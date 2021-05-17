@@ -19,6 +19,7 @@ _ref:
     pageId: _js
     pageTitle: _js
     filePath: operators/_js.yaml
+    env: Client Only
     description: |
       The `_js` operator can evaluate or create a JavaScript function. The JavaScript function can return any primitives or JSON data. Since operators are synchronous functions, the JavaScript function should be synchronous.
 

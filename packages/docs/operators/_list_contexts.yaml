@@ -19,6 +19,7 @@ _ref:
     pageId: _list_contexts
     pageTitle: _list_contexts
     filePath: operators/_list_contexts.yaml
+    env: Client Only
     types: |
       ```
       (value: any): string[]

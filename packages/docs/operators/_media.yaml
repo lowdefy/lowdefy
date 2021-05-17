@@ -19,6 +19,7 @@ _ref:
     pageId: _media
     pageTitle: _media
     filePath: operators/_media.yaml
+    env: Client Only
     types: |
       ```
       (key: string): any

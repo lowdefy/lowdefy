@@ -19,6 +19,7 @@ _ref:
     pageId: _menu
     pageTitle: _menu
     filePath: operators/_menu.yaml
+    env: Client Only
     types: |
       ```
       (menuId: string): object
