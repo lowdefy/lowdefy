@@ -75,7 +75,7 @@
   layout:
     flex: 1 0 auto
   properties:
-    title: Join the Community
+    title: Join on Discord
     type: text
     size: large
   events:
@@ -83,7 +83,7 @@
       - id: website_link
         type: Link
         params:
-          url: https://github.com/lowdefy/lowdefy/discussions
+          url: https://discord.gg/WmcJgXt
 - id: github_button
   type: Button
   layout:
