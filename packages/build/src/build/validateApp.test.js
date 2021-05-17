@@ -55,14 +55,3 @@ test('validateApp app not an object', async () => {
     'lowdefy.app is not an object.'
   );
 });
-
-test('validateApp config invalid auth config', async () => {
-  let components = {
-    app: {
-      notAllowed: {},
-    },
-  };
-  await expect(validateApp({ components, context })).rejects.toThrow(
-    'should NOT have additional properties'
-  );
-});

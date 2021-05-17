@@ -17,8 +17,6 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { validate } from '@lowdefy/ajv';
-import lowdefySchema from '../lowdefySchema.json';
 
 async function validateApp({ components }) {
   if (type.isNone(components.app)) {
@@ -36,10 +34,6 @@ async function validateApp({ components }) {
   if (type.isNone(components.app.html.appendHead)) {
     components.app.html.appendHead = '';
   }
-  validate({
-    schema: lowdefySchema.definitions.app,
-    data: components.app,
-  });
   return components;
 }
 
