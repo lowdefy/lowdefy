@@ -127,6 +127,7 @@
 - _ref: connections/SQLite.yaml
 
 - _ref: actions/CallMethod.yaml
+- _ref: actions/JsAction.yaml
 - _ref: actions/Link.yaml
 - _ref: actions/Login.yaml
 - _ref: actions/Logout.yaml

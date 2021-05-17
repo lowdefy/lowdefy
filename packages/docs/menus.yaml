@@ -481,6 +481,9 @@
         - id: CallMethod
           type: MenuLink
           pageId: CallMethod
+        - id: JsAction
+          type: MenuLink
+          pageId: JsAction
         - id: Link
           type: MenuLink
           pageId: Link
