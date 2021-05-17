@@ -125,14 +125,15 @@ _ref:
                 - `actions: actionObjects[]`: The list of [Lowdefy action objects](https://docs.lowdefy.com/events-and-actions) which will be  evaluated by the Lowdefy engine.
                 - `history: object[]`: A list of objects logging the event calls and responses.
                   - `blockId: string`: The block id from which the event was called.
+                  - `endTimestamp: datetime`: Timestamp for when the event was completed.
                   - `event: object`: The event object passed to the event.
                   - `eventName: string`: The event name which which triggerEvent was called.
                   - `success: boolean`: True if all actions for the event executed without throwing any errors.
-                  - `timestamp: datetime`: Timestamp for when the event was completed.
-                  - `responses: object[]`: The list of action responses.
-                    - `actionId: string`: The id of the triggered action.
-                    - `actionType: string`: The type of action called.
+                  - `startTimestamp: datetime`: Timestamp for when the event was started.
+                  - `responses: object[]`: The list of action responses, where the object key is equal to the action id.
+                    - `type: string`: The type of action called.
                     - `error: Error: If the action throw an error.
+                    - `index: number: Index of the action in the event array.
                     - `response: any`: The returned result of the action.
                     - `skipped: boolean`: True if the action was skipped.
             - `methods: object`: All application methods built into Lowdefy, available for the block.

@@ -83,6 +83,9 @@ _ref:
                     params:
                       # ...
             ```
+            # The actions object
+
+            When an event is triggered each completed action writes its response to the actions object under the action id object key. Thus all following actions in a event action list has access to the response of all preceding actions in the same event list through the [`_actions`](/_actions) operator.
 
             # The event object
 
@@ -111,6 +114,7 @@ _ref:
             The following actions can be used:
 
             - [`CallMethod`](/CallMethod) - Call a method defined by another block.
+            - [`JsAction`](/JsAction) - Call a custom JavaScript function as an action.
             - [`Link`](/Link) - Link to another page.
             - [`Message`](/Message) - Show a message to the user.
             - [`Notification`](/Notification) - Show a notification to the user.

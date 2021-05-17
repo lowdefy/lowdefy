@@ -140,6 +140,7 @@
 - _ref: actions/SetState.yaml
 - _ref: actions/Validate.yaml
 
+- _ref: operators/_actions.yaml
 - _ref: operators/_and.yaml
 - _ref: operators/_args.yaml
 - _ref: operators/_array.yaml
