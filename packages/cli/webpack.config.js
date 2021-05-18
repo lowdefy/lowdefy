@@ -57,7 +57,7 @@ module.exports = [
   {
     entry: './src/commands/dev/shell/index.js',
     output: {
-      filename: 'index.js',
+      filename: '[name].[contenthash].js',
       path: path.resolve(__dirname, 'dist/shell'),
     },
     mode: 'production',
@@ -83,6 +83,10 @@ module.exports = [
           ],
         },
       ],
+    },
+    optimization: {
+      moduleIds: 'deterministic',
+      runtimeChunk: 'single',
     },
     plugins: [
       // new CleanWebpackPlugin(),
