@@ -1,6 +1,7 @@
 const { ModuleFederationPlugin } = require('webpack').container;
 const path = require('path');
 const fs = require('fs');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const packageJson = require('./package.json');
 
@@ -94,6 +95,7 @@ module.exports = {
     ],
   },
   plugins: [
+    new CleanWebpackPlugin(),
     new ModuleFederationPlugin({
       name: sanitizeName(packageJson.name),
       library: { type: 'var', name: sanitizeName(packageJson.name) },

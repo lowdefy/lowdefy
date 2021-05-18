@@ -1,8 +1,10 @@
 const path = require('path');
 const webpack = require('webpack');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { ModuleFederationPlugin } = require('webpack').container;
 const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { ModuleFederationPlugin } = require('webpack').container;
+
 const { dependencies, devDependencies } = require('./package.json');
 
 module.exports = [
@@ -42,7 +44,9 @@ module.exports = [
       ],
     },
     plugins: [
-      // new CleanWebpackPlugin(),
+      new CleanWebpackPlugin({
+        cleanOnceBeforeBuildPatterns: ['**/*', '!shell/**'],
+      }),
       new webpack.BannerPlugin({ banner: '#!/usr/bin/env node', raw: true }),
       new ModuleFederationPlugin({
         name: 'cli',
@@ -57,7 +61,7 @@ module.exports = [
   {
     entry: './src/commands/dev/shell/index.js',
     output: {
-      filename: 'index.js',
+      filename: '[name].[contenthash].js',
       path: path.resolve(__dirname, 'dist/shell'),
     },
     mode: 'production',
@@ -84,8 +88,14 @@ module.exports = [
         },
       ],
     },
+    optimization: {
+      moduleIds: 'deterministic',
+      runtimeChunk: 'single',
+    },
     plugins: [
-      // new CleanWebpackPlugin(),
+      new CleanWebpackPlugin({
+        cleanOnceBeforeBuildPatterns: ['**/*', '!index.js'],
+      }),
       new ModuleFederationPlugin({
         name: 'lowdefy_web_shell',
         shared: {
