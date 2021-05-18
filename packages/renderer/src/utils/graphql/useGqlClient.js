@@ -15,7 +15,7 @@
 */
 
 import { useState } from 'react';
-import { ApolloLink, HttpLink } from '@apollo/client';
+import { ApolloLink, HttpLink, fromPromise } from '@apollo/client';
 import { ApolloClient } from '@apollo/client/core';
 import { InMemoryCache } from '@apollo/client/cache';
 import { onError } from '@apollo/link-error';
@@ -30,6 +30,29 @@ const cache = new InMemoryCache({
 });
 const retryLink = new RetryLink();
 
+function refreshLogin({ lowdefy }) {
+  lowdefy.user = {};
+  lowdefy.localStorage.setItem(`idToken`, '');
+  // eslint-disable-next-line no-case-declarations
+  let loginInput = {};
+  if (lowdefy.pageId) {
+    const { pageId, urlQuery } = lowdefy;
+    loginInput = {
+      pageId,
+      urlQuery,
+      input:
+        lowdefy.inputs[
+          makeContextId({
+            blockId: pageId,
+            pageId,
+            urlQuery,
+          })
+        ],
+    };
+  }
+  return lowdefy.auth.login(loginInput);
+}
+
 const httpLink = ({ uri = '/api/graphql' }) => new HttpLink({ uri, credentials: 'same-origin' });
 
 // TODO: Handle errors
@@ -38,27 +61,7 @@ const errorHandler = ({ lowdefy }) => ({ graphQLErrors, networkError }) => {
     graphQLErrors.forEach((err) => {
       switch (err.extensions.code) {
         case 'TOKEN_EXPIRED':
-          lowdefy.user = {};
-          lowdefy.localStorage.setItem(`idToken`, '');
-          // eslint-disable-next-line no-case-declarations
-          let loginInput = {};
-          if (lowdefy.pageId) {
-            const { pageId, urlQuery } = lowdefy;
-            loginInput = {
-              pageId,
-              urlQuery,
-              input:
-                lowdefy.inputs[
-                  makeContextId({
-                    blockId: pageId,
-                    pageId,
-                    urlQuery,
-                  })
-                ],
-            };
-          }
-          lowdefy.auth.login(loginInput);
-          return;
+          return fromPromise(refreshLogin({ lowdefy }));
         case 'UNAUTHENTICATED':
           lowdefy.user = {};
           localStorage.setItem(`idToken`, '');
