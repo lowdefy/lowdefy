@@ -20,12 +20,16 @@ _ref:
     section: Concepts
     filePath: concepts/custom-blocks.yaml
     content:
+      - id: warning
+        type: Alert
+        properties:
+          message: |
+            SECURITY WARNING: Blocks executes JavaScript inside your Lowdefy app. Insecure code can expose your app or data. Make sure that you only load blocks from trusted a source.
+          type: warning
       - id: md1
         type: MarkdownWithCode
         properties:
           content: |
-            > __NOTE__: Blocks run javascript on your site - this can lead to potential security vulnerabilities. __Make sure you trust the block publisher or even better, host your own blocks.__
-
             Blocks in Lowdefy are simple, most often state-less, [React components](https://reactjs.org/docs/components-and-props.html). Lowdefy uses [webpack module federation](https://webpack.js.org/concepts/module-federation/) to implement a micro front-end strategy. This means blocks are imported at load time, and not part of the Lowdefy app build.
 
             The decoupling of blocks provides the considerable advantages:
@@ -41,7 +45,7 @@ _ref:
 
             ```yaml
             name: dashboard-app
-            lowdefy: 3.10.0
+            lowdefy: 3.15.0
             types:
               AmChartsXY:
                 url: https://blocks-cdn.lowdefy.com/v3.10.1/blocks-amcharts/meta/AmChartsXY.json
@@ -89,9 +93,9 @@ _ref:
 
             In your `lowdefy.yaml` file, add your custom block type to the `types` object with the local path.
 
-             ```yaml
+            ```yaml
             name: dashboard-app
-            lowdefy: 3.10.0
+            lowdefy: 3.15.0
             types:
               MyCustomBlock:
                 url: http://localhost:3002/meta/MyCustomBlock.json

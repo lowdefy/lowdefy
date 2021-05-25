@@ -24,6 +24,7 @@ async function run() {
     logger: console,
     cacheDirectory: path.resolve(process.cwd(), '../servers/serverDev/.lowdefy/.cache'),
     configDirectory: path.resolve(process.cwd(), '../docs'),
+    // configDirectory: path.resolve(process.cwd(), '../servers/serverDev'),
     outputDirectory: path.resolve(process.cwd(), '../servers/serverDev/.lowdefy/build'),
   });
 }

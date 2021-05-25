@@ -75,7 +75,7 @@
   layout:
     flex: 1 0 auto
   properties:
-    title: Join on Discord
+    title: Join our Discord
     type: text
     size: large
   events:

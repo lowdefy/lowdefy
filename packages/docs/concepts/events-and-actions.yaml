@@ -21,7 +21,7 @@ _ref:
     filePath: concepts/events-and-actions.yaml
     content:
       - id: md1
-        type: Markdown
+        type: MarkdownWithCode
         properties:
           content: |
             ### TLDR

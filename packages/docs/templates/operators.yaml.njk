@@ -23,6 +23,16 @@ page:
         _var: pageTitle
       section: Operators
       content:
+        - id: warning
+          type: Alert
+          visible:
+            _not: 
+              _not:
+                _var: warning
+          properties:
+            message: 
+              _var: warning
+            type: warning
         - id: environment
           type: Alert
           visible:
@@ -34,7 +44,7 @@ page:
               _string.concat:
                 - 'Environment: '
                 - _var: env
-            type: warning
+            type: info
         - id: types
           type: Markdown
           style:
