@@ -86,7 +86,7 @@ const DateTimeSelector = ({
                   !newVal
                     ? null
                     : moment
-                        .utc(newVal.add(properties.selectGMT ? newVal.utcOffset() : 0, 'minutes'))
+                        .utc(newVal.add(properties.selectUTC ? newVal.utcOffset() : 0, 'minutes'))
                         .startOf(timeUnit)
                         .toDate()
                 );
@@ -95,7 +95,7 @@ const DateTimeSelector = ({
               value={
                 !type.isDate(value)
                   ? null
-                  : properties.selectGMT
+                  : properties.selectUTC
                   ? moment.utc(value)
                   : moment(value)
               }
