@@ -1283,10 +1283,10 @@ exports[`Render properties.secondStep - value[0] 1`] = `
 </div>
 `;
 
-exports[`Render properties.selectGMT: true - value[0] 1`] = `
+exports[`Render properties.selectUTC: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.selectGMT: true"
+  id="properties.selectUTC: true"
   style={Object {}}
 >
   <div
@@ -1295,10 +1295,10 @@ exports[`Render properties.selectGMT: true - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.selectGMT: true_input"
-      title="properties.selectGMT: true"
+      htmlFor="properties.selectUTC: true_input"
+      title="properties.selectUTC: true"
     >
-      properties.selectGMT: true
+      properties.selectUTC: true
     </label>
   </div>
   <div
@@ -1315,7 +1315,7 @@ exports[`Render properties.selectGMT: true - value[0] 1`] = `
           className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
         >
           <div
-            id="properties.selectGMT: true_popup"
+            id="properties.selectUTC: true_popup"
           />
           <div
             className="ant-picker {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
@@ -1326,7 +1326,7 @@ exports[`Render properties.selectGMT: true - value[0] 1`] = `
             >
               <input
                 autoComplete="off"
-                id="properties.selectGMT: true_input"
+                id="properties.selectUTC: true_input"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -2975,10 +2975,10 @@ exports[`Render required = true properties.secondStep - value[0] 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.selectGMT: true - value[0] 1`] = `
+exports[`Render required = true properties.selectUTC: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.selectGMT: true"
+  id="properties.selectUTC: true"
   style={Object {}}
 >
   <div
@@ -2987,10 +2987,10 @@ exports[`Render required = true properties.selectGMT: true - value[0] 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.selectGMT: true_input"
-      title="properties.selectGMT: true"
+      htmlFor="properties.selectUTC: true_input"
+      title="properties.selectUTC: true"
     >
-      properties.selectGMT: true
+      properties.selectUTC: true
     </label>
   </div>
   <div
@@ -3007,7 +3007,7 @@ exports[`Render required = true properties.selectGMT: true - value[0] 1`] = `
           className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
         >
           <div
-            id="properties.selectGMT: true_popup"
+            id="properties.selectUTC: true_popup"
           />
           <div
             className="ant-picker {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
@@ -3018,7 +3018,7 @@ exports[`Render required = true properties.selectGMT: true - value[0] 1`] = `
             >
               <input
                 autoComplete="off"
-                id="properties.selectGMT: true_input"
+                id="properties.selectUTC: true_input"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -5222,10 +5222,10 @@ exports[`Render validation.status = error properties.secondStep - value[0] 1`] =
 </div>
 `;
 
-exports[`Render validation.status = error properties.selectGMT: true - value[0] 1`] = `
+exports[`Render validation.status = error properties.selectUTC: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.selectGMT: true"
+  id="properties.selectUTC: true"
   style={Object {}}
 >
   <div
@@ -5234,10 +5234,10 @@ exports[`Render validation.status = error properties.selectGMT: true - value[0] 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.selectGMT: true_input"
-      title="properties.selectGMT: true"
+      htmlFor="properties.selectUTC: true_input"
+      title="properties.selectUTC: true"
     >
-      properties.selectGMT: true
+      properties.selectUTC: true
     </label>
   </div>
   <div
@@ -5254,7 +5254,7 @@ exports[`Render validation.status = error properties.selectGMT: true - value[0] 
           className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
         >
           <div
-            id="properties.selectGMT: true_popup"
+            id="properties.selectUTC: true_popup"
           />
           <div
             className="ant-picker {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
@@ -5265,7 +5265,7 @@ exports[`Render validation.status = error properties.selectGMT: true - value[0] 
             >
               <input
                 autoComplete="off"
-                id="properties.selectGMT: true_input"
+                id="properties.selectUTC: true_input"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -7082,10 +7082,10 @@ exports[`Render validation.status = null properties.secondStep - value[0] 1`] = 
 </div>
 `;
 
-exports[`Render validation.status = null properties.selectGMT: true - value[0] 1`] = `
+exports[`Render validation.status = null properties.selectUTC: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.selectGMT: true"
+  id="properties.selectUTC: true"
   style={Object {}}
 >
   <div
@@ -7094,10 +7094,10 @@ exports[`Render validation.status = null properties.selectGMT: true - value[0] 1
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.selectGMT: true_input"
-      title="properties.selectGMT: true"
+      htmlFor="properties.selectUTC: true_input"
+      title="properties.selectUTC: true"
     >
-      properties.selectGMT: true
+      properties.selectUTC: true
     </label>
   </div>
   <div
@@ -7114,7 +7114,7 @@ exports[`Render validation.status = null properties.selectGMT: true - value[0] 1
           className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
         >
           <div
-            id="properties.selectGMT: true_popup"
+            id="properties.selectUTC: true_popup"
           />
           <div
             className="ant-picker {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
@@ -7125,7 +7125,7 @@ exports[`Render validation.status = null properties.selectGMT: true - value[0] 1
             >
               <input
                 autoComplete="off"
-                id="properties.selectGMT: true_input"
+                id="properties.selectUTC: true_input"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -9234,10 +9234,10 @@ exports[`Render validation.status = success properties.secondStep - value[0] 1`]
 </div>
 `;
 
-exports[`Render validation.status = success properties.selectGMT: true - value[0] 1`] = `
+exports[`Render validation.status = success properties.selectUTC: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.selectGMT: true"
+  id="properties.selectUTC: true"
   style={Object {}}
 >
   <div
@@ -9246,10 +9246,10 @@ exports[`Render validation.status = success properties.selectGMT: true - value[0
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.selectGMT: true_input"
-      title="properties.selectGMT: true"
+      htmlFor="properties.selectUTC: true_input"
+      title="properties.selectUTC: true"
     >
-      properties.selectGMT: true
+      properties.selectUTC: true
     </label>
   </div>
   <div
@@ -9266,7 +9266,7 @@ exports[`Render validation.status = success properties.selectGMT: true - value[0
           className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
         >
           <div
-            id="properties.selectGMT: true_popup"
+            id="properties.selectUTC: true_popup"
           />
           <div
             className="ant-picker {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
@@ -9277,7 +9277,7 @@ exports[`Render validation.status = success properties.selectGMT: true - value[0
             >
               <input
                 autoComplete="off"
-                id="properties.selectGMT: true_input"
+                id="properties.selectUTC: true_input"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -11619,10 +11619,10 @@ exports[`Render validation.status = warning properties.secondStep - value[0] 1`]
 </div>
 `;
 
-exports[`Render validation.status = warning properties.selectGMT: true - value[0] 1`] = `
+exports[`Render validation.status = warning properties.selectUTC: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.selectGMT: true"
+  id="properties.selectUTC: true"
   style={Object {}}
 >
   <div
@@ -11631,10 +11631,10 @@ exports[`Render validation.status = warning properties.selectGMT: true - value[0
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.selectGMT: true_input"
-      title="properties.selectGMT: true"
+      htmlFor="properties.selectUTC: true_input"
+      title="properties.selectUTC: true"
     >
-      properties.selectGMT: true
+      properties.selectUTC: true
     </label>
   </div>
   <div
@@ -11651,7 +11651,7 @@ exports[`Render validation.status = warning properties.selectGMT: true - value[0
           className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
         >
           <div
-            id="properties.selectGMT: true_popup"
+            id="properties.selectUTC: true_popup"
           />
           <div
             className="ant-picker {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
@@ -11662,7 +11662,7 @@ exports[`Render validation.status = warning properties.selectGMT: true - value[0
             >
               <input
                 autoComplete="off"
-                id="properties.selectGMT: true_input"
+                id="properties.selectUTC: true_input"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -12276,9 +12276,9 @@ exports[`Test Schema properties.secondStep 1`] = `true`;
 
 exports[`Test Schema properties.secondStep 2`] = `null`;
 
-exports[`Test Schema properties.selectGMT: true 1`] = `true`;
+exports[`Test Schema properties.selectUTC: true 1`] = `true`;
 
-exports[`Test Schema properties.selectGMT: true 2`] = `null`;
+exports[`Test Schema properties.selectUTC: true 2`] = `null`;
 
 exports[`Test Schema properties.showNow: false 1`] = `true`;
 
