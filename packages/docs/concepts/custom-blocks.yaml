@@ -134,12 +134,13 @@ _ref:
                   - `eventName: string`: The event name which which triggerEvent was called.
                   - `success: boolean`: True if all actions for the event executed without throwing any errors.
                   - `startTimestamp: datetime`: Timestamp for when the event was started.
-                  - `responses: object[]`: The list of action responses, where the object key is equal to the action id.
-                    - `type: string`: The type of action called.
-                    - `error: Error: If the action throw an error.
-                    - `index: number: Index of the action in the event array.
-                    - `response: any`: The returned result of the action.
-                    - `skipped: boolean`: True if the action was skipped.
+                  - `responses: object`: The list of action responses, where the object key is equal to the action id.
+                    - `{{ key }}: string`:
+                        - `type: string`: The type of action called.
+                        - `error: Error: If the action throw an error.
+                        - `index: number: Index of the action in the event array.
+                        - `response: any`: The returned result of the action.
+                        - `skipped: boolean`: True if the action was skipped.
             - `methods: object`: All application methods built into Lowdefy, available for the block.
               - `makeCssClass(cssObject | cssObject[]): string`: This methods creates a css class for the block to apply to DOM elements. Css classes are created using [Emotion](https://emotion.sh/docs/introduction). If a list of cssObject are given the cssObjects are shallow merged with the preceding objects properties being overwritten by the latter. Any valid css style object can be passed, including media queries. Default media queries are built in:
                 - `xs?: object`: Css object applied for screen media with max width of 576px.
