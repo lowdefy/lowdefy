@@ -23,6 +23,7 @@
 - _ref: concepts/secrets.yaml
 - _ref: concepts/deployment.yaml
 - _ref: concepts/lists.yaml
+- _ref: concepts/custom-code.yaml
 - _ref: concepts/custom-blocks.yaml
 
 - _ref: users/users-introduction.yaml

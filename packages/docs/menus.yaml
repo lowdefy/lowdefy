@@ -113,6 +113,11 @@
           pageId: lists
           properties:
             title: Lists
+        - id: custom-code
+          type: MenuLink
+          pageId: custom-code
+          properties:
+            title: Custom Code
         - id: custom-blocks
           type: MenuLink
           pageId: custom-blocks

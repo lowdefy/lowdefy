@@ -18,6 +18,8 @@ _ref:
     pageId: JsAction
     pageTitle: JsAction
     filePath: actions/JsAction.yaml
+    warning: |
+      SECURITY WARNING: The JsAction executes JavaScript inside your Lowdefy app. Insecure code can expose your app or data. Since Lowdefy doesn't validate your JavaScript, make sure that you only load trusted code.
     types: |
       ```
       (params: {
@@ -26,9 +28,21 @@ _ref:
       }): void
       ```
     description: |
-      The `JsAction` action is used to call a custom JavaScript function which was loaded onto the page using the `window.lowdefy.registerJsAction()`. This JavaScript function can be asynchronous. See [Custom JavaScript](/custom-javascript) for more details on how to register a new JavaScript action.
+      The `JsAction` action is used to call a custom JavaScript function which was loaded onto the page using the `window.lowdefy.registerJsAction()` method. This JavaScript function can be asynchronous. See [Custom JavaScript](/custom-javascript) for more details on how to register a new JavaScript action.
 
-      The returned result of the JavaScript function is accessible through the [`_actions`](/_actions) operator for subsequent action in the event action chain.
+      The returned result of the JavaScript function is accessible through the [`_actions`](/_actions) operator for subsequent action in the event action list.
+
+      A `JsAction` is called with a context object which includes all [`context` data objects](/context-and-state) as well as the list of `args` passed to the action.
+      ```text
+      (context: {
+        user: object,
+        global: object,
+        state: object,
+        urlQuery: object,
+        input: object,
+      }, 
+      ...args?: any[]): any
+      ```
     params: |
       ###### object
         - `name: string`: __Required__ - The registered name of the JavaScript function to call when the action is triggered.
