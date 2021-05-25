@@ -620,7 +620,7 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.selectGMT: true - value[0] - default 1`] = `
+exports[`Mock render - properties.selectUTC: true - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -631,7 +631,7 @@ Array [
       "disabledDate": [Function],
       "format": "YYYY-MM-DD HH:mm",
       "getPopupContainer": [Function],
-      "id": "properties.selectGMT: true_input",
+      "id": "properties.selectUTC: true_input",
       "onChange": [Function],
       "placeholder": "Select Date & Time",
       "showNow": undefined,
