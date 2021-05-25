@@ -142,17 +142,16 @@ test('Request call one request', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'a',
-        actionType: 'Request',
+    responses: {
+      a: {
+        type: 'Request',
+        index: 0,
         response: [1],
       },
-    ],
-    success: true,
-    timestamp: {
-      date: 0,
     },
+    success: true,
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
 });
 
@@ -223,17 +222,16 @@ test('Request call all requests', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'a',
-        actionType: 'Request',
+    responses: {
+      a: {
+        type: 'Request',
+        index: 0,
         response: [1, 2],
       },
-    ],
-    success: true,
-    timestamp: {
-      date: 0,
     },
+    success: true,
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
 });
 
@@ -304,17 +302,16 @@ test('Request call array of requests', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'a',
-        actionType: 'Request',
+    responses: {
+      a: {
+        type: 'Request',
+        index: 0,
         response: [1, 2],
       },
-    ],
-    success: true,
-    timestamp: {
-      date: 0,
     },
+    success: true,
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
 });
 
@@ -404,15 +401,28 @@ test('Request call request error', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'a',
-        actionType: 'Request',
+    error: {
+      action: {
+        id: 'a',
+        params: 'req_error',
+        type: 'Request',
+      },
+      error: {
+        error: new Error('Request error'),
+        index: 0,
+        type: 'Request',
+      },
+    },
+    responses: {
+      a: {
+        type: 'Request',
+        index: 0,
         error: new Error('Request error'),
       },
-    ],
+    },
     success: false,
-    timestamp: { date: 0 },
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
 });
 
@@ -460,14 +470,27 @@ test('Request call request graphql error', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'a',
-        actionType: 'Request',
+    error: {
+      action: {
+        id: 'a',
+        params: 'req_gql_error',
+        type: 'Request',
+      },
+      error: {
+        error: new Error('displayTitle: displayMessage'),
+        index: 0,
+        type: 'Request',
+      },
+    },
+    responses: {
+      a: {
+        type: 'Request',
+        index: 0,
         error: new Error('displayTitle: displayMessage'),
       },
-    ],
+    },
     success: false,
-    timestamp: { date: 0 },
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
 });

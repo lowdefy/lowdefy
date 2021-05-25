@@ -479,22 +479,6 @@ describe('parse operators', () => {
     expect(errors).toEqual([]);
   });
 
-  test('parse _js operator', async () => {
-    const input = {
-      '_js.function': {
-        code: `function (a,b){
-    return a+b;
-  }`,
-      },
-    };
-    const parser = new NodeParser({});
-    await parser.init();
-    const { output, errors } = parser.parse({ input, location: 'locationId' });
-    expect(output).toBeInstanceOf(Function);
-    expect(output(1, 2)).toEqual(3);
-    expect(errors).toEqual([]);
-  });
-
   test('parse _index operator', async () => {
     const input = { _index: 0 };
     const parser = new NodeParser({ input: { key: 'value' }, arrayIndices: [3, 2] });

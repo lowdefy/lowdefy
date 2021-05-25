@@ -24,11 +24,34 @@
     <link rel="icon" type="image/svg+xml" href="/public/icon.svg">
     <link rel="icon" type="image/png" href="/public/icon-32.png">
     <link rel="apple-touch-icon" href="/public/apple-touch-icon.png">
-
+    <script type="text/javascript">
+      const jsActions = {}
+      const jsOperators = {}
+      const getMethodLoader = (scope, reference) =>
+        (name, method) => {
+          if (typeof name !== 'string') {
+            throw new Error(`${scope} requires a string for the first argument.`)
+          }
+          if (typeof method !== 'function') {
+            throw new Error(`${scope} requires a function for the second argument.`)
+          }
+          reference[name] = method;
+        }
+      window.lowdefy = {
+        imports: {
+          jsActions,
+          jsOperators,
+        },
+        registerJsAction: getMethodLoader('registerJsAction', jsActions),
+        registerJsOperator: getMethodLoader('registerJsOperator', jsOperators)
+      }
+    </script> 
+  <!-- __LOWDEFY_APP_HEAD_HTML__ -->
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="emotion"></div>
     <div id="root"></div>
+    <!-- __LOWDEFY_APP_BODY_HTML__ -->
   </body>
 </html>

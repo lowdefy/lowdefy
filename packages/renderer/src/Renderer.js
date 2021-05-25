@@ -33,13 +33,20 @@ const lowdefy = {
   contexts: {},
   displayMessage: () => () => undefined,
   document,
+  imports: {
+    jsActions: window.lowdefy.imports.jsActions,
+    jsOperators: window.lowdefy.imports.jsOperators,
+  },
   inputs: {},
   link: () => {},
   localStorage,
+  registerJsAction: window.lowdefy.registerJsAction,
+  registerJsOperator: window.lowdefy.registerJsOperator,
   updaters: {},
   window,
 };
 
+delete window.lowdefy.imports;
 if (window.location.origin.includes('http://localhost')) {
   window.lowdefy = lowdefy;
 }

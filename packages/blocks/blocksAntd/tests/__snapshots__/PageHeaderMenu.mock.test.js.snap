@@ -1079,13 +1079,13 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.logo.srcset - value[0] - default 1`] = `
+exports[`Mock render - properties.logo.srcSet - value[0] - default 1`] = `
 Array [
   Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
-          blockId="properties.logo.srcset_header"
+          blockId="properties.logo.srcSet_header"
           content={
             Object {
               "content": [Function],
@@ -1131,7 +1131,7 @@ Array [
           }
         />
         <ContentBlock
-          blockId="properties.logo.srcset_content"
+          blockId="properties.logo.srcSet_content"
           content={
             Object {
               "content": [Function],
@@ -1176,7 +1176,7 @@ Array [
         />
       </React.Fragment>,
       "className": "css-vooagt",
-      "id": "properties.logo.srcset",
+      "id": "properties.logo.srcSet",
     },
     Object {},
   ],

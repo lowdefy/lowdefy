@@ -24,6 +24,11 @@ global:
     sm:
       span: 23
 
+app:
+  html:
+    appendHead:
+      _ref: head.html
+
 connections:
   - id: discord_channel
     type: AxiosHttp

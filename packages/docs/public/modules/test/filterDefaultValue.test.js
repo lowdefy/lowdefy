@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import filterDefaultValue from '../blocks/filterDefaultValue';
+import filterDefaultValue from '../filterDefaultValue';
 
 test('no default value', () => {
   const value = { a: 1 };

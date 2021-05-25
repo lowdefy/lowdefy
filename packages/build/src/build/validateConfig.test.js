@@ -23,7 +23,9 @@ test('validateConfig config not an object', async () => {
   const components = {
     config: 'config',
   };
-  await expect(validateConfig({ components, context })).rejects.toThrow('Config is not an object.');
+  await expect(validateConfig({ components, context })).rejects.toThrow(
+    'lowdefy.config is not an object.'
+  );
 });
 
 test('validateConfig config invalid auth config', async () => {

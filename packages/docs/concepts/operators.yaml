@@ -30,7 +30,31 @@ _ref:
 
             If an operator errors while evaluating, it returns a `null` value, and logs the error to the console.
 
-            # Build time operators
+            ## Client or server operators
+
+            Some operators are only available on either the client or the server. For example, the [`_menu`](/_menu) operator is only useful on the client and is thus not included in server requests. Likewise, the [`_secret`](/_secret) operator is only available on the server for security reasons. 
+
+            If a operator has special environment considerations, it is indicated on the individual operator documentation page. If no indication is made, the operator can be used under both environments.
+
+            ##### Client only operators:
+            - [_actions](/_actions)
+            - [_format](/_format)
+            - [_js](/_js)
+            - [_list_contexts](/_list_contexts)
+            - [_media](/_media)
+            - [_menu](/_menu)
+            - [_request](/_request)
+
+            ##### Server only operators:
+            - [_diff](/_diff)
+            - [_secret](/_secret)
+            - [_uuid](/_uuid)
+
+            Operators that are client side only cannot be used in `Requests` and `Connections`, and operators which are server side only cannot be used in `Blocks` and `Actions`. 
+
+            ## Build time operators
+
+            Besides the client and server environment, app build time is considered a third environment where special operator logic applies.
 
             The `_ref` and `_var` operators do not work like other operators. They are evaluated while an app is being built, and can thus be used anywhere in the app configuration. They are used to split a app into multiple files, and to reuse configuration. See [`_ref`](/_ref) for more details.
       - _ref:

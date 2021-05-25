@@ -122,15 +122,15 @@ const PageHeaderMenu = ({
                             ? '/public/logo-light-theme.png'
                             : '/public/logo-dark-theme.png')
                         }
-                        srcset={
-                          (properties.logo && (properties.logo.srcset || properties.logo.src)) ||
+                        srcSet={
+                          (properties.logo && (properties.logo.srcSet || properties.logo.src)) ||
                           (get(properties, 'header.theme') === 'light'
-                            ? '/public/logo-square-light-theme.png 40w, /public/logo-light-theme.png 768w'
-                            : '/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 768w')
+                            ? '/public/logo-square-light-theme.png 40w, /public/logo-light-theme.png 577w'
+                            : '/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w')
                         }
                         sizes={
                           (properties.logo && properties.logo.sizes) ||
-                          '(max-width: 767px) 40px, 768px'
+                          '(max-width: 576px) 40px, 577px'
                         }
                         alt={(properties.logo && properties.logo.alt) || 'Lowdefy'}
                         className={methods.makeCssClass([
@@ -138,7 +138,7 @@ const PageHeaderMenu = ({
                             width: 130,
                             sm: {
                               width:
-                                properties.logo && properties.logo.src && !properties.logo.srcset
+                                properties.logo && properties.logo.src && !properties.logo.srcSet
                                   ? 130
                                   : 40,
                             },
