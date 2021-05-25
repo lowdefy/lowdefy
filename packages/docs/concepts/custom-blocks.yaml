@@ -137,8 +137,8 @@ _ref:
                   - `responses: object`: The list of action responses, where the object key is equal to the action id.
                     - `{{ key }}: string`:
                         - `type: string`: The type of action called.
-                        - `error: Error: If the action throw an error.
-                        - `index: number: Index of the action in the event array.
+                        - `error: Error`: If the action throw an error.
+                        - `index: number`: Index of the action in the event array.
                         - `response: any`: The returned result of the action.
                         - `skipped: boolean`: True if the action was skipped.
             - `methods: object`: All application methods built into Lowdefy, available for the block.
