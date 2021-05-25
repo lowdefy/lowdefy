@@ -23,6 +23,7 @@
 - _ref: concepts/secrets.yaml
 - _ref: concepts/deployment.yaml
 - _ref: concepts/lists.yaml
+- _ref: concepts/custom-code.yaml
 - _ref: concepts/custom-blocks.yaml
 
 - _ref: users/users-introduction.yaml
@@ -127,6 +128,7 @@
 - _ref: connections/SQLite.yaml
 
 - _ref: actions/CallMethod.yaml
+- _ref: actions/JsAction.yaml
 - _ref: actions/Link.yaml
 - _ref: actions/Login.yaml
 - _ref: actions/Logout.yaml
@@ -139,6 +141,7 @@
 - _ref: actions/SetState.yaml
 - _ref: actions/Validate.yaml
 
+- _ref: operators/_actions.yaml
 - _ref: operators/_and.yaml
 - _ref: operators/_args.yaml
 - _ref: operators/_array.yaml

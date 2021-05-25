@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _format
     pageTitle: _format
+    env: Client Only
     description: |
       The `_format` operator converts objects to strings, using a specified format. It can only be used on the web-client (not in requests or connections).
     methods:

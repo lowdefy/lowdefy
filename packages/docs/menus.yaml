@@ -113,6 +113,11 @@
           pageId: lists
           properties:
             title: Lists
+        - id: custom-code
+          type: MenuLink
+          pageId: custom-code
+          properties:
+            title: Custom Code
         - id: custom-blocks
           type: MenuLink
           pageId: custom-blocks
@@ -481,6 +486,9 @@
         - id: CallMethod
           type: MenuLink
           pageId: CallMethod
+        - id: JsAction
+          type: MenuLink
+          pageId: JsAction
         - id: Link
           type: MenuLink
           pageId: Link
@@ -524,6 +532,9 @@
         title: Operators
         icon: ToolOutlined
       links:
+        - id: _actions
+          type: MenuLink
+          pageId: _actions
         - id: _and
           type: MenuLink
           pageId: _and

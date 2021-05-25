@@ -61,11 +61,11 @@
     logo:
       style:
         border: 5px solid blue
-- id: 'properties.logo.srcset'
+- id: 'properties.logo.srcSet'
   type: PageHeaderMenu
   properties:
     logo:
-      srcset: 'https://lowdefy.com/logos/name_250.png 250w, https://lowdefy.com/logos/name_450.png 450w'
+      srcSet: 'https://lowdefy.com/logos/name_250.png 250w, https://lowdefy.com/logos/name_450.png 450w'
     menu:
       links:
         - id: Introduction
@@ -84,7 +84,7 @@
   type: PageHeaderMenu
   properties:
     logo:
-      srcset: '(max-width: 767px) 40px, 768px'
+      srcSet: '(max-width: 767px) 40px, 768px'
     menu:
       links:
         - id: Introduction

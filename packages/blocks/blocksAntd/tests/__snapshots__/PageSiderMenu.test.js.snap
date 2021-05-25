@@ -56,9 +56,9 @@ exports[`Render default - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"sm\\":{\\"width\\":40},\\"md\\":{\\"width\\":130}},{\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        sizes="(max-width: 767px) 40px, 768px"
+        sizes="(max-width: 576px) 40px, 577px"
         src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 768w"
+        srcSet="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
       />
     </a>
   </header>
@@ -231,9 +231,9 @@ exports[`Render properties.breadcrumb.list - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"sm\\":{\\"width\\":40},\\"md\\":{\\"width\\":130}},{\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        sizes="(max-width: 767px) 40px, 768px"
+        sizes="(max-width: 576px) 40px, 577px"
         src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 768w"
+        srcSet="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
       />
     </a>
   </header>
@@ -440,9 +440,9 @@ exports[`Render properties.content.style - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"sm\\":{\\"width\\":40},\\"md\\":{\\"width\\":130}},{\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        sizes="(max-width: 767px) 40px, 768px"
+        sizes="(max-width: 576px) 40px, 577px"
         src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 768w"
+        srcSet="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
       />
     </a>
   </header>
@@ -615,9 +615,9 @@ exports[`Render properties.footer.style - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"sm\\":{\\"width\\":40},\\"md\\":{\\"width\\":130}},{\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        sizes="(max-width: 767px) 40px, 768px"
+        sizes="(max-width: 576px) 40px, 577px"
         src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 768w"
+        srcSet="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
       />
     </a>
   </header>
@@ -805,9 +805,9 @@ exports[`Render properties.header.color - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"sm\\":{\\"width\\":40},\\"md\\":{\\"width\\":130}},{\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        sizes="(max-width: 767px) 40px, 768px"
+        sizes="(max-width: 576px) 40px, 577px"
         src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 768w"
+        srcSet="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
       />
     </a>
   </header>
@@ -1077,9 +1077,9 @@ exports[`Render properties.header.style - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"sm\\":{\\"width\\":40},\\"md\\":{\\"width\\":130}},{\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        sizes="(max-width: 767px) 40px, 768px"
+        sizes="(max-width: 576px) 40px, 577px"
         src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 768w"
+        srcSet="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
       />
     </a>
   </header>
@@ -1252,9 +1252,9 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"sm\\":{\\"width\\":40},\\"md\\":{\\"width\\":130}},{\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        sizes="(max-width: 767px) 40px, 768px"
+        sizes="(max-width: 576px) 40px, 577px"
         src="/public/logo-light-theme.png"
-        srcset="/public/logo-square-light-theme.png 40w, /public/logo-light-theme.png 768w"
+        srcSet="/public/logo-square-light-theme.png 40w, /public/logo-light-theme.png 577w"
       />
     </a>
   </header>
@@ -1514,9 +1514,9 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
       <img
         alt="Header logo alt text"
         className="{\\"style\\":[{\\"width\\":130,\\"sm\\":{\\"width\\":40},\\"md\\":{\\"width\\":130}},{\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        sizes="(max-width: 767px) 40px, 768px"
+        sizes="(max-width: 576px) 40px, 577px"
         src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 768w"
+        srcSet="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
       />
     </a>
   </header>
@@ -1776,9 +1776,9 @@ exports[`Render properties.logo.size - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"sm\\":{\\"width\\":40},\\"md\\":{\\"width\\":130}},{\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        sizes="(max-width: 767px) 40px, 768px"
+        sizes="(max-width: 576px) 40px, 577px"
         src="/public/logo-dark-theme.png"
-        srcset="(max-width: 767px) 40px, 768px"
+        srcSet="(max-width: 767px) 40px, 768px"
       />
     </a>
   </header>
@@ -2038,9 +2038,9 @@ exports[`Render properties.logo.src - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"sm\\":{\\"width\\":130},\\"md\\":{\\"width\\":130}},{\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        sizes="(max-width: 767px) 40px, 768px"
+        sizes="(max-width: 576px) 40px, 577px"
         src="https://lowdefy.com/logos/name_250.png"
-        srcset="https://lowdefy.com/logos/name_250.png"
+        srcSet="https://lowdefy.com/logos/name_250.png"
       />
     </a>
   </header>
@@ -2244,14 +2244,14 @@ exports[`Render properties.logo.src - value[0] 1`] = `
 </section>
 `;
 
-exports[`Render properties.logo.srcset - value[0] 1`] = `
+exports[`Render properties.logo.srcSet - value[0] 1`] = `
 <section
   className="ant-layout {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
-  id="properties.logo.srcset"
+  id="properties.logo.srcSet"
 >
   <header
     className="ant-layout-header {\\"style\\":[{\\"backgroundColor\\":false},null,{\\"display\\":\\"flex\\",\\"alignItems\\":\\"center\\",\\"padding\\":\\"0 46px\\",\\"sm\\":{\\"padding\\":\\"0 15px\\"},\\"md\\":{\\"padding\\":\\"0 30px\\"},\\"lg\\":{\\"padding\\":\\"0 46px\\"},\\"flexDirection\\":\\"row-reverse\\"}]} hide-on-print"
-    id="properties.logo.srcset_header"
+    id="properties.logo.srcSet_header"
   >
     <div
       className="{\\"style\\":{\\"alignItems\\":\\"center\\",\\"flex\\":\\"1 1 auto\\",\\"display\\":\\"flex\\",\\"justifyContent\\":\\"flex-end\\"}}"
@@ -2260,18 +2260,18 @@ exports[`Render properties.logo.srcset - value[0] 1`] = `
         className="{\\"style\\":[{\\"display\\":\\"block\\",\\"lg\\":{\\"display\\":\\"none\\"}},{\\"paddingLeft\\":\\"1rem\\"}]}"
       >
         <div
-          id="properties.logo.srcset_mobile_menu"
+          id="properties.logo.srcSet_mobile_menu"
         >
           <button
             className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
-            id="properties.logo.srcset_mobile_menu_button"
+            id="properties.logo.srcSet_mobile_menu_button"
             onClick={[Function]}
             type="button"
           >
             <span
               aria-label="loading-3-quarters"
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
-              id="properties.logo.srcset_mobile_menu_button_icon"
+              id="properties.logo.srcSet_mobile_menu_button_icon"
               required={false}
               role="img"
             >
@@ -2300,19 +2300,19 @@ exports[`Render properties.logo.srcset - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"sm\\":{\\"width\\":40},\\"md\\":{\\"width\\":130}},{\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        sizes="(max-width: 767px) 40px, 768px"
+        sizes="(max-width: 576px) 40px, 577px"
         src="/public/logo-dark-theme.png"
-        srcset="https://lowdefy.com/logos/name_250.png 250w, https://lowdefy.com/logos/name_450.png 450w"
+        srcSet="https://lowdefy.com/logos/name_250.png 250w, https://lowdefy.com/logos/name_450.png 450w"
       />
     </a>
   </header>
   <section
     className="ant-layout ant-layout-has-sider {}"
-    id="properties.logo.srcset_layout"
+    id="properties.logo.srcSet_layout"
   >
     <aside
       className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print ant-layout-sider ant-layout-sider-light"
-      id="properties.logo.srcset_sider"
+      id="properties.logo.srcSet_sider"
       style={
         Object {
           "flex": "0 0 200px",
@@ -2336,7 +2336,7 @@ exports[`Render properties.logo.srcset - value[0] 1`] = `
         >
           <ul
             className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} ant-menu-light ant-menu-root ant-menu-inline"
-            id="properties.logo.srcset_menu"
+            id="properties.logo.srcSet_menu"
             onMouseEnter={[Function]}
             onTransitionEnd={[Function]}
             role="menu"
@@ -2438,7 +2438,7 @@ exports[`Render properties.logo.srcset - value[0] 1`] = `
           />
           <div
             className="{}"
-            id="properties.logo.srcset_toggle_sider_affix"
+            id="properties.logo.srcSet_toggle_sider_affix"
           >
             <div
               className=""
@@ -2452,14 +2452,14 @@ exports[`Render properties.logo.srcset - value[0] 1`] = `
               >
                 <button
                   className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
-                  id="properties.logo.srcset_toggle_sider"
+                  id="properties.logo.srcSet_toggle_sider"
                   onClick={[Function]}
                   type="button"
                 >
                   <span
                     aria-label="loading-3-quarters"
                     className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
-                    id="properties.logo.srcset_toggle_sider_icon"
+                    id="properties.logo.srcSet_toggle_sider_icon"
                     required={false}
                     role="img"
                   >
@@ -2486,7 +2486,7 @@ exports[`Render properties.logo.srcset - value[0] 1`] = `
     </aside>
     <main
       className="ant-layout-content {\\"style\\":{\\"padding\\":\\"0 40px 40px 40px\\",\\"sm\\":{\\"padding\\":\\"0 10px 10px 10px\\"},\\"md\\":{\\"padding\\":\\"0 20px 20px 20px\\"},\\"lg\\":{\\"padding\\":\\"0 40px 40px 40px\\"}}}"
-      id="properties.logo.srcset_content"
+      id="properties.logo.srcSet_content"
     >
       <div
         className="{\\"style\\":{\\"padding\\":\\"20px 0\\",\\"sm\\":{\\"padding\\":\\"5px 0\\"},\\"md\\":{\\"padding\\":\\"10px 0\\"}}}"
@@ -2562,9 +2562,9 @@ exports[`Render properties.logo.style - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"sm\\":{\\"width\\":40},\\"md\\":{\\"width\\":130}},{\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},{\\"border\\":\\"5px solid blue\\"}]}"
-        sizes="(max-width: 767px) 40px, 768px"
+        sizes="(max-width: 576px) 40px, 577px"
         src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 768w"
+        srcSet="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
       />
     </a>
   </header>
@@ -2737,9 +2737,9 @@ exports[`Render properties.menu - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"sm\\":{\\"width\\":40},\\"md\\":{\\"width\\":130}},{\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        sizes="(max-width: 767px) 40px, 768px"
+        sizes="(max-width: 576px) 40px, 577px"
         src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 768w"
+        srcSet="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
       />
     </a>
   </header>
@@ -2999,9 +2999,9 @@ exports[`Render properties.menu.selectedColor - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"sm\\":{\\"width\\":40},\\"md\\":{\\"width\\":130}},{\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        sizes="(max-width: 767px) 40px, 768px"
+        sizes="(max-width: 576px) 40px, 577px"
         src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 768w"
+        srcSet="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
       />
     </a>
   </header>
@@ -3261,9 +3261,9 @@ exports[`Render properties.sider.color - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"sm\\":{\\"width\\":40},\\"md\\":{\\"width\\":130}},{\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        sizes="(max-width: 767px) 40px, 768px"
+        sizes="(max-width: 576px) 40px, 577px"
         src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 768w"
+        srcSet="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
       />
     </a>
   </header>
@@ -3523,9 +3523,9 @@ exports[`Render properties.sider.initialCollapsed - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"sm\\":{\\"width\\":40},\\"md\\":{\\"width\\":130}},{\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        sizes="(max-width: 767px) 40px, 768px"
+        sizes="(max-width: 576px) 40px, 577px"
         src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 768w"
+        srcSet="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
       />
     </a>
   </header>
@@ -3709,9 +3709,9 @@ exports[`Render properties.sider.style - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"sm\\":{\\"width\\":40},\\"md\\":{\\"width\\":130}},{\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        sizes="(max-width: 767px) 40px, 768px"
+        sizes="(max-width: 576px) 40px, 577px"
         src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 768w"
+        srcSet="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
       />
     </a>
   </header>
@@ -3895,9 +3895,9 @@ exports[`Render properties.sider.theme: dark - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"sm\\":{\\"width\\":40},\\"md\\":{\\"width\\":130}},{\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        sizes="(max-width: 767px) 40px, 768px"
+        sizes="(max-width: 576px) 40px, 577px"
         src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 768w"
+        srcSet="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
       />
     </a>
   </header>
@@ -4070,9 +4070,9 @@ exports[`Render properties.style - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"sm\\":{\\"width\\":40},\\"md\\":{\\"width\\":130}},{\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        sizes="(max-width: 767px) 40px, 768px"
+        sizes="(max-width: 576px) 40px, 577px"
         src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 768w"
+        srcSet="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
       />
     </a>
   </header>
@@ -4245,9 +4245,9 @@ exports[`Render properties.toggleSiderButton.hide - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"sm\\":{\\"width\\":40},\\"md\\":{\\"width\\":130}},{\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        sizes="(max-width: 767px) 40px, 768px"
+        sizes="(max-width: 576px) 40px, 577px"
         src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 768w"
+        srcSet="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
       />
     </a>
   </header>
@@ -4431,9 +4431,9 @@ exports[`Render properties.toggleSiderButton.type - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"sm\\":{\\"width\\":40},\\"md\\":{\\"width\\":130}},{\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        sizes="(max-width: 767px) 40px, 768px"
+        sizes="(max-width: 576px) 40px, 577px"
         src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 768w"
+        srcSet="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
       />
     </a>
   </header>
@@ -4601,9 +4601,9 @@ exports[`Test Schema properties.logo.src 1`] = `true`;
 
 exports[`Test Schema properties.logo.src 2`] = `null`;
 
-exports[`Test Schema properties.logo.srcset 1`] = `true`;
+exports[`Test Schema properties.logo.srcSet 1`] = `true`;
 
-exports[`Test Schema properties.logo.srcset 2`] = `null`;
+exports[`Test Schema properties.logo.srcSet 2`] = `null`;
 
 exports[`Test Schema properties.logo.style 1`] = `true`;
 

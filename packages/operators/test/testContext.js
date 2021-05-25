@@ -7,6 +7,10 @@ const operators = Object.keys({
 });
 
 const lowdefy = {
+  imports: {
+    jsOperators: {},
+    jsActions: {},
+  },
   inputs: {
     own: {
       string: 'input',

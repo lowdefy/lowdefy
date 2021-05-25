@@ -1,0 +1,123 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
+  vars:
+    pageId: _actions
+    pageTitle: _actions
+    filePath: operators/_actions.yaml
+    env: Client Only
+    types: |
+      ```
+      (key: string): any
+      (all: boolean): any
+      (arguments: {
+        all?: boolean,
+        key?: string,
+        default?: any,
+      }): any
+      ```
+    description: |
+      The `_actions` operator returns the response value for a preceding action in the same event list.
+
+      The action response object has the following structure:
+      ```yaml
+      error: Error,
+      index: number,
+      response: any,
+      skipped: boolean,
+      type: string,
+      ```
+    arguments: |
+      ###### string
+      If the `_actions` operator is called with a string equal to a preceding action id in the same event list, the action response object returned. If a string is passed which does not match preceding action id in the same event list, `null` is returned. Dot notation is supported.
+
+      ###### boolean
+      If the `_actions` operator is called with boolean argument `true`, an object with all the preceding action id responses in the same event list is returned.
+
+    examples: |
+      ##### Using a action response:
+      ```yaml
+      _actions: my_action.response
+      ```
+      Returns: The response returned by the action.
+
+      ##### Setting a action response to `state`:
+      ```yaml
+      id: refresh
+      type: Button
+      events:
+        onClick:
+          - id: get_fresh_data
+            type: Request
+            skip:
+              _state: should_not_fetch
+            params: get_data
+          - id: set_data
+            type: SetState
+            params:
+              did_not_fetch_data:
+                _actions: get_fresh_data.skipped
+      ```
+
+      ##### Setting a returned [`JsAction`](/JsAction) response to `state`:
+      First register a custom JavaScript action: `getNormalizedEigenvector`
+      ```yaml
+      # file: lowdefy.yaml
+      lowdefy: '3.15.0'
+      app:
+        html:
+          appendHead: |
+            <script type="text/javascript">
+              const getNormalizedEigenvector = (context, ...args) => {
+                const vectorLength = Math.sqrt(args.reduce((acc, curVal) => Math.pow(curVal, 2) + acc), 0);
+                return args.map(val => val / vectorLength );
+              }
+              window.lowdefy.registerJsAction('getNormalizedEigenvector', getNormalizedEigenvector);
+            </script>
+      ```
+      Then, calculate the vector and update state.
+      ```yaml
+      # onClick event on a block.
+      id: calculate
+      type: Button
+      events:
+        onClick:
+          - id: get_normalized_eigenvector
+            type: JsAction 
+            params:
+              name: getNormalizedEigenvector
+              args:
+                - 1
+                - 5
+                - -12
+                - 7
+                - 4
+          - id: update_state
+            type: SetState
+            params:
+              normal_eigenvector:
+                _actions: get_normalized_eigenvector.response
+      ```
+      In this example, state will now be equal to:
+      ```yaml
+      normal_eigenvector:
+        - 0.06523280730534423
+        - 0.3261640365267211
+        - -0.7827936876641306
+        - 0.45662965113740955
+        - 0.2609312292213769
+      ```

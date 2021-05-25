@@ -45,4 +45,4 @@ function filterDefaultValue(value, defaultValue) {
   return filterObject({ obj: value, path: [] });
 }
 
-module.exports = filterDefaultValue;
+export default filterDefaultValue;

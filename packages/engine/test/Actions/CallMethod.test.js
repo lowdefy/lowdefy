@@ -86,17 +86,18 @@ test('CallMethod with no args, synchronous method', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'a',
-        actionType: 'CallMethod',
+    responses: {
+      a: {
+        type: 'CallMethod',
+        index: 0,
         response: {
           args: [],
         },
       },
-    ],
+    },
     success: true,
-    timestamp: new Date(),
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
   expect(blockMethod.mock.calls).toEqual([[]]);
 });
@@ -161,19 +162,18 @@ test('CallMethod method return a promise', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'a',
-        actionType: 'CallMethod',
+    responses: {
+      a: {
+        type: 'CallMethod',
+        index: 0,
         response: {
           args: ['arg'],
         },
       },
-    ],
-    success: true,
-    timestamp: {
-      date: 0,
     },
+    success: true,
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
   expect(calls).toEqual([['arg']]);
 });
@@ -230,19 +230,36 @@ test('CallMethod with args not an array', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'a',
-        actionType: 'CallMethod',
+    error: {
+      action: {
+        id: 'a',
+        params: {
+          args: 'arg',
+          blockId: 'textInput',
+          method: 'blockMethod',
+        },
+        type: 'CallMethod',
+      },
+      error: {
+        error: new Error(
+          'Failed to call method "blockMethod" on block "textInput": "args" should be an array.'
+        ),
+        index: 0,
+        type: 'CallMethod',
+      },
+    },
+    responses: {
+      a: {
+        type: 'CallMethod',
+        index: 0,
         error: new Error(
           'Failed to call method "blockMethod" on block "textInput": "args" should be an array.'
         ),
       },
-    ],
-    success: false,
-    timestamp: {
-      date: 0,
     },
+    success: false,
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
   expect(blockMethod.mock.calls).toEqual([]);
 });
@@ -299,19 +316,18 @@ test('CallMethod with multiple positional args, synchronous method', async () =>
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'a',
-        actionType: 'CallMethod',
+    responses: {
+      a: {
+        type: 'CallMethod',
+        index: 0,
         response: {
           args: ['arg1', 'arg2'],
         },
       },
-    ],
-    success: true,
-    timestamp: {
-      date: 0,
     },
+    success: true,
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
   expect(blockMethod.mock.calls).toEqual([['arg1', 'arg2']]);
 });

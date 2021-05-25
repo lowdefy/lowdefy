@@ -1,0 +1,234 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/actions.yaml.njk
+  vars:
+    pageId: JsAction
+    pageTitle: JsAction
+    filePath: actions/JsAction.yaml
+    warning: |
+      SECURITY WARNING: The JsAction executes JavaScript inside your Lowdefy app. Insecure code can expose your app or data. Since Lowdefy doesn't validate your JavaScript, make sure that you only load trusted code.
+    types: |
+      ```
+      (params: {
+        name: string,
+        args?: any[]
+      }): void
+      ```
+    description: |
+      The `JsAction` action is used to call a custom JavaScript function which was loaded onto the page using the `window.lowdefy.registerJsAction()` method. This JavaScript function can be asynchronous. See [Custom Code](/custom-code) for more details on how to register a new JavaScript action.
+
+      The returned result of the JavaScript function is accessible through the [`_actions`](/_actions) operator for subsequent action in the event action list.
+
+      A `JsAction` is called with a context object which includes all [`context` data objects](/context-and-state) as well as the list of `args` passed to the action.
+      ```text
+      (context: {
+        user: object,
+        global: object,
+        state: object,
+        urlQuery: object,
+        input: object,
+      },
+      ...args?: any[]): any
+      ```
+    params: |
+      ###### object
+        - `name: string`: __Required__ - The registered name of the JavaScript function to call when the action is triggered.
+        - `args: any[]`: The array of positional arguments with which the JavaScript function should be called.
+
+    examples: |
+      ##### Set a [Intercom](https://www.intercom.com/) user when a page is initialized:
+
+      ```yaml
+      # lowdefy.yaml
+      name: intercom-example
+      lowdefy: '3.15.0'
+      app:
+        html:
+          appendBody: |
+            <script>
+              function setIntercomUser(context) {
+                window.intercomSettings = {
+                  app_id: "{{ your_intercom_app_id }}",
+                  name: context.user.name,
+                  email: context.user.email,
+                };
+              }
+              window.lowdefy.registerJsAction('setIntercomUser', setIntercomUser);
+            </script>
+            <script>
+              (function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');
+              ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];
+              i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');
+              s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/{{ your_intercom_app_id }}';
+              var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};
+              if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();
+            </script>
+      pages:
+        - id: home
+          type: PageHeaderMenu
+          events:
+            onInitAsync:
+              - id: set_intercom_user
+                type: JsAction
+                params:
+                  name: setIntercomUser
+          blocks:
+            # ...
+      ```
+
+      ##### Highlight search term returned by [MongoDB Search Highlight](https://docs.atlas.mongodb.com/reference/atlas-search/highlighting/):
+      Add a JavaScript file to highlight the search text by wapping the highlighted text with `<span style="background: yellow;">{{ value }}</span>`:
+      ```js
+      // file: /public/highlightText.js
+        function highlightText(context, data) {
+          return data.map((item) => {
+            item.highlights.forEach((light) => {
+              const paths = light.path.split('.');
+              const key = paths[paths.length - 1];
+              paths.pop();
+              let res = item;
+              paths.forEach((key) => {
+                res = res[key];
+              });
+              res[key] = light.texts.reduce((acc, obj) => {
+                if (obj.type === 'hit') {
+                  return acc.concat('<span style="background: yellow;">', obj.value, '</span>');
+                }
+                return acc.concat(obj.value);
+              }, '');
+            });
+            return item;
+          });
+        }
+        export default highlightText;
+      ```
+      Import custom JavaScript modules:
+      ```js
+      // file: /public/modules.js
+      import highlightText from './highlightText.js';
+      window.lowdefy.registerJsAction('highlightText', highlightText);
+      ````
+      Lowdefy setup:
+      ```yaml
+      # file: lowdefy.yaml
+      name: text-highlight-example
+      lowdefy: '3.15.0'
+      app:
+        html:
+          # Load the custom modules into the index.html head tag.
+          appendHead: |
+            <script type="module" src="/public/modules.js"></script>
+      connections:
+        - id: products
+          type: MongoDBCollection
+          properties:
+            collection: products
+            databaseUri:
+              _secret: MDB_URI
+      pages:
+        - id: home
+          type: PageHeaderMenu
+          requests:
+            - id: search_products
+              type: MongoDBAggregation
+              connectionId: products
+              properties:
+                pipeline:
+                  _array.concat:
+                    - - $search:
+                          compound:
+                            should:
+                              - text:
+                                  query:
+                                    _string.concat:
+                                      - '*'
+                                      - _state: search.input
+                                      - '*'
+                                  path:
+                                    - title
+                                    - description
+                              - wildcard:
+                                  query:
+                                    _string.concat:
+                                      - '*'
+                                      - _state: search.input
+                                      - '*'
+                                  path:
+                                    - title
+                                    - description
+                                  allowAnalyzedField: true
+                          highlight:
+                            path:
+                              - title
+                              - description
+                      - $addFields:
+                          score:
+                            $meta: searchScore
+                          highlights:
+                            $meta: searchHighlights
+          blocks:
+            - id: search.input
+              type: TextInput
+              properties:
+                title: Type to search products
+                prefix: SearchOutlined
+              events:
+                onChange:
+                  - id: get_search # get search_products query for search.input
+                    type: Request
+                    params: search_products
+                  - id: apply_highlight # apply the highlight transformation to the request data.
+                    type: JsAction
+                    params:
+                      name: highlightText
+                      args:
+                        - _request: search_products
+                  - id: set_state # set the response of the apply_highlight action to state
+                    type: SetState
+                    params:
+                      found_products:
+                        _actions: apply_highlight.response
+            - id: product_results
+              type: Html
+              properties:
+                html:
+                  _nunjucks:
+                    template: |
+                      <ul>
+                        {% for item in found_products %}
+                          <li>{{ item.title | safe }} - {{ item.description | safe}}</li>
+                        {% endfor %}
+                      </ul>
+                    on:
+                      found_products:
+                        _state: found_products
+      ```
+      NOTE: For this example to work, you will need a `products` collection in your MongoDB database, populated with `{title: '...', description: '...'}` data objects including the following search index on the `products` collection:
+      ```json
+      {
+        "mappings": {
+          "dynamic": true,
+          "fields": {
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            }
+          }
+        }
+      }
+      ```

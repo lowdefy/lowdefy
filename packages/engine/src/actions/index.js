@@ -15,6 +15,7 @@
 */
 
 import CallMethod from './CallMethod';
+import JsAction from './JsAction';
 import Link from './Link';
 import Login from './Login';
 import Logout from './Logout';
@@ -28,12 +29,13 @@ import Validate from './Validate';
 
 export default {
   CallMethod,
+  JsAction,
   Link,
   Login,
   Logout,
   Message,
-  Reset,
   Request,
+  Reset,
   ScrollTo,
   SetGlobal,
   SetState,
