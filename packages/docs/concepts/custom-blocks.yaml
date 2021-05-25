@@ -24,7 +24,7 @@ _ref:
         type: Alert
         properties:
           message: |
-            SECURITY WARNING: Blocks executes JavaScript inside your Lowdefy app. Insecure code can expose your app or data. Make sure that you only load blocks from trusted a source.
+            SECURITY WARNING: Blocks execute JavaScript inside your Lowdefy app. Insecure code can expose your app or data. Make sure that you only load blocks from a trusted source.
           type: warning
       - id: md1
         type: MarkdownWithCode
@@ -35,9 +35,9 @@ _ref:
             The decoupling of blocks provides the considerable advantages:
             - Block developers can extend the UI capabilities of Lowdefy by building blocks for the community to utilize.
             - Lowdefy app developers can use community blocks to experiment and extend their apps.
-            - Lowdefy blocks are simple, most often stateless React components, thus blocks can be developed fast and can be used inside Lowdefy apps with ease.
+            - Lowdefy blocks are simple, most often stateless React components, thus blocks can be developed quickly and can be used inside Lowdefy apps with ease.
             - The build process is simple and fast since you only build the code for your block, and not the entire application.
-            - The Lowdefy engine takes care off the application state, the the block only has to concern itself which a easy application interface.
+            - The Lowdefy engine takes care off the application state, the the block only has to concern itself with a easy application interface.
 
             ## Using Custom Blocks
 
@@ -160,7 +160,7 @@ _ref:
 
             ## Deploying Custom Blocks
 
-            Both the block metadata and block React component need to be built by webpack and hosted on a publicly accessible static file server. Any Lowdefy app can then load and use the block. You also need to set the `remoteEntryUrl` in `webpack.prod.js` in order to build the correct block meta data, make sure URL is pointing to where your block is hosted.
+            Both the block metadata and block React component need to be built by webpack and hosted on a publicly accessible static file server. Any Lowdefy app can then load and use the block. You also need to set the `remoteEntryUrl` in `webpack.prod.js` in order to build the correct block meta data, make sure the URL is pointing to where your block is hosted.
 
             The easiest way to host your custom block is the deploy the custom block to [npm](https://www.npmjs.com/) and [Unpkg](https://unpkg.com/) will automatically host your block for you on their CDN. Although this option is easy, the cache settings for Unpkg can result in longer load times in some cases which can result in a unreliable user experience. It is thus best to deploy you blocks to your own static file servers.
 
@@ -168,7 +168,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Lists
-            previous_page_id: lists
+            previous_page_title: Custom Code
+            previous_page_id: custom-code
             next_page_title: User authentication
             next_page_id: users-introduction
