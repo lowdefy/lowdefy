@@ -44,8 +44,9 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: './src/shell/index.html',
+      minify: false,
       publicPath: '/',
+      template: './src/shell/index.html',
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production'),
