@@ -17,6 +17,7 @@
 import path from 'path';
 import express from 'express';
 import reload from 'reload';
+import { readFile } from '@lowdefy/node-utils';
 import findOpenPort from '../../utils/findOpenPort';
 
 async function getExpress({ context, gqlServer, options }) {
