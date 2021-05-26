@@ -61,7 +61,7 @@
               "type": "array",
               "description": "List of items to display",
               "items": {
-                "type": ["string", "number", "object"],
+                "type": "object",
                 "required": ["label"],
                 "properties": {
                   "label": {
