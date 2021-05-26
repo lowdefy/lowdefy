@@ -362,6 +362,11 @@
     </url>
 
     <url>
+      <loc>https://docs.lowdefy.com/Img</loc>
+      <lastmod>2021-05-26</lastmod>
+    </url>
+
+    <url>
       <loc>https://docs.lowdefy.com/Markdown</loc>
       <lastmod>2021-05-26</lastmod>
     </url>
@@ -478,6 +483,11 @@
 
     <url>
       <loc>https://docs.lowdefy.com/Tabs</loc>
+      <lastmod>2021-05-26</lastmod>
+    </url>
+
+    <url>
+      <loc>https://docs.lowdefy.com/Tooltip</loc>
       <lastmod>2021-05-26</lastmod>
     </url>
 

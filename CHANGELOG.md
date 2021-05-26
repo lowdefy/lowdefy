@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.16.1](https://github.com/lowdefy/lowdefy/compare/v3.16.0...v3.16.1) (2021-05-26)
+
+## Changes
+
+### Fixes
+
+- Add new block locations to build.
+- Fix Descriptions schema for docs generator.
+
+## Commits
+
+### Bug Fixes
+
+- **build:** Add default locations for new blocks. ([544d1e1](https://github.com/lowdefy/lowdefy/commit/544d1e1d8459fb03294eb692f12116fa9f3904a5))
+- **docs:** Fix Descriptions schema for docs generator. ([dbe1efe](https://github.com/lowdefy/lowdefy/commit/dbe1efec53930f5507abcebb54bc4d21e56ddc94))
+
 # [3.16.0](https://github.com/lowdefy/lowdefy/compare/v3.15.0...v3.16.0) (2021-05-26)
 
 ## Changes
