@@ -47,7 +47,7 @@
     "eslint-plugin-prettier": "3.4.0",
     "eslint-plugin-react": "7.23.2",
     "eslint-plugin-react-hooks": "4.2.0",
-    "lerna": "3.22.1",
+    "lerna": "4.0.0",
     "prettier": "2.3.0"
   },
   "resolutions": {
