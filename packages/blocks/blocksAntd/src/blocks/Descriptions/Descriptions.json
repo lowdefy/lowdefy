@@ -61,7 +61,7 @@
               "type": "array",
               "description": "List of items to display",
               "items": {
-                "type": "object",
+                "type": ["string", "number", "object"],
                 "required": ["label"],
                 "properties": {
                   "label": {
@@ -75,6 +75,13 @@
                   "span": {
                     "type": "integer",
                     "description": "Number of columns for this item to span."
+                  },
+                  "style": {
+                    "type": "object",
+                    "description": "Css style object to applied to item.",
+                    "docs": {
+                      "displayType": "yaml"
+                    }
                   }
                 }
               }
