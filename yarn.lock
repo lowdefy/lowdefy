@@ -3265,7 +3265,7 @@ __metadata:
     enzyme: 3.11.0
     html-webpack-plugin: 5.3.1
     identity-obj-proxy: 3.0.0
-    imports-loader: 2.0.0
+    imports-loader: 3.0.0
     jest: 26.6.3
     js-yaml: 4.1.0
     path-browserify: 1.0.1
@@ -11671,16 +11671,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"imports-loader@npm:2.0.0":
-  version: 2.0.0
-  resolution: "imports-loader@npm:2.0.0"
+"imports-loader@npm:3.0.0":
+  version: 3.0.0
+  resolution: "imports-loader@npm:3.0.0"
   dependencies:
-    loader-utils: ^2.0.0
     source-map: ^0.6.1
     strip-comments: ^2.0.1
   peerDependencies:
     webpack: ^5.0.0
-  checksum: 9d1c73008d0c23db0bd7975208c012e4c49bb3d186d9bb99dda558bef66856d12b78cb34c504ca9dd89e794d03b22a91b95dfb4887ae922580e343fb7f77f17b
+  checksum: 97dbe49fca827fe6936fec0083cf3518998b802ee77e3f00babfd4b48a65781b27f23a41dd4364edefe2b659dc2f9b12179df766c37315a29f37cf606062281b
   languageName: node
   linkType: hard
 
