@@ -53,7 +53,6 @@
     "express": "4.17.1",
     "fs-extra": "10.0.0",
     "graphql": "15.5.0",
-    "inquirer": "7.3.3",
     "js-yaml": "4.1.0",
     "mssql": "7.1.0",
     "mysql": "2.18.1",

@@ -11420,7 +11420,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"inquirer@npm:7.3.3, inquirer@npm:^7.3.3":
+"inquirer@npm:^7.3.3":
   version: 7.3.3
   resolution: "inquirer@npm:7.3.3"
   dependencies:
@@ -13590,7 +13590,6 @@ fsevents@^1.2.7:
     fs-extra: 10.0.0
     graphql: 15.5.0
     html-webpack-plugin: 5.3.1
-    inquirer: 7.3.3
     jest: 26.6.3
     js-yaml: 4.1.0
     mssql: 7.1.0

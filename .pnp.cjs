@@ -18883,7 +18883,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["fs-extra", "npm:10.0.0"],
             ["graphql", "npm:15.5.0"],
             ["html-webpack-plugin", "virtual:dddca670fd0b7758fb2e1b1a3e18ac7ebd1ecd06ecdd7acec2b78bccf1d35802cb22904bfbb233b16515a81f5cb819421786d20887823d98022b367036c1ad51#npm:5.3.1"],
-            ["inquirer", "npm:7.3.3"],
             ["jest", "npm:26.6.3"],
             ["js-yaml", "npm:4.1.0"],
             ["mssql", "npm:7.1.0"],
