@@ -50,8 +50,7 @@ test('primitive boolean multiple', () => {
 test('primitive none multiple', () => {
   expect(getValueIndex([null, 'c'], [0, null, true, 1, false, 'c'], true)).toEqual([1, 5]);
   expect(getValueIndex([undefined, false], [0, true, 1, false, undefined, 'c'], true)).toEqual([
-    4,
-    3,
+    4, 3,
   ]);
 });
 

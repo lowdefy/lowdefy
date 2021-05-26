@@ -32,14 +32,8 @@ async function verifyAccessToken({
   if (!authorization) return {};
   const tokenController = getController('token');
   try {
-    const {
-      iat,
-      exp,
-      aud,
-      iss,
-      lowdefy_access_token,
-      ...user
-    } = await tokenController.verifyAccessToken(authorization);
+    const { iat, exp, aud, iss, lowdefy_access_token, ...user } =
+      await tokenController.verifyAccessToken(authorization);
     const componentLoader = getLoader('component');
     const appConfig = await componentLoader.load('config');
     const rolesField = get(appConfig, 'auth.openId.rolesField');

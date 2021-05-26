@@ -27,8 +27,10 @@ import getSendTelemetry from './getSendTelemetry';
 // eslint-disable-next-line no-unused-vars
 import packageJson from '../../package.json';
 
-jest.mock('./getConfig', () => async () =>
-  Promise.resolve({ appId: 'appId', disableTelemetry: true, lowdefyVersion: 'lowdefyVersion' })
+jest.mock(
+  './getConfig',
+  () => async () =>
+    Promise.resolve({ appId: 'appId', disableTelemetry: true, lowdefyVersion: 'lowdefyVersion' })
 );
 jest.mock('./print', () => {
   const error = jest.fn();

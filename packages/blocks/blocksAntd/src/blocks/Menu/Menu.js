@@ -96,7 +96,8 @@ const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename 
           theme === 'dark' && {
             '& > li.ant-menu-item-selected': nestedColorsBg,
             '& > li.ant-menu-submenu > ul > li.ant-menu-item-selected': nestedColorsBg,
-            '& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected': nestedColorsBg,
+            '& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected':
+              nestedColorsBg,
           },
         properties.selectedColor &&
           theme === 'light' && {
@@ -106,7 +107,8 @@ const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename 
             '& > li.ant-menu-submenu:hover': nestedColors,
             '& > li.ant-menu-submenu > ul > li.ant-menu-item:hover': nestedColors,
             '& > li.ant-menu-submenu > ul > li.ant-menu-item-selected': nestedColorsBg,
-            '& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected': nestedColorsBg,
+            '& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected':
+              nestedColorsBg,
           },
         properties.style,
       ])}
@@ -171,13 +173,15 @@ const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename 
                   properties.selectedColor &&
                     theme === 'dark' && {
                       '& > ul > li.ant-menu-item-selected': nestedColorsBg,
-                      '& > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected': nestedColorsBg,
+                      '& > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected':
+                        nestedColorsBg,
                     },
                   properties.selectedColor &&
                     theme === 'light' && {
                       '& > ul > li.ant-menu-item-selected': nestedColorsBg,
                       '& > ul > li.ant-menu-item:hover': nestedColors,
-                      '& > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected': nestedColorsBg,
+                      '& > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected':
+                        nestedColorsBg,
                     },
                 ])}
                 key={link.pageId || link.id}
