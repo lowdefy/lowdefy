@@ -75,6 +75,7 @@ import TextArea from './blocks/TextArea/TextArea';
 import TextInput from './blocks/TextInput/TextInput';
 import Title from './blocks/Title/Title';
 import TitleInput from './blocks/TitleInput/TitleInput';
+import Tooltip from './blocks/Tooltip/Tooltip';
 import WeekSelector from './blocks/WeekSelector/WeekSelector';
 
 export {
@@ -139,6 +140,7 @@ export {
   TextInput,
   Title,
   TitleInput,
+  Tooltip,
   WeekSelector,
 };
 export default {
@@ -203,5 +205,6 @@ export default {
   TextInput,
   Title,
   TitleInput,
+  Tooltip,
   WeekSelector,
 };
