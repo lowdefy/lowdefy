@@ -3066,7 +3066,7 @@ __metadata:
     babel-loader: 8.2.2
     clean-webpack-plugin: 3.0.0
     create-emotion: 10.0.27
-    css-loader: 5.0.2
+    css-loader: 5.2.6
     enzyme: 3.11.0
     enzyme-to-json: 3.6.2
     html-webpack-plugin: 5.1.0
@@ -3110,7 +3110,7 @@ __metadata:
     classnames: 2.2.6
     clean-webpack-plugin: 3.0.0
     copy-webpack-plugin: 7.0.0
-    css-loader: 5.0.2
+    css-loader: 5.2.6
     enzyme: 3.11.0
     enzyme-to-json: 3.6.2
     html-webpack-plugin: 5.1.0
@@ -3153,7 +3153,7 @@ __metadata:
     buffer: 6.0.3
     clean-webpack-plugin: 3.0.0
     copy-webpack-plugin: 7.0.0
-    css-loader: 5.0.2
+    css-loader: 5.2.6
     dompurify: 2.2.8
     enzyme: 3.11.0
     html-webpack-plugin: 5.1.0
@@ -3192,7 +3192,7 @@ __metadata:
     buffer: 6.0.3
     clean-webpack-plugin: 3.0.0
     copy-webpack-plugin: 7.0.0
-    css-loader: 5.0.2
+    css-loader: 5.2.6
     enzyme: 3.11.0
     enzyme-to-json: 3.6.2
     html-webpack-plugin: 5.1.0
@@ -3232,7 +3232,7 @@ __metadata:
     buffer: 6.0.3
     clean-webpack-plugin: 3.0.0
     copy-webpack-plugin: 7.0.0
-    css-loader: 5.0.2
+    css-loader: 5.2.6
     echarts: 5.0.2
     echarts-for-react: 3.0.1
     html-webpack-plugin: 5.1.0
@@ -3270,7 +3270,7 @@ __metadata:
     buffer: 6.0.3
     clean-webpack-plugin: 3.0.0
     copy-webpack-plugin: 7.0.0
-    css-loader: 5.0.2
+    css-loader: 5.2.6
     dompurify: 2.2.8
     enzyme: 3.11.0
     html-webpack-plugin: 5.1.0
@@ -3466,7 +3466,7 @@ __metadata:
     babel-plugin-import: 1.13.3
     buffer: 6.0.3
     clean-webpack-plugin: 3.0.0
-    css-loader: 5.0.2
+    css-loader: 5.2.6
     html-webpack-plugin: 5.1.0
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
@@ -3573,7 +3573,7 @@ __metadata:
     "@lowdefy/layout": 3.15.0
     babel-loader: 8.2.2
     clean-webpack-plugin: 3.0.0
-    css-loader: 5.0.2
+    css-loader: 5.2.6
     graphql: 15.5.0
     graphql-type-json: 0.3.2
     html-webpack-plugin: 5.1.0
@@ -3606,7 +3606,7 @@ __metadata:
     babel-loader: 8.2.2
     clean-webpack-plugin: 3.0.0
     copy-webpack-plugin: 7.0.0
-    css-loader: 5.0.2
+    css-loader: 5.2.6
     dotenv: 8.2.0
     express: 4.17.1
     graphql: 15.5.0
@@ -3637,7 +3637,7 @@ __metadata:
     babel-loader: 8.2.2
     clean-webpack-plugin: 3.0.0
     copy-webpack-plugin: 7.0.0
-    css-loader: 5.0.2
+    css-loader: 5.2.6
     express: 4.17.1
     graphql: 15.5.0
     html-webpack-plugin: 5.1.0
@@ -3667,7 +3667,7 @@ __metadata:
     babel-loader: 8.2.2
     clean-webpack-plugin: 3.0.0
     copy-webpack-plugin: 7.0.0
-    css-loader: 5.0.2
+    css-loader: 5.2.6
     express: 4.17.1
     graphql: 15.5.0
     html-webpack-plugin: 5.1.0
@@ -7014,7 +7014,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"camelcase@npm:^6.0.0, camelcase@npm:^6.2.0":
+"camelcase@npm:^6.0.0":
   version: 6.2.0
   resolution: "camelcase@npm:6.2.0"
   checksum: 654700600a80cb1f06ab85b3e2fe80333f94b441884d40826becdac549774f51b0317c6dcb6040416df26241fa9481eb58d0c1659d4d6d5627dcd4259be61beb
@@ -8054,25 +8054,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"css-loader@npm:5.0.2":
-  version: 5.0.2
-  resolution: "css-loader@npm:5.0.2"
+"css-loader@npm:5.2.6":
+  version: 5.2.6
+  resolution: "css-loader@npm:5.2.6"
   dependencies:
-    camelcase: ^6.2.0
-    cssesc: ^3.0.0
     icss-utils: ^5.1.0
     loader-utils: ^2.0.0
-    postcss: ^8.2.4
+    postcss: ^8.2.15
     postcss-modules-extract-imports: ^3.0.0
     postcss-modules-local-by-default: ^4.0.0
     postcss-modules-scope: ^3.0.0
     postcss-modules-values: ^4.0.0
     postcss-value-parser: ^4.1.0
     schema-utils: ^3.0.0
-    semver: ^7.3.4
+    semver: ^7.3.5
   peerDependencies:
     webpack: ^4.27.0 || ^5.0.0
-  checksum: 522ec665a9f32e749b9014562bbbce5291fbc6f21c0ce630570fed809638d848a9f640ff90dbb90cbdb9f9d442b93b9fc90266f5edf485480fd33258706ccaa3
+  checksum: b9e5a32246d025803e1d4c71c6e19a4ab41b21d9c450ce9e03ffdeba4d60295b1c1d06aa89a54cf65b8527e47ad807e66ac15815a0dd5a2c70c8009ef7883cbd
   languageName: node
   linkType: hard
 
@@ -14071,7 +14069,7 @@ fsevents@^1.2.7:
     clean-webpack-plugin: 3.0.0
     commander: 7.1.0
     copy-webpack-plugin: 7.0.0
-    css-loader: 5.0.2
+    css-loader: 5.2.6
     decompress: 4.2.1
     decompress-targz: 4.1.1
     dotenv: 8.2.0
@@ -15182,12 +15180,12 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"nanoid@npm:^3.1.22":
-  version: 3.1.22
-  resolution: "nanoid@npm:3.1.22"
+"nanoid@npm:^3.1.23":
+  version: 3.1.23
+  resolution: "nanoid@npm:3.1.23"
   bin:
     nanoid: bin/nanoid.cjs
-  checksum: 6a38c799816de388cd67233a9fad6216e0ad2abda3ce5b34eb126afbef6905924507223dc65797e2bcbc513f9cd7e078ea7e69448d59f434a6206b491278ae24
+  checksum: e6dea1da5a593ffdc8cf2676d1d02f0626f07a54a5947a7a1f5ff1fd07901b2f53044c285e98b87eb367f016fde285fd8785d54a2dceeab9c3721f4e618f8326
   languageName: node
   linkType: hard
 
@@ -16827,14 +16825,14 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.2.4":
-  version: 8.2.13
-  resolution: "postcss@npm:8.2.13"
+"postcss@npm:^8.2.15":
+  version: 8.3.0
+  resolution: "postcss@npm:8.3.0"
   dependencies:
     colorette: ^1.2.2
-    nanoid: ^3.1.22
-    source-map: ^0.6.1
-  checksum: df64697cbd6d8e501eac2eaed501dc9a9c848538b4b51c53bfe7ed62a91736e97135d1fe22384b69af11bb2387a6cb483f5eecd14b19ca192ab5497ed5522124
+    nanoid: ^3.1.23
+    source-map-js: ^0.6.2
+  checksum: 438f9b9ea5a1ad66a36c944c77a55218ea0ac9d07ba63891854e8597b1a3b7710caa25d01f7783a6b8f4a3a8d52c295da422b92e546b37d6896909c19c7d4975
   languageName: node
   linkType: hard
 
@@ -19577,6 +19575,13 @@ fsevents@^1.2.7:
   version: 2.0.1
   resolution: "source-list-map@npm:2.0.1"
   checksum: d8d45f29987d00d995ccda308dcc78b710031a9958fdb5d26674d32220c952eb7a8562062638d91896628ae4eef30e1cd112a6a547563dfda0b013024c2a9bf7
+  languageName: node
+  linkType: hard
+
+"source-map-js@npm:^0.6.2":
+  version: 0.6.2
+  resolution: "source-map-js@npm:0.6.2"
+  checksum: 8e2f992cfbedb71286fa6f6e011e2fa756b7f4d944ea4b0f49e9ff6ea34ad0a17dc655f067fdddb32efa7b45000e8c59e47a2e875d91744c86a56329b5f58b32
   languageName: node
   linkType: hard
 
