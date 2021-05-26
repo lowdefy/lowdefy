@@ -4916,7 +4916,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["clean-webpack-plugin", "virtual:ddda021c4ec2814205b88952efdbda8713d3fa30b46a24862fe5d600e712ef1be0a5d4df3a64ffe02c3bb747dc199680767ec1cf2c2a81bf41ff06833a6ecd09#npm:3.0.0"],
             ["copy-webpack-plugin", "virtual:ddda021c4ec2814205b88952efdbda8713d3fa30b46a24862fe5d600e712ef1be0a5d4df3a64ffe02c3bb747dc199680767ec1cf2c2a81bf41ff06833a6ecd09#npm:7.0.0"],
             ["css-loader", "virtual:ddda021c4ec2814205b88952efdbda8713d3fa30b46a24862fe5d600e712ef1be0a5d4df3a64ffe02c3bb747dc199680767ec1cf2c2a81bf41ff06833a6ecd09#npm:5.2.6"],
-            ["echarts", "npm:5.0.2"],
+            ["echarts", "npm:5.1.1"],
             ["echarts-for-react", "virtual:ddda021c4ec2814205b88952efdbda8713d3fa30b46a24862fe5d600e712ef1be0a5d4df3a64ffe02c3bb747dc199680767ec1cf2c2a81bf41ff06833a6ecd09#npm:3.0.1"],
             ["html-webpack-plugin", "virtual:ddda021c4ec2814205b88952efdbda8713d3fa30b46a24862fe5d600e712ef1be0a5d4df3a64ffe02c3bb747dc199680767ec1cf2c2a81bf41ff06833a6ecd09#npm:5.3.1"],
             ["identity-obj-proxy", "npm:3.0.0"],
@@ -13209,12 +13209,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["echarts", [
-        ["npm:5.0.2", {
-          "packageLocation": "./.yarn/cache/echarts-npm-5.0.2-408940d253-1e0953adca.zip/node_modules/echarts/",
+        ["npm:5.1.1", {
+          "packageLocation": "./.yarn/cache/echarts-npm-5.1.1-2de867f16e-865706c577.zip/node_modules/echarts/",
           "packageDependencies": [
-            ["echarts", "npm:5.0.2"],
+            ["echarts", "npm:5.1.1"],
             ["tslib", "npm:2.0.3"],
-            ["zrender", "npm:5.0.4"]
+            ["zrender", "npm:5.1.0"]
           ],
           "linkType": "HARD",
         }]
@@ -13233,7 +13233,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["echarts-for-react", "virtual:ddda021c4ec2814205b88952efdbda8713d3fa30b46a24862fe5d600e712ef1be0a5d4df3a64ffe02c3bb747dc199680767ec1cf2c2a81bf41ff06833a6ecd09#npm:3.0.1"],
             ["@types/echarts", null],
             ["@types/react", null],
-            ["echarts", "npm:5.0.2"],
+            ["echarts", "npm:5.1.1"],
             ["fast-deep-equal", "npm:3.1.3"],
             ["react", "npm:17.0.2"],
             ["size-sensor", "npm:1.0.1"]
@@ -31008,10 +31008,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["zrender", [
-        ["npm:5.0.4", {
-          "packageLocation": "./.yarn/cache/zrender-npm-5.0.4-b886181d36-dc8cf5c1c9.zip/node_modules/zrender/",
+        ["npm:5.1.0", {
+          "packageLocation": "./.yarn/cache/zrender-npm-5.1.0-eb6f618bba-1d5b5b37a4.zip/node_modules/zrender/",
           "packageDependencies": [
-            ["zrender", "npm:5.0.4"],
+            ["zrender", "npm:5.1.0"],
             ["tslib", "npm:2.0.3"]
           ],
           "linkType": "HARD",

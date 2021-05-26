@@ -3223,7 +3223,7 @@ __metadata:
     clean-webpack-plugin: 3.0.0
     copy-webpack-plugin: 7.0.0
     css-loader: 5.2.6
-    echarts: 5.0.2
+    echarts: 5.1.1
     echarts-for-react: 3.0.1
     html-webpack-plugin: 5.3.1
     identity-obj-proxy: 3.0.0
@@ -8839,13 +8839,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"echarts@npm:5.0.2":
-  version: 5.0.2
-  resolution: "echarts@npm:5.0.2"
+"echarts@npm:5.1.1":
+  version: 5.1.1
+  resolution: "echarts@npm:5.1.1"
   dependencies:
     tslib: 2.0.3
-    zrender: 5.0.4
-  checksum: 1e0953adca47d3c8d954c5702d27bd39dd99047c5ccde8f08c709b63f39e11df015ab7b6253ee1336dd7797c6c2ba362c69e788d417aecf18fc8d0139764282a
+    zrender: 5.1.0
+  checksum: 865706c5778be444600f8bd9605b108006d82c63d9c84e49bdc4fb2d7336bf0a1c616cd017fab6fbfbf35d96e3f21febe63c378552015258e1f55cb5a118a66e
   languageName: node
   linkType: hard
 
@@ -22288,12 +22288,12 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"zrender@npm:5.0.4":
-  version: 5.0.4
-  resolution: "zrender@npm:5.0.4"
+"zrender@npm:5.1.0":
+  version: 5.1.0
+  resolution: "zrender@npm:5.1.0"
   dependencies:
     tslib: 2.0.3
-  checksum: dc8cf5c1c9cbecf4a06b65b0adfb2501798791c88ca5f75b3f2022160fcebdbb2e26e323abd27b31acba757215f992dc497c80aa2ff0ffbb3687499d9781225e
+  checksum: 1d5b5b37a4d9259787d958acf0b310de6f93e8e9bd689879008e7d501d57dbddd66c76e50c2680a2d162c9165fe8d8edd133c8912ff75bcccf474989518d75b7
   languageName: node
   linkType: hard
 
