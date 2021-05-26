@@ -1,0 +1,463 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mock render - areas.content: - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "arrowPointAtCenter": undefined,
+      "autoAdjustOverflow": undefined,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "color": undefined,
+      "defaultVisible": undefined,
+      "id": "areas.content:",
+      "mouseEnterDelay": undefined,
+      "mouseLeaveDelay": undefined,
+      "onVisibleChange": [Function],
+      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "placement": undefined,
+      "title": "Tooltip block",
+      "trigger": undefined,
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - default - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "arrowPointAtCenter": undefined,
+      "autoAdjustOverflow": undefined,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "color": undefined,
+      "defaultVisible": undefined,
+      "id": "default",
+      "mouseEnterDelay": undefined,
+      "mouseLeaveDelay": undefined,
+      "onVisibleChange": [Function],
+      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "placement": undefined,
+      "title": undefined,
+      "trigger": undefined,
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.arrowPointAtCenter: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "arrowPointAtCenter": true,
+      "autoAdjustOverflow": undefined,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "color": undefined,
+      "defaultVisible": undefined,
+      "id": "properties.arrowPointAtCenter: true",
+      "mouseEnterDelay": undefined,
+      "mouseLeaveDelay": undefined,
+      "onVisibleChange": [Function],
+      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "placement": "topLeft",
+      "title": "arrowPointAtCenter true",
+      "trigger": undefined,
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.autoAdjustOverflow: false - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "arrowPointAtCenter": undefined,
+      "autoAdjustOverflow": false,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "color": undefined,
+      "defaultVisible": undefined,
+      "id": "properties.autoAdjustOverflow: false",
+      "mouseEnterDelay": undefined,
+      "mouseLeaveDelay": undefined,
+      "onVisibleChange": [Function],
+      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "placement": "right",
+      "title": "autoAdjustOverflow false",
+      "trigger": undefined,
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.autoAdjustOverflow: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "arrowPointAtCenter": undefined,
+      "autoAdjustOverflow": true,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "color": undefined,
+      "defaultVisible": undefined,
+      "id": "properties.autoAdjustOverflow: true",
+      "mouseEnterDelay": undefined,
+      "mouseLeaveDelay": undefined,
+      "onVisibleChange": [Function],
+      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "placement": "right",
+      "title": "autoAdjustOverflow true",
+      "trigger": undefined,
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.color: blue - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "arrowPointAtCenter": undefined,
+      "autoAdjustOverflow": undefined,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "color": "blue",
+      "defaultVisible": undefined,
+      "id": "properties.color: blue",
+      "mouseEnterDelay": undefined,
+      "mouseLeaveDelay": undefined,
+      "onVisibleChange": [Function],
+      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "placement": undefined,
+      "title": "color blue",
+      "trigger": undefined,
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.defaultVisible: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "arrowPointAtCenter": undefined,
+      "autoAdjustOverflow": undefined,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "color": undefined,
+      "defaultVisible": true,
+      "id": "properties.defaultVisible: true",
+      "mouseEnterDelay": undefined,
+      "mouseLeaveDelay": undefined,
+      "onVisibleChange": [Function],
+      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "placement": undefined,
+      "title": "defaultVisible true",
+      "trigger": undefined,
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.mouseEnterDelay: 1 - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "arrowPointAtCenter": undefined,
+      "autoAdjustOverflow": undefined,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "color": undefined,
+      "defaultVisible": undefined,
+      "id": "properties.mouseEnterDelay: 1",
+      "mouseEnterDelay": 1,
+      "mouseLeaveDelay": undefined,
+      "onVisibleChange": [Function],
+      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "placement": undefined,
+      "title": "mouseEnterDelay 1",
+      "trigger": undefined,
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.mouseLeaveDelay: 1 - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "arrowPointAtCenter": undefined,
+      "autoAdjustOverflow": undefined,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "color": undefined,
+      "defaultVisible": undefined,
+      "id": "properties.mouseLeaveDelay: 1",
+      "mouseEnterDelay": undefined,
+      "mouseLeaveDelay": 1,
+      "onVisibleChange": [Function],
+      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "placement": undefined,
+      "title": "mouseLeaveDelay 1",
+      "trigger": undefined,
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.overlayStyle: border: 5px solid blue - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "arrowPointAtCenter": undefined,
+      "autoAdjustOverflow": undefined,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "color": undefined,
+      "defaultVisible": undefined,
+      "id": "properties.overlayStyle: border: 5px solid blue",
+      "mouseEnterDelay": undefined,
+      "mouseLeaveDelay": undefined,
+      "onVisibleChange": [Function],
+      "overlayStyle": "{\\"style\\":{\\"border\\":\\"5px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "placement": undefined,
+      "title": "Tooltip block",
+      "trigger": undefined,
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.placement - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "arrowPointAtCenter": undefined,
+      "autoAdjustOverflow": undefined,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "color": undefined,
+      "defaultVisible": undefined,
+      "id": "properties.placement",
+      "mouseEnterDelay": undefined,
+      "mouseLeaveDelay": undefined,
+      "onVisibleChange": [Function],
+      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "placement": "topLeft",
+      "title": "placement topLeft",
+      "trigger": undefined,
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.title - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "arrowPointAtCenter": undefined,
+      "autoAdjustOverflow": undefined,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "color": undefined,
+      "defaultVisible": undefined,
+      "id": "properties.title",
+      "mouseEnterDelay": undefined,
+      "mouseLeaveDelay": undefined,
+      "onVisibleChange": [Function],
+      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "placement": undefined,
+      "title": "Tooltip block",
+      "trigger": undefined,
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.trigger: click - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "arrowPointAtCenter": undefined,
+      "autoAdjustOverflow": undefined,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "color": undefined,
+      "defaultVisible": undefined,
+      "id": "properties.trigger: click",
+      "mouseEnterDelay": undefined,
+      "mouseLeaveDelay": undefined,
+      "onVisibleChange": [Function],
+      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "placement": undefined,
+      "title": "trigger click",
+      "trigger": "click",
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.zIndex: 100 - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "arrowPointAtCenter": undefined,
+      "autoAdjustOverflow": undefined,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "color": undefined,
+      "defaultVisible": undefined,
+      "id": "properties.zIndex: 100",
+      "mouseEnterDelay": undefined,
+      "mouseLeaveDelay": undefined,
+      "onVisibleChange": [Function],
+      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "placement": undefined,
+      "title": "zIndex 1000",
+      "trigger": undefined,
+      "zIndex": 1000,
+    },
+    Object {},
+  ],
+]
+`;
