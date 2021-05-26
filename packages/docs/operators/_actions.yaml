@@ -77,7 +77,7 @@ _ref:
       First register a custom JavaScript action: `getNormalizedEigenvector`
       ```yaml
       # file: lowdefy.yaml
-      lowdefy: '3.15.0'
+      lowdefy: '3.16.0'
       app:
         html:
           appendHead: |
@@ -97,7 +97,7 @@ _ref:
       events:
         onClick:
           - id: get_normalized_eigenvector
-            type: JsAction 
+            type: JsAction
             params:
               name: getNormalizedEigenvector
               args:

@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.16.0](https://github.com/lowdefy/lowdefy/compare/v3.15.0...v3.16.0) (2021-05-26)
+
+
+### Bug Fixes
+
+* **docs:** Add alerts for client or server operators. ([bf5c9be](https://github.com/lowdefy/lowdefy/commit/bf5c9be5e672703c7e31f7a5a7228e492dd73e9c))
+* **docs:** Add custom code concept. ([b0e63e1](https://github.com/lowdefy/lowdefy/commit/b0e63e1e2e7bcbdcec3c96692f694a8cd33e3b1d))
+* **docs:** Add discord link. ([0a24af7](https://github.com/lowdefy/lowdefy/commit/0a24af75ebb682abf51556cafcab1c584e01053e))
+* **docs:** Change to head.html. ([a7f20c4](https://github.com/lowdefy/lowdefy/commit/a7f20c4d238b520cf172934fd9df0c4f83d9157d))
+* **docs:** Create modules/index and load filterDefaultValue. ([e45e5f1](https://github.com/lowdefy/lowdefy/commit/e45e5f1f80ccc256d668e92813b9e5415eccf6b7))
+* **docs:** Document context initialization events for context blocks. ([a59bff5](https://github.com/lowdefy/lowdefy/commit/a59bff50f25b79d0468a4a6afc836f264c3263b2)), closes [#576](https://github.com/lowdefy/lowdefy/issues/576)
+* **docs:** Fix custom block event actions history description. ([eb49803](https://github.com/lowdefy/lowdefy/commit/eb49803a48719c38a7d4cb0ff7d0540c0da25d75))
+* **docs:** Import _js.filterDefaultValue as operator. ([a6e2fe0](https://github.com/lowdefy/lowdefy/commit/a6e2fe036160d49b6c1994aee68326f88fc7c564))
+* **docs:** Sitemap must be https. ([290b271](https://github.com/lowdefy/lowdefy/commit/290b271ec6b1cff3e89c3381ab741d913eea5688))
+* **docs:** Updates to custom code docs. ([a4be530](https://github.com/lowdefy/lowdefy/commit/a4be53077afd6dbcf42f41473695f77d00ccd1a5))
+* Rename appendHeader to appendHead. ([4e79736](https://github.com/lowdefy/lowdefy/commit/4e797363540bd0f5cfbe65928585012316b05a58))
+
+
+### Features
+
+* add Tooltip to docs ([e79a876](https://github.com/lowdefy/lowdefy/commit/e79a876a30585d90532680d7229ee921b18a4ac1))
+* **blockBasic:** Add Img block. ([c850cb3](https://github.com/lowdefy/lowdefy/commit/c850cb32061cf2a4c361aecc024fe699cc06c7e0))
+* **docs:** Add _actions operator. ([d5583d2](https://github.com/lowdefy/lowdefy/commit/d5583d200a809cc451d051a7ee16455f018beff9))
+* **docs:** Add JsAction. ([19fd956](https://github.com/lowdefy/lowdefy/commit/19fd9563c038a16aabebbf5c0e9b3324efa5b9d4))
+
+
+
+
+
 # [3.15.0](https://github.com/lowdefy/lowdefy/compare/v3.14.1...v3.15.0) (2021-05-11)
 
 

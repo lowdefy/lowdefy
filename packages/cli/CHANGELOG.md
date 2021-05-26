@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.16.0](https://github.com/lowdefy/lowdefy/compare/v3.15.0...v3.16.0) (2021-05-26)
+
+
+### Bug Fixes
+
+* Rename appendHeader to appendHead. ([4e79736](https://github.com/lowdefy/lowdefy/commit/4e797363540bd0f5cfbe65928585012316b05a58))
+* webpack config so that index.html is not minified. ([d9cbf8d](https://github.com/lowdefy/lowdefy/commit/d9cbf8df56f97116832a7038f026058f1d528dc6))
+* **servers:** Express function changed to async. ([6df571b](https://github.com/lowdefy/lowdefy/commit/6df571b0475d946e6864c2824af36450b70a7fa0))
+
+
+### Features
+
+* Include contenthash in webpack output. ([dd2adbb](https://github.com/lowdefy/lowdefy/commit/dd2adbbaa195899c6986ca99934e19c4f6aeca21)), closes [#575](https://github.com/lowdefy/lowdefy/issues/575)
+* **cli:** Add appendHead, appendBody and custom js scripts. ([0f74833](https://github.com/lowdefy/lowdefy/commit/0f74833914917e7fb5d2d51177e2010b698d1019))
+
+
+
+
+
 # [3.15.0](https://github.com/lowdefy/lowdefy/compare/v3.14.1...v3.15.0) (2021-05-11)
 
 

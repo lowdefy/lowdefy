@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.16.0](https://github.com/lowdefy/lowdefy/compare/v3.15.0...v3.16.0) (2021-05-26)
+
+
+### Bug Fixes
+
+* **operators:** Update tests for _js and _actions. ([022893b](https://github.com/lowdefy/lowdefy/commit/022893bbca2dbfdbd8542dc3436cf5d960522f3c))
+
+
+### Features
+
+* **operators:** Custom _js and _actions operators. ([815f6a4](https://github.com/lowdefy/lowdefy/commit/815f6a452fcbe38ce21361393d2a0c9a74ff7058))
+
+
+
+
+
 # [3.15.0](https://github.com/lowdefy/lowdefy/compare/v3.14.1...v3.15.0) (2021-05-11)
 
 

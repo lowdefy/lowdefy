@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.16.0](https://github.com/lowdefy/lowdefy/compare/v3.15.0...v3.16.0) (2021-05-26)
+
+
+### Bug Fixes
+
+* webpack config so that index.html is not minified. ([d9cbf8d](https://github.com/lowdefy/lowdefy/commit/d9cbf8df56f97116832a7038f026058f1d528dc6))
+
+
+### Features
+
+* Include contenthash in webpack output. ([dd2adbb](https://github.com/lowdefy/lowdefy/commit/dd2adbbaa195899c6986ca99934e19c4f6aeca21)), closes [#575](https://github.com/lowdefy/lowdefy/issues/575)
+* **server:** Add head and body load scripts. ([ad195b4](https://github.com/lowdefy/lowdefy/commit/ad195b409b1780ac1bb3e194de5c106dbdb0b2b3))
+* **servers:** Load header and body html on server. ([a5b070f](https://github.com/lowdefy/lowdefy/commit/a5b070f03b1d69991e9bfa7a4ccd571972d344df))
+
+
+
+
+
 # [3.15.0](https://github.com/lowdefy/lowdefy/compare/v3.14.1...v3.15.0) (2021-05-11)
 
 **Note:** Version bump only for package @lowdefy/server-netlify

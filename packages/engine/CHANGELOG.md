@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.16.0](https://github.com/lowdefy/lowdefy/compare/v3.15.0...v3.16.0) (2021-05-26)
+
+
+### Bug Fixes
+
+* **engine:** Add tests for JsAction. ([2113ae5](https://github.com/lowdefy/lowdefy/commit/2113ae5c74d1143e1305b858b555cd5ff35faa59))
+* **engine:** Modify action response object. ([94db71d](https://github.com/lowdefy/lowdefy/commit/94db71d2ace301c930f775de44d9908eb9c63576))
+* **engine:** Update tests for new action responses structure. ([73c84e6](https://github.com/lowdefy/lowdefy/commit/73c84e6fdc75f4aca072f6843fea17eee87b02eb))
+
+
+### Features
+
+* **engine:** Add JsAction. ([005155a](https://github.com/lowdefy/lowdefy/commit/005155aecf97774b37611eaa18c6aa854d6a92d3))
+
+
+
+
+
 # [3.15.0](https://github.com/lowdefy/lowdefy/compare/v3.14.1...v3.15.0) (2021-05-11)
 
 **Note:** Version bump only for package @lowdefy/engine

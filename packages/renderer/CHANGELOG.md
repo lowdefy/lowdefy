@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.16.0](https://github.com/lowdefy/lowdefy/compare/v3.15.0...v3.16.0) (2021-05-26)
+
+
+### Bug Fixes
+
+* **renderer:** Fix deprication build warning. ([18baf4a](https://github.com/lowdefy/lowdefy/commit/18baf4a421741c4c8f3034eea4fcf697a9c15023))
+* **renderer:** Load and remove lowdefy.imports. ([e6fccbc](https://github.com/lowdefy/lowdefy/commit/e6fccbc4f9d7a9ec19e746b33698d86d0a2cab58))
+* **renderer:** Wait for login action on expired token refresh. ([7219cdd](https://github.com/lowdefy/lowdefy/commit/7219cddb40f047e539c723aa2a19ea3c2a2bebe3))
+
+
+### Features
+
+* **renderer:** Add customActions, jsOperators, registerCustomAction and registerJsOperator to lowdefy object. ([95f853d](https://github.com/lowdefy/lowdefy/commit/95f853da4b8f4308a9751a191b9519e8d69e8ace))
+
+
+
+
+
 # [3.15.0](https://github.com/lowdefy/lowdefy/compare/v3.14.1...v3.15.0) (2021-05-11)
 
 

@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.16.0](https://github.com/lowdefy/lowdefy/compare/v3.15.0...v3.16.0) (2021-05-26)
+
+
+### Bug Fixes
+
+* fix indentation level op events in schema ([4426888](https://github.com/lowdefy/lowdefy/commit/44268886182657a95b7b1f4c1f2e7aa0ec63bcd1))
+* **blocksAntd:** Add new-line support to Descriptions, closes [#581](https://github.com/lowdefy/lowdefy/issues/581) ([41bb9ee](https://github.com/lowdefy/lowdefy/commit/41bb9eee438b60d75efe00a433beb99ad98e78b8))
+* **blocksAntd:** Fix DateTimeSelector to work for local or utc time, closes [#580](https://github.com/lowdefy/lowdefy/issues/580)  # ([30a4764](https://github.com/lowdefy/lowdefy/commit/30a476460859f8b72198bad17ef892ef634cb24d))
+* **blocksAntd:** Fix srcSet and media change width. ([4fb991a](https://github.com/lowdefy/lowdefy/commit/4fb991af415ab66dcdee59d233bf43d4c271f99c))
+* **docs:** Document context initialization events for context blocks. ([a59bff5](https://github.com/lowdefy/lowdefy/commit/a59bff50f25b79d0468a4a6afc836f264c3263b2)), closes [#576](https://github.com/lowdefy/lowdefy/issues/576)
+* Fix Tabs blocks events in schema. ([70a13af](https://github.com/lowdefy/lowdefy/commit/70a13af94d90c6c40276f77fefea8708e7040451)), closes [#576](https://github.com/lowdefy/lowdefy/issues/576)
+* **blocksAntd:** Rename selectGMT to selectUTC for DateTimeSelector. ([e817fb1](https://github.com/lowdefy/lowdefy/commit/e817fb1900a66c38487632500302040acd206a46))
+
+
+### Features
+
+* new Tooltip block and tests ([8717767](https://github.com/lowdefy/lowdefy/commit/871776745a3a4beb60622bb5b3e5aca0a1454a94))
+
+
+
+
+
 # [3.15.0](https://github.com/lowdefy/lowdefy/compare/v3.14.1...v3.15.0) (2021-05-11)
 
 

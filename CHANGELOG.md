@@ -3,6 +3,86 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.16.0](https://github.com/lowdefy/lowdefy/compare/v3.15.0...v3.16.0) (2021-05-26)
+
+## Changes
+
+### BREAKING
+
+- Rename selectGMT to selectUTC for DateTimeSelector.
+
+### Depreciated
+
+- Depreciate \_js.evaluate and \_js.function operators. Replaced with the new \_js operator. See [https://docs.lowdefy.com/\_js](https://docs.lowdefy.com/_js)
+
+### Features
+
+- Add support for custom HTML before the closing head and body tags of the app.
+- Add the JsAction action, that can run custom JavaScript.
+- Javascript operators are now implemented differently. See [https://docs.lowdefy.com/custom-code](https://docs.lowdefy.com/custom-code)
+- Add Tooltip and Img blocks.
+
+### Fixes
+
+- Fix docs sitemap.
+- Add new-line support to Descriptions, closes [#581](https://github.com/lowdefy/lowdefy/issues/581)
+- Fix DateTimeSelector to work for local or utc time, closes [#580](https://github.com/lowdefy/lowdefy/issues/580)
+- Document client and server environment operators.
+- Document context initialization events for context blocks.
+- SendGridMailSend to handle arrays, closes [#582](https://github.com/lowdefy/lowdefy/issues/582)
+- Document Tabs block events, closes [#576](https://github.com/lowdefy/lowdefy/issues/576).
+- Wait for login action on expired token refresh.
+- Fixed cached scripts on app update by including contenthash in webpack output, closes [#575](https://github.com/lowdefy/lowdefy/issues/575).
+
+## Commits
+
+### Bug Fixes
+
+- **docs:** Sitemap must be https. ([290b271](https://github.com/lowdefy/lowdefy/commit/290b271ec6b1cff3e89c3381ab741d913eea5688))
+- fix indentation level op events in schema ([4426888](https://github.com/lowdefy/lowdefy/commit/44268886182657a95b7b1f4c1f2e7aa0ec63bcd1))
+- **blocksAntd:** Add new-line support to Descriptions, closes [#581](https://github.com/lowdefy/lowdefy/issues/581) ([41bb9ee](https://github.com/lowdefy/lowdefy/commit/41bb9eee438b60d75efe00a433beb99ad98e78b8))
+- **blocksAntd:** Fix DateTimeSelector to work for local or utc time, closes [#580](https://github.com/lowdefy/lowdefy/issues/580) # ([30a4764](https://github.com/lowdefy/lowdefy/commit/30a476460859f8b72198bad17ef892ef634cb24d))
+- **blocksAntd:** Fix srcSet and media change width. ([4fb991a](https://github.com/lowdefy/lowdefy/commit/4fb991af415ab66dcdee59d233bf43d4c271f99c))
+- **blocksAntd:** Rename selectGMT to selectUTC for DateTimeSelector. ([e817fb1](https://github.com/lowdefy/lowdefy/commit/e817fb1900a66c38487632500302040acd206a46))
+- **build:** Do not throw on validate app config. ([96904a7](https://github.com/lowdefy/lowdefy/commit/96904a7783695f2b60b20be9488ffcb8dde79930))
+- **docs:** Add alerts for client or server operators. ([bf5c9be](https://github.com/lowdefy/lowdefy/commit/bf5c9be5e672703c7e31f7a5a7228e492dd73e9c))
+- **docs:** Add custom code concept. ([b0e63e1](https://github.com/lowdefy/lowdefy/commit/b0e63e1e2e7bcbdcec3c96692f694a8cd33e3b1d))
+- **docs:** Add discord link. ([0a24af7](https://github.com/lowdefy/lowdefy/commit/0a24af75ebb682abf51556cafcab1c584e01053e))
+- **docs:** Document context initialization events for context blocks. ([a59bff5](https://github.com/lowdefy/lowdefy/commit/a59bff50f25b79d0468a4a6afc836f264c3263b2)), closes [#576](https://github.com/lowdefy/lowdefy/issues/576)
+- **engine:** Add tests for JsAction. ([2113ae5](https://github.com/lowdefy/lowdefy/commit/2113ae5c74d1143e1305b858b555cd5ff35faa59))
+- **engine:** Update tests for new action responses structure. ([73c84e6](https://github.com/lowdefy/lowdefy/commit/73c84e6fdc75f4aca072f6843fea17eee87b02eb))
+- **graphql:** SendGridMailSend to handle arrays, closes [#582](https://github.com/lowdefy/lowdefy/issues/582) ([dc0ef6c](https://github.com/lowdefy/lowdefy/commit/dc0ef6c521d1b4e5b2c498e2932cc2c2d83f5eb1))
+- Fix Tabs blocks events in schema. ([70a13af](https://github.com/lowdefy/lowdefy/commit/70a13af94d90c6c40276f77fefea8708e7040451)), closes [#576](https://github.com/lowdefy/lowdefy/issues/576)
+- webpack config so that index.html is not minified. ([d9cbf8d](https://github.com/lowdefy/lowdefy/commit/d9cbf8df56f97116832a7038f026058f1d528dc6))
+- **docs:** Change to head.html. ([a7f20c4](https://github.com/lowdefy/lowdefy/commit/a7f20c4d238b520cf172934fd9df0c4f83d9157d))
+- **docs:** Create modules/index and load filterDefaultValue. ([e45e5f1](https://github.com/lowdefy/lowdefy/commit/e45e5f1f80ccc256d668e92813b9e5415eccf6b7))
+- **docs:** Fix custom block event actions history description. ([eb49803](https://github.com/lowdefy/lowdefy/commit/eb49803a48719c38a7d4cb0ff7d0540c0da25d75))
+- **docs:** Import \_js.filterDefaultValue as operator. ([a6e2fe0](https://github.com/lowdefy/lowdefy/commit/a6e2fe036160d49b6c1994aee68326f88fc7c564))
+- **docs:** Updates to custom code docs. ([a4be530](https://github.com/lowdefy/lowdefy/commit/a4be53077afd6dbcf42f41473695f77d00ccd1a5))
+- **engine:** Modify action response object. ([94db71d](https://github.com/lowdefy/lowdefy/commit/94db71d2ace301c930f775de44d9908eb9c63576))
+- **operators:** Update tests for \_js and \_actions. ([022893b](https://github.com/lowdefy/lowdefy/commit/022893bbca2dbfdbd8542dc3436cf5d960522f3c))
+- **renderer:** Fix deprication build warning. ([18baf4a](https://github.com/lowdefy/lowdefy/commit/18baf4a421741c4c8f3034eea4fcf697a9c15023))
+- **renderer:** Load and remove lowdefy.imports. ([e6fccbc](https://github.com/lowdefy/lowdefy/commit/e6fccbc4f9d7a9ec19e746b33698d86d0a2cab58))
+- **renderer:** Wait for login action on expired token refresh. ([7219cdd](https://github.com/lowdefy/lowdefy/commit/7219cddb40f047e539c723aa2a19ea3c2a2bebe3))
+- Rename appendHeader to appendHead. ([4e79736](https://github.com/lowdefy/lowdefy/commit/4e797363540bd0f5cfbe65928585012316b05a58))
+- **servers:** Express function changed to async. ([6df571b](https://github.com/lowdefy/lowdefy/commit/6df571b0475d946e6864c2824af36450b70a7fa0))
+
+### Features
+
+- add Tooltip to docs ([e79a876](https://github.com/lowdefy/lowdefy/commit/e79a876a30585d90532680d7229ee921b18a4ac1))
+- new Tooltip block and tests ([8717767](https://github.com/lowdefy/lowdefy/commit/871776745a3a4beb60622bb5b3e5aca0a1454a94))
+- **blockBasic:** Add Img block. ([c850cb3](https://github.com/lowdefy/lowdefy/commit/c850cb32061cf2a4c361aecc024fe699cc06c7e0))
+- Include contenthash in webpack output. ([dd2adbb](https://github.com/lowdefy/lowdefy/commit/dd2adbbaa195899c6986ca99934e19c4f6aeca21)), closes [#575](https://github.com/lowdefy/lowdefy/issues/575)
+- **build:** Build app config. ([6575bc7](https://github.com/lowdefy/lowdefy/commit/6575bc78bc37a1b33f301364a5daee4bab324884))
+- **cli:** Add appendHead, appendBody and custom js scripts. ([0f74833](https://github.com/lowdefy/lowdefy/commit/0f74833914917e7fb5d2d51177e2010b698d1019))
+- **docs:** Add \_actions operator. ([d5583d2](https://github.com/lowdefy/lowdefy/commit/d5583d200a809cc451d051a7ee16455f018beff9))
+- **docs:** Add JsAction. ([19fd956](https://github.com/lowdefy/lowdefy/commit/19fd9563c038a16aabebbf5c0e9b3324efa5b9d4))
+- **engine:** Add JsAction. ([005155a](https://github.com/lowdefy/lowdefy/commit/005155aecf97774b37611eaa18c6aa854d6a92d3))
+- **operators:** Custom \_js and \_actions operators. ([815f6a4](https://github.com/lowdefy/lowdefy/commit/815f6a452fcbe38ce21361393d2a0c9a74ff7058))
+- **renderer:** Add customActions, jsOperators, registerCustomAction and registerJsOperator to lowdefy object. ([95f853d](https://github.com/lowdefy/lowdefy/commit/95f853da4b8f4308a9751a191b9519e8d69e8ace))
+- **server:** Add head and body load scripts. ([ad195b4](https://github.com/lowdefy/lowdefy/commit/ad195b409b1780ac1bb3e194de5c106dbdb0b2b3))
+- **servers:** Load header and body html on server. ([a5b070f](https://github.com/lowdefy/lowdefy/commit/a5b070f03b1d69991e9bfa7a4ccd571972d344df))
+
 # [3.15.0](https://github.com/lowdefy/lowdefy/compare/v3.14.1...v3.15.0) (2021-05-11)
 
 ## Changes
