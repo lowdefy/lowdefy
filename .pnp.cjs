@@ -5090,7 +5090,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ajv-errors", "virtual:09ba37edd9db25b7821b7d2b2d2055c41a6ed7b7590f4f31cb08f11ca472be4a006b49e750b63bf1615697d9f5fdbcda49d5e649e3491c0b6490a9dc0dbedfa2#npm:1.0.1"],
             ["apollo-server", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:2.24.1"],
             ["apollo-server-testing", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:2.24.1"],
-            ["aws-sdk", "npm:2.845.0"],
+            ["aws-sdk", "npm:2.914.0"],
             ["axios", "npm:0.21.1"],
             ["babel-jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:26.6.3"],
             ["babel-loader", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:8.2.2"],
@@ -8981,10 +8981,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["aws-sdk", [
-        ["npm:2.845.0", {
-          "packageLocation": "./.yarn/cache/aws-sdk-npm-2.845.0-58e9f2ed57-901c03d30f.zip/node_modules/aws-sdk/",
+        ["npm:2.914.0", {
+          "packageLocation": "./.yarn/unplugged/aws-sdk-npm-2.914.0-5b0cd82ac0/node_modules/aws-sdk/",
           "packageDependencies": [
-            ["aws-sdk", "npm:2.845.0"],
+            ["aws-sdk", "npm:2.914.0"],
             ["buffer", "npm:4.9.2"],
             ["events", "npm:1.1.1"],
             ["ieee754", "npm:1.1.13"],
