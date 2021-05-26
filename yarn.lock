@@ -3388,7 +3388,7 @@ __metadata:
     graphql-type-json: 0.3.2
     jest: 26.6.3
     jsonwebtoken: 8.5.1
-    knex: 0.95.4
+    knex: 0.95.6
     mingo: 4.1.2
     moment: 2.29.1
     mongodb: 3.6.5
@@ -13522,9 +13522,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"knex@npm:0.95.4":
-  version: 0.95.4
-  resolution: "knex@npm:0.95.4"
+"knex@npm:0.95.6":
+  version: 0.95.6
+  resolution: "knex@npm:0.95.6"
   dependencies:
     colorette: 1.2.1
     commander: ^7.1.0
@@ -13539,12 +13539,6 @@ fsevents@^1.2.7:
     resolve-from: ^5.0.0
     tarn: ^3.0.1
     tildify: 2.0.0
-  peerDependencies:
-    mysql: ^2.18.1
-    mysql2: ^2.2.5
-    pg: ^8.5.1
-    sqlite3: ^5.0.0
-    tedious: ^11.0.5
   peerDependenciesMeta:
     mysql:
       optional: true
@@ -13558,7 +13552,7 @@ fsevents@^1.2.7:
       optional: true
   bin:
     knex: bin/cli.js
-  checksum: a9805bcfc105384affb057c17ed5dc55b765c5736f20af2421d583ee9aa036f23c031af291d8cda3e4830dc1f952c1b884d33a46473fa96ed2dfd73711ab853c
+  checksum: c4d8cae48acae446fae25f6f7a2af0553bbab5817e747d2e14b67e5dccd6f044fbdafe9a603ebc8844a53300866a9c6ef290440f5a82ae016652c789a21a755c
   languageName: node
   linkType: hard
 

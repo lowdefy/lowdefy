@@ -6189,7 +6189,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql-type-json", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:0.3.2"],
             ["jest", "npm:26.6.3"],
             ["jsonwebtoken", "npm:8.5.1"],
-            ["knex", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:0.95.4"],
+            ["knex", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:0.95.6"],
             ["mingo", "npm:4.1.2"],
             ["moment", "npm:2.29.1"],
             ["mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:3.6.5"],
@@ -13721,18 +13721,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["virtual:49eb6d0a690e7a98d60d22deab3735fedc99d9223bcbc8d98ba211ef546dbae4f282605ea1248dcc3b32eabcdbd7328373edff0239501433dd26d25119e83a44#npm:4.3.1", {
-          "packageLocation": "./.yarn/$$virtual/debug-virtual-2911ce74e6/0/cache/debug-npm-4.3.1-22e08d605e-0d41ba5177.zip/node_modules/debug/",
-          "packageDependencies": [
-            ["debug", "virtual:49eb6d0a690e7a98d60d22deab3735fedc99d9223bcbc8d98ba211ef546dbae4f282605ea1248dcc3b32eabcdbd7328373edff0239501433dd26d25119e83a44#npm:4.3.1"],
-            ["ms", "npm:2.1.2"],
-            ["supports-color", null]
-          ],
-          "packagePeers": [
-            "supports-color"
-          ],
-          "linkType": "HARD",
-        }],
         ["virtual:6618ab6046111bda0b9a733e34fec5329265b155b4408a2345f36333ccbe1a86dfc9efc447e5134e4156dde98ed737f5efbe42b5378f22c09197bf46e2cdab17#npm:3.1.0", {
           "packageLocation": "./.yarn/$$virtual/debug-virtual-77b911398e/0/cache/debug-npm-3.1.0-9f0accb99b-1295acd5e0.zip/node_modules/debug/",
           "packageDependencies": [
@@ -13775,6 +13763,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["debug", "virtual:8e280f245668d9d72a41bc64344e0f434299c24a59b0040fcefb971a36d289882a8e7655625df4538b70b701d73c7012f8ef00ed6746e4d4ee9509f353a23a1d#npm:4.3.2"],
             ["ms", "npm:2.1.2"],
             ["supports-color", "npm:6.1.0"]
+          ],
+          "packagePeers": [
+            "supports-color"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:d3e430e1d2f236270b03b13047f8bac78f666c62289af219a89d1a7c1ac186e46323c92b8cf07ea04c313eeda932b0b49659a821e1b674d1d4631ec65245eb0c#npm:4.3.1", {
+          "packageLocation": "./.yarn/$$virtual/debug-virtual-636659ec62/0/cache/debug-npm-4.3.1-22e08d605e-0d41ba5177.zip/node_modules/debug/",
+          "packageDependencies": [
+            ["debug", "virtual:d3e430e1d2f236270b03b13047f8bac78f666c62289af219a89d1a7c1ac186e46323c92b8cf07ea04c313eeda932b0b49659a821e1b674d1d4631ec65245eb0c#npm:4.3.1"],
+            ["ms", "npm:2.1.2"],
+            ["supports-color", null]
           ],
           "packagePeers": [
             "supports-color"
@@ -19944,25 +19944,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["knex", [
-        ["npm:0.95.4", {
-          "packageLocation": "./.yarn/cache/knex-npm-0.95.4-6b4565ac8d-a9805bcfc1.zip/node_modules/knex/",
+        ["npm:0.95.6", {
+          "packageLocation": "./.yarn/cache/knex-npm-0.95.6-9e60712dde-c4d8cae48a.zip/node_modules/knex/",
           "packageDependencies": [
-            ["knex", "npm:0.95.4"]
+            ["knex", "npm:0.95.6"]
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:0.95.4", {
-          "packageLocation": "./.yarn/$$virtual/knex-virtual-49eb6d0a69/0/cache/knex-npm-0.95.4-6b4565ac8d-a9805bcfc1.zip/node_modules/knex/",
+        ["virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:0.95.6", {
+          "packageLocation": "./.yarn/$$virtual/knex-virtual-d3e430e1d2/0/cache/knex-npm-0.95.6-9e60712dde-c4d8cae48a.zip/node_modules/knex/",
           "packageDependencies": [
-            ["knex", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:0.95.4"],
-            ["@types/mysql", null],
-            ["@types/mysql2", null],
-            ["@types/pg", null],
-            ["@types/sqlite3", null],
-            ["@types/tedious", null],
+            ["knex", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:0.95.6"],
             ["colorette", "npm:1.2.1"],
             ["commander", "npm:7.2.0"],
-            ["debug", "virtual:49eb6d0a690e7a98d60d22deab3735fedc99d9223bcbc8d98ba211ef546dbae4f282605ea1248dcc3b32eabcdbd7328373edff0239501433dd26d25119e83a44#npm:4.3.1"],
+            ["debug", "virtual:d3e430e1d2f236270b03b13047f8bac78f666c62289af219a89d1a7c1ac186e46323c92b8cf07ea04c313eeda932b0b49659a821e1b674d1d4631ec65245eb0c#npm:4.3.1"],
             ["escalade", "npm:3.1.1"],
             ["esm", "npm:3.2.25"],
             ["getopts", "npm:2.2.5"],
@@ -19980,11 +19975,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["tildify", "npm:2.0.0"]
           ],
           "packagePeers": [
-            "@types/mysql2",
-            "@types/mysql",
-            "@types/pg",
-            "@types/sqlite3",
-            "@types/tedious",
             "mysql2",
             "mysql",
             "pg",
