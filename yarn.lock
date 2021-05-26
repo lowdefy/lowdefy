@@ -3417,7 +3417,7 @@ __metadata:
     mssql: 7.1.0
     mysql: 2.18.1
     openid-client: 4.7.4
-    pg: 8.5.1
+    pg: 8.6.0
     saslprep: 1.0.3
     sqlite3: 5.0.2
     webpack: 5.37.1
@@ -13981,7 +13981,7 @@ fsevents@^1.2.7:
     mysql: 2.18.1
     opener: 1.5.2
     ora: 5.4.0
-    pg: 8.5.1
+    pg: 8.6.0
     react: 17.0.2
     react-dom: 17.0.2
     reload: 3.1.1
@@ -16483,7 +16483,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"pg-connection-string@npm:^2.4.0":
+"pg-connection-string@npm:^2.5.0":
   version: 2.5.0
   resolution: "pg-connection-string@npm:2.5.0"
   checksum: 504f288e5e361a903f8b426efe9d00fc289e1d55e16fcca8e4f70f89c29e3429b60291bdec65636ca9c56496319bea878eb32ea60a0d4949ef6df3d748250818
@@ -16497,7 +16497,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"pg-pool@npm:^3.2.2":
+"pg-pool@npm:^3.3.0":
   version: 3.3.0
   resolution: "pg-pool@npm:3.3.0"
   peerDependencies:
@@ -16506,7 +16506,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"pg-protocol@npm:^1.4.0":
+"pg-protocol@npm:^1.5.0":
   version: 1.5.0
   resolution: "pg-protocol@npm:1.5.0"
   checksum: 270e72d38aaed3ee23ec35802899c707b91e176f94373ce571c45b604ee9c5fbe60f629bec0a05bb607d23d0c016c23e4e318ec3c391f83467f705284190970c
@@ -16526,15 +16526,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"pg@npm:8.5.1":
-  version: 8.5.1
-  resolution: "pg@npm:8.5.1"
+"pg@npm:8.6.0":
+  version: 8.6.0
+  resolution: "pg@npm:8.6.0"
   dependencies:
     buffer-writer: 2.0.0
     packet-reader: 1.0.0
-    pg-connection-string: ^2.4.0
-    pg-pool: ^3.2.2
-    pg-protocol: ^1.4.0
+    pg-connection-string: ^2.5.0
+    pg-pool: ^3.3.0
+    pg-protocol: ^1.5.0
     pg-types: ^2.1.0
     pgpass: 1.x
   peerDependencies:
@@ -16542,7 +16542,7 @@ fsevents@^1.2.7:
   peerDependenciesMeta:
     pg-native:
       optional: true
-  checksum: b8eed3cd3831ea8cce051fcc58a56f39e7c24545c18466c89e64e4f90c8c2d386e3c51c33e22b0d2e39bf51156bdd4d5ade16c6e0edad1fbff97bd89f2bd86f2
+  checksum: 06bec69854081161b3563f2bc0a3b09a20ebbff87e137914816de0970d70a0a4b282917434783f99841ec650a0650c0919fade96cb25e636d1b4a0cebb672922
   languageName: node
   linkType: hard
 
