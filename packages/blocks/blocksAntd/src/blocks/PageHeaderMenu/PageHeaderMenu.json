@@ -210,33 +210,49 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "onToggleDrawer": {
+        "onBreadcrumbClick": {
           "type": "array",
-          "description": "Trigger action when mobile menu drawer is toggled."
+          "description": "Trigger action when a breadcrumb item is clicked."
         },
         "onClose": {
           "type": "array",
           "description": "Trigger action when mobile menu is closed."
         },
-        "onOpen": {
+        "onEnter": {
           "type": "array",
-          "description": "Trigger action when mobile menu is open."
+          "description": "Trigger actions every time a context is mounted and keep the page in loading until all actions have finished."
         },
-        "onMenuItemSelect": {
+        "onEnterAsync": {
           "type": "array",
-          "description": "Trigger action when menu item is selected."
+          "description": "Trigger actions every time a context is mounted and do not keep the page in loading."
+        },
+        "onInit": {
+          "type": "array",
+          "description": "Trigger actions the first time a context is mounted and keep the page in loading until all actions have finished."
+        },
+        "onInitAsync": {
+          "type": "array",
+          "description": "Trigger actions the first time a context is mounted and do not keep the page in loading."
         },
         "onMenuItemClick": {
           "type": "array",
           "description": "Trigger action when menu item is clicked."
         },
+        "onMenuItemSelect": {
+          "type": "array",
+          "description": "Trigger action when menu item is selected."
+        },
+        "onOpen": {
+          "type": "array",
+          "description": "Trigger action when mobile menu is open."
+        },
+        "onToggleDrawer": {
+          "type": "array",
+          "description": "Trigger action when mobile menu drawer is toggled."
+        },
         "onToggleMenuGroup": {
           "type": "array",
           "description": "Trigger action when mobile menu group is opened."
-        },
-        "onBreadcrumbClick": {
-          "type": "array",
-          "description": "Trigger action when a breadcrumb item is clicked."
         }
       }
     }
