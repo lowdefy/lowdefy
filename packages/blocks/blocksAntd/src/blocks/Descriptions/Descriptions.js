@@ -19,7 +19,7 @@ import { type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 import { Descriptions } from 'antd';
 
-const DescriptionsBlock = ({ blockId, properties }) => (
+const DescriptionsBlock = ({ blockId, properties, methods }) => (
   <Descriptions
     id={blockId}
     title={properties.title}
@@ -36,17 +36,26 @@ const DescriptionsBlock = ({ blockId, properties }) => (
               {item}
             </Descriptions.Item>
           ) : (
-            <Descriptions.Item key={i} label={item.label} span={item.span}>
+            <Descriptions.Item
+              key={i}
+              label={item.label}
+              span={item.span}
+              className={`${methods.makeCssClass([{ whiteSpace: 'pre-wrap' }, item.style])}`}
+            >
               {item.value}
             </Descriptions.Item>
           )
         )
       : type.isObject(properties.items) &&
         Object.keys(properties.items).map((key, i) => (
-          <Descriptions.Item key={i} label={key}>
+          <Descriptions.Item
+            key={i}
+            label={key}
+            className={`${methods.makeCssClass({ whiteSpace: 'pre-wrap' })}`}
+          >
             {type.isPrimitive(properties.items[key])
-              ? `${properties.items[key]}`
-              : `${JSON.stringify(properties.items[key])}`}
+              ? properties.items[key]
+              : JSON.stringify(properties.items[key])}
           </Descriptions.Item>
         ))}
   </Descriptions>
