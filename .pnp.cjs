@@ -19277,7 +19277,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mssql", "npm:7.1.0"],
             ["mysql", "npm:2.18.1"],
             ["opener", "npm:1.5.2"],
-            ["ora", "npm:5.3.0"],
+            ["ora", "npm:5.4.0"],
             ["pg", "virtual:dddca670fd0b7758fb2e1b1a3e18ac7ebd1ecd06ecdd7acec2b78bccf1d35802cb22904bfbb233b16515a81f5cb819421786d20887823d98022b367036c1ad51#npm:8.5.1"],
             ["react", "npm:17.0.2"],
             ["react-dom", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:17.0.2"],
@@ -21428,15 +21428,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["ora", [
-        ["npm:5.3.0", {
-          "packageLocation": "./.yarn/cache/ora-npm-5.3.0-bb3e7178be-892cfd7a89.zip/node_modules/ora/",
+        ["npm:5.4.0", {
+          "packageLocation": "./.yarn/cache/ora-npm-5.4.0-c25dc7a9aa-ad124cc24a.zip/node_modules/ora/",
           "packageDependencies": [
-            ["ora", "npm:5.3.0"],
+            ["ora", "npm:5.4.0"],
             ["bl", "npm:4.1.0"],
             ["chalk", "npm:4.1.1"],
             ["cli-cursor", "npm:3.1.0"],
             ["cli-spinners", "npm:2.6.0"],
             ["is-interactive", "npm:1.0.0"],
+            ["is-unicode-supported", "npm:0.1.0"],
             ["log-symbols", "npm:4.1.0"],
             ["strip-ansi", "npm:6.0.0"],
             ["wcwidth", "npm:1.0.1"]
