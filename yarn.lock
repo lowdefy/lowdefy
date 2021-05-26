@@ -3099,7 +3099,7 @@ __metadata:
     buffer: 6.0.3
     classnames: 2.3.1
     clean-webpack-plugin: 3.0.0
-    copy-webpack-plugin: 7.0.0
+    copy-webpack-plugin: 9.0.0
     css-loader: 5.2.6
     enzyme: 3.11.0
     enzyme-to-json: 3.6.2
@@ -3142,7 +3142,7 @@ __metadata:
     babel-loader: 8.2.2
     buffer: 6.0.3
     clean-webpack-plugin: 3.0.0
-    copy-webpack-plugin: 7.0.0
+    copy-webpack-plugin: 9.0.0
     css-loader: 5.2.6
     dompurify: 2.2.8
     enzyme: 3.11.0
@@ -3181,7 +3181,7 @@ __metadata:
     babel-plugin-import: 1.13.3
     buffer: 6.0.3
     clean-webpack-plugin: 3.0.0
-    copy-webpack-plugin: 7.0.0
+    copy-webpack-plugin: 9.0.0
     css-loader: 5.2.6
     enzyme: 3.11.0
     enzyme-to-json: 3.6.2
@@ -3221,7 +3221,7 @@ __metadata:
     babel-loader: 8.2.2
     buffer: 6.0.3
     clean-webpack-plugin: 3.0.0
-    copy-webpack-plugin: 7.0.0
+    copy-webpack-plugin: 9.0.0
     css-loader: 5.2.6
     echarts: 5.1.1
     echarts-for-react: 3.0.1
@@ -3259,7 +3259,7 @@ __metadata:
     babel-loader: 8.2.2
     buffer: 6.0.3
     clean-webpack-plugin: 3.0.0
-    copy-webpack-plugin: 7.0.0
+    copy-webpack-plugin: 9.0.0
     css-loader: 5.2.6
     dompurify: 2.2.8
     enzyme: 3.11.0
@@ -3595,7 +3595,7 @@ __metadata:
     babel-jest: 26.6.3
     babel-loader: 8.2.2
     clean-webpack-plugin: 3.0.0
-    copy-webpack-plugin: 7.0.0
+    copy-webpack-plugin: 9.0.0
     css-loader: 5.2.6
     dotenv: 10.0.0
     express: 4.17.1
@@ -3626,7 +3626,7 @@ __metadata:
     babel-jest: 26.6.3
     babel-loader: 8.2.2
     clean-webpack-plugin: 3.0.0
-    copy-webpack-plugin: 7.0.0
+    copy-webpack-plugin: 9.0.0
     css-loader: 5.2.6
     express: 4.17.1
     graphql: 15.5.0
@@ -3656,7 +3656,7 @@ __metadata:
     babel-jest: 26.6.3
     babel-loader: 8.2.2
     clean-webpack-plugin: 3.0.0
-    copy-webpack-plugin: 7.0.0
+    copy-webpack-plugin: 9.0.0
     css-loader: 5.2.6
     express: 4.17.1
     graphql: 15.5.0
@@ -7791,21 +7791,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"copy-webpack-plugin@npm:7.0.0":
-  version: 7.0.0
-  resolution: "copy-webpack-plugin@npm:7.0.0"
+"copy-webpack-plugin@npm:9.0.0":
+  version: 9.0.0
+  resolution: "copy-webpack-plugin@npm:9.0.0"
   dependencies:
-    fast-glob: ^3.2.4
-    glob-parent: ^5.1.1
-    globby: ^11.0.1
-    loader-utils: ^2.0.0
+    fast-glob: ^3.2.5
+    glob-parent: ^6.0.0
+    globby: ^11.0.3
     normalize-path: ^3.0.0
-    p-limit: ^3.0.2
+    p-limit: ^3.1.0
     schema-utils: ^3.0.0
     serialize-javascript: ^5.0.1
   peerDependencies:
     webpack: ^5.1.0
-  checksum: 2884a96ba677781d28351e342a23c10ddddfa464098e58060487d6ebee18c950fce6bf7a9052638dd4797c742c06bb007b1dfca582100832d341902338df39f3
+  checksum: c209583f60f81d54cb3e7625810a6779ff3ad0d06e76f1f5c049f91c1eab8bf555ac6ad56478539939f826e009c1ad03e1fac258ff432239192811aab0b97ecc
   languageName: node
   linkType: hard
 
@@ -9859,7 +9858,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-glob@npm:^3.1.1, fast-glob@npm:^3.2.2, fast-glob@npm:^3.2.4":
+"fast-glob@npm:^3.1.1, fast-glob@npm:^3.2.2, fast-glob@npm:^3.2.5":
   version: 3.2.5
   resolution: "fast-glob@npm:3.2.5"
   dependencies:
@@ -10667,12 +10666,21 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"glob-parent@npm:^5.0.0, glob-parent@npm:^5.1.0, glob-parent@npm:^5.1.1, glob-parent@npm:~5.1.0":
+"glob-parent@npm:^5.0.0, glob-parent@npm:^5.1.0, glob-parent@npm:~5.1.0":
   version: 5.1.2
   resolution: "glob-parent@npm:5.1.2"
   dependencies:
     is-glob: ^4.0.1
   checksum: 82fcaa4ce102a0ae01370ed8fd5299ca32184af0418e1c1b613ed851240160558c0cc9712868eb9ca1924f687b07cd9c70c25f303f39f9f376d9a32f94f28e76
+  languageName: node
+  linkType: hard
+
+"glob-parent@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "glob-parent@npm:6.0.0"
+  dependencies:
+    is-glob: ^4.0.1
+  checksum: 0e29b74888702867f75e9d125c96b6104f787b3c203d9d83ea8d662778e57bfcbb4c8d5d8f32ade99aa05aac8dcd95ecdf952d8cf43d2de31741141de7629a7d
   languageName: node
   linkType: hard
 
@@ -10738,7 +10746,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"globby@npm:^11.0.1":
+"globby@npm:^11.0.1, globby@npm:^11.0.3":
   version: 11.0.3
   resolution: "globby@npm:11.0.3"
   dependencies:
@@ -13965,7 +13973,7 @@ fsevents@^1.2.7:
     chokidar: 3.5.1
     clean-webpack-plugin: 3.0.0
     commander: 7.2.0
-    copy-webpack-plugin: 7.0.0
+    copy-webpack-plugin: 9.0.0
     css-loader: 5.2.6
     decompress: 4.2.1
     decompress-targz: 4.1.1
@@ -16059,7 +16067,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"p-limit@npm:^3.0.2, p-limit@npm:^3.1.0":
+"p-limit@npm:^3.1.0":
   version: 3.1.0
   resolution: "p-limit@npm:3.1.0"
   dependencies:
