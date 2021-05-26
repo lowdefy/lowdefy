@@ -524,23 +524,24 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@azure/ms-rest-azure-env", [
-        ["npm:1.1.2", {
-          "packageLocation": "./.yarn/cache/@azure-ms-rest-azure-env-npm-1.1.2-c1c6e78885-70f52de1fe.zip/node_modules/@azure/ms-rest-azure-env/",
+        ["npm:2.0.0", {
+          "packageLocation": "./.yarn/cache/@azure-ms-rest-azure-env-npm-2.0.0-00910da26c-b56aca1f61.zip/node_modules/@azure/ms-rest-azure-env/",
           "packageDependencies": [
-            ["@azure/ms-rest-azure-env", "npm:1.1.2"]
+            ["@azure/ms-rest-azure-env", "npm:2.0.0"]
           ],
           "linkType": "HARD",
         }]
       ]],
       ["@azure/ms-rest-js", [
-        ["npm:1.11.2", {
-          "packageLocation": "./.yarn/cache/@azure-ms-rest-js-npm-1.11.2-1f0635df68-a96f2f075e.zip/node_modules/@azure/ms-rest-js/",
+        ["npm:2.5.0", {
+          "packageLocation": "./.yarn/cache/@azure-ms-rest-js-npm-2.5.0-c7a39a34c2-e41fea3fbd.zip/node_modules/@azure/ms-rest-js/",
           "packageDependencies": [
-            ["@azure/ms-rest-js", "npm:1.11.2"],
+            ["@azure/ms-rest-js", "npm:2.5.0"],
             ["@azure/core-auth", "npm:1.3.0"],
-            ["axios", "npm:0.21.1"],
+            ["abort-controller", "npm:3.0.0"],
             ["form-data", "npm:2.5.1"],
-            ["tough-cookie", "npm:2.5.0"],
+            ["node-fetch", "npm:2.6.1"],
+            ["tough-cookie", "npm:3.0.1"],
             ["tslib", "npm:1.14.1"],
             ["tunnel", "npm:0.0.6"],
             ["uuid", "npm:3.4.0"],
@@ -550,13 +551,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@azure/ms-rest-nodeauth", [
-        ["npm:2.0.2", {
-          "packageLocation": "./.yarn/cache/@azure-ms-rest-nodeauth-npm-2.0.2-cccf9dbca0-65b0959c17.zip/node_modules/@azure/ms-rest-nodeauth/",
+        ["npm:3.0.10", {
+          "packageLocation": "./.yarn/cache/@azure-ms-rest-nodeauth-npm-3.0.10-d4b179166c-d7ae0f0ce0.zip/node_modules/@azure/ms-rest-nodeauth/",
           "packageDependencies": [
-            ["@azure/ms-rest-nodeauth", "npm:2.0.2"],
-            ["@azure/ms-rest-azure-env", "npm:1.1.2"],
-            ["@azure/ms-rest-js", "npm:1.11.2"],
-            ["adal-node", "npm:0.1.28"]
+            ["@azure/ms-rest-nodeauth", "npm:3.0.10"],
+            ["@azure/ms-rest-azure-env", "npm:2.0.0"],
+            ["@azure/ms-rest-js", "npm:2.5.0"],
+            ["adal-node", "npm:0.2.2"]
           ],
           "linkType": "HARD",
         }]
@@ -4929,6 +4930,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@js-joda/core", [
+        ["npm:3.2.0", {
+          "packageLocation": "./.yarn/cache/@js-joda-core-npm-3.2.0-d2526290e9-c4b106b0fe.zip/node_modules/@js-joda/core/",
+          "packageDependencies": [
+            ["@js-joda/core", "npm:3.2.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@lerna/add", [
         ["npm:3.21.0", {
           "packageLocation": "./.yarn/cache/@lerna-add-npm-3.21.0-5b0b33bc83-e3f7402ce9.zip/node_modules/@lerna/add/",
@@ -6193,7 +6203,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mingo", "npm:4.1.2"],
             ["moment", "npm:2.29.1"],
             ["mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:3.6.5"],
-            ["mssql", "npm:6.3.1"],
+            ["mssql", "npm:7.1.0"],
             ["mysql", "npm:2.18.1"],
             ["openid-client", "npm:4.6.0"],
             ["pg", "virtual:dddca670fd0b7758fb2e1b1a3e18ac7ebd1ecd06ecdd7acec2b78bccf1d35802cb22904bfbb233b16515a81f5cb819421786d20887823d98022b367036c1ad51#npm:8.5.1"],
@@ -6943,6 +6953,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@tediousjs/connection-string", [
+        ["npm:0.3.0", {
+          "packageLocation": "./.yarn/cache/@tediousjs-connection-string-npm-0.3.0-7c743f6157-70729a3c15.zip/node_modules/@tediousjs/connection-string/",
+          "packageDependencies": [
+            ["@tediousjs/connection-string", "npm:0.3.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@tootallnate/once", [
         ["npm:1.1.2", {
           "packageLocation": "./.yarn/cache/@tootallnate-once-npm-1.1.2-0517220057-d030f3fb14.zip/node_modules/@tootallnate/once/",
@@ -7425,13 +7444,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:12.20.11", {
-          "packageLocation": "./.yarn/cache/@types-node-npm-12.20.11-3a1a264f2f-d4e44cb1b2.zip/node_modules/@types/node/",
-          "packageDependencies": [
-            ["@types/node", "npm:12.20.11"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:13.13.51", {
           "packageLocation": "./.yarn/cache/@types-node-npm-13.13.51-b47f69e0e9-8aef4eb0fa.zip/node_modules/@types/node/",
           "packageDependencies": [
@@ -7497,17 +7509,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-range-parser-npm-1.2.3-c06253b351-092fabae0e.zip/node_modules/@types/range-parser/",
           "packageDependencies": [
             ["@types/range-parser", "npm:1.2.3"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["@types/readable-stream", [
-        ["npm:2.3.9", {
-          "packageLocation": "./.yarn/cache/@types-readable-stream-npm-2.3.9-506ceda8eb-f48e493650.zip/node_modules/@types/readable-stream/",
-          "packageDependencies": [
-            ["@types/readable-stream", "npm:2.3.9"],
-            ["@types/node", "npm:15.0.1"],
-            ["safe-buffer", "npm:5.2.1"]
           ],
           "linkType": "HARD",
         }]
@@ -8966,15 +8967,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["adal-node", [
-        ["npm:0.1.28", {
-          "packageLocation": "./.yarn/cache/adal-node-npm-0.1.28-50ce9ce733-e0612f4be3.zip/node_modules/adal-node/",
+        ["npm:0.2.2", {
+          "packageLocation": "./.yarn/cache/adal-node-npm-0.2.2-0913642387-eafd8acda0.zip/node_modules/adal-node/",
           "packageDependencies": [
-            ["adal-node", "npm:0.1.28"],
+            ["adal-node", "npm:0.2.2"],
             ["@types/node", "npm:8.10.66"],
-            ["async", "npm:3.2.0"],
+            ["async", "npm:2.6.3"],
+            ["axios", "npm:0.21.1"],
             ["date-utils", "npm:1.2.21"],
             ["jws", "npm:3.2.2"],
-            ["request", "npm:2.88.2"],
             ["underscore", "npm:1.13.1"],
             ["uuid", "npm:3.4.0"],
             ["xmldom", "npm:0.6.0"],
@@ -10113,13 +10114,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["lodash", "npm:4.17.21"]
           ],
           "linkType": "HARD",
-        }],
-        ["npm:3.2.0", {
-          "packageLocation": "./.yarn/cache/async-npm-3.2.0-b6fd825ddc-5c7913c084.zip/node_modules/async/",
-          "packageDependencies": [
-            ["async", "npm:3.2.0"]
-          ],
-          "linkType": "HARD",
         }]
       ]],
       ["async-each", [
@@ -11063,14 +11057,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["bl", "npm:2.2.1"],
             ["readable-stream", "npm:2.3.7"],
             ["safe-buffer", "npm:5.2.1"]
-          ],
-          "linkType": "HARD",
-        }],
-        ["npm:3.0.1", {
-          "packageLocation": "./.yarn/cache/bl-npm-3.0.1-fb8b706aac-7db2f70083.zip/node_modules/bl/",
-          "packageDependencies": [
-            ["bl", "npm:3.0.1"],
-            ["readable-stream", "npm:3.6.0"]
           ],
           "linkType": "HARD",
         }],
@@ -17820,14 +17806,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:0.5.2", {
-          "packageLocation": "./.yarn/cache/iconv-lite-npm-0.5.2-04e4678c41-b54433bf01.zip/node_modules/iconv-lite/",
-          "packageDependencies": [
-            ["iconv-lite", "npm:0.5.2"],
-            ["safer-buffer", "npm:2.1.2"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:0.6.2", {
           "packageLocation": "./.yarn/cache/iconv-lite-npm-0.6.2-13e85ec7dc-0785670120.zip/node_modules/iconv-lite/",
           "packageDependencies": [
@@ -20603,7 +20581,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["inquirer", "npm:7.3.3"],
             ["jest", "npm:26.6.3"],
             ["js-yaml", "npm:4.0.0"],
-            ["mssql", "npm:6.3.1"],
+            ["mssql", "npm:7.1.0"],
             ["mysql", "npm:2.18.1"],
             ["opener", "npm:1.5.2"],
             ["ora", "npm:5.3.0"],
@@ -21718,13 +21696,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["mssql", [
-        ["npm:6.3.1", {
-          "packageLocation": "./.yarn/cache/mssql-npm-6.3.1-f0c65b9705-f3558a0296.zip/node_modules/mssql/",
+        ["npm:7.1.0", {
+          "packageLocation": "./.yarn/cache/mssql-npm-7.1.0-4a85ceac83-c947548f1a.zip/node_modules/mssql/",
           "packageDependencies": [
-            ["mssql", "npm:6.3.1"],
+            ["mssql", "npm:7.1.0"],
+            ["@tediousjs/connection-string", "npm:0.3.0"],
             ["debug", "virtual:360365131be35f502cf349d7b4fecc7f30ad06d56a9b7e8b81293a2c9ff5036bf40d49f1733a2d76bd0ed210259ed49de7d6084cd9578c843c9f35624625aa49#npm:4.3.2"],
-            ["tarn", "npm:1.1.5"],
-            ["tedious", "npm:6.7.0"]
+            ["rfdc", "npm:1.3.0"],
+            ["tarn", "npm:3.0.1"],
+            ["tedious", "npm:11.0.8"]
           ],
           "linkType": "HARD",
         }]
@@ -21944,6 +21924,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["no-case", "npm:3.0.4"],
             ["lower-case", "npm:2.0.2"],
             ["tslib", "npm:2.2.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["node-abort-controller", [
+        ["npm:1.2.1", {
+          "packageLocation": "./.yarn/cache/node-abort-controller-npm-1.2.1-18102ebf3c-f0a55c64df.zip/node_modules/node-abort-controller/",
+          "packageDependencies": [
+            ["node-abort-controller", "npm:1.2.1"]
           ],
           "linkType": "HARD",
         }]
@@ -26587,6 +26576,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["rfdc", [
+        ["npm:1.3.0", {
+          "packageLocation": "./.yarn/cache/rfdc-npm-1.3.0-272f288ad8-34dd5c5acf.zip/node_modules/rfdc/",
+          "packageDependencies": [
+            ["rfdc", "npm:1.3.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["rimraf", [
         ["npm:2.7.1", {
           "packageLocation": "./.yarn/cache/rimraf-npm-2.7.1-9a71f3cc37-059efac283.zip/node_modules/rimraf/",
@@ -28377,13 +28375,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["tarn", [
-        ["npm:1.1.5", {
-          "packageLocation": "./.yarn/cache/tarn-npm-1.1.5-6206bbbc92-a72300be92.zip/node_modules/tarn/",
-          "packageDependencies": [
-            ["tarn", "npm:1.1.5"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:3.0.1", {
           "packageLocation": "./.yarn/cache/tarn-npm-3.0.1-afc495be8f-132dd6c6c3.zip/node_modules/tarn/",
           "packageDependencies": [
@@ -28393,18 +28384,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["tedious", [
-        ["npm:6.7.0", {
-          "packageLocation": "./.yarn/cache/tedious-npm-6.7.0-b1277dfccf-fc093389da.zip/node_modules/tedious/",
+        ["npm:11.0.8", {
+          "packageLocation": "./.yarn/cache/tedious-npm-11.0.8-389ed40c5d-2e47f040cf.zip/node_modules/tedious/",
           "packageDependencies": [
-            ["tedious", "npm:6.7.0"],
-            ["@azure/ms-rest-nodeauth", "npm:2.0.2"],
-            ["@types/node", "npm:12.20.11"],
-            ["@types/readable-stream", "npm:2.3.9"],
-            ["bl", "npm:3.0.1"],
+            ["tedious", "npm:11.0.8"],
+            ["@azure/ms-rest-nodeauth", "npm:3.0.10"],
+            ["@js-joda/core", "npm:3.2.0"],
+            ["adal-node", "npm:0.2.2"],
+            ["bl", "npm:4.1.0"],
             ["depd", "npm:2.0.0"],
-            ["iconv-lite", "npm:0.5.2"],
+            ["iconv-lite", "npm:0.6.2"],
             ["jsbi", "npm:3.1.4"],
             ["native-duplexpair", "npm:1.0.0"],
+            ["node-abort-controller", "npm:1.2.1"],
             ["punycode", "npm:2.1.1"],
             ["readable-stream", "npm:3.6.0"],
             ["sprintf-js", "npm:1.1.2"]
@@ -29070,6 +29062,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tough-cookie-npm-2.5.0-79a2fe43fe-bf5d6fac5c.zip/node_modules/tough-cookie/",
           "packageDependencies": [
             ["tough-cookie", "npm:2.5.0"],
+            ["psl", "npm:1.8.0"],
+            ["punycode", "npm:2.1.1"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:3.0.1", {
+          "packageLocation": "./.yarn/cache/tough-cookie-npm-3.0.1-09a21f6bd7-dc1eee69c6.zip/node_modules/tough-cookie/",
+          "packageDependencies": [
+            ["tough-cookie", "npm:3.0.1"],
+            ["ip-regex", "npm:2.1.0"],
             ["psl", "npm:1.8.0"],
             ["punycode", "npm:2.1.1"]
           ],
