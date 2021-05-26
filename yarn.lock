@@ -3347,7 +3347,7 @@ __metadata:
     "@lowdefy/operators": 3.15.0
     babel-jest: 26.6.3
     graphql: 15.5.0
-    graphql-tag: 2.11.0
+    graphql-tag: 2.12.4
     jest: 26.6.3
   languageName: unknown
   linkType: soft
@@ -10905,16 +10905,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"graphql-tag@npm:2.11.0":
-  version: 2.11.0
-  resolution: "graphql-tag@npm:2.11.0"
-  peerDependencies:
-    graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
-  checksum: 400355590180cce2f39df5c599cad20ee982bb7e4a63ad70857aa0fe2e82e3ef6233a4db2b80a03e6dfa84bf3ecb13dc2947936eaf31753c94876e22be45ea78
-  languageName: node
-  linkType: hard
-
-"graphql-tag@npm:^2.11.0, graphql-tag@npm:^2.12.0":
+"graphql-tag@npm:2.12.4, graphql-tag@npm:^2.11.0, graphql-tag@npm:^2.12.0":
   version: 2.12.4
   resolution: "graphql-tag@npm:2.12.4"
   dependencies:

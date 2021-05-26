@@ -5050,7 +5050,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/operators", "workspace:packages/operators"],
             ["babel-jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:26.6.3"],
             ["graphql", "npm:15.5.0"],
-            ["graphql-tag", "virtual:90d4a72924f341713b457eb175224e1ec0cb1cc17fae57e4425352a06b7bd1badc2992c0aaf430411c746462d51ce4afd9da56feea73b62dad7f9bec3f6bc226#npm:2.11.0"],
+            ["graphql-tag", "virtual:c4313e50c76b7f4ca38b98bfbf4aef6d60fe5dc8880482a363be0813a3de98090242eb84dca1375568131ccc5c77386b118a42fce6c4608b8cd4c6d2d10d2c57#npm:2.12.4"],
             ["jest", "npm:26.6.3"]
           ],
           "linkType": "SOFT",
@@ -15578,32 +15578,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["graphql-tag", [
-        ["npm:2.11.0", {
-          "packageLocation": "./.yarn/cache/graphql-tag-npm-2.11.0-d505ecf590-4003555901.zip/node_modules/graphql-tag/",
-          "packageDependencies": [
-            ["graphql-tag", "npm:2.11.0"]
-          ],
-          "linkType": "SOFT",
-        }],
         ["npm:2.12.4", {
           "packageLocation": "./.yarn/cache/graphql-tag-npm-2.12.4-0af5217688-01623ede35.zip/node_modules/graphql-tag/",
           "packageDependencies": [
             ["graphql-tag", "npm:2.12.4"]
           ],
           "linkType": "SOFT",
-        }],
-        ["virtual:90d4a72924f341713b457eb175224e1ec0cb1cc17fae57e4425352a06b7bd1badc2992c0aaf430411c746462d51ce4afd9da56feea73b62dad7f9bec3f6bc226#npm:2.11.0", {
-          "packageLocation": "./.yarn/$$virtual/graphql-tag-virtual-a9b97c87e6/0/cache/graphql-tag-npm-2.11.0-d505ecf590-4003555901.zip/node_modules/graphql-tag/",
-          "packageDependencies": [
-            ["graphql-tag", "virtual:90d4a72924f341713b457eb175224e1ec0cb1cc17fae57e4425352a06b7bd1badc2992c0aaf430411c746462d51ce4afd9da56feea73b62dad7f9bec3f6bc226#npm:2.11.0"],
-            ["@types/graphql", null],
-            ["graphql", "npm:15.5.0"]
-          ],
-          "packagePeers": [
-            "@types/graphql",
-            "graphql"
-          ],
-          "linkType": "HARD",
         }],
         ["virtual:c4313e50c76b7f4ca38b98bfbf4aef6d60fe5dc8880482a363be0813a3de98090242eb84dca1375568131ccc5c77386b118a42fce6c4608b8cd4c6d2d10d2c57#npm:2.12.4", {
           "packageLocation": "./.yarn/$$virtual/graphql-tag-virtual-0b628e4b7d/0/cache/graphql-tag-npm-2.12.4-0af5217688-01623ede35.zip/node_modules/graphql-tag/",
