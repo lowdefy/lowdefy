@@ -285,17 +285,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@apollo/client", [
-        ["npm:3.3.11", {
-          "packageLocation": "./.yarn/cache/@apollo-client-npm-3.3.11-d530cb03e8-512f62f956.zip/node_modules/@apollo/client/",
-          "packageDependencies": [
-            ["@apollo/client", "npm:3.3.11"]
-          ],
-          "linkType": "SOFT",
-        }],
         ["npm:3.3.16", {
           "packageLocation": "./.yarn/cache/@apollo-client-npm-3.3.16-fdc37abc6b-5eaccf99ed.zip/node_modules/@apollo/client/",
           "packageDependencies": [
             ["@apollo/client", "npm:3.3.16"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["npm:3.3.19", {
+          "packageLocation": "./.yarn/cache/@apollo-client-npm-3.3.19-39baf9f99e-a7266cfdff.zip/node_modules/@apollo/client/",
+          "packageDependencies": [
+            ["@apollo/client", "npm:3.3.19"]
           ],
           "linkType": "SOFT",
         }],
@@ -332,27 +332,27 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.3.11", {
-          "packageLocation": "./.yarn/$$virtual/@apollo-client-virtual-ae680006fe/0/cache/@apollo-client-npm-3.3.11-d530cb03e8-512f62f956.zip/node_modules/@apollo/client/",
+        ["virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.3.19", {
+          "packageLocation": "./.yarn/$$virtual/@apollo-client-virtual-2c35870bed/0/cache/@apollo-client-npm-3.3.19-39baf9f99e-a7266cfdff.zip/node_modules/@apollo/client/",
           "packageDependencies": [
-            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.3.11"],
+            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.3.19"],
             ["@graphql-typed-document-node/core", "virtual:7f71227ff6c034c529a33f013ecd78425937c0990c682f83fb5cfa6d5ca66bf770bb04fd06de871d934c139e2a7e8f2f6c4a6fd798c0eb58f1812cba711c1cb3#npm:3.1.0"],
             ["@types/graphql", null],
             ["@types/react", null],
             ["@types/subscriptions-transport-ws", null],
             ["@types/zen-observable", "npm:0.8.2"],
-            ["@wry/context", "npm:0.5.4"],
-            ["@wry/equality", "npm:0.3.4"],
+            ["@wry/context", "npm:0.6.0"],
+            ["@wry/equality", "npm:0.4.0"],
             ["fast-json-stable-stringify", "npm:2.1.0"],
             ["graphql", "npm:15.5.0"],
             ["graphql-tag", "virtual:b18c7e6aa62a46b47e7e647745f58083490707635257573affc02617034ebea8b5cc8684841428c6714eee4acfa5dd200fd91e7ff447e19bf21f8e4345d68631#npm:2.12.4"],
             ["hoist-non-react-statics", "npm:3.3.2"],
-            ["optimism", "npm:0.14.1"],
+            ["optimism", "npm:0.16.1"],
             ["prop-types", "npm:15.7.2"],
             ["react", "npm:17.0.2"],
             ["subscriptions-transport-ws", null],
             ["symbol-observable", "npm:2.0.3"],
-            ["ts-invariant", "npm:0.6.2"],
+            ["ts-invariant", "npm:0.7.3"],
             ["tslib", "npm:1.14.1"],
             ["zen-observable", "npm:0.8.15"]
           ],
@@ -6361,7 +6361,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/renderer/",
           "packageDependencies": [
             ["@lowdefy/renderer", "workspace:packages/renderer"],
-            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.3.11"],
+            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.3.19"],
             ["@apollo/link-context", "npm:2.0.0-beta.3"],
             ["@apollo/link-error", "npm:2.0.0-beta.3"],
             ["@apollo/link-retry", "npm:2.0.0-beta.3"],
@@ -7597,15 +7597,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["@types/ungap__global-this", [
-        ["npm:0.3.1", {
-          "packageLocation": "./.yarn/cache/@types-ungap__global-this-npm-0.3.1-d6b2fe1a40-c000b1f779.zip/node_modules/@types/ungap__global-this/",
-          "packageDependencies": [
-            ["@types/ungap__global-this", "npm:0.3.1"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
       ["@types/unist", [
         ["npm:2.0.3", {
           "packageLocation": "./.yarn/cache/@types-unist-npm-2.0.3-4b26dedfde-42e0dc4ac7.zip/node_modules/@types/unist/",
@@ -7676,15 +7667,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-zen-observable-npm-0.8.2-a15378fb68-f48643c09a.zip/node_modules/@types/zen-observable/",
           "packageDependencies": [
             ["@types/zen-observable", "npm:0.8.2"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["@ungap/global-this", [
-        ["npm:0.4.4", {
-          "packageLocation": "./.yarn/cache/@ungap-global-this-npm-0.4.4-02f6253d50-5ee0ba7cdf.zip/node_modules/@ungap/global-this/",
-          "packageDependencies": [
-            ["@ungap/global-this", "npm:0.4.4"]
           ],
           "linkType": "HARD",
         }]
@@ -8643,14 +8625,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@wry/context", [
-        ["npm:0.5.4", {
-          "packageLocation": "./.yarn/cache/@wry-context-npm-0.5.4-f231538ab5-4894bf9db9.zip/node_modules/@wry/context/",
-          "packageDependencies": [
-            ["@wry/context", "npm:0.5.4"],
-            ["tslib", "npm:1.14.1"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:0.6.0", {
           "packageLocation": "./.yarn/cache/@wry-context-npm-0.6.0-e4550c2f21-c1452ba900.zip/node_modules/@wry/context/",
           "packageDependencies": [
@@ -8669,14 +8643,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:0.3.4", {
-          "packageLocation": "./.yarn/cache/@wry-equality-npm-0.3.4-62f2dae43d-6de84a1dcb.zip/node_modules/@wry/equality/",
-          "packageDependencies": [
-            ["@wry/equality", "npm:0.3.4"],
-            ["tslib", "npm:1.14.1"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:0.4.0", {
           "packageLocation": "./.yarn/cache/@wry-equality-npm-0.4.0-cc662f6bac-87c2b705ed.zip/node_modules/@wry/equality/",
           "packageDependencies": [
@@ -8687,14 +8653,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@wry/trie", [
-        ["npm:0.2.2", {
-          "packageLocation": "./.yarn/cache/@wry-trie-npm-0.2.2-5e6cd2abff-7e6a1570bf.zip/node_modules/@wry/trie/",
-          "packageDependencies": [
-            ["@wry/trie", "npm:0.2.2"],
-            ["tslib", "npm:1.14.1"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:0.3.0", {
           "packageLocation": "./.yarn/cache/@wry-trie-npm-0.3.0-89ce720fa1-74305830c7.zip/node_modules/@wry/trie/",
           "packageDependencies": [
@@ -22752,19 +22710,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["optimism", [
-        ["npm:0.14.1", {
-          "packageLocation": "./.yarn/cache/optimism-npm-0.14.1-3ba53519ff-6fe9cf1d8e.zip/node_modules/optimism/",
-          "packageDependencies": [
-            ["optimism", "npm:0.14.1"],
-            ["@wry/context", "npm:0.5.4"],
-            ["@wry/trie", "npm:0.2.2"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:0.15.0", {
           "packageLocation": "./.yarn/cache/optimism-npm-0.15.0-cff043b654-a9152e33a2.zip/node_modules/optimism/",
           "packageDependencies": [
             ["optimism", "npm:0.15.0"],
+            ["@wry/context", "npm:0.6.0"],
+            ["@wry/trie", "npm:0.3.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.16.1", {
+          "packageLocation": "./.yarn/cache/optimism-npm-0.16.1-b6a027d092-760b129552.zip/node_modules/optimism/",
+          "packageDependencies": [
+            ["optimism", "npm:0.16.1"],
             ["@wry/context", "npm:0.6.0"],
             ["@wry/trie", "npm:0.3.0"]
           ],
@@ -29220,16 +29178,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/ts-invariant-npm-0.4.4-9f97371ec3-0280fb0e85.zip/node_modules/ts-invariant/",
           "packageDependencies": [
             ["ts-invariant", "npm:0.4.4"],
-            ["tslib", "npm:1.14.1"]
-          ],
-          "linkType": "HARD",
-        }],
-        ["npm:0.6.2", {
-          "packageLocation": "./.yarn/cache/ts-invariant-npm-0.6.2-d293d786a6-64230c18f0.zip/node_modules/ts-invariant/",
-          "packageDependencies": [
-            ["ts-invariant", "npm:0.6.2"],
-            ["@types/ungap__global-this", "npm:0.3.1"],
-            ["@ungap/global-this", "npm:0.4.4"],
             ["tslib", "npm:1.14.1"]
           ],
           "linkType": "HARD",

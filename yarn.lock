@@ -75,21 +75,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/client@npm:3.3.11":
-  version: 3.3.11
-  resolution: "@apollo/client@npm:3.3.11"
+"@apollo/client@npm:3.3.19":
+  version: 3.3.19
+  resolution: "@apollo/client@npm:3.3.19"
   dependencies:
     "@graphql-typed-document-node/core": ^3.0.0
     "@types/zen-observable": ^0.8.0
-    "@wry/context": ^0.5.2
-    "@wry/equality": ^0.3.0
+    "@wry/context": ^0.6.0
+    "@wry/equality": ^0.4.0
     fast-json-stable-stringify: ^2.0.0
     graphql-tag: ^2.12.0
     hoist-non-react-statics: ^3.3.2
-    optimism: ^0.14.0
+    optimism: ^0.16.0
     prop-types: ^15.7.2
     symbol-observable: ^2.0.0
-    ts-invariant: ^0.6.0
+    ts-invariant: ^0.7.0
     tslib: ^1.10.0
     zen-observable: ^0.8.14
   peerDependencies:
@@ -101,7 +101,7 @@ __metadata:
       optional: true
     subscriptions-transport-ws:
       optional: true
-  checksum: 512f62f956c1d51ad1a32d51cca56295e41f685cbcf2b623366b22a85b0bc6487338f8d90dbff6eae311eff9eb342c67a6adf577633851a9cbd85618c229e66b
+  checksum: a7266cfdff900ef71adece4d24c853fc6179dfe3d3b89905b468b0a487959a435ef84219fb1266c86e2edb0747ff0e52b6ac49dba72bdac7cdbc55e1d0a2e357
   languageName: node
   linkType: hard
 
@@ -3529,7 +3529,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/renderer@workspace:packages/renderer"
   dependencies:
-    "@apollo/client": 3.3.11
+    "@apollo/client": 3.3.19
     "@apollo/link-context": 2.0.0-beta.3
     "@apollo/link-error": 2.0.0-beta.3
     "@apollo/link-retry": 2.0.0-beta.3
@@ -4602,13 +4602,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ungap__global-this@npm:^0.3.1":
-  version: 0.3.1
-  resolution: "@types/ungap__global-this@npm:0.3.1"
-  checksum: c000b1f7792fa96def1e976d54bf23a127c99fa0bb0ee713e9792f9cf8fc97f4dba3313df9f9295e33f6461a54bd41279bb89ba1add1fb86d309b08e3a95f260
-  languageName: node
-  linkType: hard
-
 "@types/unist@npm:*, @types/unist@npm:^2.0.0, @types/unist@npm:^2.0.2, @types/unist@npm:^2.0.3":
   version: 2.0.3
   resolution: "@types/unist@npm:2.0.3"
@@ -4670,13 +4663,6 @@ __metadata:
   version: 0.8.2
   resolution: "@types/zen-observable@npm:0.8.2"
   checksum: f48643c09a5fb00503d5b5c156779870bc5c96c4cc7f3d0f643619752a04eed784de6a37c9121e284d2cdd8ec70e3e00a73613797f009f37dbe6795ffb9607c5
-  languageName: node
-  linkType: hard
-
-"@ungap/global-this@npm:^0.4.2":
-  version: 0.4.4
-  resolution: "@ungap/global-this@npm:0.4.4"
-  checksum: 5ee0ba7cdffbb1c9205db99fd801dc49957ec519cb9a50b989a0c81d28ead04d8323e73f30d642ffd287f4dec1f39eb303f6a25e58b7a0102fd390154a0019f6
   languageName: node
   linkType: hard
 
@@ -4899,15 +4885,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wry/context@npm:^0.5.2":
-  version: 0.5.4
-  resolution: "@wry/context@npm:0.5.4"
-  dependencies:
-    tslib: ^1.14.1
-  checksum: 4894bf9db998a0d6591cdbbf97de6162ae38efac364d0633319906cccc293159bc8b98784b2969f9f75927096e335b1d1bb7a299fdb25eff7e1fc449919b4023
-  languageName: node
-  linkType: hard
-
 "@wry/context@npm:^0.6.0":
   version: 0.6.0
   resolution: "@wry/context@npm:0.6.0"
@@ -4926,30 +4903,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wry/equality@npm:^0.3.0":
-  version: 0.3.4
-  resolution: "@wry/equality@npm:0.3.4"
-  dependencies:
-    tslib: ^1.14.1
-  checksum: 6de84a1dcbbdc79f4b980b03e4111d97b1c3b8311e5db81c105d17109a258542a4aadef01294e21bf253e8e40702900913d25f55fc72dd76f5d7a844c706783e
-  languageName: node
-  linkType: hard
-
 "@wry/equality@npm:^0.4.0":
   version: 0.4.0
   resolution: "@wry/equality@npm:0.4.0"
   dependencies:
     tslib: ^2.1.0
   checksum: 87c2b705edf0cc81e8b034367765762f3d2a1a0bfd9163b70389398bc0fc0338e1f8d68b2eaa70b0f5101c455bf5d419ae4a4f03f7f7697803e34adb9ca86b72
-  languageName: node
-  linkType: hard
-
-"@wry/trie@npm:^0.2.1":
-  version: 0.2.2
-  resolution: "@wry/trie@npm:0.2.2"
-  dependencies:
-    tslib: ^1.14.1
-  checksum: 7e6a1570bfc04f9f50a8fb550b1cd458386e4e963334e700cc2a450ecb795dad1d06c4fbfbf9981c69a7faec4d2b98513fec803cfc30a4d3d5ac649a7f32e28f
   languageName: node
   linkType: hard
 
@@ -16044,16 +16003,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"optimism@npm:^0.14.0":
-  version: 0.14.1
-  resolution: "optimism@npm:0.14.1"
-  dependencies:
-    "@wry/context": ^0.5.2
-    "@wry/trie": ^0.2.1
-  checksum: 6fe9cf1d8ea72acee3d33d986b14b84ee610f1c934866827160cdead5a23b72f345f54288ec44a909021166fc9dd5ce47c3c7bae7798f78651c6d2c69bf176df
-  languageName: node
-  linkType: hard
-
 "optimism@npm:^0.15.0":
   version: 0.15.0
   resolution: "optimism@npm:0.15.0"
@@ -16061,6 +16010,16 @@ fsevents@^1.2.7:
     "@wry/context": ^0.6.0
     "@wry/trie": ^0.3.0
   checksum: a9152e33a27be9b2b4a441387061a7e8aff9877872169eba49c11c07fee19b7369efd48f7530f5a65e142f46b63ba3c8a56c9b893eaa696e143f1fdff33760a2
+  languageName: node
+  linkType: hard
+
+"optimism@npm:^0.16.0":
+  version: 0.16.1
+  resolution: "optimism@npm:0.16.1"
+  dependencies:
+    "@wry/context": ^0.6.0
+    "@wry/trie": ^0.3.0
+  checksum: 760b1295525ba86592edf245736ed704670330a8997d91144c1b45bc9f76e392b53c170fb1eb3b265f67584a4f7e205bc777d0c8ed97774326dba9fbfe899e27
   languageName: node
   linkType: hard
 
@@ -20875,17 +20834,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"ts-invariant@npm:^0.6.0":
-  version: 0.6.2
-  resolution: "ts-invariant@npm:0.6.2"
-  dependencies:
-    "@types/ungap__global-this": ^0.3.1
-    "@ungap/global-this": ^0.4.2
-    tslib: ^1.9.3
-  checksum: 64230c18f04ea17ca9b1222647372202c12be4a45e5c23cff308cace9ad45384f52faaa0cb93aec0b24d82e85e11e2dd77816bf626684ffa3a90d27c420a0727
-  languageName: node
-  linkType: hard
-
 "ts-invariant@npm:^0.7.0":
   version: 0.7.3
   resolution: "ts-invariant@npm:0.7.3"
@@ -20921,7 +20869,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"tslib@npm:^1.10.0, tslib@npm:^1.13.0, tslib@npm:^1.14.1, tslib@npm:^1.9.0, tslib@npm:^1.9.2, tslib@npm:^1.9.3":
+"tslib@npm:^1.10.0, tslib@npm:^1.13.0, tslib@npm:^1.9.0, tslib@npm:^1.9.2, tslib@npm:^1.9.3":
   version: 1.14.1
   resolution: "tslib@npm:1.14.1"
   checksum: f44fe7f216946b17d3e3074df3746372703cf24e9127b4c045511456e8e4bf25515fb0a1bb3937676cc305651c5d4fcb6377b0588a4c6a957e748c4c28905d17
