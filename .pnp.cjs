@@ -6171,7 +6171,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/node-utils", "workspace:packages/nodeUtils"],
             ["@lowdefy/nunjucks", "workspace:packages/nunjucks"],
             ["@lowdefy/operators", "workspace:packages/operators"],
-            ["@sendgrid/mail", "npm:7.4.2"],
+            ["@sendgrid/mail", "npm:7.4.4"],
             ["@shelf/jest-mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:1.2.4"],
             ["ajv", "npm:6.12.6"],
             ["ajv-errors", "virtual:09ba37edd9db25b7821b7d2b2d2055c41a6ed7b7590f4f31cb08f11ca472be4a006b49e750b63bf1615697d9f5fdbcda49d5e649e3491c0b6490a9dc0dbedfa2#npm:1.0.1"],
@@ -6833,33 +6833,33 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@sendgrid/client", [
-        ["npm:7.4.2", {
-          "packageLocation": "./.yarn/cache/@sendgrid-client-npm-7.4.2-90b5c20b98-b7dd62ee5e.zip/node_modules/@sendgrid/client/",
+        ["npm:7.4.3", {
+          "packageLocation": "./.yarn/cache/@sendgrid-client-npm-7.4.3-5371620211-657418b9d3.zip/node_modules/@sendgrid/client/",
           "packageDependencies": [
-            ["@sendgrid/client", "npm:7.4.2"],
-            ["@sendgrid/helpers", "npm:7.4.2"],
+            ["@sendgrid/client", "npm:7.4.3"],
+            ["@sendgrid/helpers", "npm:7.4.3"],
             ["axios", "npm:0.21.1"]
           ],
           "linkType": "HARD",
         }]
       ]],
       ["@sendgrid/helpers", [
-        ["npm:7.4.2", {
-          "packageLocation": "./.yarn/cache/@sendgrid-helpers-npm-7.4.2-be48d88b3e-4747128f10.zip/node_modules/@sendgrid/helpers/",
+        ["npm:7.4.3", {
+          "packageLocation": "./.yarn/cache/@sendgrid-helpers-npm-7.4.3-1e4e575f5e-1528ff0a19.zip/node_modules/@sendgrid/helpers/",
           "packageDependencies": [
-            ["@sendgrid/helpers", "npm:7.4.2"],
+            ["@sendgrid/helpers", "npm:7.4.3"],
             ["deepmerge", "npm:4.2.2"]
           ],
           "linkType": "HARD",
         }]
       ]],
       ["@sendgrid/mail", [
-        ["npm:7.4.2", {
-          "packageLocation": "./.yarn/cache/@sendgrid-mail-npm-7.4.2-f85cb23a5a-4b4edeaf5a.zip/node_modules/@sendgrid/mail/",
+        ["npm:7.4.4", {
+          "packageLocation": "./.yarn/cache/@sendgrid-mail-npm-7.4.4-815c11e40d-568c64dd49.zip/node_modules/@sendgrid/mail/",
           "packageDependencies": [
-            ["@sendgrid/mail", "npm:7.4.2"],
-            ["@sendgrid/client", "npm:7.4.2"],
-            ["@sendgrid/helpers", "npm:7.4.2"]
+            ["@sendgrid/mail", "npm:7.4.4"],
+            ["@sendgrid/client", "npm:7.4.3"],
+            ["@sendgrid/helpers", "npm:7.4.3"]
           ],
           "linkType": "HARD",
         }]

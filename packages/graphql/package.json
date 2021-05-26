@@ -43,7 +43,7 @@
     "@lowdefy/node-utils": "3.15.0",
     "@lowdefy/nunjucks": "3.15.0",
     "@lowdefy/operators": "3.15.0",
-    "@sendgrid/mail": "7.4.2",
+    "@sendgrid/mail": "7.4.4",
     "ajv": "6.12.6",
     "ajv-errors": "1.0.1",
     "apollo-server": "2.21.0",
