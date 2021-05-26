@@ -6,18 +6,22 @@ Array [
     Object {
       "arrowPointAtCenter": undefined,
       "autoAdjustOverflow": undefined,
-      "children": <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
+      "children": Array [
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
           }
-        }
-      >
-        content
-      </div>,
+        >
+          content
+        </div>,
+        "",
+      ],
       "color": undefined,
       "defaultVisible": undefined,
+      "destroyTooltipOnHide": undefined,
       "id": "areas.content:",
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": undefined,
@@ -25,7 +29,7 @@ Array [
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
       "title": "Tooltip block",
-      "trigger": undefined,
+      "trigger": "hover",
       "zIndex": undefined,
     },
     Object {},
@@ -39,18 +43,22 @@ Array [
     Object {
       "arrowPointAtCenter": undefined,
       "autoAdjustOverflow": undefined,
-      "children": <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
+      "children": Array [
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
           }
-        }
-      >
-        content
-      </div>,
+        >
+          content
+        </div>,
+        "",
+      ],
       "color": undefined,
       "defaultVisible": undefined,
+      "destroyTooltipOnHide": undefined,
       "id": "default",
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": undefined,
@@ -58,7 +66,7 @@ Array [
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
       "title": undefined,
-      "trigger": undefined,
+      "trigger": "hover",
       "zIndex": undefined,
     },
     Object {},
@@ -72,18 +80,22 @@ Array [
     Object {
       "arrowPointAtCenter": true,
       "autoAdjustOverflow": undefined,
-      "children": <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
+      "children": Array [
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
           }
-        }
-      >
-        content
-      </div>,
+        >
+          content
+        </div>,
+        "",
+      ],
       "color": undefined,
       "defaultVisible": undefined,
+      "destroyTooltipOnHide": undefined,
       "id": "properties.arrowPointAtCenter: true",
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": undefined,
@@ -91,7 +103,7 @@ Array [
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": "topLeft",
       "title": "arrowPointAtCenter true",
-      "trigger": undefined,
+      "trigger": "hover",
       "zIndex": undefined,
     },
     Object {},
@@ -105,18 +117,22 @@ Array [
     Object {
       "arrowPointAtCenter": undefined,
       "autoAdjustOverflow": false,
-      "children": <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
+      "children": Array [
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
           }
-        }
-      >
-        content
-      </div>,
+        >
+          content
+        </div>,
+        "",
+      ],
       "color": undefined,
       "defaultVisible": undefined,
+      "destroyTooltipOnHide": undefined,
       "id": "properties.autoAdjustOverflow: false",
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": undefined,
@@ -124,7 +140,7 @@ Array [
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": "right",
       "title": "autoAdjustOverflow false",
-      "trigger": undefined,
+      "trigger": "hover",
       "zIndex": undefined,
     },
     Object {},
@@ -138,18 +154,22 @@ Array [
     Object {
       "arrowPointAtCenter": undefined,
       "autoAdjustOverflow": true,
-      "children": <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
+      "children": Array [
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
           }
-        }
-      >
-        content
-      </div>,
+        >
+          content
+        </div>,
+        "",
+      ],
       "color": undefined,
       "defaultVisible": undefined,
+      "destroyTooltipOnHide": undefined,
       "id": "properties.autoAdjustOverflow: true",
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": undefined,
@@ -157,7 +177,7 @@ Array [
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": "right",
       "title": "autoAdjustOverflow true",
-      "trigger": undefined,
+      "trigger": "hover",
       "zIndex": undefined,
     },
     Object {},
@@ -171,18 +191,22 @@ Array [
     Object {
       "arrowPointAtCenter": undefined,
       "autoAdjustOverflow": undefined,
-      "children": <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
+      "children": Array [
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
           }
-        }
-      >
-        content
-      </div>,
+        >
+          content
+        </div>,
+        "",
+      ],
       "color": "blue",
       "defaultVisible": undefined,
+      "destroyTooltipOnHide": undefined,
       "id": "properties.color: blue",
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": undefined,
@@ -190,7 +214,7 @@ Array [
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
       "title": "color blue",
-      "trigger": undefined,
+      "trigger": "hover",
       "zIndex": undefined,
     },
     Object {},
@@ -204,18 +228,22 @@ Array [
     Object {
       "arrowPointAtCenter": undefined,
       "autoAdjustOverflow": undefined,
-      "children": <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
+      "children": Array [
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
           }
-        }
-      >
-        content
-      </div>,
+        >
+          content
+        </div>,
+        "",
+      ],
       "color": undefined,
       "defaultVisible": true,
+      "destroyTooltipOnHide": undefined,
       "id": "properties.defaultVisible: true",
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": undefined,
@@ -223,7 +251,7 @@ Array [
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
       "title": "defaultVisible true",
-      "trigger": undefined,
+      "trigger": "hover",
       "zIndex": undefined,
     },
     Object {},
@@ -237,18 +265,22 @@ Array [
     Object {
       "arrowPointAtCenter": undefined,
       "autoAdjustOverflow": undefined,
-      "children": <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
+      "children": Array [
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
           }
-        }
-      >
-        content
-      </div>,
+        >
+          content
+        </div>,
+        "",
+      ],
       "color": undefined,
       "defaultVisible": undefined,
+      "destroyTooltipOnHide": undefined,
       "id": "properties.mouseEnterDelay: 1",
       "mouseEnterDelay": 1,
       "mouseLeaveDelay": undefined,
@@ -256,7 +288,7 @@ Array [
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
       "title": "mouseEnterDelay 1",
-      "trigger": undefined,
+      "trigger": "hover",
       "zIndex": undefined,
     },
     Object {},
@@ -270,18 +302,22 @@ Array [
     Object {
       "arrowPointAtCenter": undefined,
       "autoAdjustOverflow": undefined,
-      "children": <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
+      "children": Array [
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
           }
-        }
-      >
-        content
-      </div>,
+        >
+          content
+        </div>,
+        "",
+      ],
       "color": undefined,
       "defaultVisible": undefined,
+      "destroyTooltipOnHide": undefined,
       "id": "properties.mouseLeaveDelay: 1",
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": 1,
@@ -289,7 +325,7 @@ Array [
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
       "title": "mouseLeaveDelay 1",
-      "trigger": undefined,
+      "trigger": "hover",
       "zIndex": undefined,
     },
     Object {},
@@ -303,18 +339,22 @@ Array [
     Object {
       "arrowPointAtCenter": undefined,
       "autoAdjustOverflow": undefined,
-      "children": <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
+      "children": Array [
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
           }
-        }
-      >
-        content
-      </div>,
+        >
+          content
+        </div>,
+        "",
+      ],
       "color": undefined,
       "defaultVisible": undefined,
+      "destroyTooltipOnHide": undefined,
       "id": "properties.overlayStyle: border: 5px solid blue",
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": undefined,
@@ -322,7 +362,7 @@ Array [
       "overlayStyle": "{\\"style\\":{\\"border\\":\\"5px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
       "title": "Tooltip block",
-      "trigger": undefined,
+      "trigger": "hover",
       "zIndex": undefined,
     },
     Object {},
@@ -336,18 +376,22 @@ Array [
     Object {
       "arrowPointAtCenter": undefined,
       "autoAdjustOverflow": undefined,
-      "children": <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
+      "children": Array [
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
           }
-        }
-      >
-        content
-      </div>,
+        >
+          content
+        </div>,
+        "",
+      ],
       "color": undefined,
       "defaultVisible": undefined,
+      "destroyTooltipOnHide": undefined,
       "id": "properties.placement",
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": undefined,
@@ -355,7 +399,7 @@ Array [
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": "topLeft",
       "title": "placement topLeft",
-      "trigger": undefined,
+      "trigger": "hover",
       "zIndex": undefined,
     },
     Object {},
@@ -369,18 +413,22 @@ Array [
     Object {
       "arrowPointAtCenter": undefined,
       "autoAdjustOverflow": undefined,
-      "children": <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
+      "children": Array [
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
           }
-        }
-      >
-        content
-      </div>,
+        >
+          content
+        </div>,
+        "",
+      ],
       "color": undefined,
       "defaultVisible": undefined,
+      "destroyTooltipOnHide": undefined,
       "id": "properties.title",
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": undefined,
@@ -388,7 +436,7 @@ Array [
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
       "title": "Tooltip block",
-      "trigger": undefined,
+      "trigger": "hover",
       "zIndex": undefined,
     },
     Object {},
@@ -402,18 +450,22 @@ Array [
     Object {
       "arrowPointAtCenter": undefined,
       "autoAdjustOverflow": undefined,
-      "children": <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
+      "children": Array [
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
           }
-        }
-      >
-        content
-      </div>,
+        >
+          content
+        </div>,
+        "",
+      ],
       "color": undefined,
       "defaultVisible": undefined,
+      "destroyTooltipOnHide": undefined,
       "id": "properties.trigger: click",
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": undefined,
@@ -435,18 +487,22 @@ Array [
     Object {
       "arrowPointAtCenter": undefined,
       "autoAdjustOverflow": undefined,
-      "children": <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
+      "children": Array [
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
           }
-        }
-      >
-        content
-      </div>,
+        >
+          content
+        </div>,
+        "",
+      ],
       "color": undefined,
       "defaultVisible": undefined,
+      "destroyTooltipOnHide": undefined,
       "id": "properties.zIndex: 100",
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": undefined,
@@ -454,7 +510,7 @@ Array [
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
       "title": "zIndex 1000",
-      "trigger": undefined,
+      "trigger": "hover",
       "zIndex": 1000,
     },
     Object {},
