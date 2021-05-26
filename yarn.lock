@@ -3122,7 +3122,7 @@ __metadata:
     clean-webpack-plugin: 3.0.0
     copy-webpack-plugin: 7.0.0
     css-loader: 5.0.2
-    dompurify: 2.2.6
+    dompurify: 2.2.8
     enzyme: 3.11.0
     html-webpack-plugin: 5.1.0
     identity-obj-proxy: 3.0.0
@@ -3239,7 +3239,7 @@ __metadata:
     clean-webpack-plugin: 3.0.0
     copy-webpack-plugin: 7.0.0
     css-loader: 5.0.2
-    dompurify: 2.2.6
+    dompurify: 2.2.8
     enzyme: 3.11.0
     html-webpack-plugin: 5.1.0
     identity-obj-proxy: 3.0.0
@@ -8842,10 +8842,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dompurify@npm:2.2.6":
-  version: 2.2.6
-  resolution: "dompurify@npm:2.2.6"
-  checksum: dfc77c2c603d84d4385a419acbda3f14777bf97f7a33a1de43d8a4f264171d12c916eda923715bc0199bcece20d3d6d3de730f3470d178c8ffdf25ba7ca18aee
+"dompurify@npm:2.2.8":
+  version: 2.2.8
+  resolution: "dompurify@npm:2.2.8"
+  checksum: c8498b4dc81c5b61f84c09836da7ed1ab61fce3f349bbcf669b28a44047d85f795141c4a1daa66879481560b955bfbd1dc9dae04ad554f52d727739ecb6ea545
   languageName: node
   linkType: hard
 

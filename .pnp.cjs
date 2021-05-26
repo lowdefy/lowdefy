@@ -5920,7 +5920,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["clean-webpack-plugin", "virtual:beb4c218366cad8c4da96fe997fe88a6dbf8be39fc0c58c2a268588a03658c7ba45d103fbf636a724af6c876096f657636ab125613932f8c99e093546f94adb0#npm:3.0.0"],
             ["copy-webpack-plugin", "virtual:beb4c218366cad8c4da96fe997fe88a6dbf8be39fc0c58c2a268588a03658c7ba45d103fbf636a724af6c876096f657636ab125613932f8c99e093546f94adb0#npm:7.0.0"],
             ["css-loader", "virtual:beb4c218366cad8c4da96fe997fe88a6dbf8be39fc0c58c2a268588a03658c7ba45d103fbf636a724af6c876096f657636ab125613932f8c99e093546f94adb0#npm:5.0.2"],
-            ["dompurify", "npm:2.2.6"],
+            ["dompurify", "npm:2.2.8"],
             ["enzyme", "npm:3.11.0"],
             ["html-webpack-plugin", "virtual:beb4c218366cad8c4da96fe997fe88a6dbf8be39fc0c58c2a268588a03658c7ba45d103fbf636a724af6c876096f657636ab125613932f8c99e093546f94adb0#npm:5.1.0"],
             ["identity-obj-proxy", "npm:3.0.0"],
@@ -6043,7 +6043,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["clean-webpack-plugin", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:3.0.0"],
             ["copy-webpack-plugin", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:7.0.0"],
             ["css-loader", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:5.0.2"],
-            ["dompurify", "npm:2.2.6"],
+            ["dompurify", "npm:2.2.8"],
             ["enzyme", "npm:3.11.0"],
             ["html-webpack-plugin", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:5.1.0"],
             ["identity-obj-proxy", "npm:3.0.0"],
@@ -14418,10 +14418,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["dompurify", [
-        ["npm:2.2.6", {
-          "packageLocation": "./.yarn/cache/dompurify-npm-2.2.6-2ef52db318-dfc77c2c60.zip/node_modules/dompurify/",
+        ["npm:2.2.8", {
+          "packageLocation": "./.yarn/cache/dompurify-npm-2.2.8-a7cc9802e5-c8498b4dc8.zip/node_modules/dompurify/",
           "packageDependencies": [
-            ["dompurify", "npm:2.2.6"]
+            ["dompurify", "npm:2.2.8"]
           ],
           "linkType": "HARD",
         }]
