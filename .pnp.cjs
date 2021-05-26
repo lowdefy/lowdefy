@@ -5830,7 +5830,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["create-emotion", "npm:10.0.27"],
             ["css-loader", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:5.0.2"],
             ["enzyme", "npm:3.11.0"],
-            ["enzyme-to-json", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:3.6.1"],
+            ["enzyme-to-json", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:3.6.2"],
             ["html-webpack-plugin", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:5.1.0"],
             ["identity-obj-proxy", "npm:3.0.0"],
             ["jest", "npm:26.6.3"],
@@ -5876,7 +5876,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["copy-webpack-plugin", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:7.0.0"],
             ["css-loader", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:5.0.2"],
             ["enzyme", "npm:3.11.0"],
-            ["enzyme-to-json", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:3.6.1"],
+            ["enzyme-to-json", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:3.6.2"],
             ["html-webpack-plugin", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:5.1.0"],
             ["identity-obj-proxy", "npm:3.0.0"],
             ["jest", "npm:26.6.3"],
@@ -5962,7 +5962,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["copy-webpack-plugin", "virtual:885b7c7699c189719052a46b1a9ec1286757c4ac6b604c1386cca53720d793c5403bf2f82e8d576afe6e296a65179038188b229308256e2723b9e95f9bb39b0d#npm:7.0.0"],
             ["css-loader", "virtual:885b7c7699c189719052a46b1a9ec1286757c4ac6b604c1386cca53720d793c5403bf2f82e8d576afe6e296a65179038188b229308256e2723b9e95f9bb39b0d#npm:5.0.2"],
             ["enzyme", "npm:3.11.0"],
-            ["enzyme-to-json", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:3.6.1"],
+            ["enzyme-to-json", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:3.6.2"],
             ["html-webpack-plugin", "virtual:885b7c7699c189719052a46b1a9ec1286757c4ac6b604c1386cca53720d793c5403bf2f82e8d576afe6e296a65179038188b229308256e2723b9e95f9bb39b0d#npm:5.1.0"],
             ["identity-obj-proxy", "npm:3.0.0"],
             ["jest", "npm:26.6.3"],
@@ -14821,17 +14821,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["enzyme-to-json", [
-        ["npm:3.6.1", {
-          "packageLocation": "./.yarn/cache/enzyme-to-json-npm-3.6.1-0a5df95aa9-13a2384950.zip/node_modules/enzyme-to-json/",
+        ["npm:3.6.2", {
+          "packageLocation": "./.yarn/cache/enzyme-to-json-npm-3.6.2-ea15cbb1e0-5aedfe487f.zip/node_modules/enzyme-to-json/",
           "packageDependencies": [
-            ["enzyme-to-json", "npm:3.6.1"]
+            ["enzyme-to-json", "npm:3.6.2"]
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:3.6.1", {
-          "packageLocation": "./.yarn/$$virtual/enzyme-to-json-virtual-7d33ef62c9/0/cache/enzyme-to-json-npm-3.6.1-0a5df95aa9-13a2384950.zip/node_modules/enzyme-to-json/",
+        ["virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:3.6.2", {
+          "packageLocation": "./.yarn/$$virtual/enzyme-to-json-virtual-9dc55a8b0c/0/cache/enzyme-to-json-npm-3.6.2-ea15cbb1e0-5aedfe487f.zip/node_modules/enzyme-to-json/",
           "packageDependencies": [
-            ["enzyme-to-json", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:3.6.1"],
+            ["enzyme-to-json", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:3.6.2"],
             ["@types/cheerio", "npm:0.22.28"],
             ["@types/enzyme", null],
             ["enzyme", "npm:3.11.0"],

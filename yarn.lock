@@ -3036,7 +3036,7 @@ __metadata:
     create-emotion: 10.0.27
     css-loader: 5.0.2
     enzyme: 3.11.0
-    enzyme-to-json: 3.6.1
+    enzyme-to-json: 3.6.2
     html-webpack-plugin: 5.1.0
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
@@ -3080,7 +3080,7 @@ __metadata:
     copy-webpack-plugin: 7.0.0
     css-loader: 5.0.2
     enzyme: 3.11.0
-    enzyme-to-json: 3.6.1
+    enzyme-to-json: 3.6.2
     html-webpack-plugin: 5.1.0
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
@@ -3162,7 +3162,7 @@ __metadata:
     copy-webpack-plugin: 7.0.0
     css-loader: 5.0.2
     enzyme: 3.11.0
-    enzyme-to-json: 3.6.1
+    enzyme-to-json: 3.6.2
     html-webpack-plugin: 5.1.0
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
@@ -9166,16 +9166,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"enzyme-to-json@npm:3.6.1":
-  version: 3.6.1
-  resolution: "enzyme-to-json@npm:3.6.1"
+"enzyme-to-json@npm:3.6.2":
+  version: 3.6.2
+  resolution: "enzyme-to-json@npm:3.6.2"
   dependencies:
     "@types/cheerio": ^0.22.22
-    lodash: ^4.17.15
+    lodash: ^4.17.21
     react-is: ^16.12.0
   peerDependencies:
     enzyme: ^3.4.0
-  checksum: 13a2384950bb80f1ee58b1c0a9b6a28781915f09f4b2367f2208a9a482f54bc5b254d1f71da4c93ac64e469a2ec3f8c7a4ded9740c48072ef6ec33f279d391bb
+  checksum: 5aedfe487f3f37b875a926ab8df64df335f40f04b5c77da87972c7b937887e7211a3e5fce253f8ea55f037212e01e4a6b03ca37eda1b9196d8d675d041cf32df
   languageName: node
   linkType: hard
 
