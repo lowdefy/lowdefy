@@ -3422,7 +3422,7 @@ __metadata:
     jest: 26.6.3
     jest-diff: 26.6.2
     lodash.merge: 4.6.2
-    query-string: 6.14.0
+    query-string: 7.0.0
   languageName: unknown
   linkType: soft
 
@@ -17181,15 +17181,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"query-string@npm:6.14.0":
-  version: 6.14.0
-  resolution: "query-string@npm:6.14.0"
+"query-string@npm:7.0.0":
+  version: 7.0.0
+  resolution: "query-string@npm:7.0.0"
   dependencies:
     decode-uri-component: ^0.2.0
     filter-obj: ^1.1.0
     split-on-first: ^1.0.0
     strict-uri-encode: ^2.0.0
-  checksum: 70af3a82fe9babc51b72ed9d68cd5485754ee84456b8d1ab80c8f8fdda9302630513b91d96ed89e701cbdf04619bbcde1695b061ea47b91b099c9f79e4080bba
+  checksum: bfdb88aee494c246b1ed2614cd55e5ada111860755e4fa79271cbc6dcc8198db8d9b21873489f83a06027f78d293f37989b4602d36a642ea632cf22713ecc63d
   languageName: node
   linkType: hard
 
