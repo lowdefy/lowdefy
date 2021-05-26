@@ -293,6 +293,9 @@
         - id: Icon
           type: MenuLink
           pageId: Icon
+        - id: Img
+          type: MenuLink
+          pageId: Img
         - id: Markdown
           type: MenuLink
           pageId: Markdown
@@ -388,9 +391,6 @@
         - id: Context
           type: MenuLink
           pageId: Context
-        - id: PageHCF
-          type: MenuLink
-          pageId: PageHCF
         - id: PageHCF
           type: MenuLink
           pageId: PageHCF

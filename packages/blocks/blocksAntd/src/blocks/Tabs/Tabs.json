@@ -83,22 +83,22 @@
           "description": "Area key for the extra area blocks."
         }
       }
-    }
-  },
-  "events": {
-    "type": "object",
-    "properties": {
-      "onChange": {
-        "type": "array",
-        "description": "Trigger action on tab change."
-      },
-      "onTabScroll": {
-        "type": "array",
-        "description": "Trigger action on tab scroll."
-      },
-      "onTabClick": {
-        "type": "array",
-        "description": "Trigger action on tab click."
+    },
+    "events": {
+      "type": "object",
+      "properties": {
+        "onChange": {
+          "type": "array",
+          "description": "Trigger action on tab change."
+        },
+        "onTabScroll": {
+          "type": "array",
+          "description": "Trigger action on tab scroll."
+        },
+        "onTabClick": {
+          "type": "array",
+          "description": "Trigger action on tab click."
+        }
       }
     }
   }

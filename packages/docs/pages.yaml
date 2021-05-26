@@ -74,6 +74,7 @@
 - _ref: blocks/display/EChart.yaml
 - _ref: blocks/display/Html.yaml
 - _ref: blocks/display/Icon.yaml
+- _ref: blocks/display/Img.yaml
 - _ref: blocks/display/Markdown.yaml
 - _ref: blocks/display/MarkdownWithCode.yaml
 - _ref: blocks/display/Menu.yaml
