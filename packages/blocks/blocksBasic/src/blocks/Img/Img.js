@@ -14,13 +14,25 @@
   limitations under the License.
 */
 
-import Box from './blocks/Box/Box';
-import Context from './blocks/Context/Context';
-import DangerousHtml from './blocks/DangerousHtml/DangerousHtml';
-import Html from './blocks/Html/Html';
-import Img from './blocks/Img/Img';
-import List from './blocks/List/List';
-import Span from './blocks/Span/Span';
+import React from 'react';
+import { blockDefaultProps } from '@lowdefy/block-tools';
 
-export { Box, Context, DangerousHtml, Html, Img, List, Span };
-export default { Box, Context, DangerousHtml, Html, Img, List, Span };
+const ImgBlock = ({ blockId, events, properties, methods }) => {
+  const { style, ...allProps } = properties;
+  return (
+    <img
+      {...allProps}
+      id={blockId}
+      data-testid={blockId}
+      onClick={() => methods.triggerEvent({ name: 'onClick' })}
+      className={methods.makeCssClass([
+        { outline: 'none', cursor: events.onClick && 'pointer' },
+        properties.style,
+      ])}
+    />
+  );
+};
+
+ImgBlock.defaultProps = blockDefaultProps;
+
+export default ImgBlock;
