@@ -3485,7 +3485,7 @@ __metadata:
   dependencies:
     "@yarnpkg/pnpify": 2.4.0
     eslint: 7.27.0
-    eslint-config-prettier: 7.2.0
+    eslint-config-prettier: 8.3.0
     eslint-import-resolver-node: 0.3.4
     eslint-plugin-import: 2.23.3
     eslint-plugin-jsx-a11y: 6.4.1
@@ -9254,14 +9254,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-prettier@npm:7.2.0":
-  version: 7.2.0
-  resolution: "eslint-config-prettier@npm:7.2.0"
+"eslint-config-prettier@npm:8.3.0":
+  version: 8.3.0
+  resolution: "eslint-config-prettier@npm:8.3.0"
   peerDependencies:
     eslint: ">=7.0.0"
   bin:
     eslint-config-prettier: bin/cli.js
-  checksum: 6812150ea49703cd64035527205b4905bc1edcd34646e71f71665e1acff9ab4648f872598389bdb209964093ad73993830a2c821ba12642764a5293513b92a58
+  checksum: 94ccbb50fb67e5e47e8ba6cfa257b5cbf53619990ab13f46b99518cfe9b900394b93bdf6ffedbde1a8e2997d301b0fbd73a6b4202146bc53475dfb30a8c812f2
   languageName: node
   linkType: hard
 

@@ -6,11 +6,11 @@ env:
 settings:
   import/resolver: node
 extends:
-  - prettier
   - eslint:recommended
   - plugin:react/recommended
   - plugin:import/errors
   - plugin:import/warnings
+  - plugin:prettier/recommended
 
 plugins:
   - import
