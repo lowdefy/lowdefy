@@ -19,18 +19,21 @@ import SendGridMailSend from './SendGridMailSend';
 
 const { resolver, schema } = SendGridMailSend;
 
+const mockSend = jest.fn();
+
 jest.mock('@sendgrid/mail', () => {
   return {
     setApiKey: jest.fn(),
     send: (msg) => {
-      if (msg.to === 'response_error') {
+      if (msg[0].to === 'response_error') {
         const error = new Error('Test error.');
         error.response = { body: ['Test error 1.', 'Test error 2.'] };
         throw error;
       }
-      if (msg.to === 'generic_error') {
+      if (msg[0].to === 'generic_error') {
         throw new Error('Test error.');
       }
+      mockSend(msg);
       return Promise.resolve(msg);
     },
   };
@@ -52,6 +55,20 @@ test('send with valid request and connection', async () => {
     from: { name: 'a@b.om', email: 'a.cc@mm.co' },
   };
   const send = await resolver({ request, connection });
+  expect(mockSend.mock.calls).toEqual([
+    [
+      [
+        {
+          from: { email: 'a.cc@mm.co', name: 'a@b.om' },
+          mailSettings: undefined,
+          subject: 'A',
+          templateId: undefined,
+          text: 'B',
+          to: 'a@b.com',
+        },
+      ],
+    ],
+  ]);
   expect(send).toEqual({
     response: 'Mail sent successfully',
   });
@@ -68,6 +85,20 @@ test('send to list of emails', async () => {
     from: 'x@y.com',
   };
   const send = await resolver({ request, connection });
+  expect(mockSend.mock.calls).toEqual([
+    [
+      [
+        {
+          from: 'x@y.com',
+          mailSettings: undefined,
+          subject: 'A',
+          templateId: undefined,
+          text: 'B',
+          to: ['a@b.com', 'aaa bbb <aaa@bbb.com>', { email: 'ddd@eee.com', name: 'ccc' }],
+        },
+      ],
+    ],
+  ]);
   expect(send).toEqual({
     response: 'Mail sent successfully',
   });
@@ -91,6 +122,28 @@ test('send a list of different emails', async () => {
     from: 'x@y.com',
   };
   const send = await resolver({ request, connection });
+  expect(mockSend.mock.calls).toEqual([
+    [
+      [
+        {
+          from: 'x@y.com',
+          mailSettings: undefined,
+          subject: 'A',
+          templateId: undefined,
+          text: 'A',
+          to: 'a@b.com',
+        },
+        {
+          from: 'x@y.com',
+          mailSettings: undefined,
+          subject: 'B',
+          templateId: undefined,
+          text: 'B',
+          to: 'b@b.com',
+        },
+      ],
+    ],
+  ]);
   expect(send).toEqual({
     response: 'Mail sent successfully',
   });
