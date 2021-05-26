@@ -3027,7 +3027,7 @@ __metadata:
     "@babel/preset-env": 7.13.12
     "@babel/preset-react": 7.13.13
     "@lowdefy/helpers": 3.15.0
-    "@wojtekmaj/enzyme-adapter-react-17": 0.6.0
+    "@wojtekmaj/enzyme-adapter-react-17": 0.6.1
     ajv: 6.12.6
     ajv-errors: 1.0.1
     babel-jest: 26.6.3
@@ -3069,7 +3069,7 @@ __metadata:
     "@lowdefy/block-tools": 3.15.0
     "@lowdefy/color": 3.15.0
     "@lowdefy/helpers": 3.15.0
-    "@wojtekmaj/enzyme-adapter-react-17": 0.6.0
+    "@wojtekmaj/enzyme-adapter-react-17": 0.6.1
     antd: 4.4.2
     babel-jest: 26.6.3
     babel-loader: 8.2.2
@@ -3115,7 +3115,7 @@ __metadata:
     "@babel/preset-react": 7.12.13
     "@lowdefy/block-tools": 3.15.0
     "@lowdefy/helpers": 3.15.0
-    "@wojtekmaj/enzyme-adapter-react-17": 0.6.0
+    "@wojtekmaj/enzyme-adapter-react-17": 0.6.1
     babel-jest: 26.6.3
     babel-loader: 8.2.2
     buffer: 6.0.3
@@ -3153,7 +3153,7 @@ __metadata:
     "@lowdefy/block-tools": 3.15.0
     "@lowdefy/blocks-antd": 3.15.0
     "@lowdefy/helpers": 3.15.0
-    "@wojtekmaj/enzyme-adapter-react-17": 0.6.0
+    "@wojtekmaj/enzyme-adapter-react-17": 0.6.1
     babel-jest: 26.6.3
     babel-loader: 8.2.2
     babel-plugin-import: 1.13.3
@@ -3232,7 +3232,7 @@ __metadata:
     "@babel/preset-react": 7.12.13
     "@lowdefy/block-tools": 3.15.0
     "@lowdefy/helpers": 3.15.0
-    "@wojtekmaj/enzyme-adapter-react-17": 0.6.0
+    "@wojtekmaj/enzyme-adapter-react-17": 0.6.1
     babel-jest: 26.6.3
     babel-loader: 8.2.2
     buffer: 6.0.3
@@ -4864,9 +4864,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wojtekmaj/enzyme-adapter-react-17@npm:0.6.0":
-  version: 0.6.0
-  resolution: "@wojtekmaj/enzyme-adapter-react-17@npm:0.6.0"
+"@wojtekmaj/enzyme-adapter-react-17@npm:0.6.1":
+  version: 0.6.1
+  resolution: "@wojtekmaj/enzyme-adapter-react-17@npm:0.6.1"
   dependencies:
     "@wojtekmaj/enzyme-adapter-utils": ^0.1.0
     enzyme-shallow-equal: ^1.0.0
@@ -4880,7 +4880,7 @@ __metadata:
     enzyme: ^3.0.0
     react: ^17.0.0-0
     react-dom: ^17.0.0-0
-  checksum: 5aa055cd9d29dc39537ce05120d5dc7362a4318034486533cb7fc430ca9e2c91dad57764d403b1d1fa20aff9abb41743b2e87e0622590b792712b199c476ae17
+  checksum: 5ffce75cd5ecdf7074060a374cefb586f8dc07808768cf0163b67462d20e9f784b3a65b0e27ea93953ced3af37182779c7847608e6d3933726d53e7fd7d34fa5
   languageName: node
   linkType: hard
 
