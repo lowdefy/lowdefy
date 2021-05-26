@@ -18,8 +18,9 @@ import Box from './blocks/Box/Box';
 import Context from './blocks/Context/Context';
 import DangerousHtml from './blocks/DangerousHtml/DangerousHtml';
 import Html from './blocks/Html/Html';
+import Img from './blocks/Img/Img';
 import List from './blocks/List/List';
 import Span from './blocks/Span/Span';
 
-export { Box, Context, DangerousHtml, Html, Span, List };
-export default { Box, Context, DangerousHtml, Html, Span, List };
+export { Box, Context, DangerousHtml, Html, Img, List, Span };
+export default { Box, Context, DangerousHtml, Html, Img, List, Span };

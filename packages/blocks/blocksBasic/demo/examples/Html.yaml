@@ -8,7 +8,7 @@
 - id: properties.style
   type: Html
   properties:
-    style: 
+    style:
       background: yellow
       padding: 10
     html: |
@@ -16,7 +16,7 @@
 - id: properties.html-styled
   type: Html
   properties:
-    style: 
+    style:
       background: yellow
       padding: 10
     html: |

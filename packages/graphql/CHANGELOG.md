@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.16.1](https://github.com/lowdefy/lowdefy/compare/v3.16.0...v3.16.1) (2021-05-26)
+
+**Note:** Version bump only for package @lowdefy/graphql
+
+
+
+
+
+# [3.16.0](https://github.com/lowdefy/lowdefy/compare/v3.15.0...v3.16.0) (2021-05-26)
+
+
+### Bug Fixes
+
+* **graphql:** SendGridMailSend to handle arrays, closes [#582](https://github.com/lowdefy/lowdefy/issues/582) ([dc0ef6c](https://github.com/lowdefy/lowdefy/commit/dc0ef6c521d1b4e5b2c498e2932cc2c2d83f5eb1))
+
+
+
+
+
 # [3.15.0](https://github.com/lowdefy/lowdefy/compare/v3.14.1...v3.15.0) (2021-05-11)
 
 

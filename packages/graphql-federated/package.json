@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/graphql-federated",
-  "version": "3.15.0",
+  "version": "3.16.1",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -37,7 +37,7 @@
     "webpack": "webpack --config webpack.config.js"
   },
   "dependencies": {
-    "@lowdefy/graphql": "3.15.0"
+    "@lowdefy/graphql": "3.16.1"
   },
   "devDependencies": {
     "@babel/cli": "7.14.3",

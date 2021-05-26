@@ -18,7 +18,7 @@ Array [
 ]
 `;
 
-exports[`Mock render - default - value[0] - default 2`] = `
+exports[`Mock render - default title - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -26,7 +26,7 @@ Array [
       "children": false,
       "colon": undefined,
       "column": undefined,
-      "id": "default",
+      "id": "default title",
       "layout": undefined,
       "size": undefined,
       "title": "Descriptions title",
@@ -43,16 +43,19 @@ Array [
       "bordered": true,
       "children": Array [
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_one"
         >
           value one
         </mockConstructor>,
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_two"
         >
           2
         </mockConstructor>,
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_three"
         >
           value three
@@ -77,16 +80,19 @@ Array [
       "bordered": undefined,
       "children": Array [
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_one"
         >
           value one
         </mockConstructor>,
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_two"
         >
           2
         </mockConstructor>,
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_three"
         >
           value three
@@ -111,16 +117,19 @@ Array [
       "bordered": undefined,
       "children": Array [
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_one"
         >
           value one
         </mockConstructor>,
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_two"
         >
           2
         </mockConstructor>,
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_three"
         >
           value three
@@ -145,18 +154,21 @@ Array [
       "bordered": undefined,
       "children": Array [
         <mockConstructor
+          className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null]}"
           label="field_one"
           span={1}
         >
           1
         </mockConstructor>,
         <mockConstructor
+          className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null]}"
           label="field_two"
           span={1}
         >
           2
         </mockConstructor>,
         <mockConstructor
+          className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null]}"
           label="field_three"
           span={2}
         >
@@ -175,40 +187,34 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.items-list-primitive - value[0] - default 1`] = `
+exports[`Mock render - properties.items-list with new lines - value[0] - default 1`] = `
 Array [
   Array [
     Object {
       "bordered": undefined,
       "children": Array [
         <mockConstructor
-          label={1}
+          className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null]}"
+          label="field_one"
           span={1}
         >
-          1
+          description field with 
+new line 	 helps
+ make better content.
         </mockConstructor>,
         <mockConstructor
-          label={2}
-          span={2}
+          className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null]}"
+          label="one \\\\n two;"
+          span={1}
         >
-          2
-        </mockConstructor>,
-        <mockConstructor
-          label={3}
-          span={3}
-        >
-          3
-        </mockConstructor>,
-        <mockConstructor
-          label={4}
-          span={4}
-        >
-          4
+          description field with 
+new line 	 helps
+ make better content.
         </mockConstructor>,
       ],
       "colon": undefined,
-      "column": undefined,
-      "id": "properties.items-list-primitive",
+      "column": 2,
+      "id": "properties.items-list with new lines",
       "layout": undefined,
       "size": undefined,
       "title": "Title",
@@ -225,16 +231,19 @@ Array [
       "bordered": undefined,
       "children": Array [
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_one"
         >
           value one
         </mockConstructor>,
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_two"
         >
           2
         </mockConstructor>,
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_three"
         >
           value three
@@ -252,6 +261,41 @@ Array [
 ]
 `;
 
+exports[`Mock render - properties.items-object with new lines - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bordered": undefined,
+      "children": Array [
+        <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+          label="field_one"
+        >
+          description one field with 
+ new line 	 helps
+ make better content.
+        </mockConstructor>,
+        <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+          label="one \\\\n two;"
+        >
+          description two field with 
+ new line 	 helps
+ make better content.
+        </mockConstructor>,
+      ],
+      "colon": undefined,
+      "column": 2,
+      "id": "properties.items-object with new lines",
+      "layout": undefined,
+      "size": undefined,
+      "title": "Title",
+    },
+    Object {},
+  ],
+]
+`;
+
 exports[`Mock render - properties.items-object-object - value[0] - default 1`] = `
 Array [
   Array [
@@ -259,16 +303,19 @@ Array [
       "bordered": undefined,
       "children": Array [
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="one"
         >
           {"two":3}
         </mockConstructor>,
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="four"
         >
           {"five":"six"}
         </mockConstructor>,
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="seven"
         >
           {"eight":[9,"ten"]}
@@ -293,16 +340,19 @@ Array [
       "bordered": undefined,
       "children": Array [
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_one"
         >
           value one
         </mockConstructor>,
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_two"
         >
           2
         </mockConstructor>,
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_three"
         >
           value three
@@ -327,16 +377,19 @@ Array [
       "bordered": undefined,
       "children": Array [
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_one"
         >
           value one
         </mockConstructor>,
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_two"
         >
           2
         </mockConstructor>,
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_three"
         >
           value three
@@ -361,16 +414,19 @@ Array [
       "bordered": undefined,
       "children": Array [
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_one"
         >
           value one
         </mockConstructor>,
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_two"
         >
           2
         </mockConstructor>,
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_three"
         >
           value three
@@ -395,31 +451,37 @@ Array [
       "bordered": true,
       "children": Array [
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_one"
         >
           value one
         </mockConstructor>,
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_two"
         >
           2
         </mockConstructor>,
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_three"
         >
           value three
         </mockConstructor>,
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_4"
         >
           value 4
         </mockConstructor>,
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_5"
         >
           5
         </mockConstructor>,
         <mockConstructor
+          className="{\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
           label="field_6"
         >
           value 6
