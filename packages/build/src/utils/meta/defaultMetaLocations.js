@@ -32,6 +32,9 @@ const defaultMetaLocations = {
   Html: {
     url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-basic/meta/Html.json`,
   },
+  Img: {
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-basic/meta/Img.json`,
+  },
   List: {
     url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-basic/meta/List.json`,
   },
@@ -222,6 +225,9 @@ const defaultMetaLocations = {
   },
   TitleInput: {
     url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/TitleInput.json`,
+  },
+  Tooltip: {
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Tooltip.json`,
   },
   UserAvatar: {
     url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/UserAvatar.json`,

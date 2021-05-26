@@ -59,4 +59,4 @@ pages:
     path: pages.yaml
     # Commented out because it loops
     # Use to generate new sitemap if pages are added
-    transformer: templates/generateSitemap.js
+    # transformer: templates/generateSitemap.js
