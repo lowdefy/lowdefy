@@ -3068,7 +3068,7 @@ __metadata:
     css-loader: 5.2.6
     enzyme: 3.11.0
     enzyme-to-json: 3.6.2
-    html-webpack-plugin: 5.1.0
+    html-webpack-plugin: 5.3.1
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
     js-yaml: 4.0.0
@@ -3112,7 +3112,7 @@ __metadata:
     css-loader: 5.2.6
     enzyme: 3.11.0
     enzyme-to-json: 3.6.2
-    html-webpack-plugin: 5.1.0
+    html-webpack-plugin: 5.3.1
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
     jest-serializer-html: 7.0.0
@@ -3155,7 +3155,7 @@ __metadata:
     css-loader: 5.2.6
     dompurify: 2.2.8
     enzyme: 3.11.0
-    html-webpack-plugin: 5.1.0
+    html-webpack-plugin: 5.3.1
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
     js-yaml: 4.0.0
@@ -3194,7 +3194,7 @@ __metadata:
     css-loader: 5.2.6
     enzyme: 3.11.0
     enzyme-to-json: 3.6.2
-    html-webpack-plugin: 5.1.0
+    html-webpack-plugin: 5.3.1
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
     jest-serializer-html: 7.0.0
@@ -3234,7 +3234,7 @@ __metadata:
     css-loader: 5.2.6
     echarts: 5.0.2
     echarts-for-react: 3.0.1
-    html-webpack-plugin: 5.1.0
+    html-webpack-plugin: 5.3.1
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
     js-yaml: 4.0.0
@@ -3272,7 +3272,7 @@ __metadata:
     css-loader: 5.2.6
     dompurify: 2.2.8
     enzyme: 3.11.0
-    html-webpack-plugin: 5.1.0
+    html-webpack-plugin: 5.3.1
     identity-obj-proxy: 3.0.0
     imports-loader: 2.0.0
     jest: 26.6.3
@@ -3466,7 +3466,7 @@ __metadata:
     buffer: 6.0.3
     clean-webpack-plugin: 3.0.0
     css-loader: 5.2.6
-    html-webpack-plugin: 5.1.0
+    html-webpack-plugin: 5.3.1
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
     js-yaml: 4.0.0
@@ -3575,7 +3575,7 @@ __metadata:
     css-loader: 5.2.6
     graphql: 15.5.0
     graphql-type-json: 0.3.2
-    html-webpack-plugin: 5.1.0
+    html-webpack-plugin: 5.3.1
     react: 17.0.2
     react-dom: 17.0.2
     react-helmet: 6.1.0
@@ -3609,7 +3609,7 @@ __metadata:
     dotenv: 8.2.0
     express: 4.17.1
     graphql: 15.5.0
-    html-webpack-plugin: 5.1.0
+    html-webpack-plugin: 5.3.1
     jest: 26.6.3
     nodemon: 2.0.7
     react: 17.0.2
@@ -3639,7 +3639,7 @@ __metadata:
     css-loader: 5.2.6
     express: 4.17.1
     graphql: 15.5.0
-    html-webpack-plugin: 5.1.0
+    html-webpack-plugin: 5.3.1
     jest: 26.6.3
     nodemon: 2.0.7
     react: 17.0.2
@@ -3669,7 +3669,7 @@ __metadata:
     css-loader: 5.2.6
     express: 4.17.1
     graphql: 15.5.0
-    html-webpack-plugin: 5.1.0
+    html-webpack-plugin: 5.3.1
     jest: 26.6.3
     react: 17.0.2
     react-dom: 17.0.2
@@ -11405,19 +11405,18 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"html-webpack-plugin@npm:5.1.0":
-  version: 5.1.0
-  resolution: "html-webpack-plugin@npm:5.1.0"
+"html-webpack-plugin@npm:5.3.1":
+  version: 5.3.1
+  resolution: "html-webpack-plugin@npm:5.3.1"
   dependencies:
     "@types/html-minifier-terser": ^5.0.0
     html-minifier-terser: ^5.0.1
-    loader-utils: ^2.0.0
     lodash: ^4.17.20
     pretty-error: ^2.1.1
     tapable: ^2.0.0
   peerDependencies:
     webpack: ^5.20.0
-  checksum: ad67436ac7f4fa9450d2184538b42fb3ffb0801008b61d46b17efdb95a38d650d4ed025765945c355a97b2ff55a45af0b4832357405bf430343062204f354ea2
+  checksum: 2d744cf3144686cc4b786dac8fbbce3733dd1825a99efea2f289b54e47201f8431df56114d72eb87cf4f78aa8dede6ea5ee09904313dbd72209dc3a43a804b51
   languageName: node
   linkType: hard
 
@@ -14103,7 +14102,7 @@ fsevents@^1.2.7:
     express: 4.17.1
     fs-extra: 9.1.0
     graphql: 15.5.0
-    html-webpack-plugin: 5.1.0
+    html-webpack-plugin: 5.3.1
     inquirer: 7.3.3
     jest: 26.6.3
     js-yaml: 4.0.0
