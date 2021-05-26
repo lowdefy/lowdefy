@@ -15,6 +15,7 @@
 */
 
 import sendgrid from '@sendgrid/mail';
+import { type } from '@lowdefy/helpers';
 import schema from './SendGridMailSendSchema.json';
 
 // https://sendgrid.api-docs.io/v3.0/how-to-use-the-sendgrid-v3-api/api-authentication
@@ -22,41 +23,15 @@ import schema from './SendGridMailSendSchema.json';
 
 async function sendGridMailSend({ request, connection }) {
   const { apiKey, from, templateId, mailSettings } = connection;
-  const {
-    to,
-    cc,
-    bcc,
-    replyTo,
-    subject,
-    text,
-    html,
-    dynamicTemplateData,
-    attachments,
-    categories,
-    sendAt,
-    batchId,
-  } = request;
-
   sendgrid.setApiKey(apiKey);
-  const msg = {
-    to,
-    cc,
-    bcc,
+  const messages = (type.isArray(request) ? request : [request]).map((msg) => ({
+    ...msg,
     from,
-    replyTo,
-    subject,
-    text,
-    html,
     templateId,
-    dynamicTemplateData,
-    attachments,
-    categories,
-    sendAt,
-    batchId,
     mailSettings,
-  };
+  }));
   try {
-    await sendgrid.send(msg);
+    await sendgrid.send(messages);
   } catch (error) {
     if (error.response) {
       throw new Error(JSON.stringify(error.response.body));
