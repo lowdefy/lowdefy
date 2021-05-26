@@ -39,15 +39,15 @@
       - label: 'one \n two;'
         value: "description field with \nnew line \t helps\n make better content."
         span: 1
-- id: properties.items-list-primitive
-  type: Descriptions
-  properties:
-    title: Title
-    items:
-      - 1
-      - 2
-      - 3
-      - 4
+# - id: properties.items-list-primitive
+#   type: Descriptions
+#   properties:
+#     title: Title
+#     items:
+#       - 1
+#       - 2
+#       - 3
+#       - 4
 - id: properties.items-object-object
   type: Descriptions
   properties:

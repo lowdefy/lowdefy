@@ -351,98 +351,6 @@ new line 	 helps
 </div>
 `;
 
-exports[`Render properties.items-list-primitive - value[0] 1`] = `
-<div
-  className="ant-descriptions"
->
-  <div
-    className="ant-descriptions-title"
-  >
-    Title
-  </div>
-  <div
-    className="ant-descriptions-view"
-  >
-    <table>
-      <tbody>
-        <tr
-          className="ant-descriptions-row"
-        >
-          <td
-            className="ant-descriptions-item"
-            colSpan={1}
-          >
-            <span
-              className="ant-descriptions-item-label"
-            >
-              1
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
-              1
-            </span>
-          </td>
-          <td
-            className="ant-descriptions-item"
-            colSpan={2}
-          >
-            <span
-              className="ant-descriptions-item-label"
-            >
-              2
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
-              2
-            </span>
-          </td>
-        </tr>
-        <tr
-          className="ant-descriptions-row"
-        >
-          <td
-            className="ant-descriptions-item"
-            colSpan={3}
-          >
-            <span
-              className="ant-descriptions-item-label"
-            >
-              3
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
-              3
-            </span>
-          </td>
-        </tr>
-        <tr
-          className="ant-descriptions-row"
-        >
-          <td
-            className="ant-descriptions-item"
-            colSpan={3}
-          >
-            <span
-              className="ant-descriptions-item-label"
-            >
-              4
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
-              4
-            </span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-`;
-
 exports[`Render properties.items-object - value[0] 1`] = `
 <div
   className="ant-descriptions"
@@ -972,10 +880,6 @@ exports[`Test Schema properties.items-list 2`] = `null`;
 exports[`Test Schema properties.items-list with new lines 1`] = `true`;
 
 exports[`Test Schema properties.items-list with new lines 2`] = `null`;
-
-exports[`Test Schema properties.items-list-primitive 1`] = `true`;
-
-exports[`Test Schema properties.items-list-primitive 2`] = `null`;
 
 exports[`Test Schema properties.items-object 1`] = `true`;
 
