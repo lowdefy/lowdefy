@@ -70,15 +70,15 @@
           "type": "integer",
           "description": "The z-index of the Tooltip."
         }
-      },
-      "events": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "onVisibleChange": {
-            "type": "array",
-            "description": "Trigger action when visibility of the tooltip card is changed."
-          }
+      }
+    },
+    "events": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "onVisibleChange": {
+          "type": "array",
+          "description": "Trigger action when visibility of the tooltip card is changed."
         }
       }
     }
