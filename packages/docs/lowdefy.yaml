@@ -16,6 +16,9 @@ name: '@lowdefy/docs'
 lowdefy: '3.15.0'
 licence: Apache-2.0
 
+types:
+  Tooltip: 
+    url: http://localhost:3002/meta/Tooltip.json
 global:
   all_icons:
     _ref: blocks/all_icons.yaml

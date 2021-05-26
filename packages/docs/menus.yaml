@@ -375,6 +375,9 @@
         - id: Tabs
           type: MenuLink
           pageId: Tabs
+        - id: Tooltip
+          type: MenuLink
+          pageId: Tooltip
 
     - id: blocks_context
       type: MenuGroup
