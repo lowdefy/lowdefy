@@ -40,7 +40,7 @@
     "@lowdefy/helpers": "3.15.0",
     "@lowdefy/nunjucks": "3.15.0",
     "deep-diff": "1.0.2",
-    "js-yaml": "4.0.0",
+    "js-yaml": "4.1.0",
     "mingo": "4.1.2",
     "quickjs-emscripten": "0.11.0",
     "uuid": "8.3.2"
