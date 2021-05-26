@@ -180,7 +180,7 @@ _ref:
             Open the `lowdefy.yaml` file using a text editor like [VS Code](https://code.visualstudio.com/download). The content of the file should look like this:
 
             ```yaml
-            lowdefy: 3.15.0
+            lowdefy: 3.16.1
             name: Lowdefy starter
 
             pages:

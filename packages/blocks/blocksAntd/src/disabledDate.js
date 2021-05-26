@@ -35,7 +35,7 @@ const disabledDate = (disabledDates = {}) => {
     .filter((range) => range !== null);
 
   return (currentDate) => {
-    const utcCurrentData = currentDate.utc();
+    const utcCurrentData = currentDate.clone().utc();
     if (min && utcCurrentData.isBefore(min)) return true;
     if (max && utcCurrentData.isAfter(max)) return true;
     let match = dates.find((date) => date.isSame(utcCurrentData.startOf('day')));

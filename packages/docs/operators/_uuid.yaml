@@ -19,6 +19,7 @@ _ref:
     pageId: _uuid
     pageTitle: _uuid
     filePath: operators/_uuid.yaml
+    env: Server Only
     types: |
       ```
       (void): string

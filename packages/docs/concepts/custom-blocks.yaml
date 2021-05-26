@@ -20,20 +20,24 @@ _ref:
     section: Concepts
     filePath: concepts/custom-blocks.yaml
     content:
+      - id: warning
+        type: Alert
+        properties:
+          message: |
+            SECURITY WARNING: Blocks execute JavaScript inside your Lowdefy app. Insecure code can expose your app or data. Make sure that you only load blocks from a trusted source.
+          type: warning
       - id: md1
         type: MarkdownWithCode
         properties:
           content: |
-            > __NOTE__: Blocks run javascript on your site - this can lead to potential security vulnerabilities. __Make sure you trust the block publisher or even better, host your own blocks.__
-
             Blocks in Lowdefy are simple, most often state-less, [React components](https://reactjs.org/docs/components-and-props.html). Lowdefy uses [webpack module federation](https://webpack.js.org/concepts/module-federation/) to implement a micro front-end strategy. This means blocks are imported at load time, and not part of the Lowdefy app build.
 
             The decoupling of blocks provides the considerable advantages:
             - Block developers can extend the UI capabilities of Lowdefy by building blocks for the community to utilize.
             - Lowdefy app developers can use community blocks to experiment and extend their apps.
-            - Lowdefy blocks are simple, most often stateless React components, thus blocks can be developed fast and can be used inside Lowdefy apps with ease.
+            - Lowdefy blocks are simple, most often stateless React components, thus blocks can be developed quickly and can be used inside Lowdefy apps with ease.
             - The build process is simple and fast since you only build the code for your block, and not the entire application.
-            - The Lowdefy engine takes care off the application state, the the block only has to concern itself which a easy application interface.
+            - The Lowdefy engine takes care off the application state, the the block only has to concern itself with a easy application interface.
 
             ## Using Custom Blocks
 
@@ -41,7 +45,7 @@ _ref:
 
             ```yaml
             name: dashboard-app
-            lowdefy: 3.10.0
+            lowdefy: 3.16.1
             types:
               AmChartsXY:
                 url: https://blocks-cdn.lowdefy.com/v3.10.1/blocks-amcharts/meta/AmChartsXY.json
@@ -89,9 +93,9 @@ _ref:
 
             In your `lowdefy.yaml` file, add your custom block type to the `types` object with the local path.
 
-             ```yaml
+            ```yaml
             name: dashboard-app
-            lowdefy: 3.10.0
+            lowdefy: 3.16.1
             types:
               MyCustomBlock:
                 url: http://localhost:3002/meta/MyCustomBlock.json
@@ -125,16 +129,18 @@ _ref:
                 - `actions: actionObjects[]`: The list of [Lowdefy action objects](https://docs.lowdefy.com/events-and-actions) which will be  evaluated by the Lowdefy engine.
                 - `history: object[]`: A list of objects logging the event calls and responses.
                   - `blockId: string`: The block id from which the event was called.
+                  - `endTimestamp: datetime`: Timestamp for when the event was completed.
                   - `event: object`: The event object passed to the event.
                   - `eventName: string`: The event name which which triggerEvent was called.
                   - `success: boolean`: True if all actions for the event executed without throwing any errors.
-                  - `timestamp: datetime`: Timestamp for when the event was completed.
-                  - `responses: object[]`: The list of action responses.
-                    - `actionId: string`: The id of the triggered action.
-                    - `actionType: string`: The type of action called.
-                    - `error: Error: If the action throw an error.
-                    - `response: any`: The returned result of the action.
-                    - `skipped: boolean`: True if the action was skipped.
+                  - `startTimestamp: datetime`: Timestamp for when the event was started.
+                  - `responses: object`: The list of action responses, where the object key is equal to the action id.
+                    - `{{ key }}: string`:
+                        - `type: string`: The type of action called.
+                        - `error: Error`: If the action throw an error.
+                        - `index: number`: Index of the action in the event array.
+                        - `response: any`: The returned result of the action.
+                        - `skipped: boolean`: True if the action was skipped.
             - `methods: object`: All application methods built into Lowdefy, available for the block.
               - `makeCssClass(cssObject | cssObject[]): string`: This methods creates a css class for the block to apply to DOM elements. Css classes are created using [Emotion](https://emotion.sh/docs/introduction). If a list of cssObject are given the cssObjects are shallow merged with the preceding objects properties being overwritten by the latter. Any valid css style object can be passed, including media queries. Default media queries are built in:
                 - `xs?: object`: Css object applied for screen media with max width of 576px.
@@ -155,7 +161,7 @@ _ref:
 
             ## Deploying Custom Blocks
 
-            Both the block metadata and block React component need to be built by webpack and hosted on a publicly accessible static file server. Any Lowdefy app can then load and use the block. You also need to set the `remoteEntryUrl` in `webpack.prod.js` in order to build the correct block meta data, make sure URL is pointing to where your block is hosted.
+            Both the block metadata and block React component need to be built by webpack and hosted on a publicly accessible static file server. Any Lowdefy app can then load and use the block. You also need to set the `remoteEntryUrl` in `webpack.prod.js` in order to build the correct block meta data, make sure the URL is pointing to where your block is hosted.
 
             The easiest way to host your custom block is the deploy the custom block to [npm](https://www.npmjs.com/) and [Unpkg](https://unpkg.com/) will automatically host your block for you on their CDN. Although this option is easy, the cache settings for Unpkg can result in longer load times in some cases which can result in a unreliable user experience. It is thus best to deploy you blocks to your own static file servers.
 
@@ -163,7 +169,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Lists
-            previous_page_id: lists
+            previous_page_title: Custom Code
+            previous_page_id: custom-code
             next_page_title: User authentication
             next_page_id: users-introduction

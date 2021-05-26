@@ -26,13 +26,20 @@ async function getExpress({ context, gqlServer, options }) {
 
   const reloadPort = await findOpenPort();
   const reloadReturned = await reload(app, { route: '/api/dev/reload.js', port: reloadPort });
-  app.use(express.static(path.join(__dirname, 'shell')));
+
+  app.use('/public', express.static(path.resolve(process.cwd(), 'public')));
+  app.use(express.static(path.resolve(__dirname, 'shell')));
 
   app.use('/api/dev/version', (req, res) => {
     res.json(context.lowdefyVersion);
   });
-  app.use((req, res) => {
-    res.sendFile(path.resolve(__dirname, 'shell/index.html'));
+  app.use(async (req, res) => {
+    let indexHtml = await readFile(path.resolve(__dirname, 'shell/index.html'));
+    let appConfig = await readFile(path.resolve(context.outputDirectory, 'app.json'));
+    appConfig = JSON.parse(appConfig);
+    indexHtml = indexHtml.replace('<!-- __LOWDEFY_APP_HEAD_HTML__ -->', appConfig.html.appendHead);
+    indexHtml = indexHtml.replace('<!-- __LOWDEFY_APP_BODY_HTML__ -->', appConfig.html.appendBody);
+    res.send(indexHtml);
   });
   return { expressApp: app, reloadFn: reloadReturned.reload };
 }

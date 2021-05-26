@@ -167,10 +167,10 @@
           "minimum": 1,
           "description": "Minute intervals to show in the time selector."
         },
-        "selectGMT": {
+        "selectUTC": {
           "type": "boolean",
           "default": false,
-          "description": "Shows the user's selection as GMT time, not time-zone based."
+          "description": "Shows the user's selection as UTC time, not time-zone based."
         },
         "showToday": {
           "type": "boolean",

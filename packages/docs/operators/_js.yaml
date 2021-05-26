@@ -19,12 +19,28 @@ _ref:
     pageId: _js
     pageTitle: _js
     filePath: operators/_js.yaml
+    env: Client Only
+    warning: |
+      SECURITY WARNING: The _js operator executes JavaScript inside your Lowdefy app. Insecure code can expose your app or data. Since Lowdefy doesn't validate your JavaScript, make sure that you only load trusted code.
+    types: |
+      ```
+      (args: any[]): any
+      ```
     description: |
-      The `_js` operator can evaluate or create a JavaScript function. The JavaScript function can return any primitives or JSON data. Since operators are synchronous functions, the JavaScript function should be synchronous.
+      The `_js` operator executes a JavaScript function when the operator is evaluated. If used in a block, this function is called every time the Lowdefy engine checks if any block on the page should be updated. This function must be synchronous, and it is highly recommended that it is a pure function (it always returns the same result for the same input, and does not have side effects). Since it is called often it should also execute quickly, a slow operator will slow down the entire app. The [`JsAction`](/JsAction) action can be used to execute asynchronous code when an event is triggered.
 
-      To make this as secure as possible, the JavaScript is evaluated inside a JavaScript WebAssembly VM. The JavaScript engine is [QuickJS](https://bellard.org/quickjs/), a small and fast JavaScript implementation.
+      To use the `_js` operator the following is needed:
 
-      As a result, the following applies to the JavaScript function definitions:
+      - Load the custom JavaScript into the app `head` tag. See the [Custom Code](/custom-code) section for more details.
+      - In the custom JavaScript, pass the JavaScript operator function to the app using the `window.lowdefy.registerJsOperator(name: string, operatorFunction: function)` method.
+      - A list of arguments can be passed to the JavaScript function which will be spread as function parameters.
+      - The returned value of the custom JavaScript function will be the operator result.
+
+      -----------
+
+      > DEPRECATION WARNING: The QuickJS JavaScript operators are depreciated and will be removed in the next version. Instead native browser functions can now be loaded at build time by registering the operator function with `window.lowdefy.registerJsOperator(name: string, operatorFunction: function)`. See the [Custom Code](/custom-code) section for details.
+
+      For depreciated `evaluate`, and `function`, the following applies to the JavaScript function definitions:
         - The `code` operator argument requires a function definition.
         - Function arguments can be used inside the function, and are passed via the `args` operator argument as a array.
         - A primitive or JSON result will be returned, so the function result must be JSON serializable.
@@ -35,7 +51,158 @@ _ref:
       > The JavaScript function can be passed to the `code` argument during build using the `_ref.eval` method. See the examples below and the [`_ref`](/_ref) operator for more details.
 
     methods:
-      - name: evaluate
+      - name: '{{ method_name }}'
+        types: |
+          ```
+          (args?: any[]): any
+          ```
+        description: |
+          The `_js.{{ method_name }}` method evaluates the JavaScript function as registered using `window.lowdefy.registerJsOperator(method_name: string, method: function)`. When passing a list of arguments to the JavaScript function, then list of arguments will be spread as function parameters.
+
+          The loaded JavaScript function must be a synchronous pure function. See the [Custom JavaScript](/custom-javascript) section for more detail on how to load custom JavaScript operators.
+        examples: |
+          ##### A custom JavaScript operator to calculate primes:
+          ```yaml
+          # lowdefy.yaml
+          name: make-me-primes
+          lowdefy: '3.16.1'
+          app:
+            html:
+              # This HTML will be appended to the head HTML tag in the Lowdefy app
+              appendHead: |
+                <script type="text/javascript">
+                  // Define the JavaScript function.
+                  function makePrimes(to) {
+                    return [...Array((to || 1)-1).keys()].map(i=>i+2).filter(n =>
+                    [...Array(n-2).keys()].map(i=>i+2).reduce((acc,x)=> acc && n % x !== 0, true));
+                  }
+                  // Register the JavaScript operator function.
+                  window.lowdefy.registerJsOperator('makePrimes', makePrimes);
+                </script>
+          pages:
+            - id: home
+              type: PageHeaderMenu
+              blocks:
+                - id: num_of_primes
+                  type: NumberInput
+                  properties:
+                    title: Give me all the primes below?
+                - id: primes
+                  type: Markdown
+                  properties:
+                    content:
+                      _nunjucks:
+                        template: |
+                          All primes below {{ num_of_primes }} is: {{ primes }}
+                        on:
+                          num_of_primes:
+                            _state: num_of_primes
+                          primes:
+                            # Use the custom JavaScript operator.
+                            _js.makePrimes:
+                              - _state: num_of_primes
+          ````
+
+          ##### _js.function to create a label.formatter function for an EChart block:
+
+          Create a JavaScript file which are hosted publicly. The `public` folder in your Lowdefy app makes this easy. Also check to register the custom operator using `window.lowdefy.registerJsOperator`.
+          ```js
+          // file: /public/getLabel.js
+          const getLabel = (levelTwo, levelThree, levelFour) => (param) => {
+            var depth = param.treePathInfo.length;
+            if (depth === 2) {
+                return levelTwo;
+            }
+            else if (depth === 3) {
+                return levelThree;
+            }
+            else if (depth === 4) {
+                return levelFour;
+            }
+          }
+          window.lowdefy.registerJsOperator('getLabel', getLabel);
+          ```
+
+          Load the JavaScript by referencing it into the Lowdefy application HTML `head` tag.
+          ```html
+          // file: imports.html
+          <script type="text/javascript" src="/public/getLabel.js"></script>
+          ```
+
+          Use the `_js.getLabel` operator
+          ```yaml
+          # file: lowdefy.yaml
+          name: my-chart
+          lowdefy: '3.16.1'
+          app:
+            html:
+              appendHead:
+                _ref: imports.html # Loading html content into the application head tag.
+          pages:
+            - id: home
+              type: PageHeaderMenu
+              blocks:
+                - id: chart
+                  type: EChart
+                  properties:
+                    height: 600
+                    option:
+                      series:
+                        - radius:
+                            - '15%'
+                            - '80%'
+                          type: 'sunburst'
+                          sort: null
+                          emphasis:
+                            focus: 'ancestor'
+                          data:
+                            - value: 8,
+                              children:
+                                - value: 4,
+                                  children:
+                                    - value: 2
+                                    - value: 1
+                                    - value: 1
+                                    - value: 0.5
+                                - value: 2
+                            - value: 4
+                              children:
+                                - children:
+                                    - value: 2
+                            - value: 4
+                              children:
+                                - children:
+                                    - value: 2
+                            - value: 3
+                              children:
+                                - children:
+                                    - value: 1
+                          label:
+                            color: '#000'
+                            textBorderColor: '#fff'
+                            textBorderWidth: 2
+                            formatter:
+                              _js.getLabel: # Use the getLabel function
+                                - 'radial'
+                                - 'tangential'
+                                - 'other'
+                          levels:
+                            - {}
+                            - itemStyle:
+                                color: '#CD4949'
+                              label:
+                                rotate: 'radial'
+                            - itemStyle:
+                                color: '#F47251'
+                              label:
+                                rotate: 'tangential'
+                            - itemStyle:
+                                color: '#FFC75F'
+                              label:
+                                rotate: 0
+          ````
+
+      - name: evaluate [DEPRECATED]
         types: |
           ```
           ({
@@ -94,7 +261,7 @@ _ref:
           ```
           [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
           ```
-      - name: function
+      - name: function [DEPRECATED]
         types: |
           ```
           ({

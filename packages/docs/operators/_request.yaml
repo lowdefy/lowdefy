@@ -19,6 +19,7 @@ _ref:
     pageId: _request
     pageTitle: _request
     filePath: operators/_request.yaml
+    env: Client Only
     types: |
       ```
       (requestId: string): any

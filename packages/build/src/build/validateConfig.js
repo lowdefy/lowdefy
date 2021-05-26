@@ -25,7 +25,7 @@ async function validateConfig({ components }) {
     components.config = {};
   }
   if (!type.isObject(components.config)) {
-    throw new Error('Config is not an object.');
+    throw new Error('lowdefy.config is not an object.');
   }
   if (type.isNone(components.config.auth)) {
     components.config.auth = {};

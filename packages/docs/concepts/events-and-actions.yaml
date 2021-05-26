@@ -21,7 +21,7 @@ _ref:
     filePath: concepts/events-and-actions.yaml
     content:
       - id: md1
-        type: Markdown
+        type: MarkdownWithCode
         properties:
           content: |
             ### TLDR
@@ -83,6 +83,9 @@ _ref:
                     params:
                       # ...
             ```
+            # The actions object
+
+            When an event is triggered each completed action writes its response to the actions object under the action id object key. Thus all following actions in a event action list has access to the response of all preceding actions in the same event list through the [`_actions`](/_actions) operator.
 
             # The event object
 
@@ -90,17 +93,17 @@ _ref:
 
             # Context initialisation events
 
-            Four events are always defined for [`context`](/context) type blocks:
+            Four events are always defined for [`context`](/context) type blocks, called in the following order:
               - `onInit`
               - `onEnter`
               - `onInitAsync`
               - `onEnterAsync`
 
-            These events can be used to initialise the context or page.
+            These events can be used to initialize the context or page.
 
             The `onInit` event is triggered the first time a context is mounted, for example if a page is loaded for the first time. This event blocks page render, in other words, the page __will__ remain in a loading state until all the actions have completed execution. It can be used to set up a context. Actions that take a long time to execute, like `Request`, should be used sparingly here.
 
-            The `onEnter` event is triggered every time a context is mounted to a page, for example if a user left a page, and returns to it. This event also blocks page render. It can be used to execute actions that should be run each time a page is loaded, like checking if an id is present in the [url query parameters](/_url_query), and initialising the [`state`](/context-and-state).
+            The `onEnter` event is triggered every time a context is mounted to a page, for example if a user left a page, and returns to it. This event also blocks page render. It can be used to execute actions that should be run each time a page is loaded, like checking if an id is present in the [url query parameters](/_url_query), and initializing the [`state`](/context-and-state).
 
             The `onInitAsync` event is triggered the first time a context is mounted, but does not block page render. In other words, the page __will not__ remain in a loading state until all the actions have completed execution. This is a good place to execute non-blocking tasks or requests that might take longer to execute.
 
@@ -111,6 +114,7 @@ _ref:
             The following actions can be used:
 
             - [`CallMethod`](/CallMethod) - Call a method defined by another block.
+            - [`JsAction`](/JsAction) - Call a custom JavaScript function as an action.
             - [`Link`](/Link) - Link to another page.
             - [`Message`](/Message) - Show a message to the user.
             - [`Notification`](/Notification) - Show a notification to the user.

@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.16.1](https://github.com/lowdefy/lowdefy/compare/v3.16.0...v3.16.1) (2021-05-26)
+
+**Note:** Version bump only for package @lowdefy/blocks-basic
+
+
+
+
+
+# [3.16.0](https://github.com/lowdefy/lowdefy/compare/v3.15.0...v3.16.0) (2021-05-26)
+
+
+### Bug Fixes
+
+* **docs:** Document context initialization events for context blocks. ([a59bff5](https://github.com/lowdefy/lowdefy/commit/a59bff50f25b79d0468a4a6afc836f264c3263b2)), closes [#576](https://github.com/lowdefy/lowdefy/issues/576)
+
+
+### Features
+
+* **blockBasic:** Add Img block. ([c850cb3](https://github.com/lowdefy/lowdefy/commit/c850cb32061cf2a4c361aecc024fe699cc06c7e0))
+
+
+
+
+
 # [3.15.0](https://github.com/lowdefy/lowdefy/compare/v3.14.1...v3.15.0) (2021-05-11)
 
 **Note:** Version bump only for package @lowdefy/blocks-basic

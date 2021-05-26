@@ -79,17 +79,16 @@ test('call a synchronous action', async () => {
     blockId: 'blockId',
     event: {},
     eventName: 'eventName',
-    responses: [
-      {
-        actionId: 'test',
-        actionType: 'ActionSync',
+    responses: {
+      test: {
+        type: 'ActionSync',
+        index: 0,
         response: 'params',
       },
-    ],
-    success: true,
-    timestamp: {
-      date: 0,
     },
+    success: true,
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
   expect(actions.ActionSync.mock.calls.length).toBe(1);
 });
@@ -117,17 +116,16 @@ test('call a asynchronous action', async () => {
     blockId: 'blockId',
     event: {},
     eventName: 'eventName',
-    responses: [
-      {
-        actionId: 'test',
-        actionType: 'ActionAsync',
+    responses: {
+      test: {
+        type: 'ActionAsync',
+        index: 0,
         response: 'params',
       },
-    ],
-    success: true,
-    timestamp: {
-      date: 0,
     },
+    success: true,
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
   expect(actions.ActionAsync.mock.calls.length).toBe(1);
 });
@@ -158,22 +156,21 @@ test('call 2 actions', async () => {
     blockId: 'blockId',
     event: {},
     eventName: 'eventName',
-    responses: [
-      {
-        actionId: 'test1',
-        actionType: 'ActionSync',
+    responses: {
+      test1: {
+        type: 'ActionSync',
+        index: 0,
         response: 'params1',
       },
-      {
-        actionId: 'test2',
-        actionType: 'ActionAsync',
+      test2: {
+        type: 'ActionAsync',
+        index: 1,
         response: 'params2',
       },
-    ],
-    success: true,
-    timestamp: {
-      date: 0,
     },
+    success: true,
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
 });
 
@@ -275,17 +272,16 @@ test('skip a action', async () => {
     blockId: 'blockId',
     event: {},
     eventName: 'eventName',
-    responses: [
-      {
-        actionId: 'test',
-        actionType: 'ActionSync',
+    responses: {
+      test: {
+        type: 'ActionSync',
+        index: 0,
         skipped: true,
       },
-    ],
-    success: true,
-    timestamp: {
-      date: 0,
     },
+    success: true,
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
   expect(actions.ActionSync.mock.calls.length).toBe(0);
 });
@@ -313,17 +309,28 @@ test('action throws a error', async () => {
     blockId: 'blockId',
     event: {},
     eventName: 'eventName',
-    responses: [
-      {
-        actionId: 'test',
-        actionType: 'ActionError',
+    error: {
+      action: {
+        id: 'test',
+        params: 'params',
+        type: 'ActionError',
+      },
+      error: {
+        error: new Error('Test error'),
+        index: 0,
+        type: 'ActionError',
+      },
+    },
+    responses: {
+      test: {
+        type: 'ActionError',
+        index: 0,
         error: new Error('Test error'),
       },
-    ],
-    success: false,
-    timestamp: {
-      date: 0,
     },
+    success: false,
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
   expect(actions.ActionError.mock.calls.length).toBe(1);
 });
@@ -354,17 +361,28 @@ test('actions after a error are not called throws a error', async () => {
     blockId: 'blockId',
     event: {},
     eventName: 'eventName',
-    responses: [
-      {
-        actionId: 'test',
-        actionType: 'ActionError',
+    error: {
+      action: {
+        id: 'test',
+        params: 'params',
+        type: 'ActionError',
+      },
+      error: {
+        error: new Error('Test error'),
+        index: 0,
+        type: 'ActionError',
+      },
+    },
+    responses: {
+      test: {
+        type: 'ActionError',
+        index: 0,
         error: new Error('Test error'),
       },
-    ],
-    success: false,
-    timestamp: {
-      date: 0,
     },
+    success: false,
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
   expect(actions.ActionError.mock.calls.length).toBe(1);
   expect(actions.ActionSync.mock.calls.length).toBe(0);
@@ -393,17 +411,28 @@ test('Invalid action type', async () => {
     blockId: 'blockId',
     event: {},
     eventName: 'eventName',
-    responses: [
-      {
-        actionId: 'test',
-        actionType: 'Invalid',
+    error: {
+      action: {
+        id: 'test',
+        params: 'params',
+        type: 'Invalid',
+      },
+      error: {
+        error: new Error('Invalid action type "Invalid" at "blockId".'),
+        index: 0,
+        type: 'Invalid',
+      },
+    },
+    responses: {
+      test: {
+        type: 'Invalid',
+        index: 0,
         error: new Error('Invalid action type "Invalid" at "blockId".'),
       },
-    ],
-    success: false,
-    timestamp: {
-      date: 0,
     },
+    success: false,
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
 });
 
@@ -430,19 +459,34 @@ test('Parser error in action', async () => {
     blockId: 'blockId',
     event: {},
     eventName: 'eventName',
-    responses: [
-      {
-        actionId: 'test',
-        actionType: 'ActionSync',
+    error: {
+      action: {
+        id: 'test',
+        params: {
+          _state: [],
+        },
+        type: 'ActionSync',
+      },
+      error: {
+        error: new Error(
+          'Operator Error: _state params must be of type string, integer, boolean or object. Received: [] at blockId.'
+        ),
+        index: 0,
+        type: 'ActionSync',
+      },
+    },
+    responses: {
+      test: {
+        type: 'ActionSync',
+        index: 0,
         error: new Error(
           'Operator Error: _state params must be of type string, integer, boolean or object. Received: [] at blockId.'
         ),
       },
-    ],
-    success: false,
-    timestamp: {
-      date: 0,
     },
+    success: false,
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
 });
 

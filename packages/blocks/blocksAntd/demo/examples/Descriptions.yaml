@@ -1,6 +1,6 @@
 - id: default
   type: Descriptions
-- id: default
+- id: default title
   type: Descriptions
   properties:
     title: Descriptions title
@@ -19,37 +19,49 @@
     column: 2
     items:
       - label: field_one
-        value: "1"
+        value: '1'
         span: 1
       - label: field_two
-        value: "2"
+        value: '2'
         span: 1
       - label: field_three
-        value: "3"
+        value: '3'
         span: 2
-- id: properties.items-list-primitive
+- id: properties.items-list with new lines
   type: Descriptions
   properties:
     title: Title
+    column: 2
     items:
-      - 1
-      - 2
-      - 3
-      - 4
+      - label: field_one
+        value: "description field with \nnew line \t helps\n make better content."
+        span: 1
+      - label: 'one \n two;'
+        value: "description field with \nnew line \t helps\n make better content."
+        span: 1
+# - id: properties.items-list-primitive
+#   type: Descriptions
+#   properties:
+#     title: Title
+#     items:
+#       - 1
+#       - 2
+#       - 3
+#       - 4
 - id: properties.items-object-object
   type: Descriptions
   properties:
     title: Title
     items:
-      one: 
+      one:
         two: 3
       four:
         five: six
-      seven: 
+      seven:
         eight:
-          - 9 
+          - 9
           - ten
-- id: "properties.bordered: true"
+- id: 'properties.bordered: true'
   type: Descriptions
   properties:
     bordered: true
@@ -57,7 +69,7 @@
       field_one: value one
       field_two: 2
       field_three: value three
-- id: "properties.colon: false"
+- id: 'properties.colon: false'
   type: Descriptions
   properties:
     colon: false
@@ -65,7 +77,7 @@
       field_one: value one
       field_two: 2
       field_three: value three
-- id: "properties.column: 2"
+- id: 'properties.column: 2'
   type: Descriptions
   properties:
     column: 2
@@ -73,7 +85,7 @@
       field_one: value one
       field_two: 2
       field_three: value three
-- id: "properties.layout: vertical"
+- id: 'properties.layout: vertical'
   type: Descriptions
   properties:
     layout: vertical
@@ -81,7 +93,7 @@
       field_one: value one
       field_two: 2
       field_three: value three
-- id: "properties.size: small"
+- id: 'properties.size: small'
   type: Descriptions
   properties:
     size: small
@@ -89,7 +101,7 @@
       field_one: value one
       field_two: 2
       field_three: value three
-- id: "properties.size: default"
+- id: 'properties.size: default'
   type: Descriptions
   properties:
     size: default
@@ -97,7 +109,7 @@
       field_one: value one
       field_two: 2
       field_three: value three
-- id: "properties.size: small, properties.bordered: true"
+- id: 'properties.size: small, properties.bordered: true'
   type: Descriptions
   properties:
     size: small
@@ -109,3 +121,11 @@
       field_4: value 4
       field_5: 5
       field_6: value 6
+- id: properties.items-object with new lines
+  type: Descriptions
+  properties:
+    title: Title
+    column: 2
+    items:
+      field_one: "description one field with \n new line \t helps\n make better content."
+      'one \n two;': "description two field with \n new line \t helps\n make better content."

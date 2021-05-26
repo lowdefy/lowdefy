@@ -15,7 +15,7 @@
 */
 
 import React, { Suspense } from 'react';
-import { version } from '../../package.json';
+import packageJson from '../../package.json';
 
 import { ErrorBoundary, makeCssClass } from '@lowdefy/block-tools';
 
@@ -30,8 +30,8 @@ const Block = ({ methods }) => {
             moduleFederation: {
               module: 'Message',
               scope: '_at_lowdefy_slash_blocks_dash_antd',
-              version,
-              remoteEntryUrl: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/remoteEntry.js`,
+              version: packageJson.version,
+              remoteEntryUrl: `https://blocks-cdn.lowdefy.com/v${packageJson.version}/blocks-antd/remoteEntry.js`,
             },
           }}
           Loading={''}

@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.16.1](https://github.com/lowdefy/lowdefy/compare/v3.16.0...v3.16.1) (2021-05-26)
+
+**Note:** Version bump only for package @lowdefy/server-dev
+
+
+
+
+
+# [3.16.0](https://github.com/lowdefy/lowdefy/compare/v3.15.0...v3.16.0) (2021-05-26)
+
+
+### Bug Fixes
+
+* webpack config so that index.html is not minified. ([d9cbf8d](https://github.com/lowdefy/lowdefy/commit/d9cbf8df56f97116832a7038f026058f1d528dc6))
+* **docs:** Create modules/index and load filterDefaultValue. ([e45e5f1](https://github.com/lowdefy/lowdefy/commit/e45e5f1f80ccc256d668e92813b9e5415eccf6b7))
+* Rename appendHeader to appendHead. ([4e79736](https://github.com/lowdefy/lowdefy/commit/4e797363540bd0f5cfbe65928585012316b05a58))
+* **docs:** Import _js.filterDefaultValue as operator. ([a6e2fe0](https://github.com/lowdefy/lowdefy/commit/a6e2fe036160d49b6c1994aee68326f88fc7c564))
+
+
+### Features
+
+* **server:** Add head and body load scripts. ([ad195b4](https://github.com/lowdefy/lowdefy/commit/ad195b409b1780ac1bb3e194de5c106dbdb0b2b3))
+* **servers:** Load header and body html on server. ([a5b070f](https://github.com/lowdefy/lowdefy/commit/a5b070f03b1d69991e9bfa7a4ccd571972d344df))
+
+
+
+
+
 # [3.15.0](https://github.com/lowdefy/lowdefy/compare/v3.14.1...v3.15.0) (2021-05-11)
 
 **Note:** Version bump only for package @lowdefy/server-dev

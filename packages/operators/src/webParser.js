@@ -52,7 +52,7 @@ class WebParser {
     );
   }
 
-  parse({ args, arrayIndices, event, input, location }) {
+  parse({ actions, args, arrayIndices, event, input, location }) {
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
     }
@@ -75,6 +75,7 @@ class WebParser {
           if (!type.isUndefined(this.operations[op])) {
             const res = this.operations[op]({
               eventLog: this.context.eventLog,
+              actions,
               args,
               arrayIndices,
               context: this.context,

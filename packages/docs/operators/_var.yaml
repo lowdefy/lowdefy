@@ -19,6 +19,7 @@ _ref:
     pageId: _var
     pageTitle: _var
     filePath: operators/_var.yaml
+    env: Build Only
     types: |
       ```
       (name: string): any

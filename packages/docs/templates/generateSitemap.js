@@ -25,7 +25,7 @@ function transformer(pages) {
   const addPage = (acc, page) => {
     return acc.concat(`
     <url>
-      <loc>http://docs.lowdefy.com/${page.id}</loc>
+      <loc>https://docs.lowdefy.com/${page.id}</loc>
       <lastmod>${now.getFullYear()}-${now.getMonth() > 8 ? '' : 0}${now.getMonth() + 1}-${
       now.getDate() > 9 ? '' : 0
     }${now.getDate()}</lastmod>

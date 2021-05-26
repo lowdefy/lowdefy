@@ -19,6 +19,7 @@ _ref:
     pageId: _ref
     pageTitle: _ref
     filePath: operators/_ref.yaml
+    env: Build Only
     types: |
       ```
       (path: string): any
@@ -102,7 +103,7 @@ _ref:
       ###### Reference pages:
       ```yaml
       # lowdefy.yaml
-      lowdefy: '3.15.0'
+      lowdefy: '3.16.1'
       pages:
         - _ref: pages/page1.yaml
         - _ref: pages/page2.yaml
@@ -123,7 +124,7 @@ _ref:
       ```
       Returns:
       ```
-      lowdefy: '3.15.0'
+      lowdefy: '3.16.1'
       pages:
         - id: page1
           type: PageHeaderMenu

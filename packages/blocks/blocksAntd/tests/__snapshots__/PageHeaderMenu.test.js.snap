@@ -40,9 +40,9 @@ exports[`Test Schema properties.logo.src 1`] = `true`;
 
 exports[`Test Schema properties.logo.src 2`] = `null`;
 
-exports[`Test Schema properties.logo.srcset 1`] = `true`;
+exports[`Test Schema properties.logo.srcSet 1`] = `true`;
 
-exports[`Test Schema properties.logo.srcset 2`] = `null`;
+exports[`Test Schema properties.logo.srcSet 2`] = `null`;
 
 exports[`Test Schema properties.logo.style 1`] = `true`;
 
