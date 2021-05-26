@@ -65,7 +65,7 @@ _ref:
           ```yaml
           # lowdefy.yaml
           name: make-me-primes
-          lowdefy: '3.16.1'
+          lowdefy: '3.16.2'
           app:
             html:
               # This HTML will be appended to the head HTML tag in the Lowdefy app
@@ -133,7 +133,7 @@ _ref:
           ```yaml
           # file: lowdefy.yaml
           name: my-chart
-          lowdefy: '3.16.1'
+          lowdefy: '3.16.2'
           app:
             html:
               appendHead:
