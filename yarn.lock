@@ -3118,7 +3118,7 @@ __metadata:
     jest-serializer-html: 7.0.0
     js-yaml: 4.0.0
     less: 3.13.0
-    less-loader: 8.0.0
+    less-loader: 9.0.0
     moment: 2.29.1
     rc-animate: 3.1.1
     react: 17.0.2
@@ -3200,7 +3200,7 @@ __metadata:
     jest-serializer-html: 7.0.0
     js-yaml: 4.0.0
     less: 3.13.0
-    less-loader: 8.0.0
+    less-loader: 9.0.0
     react: 17.0.2
     react-color: 2.19.3
     react-dom: 17.0.2
@@ -3471,7 +3471,7 @@ __metadata:
     jest: 26.6.3
     js-yaml: 4.0.0
     less: 3.13.0
-    less-loader: 8.0.0
+    less-loader: 9.0.0
     path-browserify: 1.0.1
     process: 0.11.10
     react: 17.0.2
@@ -13659,15 +13659,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"less-loader@npm:8.0.0":
-  version: 8.0.0
-  resolution: "less-loader@npm:8.0.0"
+"less-loader@npm:9.0.0":
+  version: 9.0.0
+  resolution: "less-loader@npm:9.0.0"
   dependencies:
     klona: ^2.0.4
   peerDependencies:
     less: ^3.5.0 || ^4.0.0
     webpack: ^5.0.0
-  checksum: 3f1bdb06cbbfc2bb41a00758e3a73e882a851bbc672fb5fc5ca1cb4099233c6ebd82a366da351dac126f1e27e7109179b250d133441167668df1e4e5e3ac9ca8
+  checksum: d0a525edf91b2d4e9f022ca48198dc530e834a3d67a251141b60ed2dfc92448207e759f995aa0d4187b22d701a40d484197e9b6f6b93cfef05b8f9b3f4d207ae
   languageName: node
   linkType: hard
 
