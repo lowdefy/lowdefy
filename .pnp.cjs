@@ -14600,6 +14600,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["fs-extra", [
+        ["npm:10.0.0", {
+          "packageLocation": "./.yarn/cache/fs-extra-npm-10.0.0-4f8c704115-84632d143f.zip/node_modules/fs-extra/",
+          "packageDependencies": [
+            ["fs-extra", "npm:10.0.0"],
+            ["graceful-fs", "npm:4.2.6"],
+            ["jsonfile", "npm:6.1.0"],
+            ["universalify", "npm:2.0.0"]
+          ],
+          "linkType": "HARD",
+        }],
         ["npm:9.1.0", {
           "packageLocation": "./.yarn/cache/fs-extra-npm-9.1.0-983c2ddb4c-e667d8df54.zip/node_modules/fs-extra/",
           "packageDependencies": [
@@ -18870,7 +18880,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["decompress-targz", "npm:4.1.1"],
             ["dotenv", "npm:10.0.0"],
             ["express", "npm:4.17.1"],
-            ["fs-extra", "npm:9.1.0"],
+            ["fs-extra", "npm:10.0.0"],
             ["graphql", "npm:15.5.0"],
             ["html-webpack-plugin", "virtual:dddca670fd0b7758fb2e1b1a3e18ac7ebd1ecd06ecdd7acec2b78bccf1d35802cb22904bfbb233b16515a81f5cb819421786d20887823d98022b367036c1ad51#npm:5.3.1"],
             ["inquirer", "npm:7.3.3"],
