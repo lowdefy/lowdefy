@@ -3416,7 +3416,7 @@ __metadata:
     mongodb: 3.6.8
     mssql: 7.1.0
     mysql: 2.18.1
-    openid-client: 4.6.0
+    openid-client: 4.7.4
     pg: 8.5.1
     saslprep: 1.0.3
     sqlite3: 5.0.2
@@ -13025,7 +13025,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"jose@npm:^2.0.4":
+"jose@npm:^2.0.5":
   version: 2.0.5
   resolution: "jose@npm:2.0.5"
   dependencies:
@@ -15881,18 +15881,18 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"openid-client@npm:4.6.0":
-  version: 4.6.0
-  resolution: "openid-client@npm:4.6.0"
+"openid-client@npm:4.7.4":
+  version: 4.7.4
+  resolution: "openid-client@npm:4.7.4"
   dependencies:
     aggregate-error: ^3.1.0
     got: ^11.8.0
-    jose: ^2.0.4
+    jose: ^2.0.5
     lru-cache: ^6.0.0
     make-error: ^1.3.6
     object-hash: ^2.0.1
     oidc-token-hash: ^5.0.1
-  checksum: 165c72de49c849f645120d16fe42d79817b953cddef6509ff8ed051be9399069de448bde5861897bf8cf4b82797b67822f8a739b3c31566b73cacf81f971138e
+  checksum: a6893cb9e6c0846f094133a091a6e546fd60d78dfba4bcec1892559bef385add0f304c3c69f646d8bb20dce76941117a881831e6bd195b8f06d55e7fec27ad12
   languageName: node
   linkType: hard
 
