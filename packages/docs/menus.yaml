@@ -388,9 +388,6 @@
         - id: PageHCF
           type: MenuLink
           pageId: PageHCF
-        - id: PageHCF
-          type: MenuLink
-          pageId: PageHCF
         - id: PageHCSF
           type: MenuLink
           pageId: PageHCSF
