@@ -20,10 +20,11 @@
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <title>Lowdefy App</title>
       <link rel="manifest" href="/public/manifest.webmanifest">
-  
+
       <link rel="icon" type="image/svg+xml" href="/public/icon.svg">
       <link rel="icon" type="image/png" href="/public/icon-32.png">
       <link rel="apple-touch-icon" href="/public/apple-touch-icon.png">
+      <script src="/api/dev/reload.js"></script>
       <script type="text/javascript">
         const jsActions = {}
         const jsOperators = {}
@@ -45,7 +46,7 @@
           registerJsAction: getMethodLoader('registerJsAction', jsActions),
           registerJsOperator: getMethodLoader('registerJsOperator', jsOperators)
         }
-      </script> 
+      </script>
     <!-- __LOWDEFY_APP_HEAD_HTML__ -->
     </head>
     <body>
@@ -55,4 +56,3 @@
       <!-- __LOWDEFY_APP_BODY_HTML__ -->
     </body>
   </html>
-  
