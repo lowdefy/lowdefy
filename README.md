@@ -1,12 +1,11 @@
 ![Lowdefy](https://lowdefy.com/banner.png)
 
-![Discord](https://img.shields.io/discord/729696747261263962?label=Discord%20Chat&logo=discord&logoColor=white)
+[![Discord](https://img.shields.io/discord/729696747261263962?label=Join%20our%20Discord&logo=discord&logoColor=white)](https://discord.gg/WmcJgXt)
 
 [![Tweet](https://img.shields.io/twitter/url?logo=twitter&style=flat-square&url=https%3A%2F%2Flowdefy.com)](https://twitter.com/intent/tweet?text=Build%20web%20apps%2C%20admin%20panels%2C%20BI%20dashboards%2C%20and%20CRUD%20apps%20with%20ease%21%20Try%20&url=https://lowdefy.com&via=lowdefy&hashtags=lowcode,lowdefy,internaltools,developers,opensource)
 [![Follow](https://img.shields.io/twitter/follow/lowdefy?logo=twitter&style=flat-square)](https://twitter.com/intent/follow?screen_name=lowdefy)
 
-![Tests Main](https://github.com/lowdefy/lowdefy/workflows/Test%20Main/badge.svg?branch=main)
-![Tests Develop](https://github.com/lowdefy/lowdefy/workflows/Test%20Develop/badge.svg?branch=develop)
+![Tests](https://github.com/lowdefy/lowdefy/workflows/Tests/badge.svg?branch=main)
 [![Maintainability](https://api.codeclimate.com/v1/badges/6efe9bfa0648772cae00/maintainability)](https://codeclimate.com/github/lowdefy/lowdefy/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/6efe9bfa0648772cae00/test_coverage)](https://codeclimate.com/github/lowdefy/lowdefy/test_coverage)
 [![Codecov](https://codecov.io/gh/lowdefy/lowdefy/branch/main/graph/badge.svg?token=U2AEEH9K1W)](https://codecov.io/gh/lowdefy/lowdefy)
