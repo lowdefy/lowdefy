@@ -32,7 +32,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "yarn webpack",
-    "clean": "rm -rf dist",
+    "clean": "rm -rf dist && rm -rf .lowdefy",
     "cli": "yarn node ./dist/index.js",
     "cli:build": "yarn build && yarn node ./dist/index.js",
     "prepare": "yarn build",
