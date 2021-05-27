@@ -17,26 +17,23 @@
 import path from 'path';
 import express from 'express';
 import reload from 'reload';
+import { get } from '@lowdefy/helpers';
 import { readFile } from '@lowdefy/node-utils';
 import findOpenPort from '../../utils/findOpenPort';
 
 async function getExpress({ context, gqlServer, options }) {
-  let indexHtml = null;
-
   const serveIndex = async (req, res) => {
-    if (!indexHtml) {
-      indexHtml = await readFile(path.resolve(__dirname, 'shell/index.html'));
-      let appConfig = await readFile(path.resolve(context.outputDirectory, 'app.json'));
-      appConfig = JSON.parse(appConfig);
-      indexHtml = indexHtml.replace(
-        '<!-- __LOWDEFY_APP_HEAD_HTML__ -->',
-        appConfig.html.appendHead
-      );
-      indexHtml = indexHtml.replace(
-        '<!-- __LOWDEFY_APP_BODY_HTML__ -->',
-        appConfig.html.appendBody
-      );
-    }
+    let indexHtml = await readFile(path.resolve(__dirname, 'shell/index.html'));
+    let appConfig = await readFile(path.resolve(context.outputDirectory, 'app.json'));
+    appConfig = JSON.parse(appConfig);
+    indexHtml = indexHtml.replace(
+      '<!-- __LOWDEFY_APP_HEAD_HTML__ -->',
+      get(appConfig, 'html.appendHead', { default: '' })
+    );
+    indexHtml = indexHtml.replace(
+      '<!-- __LOWDEFY_APP_BODY_HTML__ -->',
+      get(appConfig, 'html.appendBody', { default: '' })
+    );
     res.send(indexHtml);
   };
 
