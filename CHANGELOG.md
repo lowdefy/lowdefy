@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.16.2](https://github.com/lowdefy/lowdefy/compare/v3.16.1...v3.16.2) (2021-05-26)
+
+## Changes
+
+### Fixes
+
+- Fix CLI development server.
+
+## Commits
+
+### Bug Fixes
+
+- **blocks-antd:** Remove Descriptions example with failing schema ([7e45bb3](https://github.com/lowdefy/lowdefy/commit/7e45bb30bb5fa993e6a580eabf7e9ae049ffe18f))
+- **cli:** Fix cli dev server missing import ([beff373](https://github.com/lowdefy/lowdefy/commit/beff37341b9d055028b44bfb662785ccfff100c4))
+- Update yarn lock ([622ae88](https://github.com/lowdefy/lowdefy/commit/622ae8873646a79a00d6053234d76531606eebbd))
+
 ## [3.16.1](https://github.com/lowdefy/lowdefy/compare/v3.16.0...v3.16.1) (2021-05-26)
 
 ## Changes

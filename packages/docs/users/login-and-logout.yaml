@@ -132,7 +132,7 @@ _ref:
 
             ###### Redirect to the Auth0 logout URL and return to the `logged-out` page in the app after logout:
             ```yaml
-            lowdefy: 3.16.1
+            lowdefy: 3.16.2
             config:
               auth:
                 openId:
@@ -144,7 +144,7 @@ _ref:
 
             ###### Redirect to the Keycloak logout URL and return to the `logged-out` page in the app after logout:
             ```yaml
-            lowdefy: 3.16.1
+            lowdefy: 3.16.2
             config:
               auth:
                 openId:
