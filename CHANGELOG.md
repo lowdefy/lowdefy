@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.16.4](https://github.com/lowdefy/lowdefy/compare/v3.16.3...v3.16.4) (2021-05-28)
+
+## Changes
+
+### Fixes
+
+- CLI now works for previous Lowdefy versions, closes [#598](https://github.com/lowdefy/lowdefy/issues/598)
+- Fix development server hot reload.
+- The index.html file is no longer cached by the development server.
+- Add separate file hosting section to the docs.
+- Fix an issue on selector blocks where the correct value was not found in options if the value was a complex object.
+
+## Commits
+
+### Bug Fixes
+
+- **blocks-antd:** Fix selector index comparison. ([3f06fcd](https://github.com/lowdefy/lowdefy/commit/3f06fcde4b3e01c35e942c4b0ec0a430c5039b96))
+- **cli:** Fix CLI for previous lowdefy versions ([89b8533](https://github.com/lowdefy/lowdefy/commit/89b85332033c59b64904d693776d62fc82dd8817)), closes [#598](https://github.com/lowdefy/lowdefy/issues/598)
+- **cli:** Fix dev server reload. ([af6e70d](https://github.com/lowdefy/lowdefy/commit/af6e70da762fe1212ea9a0ec6372f02d09c9a185))
+- **docs:** Split file hosting to separate concepts section. ([f802a6c](https://github.com/lowdefy/lowdefy/commit/f802a6ce351e3e4d562e29d0d407d814cf49b38f))
+
+## [3.16.3](https://github.com/lowdefy/lowdefy/compare/v3.16.2...v3.16.3) (2021-05-27)
+
+## Changes
+
+### Fixes
+
+- Custom HTML was not appended when navigating to the home (`/`) route.
+
+## Commits
+
+### Bug Fixes
+
+- **servers:** Append html when serving index from url root ([12cb782](https://github.com/lowdefy/lowdefy/commit/12cb7829460e05479fc7376f49b0defa0819afea))
+
 ## [3.16.2](https://github.com/lowdefy/lowdefy/compare/v3.16.1...v3.16.2) (2021-05-26)
 
 ## Changes

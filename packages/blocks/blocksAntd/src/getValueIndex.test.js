@@ -154,3 +154,9 @@ test('object.value mixed multiple', () => {
   expect(getValueIndex(['x', [1, 2], 'x'], options, true)).toEqual([6, 1, 6]);
   expect(getValueIndex([{ a: 1, b: { c: 'x' } }], options, true)).toEqual([7]);
 });
+
+test('object.value stable comparison,', () => {
+  const options = [{ value: { a: 1, b: 1 } }, { value: { a: 2, b: 2 } }];
+  expect(getValueIndex({ b: 1, a: 1 }, options)).toEqual(0);
+  expect(getValueIndex([{ b: 1, a: 1 }], options, true)).toEqual([0]);
+});

@@ -32,22 +32,34 @@ const server = new ApolloServer({
   resolvers,
   context,
 });
+
+let indexHtml = null;
+
+const serveIndex = async (req, res) => {
+  if (!indexHtml) {
+    indexHtml = await readFile(path.resolve(process.cwd(), 'dist/shell/index.html'));
+    let appConfig = await readFile(path.resolve(config.CONFIGURATION_BASE_PATH, 'app.json'));
+    appConfig = JSON.parse(appConfig);
+    indexHtml = indexHtml.replace('<!-- __LOWDEFY_APP_HEAD_HTML__ -->', appConfig.html.appendHead);
+    indexHtml = indexHtml.replace('<!-- __LOWDEFY_APP_BODY_HTML__ -->', appConfig.html.appendBody);
+  }
+  res.send(indexHtml);
+};
+
 const app = express();
 
 server.applyMiddleware({ app, path: '/api/graphql' });
+
+// serve index.html with appended html
+// else static server serves without appended html
+app.get('/', serveIndex);
 
 // Serve Webpack shell files from './shell/dist'
 app.use(express.static('dist/shell'));
 
 // Redirect all 404 to index.html with status 200
 // This should always be the last route
-app.use(async (req, res) => {
-  let indexHtml = await readFile(path.resolve(process.cwd(), 'dist/shell/index.html'));
-  let appConfig = await readFile(path.resolve(config.CONFIGURATION_BASE_PATH, 'app.json'));
-  appConfig = JSON.parse(appConfig);
-  indexHtml = indexHtml.replace('<!-- __LOWDEFY_APP_HEAD_HTML__ -->', appConfig.html.appendHead);
-  indexHtml = indexHtml.replace('<!-- __LOWDEFY_APP_BODY_HTML__ -->', appConfig.html.appendBody);
-  res.send(indexHtml);
-});
+app.use(serveIndex);
 
+// TODO: option to modify port here? port 443 by default?
 app.listen({ port: 3000 }, () => console.log(`Server started at port 3000`));
