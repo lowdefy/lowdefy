@@ -12,7 +12,7 @@ module.exports = {
   ],
   coverageReporters: [['lcov', { projectRoot: '../../..' }], 'text', 'clover'],
   errorOnDeprecated: true,
-  testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/src/test'],
+  testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/es/', '<rootDir>/src/test'],
   moduleNameMapper: {
     '\\.(css|less)$': '<rootDir>/tests/__mocks__/styleMock.js',
     '^antd/.*/style$': '<rootDir>/tests/__mocks__/styleMock.js',

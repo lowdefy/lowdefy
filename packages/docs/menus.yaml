@@ -113,6 +113,11 @@
           pageId: lists
           properties:
             title: Lists
+        - id: hosting-files
+          type: MenuLink
+          pageId: hosting-files
+          properties:
+            title: Hosting Files
         - id: custom-code
           type: MenuLink
           pageId: custom-code

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
 // eslint-disable-next-line consistent-return
 const getIndex = (value, options, key = 'value') => {
@@ -23,7 +23,11 @@ const getIndex = (value, options, key = 'value') => {
     if (type.isPrimitive(options[i]) && options[i] === value) {
       return i;
     }
-    if (type.isObject(options[i]) && JSON.stringify(options[i][key]) === JSON.stringify(value)) {
+    if (
+      type.isObject(options[i]) &&
+      serializer.serializeToString(options[i][key], { stable: true }) ===
+        serializer.serializeToString(value, { stable: true })
+    ) {
       return i;
     }
   }
