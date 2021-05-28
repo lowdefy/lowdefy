@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.16.4](https://github.com/lowdefy/lowdefy/compare/v3.16.3...v3.16.4) (2021-05-28)
+
+
+### Bug Fixes
+
+* **cli:** Fix CLI for previous lowdefy versions ([89b8533](https://github.com/lowdefy/lowdefy/commit/89b85332033c59b64904d693776d62fc82dd8817)), closes [#598](https://github.com/lowdefy/lowdefy/issues/598)
+* **cli:** Fix dev server reload. ([af6e70d](https://github.com/lowdefy/lowdefy/commit/af6e70da762fe1212ea9a0ec6372f02d09c9a185))
+
+
+
+
+
 ## [3.16.3](https://github.com/lowdefy/lowdefy/compare/v3.16.2...v3.16.3) (2021-05-27)
 
 
