@@ -4644,7 +4644,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/nunjucks", "workspace:packages/nunjucks"],
             ["@lowdefy/operators", "workspace:packages/operators"],
             ["@sendgrid/mail", "npm:7.4.4"],
-            ["@shelf/jest-mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:1.2.4"],
+            ["@shelf/jest-mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:1.2.5"],
             ["ajv", "npm:6.12.6"],
             ["ajv-errors", "virtual:09ba37edd9db25b7821b7d2b2d2055c41a6ed7b7590f4f31cb08f11ca472be4a006b49e750b63bf1615697d9f5fdbcda49d5e649e3491c0b6490a9dc0dbedfa2#npm:1.0.1"],
             ["apollo-server", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:2.24.1"],
@@ -5413,19 +5413,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@shelf/jest-mongodb", [
-        ["npm:1.2.4", {
-          "packageLocation": "./.yarn/cache/@shelf-jest-mongodb-npm-1.2.4-41c2f00159-020cd341b2.zip/node_modules/@shelf/jest-mongodb/",
+        ["npm:1.2.5", {
+          "packageLocation": "./.yarn/cache/@shelf-jest-mongodb-npm-1.2.5-f6268ec6d3-e6f7713b26.zip/node_modules/@shelf/jest-mongodb/",
           "packageDependencies": [
-            ["@shelf/jest-mongodb", "npm:1.2.4"]
+            ["@shelf/jest-mongodb", "npm:1.2.5"]
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:1.2.4", {
-          "packageLocation": "./.yarn/$$virtual/@shelf-jest-mongodb-virtual-4909675b98/0/cache/@shelf-jest-mongodb-npm-1.2.4-41c2f00159-020cd341b2.zip/node_modules/@shelf/jest-mongodb/",
+        ["virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:1.2.5", {
+          "packageLocation": "./.yarn/$$virtual/@shelf-jest-mongodb-virtual-2deceadabb/0/cache/@shelf-jest-mongodb-npm-1.2.5-f6268ec6d3-e6f7713b26.zip/node_modules/@shelf/jest-mongodb/",
           "packageDependencies": [
-            ["@shelf/jest-mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:1.2.4"],
+            ["@shelf/jest-mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:1.2.5"],
             ["@types/mongodb", null],
-            ["debug", "virtual:4909675b98ae0ce50c687a3f9c9b08a558c816e1e590f9d9a470ecd96b8e7242f1efaf78e3673997224aa190463f4df7377b733c35c8a06ee467d5adfca7f08b#npm:4.1.1"],
+            ["debug", "virtual:2deceadabba8689ba6b139ae046a546699ad6b18ffa1cd22ffaf8dae338ddcceb6ab8d0c844b3ebe73351abf6852d9859a90668901c279bc4d0d811e149593a3#npm:4.1.1"],
             ["mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:3.6.5"],
             ["mongodb-memory-server", "npm:6.9.6"],
             ["uuid", "npm:8.3.2"]
@@ -11798,11 +11798,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:48933b28331d16c1d73786360e7ba20f54f6df4949c6ab5c13ac4c4353b5c70f2d36a97de9a9c531027ad3588d8fd7f384706f298f0eff0356b58bb9c47f63ec#npm:4.3.2", {
-          "packageLocation": "./.yarn/$$virtual/debug-virtual-3f71dd2edb/0/cache/debug-npm-4.3.2-f0148b6afe-5543570879.zip/node_modules/debug/",
+        ["virtual:2deceadabba8689ba6b139ae046a546699ad6b18ffa1cd22ffaf8dae338ddcceb6ab8d0c844b3ebe73351abf6852d9859a90668901c279bc4d0d811e149593a3#npm:4.1.1", {
+          "packageLocation": "./.yarn/$$virtual/debug-virtual-9dcedcfbc2/0/cache/debug-npm-4.1.1-540248b3aa-3601a6ce96.zip/node_modules/debug/",
           "packageDependencies": [
-            ["debug", "virtual:48933b28331d16c1d73786360e7ba20f54f6df4949c6ab5c13ac4c4353b5c70f2d36a97de9a9c531027ad3588d8fd7f384706f298f0eff0356b58bb9c47f63ec#npm:4.3.2"],
-            ["ms", "npm:2.1.2"],
+            ["debug", "virtual:2deceadabba8689ba6b139ae046a546699ad6b18ffa1cd22ffaf8dae338ddcceb6ab8d0c844b3ebe73351abf6852d9859a90668901c279bc4d0d811e149593a3#npm:4.1.1"],
+            ["ms", "npm:2.1.3"],
             ["supports-color", null]
           ],
           "packagePeers": [
@@ -11810,11 +11810,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["virtual:4909675b98ae0ce50c687a3f9c9b08a558c816e1e590f9d9a470ecd96b8e7242f1efaf78e3673997224aa190463f4df7377b733c35c8a06ee467d5adfca7f08b#npm:4.1.1", {
-          "packageLocation": "./.yarn/$$virtual/debug-virtual-1ce8bb37db/0/cache/debug-npm-4.1.1-540248b3aa-3601a6ce96.zip/node_modules/debug/",
+        ["virtual:48933b28331d16c1d73786360e7ba20f54f6df4949c6ab5c13ac4c4353b5c70f2d36a97de9a9c531027ad3588d8fd7f384706f298f0eff0356b58bb9c47f63ec#npm:4.3.2", {
+          "packageLocation": "./.yarn/$$virtual/debug-virtual-3f71dd2edb/0/cache/debug-npm-4.3.2-f0148b6afe-5543570879.zip/node_modules/debug/",
           "packageDependencies": [
-            ["debug", "virtual:4909675b98ae0ce50c687a3f9c9b08a558c816e1e590f9d9a470ecd96b8e7242f1efaf78e3673997224aa190463f4df7377b733c35c8a06ee467d5adfca7f08b#npm:4.1.1"],
-            ["ms", "npm:2.1.3"],
+            ["debug", "virtual:48933b28331d16c1d73786360e7ba20f54f6df4949c6ab5c13ac4c4353b5c70f2d36a97de9a9c531027ad3588d8fd7f384706f298f0eff0356b58bb9c47f63ec#npm:4.3.2"],
+            ["ms", "npm:2.1.2"],
             ["supports-color", null]
           ],
           "packagePeers": [

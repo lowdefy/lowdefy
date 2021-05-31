@@ -3130,7 +3130,7 @@ __metadata:
     "@lowdefy/nunjucks": 3.16.4
     "@lowdefy/operators": 3.16.4
     "@sendgrid/mail": 7.4.4
-    "@shelf/jest-mongodb": 1.2.4
+    "@shelf/jest-mongodb": 1.2.5
     ajv: 6.12.6
     ajv-errors: 1.0.1
     apollo-server: 2.24.1
@@ -3775,16 +3775,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@shelf/jest-mongodb@npm:1.2.4":
-  version: 1.2.4
-  resolution: "@shelf/jest-mongodb@npm:1.2.4"
+"@shelf/jest-mongodb@npm:1.2.5":
+  version: 1.2.5
+  resolution: "@shelf/jest-mongodb@npm:1.2.5"
   dependencies:
     debug: 4.1.1
     mongodb-memory-server: 6.9.6
     uuid: 8.3.2
   peerDependencies:
     mongodb: 3.x.x
-  checksum: 020cd341b21120d20aeed7274732b1fec58abf4f93f11b14a0c18ec40cb7925c347673f4d54ace36aab93b6860170f0da865e0f30d0dd5ed74ebf56426eb5f8c
+  checksum: e6f7713b2628db9e5b9b1e69ceed175b134ab832ba078255da7c81427eec4ee70352d74dbbb349f7749e03a7795a711bd114c3c6352d037defaba810bc7e4914
   languageName: node
   linkType: hard
 
