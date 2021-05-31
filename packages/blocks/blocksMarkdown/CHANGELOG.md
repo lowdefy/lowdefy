@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.16.5](https://github.com/lowdefy/lowdefy/compare/v3.16.4...v3.16.5) (2021-05-31)
+
+
+### Bug Fixes
+
+* **deps:** update dependency dompurify to v2.2.8. ([1d9b4de](https://github.com/lowdefy/lowdefy/commit/1d9b4de393b043dd00004b6660153f5fb050a102))
+* **deps:** update dependency js-yaml to v4.1.0 ([d3954f3](https://github.com/lowdefy/lowdefy/commit/d3954f30dd719deca4bc1383ba23a351a1b3b60b))
+
+
+
+
+
 ## [3.16.4](https://github.com/lowdefy/lowdefy/compare/v3.16.3...v3.16.4) (2021-05-28)
 
 **Note:** Version bump only for package @lowdefy/blocks-markdown

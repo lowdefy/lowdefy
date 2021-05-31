@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.16.5](https://github.com/lowdefy/lowdefy/compare/v3.16.4...v3.16.5) (2021-05-31)
+
+
+### Bug Fixes
+
+* **deps:** update dependency echarts to v5.1.1 ([6d3a824](https://github.com/lowdefy/lowdefy/commit/6d3a824d33e8374ffd5ed530408e34d52858e16e))
+* **deps:** update dependency js-yaml to v4.1.0 ([d3954f3](https://github.com/lowdefy/lowdefy/commit/d3954f30dd719deca4bc1383ba23a351a1b3b60b))
+* **deps:** update dependency tslib to v2.2.0 ([8873c41](https://github.com/lowdefy/lowdefy/commit/8873c417a24a70ebb048879d26f20f7846dee495))
+
+
+
+
+
 ## [3.16.4](https://github.com/lowdefy/lowdefy/compare/v3.16.3...v3.16.4) (2021-05-28)
 
 **Note:** Version bump only for package @lowdefy/blocks-echarts
