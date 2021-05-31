@@ -158,5 +158,5 @@ _ref:
           vars:
             previous_page_title: Deployment
             previous_page_id: deployment
-            next_page_title: Custom Code
-            next_page_id: custom-code
+            next_page_title: Hosting Files
+            next_page_id: hosting-files

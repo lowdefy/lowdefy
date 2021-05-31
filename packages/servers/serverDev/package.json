@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/server-dev",
-  "version": "3.16.1",
+  "version": "3.16.4",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -31,14 +31,14 @@
   "scripts": {
     "babel": "babel src --out-dir dist",
     "build": "yarn webpack && yarn babel",
-    "clean": "rm -rf dist && rm -rf dev",
+    "clean": "rm -rf dist && rm -rf .lowdefy",
     "prepare": "yarn build",
     "start": "nodemon dist/server.js",
     "webpack": "webpack --config webpack.config.js"
   },
   "dependencies": {
-    "@lowdefy/graphql": "3.16.1",
-    "@lowdefy/node-utils": "3.16.1",
+    "@lowdefy/graphql": "3.16.4",
+    "@lowdefy/node-utils": "3.16.4",
     "apollo-server-express": "2.24.1",
     "dotenv": "10.0.0",
     "express": "4.17.1",
@@ -49,7 +49,7 @@
     "@babel/core": "7.14.3",
     "@babel/preset-env": "7.14.2",
     "@babel/preset-react": "7.13.13",
-    "@lowdefy/block-tools": "3.16.1",
+    "@lowdefy/block-tools": "3.16.4",
     "babel-jest": "26.6.3",
     "babel-loader": "8.2.2",
     "clean-webpack-plugin": "3.0.0",

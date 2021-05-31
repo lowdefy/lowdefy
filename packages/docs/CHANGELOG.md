@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.16.4](https://github.com/lowdefy/lowdefy/compare/v3.16.3...v3.16.4) (2021-05-28)
+
+
+### Bug Fixes
+
+* **docs:** Split file hosting to separate concepts section. ([f802a6c](https://github.com/lowdefy/lowdefy/commit/f802a6ce351e3e4d562e29d0d407d814cf49b38f))
+
+
+
+
+
+## [3.16.3](https://github.com/lowdefy/lowdefy/compare/v3.16.2...v3.16.3) (2021-05-27)
+
+**Note:** Version bump only for package @lowdefy/docs
+
+
+
+
+
+## [3.16.2](https://github.com/lowdefy/lowdefy/compare/v3.16.1...v3.16.2) (2021-05-26)
+
+**Note:** Version bump only for package @lowdefy/docs
+
+
+
+
+
 ## [3.16.1](https://github.com/lowdefy/lowdefy/compare/v3.16.0...v3.16.1) (2021-05-26)
 
 
