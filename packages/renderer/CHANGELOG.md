@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.16.5](https://github.com/lowdefy/lowdefy/compare/v3.16.4...v3.16.5) (2021-05-31)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @apollo/client to v3.3.19. ([ac1d1f9](https://github.com/lowdefy/lowdefy/commit/ac1d1f92a4bc4418c05b4d61123e0dd1f28dd1f1))
+
+
+
+
+
 ## [3.16.4](https://github.com/lowdefy/lowdefy/compare/v3.16.3...v3.16.4) (2021-05-28)
 
 **Note:** Version bump only for package @lowdefy/renderer

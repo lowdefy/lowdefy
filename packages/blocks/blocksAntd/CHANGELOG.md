@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.16.5](https://github.com/lowdefy/lowdefy/compare/v3.16.4...v3.16.5) (2021-05-31)
+
+
+### Bug Fixes
+
+* **deps:** update dependency classnames to v2.3.1 ([d4c7249](https://github.com/lowdefy/lowdefy/commit/d4c7249814a3b6180a1cce63c0dbbd635df3db10))
+* **deps:** update dependency js-yaml to v4.1.0 ([d3954f3](https://github.com/lowdefy/lowdefy/commit/d3954f30dd719deca4bc1383ba23a351a1b3b60b))
+
+
+
+
+
 ## [3.16.4](https://github.com/lowdefy/lowdefy/compare/v3.16.3...v3.16.4) (2021-05-28)
 
 

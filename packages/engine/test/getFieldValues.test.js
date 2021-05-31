@@ -22,9 +22,7 @@ test('single object', () => {
 
 test('multiple objects', () => {
   expect(getFieldValues('_req', { _req: 1 }, { _req: 2 }, { _req: 1 }, { _req: 4 })).toEqual([
-    1,
-    2,
-    4,
+    1, 2, 4,
   ]);
 });
 
@@ -36,9 +34,7 @@ test('multiple arrays', () => {
 
 test('multiple mixed', () => {
   expect(getFieldValues('_req', [{ _req: 1 }], { _req: 2 }, { _req: 1 }, [{ _req: 4 }])).toEqual([
-    1,
-    2,
-    4,
+    1, 2, 4,
   ]);
 });
 

@@ -57,14 +57,16 @@ const writeTransformers = {
   },
 };
 
-const transformObject = ({ transformers, types }) => (object) => {
-  Object.keys(object).forEach((key) => {
-    if (types[key]) {
-      object[key] = transformers[types[key]](object[key]);
-    }
-  });
-  return object;
-};
+const transformObject =
+  ({ transformers, types }) =>
+  (object) => {
+    Object.keys(object).forEach((key) => {
+      if (types[key]) {
+        object[key] = transformers[types[key]](object[key]);
+      }
+    });
+    return object;
+  };
 
 function transformRead({ input, types = {} }) {
   if (type.isObject(input)) {

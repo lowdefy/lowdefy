@@ -118,9 +118,9 @@ test('_js with code and args specified to return json array', () => {
     14,
     'three',
   ]);
-  expect(
-    _js({ context, location, params: { code: params.code }, methodName: 'evaluate' })
-  ).toEqual([1, 2, 3, null, null, 'three']);
+  expect(_js({ context, location, params: { code: params.code }, methodName: 'evaluate' })).toEqual(
+    [1, 2, 3, null, null, 'three']
+  );
 });
 
 test('_js with open "\'" in result', () => {

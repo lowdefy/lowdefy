@@ -27,58 +27,55 @@ const getDisabled = ({ properties, value }) => {
   return false;
 };
 
-const getCustomRequest = ({ methods, setS3Parameters }) => async ({
-  file,
-  onError,
-  onProgress,
-  onSuccess,
-}) => {
-  try {
-    const { name, size, type, uid } = file;
+const getCustomRequest =
+  ({ methods, setS3Parameters }) =>
+  async ({ file, onError, onProgress, onSuccess }) => {
+    try {
+      const { name, size, type, uid } = file;
 
-    const s3PostPolicyResponse = await methods.triggerEvent({
-      name: '__getS3PostPolicy',
-      event: { filename: name, size, type, uid },
-    });
+      const s3PostPolicyResponse = await methods.triggerEvent({
+        name: '__getS3PostPolicy',
+        event: { filename: name, size, type, uid },
+      });
 
-    if (s3PostPolicyResponse.success !== true) {
-      throw new Error('S3 post policy request error.');
-    }
-
-    const { url, fields } = s3PostPolicyResponse.responses[0].response[0];
-    const { bucket, key } = fields;
-
-    setS3Parameters((prevState) => {
-      const ret = { ...prevState };
-      ret[uid] = { bucket, key };
-      return ret;
-    });
-
-    // Set 20 % progress on policy is acquired else user waits to long before progress is reported
-    onProgress({ percent: 20 });
-
-    // Create FormData with all required fields in S3 policy
-    const formData = new FormData();
-    Object.keys(fields).forEach((field) => {
-      formData.append(field, fields[field]);
-    });
-    // file needs to be the last field in the form
-    formData.append('file', file);
-
-    const xhr = new XMLHttpRequest();
-    xhr.upload.onprogress = (event) => {
-      if (event.lengthComputable) {
-        onProgress({ percent: (event.loaded / event.total) * 80 + 20 });
+      if (s3PostPolicyResponse.success !== true) {
+        throw new Error('S3 post policy request error.');
       }
-    };
-    xhr.addEventListener('error', onError);
-    xhr.addEventListener('load', onSuccess);
-    xhr.open('post', url);
-    xhr.send(formData);
-  } catch (error) {
-    onError(error);
-  }
-};
+
+      const { url, fields } = s3PostPolicyResponse.responses[0].response[0];
+      const { bucket, key } = fields;
+
+      setS3Parameters((prevState) => {
+        const ret = { ...prevState };
+        ret[uid] = { bucket, key };
+        return ret;
+      });
+
+      // Set 20 % progress on policy is acquired else user waits to long before progress is reported
+      onProgress({ percent: 20 });
+
+      // Create FormData with all required fields in S3 policy
+      const formData = new FormData();
+      Object.keys(fields).forEach((field) => {
+        formData.append(field, fields[field]);
+      });
+      // file needs to be the last field in the form
+      formData.append('file', file);
+
+      const xhr = new XMLHttpRequest();
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          onProgress({ percent: (event.loaded / event.total) * 80 + 20 });
+        }
+      };
+      xhr.addEventListener('error', onError);
+      xhr.addEventListener('load', onSuccess);
+      xhr.open('post', url);
+      xhr.send(formData);
+    } catch (error) {
+      onError(error);
+    }
+  };
 
 const S3UploadButtonBlock = ({ blockId, events, methods, properties, value }) => {
   // Use state here because we need to set s3 bucket and key as block value

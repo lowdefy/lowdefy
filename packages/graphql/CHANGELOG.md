@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.16.5](https://github.com/lowdefy/lowdefy/compare/v3.16.4...v3.16.5) (2021-05-31)
+
+
+### Bug Fixes
+
+* **deps:** update apollo server packages to v2.24.1. ([a538a22](https://github.com/lowdefy/lowdefy/commit/a538a22b6d5526678f3d8a1a7c86363a91b96992))
+* **deps:** update apollo server packages to v2.25.0 ([bbe713d](https://github.com/lowdefy/lowdefy/commit/bbe713d1bb584e1dcba6db9b9bd46a8531d2e2e6))
+* **deps:** update dependency @sendgrid/mail to v7.4.4. ([75097df](https://github.com/lowdefy/lowdefy/commit/75097df501f6985b9ffd9ab7bb9e79fdf621ab15))
+* **deps:** update dependency aws-sdk to v2.914.0 ([8259549](https://github.com/lowdefy/lowdefy/commit/82595494ab527238da27abe7102985b12dce8f77))
+* **deps:** update dependency aws-sdk to v2.918.0 ([68eed24](https://github.com/lowdefy/lowdefy/commit/68eed24bd0c330aa53c78365beec63dbd1031249))
+* **deps:** update dependency knex to v0.95.6. ([c2b718e](https://github.com/lowdefy/lowdefy/commit/c2b718e7b59ceac273ed66ff3bbc12165eb8219b))
+* **deps:** update dependency mongodb to v3.6.8 ([21cacae](https://github.com/lowdefy/lowdefy/commit/21cacae01063b20106c9ee72fb9267615339d1db))
+* **deps:** update dependency mongodb to v3.6.9 ([310d474](https://github.com/lowdefy/lowdefy/commit/310d4746cb76fabd0fddccf2c824f2bd7c4ddc22))
+* **deps:** update dependency mssql to v7.1.0. ([becfe14](https://github.com/lowdefy/lowdefy/commit/becfe14c5dbaaf9c1729d1fd7e7ad6fa7eb60221))
+* **deps:** update dependency openid-client to v4.7.4 ([79d2ad2](https://github.com/lowdefy/lowdefy/commit/79d2ad21bbcf65ada29805600258632e31060445))
+* **deps:** update dependency pg to v8.6.0 ([630b448](https://github.com/lowdefy/lowdefy/commit/630b4484c99212aca614205ec848501bd5328215))
+
+
+
+
+
 ## [3.16.4](https://github.com/lowdefy/lowdefy/compare/v3.16.3...v3.16.4) (2021-05-28)
 
 **Note:** Version bump only for package @lowdefy/graphql

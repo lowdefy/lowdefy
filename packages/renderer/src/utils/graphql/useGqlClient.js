@@ -56,24 +56,26 @@ function refreshLogin({ lowdefy }) {
 const httpLink = ({ uri = '/api/graphql' }) => new HttpLink({ uri, credentials: 'same-origin' });
 
 // TODO: Handle errors
-const errorHandler = ({ lowdefy }) => ({ graphQLErrors, networkError }) => {
-  if (graphQLErrors) {
-    graphQLErrors.forEach((err) => {
-      switch (err.extensions.code) {
-        case 'TOKEN_EXPIRED':
-          return fromPromise(refreshLogin({ lowdefy }));
-        case 'UNAUTHENTICATED':
-          lowdefy.user = {};
-          localStorage.setItem(`idToken`, '');
-          return;
-        default:
-          console.log('graphQLErrors', graphQLErrors);
-      }
-    });
-  }
-  console.log('networkError', networkError);
-  return;
-};
+const errorHandler =
+  ({ lowdefy }) =>
+  ({ graphQLErrors, networkError }) => {
+    if (graphQLErrors) {
+      graphQLErrors.forEach((err) => {
+        switch (err.extensions.code) {
+          case 'TOKEN_EXPIRED':
+            return fromPromise(refreshLogin({ lowdefy }));
+          case 'UNAUTHENTICATED':
+            lowdefy.user = {};
+            localStorage.setItem(`idToken`, '');
+            return;
+          default:
+            console.log('graphQLErrors', graphQLErrors);
+        }
+      });
+    }
+    console.log('networkError', networkError);
+    return;
+  };
 
 const useGqlClient = ({ gqlUri, lowdefy }) => {
   const [client, setClient] = useState(null);

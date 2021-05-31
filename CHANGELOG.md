@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.16.5](https://github.com/lowdefy/lowdefy/compare/v3.16.4...v3.16.5) (2021-05-31)
+
+## Changes
+
+This release only contains updates to dependencies.
+
+## Commits
+
+### Bug Fixes
+
+- **deps:** update apollo server packages to v2.24.1. ([a538a22](https://github.com/lowdefy/lowdefy/commit/a538a22b6d5526678f3d8a1a7c86363a91b96992))
+- **deps:** update apollo server packages to v2.25.0 ([bbe713d](https://github.com/lowdefy/lowdefy/commit/bbe713d1bb584e1dcba6db9b9bd46a8531d2e2e6))
+- **deps:** update dependency @apollo/client to v3.3.19. ([ac1d1f9](https://github.com/lowdefy/lowdefy/commit/ac1d1f92a4bc4418c05b4d61123e0dd1f28dd1f1))
+- **deps:** update dependency @sendgrid/mail to v7.4.4. ([75097df](https://github.com/lowdefy/lowdefy/commit/75097df501f6985b9ffd9ab7bb9e79fdf621ab15))
+- **deps:** update dependency aws-sdk to v2.914.0 ([8259549](https://github.com/lowdefy/lowdefy/commit/82595494ab527238da27abe7102985b12dce8f77))
+- **deps:** update dependency aws-sdk to v2.918.0 ([68eed24](https://github.com/lowdefy/lowdefy/commit/68eed24bd0c330aa53c78365beec63dbd1031249))
+- **deps:** update dependency classnames to v2.3.1 ([d4c7249](https://github.com/lowdefy/lowdefy/commit/d4c7249814a3b6180a1cce63c0dbbd635df3db10))
+- **deps:** update dependency dompurify to v2.2.8. ([1d9b4de](https://github.com/lowdefy/lowdefy/commit/1d9b4de393b043dd00004b6660153f5fb050a102))
+- **deps:** update dependency dotenv to v10.0.0 ([19e6a71](https://github.com/lowdefy/lowdefy/commit/19e6a7186821a40b82a6c391646f64108a743b0a))
+- **deps:** update dependency echarts to v5.1.1 ([6d3a824](https://github.com/lowdefy/lowdefy/commit/6d3a824d33e8374ffd5ed530408e34d52858e16e))
+- **deps:** update dependency fs-extra to v10.0.0 ([d9ad1a5](https://github.com/lowdefy/lowdefy/commit/d9ad1a50b1184be4feb10dae90337a2d9e24d4e1))
+- **deps:** update dependency graphql-tag to v2.12.4 ([daf81cf](https://github.com/lowdefy/lowdefy/commit/daf81cf76ddc3f91d37fed7634f5427309142156))
+- **deps:** update dependency js-yaml to v4.1.0 ([d3954f3](https://github.com/lowdefy/lowdefy/commit/d3954f30dd719deca4bc1383ba23a351a1b3b60b))
+- **deps:** update dependency knex to v0.95.6. ([c2b718e](https://github.com/lowdefy/lowdefy/commit/c2b718e7b59ceac273ed66ff3bbc12165eb8219b))
+- **deps:** update dependency mongodb to v3.6.8 ([21cacae](https://github.com/lowdefy/lowdefy/commit/21cacae01063b20106c9ee72fb9267615339d1db))
+- **deps:** update dependency mongodb to v3.6.9 ([310d474](https://github.com/lowdefy/lowdefy/commit/310d4746cb76fabd0fddccf2c824f2bd7c4ddc22))
+- **deps:** update dependency mssql to v7.1.0. ([becfe14](https://github.com/lowdefy/lowdefy/commit/becfe14c5dbaaf9c1729d1fd7e7ad6fa7eb60221))
+- **deps:** update dependency openid-client to v4.7.4 ([79d2ad2](https://github.com/lowdefy/lowdefy/commit/79d2ad21bbcf65ada29805600258632e31060445))
+- **deps:** update dependency pg to v8.6.0 ([630b448](https://github.com/lowdefy/lowdefy/commit/630b4484c99212aca614205ec848501bd5328215))
+- **deps:** update dependency query-string to v7.0.0. ([f96afb8](https://github.com/lowdefy/lowdefy/commit/f96afb81d9c7aeb8fd586e74b2dd4748982bfb3a))
+- **deps:** update dependency tslib to v2.2.0 ([8873c41](https://github.com/lowdefy/lowdefy/commit/8873c417a24a70ebb048879d26f20f7846dee495))
+
 ## [3.16.4](https://github.com/lowdefy/lowdefy/compare/v3.16.3...v3.16.4) (2021-05-28)
 
 ## Changes
