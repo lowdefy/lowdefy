@@ -2851,7 +2851,7 @@ __metadata:
     react-syntax-highlight: 15.3.1
     react-test-renderer: 17.0.2
     style-loader: 2.0.0
-    webpack: 5.37.1
+    webpack: 5.38.1
     webpack-cli: 4.7.0
     webpack-dev-server: 3.11.2
     yaml-jest: 1.0.5
@@ -2898,7 +2898,7 @@ __metadata:
     react-router-dom: 5.2.0
     react-syntax-highlighter: 15.4.3
     style-loader: 2.0.0
-    webpack: 5.37.1
+    webpack: 5.38.1
     webpack-cli: 4.7.0
     webpack-dev-server: 3.11.2
     webpack-merge: 5.7.3
@@ -2935,7 +2935,7 @@ __metadata:
     react-markdown: 5.0.3
     react-syntax-highlighter: 15.4.3
     style-loader: 2.0.0
-    webpack: 5.37.1
+    webpack: 5.38.1
     webpack-cli: 4.7.0
     webpack-dev-server: 3.11.2
     webpack-merge: 5.7.3
@@ -2978,7 +2978,7 @@ __metadata:
     react-markdown: 5.0.3
     react-syntax-highlighter: 15.4.3
     style-loader: 2.0.0
-    webpack: 5.37.1
+    webpack: 5.38.1
     webpack-cli: 4.7.0
     webpack-dev-server: 3.11.2
     webpack-merge: 5.7.3
@@ -3015,7 +3015,7 @@ __metadata:
     react-syntax-highlighter: 15.4.3
     style-loader: 2.0.0
     tslib: 2.2.0
-    webpack: 5.37.1
+    webpack: 5.38.1
     webpack-cli: 4.7.0
     webpack-dev-server: 3.11.2
     webpack-merge: 5.7.3
@@ -3056,7 +3056,7 @@ __metadata:
     react-syntax-highlighter: 15.4.3
     remark-gfm: 1.0.0
     style-loader: 2.0.0
-    webpack: 5.37.1
+    webpack: 5.38.1
     webpack-cli: 4.7.0
     webpack-dev-server: 3.11.2
     webpack-merge: 5.7.3
@@ -3086,7 +3086,7 @@ __metadata:
     js-yaml: 4.1.0
     json5: 2.2.0
     uuid: 8.3.2
-    webpack: 5.37.1
+    webpack: 5.38.1
     webpack-cli: 4.7.0
   languageName: unknown
   linkType: soft
@@ -3155,7 +3155,7 @@ __metadata:
     "@lowdefy/graphql": 3.16.4
     babel-loader: 8.2.2
     clean-webpack-plugin: 3.0.0
-    webpack: 5.37.1
+    webpack: 5.38.1
     webpack-cli: 4.7.0
   languageName: unknown
   linkType: soft
@@ -3200,7 +3200,7 @@ __metadata:
     pg: 8.6.0
     saslprep: 1.0.3
     sqlite3: 5.0.2
-    webpack: 5.37.1
+    webpack: 5.38.1
     webpack-cli: 4.7.0
   languageName: unknown
   linkType: soft
@@ -3251,7 +3251,7 @@ __metadata:
     react-syntax-highlight: 15.3.1
     react-test-renderer: 17.0.2
     style-loader: 2.0.0
-    webpack: 5.37.1
+    webpack: 5.38.1
     webpack-cli: 4.7.0
     webpack-dev-server: 3.11.2
     yaml-jest: 1.0.5
@@ -3353,7 +3353,7 @@ __metadata:
     react-router-dom: 5.2.0
     serve: 11.3.2
     style-loader: 2.0.0
-    webpack: 5.37.1
+    webpack: 5.38.1
     webpack-cli: 4.7.0
     webpack-dev-server: 3.11.2
     webpack-merge: 5.7.3
@@ -3386,7 +3386,7 @@ __metadata:
     react: 17.0.2
     react-dom: 17.0.2
     style-loader: 2.0.0
-    webpack: 5.37.1
+    webpack: 5.38.1
     webpack-cli: 4.7.0
   languageName: unknown
   linkType: soft
@@ -3416,7 +3416,7 @@ __metadata:
     react: 17.0.2
     react-dom: 17.0.2
     style-loader: 2.0.0
-    webpack: 5.37.1
+    webpack: 5.38.1
     webpack-cli: 4.7.0
   languageName: unknown
   linkType: soft
@@ -3446,7 +3446,7 @@ __metadata:
     react-dom: 17.0.2
     serverless-http: 2.7.0
     style-loader: 2.0.0
-    webpack: 5.37.1
+    webpack: 5.38.1
     webpack-cli: 4.7.0
   languageName: unknown
   linkType: soft
@@ -9006,7 +9006,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-scope@npm:^5.1.1":
+"eslint-scope@npm:5.1.1, eslint-scope@npm:^5.1.1":
   version: 5.1.1
   resolution: "eslint-scope@npm:5.1.1"
   dependencies:
@@ -13412,7 +13412,7 @@ fsevents@^1.2.7:
     sqlite3: 5.0.2
     style-loader: 2.0.0
     uuid: 8.3.2
-    webpack: 5.37.1
+    webpack: 5.38.1
     webpack-cli: 4.7.0
   bin:
     lowdefy: dist/index.js
@@ -20676,7 +20676,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"watchpack@npm:^2.0.0":
+"watchpack@npm:^2.0.0, watchpack@npm:^2.2.0":
   version: 2.2.0
   resolution: "watchpack@npm:2.2.0"
   dependencies:
@@ -20845,7 +20845,17 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"webpack@npm:*, webpack@npm:5.37.1":
+"webpack-sources@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "webpack-sources@npm:2.3.0"
+  dependencies:
+    source-list-map: ^2.0.1
+    source-map: ^0.6.1
+  checksum: b929133f8b86fa91a42d2e557f2b2cd6136f62a50c10e32db9f37a63609cd4d1b3475772503c814baa2e25c02d3206110ec2add7a3aaf2794217fbf48664e72a
+  languageName: node
+  linkType: hard
+
+"webpack@npm:*":
   version: 5.37.1
   resolution: "webpack@npm:5.37.1"
   dependencies:
@@ -20878,6 +20888,42 @@ resolve@^2.0.0-next.3:
   bin:
     webpack: bin/webpack.js
   checksum: 5fe030ea3f3852d2a2d20157ec51c6fd1ee98039ff0cf3b5176bde9c5ffcf3183fafdf132b89ad9490c9abe996aff33db6448a24d9f683edd2a8e0f80bcdd95b
+  languageName: node
+  linkType: hard
+
+"webpack@npm:5.38.1":
+  version: 5.38.1
+  resolution: "webpack@npm:5.38.1"
+  dependencies:
+    "@types/eslint-scope": ^3.7.0
+    "@types/estree": ^0.0.47
+    "@webassemblyjs/ast": 1.11.0
+    "@webassemblyjs/wasm-edit": 1.11.0
+    "@webassemblyjs/wasm-parser": 1.11.0
+    acorn: ^8.2.1
+    browserslist: ^4.14.5
+    chrome-trace-event: ^1.0.2
+    enhanced-resolve: ^5.8.0
+    es-module-lexer: ^0.4.0
+    eslint-scope: 5.1.1
+    events: ^3.2.0
+    glob-to-regexp: ^0.4.1
+    graceful-fs: ^4.2.4
+    json-parse-better-errors: ^1.0.2
+    loader-runner: ^4.2.0
+    mime-types: ^2.1.27
+    neo-async: ^2.6.2
+    schema-utils: ^3.0.0
+    tapable: ^2.1.1
+    terser-webpack-plugin: ^5.1.1
+    watchpack: ^2.2.0
+    webpack-sources: ^2.3.0
+  peerDependenciesMeta:
+    webpack-cli:
+      optional: true
+  bin:
+    webpack: bin/webpack.js
+  checksum: c6bc39fc5880782d9eb9f2a1621fb03f8ce5071a6078e216118702446061440d42bbf845fe1ad7318ca91b117f8dd1bd53a3beafa3c9942002af99d7e5398ad2
   languageName: node
   linkType: hard
 
