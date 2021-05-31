@@ -25,7 +25,7 @@ const Renderer = React.lazy(() => import('lowdefy_renderer/Renderer'));
 function Shell() {
   return (
     <React.Suspense fallback={<Loading type="Spinner" properties={{ height: '100vh' }} />}>
-      <Renderer gqlUri="/.netlify/functions/graphql"/>
+      <Renderer gqlUri="/.netlify/functions/graphql" />
     </React.Suspense>
   );
 }

@@ -20,7 +20,11 @@ import { ApolloServer } from 'apollo-server-express';
 import getFederatedModule from '../../utils/getFederatedModule';
 
 async function getGraphQl({ context }) {
-  const { typeDefs, resolvers, createContext: createGqlContext } = await getFederatedModule({
+  const {
+    typeDefs,
+    resolvers,
+    createContext: createGqlContext,
+  } = await getFederatedModule({
     module: 'graphql',
     packageName: '@lowdefy/graphql-federated',
     version: context.lowdefyVersion,

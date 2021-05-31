@@ -48,10 +48,11 @@ const ButtonSelector = ({
             id={`${blockId}_input`}
             className={methods.makeCssClass([
               properties.color && {
-                '& > label.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)': {
-                  backgroundColor: `${properties.color} !important`,
-                  borderColor: `${properties.color} !important`,
-                },
+                '& > label.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)':
+                  {
+                    backgroundColor: `${properties.color} !important`,
+                    borderColor: `${properties.color} !important`,
+                  },
               },
               properties.inputStyle,
             ])}

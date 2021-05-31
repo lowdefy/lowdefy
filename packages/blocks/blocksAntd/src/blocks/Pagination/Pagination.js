@@ -29,13 +29,15 @@ const getPageSize = ({ properties, value }) => {
   return 10;
 };
 
-const createChangeHandler = ({ eventName, methods }) => (current, pageSize) => {
-  methods.setValue({ current, pageSize, skip: (current - 1) * pageSize });
-  methods.triggerEvent({
-    name: eventName,
-    event: { current, pageSize, skip: current * pageSize },
-  });
-};
+const createChangeHandler =
+  ({ eventName, methods }) =>
+  (current, pageSize) => {
+    methods.setValue({ current, pageSize, skip: (current - 1) * pageSize });
+    methods.triggerEvent({
+      name: eventName,
+      event: { current, pageSize, skip: current * pageSize },
+    });
+  };
 
 const PaginationBlock = ({ blockId, methods, properties, value }) => {
   return (
