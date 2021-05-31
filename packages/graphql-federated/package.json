@@ -42,7 +42,7 @@
   "devDependencies": {
     "@babel/cli": "7.14.3",
     "@babel/core": "7.14.3",
-    "@babel/preset-env": "7.14.2",
+    "@babel/preset-env": "7.14.4",
     "babel-loader": "8.2.2",
     "clean-webpack-plugin": "3.0.0",
     "webpack": "5.37.1",
