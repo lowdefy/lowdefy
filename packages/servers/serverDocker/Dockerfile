@@ -25,9 +25,9 @@ FROM node:14-alpine
 
 ENV NODE_ENV=production
 
-RUN mkdir -p /home/node/app && chown -R node:node /home/node/app
+RUN mkdir -p /home/node/lowdefy && chown -R node:node /home/node/lowdefy
 
-WORKDIR /home/node/app
+WORKDIR /home/node/lowdefy
 
 USER node
 
@@ -37,4 +37,4 @@ COPY --from=build --chown=node:node /lowdefy/dist ./dist
 
 COPY --chown=node:node ./.lowdefy/build ./build
 
-CMD ["node", "/home/node/app/dist/server.js"]
+CMD ["node", "/home/node/lowdefy/dist/server.js"]
