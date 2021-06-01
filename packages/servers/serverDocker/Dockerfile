@@ -1,19 +1,40 @@
+FROM node:14-buster AS build
+
+WORKDIR /lowdefy
+
+COPY . .
+
+# Install all dependencies needed for production build
+# Can't try and cache this for src changes (just copy package.json)
+# since we yarn install later
+RUN yarn install
+RUN yarn build
+
+# Build lowdefy starter app
+RUN yarn build:lowdefy-starter
+
+# clean all depencies
+RUN rm -rf node_modules
+RUN yarn cache clean
+
+# install production dependencies only
+RUN yarn install --production
+
+
 FROM node:14-alpine
 
 ENV NODE_ENV=production
 
-RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
+RUN mkdir -p /home/node/app && chown -R node:node /home/node/app
 
 WORKDIR /home/node/app
 
-COPY package.json ./
-
 USER node
 
-RUN npm install --only=production
+COPY --from=build --chown=node:node /lowdefy/node_modules ./node_modules
 
-COPY --chown=node:node ./dist ./dist
+COPY --from=build --chown=node:node /lowdefy/dist ./dist
 
-EXPOSE 3000
+COPY --chown=node:node ./.lowdefy/build ./build
 
-CMD ["node", "./dist/server.js"]
+CMD ["node", "/home/node/app/dist/server.js"]

@@ -20,8 +20,11 @@ import { ApolloServer } from 'apollo-server-express';
 import { typeDefs, resolvers, createContext } from '@lowdefy/graphql';
 import { createGetSecretsFromEnv, readFile } from '@lowdefy/node-utils';
 
+const configurationBasePath = process.env.LOWDEFY_SERVER_CONFIGURATION_PATH || './build';
+const port = parseInt(process.env.LOWDEFY_SERVER_PORT) || 443;
+
 const config = {
-  CONFIGURATION_BASE_PATH: path.resolve(process.cwd(), './build'),
+  CONFIGURATION_BASE_PATH: path.resolve(configurationBasePath),
   getSecrets: createGetSecretsFromEnv(),
   logger: console,
 };
@@ -61,5 +64,4 @@ app.use(express.static('dist/shell'));
 // This should always be the last route
 app.use(serveIndex);
 
-// TODO: option to modify port here? port 443 by default?
-app.listen({ port: 3000 }, () => console.log(`Server started at port 3000`));
+app.listen({ port }, () => console.log(`Server started at port ${port}`));
