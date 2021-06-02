@@ -21,20 +21,16 @@ RUN yarn cache clean
 RUN yarn install --production
 
 
-FROM node:14-alpine
+FROM amazon/aws-lambda-nodejs:14
 
 ENV NODE_ENV=production
 
-RUN mkdir -p /home/node/lowdefy && chown -R node:node /home/node/lowdefy
+WORKDIR /var/task
 
-WORKDIR /home/node/lowdefy
+COPY --from=build /lowdefy/node_modules /var/task/node_modules
 
-USER node
+COPY --from=build /lowdefy/dist /var/task/dist
 
-COPY --from=build --chown=node:node /lowdefy/node_modules ./node_modules
+COPY --from=build /lowdefy/.lowdefy/build ./build
 
-COPY --from=build --chown=node:node /lowdefy/dist ./dist
-
-COPY --from=build --chown=node:node /lowdefy/.lowdefy/build ./build
-
-CMD ["node", "/home/node/lowdefy/dist/server.js"]
+CMD [ "dist/server.handler"]
