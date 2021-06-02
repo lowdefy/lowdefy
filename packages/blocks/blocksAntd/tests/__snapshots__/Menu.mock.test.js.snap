@@ -7,6 +7,7 @@ Array [
       "children": Array [],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
       "defaultOpenKeys": Array [],
+      "forceSubMenuRender": undefined,
       "id": "default",
       "mode": undefined,
       "onClick": [Function],
@@ -155,6 +156,7 @@ Array [
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
       "defaultOpenKeys": Array [],
+      "forceSubMenuRender": undefined,
       "id": "menus: default",
       "mode": undefined,
       "onClick": [Function],
@@ -391,6 +393,7 @@ Array [
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
       "defaultOpenKeys": Array [],
+      "forceSubMenuRender": undefined,
       "id": "menus: links[0]",
       "mode": undefined,
       "onClick": [Function],
@@ -627,6 +630,7 @@ Array [
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
       "defaultOpenKeys": Array [],
+      "forceSubMenuRender": undefined,
       "id": "menus: properties.menuId: menu_one",
       "mode": undefined,
       "onClick": [Function],
@@ -716,6 +720,7 @@ Array [
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
       "defaultOpenKeys": Array [],
+      "forceSubMenuRender": undefined,
       "id": "menusTitle pageId",
       "mode": undefined,
       "onClick": [Function],
@@ -806,6 +811,7 @@ Array [
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
       "defaultOpenKeys": Array [],
+      "forceSubMenuRender": undefined,
       "id": "menusTitle properties.title",
       "mode": undefined,
       "onClick": [Function],
@@ -895,6 +901,7 @@ Array [
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
       "defaultOpenKeys": Array [],
+      "forceSubMenuRender": undefined,
       "id": "menusTitle url",
       "mode": undefined,
       "onClick": [Function],
@@ -1442,6 +1449,7 @@ Array [
       "defaultOpenKeys": Array [
         undefined,
       ],
+      "forceSubMenuRender": undefined,
       "id": "mode: inline, backgroundColor: #016e1e",
       "inlineCollapsed": undefined,
       "inlineIndent": undefined,
@@ -1951,6 +1959,7 @@ Array [
       "defaultOpenKeys": Array [
         "menu_group_1",
       ],
+      "forceSubMenuRender": undefined,
       "id": "mode: inline, defaultOpenKeys: page_1_2_2",
       "inlineCollapsed": undefined,
       "inlineIndent": undefined,
@@ -2458,6 +2467,7 @@ Array [
       "defaultOpenKeys": Array [
         "menu_group_1",
       ],
+      "forceSubMenuRender": undefined,
       "id": "mode: inline, pageId: page_1_2_2",
       "inlineCollapsed": undefined,
       "inlineIndent": undefined,
@@ -3469,6 +3479,7 @@ Array [
       "defaultOpenKeys": Array [
         undefined,
       ],
+      "forceSubMenuRender": undefined,
       "id": "mode: inline, selectedColor: #f16e1e",
       "inlineCollapsed": undefined,
       "inlineIndent": undefined,
@@ -4524,6 +4535,7 @@ Array [
       "defaultOpenKeys": Array [
         undefined,
       ],
+      "forceSubMenuRender": undefined,
       "id": "mode: inline, selectedColor: #f16e1e, backgroundColor: #016e1e",
       "inlineCollapsed": undefined,
       "inlineIndent": undefined,
@@ -5033,6 +5045,7 @@ Array [
       "defaultOpenKeys": Array [
         undefined,
       ],
+      "forceSubMenuRender": undefined,
       "id": "mode: inline, selectedKeys: [page_2, page_3]",
       "inlineCollapsed": undefined,
       "inlineIndent": undefined,
@@ -5541,6 +5554,7 @@ Array [
       "defaultOpenKeys": Array [
         undefined,
       ],
+      "forceSubMenuRender": undefined,
       "id": "mode: inline, selectedKeys: [page_2, page_3], pageId: page_1_2_2",
       "inlineCollapsed": undefined,
       "inlineIndent": undefined,
@@ -6049,6 +6063,7 @@ Array [
       "defaultOpenKeys": Array [
         undefined,
       ],
+      "forceSubMenuRender": undefined,
       "id": "mode: inline, theme: light",
       "inlineCollapsed": undefined,
       "inlineIndent": undefined,
@@ -7552,6 +7567,7 @@ Array [
       "defaultOpenKeys": Array [
         undefined,
       ],
+      "forceSubMenuRender": undefined,
       "id": "mode: inline, theme: light, selectedColor: #6C2ACB",
       "inlineCollapsed": undefined,
       "inlineIndent": undefined,
@@ -9097,6 +9113,7 @@ Array [
       "defaultOpenKeys": Array [
         undefined,
       ],
+      "forceSubMenuRender": undefined,
       "id": "mode: inline, theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e",
       "inlineCollapsed": undefined,
       "inlineIndent": undefined,
@@ -9646,6 +9663,7 @@ Array [
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},{\\"backgroundColor\\":\\"#016e1e !important\\"},null,null,null]}",
       "defaultOpenKeys": Array [],
+      "forceSubMenuRender": undefined,
       "id": "mode: vertical, backgroundColor: #016e1e",
       "mode": "vertical",
       "onClick": [Function],
@@ -10151,6 +10169,7 @@ Array [
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
       "defaultOpenKeys": Array [],
+      "forceSubMenuRender": undefined,
       "id": "mode: vertical, pageId: page_1_2_2",
       "mode": "vertical",
       "onClick": [Function],
@@ -11158,6 +11177,7 @@ Array [
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,{\\"& > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}}},false,null]}",
       "defaultOpenKeys": Array [],
+      "forceSubMenuRender": undefined,
       "id": "mode: vertical, selectedColor: #f16e1e",
       "mode": "vertical",
       "onClick": [Function],
@@ -12209,6 +12229,7 @@ Array [
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},{\\"backgroundColor\\":\\"#016e1e !important\\"},{\\"& > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}}},false,null]}",
       "defaultOpenKeys": Array [],
+      "forceSubMenuRender": undefined,
       "id": "mode: vertical, selectedColor: #f16e1e, backgroundColor: #016e1e",
       "mode": "vertical",
       "onClick": [Function],
@@ -12714,6 +12735,7 @@ Array [
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
       "defaultOpenKeys": Array [],
+      "forceSubMenuRender": undefined,
       "id": "mode: vertical, selectedKeys: [page_2, page_3]",
       "mode": "vertical",
       "onClick": [Function],
@@ -13218,6 +13240,7 @@ Array [
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
       "defaultOpenKeys": Array [],
+      "forceSubMenuRender": undefined,
       "id": "mode: vertical, selectedKeys: [page_2, page_3], pageId: page_1_2_2",
       "mode": "vertical",
       "onClick": [Function],
@@ -13722,6 +13745,7 @@ Array [
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
       "defaultOpenKeys": Array [],
+      "forceSubMenuRender": undefined,
       "id": "mode: vertical, theme: light",
       "mode": "vertical",
       "onClick": [Function],
@@ -15263,6 +15287,7 @@ Array [
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},{\\"backgroundColor\\":\\"#016e1e !important\\"},false,{\\"& > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu-selected\\":{\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-item:hover\\":{\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu:hover\\":{\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item:hover\\":{\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}}},null]}",
       "defaultOpenKeys": Array [],
+      "forceSubMenuRender": undefined,
       "id": "mode: vertical, theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e",
       "mode": "vertical",
       "onClick": [Function],
@@ -15470,6 +15495,7 @@ Array [
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
       "defaultOpenKeys": Array [],
+      "forceSubMenuRender": undefined,
       "id": "properties.MenuGroup with MenuLInks",
       "mode": undefined,
       "onClick": [Function],
@@ -15767,8 +15793,215 @@ Array [
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
       "defaultOpenKeys": Array [],
+      "forceSubMenuRender": undefined,
       "id": "properties.danger: true",
       "mode": "vertical",
+      "onClick": [Function],
+      "onOpenChange": [Function],
+      "onSelect": [Function],
+      "selectable": true,
+      "selectedKeys": Array [
+        undefined,
+      ],
+      "subMenuCloseDelay": undefined,
+      "subMenuOpenDelay": undefined,
+      "theme": "dark",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.forceSubMenuRender with MenuLInks - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": Array [
+        <mockConstructor
+          className="{\\"style\\":[{\\"& > ul\\":{}}]}"
+          popupClassName="{\\"style\\":[null,null,null]}"
+          title={
+            <MenuTitle
+              id="menu_group_1"
+              makeCssClass={
+                [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "display": false,
+                          "lineHeight": "64px",
+                        },
+                        undefined,
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "& > ul": Object {
+                            "backgroundColor": undefined,
+                          },
+                        },
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null,null]}",
+                    },
+                  ],
+                }
+              }
+              properties={
+                Object {
+                  "title": "Menu Group 1",
+                }
+              }
+            />
+          }
+        >
+          <mockConstructor>
+            <MenuTitle
+              id="menu_item_1"
+              makeCssClass={
+                [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "display": false,
+                          "lineHeight": "64px",
+                        },
+                        undefined,
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "& > ul": Object {
+                            "backgroundColor": undefined,
+                          },
+                        },
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null,null]}",
+                    },
+                  ],
+                }
+              }
+              properties={
+                Object {
+                  "title": "Menu Item one",
+                }
+              }
+            />
+          </mockConstructor>
+          <mockConstructor>
+            <MenuTitle
+              id="menu_item_2"
+              makeCssClass={
+                [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "display": false,
+                          "lineHeight": "64px",
+                        },
+                        undefined,
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "& > ul": Object {
+                            "backgroundColor": undefined,
+                          },
+                        },
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null,null]}",
+                    },
+                  ],
+                }
+              }
+              properties={
+                Object {
+                  "title": "Menu Item two",
+                }
+              }
+            />
+          </mockConstructor>
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+      "defaultOpenKeys": Array [],
+      "forceSubMenuRender": true,
+      "id": "properties.forceSubMenuRender with MenuLInks",
+      "mode": undefined,
       "onClick": [Function],
       "onOpenChange": [Function],
       "onSelect": [Function],
@@ -15919,6 +16152,7 @@ Array [
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
       "defaultOpenKeys": Array [],
+      "forceSubMenuRender": undefined,
       "id": "properties.icon",
       "mode": undefined,
       "onClick": [Function],
@@ -16005,6 +16239,7 @@ Array [
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
       "defaultOpenKeys": Array [],
+      "forceSubMenuRender": undefined,
       "id": "properties.links",
       "mode": undefined,
       "onClick": [Function],
@@ -16212,6 +16447,7 @@ Array [
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
       "defaultOpenKeys": Array [],
+      "forceSubMenuRender": undefined,
       "id": "properties.subMenuCloseDelay: 3",
       "mode": undefined,
       "onClick": [Function],
@@ -16418,6 +16654,7 @@ Array [
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
       "defaultOpenKeys": Array [],
+      "forceSubMenuRender": undefined,
       "id": "properties.subMenuOpenDelay: 3",
       "mode": undefined,
       "onClick": [Function],
@@ -16572,6 +16809,7 @@ Array [
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
       "defaultOpenKeys": Array [],
+      "forceSubMenuRender": undefined,
       "id": "properties.title",
       "mode": undefined,
       "onClick": [Function],

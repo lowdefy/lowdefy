@@ -3264,6 +3264,10 @@ exports[`Test Schema properties.danger: true 1`] = `true`;
 
 exports[`Test Schema properties.danger: true 2`] = `null`;
 
+exports[`Test Schema properties.forceSubMenuRender with MenuLInks 1`] = `true`;
+
+exports[`Test Schema properties.forceSubMenuRender with MenuLInks 2`] = `null`;
+
 exports[`Test Schema properties.icon 1`] = `true`;
 
 exports[`Test Schema properties.icon 2`] = `null`;
