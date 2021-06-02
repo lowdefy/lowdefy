@@ -22,3 +22,4 @@ packages/cli/lowdefy.yaml
 packages/servers/serverDev/lowdefy.yaml
 packages/servers/serverDocker/lowdefy.yaml
 packages/servers/serverNetlify/lowdefy.yaml
+packages/server/lowdefy.yaml
