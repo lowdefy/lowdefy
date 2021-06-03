@@ -112,6 +112,7 @@ const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename 
           },
         properties.style,
       ])}
+      forceSubMenuRender={properties.forceSubMenuRender}
       theme={theme}
       selectable={true}
       defaultOpenKeys={
