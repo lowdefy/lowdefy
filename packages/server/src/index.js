@@ -28,6 +28,7 @@ function getServer({
   logger,
   getSecrets,
   serveStaticFiles = true,
+  shellLocation,
 }) {
   const context = createContext({
     CONFIGURATION_BASE_PATH: configurationBasePath,
@@ -45,8 +46,9 @@ function getServer({
   let indexHtml = null;
 
   const serveIndex = async (req, res) => {
-    if (!indexHtml) {
-      indexHtml = await readFile(path.resolve(process.cwd(), 'dist/shell/index.html'));
+    // TODO: can do better here?
+    if (!indexHtml || development) {
+      indexHtml = await readFile(path.resolve(process.cwd(), shellLocation, 'shell/index.html'));
       let appConfig = await readFile(path.resolve(configurationBasePath, 'app.json'));
       appConfig = JSON.parse(appConfig);
       indexHtml = indexHtml.replace(
@@ -70,8 +72,10 @@ function getServer({
     // else static server serves without appended html
     server.get('/', serveIndex);
 
-    // Serve webpack and public files from './dist/shell'
-    server.use(express.static('dist/shell'));
+    server.use('/shell', express.static(path.resolve(process.cwd(), shellLocation, 'shell')));
+
+    // serve public files
+    server.use('/public', express.static(path.resolve(process.cwd(), shellLocation, 'public')));
 
     // Redirect all 404 to index.html with status 200
     // This should always be the last route

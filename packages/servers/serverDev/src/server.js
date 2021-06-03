@@ -16,6 +16,7 @@
 
 import dotenv from 'dotenv';
 import getServer from '@lowdefy/server';
+import shellLocation from '@lowdefy/shell';
 import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
 
 dotenv.config({ silent: true });
@@ -25,6 +26,7 @@ const server = getServer({
   development: true,
   getSecrets: createGetSecretsFromEnv(),
   logger: console,
+  shellLocation,
 });
 
 server.listen({ port: 3000 }, () => console.log(`🚀 Server ready at http://localhost:3000`));

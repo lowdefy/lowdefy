@@ -25,13 +25,16 @@
     "type": "git",
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
+  "main": "dist/location.js",
   "files": [
     "dist/*"
   ],
   "scripts": {
-    "build": "webpack --config webpack.config.js",
+    "babel": "babel src/location.js --out-dir dist",
+    "build": "yarn webpack && yarn babel",
     "clean": "rm -rf dist",
-    "prepare": "yarn build"
+    "prepare": "yarn build",
+    "webpack": "webpack --config webpack.config.js"
   },
   "dependencies": {
     "@lowdefy/graphql": "3.16.5",

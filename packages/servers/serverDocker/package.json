@@ -31,18 +31,18 @@
   ],
   "scripts": {
     "babel": "babel src --out-dir dist",
-    "build": "yarn webpack && yarn babel",
+    "build": "yarn babel",
     "build:docker": "docker build --tag lowdefy/lowdefy .",
     "build:lowdefy-starter": "lowdefy init && lowdefy build",
     "clean": "rm -rf dist && rm -rf dev",
     "prepare": "yarn build",
-    "start": "nodemon dist/server.js",
-    "webpack": "webpack --config webpack.config.js"
+    "start": "nodemon dist/server.js"
   },
   "dependencies": {
     "@lowdefy/graphql": "3.16.5",
     "@lowdefy/node-utils": "3.16.5",
     "@lowdefy/server": "3.16.5",
+    "@lowdefy/shell": "3.16.5",
     "apollo-server-express": "2.25.0",
     "express": "4.17.1",
     "graphql": "15.5.0"

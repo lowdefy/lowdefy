@@ -7,11 +7,11 @@ const { ModuleFederationPlugin } = require('webpack').container;
 const packageJson = require('./package.json');
 
 module.exports = {
-  entry: './src/index',
+  entry: './src/shell/index',
   mode: 'production',
   output: {
     filename: '[name].[contenthash].js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'dist/shell'),
   },
   module: {
     rules: [
@@ -45,8 +45,8 @@ module.exports = {
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       minify: false,
-      publicPath: '/',
-      template: './src/index.html',
+      publicPath: '/shell',
+      template: './src/shell/index.html',
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production'),
@@ -74,7 +74,7 @@ module.exports = {
       patterns: [
         {
           from: './src/public',
-          to: 'public',
+          to: '../public',
         },
       ],
     }),
