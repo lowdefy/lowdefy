@@ -55,7 +55,7 @@ function getServer({ development = false, configurationBasePath, logger, getSecr
 
   const server = express();
 
-  gqlServer.applyMiddleware({ server, path: '/api/graphql' });
+  gqlServer.applyMiddleware({ app: server, path: '/api/graphql' });
 
   // serve index.html with appended html
   // else static server serves without appended html
