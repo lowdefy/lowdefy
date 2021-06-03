@@ -34,6 +34,5 @@ jest.mock('@lowdefy/block-tools', () => {
   };
 });
 
-// Fix: TypeError: parentInstance.children.indexOf is not a function
-// runRenderTests({ examples, Block: Menu, meta });
+runRenderTests({ examples, Block: Menu, meta });
 runBlockSchemaTests({ examples, meta });
