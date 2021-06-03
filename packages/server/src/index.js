@@ -21,11 +21,19 @@ import { typeDefs, resolvers, createContext } from '@lowdefy/graphql';
 import { get } from '@lowdefy/helpers';
 import { readFile } from '@lowdefy/node-utils';
 
-function getServer({ development = false, configurationBasePath, logger, getSecrets }) {
+function getServer({
+  development = false,
+  configurationBasePath,
+  gqlUri,
+  logger,
+  getSecrets,
+  serveStaticFiles = true,
+}) {
   const context = createContext({
     CONFIGURATION_BASE_PATH: configurationBasePath,
     development,
     getSecrets,
+    gqlUri,
     logger,
   });
   const gqlServer = new ApolloServer({
@@ -57,17 +65,18 @@ function getServer({ development = false, configurationBasePath, logger, getSecr
 
   gqlServer.applyMiddleware({ app: server, path: '/api/graphql' });
 
-  // serve index.html with appended html
-  // else static server serves without appended html
-  server.get('/', serveIndex);
+  if (serveStaticFiles) {
+    // serve index.html with appended html
+    // else static server serves without appended html
+    server.get('/', serveIndex);
 
-  // Serve webpack and public files from './dist/shell'
-  server.use(express.static('dist/shell'));
+    // Serve webpack and public files from './dist/shell'
+    server.use(express.static('dist/shell'));
 
-  // Redirect all 404 to index.html with status 200
-  // This should always be the last route
-  server.use(serveIndex);
-
+    // Redirect all 404 to index.html with status 200
+    // This should always be the last route
+    server.use(serveIndex);
+  }
   return server;
 }
 

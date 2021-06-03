@@ -5164,6 +5164,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/block-tools", "workspace:packages/blockTools"],
             ["@lowdefy/graphql", "workspace:packages/graphql"],
             ["@lowdefy/node-utils", "workspace:packages/nodeUtils"],
+            ["@lowdefy/server", "workspace:packages/server"],
             ["apollo-server-express", "virtual:dddca670fd0b7758fb2e1b1a3e18ac7ebd1ecd06ecdd7acec2b78bccf1d35802cb22904bfbb233b16515a81f5cb819421786d20887823d98022b367036c1ad51#npm:2.25.0"],
             ["babel-jest", "virtual:caddf51df4928b33a437ca87b8f5ddfb6205ebd6d8231f74d4ee7223f3866e6f815b221aa1e2bd33e98915f701e95bae72a93d2288b49a34a6246bdbc2a4a132#npm:26.6.3"],
             ["babel-loader", "virtual:053c0cf5ed50eefeca8cc4cce6ba0ef6704f9c0028bb0069813661abde8c00a7473f912815b4e5d2e63edfa23bc60a7e7117851e4decf6eefa4d6668d9b67b4b#npm:8.2.2"],
