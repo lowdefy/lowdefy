@@ -33,7 +33,6 @@
     "babel": "babel src/functions --out-dir dist/functions",
     "build": "yarn webpack && yarn babel",
     "clean": "rm -rf dist && rm -rf dev",
-    "netlify": "netlify",
     "prepare": "yarn build",
     "webpack": "webpack --config webpack.config.js"
   },
