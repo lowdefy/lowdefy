@@ -103,6 +103,11 @@ properties:
   footer:
     style:
       background: '#FFFFFF'
+  breadcrumb:
+    list:
+      - _ref: version.yaml
+      - {{ category }}
+      - {{ block_type }}
 layout:
   contentGutter: 16
 areas:
