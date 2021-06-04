@@ -16,6 +16,7 @@
 
 import serverless from 'serverless-http';
 import getServer from '@lowdefy/server';
+import shellLocation from '@lowdefy/shell';
 import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
 
 const configurationBasePath = process.env.LOWDEFY_SERVER_CONFIGURATION_PATH || './build';
@@ -25,6 +26,7 @@ const server = getServer({
   development: false,
   getSecrets: createGetSecretsFromEnv(),
   logger: console,
+  shellLocation,
 });
 
 export const handler = serverless(server, {
