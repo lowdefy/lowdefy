@@ -21,36 +21,58 @@ class Actions {
   constructor(context) {
     this.context = context;
     this.callAction = this.callAction.bind(this);
+    this.callActionLoop = this.callActionLoop.bind(this);
     this.callActions = this.callActions.bind(this);
     this.displayMessage = this.displayMessage.bind(this);
     this.actions = actions;
   }
 
-  async callActions({ actions, arrayIndices, block, event, eventName }) {
+  async callActionLoop({ actions, arrayIndices, block, event, responses }) {
+    for (const [index, action] of actions.entries()) {
+      try {
+        const response = await this.callAction({
+          action,
+          arrayIndices,
+          block,
+          event,
+          index,
+          responses,
+        });
+        responses[action.id] = response;
+      } catch (error) {
+        throw {
+          error,
+          action,
+        };
+      }
+    }
+  }
+
+  async callActions({ actions, arrayIndices, block, catchActions, event, eventName }) {
     const startTimestamp = new Date();
     const responses = {};
     try {
-      for (const [index, action] of actions.entries()) {
-        try {
-          const response = await this.callAction({
-            action,
-            arrayIndices,
-            block,
-            event,
-            index,
-            responses,
-          });
-          responses[action.id] = response;
-        } catch (error) {
-          throw {
-            error,
-            action,
-          };
-        }
-      }
+      await this.callActionLoop({ actions, arrayIndices, block, event, responses });
     } catch (error) {
       responses[error.action.id] = error.error;
       console.error(error);
+      try {
+        await this.callActionLoop({ actions: catchActions, arrayIndices, block, event, responses });
+      } catch (errorCatch) {
+        responses[errorCatch.action.id] = errorCatch.error;
+        console.error(errorCatch);
+        return {
+          blockId: block.blockId,
+          error,
+          errorCatch,
+          event,
+          eventName,
+          responses,
+          endTimestamp: new Date(),
+          startTimestamp,
+          success: false,
+        };
+      }
       return {
         blockId: block.blockId,
         error,

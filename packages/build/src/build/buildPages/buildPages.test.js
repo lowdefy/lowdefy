@@ -1760,3 +1760,167 @@ describe('web operators', () => {
     ]);
   });
 });
+
+test('block events actions array should map to try catch', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Context',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            events: {
+              onClick: [
+                {
+                  id: 'action_1',
+                  type: 'Reset',
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  };
+  const res = await buildPages({ components, context });
+  expect(get(res, 'pages.0.areas.content.blocks.0.events.onClick.try')).toEqual([
+    {
+      id: 'action_1',
+      type: 'Reset',
+    },
+  ]);
+  expect(get(res, 'pages.0.areas.content.blocks.0.events.onClick.catch')).toEqual([]);
+});
+
+test('block events actions as try catch arrays', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Context',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            events: {
+              onClick: {
+                try: [
+                  {
+                    id: 'action_1',
+                    type: 'Reset',
+                  },
+                ],
+                catch: [
+                  {
+                    id: 'action_1',
+                    type: 'Retry',
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  const res = await buildPages({ components, context });
+  expect(get(res, 'pages.0.areas.content.blocks.0.events.onClick.try')).toEqual([
+    {
+      id: 'action_1',
+      type: 'Reset',
+    },
+  ]);
+  expect(get(res, 'pages.0.areas.content.blocks.0.events.onClick.catch')).toEqual([
+    {
+      id: 'action_1',
+      type: 'Retry',
+    },
+  ]);
+});
+
+test('block events actions try not an array', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Context',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            events: {
+              onClick: {
+                try: {
+                  id: 'action_1',
+                  type: 'Reset',
+                },
+              },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  await expect(buildPages({ components, context })).rejects.toThrow(
+    'Events must be an array of actions at block_1 in events onClick on page page_1. Received {"id":"action_1","type":"Reset"}'
+  );
+});
+
+test('block events actions not an array', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Context',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            events: {
+              onClick: {},
+            },
+          },
+        ],
+      },
+    ],
+  };
+  await expect(buildPages({ components, context })).rejects.toThrow(
+    'Events must be an array of actions at block_1 in events onClick on page page_1. Received undefined'
+  );
+});
+
+test('block events actions catch not an array', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Context',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            events: {
+              onClick: {
+                try: [],
+                catch: {
+                  id: 'action_1',
+                  type: 'Reset',
+                },
+              },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  await expect(buildPages({ components, context })).rejects.toThrow(
+    'Catch events must be an array of actions at block_1 in events onClick on page page_1. Received {"id":"action_1","type":"Reset"}'
+  );
+});

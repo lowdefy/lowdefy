@@ -25,6 +25,9 @@ jest.mock('../../src/actions/index.js', () => ({
   ActionError: jest.fn(() => {
     throw new Error('Test error');
   }),
+  CatchActionError: jest.fn(() => {
+    throw new Error('Test catch error');
+  }),
 }));
 
 const pageId = 'one';
@@ -72,6 +75,7 @@ test('call a synchronous action', async () => {
     actions: [{ id: 'test', type: 'ActionSync', params: 'params' }],
     arrayIndices,
     block: { blockId: 'blockId' },
+    catchActions: [],
     event: {},
     eventName,
   });
@@ -109,6 +113,7 @@ test('call a asynchronous action', async () => {
     actions: [{ id: 'test', type: 'ActionAsync', params: 'params' }],
     arrayIndices,
     block: { blockId: 'blockId' },
+    catchActions: [],
     event: {},
     eventName,
   });
@@ -149,6 +154,7 @@ test('call 2 actions', async () => {
     ],
     arrayIndices,
     block: { blockId: 'blockId' },
+    catchActions: [],
     event: {},
     eventName,
   });
@@ -203,6 +209,7 @@ test('operators are evaluated in params, skip and messages', async () => {
         messages: { _event: 'messages' },
       },
     ],
+    catchActions: [],
     arrayIndices: [1],
     block: { blockId: 'blockId' },
     event: {
@@ -265,6 +272,7 @@ test('skip a action', async () => {
     actions: [{ id: 'test', type: 'ActionSync', skip: true }],
     arrayIndices,
     block: { blockId: 'blockId' },
+    catchActions: [],
     event: {},
     eventName,
   });
@@ -302,6 +310,7 @@ test('action throws a error', async () => {
     actions: [{ id: 'test', type: 'ActionError', params: 'params' }],
     arrayIndices,
     block: { blockId: 'blockId' },
+    catchActions: [],
     event: {},
     eventName,
   });
@@ -354,6 +363,7 @@ test('actions after a error are not called throws a error', async () => {
     ],
     arrayIndices,
     block: { blockId: 'blockId' },
+    catchActions: [],
     event: {},
     eventName,
   });
@@ -404,6 +414,7 @@ test('Invalid action type', async () => {
     actions: [{ id: 'test', type: 'Invalid', params: 'params' }],
     arrayIndices,
     block: { blockId: 'blockId' },
+    catchActions: [],
     event: {},
     eventName,
   });
@@ -452,6 +463,7 @@ test('Parser error in action', async () => {
     actions: [{ id: 'test', type: 'ActionSync', params: { _state: [] } }],
     arrayIndices,
     block: { blockId: 'blockId' },
+    catchActions: [],
     event: {},
     eventName,
   });
@@ -512,6 +524,7 @@ test('Display default loading and success messages when value == true ', async (
     ],
     arrayIndices,
     block: { blockId: 'blockId' },
+    catchActions: [],
     event: {},
     eventName,
   });
@@ -556,6 +569,7 @@ test('Display custom loading and success messages when value is a string ', asyn
     ],
     arrayIndices,
     block: { blockId: 'blockId' },
+    catchActions: [],
     event: {},
     eventName,
   });
@@ -599,6 +613,7 @@ test('Do not display loading and success messages by default', async () => {
     ],
     arrayIndices,
     block: { blockId: 'blockId' },
+    catchActions: [],
     event: {},
     eventName,
   });
@@ -627,6 +642,7 @@ test('Display error message by default', async () => {
     ],
     arrayIndices,
     block: { blockId: 'blockId' },
+    catchActions: [],
     event: {},
     eventName,
   });
@@ -665,6 +681,7 @@ test('Display custom error message', async () => {
     ],
     arrayIndices,
     block: { blockId: 'blockId' },
+    catchActions: [],
     event: {},
     eventName,
   });
@@ -703,8 +720,186 @@ test('Do not display an error message if message === false', async () => {
     ],
     arrayIndices,
     block: { blockId: 'blockId' },
+    catchActions: [],
     event: {},
     eventName,
   });
   expect(displayMessage.mock.calls).toEqual([]);
+});
+
+test('Call catchActions when actions throws error', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+  });
+  const Actions = context.Actions;
+  const res = await Actions.callActions({
+    actions: [
+      {
+        id: 'try_error',
+        type: 'ActionError',
+        messages: {
+          error: false,
+        },
+      },
+    ],
+    arrayIndices,
+    block: { blockId: 'blockId' },
+    catchActions: [
+      {
+        id: 'catch_test',
+        type: 'ActionAsync',
+        params: 'params',
+      },
+    ],
+    event: {},
+    eventName,
+  });
+  expect(res).toEqual({
+    blockId: 'blockId',
+    endTimestamp: {
+      date: 0,
+    },
+    error: {
+      action: {
+        id: 'try_error',
+        messages: {
+          error: false,
+        },
+        type: 'ActionError',
+      },
+      error: {
+        error: new Error('Test error'),
+        index: 0,
+        type: 'ActionError',
+      },
+    },
+    event: {},
+    eventName: 'eventName',
+    responses: {
+      catch_test: {
+        index: 0,
+        response: 'params',
+        type: 'ActionAsync',
+      },
+      try_error: {
+        error: new Error('Test error'),
+        index: 0,
+        type: 'ActionError',
+      },
+    },
+    startTimestamp: {
+      date: 0,
+    },
+    success: false,
+  });
+  expect(actions.ActionAsync.mock.calls.length).toBe(1);
+});
+
+test('Call catchActions when actions throws error and catchActions throws error', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+  });
+  const Actions = context.Actions;
+  const res = await Actions.callActions({
+    actions: [
+      {
+        id: 'try_error',
+        type: 'ActionError',
+        messages: {
+          error: false,
+        },
+      },
+    ],
+    arrayIndices,
+    block: { blockId: 'blockId' },
+
+    catchActions: [
+      {
+        id: 'catch_test',
+        type: 'ActionAsync',
+        params: 'params',
+      },
+      {
+        id: 'catch_error',
+        type: 'CatchActionError',
+        messages: {
+          error: false,
+        },
+      },
+    ],
+    event: {},
+    eventName,
+  });
+  expect(res).toEqual({
+    blockId: 'blockId',
+    endTimestamp: {
+      date: 0,
+    },
+    error: {
+      action: {
+        id: 'try_error',
+        messages: {
+          error: false,
+        },
+        type: 'ActionError',
+      },
+      error: {
+        error: new Error('Test error'),
+        index: 0,
+        type: 'ActionError',
+      },
+    },
+    errorCatch: {
+      action: {
+        id: 'catch_error',
+        messages: {
+          error: false,
+        },
+        type: 'CatchActionError',
+      },
+      error: {
+        error: new Error('Test catch error'),
+        index: 1,
+        type: 'CatchActionError',
+      },
+    },
+    event: {},
+    eventName: 'eventName',
+    responses: {
+      catch_test: {
+        index: 0,
+        response: 'params',
+        type: 'ActionAsync',
+      },
+      try_error: {
+        error: new Error('Test error'),
+        index: 0,
+        type: 'ActionError',
+      },
+      catch_error: {
+        error: new Error('Test catch error'),
+        index: 1,
+        type: 'CatchActionError',
+      },
+    },
+    startTimestamp: {
+      date: 0,
+    },
+    success: false,
+  });
+  expect(actions.ActionAsync.mock.calls.length).toBe(1);
 });

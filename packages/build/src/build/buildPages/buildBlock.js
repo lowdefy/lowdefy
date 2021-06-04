@@ -30,6 +30,7 @@ async function buildBlock(block, blockContext) {
   block.blockId = block.id;
   block.id = `block:${blockContext.pageId}:${block.id}`;
   await setBlockMeta(block, blockContext.metaLoader, blockContext.pageId);
+
   let newBlockContext = blockContext;
   if (block.meta.category === 'context') {
     newBlockContext = {
@@ -44,6 +45,32 @@ async function buildBlock(block, blockContext) {
   if (block.meta.category === 'context') {
     block.requests = newBlockContext.requests;
   }
+
+  if (block.events) {
+    Object.keys(block.events).map((key) => {
+      if (type.isArray(block.events[key])) {
+        block.events[key] = {
+          try: block.events[key],
+          catch: [],
+        };
+      }
+      if (!type.isArray(block.events[key].try)) {
+        throw new Error(
+          `Events must be an array of actions at ${block.blockId} in events ${key} on page ${
+            newBlockContext.pageId
+          }. Received ${JSON.stringify(block.events[key].try)}`
+        );
+      }
+      if (!type.isArray(block.events[key].catch) && !type.isNone(block.events[key].catch)) {
+        throw new Error(
+          `Catch events must be an array of actions at ${block.blockId} in events ${key} on page ${
+            newBlockContext.pageId
+          }. Received ${JSON.stringify(block.events[key].catch)}`
+        );
+      }
+    });
+  }
+
   if (!type.isNone(block.blocks)) {
     if (!type.isArray(block.blocks)) {
       throw new Error(
