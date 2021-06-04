@@ -28,7 +28,7 @@ _ref:
 
             It uses the [axios](https://github.com/axios/axios) library.
 
-            The same properties can be set on both connections and requests. The properties will be merged, with the request properties overwriting connection properties. This allows properties like authentication headers and the baseUrl to be set on the connection, with request specific properties like the request.
+            The same properties can be set on both connections and requests. The properties will be merged, with the request properties overwriting connection properties. This allows properties like authentication headers and the baseURL to be set on the connection, with request specific properties like the request.
 
             >Secrets like authentication headers and API keys should be stored using the [`_secret`](operators/secret.md) operator.
 
@@ -81,13 +81,13 @@ _ref:
 
             Properties for a AxiosHttp can be set on either the connection, the request, or both. However, both a connection and request need to be defined.
 
-            ###### Using the connection to set baseUrl and authorization, and handle specific requests as requests.
+            ###### Using the connection to set baseURL and authorization, and handle specific requests as requests.
             ```yaml
             connections:
               - id: app_api
                 type: AxiosHttp
                 properties:
-                  baseUrl: app.com/api
+                  baseURL: app.com/api
                   auth:
                     username: api_user
                     password:

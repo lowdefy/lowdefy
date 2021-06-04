@@ -46,6 +46,11 @@
             "description": "A menu item 'id' which should be open by default."
           }
         },
+        "forceSubMenuRender": {
+          "type": "boolean",
+          "description": "Render submenu into DOM before it becomes visible.",
+          "default": false
+        },
         "subMenuCloseDelay": {
           "type": "number",
           "description": "Delay time to hide submenu when mouse leaves (in seconds)."

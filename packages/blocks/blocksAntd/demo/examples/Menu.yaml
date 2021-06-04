@@ -59,6 +59,27 @@
             PageId: page_1_2
             properties:
               title: Menu Item two
+# Fix: TypeError: parentInstance.children.indexOf is not a function
+# - id: 'properties.forceSubMenuRender with MenuLInks'
+#   type: Menu
+#   properties:
+#     forceSubMenuRender: true
+#     links:
+#       - id: menu_group_1
+#         type: MenuGroup
+#         properties:
+#           title: Menu Group 1
+#         links:
+#           - id: menu_item_1
+#             type: MenuLink
+#             PageId: page_1_1
+#             properties:
+#               title: Menu Item one
+#           - id: menu_item_2
+#             type: MenuLink
+#             PageId: page_1_2
+#             properties:
+#               title: Menu Item two
 - id: 'properties.subMenuOpenDelay: 3'
   type: Menu
   properties:
@@ -133,7 +154,7 @@
   properties:
     mode: vertical
     theme: light
-    selectedKeys: 
+    selectedKeys:
       - menu_item_1_1
       - menu_item_3
       - menu_item_1_2_2
@@ -359,7 +380,7 @@
   properties:
     mode: vertical
     backgroundColor: '#016e1e'
-    selectedKeys: 
+    selectedKeys:
       - menu_item_1_1
       - menu_item_3
       - menu_item_1_2_2
@@ -406,7 +427,7 @@
   properties:
     mode: vertical
     selectedColor: '#f16e1e'
-    selectedKeys: 
+    selectedKeys:
       - menu_item_1_1
       - menu_item_3
       - menu_item_1_2_2
@@ -454,7 +475,7 @@
     mode: vertical
     selectedColor: '#f16e1e'
     backgroundColor: '#016e1e'
-    selectedKeys: 
+    selectedKeys:
       - menu_item_1_1
       - menu_item_3
       - menu_item_1_2_2
@@ -503,7 +524,7 @@
     mode: vertical
     selectedColor: '#f16e1e'
     backgroundColor: '#016e1e'
-    selectedKeys: 
+    selectedKeys:
       - menu_item_1_1
       - menu_item_3
       - menu_item_1_2_2
@@ -554,7 +575,7 @@
 #   properties:
 #     mode: horizontal
 #     theme: light
-#     selectedKeys: 
+#     selectedKeys:
 #       - menu_item_1_1
 #       - menu_item_3
 #       - menu_item_1_2_2
@@ -780,7 +801,7 @@
 #   properties:
 #     mode: horizontal
 #     backgroundColor: '#016e1e'
-#     selectedKeys: 
+#     selectedKeys:
 #       - menu_item_1_1
 #       - menu_item_3
 #       - menu_item_1_2_2
@@ -827,7 +848,7 @@
 #   properties:
 #     mode: horizontal
 #     selectedColor: '#f16e1e'
-#     selectedKeys: 
+#     selectedKeys:
 #       - menu_item_1_1
 #       - menu_item_3
 #       - menu_item_1_2_2
@@ -875,7 +896,7 @@
 #     mode: horizontal
 #     selectedColor: '#f16e1e'
 #     backgroundColor: '#016e1e'
-#     selectedKeys: 
+#     selectedKeys:
 #       - menu_item_1_1
 #       - menu_item_3
 #       - menu_item_1_2_2
@@ -924,7 +945,7 @@
 #     mode: horizontal
 #     selectedColor: '#f16e1e'
 #     backgroundColor: '#016e1e'
-#     selectedKeys: 
+#     selectedKeys:
 #       - menu_item_1_1
 #       - menu_item_3
 #       - menu_item_1_2_2
@@ -967,15 +988,13 @@
 #           title: Title Menu Item 3
 #           icon: VideoCameraFilled
 
-
-
 # mode inline
 - id: 'mode: inline, theme: light'
   type: Menu
   properties:
     mode: inline
     theme: light
-    selectedKeys: 
+    selectedKeys:
       - menu_item_1_1
       - menu_item_3
       - menu_item_1_2_2
@@ -1201,7 +1220,7 @@
   properties:
     mode: inline
     backgroundColor: '#016e1e'
-    selectedKeys: 
+    selectedKeys:
       - menu_item_1_1
       - menu_item_3
       - menu_item_1_2_2
@@ -1248,7 +1267,7 @@
   properties:
     mode: inline
     selectedColor: '#f16e1e'
-    selectedKeys: 
+    selectedKeys:
       - menu_item_1_1
       - menu_item_3
       - menu_item_1_2_2
@@ -1296,7 +1315,7 @@
     mode: inline
     selectedColor: '#f16e1e'
     backgroundColor: '#016e1e'
-    selectedKeys: 
+    selectedKeys:
       - menu_item_1_1
       - menu_item_3
       - menu_item_1_2_2
@@ -1345,7 +1364,7 @@
     mode: inline
     selectedColor: '#f16e1e'
     backgroundColor: '#91cfcf'
-    selectedKeys: 
+    selectedKeys:
       - menu_item_1_1
       - menu_item_3
       - menu_item_1_2_2
@@ -1388,14 +1407,13 @@
           title: Title Menu Item 3
           icon: VideoCameraFilled
 
-
 - id: 'mode: inline, theme: light, selectedColor: #6C2ACB'
   type: Menu
   properties:
     theme: light
     mode: inline
     selectedColor: '#6C2ACB'
-    selectedKeys: 
+    selectedKeys:
       - menu_item_1_1
       - menu_item_3
       - menu_item_1_2_2
@@ -1442,7 +1460,7 @@
   type: Menu
   menus:
     - id: menu_one
-      menuId: menu_one 
+      menuId: menu_one
       links:
         - id: menu_group_1
           type: MenuGroup
@@ -1464,7 +1482,7 @@
   type: Menu
   menus:
     - id: menu_one
-      menuId: menu_one 
+      menuId: menu_one
       links:
         - id: menu_group_1
           type: MenuGroup
@@ -1483,7 +1501,7 @@
             title: Title Menu Item 2
             icon: VideoCameraFilled
     - id: menu_one
-      menuId: default 
+      menuId: default
       links:
         - id: default_menu_group_1
           type: MenuGroup
@@ -1502,7 +1520,7 @@
     menuId: menu_one
   menus:
     - id: menu_one
-      menuId: menu_one 
+      menuId: menu_one
       links:
         - id: menu_group_1
           type: MenuGroup
@@ -1521,7 +1539,7 @@
             title: Title Menu Item 2
             icon: VideoCameraFilled
     - id: menu_one
-      menuId: default 
+      menuId: default
       links:
         - id: default_menu_group_1
           type: MenuGroup
@@ -1538,7 +1556,7 @@
   type: Menu
   menus:
     - id: menu_one
-      menuId: menu_one 
+      menuId: menu_one
       links:
         - id: menu_item_2
           type: MenuLink
@@ -1551,7 +1569,7 @@
   type: Menu
   menus:
     - id: menu_one
-      menuId: menu_one 
+      menuId: menu_one
       links:
         - id: menu_item_2
           type: MenuLink
@@ -1563,7 +1581,7 @@
   type: Menu
   menus:
     - id: menu_one
-      menuId: menu_one 
+      menuId: menu_one
       links:
         - id: menu_item_2
           type: MenuLink
