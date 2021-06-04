@@ -26,26 +26,28 @@ class Events {
     this.init = this.init.bind(this);
     this.triggerEvent = this.triggerEvent.bind(this);
     this.registerEvent = this.registerEvent.bind(this);
+    this.initEvent = this.initEvent.bind(this);
 
     this.init();
   }
 
+  initEvent(actions) {
+    return {
+      actions: (type.isObject(actions) ? actions.try : actions) || [],
+      catchActions: (type.isObject(actions) ? actions.catch : []) || [],
+      history: [],
+      loading: false,
+    };
+  }
+
   init() {
     Object.keys(this.block.events).forEach((eventName) => {
-      this.events[eventName] = {
-        actions: this.block.events[eventName] || [],
-        history: [],
-        loading: false,
-      };
+      this.events[eventName] = this.initEvent(this.block.events[eventName]);
     });
   }
 
   registerEvent({ name, actions }) {
-    this.events[name] = {
-      actions: actions || [],
-      history: [],
-      loading: false,
-    };
+    this.events[name] = this.initEvent(actions);
   }
 
   async triggerEvent({ name, event }) {
@@ -61,6 +63,7 @@ class Events {
       actions: eventDescription.actions,
       arrayIndices: this.arrayIndices,
       block: this.block,
+      catchActions: eventDescription.catchActions,
       event,
       eventName: name,
     });

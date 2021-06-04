@@ -248,10 +248,32 @@
           "type": "object",
           "patternProperties": {
             "^.*$": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/action"
-              }
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/action"
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "try": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/definitions/action"
+                      }
+                    },
+                    "catch": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/definitions/action"
+                      }
+                    }
+                  }
+                }
+              ]
             }
           },
           "errorMessage": {
@@ -400,7 +422,7 @@
       }
     },
     "menuItem": {
-      "$anyOf": [
+      "anyOf": [
         {
           "$ref": "#/definitions/menuGroup"
         },
