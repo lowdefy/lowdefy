@@ -106,6 +106,7 @@ test('init Events', async () => {
     onClick: {
       history: [],
       loading: false,
+      catchActions: [],
       actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
     },
   });
@@ -177,6 +178,7 @@ test('triggerEvent x1', async () => {
     onClick: {
       history: [],
       loading: true,
+      catchActions: [],
       actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
     },
   });
@@ -344,6 +346,7 @@ test('registerEvent then triggerEvent x1', async () => {
     onClick: {
       history: [],
       loading: false,
+      catchActions: [],
       actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
     },
   });
@@ -411,6 +414,7 @@ test('triggerEvent skip', async () => {
             "type": "SetState",
           },
         ],
+        "catchActions": Array [],
         "history": Array [
           Object {
             "blockId": "button",
@@ -509,6 +513,7 @@ test('triggerEvent skip tests === true', async () => {
             "type": "SetState",
           },
         ],
+        "catchActions": Array [],
         "history": Array [
           Object {
             "blockId": "button",
@@ -597,7 +602,86 @@ test('Actions array defaults', async () => {
     actions: null,
   });
   expect(button.Events.events).toEqual({
-    onClick: { actions: [], history: [], loading: false },
-    registered: { actions: [], history: [], loading: false },
+    onClick: { actions: [], history: [], loading: false, catchActions: [] },
+    registered: { actions: [], history: [], loading: false, catchActions: [] },
+  });
+});
+
+test('Actions try catch array defaults', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: {
+                try: null,
+                catch: null,
+              },
+            },
+          },
+        ],
+      },
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+  });
+  const { button } = context.RootBlocks.map;
+  expect(button.Events.events).toEqual({
+    onClick: { actions: [], history: [], loading: false, catchActions: [] },
+  });
+});
+
+test('Actions try catch arrays', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: {
+                try: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+                catch: [{ id: 'b', type: 'SetState', params: { b: 'b' } }],
+              },
+            },
+          },
+        ],
+      },
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+  });
+  const { button } = context.RootBlocks.map;
+  expect(button.Events.events).toEqual({
+    onClick: {
+      actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+      history: [],
+      loading: false,
+      catchActions: [{ id: 'b', type: 'SetState', params: { b: 'b' } }],
+    },
   });
 });
