@@ -275,6 +275,22 @@ describe('parse operators', () => {
     expect(res.errors).toMatchInlineSnapshot(`Array []`);
   });
 
+  test('parse _location operator', async () => {
+    Object.defineProperty(window, 'location', {
+      writable: true,
+      configurable: true,
+      value: { origin: 'http://test.com' },
+    });
+    const input = { a: { _location: 'origin' } };
+    const parser = new WebParser({ context, contexts });
+    await parser.init();
+    const res = parser.parse({ input, location: 'locationId' });
+    expect(res.output).toEqual({
+      a: 'http://test.com',
+    });
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
+
   test('parse _random operator', async () => {
     const mathRandomFn = Math.random;
     Math.random = () => 0.5678;
