@@ -33,4 +33,6 @@ COPY --from=build /lowdefy/dist /var/task/dist
 
 COPY --from=build /lowdefy/.lowdefy/build ./build
 
+RUN cp -R ./node_modules/@lowdefy/shell/dist/public ./public
+
 CMD [ "dist/server.handler"]

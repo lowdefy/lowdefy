@@ -19,7 +19,7 @@ import getServer from '@lowdefy/server';
 import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
 
 const server = getServer({
-  configurationBasePath: './build',
+  buildDirectory: './build',
   development: false,
   getSecrets: createGetSecretsFromEnv(),
   gqlUri: '/.netlify/functions/graphql',

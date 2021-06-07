@@ -16,4 +16,7 @@ limitations under the License.
 
 import path from 'path';
 
-export default path.resolve(__dirname);
+const publicDirectory = path.resolve(__dirname, 'public');
+const shellDirectory = path.resolve(__dirname, 'shell');
+
+export { publicDirectory, shellDirectory };

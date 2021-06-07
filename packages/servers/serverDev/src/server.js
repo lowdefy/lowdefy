@@ -16,17 +16,22 @@
 
 import dotenv from 'dotenv';
 import getServer from '@lowdefy/server';
-import shellLocation from '@lowdefy/shell';
+import { publicDirectory as defaultPublicDirectory, shellDirectory } from '@lowdefy/shell';
 import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
 
 dotenv.config({ silent: true });
 
+const buildDirectory = process.env.LOWDEFY_SERVER_BUILD_DIRECTORY || './.lowdefy/build';
+const publicDirectory = process.env.LOWDEFY_SERVER_PUBLIC_DIRECTORY || defaultPublicDirectory;
+const port = parseInt(process.env.LOWDEFY_SERVER_PORT) || 3000;
+
 const server = getServer({
-  configurationBasePath: './.lowdefy/build',
+  buildDirectory,
   development: true,
   getSecrets: createGetSecretsFromEnv(),
   logger: console,
-  shellLocation,
+  publicDirectory,
+  shellDirectory,
 });
 
-server.listen({ port: 3000 }, () => console.log(`🚀 Server ready at http://localhost:3000`));
+server.listen({ port }, () => console.log(`🚀 Server ready at http://localhost:${port}`));

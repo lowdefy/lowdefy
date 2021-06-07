@@ -37,4 +37,6 @@ COPY --from=build --chown=node:node /lowdefy/dist ./dist
 
 COPY --from=build --chown=node:node /lowdefy/.lowdefy/build ./build
 
+RUN cp -R ./node_modules/@lowdefy/shell/dist/public ./public
+
 CMD ["node", "/home/node/lowdefy/dist/server.js"]

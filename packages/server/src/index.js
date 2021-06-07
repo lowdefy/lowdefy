@@ -23,15 +23,16 @@ import { readFile } from '@lowdefy/node-utils';
 
 function getServer({
   development = false,
-  configurationBasePath,
+  buildDirectory,
   gqlUri,
   logger,
   getSecrets,
+  publicDirectory,
   serveStaticFiles = true,
-  shellLocation,
+  shellDirectory,
 }) {
   const context = createContext({
-    CONFIGURATION_BASE_PATH: configurationBasePath,
+    CONFIGURATION_BASE_PATH: buildDirectory,
     development,
     getSecrets,
     gqlUri,
@@ -48,8 +49,8 @@ function getServer({
   const serveIndex = async (req, res) => {
     // TODO: can do better here?
     if (!indexHtml || development) {
-      indexHtml = await readFile(path.resolve(process.cwd(), shellLocation, 'shell/index.html'));
-      let appConfig = await readFile(path.resolve(configurationBasePath, 'app.json'));
+      indexHtml = await readFile(path.resolve(shellDirectory, 'index.html'));
+      let appConfig = await readFile(path.resolve(buildDirectory, 'app.json'));
       appConfig = JSON.parse(appConfig);
       indexHtml = indexHtml.replace(
         '<!-- __LOWDEFY_APP_HEAD_HTML__ -->',
@@ -72,10 +73,10 @@ function getServer({
     // else static server serves without appended html
     server.get('/', serveIndex);
 
-    server.use('/shell', express.static(path.resolve(process.cwd(), shellLocation, 'shell')));
+    server.use('/shell', express.static(path.resolve(shellDirectory)));
 
     // serve public files
-    server.use('/public', express.static(path.resolve(process.cwd(), shellLocation, 'public')));
+    server.use('/public', express.static(path.resolve(publicDirectory)));
 
     // Redirect all 404 to index.html with status 200
     // This should always be the last route

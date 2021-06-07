@@ -16,17 +16,19 @@
 
 import serverless from 'serverless-http';
 import getServer from '@lowdefy/server';
-import shellLocation from '@lowdefy/shell';
+import { shellDirectory } from '@lowdefy/shell';
 import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
 
-const configurationBasePath = process.env.LOWDEFY_SERVER_CONFIGURATION_PATH || './build';
+const buildDirectory = process.env.LOWDEFY_SERVER_BUILD_DIRECTORY || './build';
+const publicDirectory = process.env.LOWDEFY_SERVER_PUBLIC_DIRECTORY || './public';
 
 const server = getServer({
-  configurationBasePath,
+  buildDirectory,
   development: false,
   getSecrets: createGetSecretsFromEnv(),
   logger: console,
-  shellLocation,
+  publicDirectory,
+  shellDirectory,
 });
 
 export const handler = serverless(server, {

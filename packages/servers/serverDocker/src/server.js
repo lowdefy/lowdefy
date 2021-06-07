@@ -15,18 +15,20 @@
 */
 
 import getServer from '@lowdefy/server';
-import shellLocation from '@lowdefy/shell';
+import { shellDirectory } from '@lowdefy/shell';
 import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
 
-const configurationBasePath = process.env.LOWDEFY_SERVER_CONFIGURATION_PATH || './build';
+const buildDirectory = process.env.LOWDEFY_SERVER_BUILD_DIRECTORY || './build';
+const publicDirectory = process.env.LOWDEFY_SERVER_PUBLIC_DIRECTORY || './public';
 const port = parseInt(process.env.LOWDEFY_SERVER_PORT) || 3000;
 
 const server = getServer({
-  configurationBasePath,
+  buildDirectory,
   development: false,
   getSecrets: createGetSecretsFromEnv(),
   logger: console,
-  shellLocation,
+  publicDirectory,
+  shellDirectory,
 });
 
 server.listen({ port }, () => console.log(`Server started at port ${port}`));
