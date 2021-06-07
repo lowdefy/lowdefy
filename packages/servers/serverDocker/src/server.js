@@ -19,7 +19,7 @@ import shellLocation from '@lowdefy/shell';
 import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
 
 const configurationBasePath = process.env.LOWDEFY_SERVER_CONFIGURATION_PATH || './build';
-const port = parseInt(process.env.LOWDEFY_SERVER_PORT) || 443;
+const port = parseInt(process.env.LOWDEFY_SERVER_PORT) || 3000;
 
 const server = getServer({
   configurationBasePath,
