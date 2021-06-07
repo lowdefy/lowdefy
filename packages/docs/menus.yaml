@@ -609,6 +609,9 @@
         - id: _list_contexts
           type: MenuLink
           pageId: _list_contexts
+        - id: _location
+          type: MenuLink
+          pageId: _location
         - id: _log
           type: MenuLink
           pageId: _log
