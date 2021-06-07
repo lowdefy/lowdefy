@@ -275,6 +275,22 @@ describe('parse operators', () => {
     expect(res.errors).toMatchInlineSnapshot(`Array []`);
   });
 
+  test('parse _location operator', async () => {
+    Object.defineProperty(window, 'location', {
+      writable: true,
+      configurable: true,
+      value: { origin: 'http://test.com' },
+    });
+    const input = { a: { _location: 'origin' } };
+    const parser = new WebParser({ context, contexts });
+    await parser.init();
+    const res = parser.parse({ input, location: 'locationId' });
+    expect(res.output).toEqual({
+      a: 'http://test.com',
+    });
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
+
   test('parse _random operator', async () => {
     const mathRandomFn = Math.random;
     Math.random = () => 0.5678;
@@ -499,19 +515,18 @@ describe('parse operators', () => {
     expect(errors).toEqual([]);
   });
 
-  test('parse _js operator', async () => {
+  test.only('parse _js operator retuning a function', async () => {
+    const test_fn = () => (a, b) => a + b;
+    const mockFn = jest.fn().mockImplementation(test_fn);
+    context.lowdefy.imports.jsOperators.test_fn = mockFn;
     const input = {
-      '_js.function': {
-        code: `function (a, b){
-    return a + b;
-  }`,
-      },
+      '_js.test_fn': [],
     };
     const parser = new WebParser({ context, contexts });
     await parser.init();
     const { output, errors } = parser.parse({ input, location: 'locationId' });
     expect(output).toBeInstanceOf(Function);
-    expect(output(1, 2)).toEqual(3);
+    expect(output(4, 2)).toEqual(6);
     expect(errors).toEqual([]);
   });
 

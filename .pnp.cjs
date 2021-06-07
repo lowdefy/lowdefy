@@ -4988,7 +4988,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest", "npm:26.6.3"],
             ["js-yaml", "npm:4.1.0"],
             ["mingo", "npm:4.1.2"],
-            ["quickjs-emscripten", "npm:0.11.0"],
             ["uuid", "npm:8.3.2"]
           ],
           "linkType": "SOFT",
@@ -22634,15 +22633,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/quick-lru-npm-5.1.1-e38e0edce3-fafb2b2fa1.zip/node_modules/quick-lru/",
           "packageDependencies": [
             ["quick-lru", "npm:5.1.1"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["quickjs-emscripten", [
-        ["npm:0.11.0", {
-          "packageLocation": "./.yarn/cache/quickjs-emscripten-npm-0.11.0-4f09eb00c3-a5cf45a1fd.zip/node_modules/quickjs-emscripten/",
-          "packageDependencies": [
-            ["quickjs-emscripten", "npm:0.11.0"]
           ],
           "linkType": "HARD",
         }]
