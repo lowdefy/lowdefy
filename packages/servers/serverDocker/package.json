@@ -33,8 +33,8 @@
     "babel": "babel src --out-dir dist",
     "build": "yarn babel",
     "build:docker": "docker build --tag lowdefy/lowdefy .",
-    "build:lowdefy-starter": "lowdefy init && lowdefy build",
-    "clean": "rm -rf dist && rm -rf dev",
+    "build:lowdefy-default": "node lowdefyDefault.cjs && lowdefy build",
+    "clean": "rm -rf dist && rm -rf .lowdefy",
     "prepare": "yarn build",
     "start": "nodemon dist/server.js"
   },

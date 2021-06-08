@@ -10,8 +10,8 @@ COPY . .
 RUN yarn install
 RUN yarn build
 
-# Build lowdefy starter app
-RUN yarn build:lowdefy-starter
+# Build lowdefy default app
+RUN yarn build:lowdefy-default
 
 # clean all depencies
 RUN rm -rf node_modules
@@ -27,12 +27,15 @@ ENV NODE_ENV=production
 
 WORKDIR /var/task
 
+# Copy build artifacts
 COPY --from=build /lowdefy/node_modules /var/task/node_modules
 
 COPY --from=build /lowdefy/dist /var/task/dist
 
 COPY --from=build /lowdefy/.lowdefy/build ./build
 
+# Copy default public files from shell
+# These can be overridden by copying different files to ./public
 RUN cp -R ./node_modules/@lowdefy/shell/dist/public ./public
 
 CMD [ "dist/server.handler"]
