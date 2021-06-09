@@ -13,6 +13,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '14.x'
+          registry-url: https://registry.npmjs.org/
       - uses: actions/checkout@v2
 
       - name: yarn install
@@ -58,10 +59,13 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
 
+      # --no-verify-access to use automation tokens https://github.com/lerna/lerna/issues/2788
+      # --ignore-scripts to aovoid scripts that could read npm token
+      # --yes to autoconfirm in ci
       - name: publish to npm
-        run: yarn lerna:publish --ignore-scripts --yes
+        run: yarn lerna:publish --ignore-scripts --yes --no-verify-access
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
       - name: Cache Docker layers
         uses: actions/cache@v2
