@@ -713,11 +713,11 @@
           url: https://docs.lowdefy.com
           properties:
             title: Latest
-        - id: v3.17.0-alpha.0
+        - id: v3.16.5
           type: MenuLink
           url: https://60b4bfc8f6822500088a1c45--lowdefy-docs.netlify.app
           properties:
-            title: v3.17.0-alpha.0
+            title: v3.16.5
         - id: v3.15.0
           type: MenuLink
           url: https://609a6df368df720007f2cc9c--lowdefy-docs.netlify.app
