@@ -62,8 +62,9 @@ jobs:
       # --no-verify-access to use automation tokens https://github.com/lerna/lerna/issues/2788
       # --ignore-scripts to aovoid scripts that could read npm token
       # --yes to autoconfirm in ci
+      # --pre-dist-tag do not tag prereleases as latest
       - name: publish to npm
-        run: yarn lerna:publish --ignore-scripts --yes --no-verify-access
+        run: yarn lerna:publish --ignore-scripts --yes --no-verify-access --pre-dist-tag alpha
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
