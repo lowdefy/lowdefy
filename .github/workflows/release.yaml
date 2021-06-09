@@ -1,13 +1,67 @@
 name: Release
 on:
-  pull_request:
+  release:
+    types:
+      - published
 
 jobs:
-  build:
+  build_and_publish:
     runs-on: ubuntu-latest
     environment: publish
     steps:
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14.x'
       - uses: actions/checkout@v2
+
+      - name: yarn install
+        run: yarn install
+
+      - name: yarn build
+        run: yarn build
+
+      - name: publish to npm
+        run: yarn lerna:publish --ignore-scripts
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Upload blocks-cdn.lowdefy.com/renderer
+        run: |
+          aws --region eu-west-1 s3 sync packages/renderer/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/renderer --acl public-read --cache-control 'public, max-age=31536000'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
+      - name: Upload blocks-cdn.lowdefy.com/blocks-basic
+        run: |
+          aws --region eu-west-1 s3 sync packages/blocks/blocksBasic/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/blocks-basic --acl public-read --cache-control 'public, max-age=31536000'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
+      - name: Upload blocks-cdn.lowdefy.com/blocks-antd
+        run: |
+          aws --region eu-west-1 s3 sync packages/blocks/blocksAntd/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/blocks-antd --acl public-read --cache-control 'public, max-age=31536000'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
+      - name: Upload blocks-cdn.lowdefy.com/blocks-markdown
+        run: |
+          aws --region eu-west-1 s3 sync packages/blocks/blocksMarkdown/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/blocks-markdown --acl public-read --cache-control 'public, max-age=31536000'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
+      - name: Upload blocks-cdn.lowdefy.com/blocks-color-selectors
+        run: |
+          aws --region eu-west-1 s3 sync packages/blocks/blocksColorSelectors/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/blocks-color-selectors --acl public-read --cache-control 'public, max-age=31536000'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
+      - name: Upload blocks-cdn.lowdefy.com/blocks-echarts
+        run: |
+          aws --region eu-west-1 s3 sync packages/blocks/blocksECharts/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/blocks-echarts --acl public-read --cache-control 'public, max-age=31536000'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
 
       - name: Cache Docker layers
         uses: actions/cache@v2
@@ -17,15 +71,25 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
-      # - name: Docker meta
-      #   id: meta
-      #   uses: docker/metadata-action@v3
-      #   with:
-      #     images: ${{ secrets.DOCKER_HUB_USERNAME }}/lowdefy:latest
-      #     tags: |
-      #       type=semver,pattern={{version}}
-      #       type=semver,pattern={{major}}.{{minor}}
-      #       type=semver,pattern={{major}}
+      - name: Docker meta lowdefy
+        id: meta_lowdefy
+        uses: docker/metadata-action@v3
+        with:
+          images: lowdefy/lowdefy
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+
+      - name: Docker meta lowdefy-aws-lambda
+        id: meta_lowdefy_aws_lambda
+        uses: docker/metadata-action@v3
+        with:
+          images: lowdefy/lowdefy-aws-lambda
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -40,16 +104,26 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
       - name: Build and push
-        id: docker_build
+        id: docker_build_lowdefy
         uses: docker/build-push-action@v2
         with:
           context: ./packages/servers/serverDocker/
-          # file: ./packages/servers/serverDocker/Dockerfile
           push: true
-          # tags: ${{ steps.meta.outputs.tags }}
-          # labels: ${{ steps.meta.outputs.labels }}
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/lowdefy:latest
+          tags: ${{ steps.meta_lowdefy.outputs.tags }}
+          labels: ${{ steps.meta_lowdefy.outputs.labels }}
           platforms: linux/amd64,linux/arm64
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+
+      - name: Build and push AWS Lambda
+        id: docker_build_lowdefy_aws_lambda
+        uses: docker/build-push-action@v2
+        with:
+          context: ./packages/servers/serverAwsLambda/
+          push: true
+          tags: ${{ steps.meta_lowdefy_aws_lambda.outputs.tags }}
+          labels: ${{ steps.meta_lowdefy_aws_lambda.outputs.labels }}
+          platforms: linux/amd64
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
@@ -60,6 +134,3 @@ jobs:
         run: |
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
-
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
