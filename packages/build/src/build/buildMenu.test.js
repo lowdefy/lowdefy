@@ -454,3 +454,50 @@ test('buildMenu pages not array, no menu', async () => {
     pages: 'pages',
   });
 });
+
+test('buildMenu default menu filter 404 page', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page:page_1',
+        pageId: 'page_1',
+        auth: { public: true },
+      },
+      {
+        id: 'page:404',
+        pageId: '404',
+        auth: { public: true },
+      },
+    ],
+  };
+  const res = await buildMenu({ components, context });
+  expect(res).toEqual({
+    menus: [
+      {
+        id: 'menu:default',
+        menuId: 'default',
+        links: [
+          {
+            id: 'menuitem:default:0',
+            menuItemId: '0',
+            type: 'MenuLink',
+            pageId: 'page_1',
+            auth: { public: true },
+          },
+        ],
+      },
+    ],
+    pages: [
+      {
+        id: 'page:page_1',
+        pageId: 'page_1',
+        auth: { public: true },
+      },
+      {
+        id: 'page:404',
+        pageId: '404',
+        auth: { public: true },
+      },
+    ],
+  });
+});

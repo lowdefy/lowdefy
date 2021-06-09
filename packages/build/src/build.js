@@ -59,9 +59,9 @@ async function build(options) {
     context.metaLoader = createMetaLoader({ components, context });
     await validateApp({ components, context });
     await validateConfig({ components, context });
+    await addDefaultPages({ components, context });
     await buildAuth({ components, context });
     await buildConnections({ components, context });
-    await addDefaultPages({ components, context });
     await buildPages({ components, context });
     await buildMenu({ components, context });
     await cleanOutputDirectory({ context });
