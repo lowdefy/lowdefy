@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.17.0-alpha.2](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.1...v3.17.0-alpha.2) (2021-06-09)
+
+
+### Bug Fixes
+
+* Do not tag prereleases with latest tag on npm ([106aef7](https://github.com/lowdefy/lowdefy/commit/106aef7a9eab9c53af8a77ac5f2f3523eba679cb))
+* **docs:** Restore docs to previous stable version ([ce1aac0](https://github.com/lowdefy/lowdefy/commit/ce1aac0ff428db74b1d00499100acfbfa47f9e52))
+* Fix lerna npm publish on release action. ([9469148](https://github.com/lowdefy/lowdefy/commit/9469148d094470d0f9d62d16ec2fc36075d83020))
+* Test npm lerna publish ([92f4b88](https://github.com/lowdefy/lowdefy/commit/92f4b88e2f860e3d500367c825bfe22f689f1f60))
+
+
+
+
+
 # [3.17.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.0...v3.17.0-alpha.1) (2021-06-09)
 
 
