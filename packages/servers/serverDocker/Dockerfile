@@ -15,7 +15,6 @@ RUN yarn build:lowdefy-default
 
 # clean all depencies
 RUN rm -rf node_modules
-RUN yarn cache clean
 
 # install production dependencies only
 RUN yarn install --production
