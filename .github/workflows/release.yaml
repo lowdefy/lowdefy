@@ -21,11 +21,6 @@ jobs:
       - name: yarn build
         run: yarn build
 
-      - name: publish to npm
-        run: yarn lerna:publish --ignore-scripts
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
       - name: Upload blocks-cdn.lowdefy.com/renderer
         run: |
           aws --region eu-west-1 s3 sync packages/renderer/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/renderer --acl public-read --cache-control 'public, max-age=31536000'
@@ -62,6 +57,11 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
+
+      - name: publish to npm
+        run: yarn lerna:publish --ignore-scripts --yes
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Cache Docker layers
         uses: actions/cache@v2
