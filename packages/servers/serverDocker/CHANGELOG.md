@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.17.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.16.5...v3.17.0-alpha.0) (2021-06-09)
+
+
+### Bug Fixes
+
+* Remove yarn cache clean from docker builds. ([e5d8d9d](https://github.com/lowdefy/lowdefy/commit/e5d8d9da4d7d5f4979d036c2207741da4e0f034b))
+* **server-docker:** Use port 3000 as default port. ([53bbc5f](https://github.com/lowdefy/lowdefy/commit/53bbc5fc1343832a26e60d189e080e0f13b1ede5))
+* **servers:** Use a empty app config instead of starter config for lowdefy default. ([db4b7f9](https://github.com/lowdefy/lowdefy/commit/db4b7f902835dcfe49d0f4cf0402b5b8435528c5))
+
+
+### Features
+
+* Add configurable public directory to servers. ([7c2beeb](https://github.com/lowdefy/lowdefy/commit/7c2beeb049d647452d4b6838427ae609e6d91b46))
+* Add docker ignore files ([441b150](https://github.com/lowdefy/lowdefy/commit/441b150e7528a5b4efae3b73d129091e690116de))
+* Init aws lambda server. ([f48021e](https://github.com/lowdefy/lowdefy/commit/f48021ea38184708ede63f306dad2684e948925e))
+* Update docker server dockerfile. ([0f52b35](https://github.com/lowdefy/lowdefy/commit/0f52b350483f1e6157040eb6539266839bb563c4))
+* use lowdefy server in docker and lambda servers ([4854f74](https://github.com/lowdefy/lowdefy/commit/4854f74733d3d3d5de0426b17669760e41785508))
+* Use shell package in dev and docker servers ([d9abe05](https://github.com/lowdefy/lowdefy/commit/d9abe05ef7267527f4fb1140557905d243246a92))
+* **server-docker:** Update lowdefy app directory in dockerfile ([cedea93](https://github.com/lowdefy/lowdefy/commit/cedea93f6b22dfb255e40aefc50172b01bafdfea))
+
+
+
+
+
 ## [3.16.5](https://github.com/lowdefy/lowdefy/compare/v3.16.4...v3.16.5) (2021-05-31)
 
 
