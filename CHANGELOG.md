@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.17.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.0...v3.17.0-alpha.1) (2021-06-09)
+
+
+### Bug Fixes
+
+* Fix npm publish comand in publish action. ([24cc119](https://github.com/lowdefy/lowdefy/commit/24cc1196c704e2f408bdbe2c8d7e37ce7ff5b87f))
+
+
+
+
+
 # [3.17.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.16.5...v3.17.0-alpha.0) (2021-06-09)
 
 
