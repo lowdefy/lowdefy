@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.17.0-alpha.3](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.2...v3.17.0-alpha.3) (2021-06-09)
+
+
+### Bug Fixes
+
+* **cli:** Open docs link in new tab. ([2da64c2](https://github.com/lowdefy/lowdefy/commit/2da64c2d8d0c9d58456c5c8df4a82836e7a623bf))
+* **servers:** .babelrc file should not be in .dockerignore ([994c13f](https://github.com/lowdefy/lowdefy/commit/994c13f97459c8d9986213b1a73dca6068d5cb48))
+
+
+
+
+
 # [3.17.0-alpha.2](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.1...v3.17.0-alpha.2) (2021-06-09)
 
 
