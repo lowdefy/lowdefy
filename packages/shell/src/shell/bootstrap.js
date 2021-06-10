@@ -22,10 +22,11 @@ import { Loading } from '@lowdefy/block-tools';
 
 const Renderer = React.lazy(() => import('lowdefy_renderer/Renderer'));
 
+// TODO: make gqlUri configurable for Netlify server
 function Shell() {
   return (
     <React.Suspense fallback={<Loading type="Spinner" properties={{ height: '100vh' }} />}>
-      <Renderer gqlUri="http://localhost:3000/api/graphql" />
+      <Renderer />
     </React.Suspense>
   );
 }

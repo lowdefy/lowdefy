@@ -27,9 +27,9 @@ ENV NODE_ENV=production
 WORKDIR /var/task
 
 # Copy build artifacts
-COPY --from=build /lowdefy/node_modules /var/task/node_modules
+COPY --from=build /lowdefy/node_modules ./node_modules
 
-COPY --from=build /lowdefy/dist /var/task/dist
+COPY --from=build /lowdefy/dist ./dist
 
 COPY --from=build /lowdefy/.lowdefy/build ./build
 
