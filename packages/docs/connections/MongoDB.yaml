@@ -286,8 +286,8 @@ _ref:
             ###### Insert a set of documents:
             ```yaml
             requests:
-              - id: insert_new_comment
-                type:  MongoDBInsertOne
+              - id: insert_documents
+                type:  MongoDBInsertMany
                 properties:
                   docs:
                     - _id: 1
