@@ -103,11 +103,6 @@
           pageId: secrets
           properties:
             title: Secrets
-        - id: deployment
-          type: MenuLink
-          pageId: deployment
-          properties:
-            title: Deployment
         - id: lists
           type: MenuLink
           pageId: lists
@@ -128,7 +123,27 @@
           pageId: custom-blocks
           properties:
             title: Custom Blocks
-
+    - id: deployment
+      type: MenuGroup
+      properties:
+        title: Deployment
+        icon: CloudUploadOutlined
+      links:
+        - id: aws-lambda
+          type: MenuLink
+          pageId: aws-lambda
+          properties:
+            title: AWS Lambda
+        - id: docker
+          type: MenuLink
+          pageId: docker
+          properties:
+            title: Docker
+        - id: netlify
+          type: MenuLink
+          pageId: netlify
+          properties:
+            title: Netlify
     - id: users_group
       type: MenuGroup
       properties:

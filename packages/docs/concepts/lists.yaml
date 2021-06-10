@@ -156,7 +156,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Deployment
-            previous_page_id: deployment
+            previous_page_title: Secrets
+            previous_page_id: secrets
             next_page_title: Hosting Files
             next_page_id: hosting-files

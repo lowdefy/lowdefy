@@ -15,20 +15,18 @@
 _ref:
   path: templates/general.yaml.njk
   vars:
-    pageId: deployment
-    pageTitle: Deployment
-    section: Concepts
-    filePath: concepts/deployment.yaml
+    pageId: netlify
+    pageTitle: Deploy to Netlify
+    section: Deployment
+    filePath: deployment/netlify.yaml
     content:
       - id: md1
         type: MarkdownWithCode
         properties:
           content: |
-            Lowdefy apps can be deployed to the following hosting platforms:
+            Lowdefy apps can be deployed to [Netlify](https://www.netlify.com). Netlify integrates with git providers to automatically deploy your app when you merge changes into the main branch of your repository and deploy previews of pull requests. On your Netlify deployment you can set environment variables, manage custom domains and more.
 
-            - Netlify
-
-            ## Deploy to Netlify
+            ## How to Deploy to Netlify
 
             #### Step 1
 
@@ -39,7 +37,7 @@ _ref:
             Link your Github project to Netlify.
 
             - Once logged in to Netlify, click the "New site from git" button.
-            - Choose Github, and authorise Netlify to access your repositories.
+            - Choose Github, and authorize Netlify to access your repositories.
             - Select your repository.
 
             > If your repository isn't found, click "Configure Netlify on Github", and give Netlify access to your repository.
@@ -71,10 +69,7 @@ _ref:
             - Wait for you site to finish deploying.
 
             On the "Site overview" tab you will find your site url.
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Secrets
-            previous_page_id: secrets
-            next_page_title: Lists
-            next_page_id: lists
+
+            #### Step 6
+
+            To set Lowdefy secrets, go to "Site settings", then "Build and deploy" in the left menu. Scroll down and select "Edit variables" in the "Environment" section. Here you can set the `LOWDEFY_SECRET_` environment variables.
