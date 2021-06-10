@@ -78,7 +78,7 @@ _ref:
             .env
             ```
 
-            ### Step 8 - Create a serverless.yaml file
+            ### Step 3 - Create a serverless.yaml file
 
             Create a file called `.serverless.yaml` in your project repository:
 
@@ -106,7 +106,7 @@ _ref:
                   - httpApi: '*'
             ```
 
-            ### Step 9 - Deploy to AWS
+            ### Step 4 - Deploy to AWS
 
             Deploy to AWS by running:
 
