@@ -54,7 +54,7 @@ _ref:
       ```yaml
       # lowdefy.yaml
       name: intercom-example
-      lowdefy: '3.17.0'
+      lowdefy: '3.17.1'
       app:
         html:
           appendBody: |
@@ -125,7 +125,7 @@ _ref:
       ```yaml
       # file: lowdefy.yaml
       name: text-highlight-example
-      lowdefy: '3.17.0'
+      lowdefy: '3.17.1'
       app:
         html:
           # Load the custom modules into the index.html head tag.
