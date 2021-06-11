@@ -1,0 +1,117 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: aws-lambda
+    pageTitle: Deploy with AWS Lambda
+    section: Deployment
+    filePath: deployment/aws-lambda.yaml
+    content:
+      - id: md1
+        type: Markdown
+        properties:
+          content: |
+            Lowdefy apps can be deployed to AWS Lambda serverless functions by using the [lowdefy/lowdefy-aws-lambda](https://hub.docker.com/repository/docker/lowdefy/lowdefy-aws-lambda) Docker images. These images contain a Lowdefy app server. To deploy to AWS Lambda a new image that contains the app configuration, based on the Lowdefy base image, should be built. This image should then be pushed to a private AWS ECR registry. From there it can be used to create a Lambda function.
+
+            The [serverless framework](https://www.serverless.com) can be used to simplify the deployment.
+
+            An example can be found in the [lowdefy-example-aws-lambda](https://github.com/lowdefy/lowdefy-example-aws-lambda)  repository.
+
+            ## Deploying to AWS Lambda
+
+            ### Requirements
+
+            - The [AWS CLI](https://aws.amazon.com/cli/) should be installed and authenticated.
+            - You should have [Docker](https://docs.docker.com/get-docker/) installed.
+
+            ### Step 1 - Create a Dockerfile
+
+            Create a file called `Dockerfile` in your project repository:
+
+            ```
+            FROM node:14-buster AS build
+
+            # Set working directory and node user
+            WORKDIR /home/node/lowdefy
+
+            USER node
+
+            # Copy app config, and change ownership of files to "node" user
+            COPY  --chown=node:node  . .
+
+            # Build the Lowdefy config using the Lowdefy CLI
+            RUN npx lowdefy@latest build
+
+            # Use the correct Lowdefy base image
+            FROM lowdefy/lowdefy-aws-lambda:3.17.0
+
+            # Copy build output from build stage
+            COPY --from=build /home/node/lowdefy/.lowdefy/build ./build
+
+            # Copy contents of public directory into image
+            COPY ./public ./public
+
+            # Lambda handler
+            CMD [ "dist/server.handler"]
+            ```
+
+            ### Step 2 - Create a `.dockerignore` file
+
+            Create a file called `.dockerignore` in your project repository:
+
+            ```
+            .lowdefy/**
+            .serverless/**
+            .env
+            ```
+
+            ### Step 3 - Create a serverless.yaml file
+
+            Create a file called `.serverless.yaml` in your project repository:
+
+            ```
+            service: lowdefy-example-aws-lambda
+            frameworkVersion: '2'
+            provider:
+              name: aws
+              region: us-east-1
+              ecr:
+                images:
+                  lowdefy:
+                    path: .
+                    file: Dockerfile
+
+            functions:
+              lowdefy-server:
+                image: lowdefy
+                name: lowdefy-example-aws-lambda-${opt:stage}
+                # Set secrets as environment variables here
+                # environment:
+                #   LOWDEFY_SECRET_MY_SECRET: ${env:LOWDEFY_SECRET_MY_SECRET}
+
+                events:
+                  - httpApi: '*'
+            ```
+
+            ### Step 4 - Deploy to AWS
+
+            Deploy to AWS by running:
+
+            ```
+            npx serverless deploy --verbose --conceal --stage dev
+            ```
+
+            This will create a ECR registry if it does not exist, and deploy an AWS Lambda function with a API Gateway HTTP api integration.

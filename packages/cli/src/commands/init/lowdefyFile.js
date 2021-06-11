@@ -58,7 +58,7 @@ pages:
                               type: Link
                               params:
                                 url: https://docs.lowdefy.com
-                                newWindow: true
+                                newTab: true
       footer:
         blocks:
           - id: footer

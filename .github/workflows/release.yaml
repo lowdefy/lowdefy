@@ -1,0 +1,141 @@
+name: Release
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  build_and_publish:
+    runs-on: ubuntu-latest
+    environment: publish
+    steps:
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14.x'
+          registry-url: https://registry.npmjs.org/
+      - uses: actions/checkout@v2
+
+      - name: yarn install
+        run: yarn install
+
+      - name: yarn build
+        run: yarn build
+
+      - name: Upload blocks-cdn.lowdefy.com/renderer
+        run: |
+          aws --region eu-west-1 s3 sync packages/renderer/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/renderer --acl public-read --cache-control 'public, max-age=31536000'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
+      - name: Upload blocks-cdn.lowdefy.com/blocks-basic
+        run: |
+          aws --region eu-west-1 s3 sync packages/blocks/blocksBasic/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/blocks-basic --acl public-read --cache-control 'public, max-age=31536000'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
+      - name: Upload blocks-cdn.lowdefy.com/blocks-antd
+        run: |
+          aws --region eu-west-1 s3 sync packages/blocks/blocksAntd/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/blocks-antd --acl public-read --cache-control 'public, max-age=31536000'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
+      - name: Upload blocks-cdn.lowdefy.com/blocks-markdown
+        run: |
+          aws --region eu-west-1 s3 sync packages/blocks/blocksMarkdown/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/blocks-markdown --acl public-read --cache-control 'public, max-age=31536000'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
+      - name: Upload blocks-cdn.lowdefy.com/blocks-color-selectors
+        run: |
+          aws --region eu-west-1 s3 sync packages/blocks/blocksColorSelectors/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/blocks-color-selectors --acl public-read --cache-control 'public, max-age=31536000'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
+      - name: Upload blocks-cdn.lowdefy.com/blocks-echarts
+        run: |
+          aws --region eu-west-1 s3 sync packages/blocks/blocksECharts/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/blocks-echarts --acl public-read --cache-control 'public, max-age=31536000'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
+
+      # --no-verify-access to use automation tokens https://github.com/lerna/lerna/issues/2788
+      # --ignore-scripts to aovoid scripts that could read npm token
+      # --yes to autoconfirm in ci
+      # --pre-dist-tag do not tag prereleases as latest
+      - name: publish to npm
+        run: yarn lerna:publish --ignore-scripts --yes --no-verify-access --pre-dist-tag alpha
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Docker meta lowdefy
+        id: meta_lowdefy
+        uses: docker/metadata-action@v3
+        with:
+          images: lowdefy/lowdefy
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+
+      - name: Docker meta lowdefy-aws-lambda
+        id: meta_lowdefy_aws_lambda
+        uses: docker/metadata-action@v3
+        with:
+          images: lowdefy/lowdefy-aws-lambda
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Build and push
+        id: docker_build_lowdefy
+        uses: docker/build-push-action@v2
+        with:
+          context: ./packages/servers/serverDocker/
+          push: true
+          tags: ${{ steps.meta_lowdefy.outputs.tags }}
+          labels: ${{ steps.meta_lowdefy.outputs.labels }}
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+
+      - name: Build and push AWS Lambda
+        id: docker_build_lowdefy_aws_lambda
+        uses: docker/build-push-action@v2
+        with:
+          context: ./packages/servers/serverAwsLambda/
+          push: true
+          tags: ${{ steps.meta_lowdefy_aws_lambda.outputs.tags }}
+          labels: ${{ steps.meta_lowdefy_aws_lambda.outputs.labels }}
+          platforms: linux/amd64
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
+
+        # Temp fix
+        # https://github.com/docker/build-push-action/issues/252
+        # https://github.com/moby/buildkit/issues/1896
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache

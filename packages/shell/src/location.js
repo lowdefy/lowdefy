@@ -14,20 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-/*global __webpack_share_scopes__, __webpack_init_sharing__*/
+import path from 'path';
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Loading } from '@lowdefy/block-tools';
+const publicDirectory = path.resolve(__dirname, 'public');
+const shellDirectory = path.resolve(__dirname, 'shell');
 
-const Renderer = React.lazy(() => import('lowdefy_renderer/Renderer'));
-
-function Shell() {
-  return (
-    <React.Suspense fallback={<Loading type="Spinner" properties={{ height: '100vh' }} />}>
-      <Renderer gqlUri="http://localhost:3000/api/graphql" />
-    </React.Suspense>
-  );
-}
-
-ReactDOM.render(<Shell />, document.getElementById('root'));
+export { publicDirectory, shellDirectory };

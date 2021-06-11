@@ -21,11 +21,14 @@
 - _ref: concepts/events-and-actions.yaml
 - _ref: concepts/operators.yaml
 - _ref: concepts/secrets.yaml
-- _ref: concepts/deployment.yaml
 - _ref: concepts/lists.yaml
 - _ref: concepts/hosting-files.yaml
 - _ref: concepts/custom-code.yaml
 - _ref: concepts/custom-blocks.yaml
+
+- _ref: deployment/aws-lambda.yaml
+- _ref: deployment/docker.yaml
+- _ref: deployment/netlify.yaml
 
 - _ref: users/users-introduction.yaml
 - _ref: users/openid-connect.yaml

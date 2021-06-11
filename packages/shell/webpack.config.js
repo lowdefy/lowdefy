@@ -8,9 +8,9 @@ const packageJson = require('./package.json');
 
 module.exports = {
   entry: './src/shell/index',
-  mode: 'development',
-  devtool: 'eval-source-map',
+  mode: 'production',
   output: {
+    filename: '[name].[contenthash].js',
     path: path.resolve(__dirname, 'dist/shell'),
   },
   module: {
@@ -37,15 +37,19 @@ module.exports = {
       },
     ],
   },
+  optimization: {
+    moduleIds: 'deterministic',
+    runtimeChunk: 'single',
+  },
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       minify: false,
-      publicPath: '/',
+      publicPath: '/shell',
       template: './src/shell/index.html',
     }),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('development'),
+      'process.env.NODE_ENV': JSON.stringify('production'),
     }),
     new ModuleFederationPlugin({
       name: 'lowdefy_web_shell',
@@ -63,14 +67,14 @@ module.exports = {
         },
       },
       remotes: {
-        lowdefy_renderer: `lowdefy_renderer@http://localhost:3001/remoteEntry.js`,
+        lowdefy_renderer: `lowdefy_renderer@https://blocks-cdn.lowdefy.com/v${packageJson.version}/renderer/remoteEntry.js`,
       },
     }),
     new CopyPlugin({
       patterns: [
         {
-          from: './src/shell/public',
-          to: 'public',
+          from: './src/public',
+          to: '../public',
         },
       ],
     }),
