@@ -36,6 +36,17 @@ _ref:
             - `LOWDEFY_SERVER_PUBLIC_DIRECTORY`: The directory of the the public assets to be served. The default is `./public` (or `/home/node/lowdefy/public`).
             - `LOWDEFY_SERVER_PORT`: The port (inside the container) at which to run the server. The default is `3000`.
 
+      - id: warning_update_dockerfile
+        type: Alert
+        properties:
+          type: warning
+          icon: WarningFilled
+          description: When updating your app to a new Lowdefy version, make sure to update the Lowdefy version in the Dockerfile
+
+      - id: md2
+        type: Markdown
+        properties:
+          content: |
             # Building a Lowdefy app image
 
             To build the configuration into a image, the following Dockerfile can be used:
