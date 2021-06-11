@@ -15,25 +15,21 @@
 */
 
 import path from 'path';
-import express from 'express';
 import serverless from 'serverless-http';
-import { ApolloServer } from 'apollo-server-express';
-import { typeDefs, resolvers, createContext } from '@lowdefy/graphql';
+import getServer from '@lowdefy/server';
 import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
 
-const config = {
-  CONFIGURATION_BASE_PATH: path.resolve(__dirname, './build'),
+const server = getServer({
+  // __dirname is important here
+  buildDirectory: path.resolve(__dirname, './build'),
+  development: false,
   getSecrets: createGetSecretsFromEnv(),
+  gqlExpressPath: '/',
   gqlUri: '/.netlify/functions/graphql',
   logger: console,
-};
+  serveStaticFiles: false,
+});
 
-const context = createContext(config);
-const server = new ApolloServer({ typeDefs, resolvers, context });
-const app = express();
-
-server.applyMiddleware({ app, path: '/' });
-
-const handler = serverless(app);
+const handler = serverless(server);
 
 export { handler };

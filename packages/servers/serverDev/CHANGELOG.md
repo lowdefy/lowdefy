@@ -3,6 +3,67 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.17.2](https://github.com/lowdefy/lowdefy/compare/v3.17.1...v3.17.2) (2021-06-11)
+
+**Note:** Version bump only for package @lowdefy/server-dev
+
+
+
+
+
+## [3.17.1](https://github.com/lowdefy/lowdefy/compare/v3.17.0...v3.17.1) (2021-06-11)
+
+**Note:** Version bump only for package @lowdefy/server-dev
+
+
+
+
+
+# [3.17.0](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.3...v3.17.0) (2021-06-11)
+
+**Note:** Version bump only for package @lowdefy/server-dev
+
+
+
+
+
+# [3.17.0-alpha.3](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.2...v3.17.0-alpha.3) (2021-06-09)
+
+**Note:** Version bump only for package @lowdefy/server-dev
+
+
+
+
+
+# [3.17.0-alpha.2](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.1...v3.17.0-alpha.2) (2021-06-09)
+
+**Note:** Version bump only for package @lowdefy/server-dev
+
+
+
+
+
+# [3.17.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.0...v3.17.0-alpha.1) (2021-06-09)
+
+**Note:** Version bump only for package @lowdefy/server-dev
+
+
+
+
+
+# [3.17.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.16.5...v3.17.0-alpha.0) (2021-06-09)
+
+
+### Features
+
+* Add configurable public directory to servers. ([7c2beeb](https://github.com/lowdefy/lowdefy/commit/7c2beeb049d647452d4b6838427ae609e6d91b46))
+* Use @lowdefy/server package in dev server. ([dc4848a](https://github.com/lowdefy/lowdefy/commit/dc4848a28f70b969865e7a207d0ccfd01c9f69d4))
+* Use shell package in dev and docker servers ([d9abe05](https://github.com/lowdefy/lowdefy/commit/d9abe05ef7267527f4fb1140557905d243246a92))
+
+
+
+
+
 ## [3.16.5](https://github.com/lowdefy/lowdefy/compare/v3.16.4...v3.16.5) (2021-05-31)
 
 

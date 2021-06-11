@@ -103,11 +103,6 @@
           pageId: secrets
           properties:
             title: Secrets
-        - id: deployment
-          type: MenuLink
-          pageId: deployment
-          properties:
-            title: Deployment
         - id: lists
           type: MenuLink
           pageId: lists
@@ -128,7 +123,27 @@
           pageId: custom-blocks
           properties:
             title: Custom Blocks
-
+    - id: deployment
+      type: MenuGroup
+      properties:
+        title: Deployment
+        icon: CloudUploadOutlined
+      links:
+        - id: aws-lambda
+          type: MenuLink
+          pageId: aws-lambda
+          properties:
+            title: AWS Lambda
+        - id: docker
+          type: MenuLink
+          pageId: docker
+          properties:
+            title: Docker
+        - id: netlify
+          type: MenuLink
+          pageId: netlify
+          properties:
+            title: Netlify
     - id: users_group
       type: MenuGroup
       properties:
@@ -609,6 +624,9 @@
         - id: _list_contexts
           type: MenuLink
           pageId: _list_contexts
+        - id: _location
+          type: MenuLink
+          pageId: _location
         - id: _log
           type: MenuLink
           pageId: _log
@@ -699,3 +717,39 @@
         - id: _yaml
           type: MenuLink
           pageId: _yaml
+    - id: versions
+      type: MenuGroup
+      properties:
+        title: Lowdefy Versions
+        icon: BranchesOutlined
+      links:
+        - id: latest
+          type: MenuLink
+          url: https://docs.lowdefy.com
+          properties:
+            title: v3.17.2
+        - id: v3.16.5
+          type: MenuLink
+          url: https://60b4bfc8f6822500088a1c45--lowdefy-docs.netlify.app
+          properties:
+            title: v3.16.5
+        - id: v3.15.0
+          type: MenuLink
+          url: https://609a6df368df720007f2cc9c--lowdefy-docs.netlify.app
+          properties:
+            title: v3.15.0
+        - id: v3.14.1
+          type: MenuLink
+          url: https://6089404fb5958f00070b8520--lowdefy-docs.netlify.app
+          properties:
+            title: v3.14.1
+        - id: v3.13.0
+          type: MenuLink
+          url: https://607952a468b9200008ad4db0--lowdefy-docs.netlify.app
+          properties:
+            title: v3.13.0
+        - id: v3.12.6
+          type: MenuLink
+          url: https://606c6baf132ad60007ef8f38--lowdefy-docs.netlify.app
+          properties:
+            title: v3.12.6

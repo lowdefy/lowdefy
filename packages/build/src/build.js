@@ -20,6 +20,7 @@ import createFileLoader from './loaders/fileLoader';
 import createFileSetter from './loaders/fileSetter';
 import createMetaLoader from './loaders/metaLoader';
 
+import addDefaultPages from './build/addDefaultPages/addDefaultPages';
 import buildAuth from './build/buildAuth/buildAuth';
 import buildConnections from './build/buildConnections';
 import buildMenu from './build/buildMenu';
@@ -58,6 +59,7 @@ async function build(options) {
     context.metaLoader = createMetaLoader({ components, context });
     await validateApp({ components, context });
     await validateConfig({ components, context });
+    await addDefaultPages({ components, context });
     await buildAuth({ components, context });
     await buildConnections({ components, context });
     await buildPages({ components, context });

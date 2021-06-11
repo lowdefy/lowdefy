@@ -14,52 +14,21 @@
   limitations under the License.
 */
 
-import path from 'path';
-import express from 'express';
-import { ApolloServer } from 'apollo-server-express';
-import { typeDefs, resolvers, createContext } from '@lowdefy/graphql';
-import { createGetSecretsFromEnv, readFile } from '@lowdefy/node-utils';
+import getServer from '@lowdefy/server';
+import { shellDirectory } from '@lowdefy/shell';
+import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
 
-const config = {
-  CONFIGURATION_BASE_PATH: path.resolve(process.cwd(), './build'),
+const buildDirectory = process.env.LOWDEFY_SERVER_BUILD_DIRECTORY || './build';
+const publicDirectory = process.env.LOWDEFY_SERVER_PUBLIC_DIRECTORY || './public';
+const port = parseInt(process.env.LOWDEFY_SERVER_PORT) || 3000;
+
+const server = getServer({
+  buildDirectory,
+  development: false,
   getSecrets: createGetSecretsFromEnv(),
   logger: console,
-};
-
-const context = createContext(config);
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  context,
+  publicDirectory,
+  shellDirectory,
 });
 
-let indexHtml = null;
-
-const serveIndex = async (req, res) => {
-  if (!indexHtml) {
-    indexHtml = await readFile(path.resolve(process.cwd(), 'dist/shell/index.html'));
-    let appConfig = await readFile(path.resolve(config.CONFIGURATION_BASE_PATH, 'app.json'));
-    appConfig = JSON.parse(appConfig);
-    indexHtml = indexHtml.replace('<!-- __LOWDEFY_APP_HEAD_HTML__ -->', appConfig.html.appendHead);
-    indexHtml = indexHtml.replace('<!-- __LOWDEFY_APP_BODY_HTML__ -->', appConfig.html.appendBody);
-  }
-  res.send(indexHtml);
-};
-
-const app = express();
-
-server.applyMiddleware({ app, path: '/api/graphql' });
-
-// serve index.html with appended html
-// else static server serves without appended html
-app.get('/', serveIndex);
-
-// Serve Webpack shell files from './shell/dist'
-app.use(express.static('dist/shell'));
-
-// Redirect all 404 to index.html with status 200
-// This should always be the last route
-app.use(serveIndex);
-
-// TODO: option to modify port here? port 443 by default?
-app.listen({ port: 3000 }, () => console.log(`Server started at port 3000`));
+server.listen({ port }, () => console.log(`Server started at port ${port}`));

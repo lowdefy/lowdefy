@@ -3,6 +3,65 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.17.2](https://github.com/lowdefy/lowdefy/compare/v3.17.1...v3.17.2) (2021-06-11)
+
+**Note:** Version bump only for package @lowdefy/engine
+
+
+
+
+
+## [3.17.1](https://github.com/lowdefy/lowdefy/compare/v3.17.0...v3.17.1) (2021-06-11)
+
+**Note:** Version bump only for package @lowdefy/engine
+
+
+
+
+
+# [3.17.0](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.3...v3.17.0) (2021-06-11)
+
+**Note:** Version bump only for package @lowdefy/engine
+
+
+
+
+
+# [3.17.0-alpha.3](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.2...v3.17.0-alpha.3) (2021-06-09)
+
+**Note:** Version bump only for package @lowdefy/engine
+
+
+
+
+
+# [3.17.0-alpha.2](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.1...v3.17.0-alpha.2) (2021-06-09)
+
+**Note:** Version bump only for package @lowdefy/engine
+
+
+
+
+
+# [3.17.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.0...v3.17.0-alpha.1) (2021-06-09)
+
+**Note:** Version bump only for package @lowdefy/engine
+
+
+
+
+
+# [3.17.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.16.5...v3.17.0-alpha.0) (2021-06-09)
+
+
+### Features
+
+* **engine:** Add catchActions to events, closes [#608](https://github.com/lowdefy/lowdefy/issues/608) ([305b3aa](https://github.com/lowdefy/lowdefy/commit/305b3aa3f9ff51c605384e36902c15d3491a5736))
+
+
+
+
+
 ## [3.16.5](https://github.com/lowdefy/lowdefy/compare/v3.16.4...v3.16.5) (2021-05-31)
 
 

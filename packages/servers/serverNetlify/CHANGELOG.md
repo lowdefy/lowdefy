@@ -3,6 +3,77 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.17.2](https://github.com/lowdefy/lowdefy/compare/v3.17.1...v3.17.2) (2021-06-11)
+
+
+### Bug Fixes
+
+* **server-netlify:** Fix Netlify build configuration path. ([e2ddc11](https://github.com/lowdefy/lowdefy/commit/e2ddc11ad5c692ca1069915a53b61b50244ce28c))
+
+
+
+
+
+## [3.17.1](https://github.com/lowdefy/lowdefy/compare/v3.17.0...v3.17.1) (2021-06-11)
+
+
+### Bug Fixes
+
+* **server-netlify:** Fix Netlify server express GraphQL path. ([f3959ad](https://github.com/lowdefy/lowdefy/commit/f3959adfe191198fbe958ecb2a14da61a8c26764))
+
+
+
+
+
+# [3.17.0](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.3...v3.17.0) (2021-06-11)
+
+**Note:** Version bump only for package @lowdefy/server-netlify
+
+
+
+
+
+# [3.17.0-alpha.3](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.2...v3.17.0-alpha.3) (2021-06-09)
+
+**Note:** Version bump only for package @lowdefy/server-netlify
+
+
+
+
+
+# [3.17.0-alpha.2](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.1...v3.17.0-alpha.2) (2021-06-09)
+
+**Note:** Version bump only for package @lowdefy/server-netlify
+
+
+
+
+
+# [3.17.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.0...v3.17.0-alpha.1) (2021-06-09)
+
+**Note:** Version bump only for package @lowdefy/server-netlify
+
+
+
+
+
+# [3.17.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.16.5...v3.17.0-alpha.0) (2021-06-09)
+
+
+### Bug Fixes
+
+* **servers:** Use a empty app config instead of starter config for lowdefy default. ([db4b7f9](https://github.com/lowdefy/lowdefy/commit/db4b7f902835dcfe49d0f4cf0402b5b8435528c5))
+
+
+### Features
+
+* Add configurable public directory to servers. ([7c2beeb](https://github.com/lowdefy/lowdefy/commit/7c2beeb049d647452d4b6838427ae609e6d91b46))
+* Use lowdefy server in netlify server. ([4a78a97](https://github.com/lowdefy/lowdefy/commit/4a78a9753c54ef217a14e99924a0f02b4bdddf9f))
+
+
+
+
+
 ## [3.16.5](https://github.com/lowdefy/lowdefy/compare/v3.16.4...v3.16.5) (2021-05-31)
 
 

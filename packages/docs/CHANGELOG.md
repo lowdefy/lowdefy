@@ -3,6 +3,83 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.17.2](https://github.com/lowdefy/lowdefy/compare/v3.17.1...v3.17.2) (2021-06-11)
+
+**Note:** Version bump only for package @lowdefy/docs
+
+
+
+
+
+## [3.17.1](https://github.com/lowdefy/lowdefy/compare/v3.17.0...v3.17.1) (2021-06-11)
+
+**Note:** Version bump only for package @lowdefy/docs
+
+
+
+
+
+# [3.17.0](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.3...v3.17.0) (2021-06-11)
+
+
+### Bug Fixes
+
+* **docs:** Add lowdefy version in dockerfile warnings ([1672f24](https://github.com/lowdefy/lowdefy/commit/1672f241c67f64129c3e6138efa1830716b445e3))
+* **docs:** Fix aws lambda docs. ([7136663](https://github.com/lowdefy/lowdefy/commit/7136663ae482e3f5a3b9bd775118264f707b1fd5))
+* **docs:** Fix type in MongoDB docs. ([07de3e9](https://github.com/lowdefy/lowdefy/commit/07de3e94a5f54095c8a0c08d919a5ee39655d188))
+
+
+### Features
+
+* **docs:** Add docs for Docker and AWS Lambda deployment ([e57fa03](https://github.com/lowdefy/lowdefy/commit/e57fa0309eeddaa815b1a96f9f5c0cc6381b4323))
+
+
+
+
+
+# [3.17.0-alpha.3](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.2...v3.17.0-alpha.3) (2021-06-09)
+
+**Note:** Version bump only for package @lowdefy/docs
+
+
+
+
+
+# [3.17.0-alpha.2](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.1...v3.17.0-alpha.2) (2021-06-09)
+
+
+### Bug Fixes
+
+* **docs:** Restore docs to previous stable version ([ce1aac0](https://github.com/lowdefy/lowdefy/commit/ce1aac0ff428db74b1d00499100acfbfa47f9e52))
+
+
+
+
+
+# [3.17.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.0...v3.17.0-alpha.1) (2021-06-09)
+
+**Note:** Version bump only for package @lowdefy/docs
+
+
+
+
+
+# [3.17.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.16.5...v3.17.0-alpha.0) (2021-06-09)
+
+
+### Bug Fixes
+
+* **docs:** Add _location operator. ([038977a](https://github.com/lowdefy/lowdefy/commit/038977aac5dcc18fb1a9f18266ee80be6bb1970e))
+* **docs:** Add forceSubMenuRender to menu. ([a4b7abc](https://github.com/lowdefy/lowdefy/commit/a4b7abc76bcd9a92f509ff02bd86ed90234af423))
+* **docs:** Add lowdefy versions to docs. ([5ff0e16](https://github.com/lowdefy/lowdefy/commit/5ff0e16d0d987f819f9e1eb9820fd756634e4a2f))
+* **docs:** Fix baseUrl typo, closes [#607](https://github.com/lowdefy/lowdefy/issues/607) ([4b1e6ce](https://github.com/lowdefy/lowdefy/commit/4b1e6ceb9a80db324a56692072315baeaf4053d2))
+* **docs:** Remove deprecated  _js wasm. ([8b00683](https://github.com/lowdefy/lowdefy/commit/8b00683c4f96bcbe9944a990f6c8b5ec3c2d9bb1))
+* **docs:** Update docs for try catch actions. ([3d7969d](https://github.com/lowdefy/lowdefy/commit/3d7969d9f6b483211820598b2deb69701ad2ed08))
+
+
+
+
+
 ## [3.16.5](https://github.com/lowdefy/lowdefy/compare/v3.16.4...v3.16.5) (2021-05-31)
 
 **Note:** Version bump only for package @lowdefy/docs

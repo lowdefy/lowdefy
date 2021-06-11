@@ -20,6 +20,7 @@ export default {
   _base64: 'web/base64',
   _format: 'web/format',
   _list_contexts: 'web/list_contexts',
+  _location: 'web/location',
   _js: 'web/js',
   _media: 'web/media',
   _menu: 'web/menu',

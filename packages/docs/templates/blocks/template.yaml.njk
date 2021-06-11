@@ -85,6 +85,8 @@ properties:
   title: {{ block_type }}
   header:
     theme: light
+  menu: 
+    forceSubMenuRender: true
   sider:
     width: 256px
     initialCollapsed:
@@ -101,6 +103,11 @@ properties:
   footer:
     style:
       background: '#FFFFFF'
+  breadcrumb:
+    list:
+      - _ref: version.yaml
+      - {{ category }}
+      - {{ block_type }}
 layout:
   contentGutter: 16
 areas:

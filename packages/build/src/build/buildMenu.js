@@ -24,12 +24,14 @@ async function buildDefaultMenu({ components, context }) {
   const menus = [
     {
       id: 'default',
-      links: pages.map((page, i) => ({
-        id: `${i}`,
-        type: 'MenuLink',
-        pageId: page.pageId,
-        auth: page.auth,
-      })),
+      links: pages
+        .map((page, i) => ({
+          id: `${i}`,
+          type: 'MenuLink',
+          pageId: page.pageId,
+          auth: page.auth,
+        }))
+        .filter((page) => page.pageId !== '404'),
     },
   ];
 
