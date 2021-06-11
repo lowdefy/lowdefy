@@ -24,6 +24,7 @@ import { readFile } from '@lowdefy/node-utils';
 function getServer({
   development = false,
   buildDirectory,
+  gqlExpressPath,
   gqlUri,
   logger,
   getSecrets,
@@ -66,7 +67,7 @@ function getServer({
 
   const server = express();
 
-  gqlServer.applyMiddleware({ app: server, path: '/api/graphql' });
+  gqlServer.applyMiddleware({ app: server, path: gqlExpressPath || '/api/graphql' });
 
   if (serveStaticFiles) {
     // serve index.html with appended html

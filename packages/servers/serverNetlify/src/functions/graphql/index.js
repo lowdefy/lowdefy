@@ -22,6 +22,7 @@ const server = getServer({
   buildDirectory: './build',
   development: false,
   getSecrets: createGetSecretsFromEnv(),
+  gqlExpressPath: '/',
   gqlUri: '/.netlify/functions/graphql',
   logger: console,
   serveStaticFiles: false,
