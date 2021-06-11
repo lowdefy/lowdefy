@@ -727,7 +727,7 @@
           type: MenuLink
           url: https://docs.lowdefy.com
           properties:
-            title: v3.17.1
+            title: v3.17.2
         - id: v3.16.5
           type: MenuLink
           url: https://60b4bfc8f6822500088a1c45--lowdefy-docs.netlify.app
