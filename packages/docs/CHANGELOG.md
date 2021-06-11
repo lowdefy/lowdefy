@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.17.0](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.3...v3.17.0) (2021-06-11)
+
+
+### Bug Fixes
+
+* **docs:** Add lowdefy version in dockerfile warnings ([1672f24](https://github.com/lowdefy/lowdefy/commit/1672f241c67f64129c3e6138efa1830716b445e3))
+* **docs:** Fix aws lambda docs. ([7136663](https://github.com/lowdefy/lowdefy/commit/7136663ae482e3f5a3b9bd775118264f707b1fd5))
+* **docs:** Fix type in MongoDB docs. ([07de3e9](https://github.com/lowdefy/lowdefy/commit/07de3e94a5f54095c8a0c08d919a5ee39655d188))
+
+
+### Features
+
+* **docs:** Add docs for Docker and AWS Lambda deployment ([e57fa03](https://github.com/lowdefy/lowdefy/commit/e57fa0309eeddaa815b1a96f9f5c0cc6381b4323))
+
+
+
+
+
 # [3.17.0-alpha.3](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.2...v3.17.0-alpha.3) (2021-06-09)
 
 **Note:** Version bump only for package @lowdefy/docs

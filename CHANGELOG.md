@@ -3,96 +3,110 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [3.17.0-alpha.3](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.2...v3.17.0-alpha.3) (2021-06-09)
+# [3.17.0](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.3...v3.17.0) (2021-06-11)
 
+## Changes
 
-### Bug Fixes
+### Breaking
 
-* **cli:** Open docs link in new tab. ([2da64c2](https://github.com/lowdefy/lowdefy/commit/2da64c2d8d0c9d58456c5c8df4a82836e7a623bf))
-* **servers:** .babelrc file should not be in .dockerignore ([994c13f](https://github.com/lowdefy/lowdefy/commit/994c13f97459c8d9986213b1a73dca6068d5cb48))
-
-
-
-
-
-# [3.17.0-alpha.2](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.1...v3.17.0-alpha.2) (2021-06-09)
-
-
-### Bug Fixes
-
-* Do not tag prereleases with latest tag on npm ([106aef7](https://github.com/lowdefy/lowdefy/commit/106aef7a9eab9c53af8a77ac5f2f3523eba679cb))
-* **docs:** Restore docs to previous stable version ([ce1aac0](https://github.com/lowdefy/lowdefy/commit/ce1aac0ff428db74b1d00499100acfbfa47f9e52))
-* Fix lerna npm publish on release action. ([9469148](https://github.com/lowdefy/lowdefy/commit/9469148d094470d0f9d62d16ec2fc36075d83020))
-* Test npm lerna publish ([92f4b88](https://github.com/lowdefy/lowdefy/commit/92f4b88e2f860e3d500367c825bfe22f689f1f60))
-
-
-
-
-
-# [3.17.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.0...v3.17.0-alpha.1) (2021-06-09)
-
-
-### Bug Fixes
-
-* Fix npm publish comand in publish action. ([24cc119](https://github.com/lowdefy/lowdefy/commit/24cc1196c704e2f408bdbe2c8d7e37ce7ff5b87f))
-
-
-
-
-
-# [3.17.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.16.5...v3.17.0-alpha.0) (2021-06-09)
-
-
-### Bug Fixes
-
-* Add publish environment to publish workflow ([b65211a](https://github.com/lowdefy/lowdefy/commit/b65211a3755b1a7a5ced5b0d3ea437a0c5aa7efd))
-* Fix release workflow file. ([028ecf0](https://github.com/lowdefy/lowdefy/commit/028ecf0868461fc1c63f7de22c387a3260ae9579))
-* remove linux/arm/v7 docker platform. ([c78d72e](https://github.com/lowdefy/lowdefy/commit/c78d72ed0be76e3c7c63a411b87cf43a87332dda))
-* Remove yarn cache clean from docker builds. ([e5d8d9d](https://github.com/lowdefy/lowdefy/commit/e5d8d9da4d7d5f4979d036c2207741da4e0f034b))
-* **blocksAntd:** Add forceSubMenuRender property to menu. ([3f85e6e](https://github.com/lowdefy/lowdefy/commit/3f85e6e6de12e6c7210c8e8daf5a22d022bb69c7))
-* **blocksAntd:** Include menu tests for working renders. ([b8fa4d0](https://github.com/lowdefy/lowdefy/commit/b8fa4d090c3ae25502e48a965a4538ebe84a4173))
-* **blocksAntd:** Skip menu render test. ([5a321ec](https://github.com/lowdefy/lowdefy/commit/5a321ec7d3bf2a3b4580abbce94601c389e9d32b))
-* **build:** Handle try catch options in actions schema. ([7e05b0e](https://github.com/lowdefy/lowdefy/commit/7e05b0eb75a92613507731e1cbceb71433d86e71))
-* **docs:** Add _location operator. ([038977a](https://github.com/lowdefy/lowdefy/commit/038977aac5dcc18fb1a9f18266ee80be6bb1970e))
-* **docs:** Add forceSubMenuRender to menu. ([a4b7abc](https://github.com/lowdefy/lowdefy/commit/a4b7abc76bcd9a92f509ff02bd86ed90234af423))
-* **docs:** Add lowdefy versions to docs. ([5ff0e16](https://github.com/lowdefy/lowdefy/commit/5ff0e16d0d987f819f9e1eb9820fd756634e4a2f))
-* **docs:** Fix baseUrl typo, closes [#607](https://github.com/lowdefy/lowdefy/issues/607) ([4b1e6ce](https://github.com/lowdefy/lowdefy/commit/4b1e6ceb9a80db324a56692072315baeaf4053d2))
-* **docs:** Remove deprecated  _js wasm. ([8b00683](https://github.com/lowdefy/lowdefy/commit/8b00683c4f96bcbe9944a990f6c8b5ec3c2d9bb1))
-* **docs:** Update docs for try catch actions. ([3d7969d](https://github.com/lowdefy/lowdefy/commit/3d7969d9f6b483211820598b2deb69701ad2ed08))
-* **operators:** Remove deprecated _js wasm. ([20d2d0f](https://github.com/lowdefy/lowdefy/commit/20d2d0f0d98073399019e6c2daee4d1f2d0af474))
-* **server-docker:** Use port 3000 as default port. ([53bbc5f](https://github.com/lowdefy/lowdefy/commit/53bbc5fc1343832a26e60d189e080e0f13b1ede5))
-* **servers:** Use a empty app config instead of starter config for lowdefy default. ([db4b7f9](https://github.com/lowdefy/lowdefy/commit/db4b7f902835dcfe49d0f4cf0402b5b8435528c5))
-
+- Remove support for depreciate `_js.function` and `_js.evaluate` operators.
 
 ### Features
 
-* Add configurable public directory to servers. ([7c2beeb](https://github.com/lowdefy/lowdefy/commit/7c2beeb049d647452d4b6838427ae609e6d91b46))
-* Add docker ignore files ([441b150](https://github.com/lowdefy/lowdefy/commit/441b150e7528a5b4efae3b73d129091e690116de))
-* Github actions to deploy docker images ([de49159](https://github.com/lowdefy/lowdefy/commit/de49159af23871fac829d6268facd46e1e3069c8))
-* Update release action to publish to npm and docker. ([acd2c5d](https://github.com/lowdefy/lowdefy/commit/acd2c5d07811e54f2006c5ca8a820705fbaeded2))
-* **build:** Add a default 404 page if no page is defined. ([b0abb39](https://github.com/lowdefy/lowdefy/commit/b0abb39e108ab22421cb5bac9248dcef9e209367))
-* **engine:** Add catchActions to events, closes [#608](https://github.com/lowdefy/lowdefy/issues/608) ([305b3aa](https://github.com/lowdefy/lowdefy/commit/305b3aa3f9ff51c605384e36902c15d3491a5736))
-* **operators:** Add _location operator. ([9175dbe](https://github.com/lowdefy/lowdefy/commit/9175dbe3b84a74169d5f72018388293790ad2f9d))
-* Init @lowdefy/server package. ([f4699be](https://github.com/lowdefy/lowdefy/commit/f4699be366912f8730c74036bbfbd5b2bb915b4a))
-* Init @lowdefy/shell package ([1c188a0](https://github.com/lowdefy/lowdefy/commit/1c188a052f203d89241ea23c90c5b74759849343))
-* Init aws lambda server. ([f48021e](https://github.com/lowdefy/lowdefy/commit/f48021ea38184708ede63f306dad2684e948925e))
-* Update docker server dockerfile. ([0f52b35](https://github.com/lowdefy/lowdefy/commit/0f52b350483f1e6157040eb6539266839bb563c4))
-* Use @lowdefy/server package in dev server. ([dc4848a](https://github.com/lowdefy/lowdefy/commit/dc4848a28f70b969865e7a207d0ccfd01c9f69d4))
-* use lowdefy server in docker and lambda servers ([4854f74](https://github.com/lowdefy/lowdefy/commit/4854f74733d3d3d5de0426b17669760e41785508))
-* Use lowdefy server in netlify server. ([4a78a97](https://github.com/lowdefy/lowdefy/commit/4a78a9753c54ef217a14e99924a0f02b4bdddf9f))
-* Use lowdefy shell in aws lambda server. ([933281f](https://github.com/lowdefy/lowdefy/commit/933281f82a2cd81329aa3ab3997ebd8d98a0900d))
-* Use shell package in dev and docker servers ([d9abe05](https://github.com/lowdefy/lowdefy/commit/d9abe05ef7267527f4fb1140557905d243246a92))
-* **server-docker:** Update lowdefy app directory in dockerfile ([cedea93](https://github.com/lowdefy/lowdefy/commit/cedea93f6b22dfb255e40aefc50172b01bafdfea))
+- Add support for deploying with Docker. See more at [https://docs.lowdefy.com/docker](https://docs.lowdefy.com/docker).
+- Add support for deploying with AWS Lambda. See more at [https://docs.lowdefy.com/aws-lambda](https://docs.lowdefy.com/aws-lambda).
+- Add try-catch error handling to events, closes [#608].
+- Add forceSubMenuRender property to menus in `Menu`, `PageHeaderMenu`, and `PageSiderMenu` blocks.
+- Add `_location` window location operator.
+- Add links to previous Lowdefy versions in docs.
+- Add a default 404 page if no 404 page is defined, closes [#280].
 
+### Fixes
+
+- The CLI init starter app docs button now opens in a new tab.
+- Fix AxiosHttp baseUrl typo in docs, closes [#607]
+
+## Commits
+
+### Bug Fixes
+
+- **docs:** Add lowdefy version in dockerfile warnings ([1672f24](https://github.com/lowdefy/lowdefy/commit/1672f241c67f64129c3e6138efa1830716b445e3))
+- **docs:** Fix aws lambda docs. ([7136663](https://github.com/lowdefy/lowdefy/commit/7136663ae482e3f5a3b9bd775118264f707b1fd5))
+- **docs:** Fix type in MongoDB docs. ([07de3e9](https://github.com/lowdefy/lowdefy/commit/07de3e94a5f54095c8a0c08d919a5ee39655d188))
+- **shell:** Fix gqlUri in shell app. ([3da4851](https://github.com/lowdefy/lowdefy/commit/3da4851718134a080e1d8daf245bd7d3e26069ec))
+
+### Features
+
+- **docs:** Add docs for Docker and AWS Lambda deployment ([e57fa03](https://github.com/lowdefy/lowdefy/commit/e57fa0309eeddaa815b1a96f9f5c0cc6381b4323))
+
+# [3.17.0-alpha.3](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.2...v3.17.0-alpha.3) (2021-06-09)
+
+### Bug Fixes
+
+- **cli:** Open docs link in new tab. ([2da64c2](https://github.com/lowdefy/lowdefy/commit/2da64c2d8d0c9d58456c5c8df4a82836e7a623bf))
+- **servers:** .babelrc file should not be in .dockerignore ([994c13f](https://github.com/lowdefy/lowdefy/commit/994c13f97459c8d9986213b1a73dca6068d5cb48))
+
+# [3.17.0-alpha.2](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.1...v3.17.0-alpha.2) (2021-06-09)
+
+### Bug Fixes
+
+- Do not tag prereleases with latest tag on npm ([106aef7](https://github.com/lowdefy/lowdefy/commit/106aef7a9eab9c53af8a77ac5f2f3523eba679cb))
+- **docs:** Restore docs to previous stable version ([ce1aac0](https://github.com/lowdefy/lowdefy/commit/ce1aac0ff428db74b1d00499100acfbfa47f9e52))
+- Fix lerna npm publish on release action. ([9469148](https://github.com/lowdefy/lowdefy/commit/9469148d094470d0f9d62d16ec2fc36075d83020))
+- Test npm lerna publish ([92f4b88](https://github.com/lowdefy/lowdefy/commit/92f4b88e2f860e3d500367c825bfe22f689f1f60))
+
+# [3.17.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.17.0-alpha.0...v3.17.0-alpha.1) (2021-06-09)
+
+### Bug Fixes
+
+- Fix npm publish comand in publish action. ([24cc119](https://github.com/lowdefy/lowdefy/commit/24cc1196c704e2f408bdbe2c8d7e37ce7ff5b87f))
+
+# [3.17.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.16.5...v3.17.0-alpha.0) (2021-06-09)
+
+### Bug Fixes
+
+- Add publish environment to publish workflow ([b65211a](https://github.com/lowdefy/lowdefy/commit/b65211a3755b1a7a5ced5b0d3ea437a0c5aa7efd))
+- Fix release workflow file. ([028ecf0](https://github.com/lowdefy/lowdefy/commit/028ecf0868461fc1c63f7de22c387a3260ae9579))
+- remove linux/arm/v7 docker platform. ([c78d72e](https://github.com/lowdefy/lowdefy/commit/c78d72ed0be76e3c7c63a411b87cf43a87332dda))
+- Remove yarn cache clean from docker builds. ([e5d8d9d](https://github.com/lowdefy/lowdefy/commit/e5d8d9da4d7d5f4979d036c2207741da4e0f034b))
+- **blocksAntd:** Add forceSubMenuRender property to menu. ([3f85e6e](https://github.com/lowdefy/lowdefy/commit/3f85e6e6de12e6c7210c8e8daf5a22d022bb69c7))
+- **blocksAntd:** Include menu tests for working renders. ([b8fa4d0](https://github.com/lowdefy/lowdefy/commit/b8fa4d090c3ae25502e48a965a4538ebe84a4173))
+- **blocksAntd:** Skip menu render test. ([5a321ec](https://github.com/lowdefy/lowdefy/commit/5a321ec7d3bf2a3b4580abbce94601c389e9d32b))
+- **build:** Handle try catch options in actions schema. ([7e05b0e](https://github.com/lowdefy/lowdefy/commit/7e05b0eb75a92613507731e1cbceb71433d86e71))
+- **docs:** Add \_location operator. ([038977a](https://github.com/lowdefy/lowdefy/commit/038977aac5dcc18fb1a9f18266ee80be6bb1970e))
+- **docs:** Add forceSubMenuRender to menu. ([a4b7abc](https://github.com/lowdefy/lowdefy/commit/a4b7abc76bcd9a92f509ff02bd86ed90234af423))
+- **docs:** Add lowdefy versions to docs. ([5ff0e16](https://github.com/lowdefy/lowdefy/commit/5ff0e16d0d987f819f9e1eb9820fd756634e4a2f))
+- **docs:** Fix baseUrl typo, closes [#607](https://github.com/lowdefy/lowdefy/issues/607) ([4b1e6ce](https://github.com/lowdefy/lowdefy/commit/4b1e6ceb9a80db324a56692072315baeaf4053d2))
+- **docs:** Remove deprecated \_js wasm. ([8b00683](https://github.com/lowdefy/lowdefy/commit/8b00683c4f96bcbe9944a990f6c8b5ec3c2d9bb1))
+- **docs:** Update docs for try catch actions. ([3d7969d](https://github.com/lowdefy/lowdefy/commit/3d7969d9f6b483211820598b2deb69701ad2ed08))
+- **operators:** Remove deprecated \_js wasm. ([20d2d0f](https://github.com/lowdefy/lowdefy/commit/20d2d0f0d98073399019e6c2daee4d1f2d0af474))
+- **server-docker:** Use port 3000 as default port. ([53bbc5f](https://github.com/lowdefy/lowdefy/commit/53bbc5fc1343832a26e60d189e080e0f13b1ede5))
+- **servers:** Use a empty app config instead of starter config for lowdefy default. ([db4b7f9](https://github.com/lowdefy/lowdefy/commit/db4b7f902835dcfe49d0f4cf0402b5b8435528c5))
+
+### Features
+
+- Add configurable public directory to servers. ([7c2beeb](https://github.com/lowdefy/lowdefy/commit/7c2beeb049d647452d4b6838427ae609e6d91b46))
+- Add docker ignore files ([441b150](https://github.com/lowdefy/lowdefy/commit/441b150e7528a5b4efae3b73d129091e690116de))
+- Github actions to deploy docker images ([de49159](https://github.com/lowdefy/lowdefy/commit/de49159af23871fac829d6268facd46e1e3069c8))
+- Update release action to publish to npm and docker. ([acd2c5d](https://github.com/lowdefy/lowdefy/commit/acd2c5d07811e54f2006c5ca8a820705fbaeded2))
+- **build:** Add a default 404 page if no page is defined. ([b0abb39](https://github.com/lowdefy/lowdefy/commit/b0abb39e108ab22421cb5bac9248dcef9e209367))
+- **engine:** Add catchActions to events, closes [#608](https://github.com/lowdefy/lowdefy/issues/608) ([305b3aa](https://github.com/lowdefy/lowdefy/commit/305b3aa3f9ff51c605384e36902c15d3491a5736))
+- **operators:** Add \_location operator. ([9175dbe](https://github.com/lowdefy/lowdefy/commit/9175dbe3b84a74169d5f72018388293790ad2f9d))
+- Init @lowdefy/server package. ([f4699be](https://github.com/lowdefy/lowdefy/commit/f4699be366912f8730c74036bbfbd5b2bb915b4a))
+- Init @lowdefy/shell package ([1c188a0](https://github.com/lowdefy/lowdefy/commit/1c188a052f203d89241ea23c90c5b74759849343))
+- Init aws lambda server. ([f48021e](https://github.com/lowdefy/lowdefy/commit/f48021ea38184708ede63f306dad2684e948925e))
+- Update docker server dockerfile. ([0f52b35](https://github.com/lowdefy/lowdefy/commit/0f52b350483f1e6157040eb6539266839bb563c4))
+- Use @lowdefy/server package in dev server. ([dc4848a](https://github.com/lowdefy/lowdefy/commit/dc4848a28f70b969865e7a207d0ccfd01c9f69d4))
+- use lowdefy server in docker and lambda servers ([4854f74](https://github.com/lowdefy/lowdefy/commit/4854f74733d3d3d5de0426b17669760e41785508))
+- Use lowdefy server in netlify server. ([4a78a97](https://github.com/lowdefy/lowdefy/commit/4a78a9753c54ef217a14e99924a0f02b4bdddf9f))
+- Use lowdefy shell in aws lambda server. ([933281f](https://github.com/lowdefy/lowdefy/commit/933281f82a2cd81329aa3ab3997ebd8d98a0900d))
+- Use shell package in dev and docker servers ([d9abe05](https://github.com/lowdefy/lowdefy/commit/d9abe05ef7267527f4fb1140557905d243246a92))
+- **server-docker:** Update lowdefy app directory in dockerfile ([cedea93](https://github.com/lowdefy/lowdefy/commit/cedea93f6b22dfb255e40aefc50172b01bafdfea))
 
 ### Reverts
 
-* Revert "chore: Update yarn version." ([04fe765](https://github.com/lowdefy/lowdefy/commit/04fe765cafc72f5cd4ea836167c285082bc2ad12))
-* Revert "chore: Yarn upgrade rename .pnp.js" ([59a0413](https://github.com/lowdefy/lowdefy/commit/59a041378ed4e6eb92f1afb6db19bf84760ebef9))
-
-
-
-
+- Revert "chore: Update yarn version." ([04fe765](https://github.com/lowdefy/lowdefy/commit/04fe765cafc72f5cd4ea836167c285082bc2ad12))
+- Revert "chore: Yarn upgrade rename .pnp.js" ([59a0413](https://github.com/lowdefy/lowdefy/commit/59a041378ed4e6eb92f1afb6db19bf84760ebef9))
 
 ## [3.16.5](https://github.com/lowdefy/lowdefy/compare/v3.16.4...v3.16.5) (2021-05-31)
 
