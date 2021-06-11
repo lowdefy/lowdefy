@@ -14,12 +14,14 @@
   limitations under the License.
 */
 
+import path from 'path';
 import serverless from 'serverless-http';
 import getServer from '@lowdefy/server';
 import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
 
 const server = getServer({
-  buildDirectory: './build',
+  // __dirname is important here
+  buildDirectory: path.resolve(__dirname, './build'),
   development: false,
   getSecrets: createGetSecretsFromEnv(),
   gqlExpressPath: '/',
