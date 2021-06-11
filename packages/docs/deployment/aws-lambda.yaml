@@ -26,7 +26,7 @@ _ref:
           content: |
             Lowdefy apps can be deployed to AWS Lambda serverless functions by using the [lowdefy/lowdefy-aws-lambda](https://hub.docker.com/repository/docker/lowdefy/lowdefy-aws-lambda) Docker images. These images contain a Lowdefy app server. To deploy to AWS Lambda a new image that contains the app configuration, based on the Lowdefy base image, should be built. This image should then be pushed to a private AWS ECR registry. From there it can be used to create a Lambda function.
 
-            The [serverless framework](https://www.serverless.com) can be used to simplify the deployment.
+            The [serverless framework](https://www.serverless.com) can be used to simplify the deployment. The serverless framework create a ECR registry if it does not exist, build the Docker image, push to the registry and deploy an AWS Lambda function with a API Gateway HTTP api integration.
 
             An example can be found in the [lowdefy-example-aws-lambda](https://github.com/lowdefy/lowdefy-example-aws-lambda)  repository.
 
@@ -68,6 +68,17 @@ _ref:
             CMD [ "dist/server.handler"]
             ```
 
+      - id: warning_update_dockerfile
+        type: Alert
+        properties:
+          type: warning
+          icon: WarningFilled
+          description: When updating your app to a new Lowdefy version, make sure to update the Lowdefy version in the Dockerfile
+
+      - id: md2
+        type: Markdown
+        properties:
+          content: |
             ### Step 2 - Create a `.dockerignore` file
 
             Create a file called `.dockerignore` in your project repository:
@@ -113,5 +124,3 @@ _ref:
             ```
             npx serverless deploy --verbose --conceal --stage dev
             ```
-
-            This will create a ECR registry if it does not exist, and deploy an AWS Lambda function with a API Gateway HTTP api integration.
