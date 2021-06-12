@@ -1,4 +1,6 @@
-![Lowdefy](https://lowdefy.com/banner.png)
+<p align="center">
+  <img alt="Lowdefy" src="https://user-images.githubusercontent.com/7165064/121780045-d0021200-cb9e-11eb-84f9-ff67c8255ec6.gif" data-canonical-src="https://user-images.githubusercontent.com/7165064/121780045-d0021200-cb9e-11eb-84f9-ff67c8255ec6.gif" width="450" />
+</p>
 
 [![Discord](https://img.shields.io/discord/729696747261263962?label=Join%20our%20Discord&logo=discord&logoColor=white)](https://discord.gg/WmcJgXt)
 
@@ -12,22 +14,33 @@
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/lowdefy/lowdefy.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/lowdefy/lowdefy/alerts/)
 [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/lowdefy/lowdefy.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/lowdefy/lowdefy/context:javascript)
 
-Lowdefy is an open-source (Apache-2.0) low-code framework that lets you build web apps with YAML configuration files. It is great for building admin panels, BI dashboards, workflows, and CRUD apps.
+Lowdefy is an open-source (Apache-2.0) low-code framework that lets you build web apps with YAML or JSON configuration files. It is great for building admin panels, BI dashboards, workflows, and CRUD apps.
 
-Advantages of writing internal tools in YAML:
+## Advantages of writing internal tools in YAML or JSON
 
 - All apps use the same structured config schema, this makes it easy to debug large apps or pick up where others left off.
-- Nothing is hidden in a GUI. This allows you to do basic essential stuff, like copy, paste, find, replace etc. which makes developing apps more productive.
+- Nothing is hidden in a GUI. This allows you to do basic essential stuff, like copy, paste, find, replace, review changes etc. which makes developing apps more productive.
 - App config is just data, thus you can even develop scripts to create and manage your apps.
 - YAML files work with your favorite developer and source control tools.
 
-Read the docs at https://docs.lowdefy.com.
+## How Lowdefy apps work 👉 https://docs.lowdefy.com
 
-UIs in Lowdefy are built using blocks, which are React components. Lowdefy provides a set of default block types with the essentials needed to build an app, but you can also create your own custom blocks. Lowdefy uses [webpack module federation](https://webpack.js.org/concepts/module-federation/) to import these blocks as micro front-ends.
+Lowdefy apps are built using:
 
-Lowdefy doesn't have any data storage built in. Instead, it provides connections to external services like databases and APIs. We are working on expanding the list of connections, and you can vote for the ones you need [here](https://github.com/lowdefy/lowdefy/discussions/309).
+- 📦 [Blocks](https://docs.lowdefy.com/blocks) are the visual part of the app, the React components. Lowdefy provides a set of default block types but app capabilities can be extended with custom blocks.
+- ⚙️ [Operators](https://docs.lowdefy.com/operators) are the functions that are used to express logic within an app. Lowdefy has many built in easy to use operator functions for creating dynamic applications with ease, however, custom javascript operators can also be loaded.
+- ⚡️ [Actions](https://docs.lowdefy.com/events-and-actions) are triggered by events, like clicking a button or loading a page. When events are triggered, a list of javascript functions can be called. Lowdefy has a set of useful actions, but applications functionality can be enriched by adding custom Lowdefy actions.
+- 📣 [Requests](https://docs.lowdefy.com/connections-and-requests) make calls to external services to hydrate applications with data or post data to external services. Lowdefy doesn't have any data storage built in. Instead, it provides connections to external services like databases and APIs.
 
-To host a Lowdefy app, only a simple server is needed. Lowdefy was designed to run in a serverless environment from the start. Currently you can host your apps on [Netlify](https://www.netlify.com), with support for Docker, AWS Lambda functions and more coming soon.
+We are working on expanding the list of connections, and you can vote for the ones you need [here](https://github.com/lowdefy/lowdefy/discussions/309).
+
+## Lowdefy apps are self-hosted
+
+Our goal is to make it easy to run Lowdefy apps anywhere. Lowdefy app servers are also stateless which makes it easy to run apps in serverless environments. Currently you can host Lowdefy apps:
+
+- As a [Docker container](https://docs.lowdefy.com/docker).
+- On [AWS Lambda](https://docs.lowdefy.com/aws-lambda) using Serverless.
+- On [Netlify](https://docs.lowdefy.com/netlify) using Netlify functions.
 
 ## Quick start
 
@@ -69,16 +82,18 @@ This example demonstrates useful patterns for building a BI report/dashboard pag
 - [Example demo.](https://example-reporting.lowdefy.com)
 - [App source code.](https://github.com/lowdefy/lowdefy-example-reporting)
 
-## Other Lowdefy Blocks Packages
+## Other Lowdefy packages and resources
 
 - [@lowdefy/blocks-aggrid](https://github.com/lowdefy/blocks-aggrid): Lowdefy blocks to render [Ag-Grid](https://www.ag-grid.com/) tables.
 - [@lowdefy/blocks-amcharts](https://github.com/lowdefy/blocks-amcharts): Lowdefy blocks to render [AmCharts v4](https://www.amcharts.com/).
+- Lowdefy [Kubernetes examples](https://github.com/vaddisrinivas/lowdefy-example-k8s).
 
-## More Lowdefy resources
+## More Lowdefy links
 
 - Getting started with Lowdefy - https://docs.lowdefy.com/tutorial-start
 - Lowdefy website - https://lowdefy.com
 - Community forum - https://github.com/lowdefy/lowdefy/discussions
+- Join the Lowdefy Discord - https://discord.gg/WmcJgXt
 - Bug reports and feature requests - https://github.com/lowdefy/lowdefy/issues
 
 ## Changelog
