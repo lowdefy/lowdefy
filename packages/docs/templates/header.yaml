@@ -11,7 +11,32 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+- id: search_box
+  type: Box
+  layout:
+    flex: 0 1 auto
+    align: middle
+  style:
+    marginRight: 8
+  blocks:
+    - id: docsearch
+      type: TextInput
+      layout:
+        flex: 0 1 auto
+        align: middle
+      properties:
+        label:
+          disabled: true
+        placeholder: Search
+    - id: docsearch_icon
+      type: Icon
+      layout:
+        flex: 0 1 auto
+        align: middle
+      style:
+        marginLeft: -22
+      properties:
+        name: SearchOutlined
 - id: why_button
   type: Button
   visible:
@@ -43,6 +68,9 @@
   visible:
     _not:
       _or:
+        - _eq:
+            - _media: size
+            - md
         - _eq:
             - _media: size
             - sm
@@ -86,6 +114,15 @@
           url: https://discord.gg/WmcJgXt
 - id: github_button
   type: Button
+  visible:
+    _not:
+      _or:
+        - _eq:
+            - _media: size
+            - sm
+        - _eq:
+            - _media: size
+            - xs
   layout:
     flex: 1 0 auto
   properties:
