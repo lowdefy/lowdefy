@@ -28,6 +28,8 @@ app:
   html:
     appendHead:
       _ref: head.html
+    appendBody:
+      _ref: body.html
 
 connections:
   - id: discord_channel
