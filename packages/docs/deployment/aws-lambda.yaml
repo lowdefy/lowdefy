@@ -47,6 +47,8 @@ _ref:
             # Set working directory and node user
             WORKDIR /home/node/lowdefy
 
+            RUN chown node:node /home/node/lowdefy
+
             USER node
 
             # Copy app config, and change ownership of files to "node" user
@@ -91,7 +93,7 @@ _ref:
 
             ### Step 3 - Create a serverless.yaml file
 
-            Create a file called `.serverless.yaml` in your project repository:
+            Create a file called `serverless.yaml` in your project repository:
 
             ```
             service: lowdefy-example-aws-lambda
