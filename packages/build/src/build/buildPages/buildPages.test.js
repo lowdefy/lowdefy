@@ -1079,6 +1079,54 @@ describe('build requests', () => {
     );
   });
 
+  test('request id missing', async () => {
+    const components = {
+      pages: [
+        {
+          id: 'page_1',
+          auth,
+          type: 'Context',
+          requests: [{ type: 'Request' }],
+        },
+      ],
+    };
+    await expect(buildPages({ components, context })).rejects.toThrow(
+      'Request id missing at page "page_1".'
+    );
+  });
+
+  test('request id not a string', async () => {
+    const components = {
+      pages: [
+        {
+          id: 'page_1',
+          auth,
+          type: 'Context',
+          requests: [{ id: true, type: 'Request' }],
+        },
+      ],
+    };
+    await expect(buildPages({ components, context })).rejects.toThrow(
+      'Request id is not a string at page "page_1". Received true.'
+    );
+  });
+
+  test('request id contains a "."', async () => {
+    const components = {
+      pages: [
+        {
+          id: 'page_1',
+          auth,
+          type: 'Context',
+          requests: [{ id: 'my.request', type: 'Request' }],
+        },
+      ],
+    };
+    await expect(buildPages({ components, context })).rejects.toThrow(
+      'Request "my.request" includes a period (".")'
+    );
+  });
+
   test('give request an id', async () => {
     const components = {
       pages: [
