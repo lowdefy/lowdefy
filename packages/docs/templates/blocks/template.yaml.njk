@@ -75,6 +75,10 @@ events:
         _var: init_state_values
 
   onEnterAsync:
+    - id: connect_docsearch
+      type: JsAction
+      params:
+        name: connectDocsearch
     - id: post_telemetry
       type: Request
       messages:
@@ -85,7 +89,7 @@ properties:
   title: {{ block_type }}
   header:
     theme: light
-  menu: 
+  menu:
     forceSubMenuRender: true
   sider:
     width: 256px
