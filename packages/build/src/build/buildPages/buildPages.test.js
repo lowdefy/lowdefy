@@ -212,7 +212,22 @@ test('page does not have an id', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow('Page id missing at page 0');
+  await expect(buildPages({ components, context })).rejects.toThrow('Page id missing at page 0.');
+});
+
+test('page id is not a string', async () => {
+  const components = {
+    pages: [
+      {
+        id: true,
+        type: 'Context',
+        auth,
+      },
+    ],
+  };
+  await expect(buildPages({ components, context })).rejects.toThrow(
+    'Page id is not a string at at page 0. Received true.'
+  );
 });
 
 test('block does not have an id', async () => {
@@ -231,7 +246,28 @@ test('block does not have an id', async () => {
     ],
   };
   await expect(buildPages({ components, context })).rejects.toThrow(
-    'Block id missing at page page1'
+    'Block id missing at page "page1".'
+  );
+});
+
+test('block id is not a string', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page1',
+        type: 'Context',
+        auth,
+        blocks: [
+          {
+            id: true,
+            type: 'Input',
+          },
+        ],
+      },
+    ],
+  };
+  await expect(buildPages({ components, context })).rejects.toThrow(
+    'Block id is not a string at page "page1". Received true.'
   );
 });
 
@@ -1040,6 +1076,54 @@ describe('build requests', () => {
     };
     await expect(buildPages({ components, context })).rejects.toThrow(
       'Requests is not an array at page_1 on page page_1. Received "requests"'
+    );
+  });
+
+  test('request id missing', async () => {
+    const components = {
+      pages: [
+        {
+          id: 'page_1',
+          auth,
+          type: 'Context',
+          requests: [{ type: 'Request' }],
+        },
+      ],
+    };
+    await expect(buildPages({ components, context })).rejects.toThrow(
+      'Request id missing at page "page_1".'
+    );
+  });
+
+  test('request id not a string', async () => {
+    const components = {
+      pages: [
+        {
+          id: 'page_1',
+          auth,
+          type: 'Context',
+          requests: [{ id: true, type: 'Request' }],
+        },
+      ],
+    };
+    await expect(buildPages({ components, context })).rejects.toThrow(
+      'Request id is not a string at page "page_1". Received true.'
+    );
+  });
+
+  test('request id contains a "."', async () => {
+    const components = {
+      pages: [
+        {
+          id: 'page_1',
+          auth,
+          type: 'Context',
+          requests: [{ id: 'my.request', type: 'Request' }],
+        },
+      ],
+    };
+    await expect(buildPages({ components, context })).rejects.toThrow(
+      'Request id "my.request" should not include a period (".").'
     );
   });
 

@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.18.0](https://github.com/lowdefy/lowdefy/compare/v3.17.2...v3.18.0) (2021-06-17)
+
+
+### Bug Fixes
+
+* **docs:** Fix Dockerfiles in docs ([4f53889](https://github.com/lowdefy/lowdefy/commit/4f538899fa977f7f6ff9012f0ef8b889f3c5b661))
+* **docs:** Reconnect docsearch after page change. ([48c26e8](https://github.com/lowdefy/lowdefy/commit/48c26e8236569eb28816a230d2984570698f7615))
+
+
+### Features
+
+* **docs:** Add algolia docsearch. ([e3c6de7](https://github.com/lowdefy/lowdefy/commit/e3c6de76e22c0e42b6ccb98a58f8efe472e4fc4d))
+* **engine:** Add wait operator. ([40ead25](https://github.com/lowdefy/lowdefy/commit/40ead255054a731cc70e7bee31c61d2d20ef0caf)), closes [#625](https://github.com/lowdefy/lowdefy/issues/625)
+* **operators:** Add support for dot notation in _request operator. ([6ffaf46](https://github.com/lowdefy/lowdefy/commit/6ffaf4690227b5a9be47b4815c78d7dd15420238))
+
+
+
+
+
 ## [3.17.2](https://github.com/lowdefy/lowdefy/compare/v3.17.1...v3.17.2) (2021-06-11)
 
 **Note:** Version bump only for package @lowdefy/docs

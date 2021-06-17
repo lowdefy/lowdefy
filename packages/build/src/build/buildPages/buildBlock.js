@@ -24,8 +24,15 @@ async function buildBlock(block, blockContext) {
       `Expected block to be an object on ${blockContext.pageId}. Received ${JSON.stringify(block)}`
     );
   }
-  if (type.isUndefined(block.id)) {
-    throw new Error(`Block id missing at page ${blockContext.pageId}`);
+  if (!type.isString(block.id)) {
+    if (type.isUndefined(block.id)) {
+      throw new Error(`Block id missing at page "${blockContext.pageId}".`);
+    }
+    throw new Error(
+      `Block id is not a string at page "${blockContext.pageId}". Received ${JSON.stringify(
+        block.id
+      )}.`
+    );
   }
   block.blockId = block.id;
   block.id = `block:${blockContext.pageId}:${block.id}`;

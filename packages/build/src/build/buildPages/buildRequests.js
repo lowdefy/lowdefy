@@ -16,6 +16,28 @@
 
 import { type } from '@lowdefy/helpers';
 
+function buildRequest({ request, blockContext }) {
+  if (!type.isString(request.id)) {
+    if (type.isUndefined(request.id)) {
+      throw new Error(`Request id missing at page "${blockContext.pageId}".`);
+    }
+    throw new Error(
+      `Request id is not a string at page "${blockContext.pageId}". Received ${JSON.stringify(
+        request.id
+      )}.`
+    );
+  }
+  if (request.id.includes('.')) {
+    throw new Error(`Request id "${request.id}" should not include a period (".").`);
+  }
+
+  request.auth = blockContext.auth;
+  request.requestId = request.id;
+  request.contextId = blockContext.contextId;
+  request.id = `request:${blockContext.pageId}:${blockContext.contextId}:${request.id}`;
+  blockContext.requests.push(request);
+}
+
 function buildRequests(block, blockContext) {
   if (!type.isNone(block.requests)) {
     if (!type.isArray(block.requests)) {
@@ -26,11 +48,7 @@ function buildRequests(block, blockContext) {
       );
     }
     block.requests.forEach((request) => {
-      request.auth = blockContext.auth;
-      request.requestId = request.id;
-      request.contextId = blockContext.contextId;
-      request.id = `request:${blockContext.pageId}:${blockContext.contextId}:${request.id}`;
-      blockContext.requests.push(request);
+      buildRequest({ request, blockContext });
     });
     delete block.requests;
   }

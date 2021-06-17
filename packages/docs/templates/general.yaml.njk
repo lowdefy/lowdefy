@@ -44,6 +44,10 @@ events:
             type: string
             length: 16
   onEnterAsync:
+    - id: connect_docsearch
+      type: JsAction
+      params:
+        name: connectDocsearch
     - id: post_telemetry
       type: Request
       messages:
@@ -54,7 +58,7 @@ properties:
   title: {{ pageTitle }}
   header:
     theme: light
-  menu: 
+  menu:
     forceSubMenuRender: true
   sider:
     width: 256px
