@@ -84,3 +84,21 @@ test('_request loading true', async () => {
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
+
+test('_request dot notation', async () => {
+  const input = { _request: 'arr.0.a' };
+  const parser = new WebParser({ context, contexts });
+  await parser.init();
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  expect(res.output).toEqual('request a1');
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
+
+test('_request dot notation with arrayindices', async () => {
+  const input = { _request: 'arr.$.a' };
+  const parser = new WebParser({ context, contexts });
+  await parser.init();
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  expect(res.output).toEqual('request a2');
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});

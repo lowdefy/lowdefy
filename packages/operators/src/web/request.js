@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { applyArrayIndices, get, serializer, type } from '@lowdefy/helpers';
 
-function _request({ params, requests, location }) {
+function _request({ arrayIndices, params, requests, location }) {
   if (!type.isString(params)) {
     throw new Error(
       `Operator Error: _request accepts a string value. Received: ${JSON.stringify(
@@ -24,10 +24,18 @@ function _request({ params, requests, location }) {
       )} at ${location}.`
     );
   }
-  if (params in requests && !requests[params].loading) {
-    return requests[params].response;
+  const splitKey = params.split('.');
+  const [requestId, ...keyParts] = splitKey;
+  if (requestId in requests && !requests[requestId].loading) {
+    if (splitKey.length === 1) {
+      return serializer.copy(requests[requestId].response);
+    }
+    const key = keyParts.reduce((acc, value) => (acc === '' ? value : acc.concat('.', value)), '');
+    return get(requests[requestId].response, applyArrayIndices(arrayIndices, key), {
+      copy: true,
+    });
   }
-  return null; // return null for all requests which has not been filled on init
+  return null;
 }
 
 export default _request;

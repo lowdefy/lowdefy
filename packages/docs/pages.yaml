@@ -146,6 +146,7 @@
 - _ref: actions/SetGlobal.yaml
 - _ref: actions/SetState.yaml
 - _ref: actions/Validate.yaml
+- _ref: actions/Wait.yaml
 
 - _ref: operators/_actions.yaml
 - _ref: operators/_and.yaml

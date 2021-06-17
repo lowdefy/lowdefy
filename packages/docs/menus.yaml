@@ -549,6 +549,9 @@
         - id: Validate
           type: MenuLink
           pageId: Validate
+        - id: Wait
+          type: MenuLink
+          pageId: Wait
     - id: operators
       type: MenuGroup
       properties:

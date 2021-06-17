@@ -39,8 +39,13 @@ Blocks:
 async function buildPages({ components, context }) {
   const pages = type.isArray(components.pages) ? components.pages : [];
   const pageBuildPromises = pages.map(async (page, i) => {
-    if (type.isUndefined(page.id)) {
-      throw new Error(`Page id missing at page ${i}`);
+    if (!type.isString(page.id)) {
+      if (type.isUndefined(page.id)) {
+        throw new Error(`Page id missing at page ${i}.`);
+      }
+      throw new Error(
+        `Page id is not a string at at page ${i}. Received ${JSON.stringify(page.id)}.`
+      );
     }
     page.pageId = page.id;
     await checkPageIsContext(page, context.metaLoader);

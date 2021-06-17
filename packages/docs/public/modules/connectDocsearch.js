@@ -14,32 +14,20 @@
   limitations under the License.
 */
 
-import CallMethod from './CallMethod';
-import JsAction from './JsAction';
-import Link from './Link';
-import Login from './Login';
-import Logout from './Logout';
-import Message from './Message';
-import Request from './Request';
-import Reset from './Reset';
-import ScrollTo from './ScrollTo';
-import SetGlobal from './SetGlobal';
-import SetState from './SetState';
-import Validate from './Validate';
-import Wait from './Wait';
+function connectDocsearch() {
+  let time = 100;
+  try {
+    // eslint-disable-next-line no-undef
+    docsearch({
+      apiKey: '4e88995ba28e39b8ed2bcfb6639379a1',
+      indexName: 'lowdefy',
+      inputSelector: '#docsearch_input',
+      debug: true,
+    });
+  } catch (err) {
+    setTimeout(connectDocsearch, time);
+    time = time * 2;
+  }
+}
 
-export default {
-  CallMethod,
-  JsAction,
-  Link,
-  Login,
-  Logout,
-  Message,
-  Request,
-  Reset,
-  ScrollTo,
-  SetGlobal,
-  SetState,
-  Validate,
-  Wait,
-};
+export default connectDocsearch;
