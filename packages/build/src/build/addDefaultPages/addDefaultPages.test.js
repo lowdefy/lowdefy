@@ -214,11 +214,21 @@ test('addDefaultPages, pages with 404 page, should not overwrite', async () => {
   });
 });
 
-test('addDefaultPages, pages not an ', async () => {
+test('addDefaultPages, pages not an array', async () => {
   const components = {
     pages: { id: 'page1', type: 'Context' },
   };
   await expect(addDefaultPages({ components, context })).rejects.toThrow(
     'lowdefy.pages is not an array.'
   );
+});
+
+test('addDefaultPages, pages are copied', async () => {
+  const components1 = {};
+  const res1 = await addDefaultPages({ components: components1, context });
+  const page1 = res1.pages[0];
+  page1.id = 'page:404';
+  const components2 = {};
+  const res2 = await addDefaultPages({ components: components2, context });
+  expect(res2.pages[0].id).toEqual('404');
 });
