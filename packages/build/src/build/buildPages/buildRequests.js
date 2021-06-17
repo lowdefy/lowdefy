@@ -28,7 +28,7 @@ function buildRequest({ request, blockContext }) {
     );
   }
   if (request.id.includes('.')) {
-    throw new Error(`Request "${request.id}" includes a period (".")`);
+    throw new Error(`Request id "${request.id}" should not include a period (".").`);
   }
 
   request.auth = blockContext.auth;

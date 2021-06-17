@@ -1123,7 +1123,7 @@ describe('build requests', () => {
       ],
     };
     await expect(buildPages({ components, context })).rejects.toThrow(
-      'Request "my.request" includes a period (".")'
+      'Request id "my.request" should not include a period (".").'
     );
   });
 
