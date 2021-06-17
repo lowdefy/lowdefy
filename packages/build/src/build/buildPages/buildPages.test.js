@@ -212,7 +212,22 @@ test('page does not have an id', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow('Page id missing at page 0');
+  await expect(buildPages({ components, context })).rejects.toThrow('Page id missing at page 0.');
+});
+
+test('page id is not a string', async () => {
+  const components = {
+    pages: [
+      {
+        id: true,
+        type: 'Context',
+        auth,
+      },
+    ],
+  };
+  await expect(buildPages({ components, context })).rejects.toThrow(
+    'Page id is not a string at at page 0. Received true.'
+  );
 });
 
 test('block does not have an id', async () => {
@@ -231,7 +246,28 @@ test('block does not have an id', async () => {
     ],
   };
   await expect(buildPages({ components, context })).rejects.toThrow(
-    'Block id missing at page page1'
+    'Block id missing at page "page1".'
+  );
+});
+
+test('block id is not a string', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page1',
+        type: 'Context',
+        auth,
+        blocks: [
+          {
+            id: true,
+            type: 'Input',
+          },
+        ],
+      },
+    ],
+  };
+  await expect(buildPages({ components, context })).rejects.toThrow(
+    'Block id is not a string at page "page1". Received true.'
   );
 });
 
