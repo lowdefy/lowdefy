@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.18.0](https://github.com/lowdefy/lowdefy/compare/v3.17.2...v3.18.0) (2021-06-17)
+
+
+### Features
+
+* **operators:** Add support for dot notation in _request operator. ([6ffaf46](https://github.com/lowdefy/lowdefy/commit/6ffaf4690227b5a9be47b4815c78d7dd15420238))
+
+
+
+
+
 ## [3.17.2](https://github.com/lowdefy/lowdefy/compare/v3.17.1...v3.17.2) (2021-06-11)
 
 **Note:** Version bump only for package @lowdefy/operators
