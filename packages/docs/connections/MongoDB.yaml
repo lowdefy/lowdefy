@@ -400,8 +400,8 @@ _ref:
               - `ignoreUndefined: boolean`: Default: `false` - Specify if the BSON serializer should ignore undefined fields.
               - `j: boolean`: Specify a journal write concern.
               - `upsert: boolean`: Default: `false` - Insert document if no match is found.
-              - `w: number | string`: _Integer_ **|** _String_ - The write concern
-              - `wtimeout: number`: _Integer_  - The write concern timeout.
+              - `w: integer | string`: The write concern
+              - `wtimeout: integer`: The write concern timeout.
 
 
             #### Examples

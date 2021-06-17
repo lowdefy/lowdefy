@@ -14,32 +14,13 @@
   limitations under the License.
 */
 
-import CallMethod from './CallMethod';
-import JsAction from './JsAction';
-import Link from './Link';
-import Login from './Login';
-import Logout from './Logout';
-import Message from './Message';
-import Request from './Request';
-import Reset from './Reset';
-import ScrollTo from './ScrollTo';
-import SetGlobal from './SetGlobal';
-import SetState from './SetState';
-import Validate from './Validate';
-import Wait from './Wait';
+import { type } from '@lowdefy/helpers';
 
-export default {
-  CallMethod,
-  JsAction,
-  Link,
-  Login,
-  Logout,
-  Message,
-  Request,
-  Reset,
-  ScrollTo,
-  SetGlobal,
-  SetState,
-  Validate,
-  Wait,
-};
+async function Wait({ params }) {
+  if (!type.isInt(params.ms)) {
+    throw new Error(`Wait action "ms" param should be an integer.`);
+  }
+  return new Promise((resolve) => setTimeout(resolve, params.ms));
+}
+
+export default Wait;
