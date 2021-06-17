@@ -515,7 +515,7 @@ describe('parse operators', () => {
     expect(errors).toEqual([]);
   });
 
-  test.only('parse _js operator retuning a function', async () => {
+  test('parse _js operator retuning a function', async () => {
     const test_fn = () => (a, b) => a + b;
     const mockFn = jest.fn().mockImplementation(test_fn);
     context.lowdefy.imports.jsOperators.test_fn = mockFn;
