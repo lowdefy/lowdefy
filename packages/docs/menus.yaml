@@ -47,6 +47,17 @@
           pageId: next-steps
           properties:
             title: Next steps
+    - id: howto
+      type: MenuGroup
+      properties:
+        title: How To
+        icon: QuestionOutlined
+      links:
+        - id: generate-pdf
+          type: MenuLink
+          pageId: generate-pdf
+          properties:
+            title: Generate PDFs
     - id: concepts
       type: MenuGroup
       properties:
