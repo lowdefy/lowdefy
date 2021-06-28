@@ -27,6 +27,7 @@ const validProperties = [
   'search',
   'hash',
 ];
+
 function _location({ arrayIndices, context, contexts, env, location, params }) {
   if (!window || !window.location) {
     throw new Error(
@@ -42,13 +43,24 @@ function _location({ arrayIndices, context, contexts, env, location, params }) {
       )}. Received: ${JSON.stringify(params)} at ${location}.`
     );
   }
+  const windowLocation = {
+    href: window.location.href,
+    origin: window.location.origin,
+    protocol: window.location.protocol,
+    host: window.location.host,
+    hostname: window.location.hostname,
+    port: window.location.port,
+    pathname: window.location.pathname,
+    search: window.location.search,
+    hash: window.location.hash,
+  };
   return getFromObject({
     arrayIndices,
     context,
     contexts,
     env,
     location,
-    object: window.location,
+    object: windowLocation,
     operator: '_location',
     params,
   });

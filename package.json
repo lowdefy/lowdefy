@@ -29,6 +29,7 @@
   ],
   "scripts": {
     "build": "lerna run build",
+    "build:dev": "NODE_ENV=development lerna run build",
     "clean": "lerna run clean",
     "lerna:version": "lerna version --no-git-tag-version",
     "lerna:publish": "lerna publish from-git",
