@@ -33,7 +33,6 @@ async function Validate({ context, params }) {
       validationErrors.length !== 1 ? 's' : ''
     }.`;
     const error = new Error(message);
-    error.lowdefyMessage = message;
     throw error;
   }
 }
