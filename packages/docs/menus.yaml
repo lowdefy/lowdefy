@@ -55,7 +55,7 @@
       links:
         - id: generate-pdf
           type: MenuLink
-          pageId: generate-pdf
+          pageId: generate-pdf-document-from-data
           properties:
             title: Generate PDFs
     - id: concepts
