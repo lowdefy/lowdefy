@@ -40,6 +40,7 @@ class Actions {
         });
         responses[action.id] = response;
       } catch (error) {
+        responses[action.id] = error;
         throw {
           error,
           action,
@@ -54,12 +55,10 @@ class Actions {
     try {
       await this.callActionLoop({ actions, arrayIndices, block, event, responses });
     } catch (error) {
-      responses[error.action.id] = error.error;
       console.error(error);
       try {
         await this.callActionLoop({ actions: catchActions, arrayIndices, block, event, responses });
       } catch (errorCatch) {
-        responses[errorCatch.action.id] = errorCatch.error;
         console.error(errorCatch);
         return {
           blockId: block.blockId,
@@ -132,6 +131,7 @@ class Actions {
         params: parsedAction.params,
       });
     } catch (error) {
+      responses[action.id] = { error, index, type: action.type };
       const { output: parsedMessages, errors: parserErrors } = this.context.parser.parse({
         actions: responses,
         event,
@@ -145,7 +145,7 @@ class Actions {
       }
       closeLoading();
       this.displayMessage({
-        defaultMessage: error.lowdefyMessage || 'Action unsuccessful',
+        defaultMessage: error.message,
         duration: 6,
         hideExplicitly: true,
         message: (parsedMessages || {}).error,
@@ -168,7 +168,6 @@ class Actions {
 
   displayMessage({ defaultMessage, duration, hideExplicitly, message, status }) {
     let close = () => undefined;
-
     if ((hideExplicitly && message !== false) || (!hideExplicitly && !type.isNone(message))) {
       close = this.context.lowdefy.displayMessage({
         content: type.isString(message) ? message : defaultMessage,

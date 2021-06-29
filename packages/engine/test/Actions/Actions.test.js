@@ -47,6 +47,7 @@ const eventName = 'eventName';
 
 // Comment out to use console.log
 console.log = () => {};
+console.error = () => {};
 
 beforeEach(() => {
   global.Date = mockDate;
@@ -304,8 +305,63 @@ test('operators are evaluated in error messages after error', async () => {
   ]);
 });
 
-// TODO: text this with _event error.
-test('operator error in error messages parser', async () => {
+test('action error in error messages from same action id', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+  });
+  const Actions = context.Actions;
+  await Actions.callActions({
+    actions: [
+      {
+        id: 'one',
+        type: 'ActionSync',
+        params: 'one response',
+      },
+      {
+        id: 'two',
+        type: 'ActionError',
+        messages: {
+          success: 'suc',
+          error: {
+            '_string.concat': [
+              'Result one: ',
+              {
+                _actions: 'one.response',
+              },
+              ' - Result two: ',
+              {
+                _actions: 'two.error',
+              },
+            ],
+          },
+        },
+      },
+    ],
+    catchActions: [],
+    arrayIndices: [1],
+    block: { blockId: 'blockId' },
+    event: {},
+    eventName,
+  });
+  expect(displayMessage.mock.calls).toEqual([
+    [
+      {
+        content: 'Result one: one response - Result two: Error: Test error',
+        duration: 6,
+        status: 'error',
+      },
+    ],
+  ]);
+});
+
+test('action error in error parser', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -320,14 +376,20 @@ test('operator error in error messages parser', async () => {
   const res = await Actions.callActions({
     actions: [
       {
-        id: 'test',
+        id: 'two',
         type: 'ActionError',
         messages: {
           success: 'suc',
           error: {
-            '_json.xyz': [
+            _divide: [
+              3,
               {
-                data: 1234,
+                _if_none: [
+                  {
+                    _actions: 'two.error',
+                  },
+                  1,
+                ],
               },
             ],
           },
@@ -340,37 +402,16 @@ test('operator error in error messages parser', async () => {
     event: {},
     eventName,
   });
-  expect(res).toEqual({
-    blockId: 'blockId',
-    endTimestamp: { date: 0 },
-    error: {
-      action: {
-        id: 'test',
-        messages: { error: { '_json.xyz': [{ data: 1234 }] }, success: 'suc' },
-        type: 'ActionError',
-      },
-      error: {
-        error:
-          new Error(`Operator Error: _json.xyz is not supported, use one of the following: stringify, parse.
-      Received: {"_json.xyz":[{"data":1234}]} at blockId.`),
-        index: 0,
-        type: 'ActionError',
-      },
-    },
-    event: {},
-    eventName: 'eventName',
-    responses: {
-      test: {
-        error:
-          new Error(`Operator Error: _json.xyz is not supported, use one of the following: stringify, parse.
-      Received: {"_json.xyz":[{"data":1234}]} at blockId.`),
-        index: 0,
-        type: 'ActionError',
-      },
-    },
-    startTimestamp: { date: 0 },
-    success: false,
-  });
+  expect(res.responses.two.error).toEqual(
+    new Error(
+      'Operator Error: _divide takes an array of 2 numbers. Received: [3,{"name":"Error"}] at blockId.'
+    )
+  );
+  expect(res.error.error.error).toEqual(
+    new Error(
+      'Operator Error: _divide takes an array of 2 numbers. Received: [3,{"name":"Error"}] at blockId.'
+    )
+  );
 });
 
 test('error with messages undefined', async () => {
@@ -401,7 +442,7 @@ test('error with messages undefined', async () => {
   expect(displayMessage.mock.calls).toEqual([
     [
       {
-        content: 'Action unsuccessful',
+        content: 'Test error',
         duration: 6,
         status: 'error',
       },
@@ -802,7 +843,7 @@ test('Display error message by default', async () => {
   expect(displayMessage.mock.calls).toEqual([
     [
       {
-        content: 'Action unsuccessful',
+        content: 'Test error',
         duration: 6,
         status: 'error',
       },
