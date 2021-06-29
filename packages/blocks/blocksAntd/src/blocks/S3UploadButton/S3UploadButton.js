@@ -42,7 +42,7 @@ const getCustomRequest =
         throw new Error('S3 post policy request error.');
       }
 
-      const { url, fields } = s3PostPolicyResponse.responses[0].response[0];
+      const { url, fields } = s3PostPolicyResponse.responses.__getS3PostPolicy.response[0];
       const { bucket, key } = fields;
 
       setS3Parameters((prevState) => {
@@ -73,6 +73,7 @@ const getCustomRequest =
       xhr.open('post', url);
       xhr.send(formData);
     } catch (error) {
+      console.error(error);
       onError(error);
     }
   };
@@ -90,7 +91,7 @@ const S3UploadButtonBlock = ({ blockId, events, methods, properties, value }) =>
       name: '__getS3PostPolicy',
       actions: [
         {
-          id: `${blockId}__getS3PostPolicy`,
+          id: '__getS3PostPolicy',
           type: 'Request',
           params: [properties.s3PostPolicyRequestId],
         },

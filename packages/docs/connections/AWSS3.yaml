@@ -180,7 +180,7 @@ _ref:
                         "*"
                     ],
                     "AllowedMethods": [
-                        "*"
+                        "GET", "PUT", "POST", "DELETE", "HEAD"
                     ],
                     "AllowedOrigins": [
                         "https://YOUR_LOWDEFY_DOMAIN_HERE"
