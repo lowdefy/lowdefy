@@ -256,6 +256,159 @@ test('operators are evaluated in params, skip and messages', async () => {
   ]);
 });
 
+test('operators are evaluated in error messages after error', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+  });
+  const Actions = context.Actions;
+  await Actions.callActions({
+    actions: [
+      {
+        id: 'test',
+        type: 'ActionError',
+        messages: {
+          success: 'suc',
+          error: {
+            '_json.stringify': [
+              {
+                data: 1234,
+              },
+            ],
+          },
+        },
+      },
+    ],
+    catchActions: [],
+    arrayIndices: [1],
+    block: { blockId: 'blockId' },
+    event: {},
+    eventName,
+  });
+  expect(displayMessage.mock.calls).toEqual([
+    [
+      {
+        content: `{
+  \"data\": 1234
+}`,
+        duration: 6,
+        status: 'error',
+      },
+    ],
+  ]);
+});
+
+// TODO: text this with _event error.
+test('operator error in error messages parser', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+  });
+  const Actions = context.Actions;
+  const res = await Actions.callActions({
+    actions: [
+      {
+        id: 'test',
+        type: 'ActionError',
+        messages: {
+          success: 'suc',
+          error: {
+            '_json.xyz': [
+              {
+                data: 1234,
+              },
+            ],
+          },
+        },
+      },
+    ],
+    catchActions: [],
+    arrayIndices: [1],
+    block: { blockId: 'blockId' },
+    event: {},
+    eventName,
+  });
+  expect(res).toEqual({
+    blockId: 'blockId',
+    endTimestamp: { date: 0 },
+    error: {
+      action: {
+        id: 'test',
+        messages: { error: { '_json.xyz': [{ data: 1234 }] }, success: 'suc' },
+        type: 'ActionError',
+      },
+      error: {
+        error:
+          new Error(`Operator Error: _json.xyz is not supported, use one of the following: stringify, parse.
+      Received: {"_json.xyz":[{"data":1234}]} at blockId.`),
+        index: 0,
+        type: 'ActionError',
+      },
+    },
+    event: {},
+    eventName: 'eventName',
+    responses: {
+      test: {
+        error:
+          new Error(`Operator Error: _json.xyz is not supported, use one of the following: stringify, parse.
+      Received: {"_json.xyz":[{"data":1234}]} at blockId.`),
+        index: 0,
+        type: 'ActionError',
+      },
+    },
+    startTimestamp: { date: 0 },
+    success: false,
+  });
+});
+
+test('error with messages undefined', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+  });
+  const Actions = context.Actions;
+  await Actions.callActions({
+    actions: [
+      {
+        id: 'test',
+        type: 'ActionError',
+      },
+    ],
+    catchActions: [],
+    arrayIndices: [1],
+    block: { blockId: 'blockId' },
+    event: {},
+    eventName,
+  });
+  expect(displayMessage.mock.calls).toEqual([
+    [
+      {
+        content: 'Action unsuccessful',
+        duration: 6,
+        status: 'error',
+      },
+    ],
+  ]);
+});
+
 test('skip a action', async () => {
   const rootBlock = {
     blockId: 'root',

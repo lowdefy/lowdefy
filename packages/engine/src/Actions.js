@@ -132,12 +132,23 @@ class Actions {
         params: parsedAction.params,
       });
     } catch (error) {
+      const { output: parsedMessages, errors: parserErrors } = this.context.parser.parse({
+        actions: responses,
+        event,
+        arrayIndices,
+        input: action.messages,
+        location: block.blockId,
+      });
+      if (parserErrors.length > 0) {
+        // this condition is very unlikely since parser errors usually occur in the first parse.
+        throw { error: parserErrors[0], type: action.type, index };
+      }
       closeLoading();
       this.displayMessage({
         defaultMessage: error.lowdefyMessage || 'Action unsuccessful',
         duration: 6,
         hideExplicitly: true,
-        message: messages.error,
+        message: (parsedMessages || {}).error,
         status: 'error',
       });
       throw {
