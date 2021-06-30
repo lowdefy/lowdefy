@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.18.1](https://github.com/lowdefy/lowdefy/compare/v3.18.0...v3.18.1) (2021-06-30)
+
+## Changes
+
+### Fixes
+
+- Fix S3UploadButton block.
+- Evaluate actions with error messages #663.
+- Replace 'Action unsuccessful' error message with message provided by Error.
+- Serializer to maintain Errors #664.
+- Fix \_location.
+
+## Commits
+
+### Bug Fixes
+
+- **blocksAntd:** Fix S3UploadButton block to new responses schema. ([37a15bf](https://github.com/lowdefy/lowdefy/commit/37a15bf6c56519565ef1b62e38dc021eeea71262))
+- **blocksAntd:** Update snapshots. ([43b23f4](https://github.com/lowdefy/lowdefy/commit/43b23f484fd6a00a3029fa9fe6389f6a7f796097))
+- **docs:** Fix typo in mql example. ([22ca375](https://github.com/lowdefy/lowdefy/commit/22ca375a8eaa54f193f06614ddbdc049989a1d2c))
+- **engine:** Evaluate action error messages after error. closes [#663](https://github.com/lowdefy/lowdefy/issues/663) ([514fd14](https://github.com/lowdefy/lowdefy/commit/514fd14ce234d19bf2661a55be328e992102b546))
+- **engine:** Remove error.lowdefyMessage. ([9f8590f](https://github.com/lowdefy/lowdefy/commit/9f8590f0d7a18a77a49235c0bc24798120062c66))
+- **engine:** Responses for actions and tests using \_actions in messages. ([38cf7ef](https://github.com/lowdefy/lowdefy/commit/38cf7ef35843ad8494fa2a9829b9ddbed33f0ca6))
+- **engine:** Up test covarage in Wait. ([a40ad4f](https://github.com/lowdefy/lowdefy/commit/a40ad4f7246c7ed0584fd3747f7a21e31832af96))
+- **helpers:** Serializer to maintain error. closes [#664](https://github.com/lowdefy/lowdefy/issues/664) ([bfbdf58](https://github.com/lowdefy/lowdefy/commit/bfbdf585ab65ec108fa90750242a39eaf0c4be63))
+- **operators:** Do not copy window.location in \_location. ([61f6215](https://github.com/lowdefy/lowdefy/commit/61f6215ee31a99ac5bbaf81c4ff7120ba5f51eda))
+- **shell:** Add dev build option to serve renderer from localhost. ([3f3840d](https://github.com/lowdefy/lowdefy/commit/3f3840d70a1d8276a4b31f99d79f7502429b9be7))
+
 # [3.18.0](https://github.com/lowdefy/lowdefy/compare/v3.17.2...v3.18.0) (2021-06-17)
 
 ## Changes

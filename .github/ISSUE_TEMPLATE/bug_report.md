@@ -1,22 +1,23 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Something is not working right. Or error messages are unclear.
 title: ''
 labels: bug
 assignees: ''
 ---
 
-**Describe the bug**
+#### Describe the bug
+
 A clear and concise description of what the bug is.
 
-**To Reproduce**
-Example configuration reproducing the issue, or steps to reproduce the behavior:
+#### To Reproduce
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+Example configuration reproducing the issue, or steps to reproduce the behavior.
 
-**Screenshots**
+#### Screenshots
+
 If applicable, add screenshots to help explain your problem.
 
-**Lowdefy Version**
+#### Lowdefy Version
+
 Version (or version range) on which you experienced this issue.

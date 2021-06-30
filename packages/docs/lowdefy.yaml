@@ -13,8 +13,11 @@
 # limitations under the License.
 
 name: '@lowdefy/docs'
-lowdefy: 3.18.0
+lowdefy: 3.18.1
 licence: Apache-2.0
+
+cli:
+  disableTelemetry: true
 
 global:
   all_icons:

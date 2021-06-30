@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.18.1](https://github.com/lowdefy/lowdefy/compare/v3.18.0...v3.18.1) (2021-06-30)
+
+
+### Bug Fixes
+
+* **helpers:** Serializer to maintain error. closes [#664](https://github.com/lowdefy/lowdefy/issues/664) ([bfbdf58](https://github.com/lowdefy/lowdefy/commit/bfbdf585ab65ec108fa90750242a39eaf0c4be63))
+
+
+
+
+
 # [3.18.0](https://github.com/lowdefy/lowdefy/compare/v3.17.2...v3.18.0) (2021-06-17)
 
 **Note:** Version bump only for package @lowdefy/helpers

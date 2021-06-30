@@ -47,6 +47,7 @@ const eventName = 'eventName';
 
 // Comment out to use console.log
 console.log = () => {};
+console.error = () => {};
 
 beforeEach(() => {
   global.Date = mockDate;
@@ -249,6 +250,199 @@ test('operators are evaluated in params, skip and messages', async () => {
     [
       {
         content: 'err',
+        duration: 6,
+        status: 'error',
+      },
+    ],
+  ]);
+});
+
+test('operators are evaluated in error messages after error', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+  });
+  const Actions = context.Actions;
+  await Actions.callActions({
+    actions: [
+      {
+        id: 'test',
+        type: 'ActionError',
+        messages: {
+          success: 'suc',
+          error: {
+            '_json.stringify': [
+              {
+                data: 1234,
+              },
+            ],
+          },
+        },
+      },
+    ],
+    catchActions: [],
+    arrayIndices: [1],
+    block: { blockId: 'blockId' },
+    event: {},
+    eventName,
+  });
+  expect(displayMessage.mock.calls).toEqual([
+    [
+      {
+        content: `{
+  \"data\": 1234
+}`,
+        duration: 6,
+        status: 'error',
+      },
+    ],
+  ]);
+});
+
+test('action error in error messages from same action id', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+  });
+  const Actions = context.Actions;
+  await Actions.callActions({
+    actions: [
+      {
+        id: 'one',
+        type: 'ActionSync',
+        params: 'one response',
+      },
+      {
+        id: 'two',
+        type: 'ActionError',
+        messages: {
+          success: 'suc',
+          error: {
+            '_string.concat': [
+              'Result one: ',
+              {
+                _actions: 'one.response',
+              },
+              ' - Result two: ',
+              {
+                _actions: 'two.error',
+              },
+            ],
+          },
+        },
+      },
+    ],
+    catchActions: [],
+    arrayIndices: [1],
+    block: { blockId: 'blockId' },
+    event: {},
+    eventName,
+  });
+  expect(displayMessage.mock.calls).toEqual([
+    [
+      {
+        content: 'Result one: one response - Result two: Error: Test error',
+        duration: 6,
+        status: 'error',
+      },
+    ],
+  ]);
+});
+
+test('action error in error parser', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+  });
+  const Actions = context.Actions;
+  const res = await Actions.callActions({
+    actions: [
+      {
+        id: 'two',
+        type: 'ActionError',
+        messages: {
+          success: 'suc',
+          error: {
+            _divide: [
+              3,
+              {
+                _if_none: [
+                  {
+                    _actions: 'two.error',
+                  },
+                  1,
+                ],
+              },
+            ],
+          },
+        },
+      },
+    ],
+    catchActions: [],
+    arrayIndices: [1],
+    block: { blockId: 'blockId' },
+    event: {},
+    eventName,
+  });
+  expect(res.responses.two.error).toEqual(
+    new Error(
+      'Operator Error: _divide takes an array of 2 numbers. Received: [3,{"name":"Error"}] at blockId.'
+    )
+  );
+  expect(res.error.error.error).toEqual(
+    new Error(
+      'Operator Error: _divide takes an array of 2 numbers. Received: [3,{"name":"Error"}] at blockId.'
+    )
+  );
+});
+
+test('error with messages undefined', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+  });
+  const Actions = context.Actions;
+  await Actions.callActions({
+    actions: [
+      {
+        id: 'test',
+        type: 'ActionError',
+      },
+    ],
+    catchActions: [],
+    arrayIndices: [1],
+    block: { blockId: 'blockId' },
+    event: {},
+    eventName,
+  });
+  expect(displayMessage.mock.calls).toEqual([
+    [
+      {
+        content: 'Test error',
         duration: 6,
         status: 'error',
       },
@@ -649,7 +843,7 @@ test('Display error message by default', async () => {
   expect(displayMessage.mock.calls).toEqual([
     [
       {
-        content: 'Action unsuccessful',
+        content: 'Test error',
         duration: 6,
         status: 'error',
       },
