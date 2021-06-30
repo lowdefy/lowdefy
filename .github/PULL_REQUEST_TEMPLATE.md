@@ -2,7 +2,8 @@
 Thanks for opening a PR! Your contribution is much appreciated.
 To make sure your PR is handled as smoothly as possible please:
  - Link issue via "Closes #[issue_number]
- - Choose & follow the right checklist for the change that you're making:
+ - Describe your changes and their implications. If the changes cause breaking changes in Lowdefy configuration, please state this.
+ - Follow the checklist and complete everything that is applicable
 -->
 
 Closes: ?
