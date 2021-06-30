@@ -464,3 +464,38 @@ test('serializeToString isoStringDates', () => {
     '{"a":[{"_date":"1970-01-01T00:00:00.000Z"}]}'
   );
 });
+
+test('serialize convert Error to _error', () => {
+  let object = {
+    a: new Error('Test error'),
+  };
+  expect(serializer.serialize(object)).toEqual({
+    a: { _error: { message: 'Test error', name: 'Error', value: 'Error: Test error' } },
+  });
+});
+
+test('serializeToString convert Error to _error', () => {
+  let object = {
+    a: new Error('Test error'),
+  };
+  expect(serializer.serializeToString(object)).toEqual(
+    '{"a":{"_error":{"name":"Error","message":"Test error","value":"Error: Test error"}}}'
+  );
+});
+
+test('deserialize revive _error to Error', () => {
+  let object = {
+    a: { _error: { message: 'Test error', name: 'Error', value: 'Error: Test error' } },
+  };
+  expect(serializer.deserialize(object)).toEqual({
+    a: new Error('Test error'),
+  });
+});
+
+test('deserializeFromString revive _error to Error', () => {
+  let object =
+    '{"a": {"_error": {"message": "Test error", "name": "Error", "value": "Error: Test error"}}}';
+  expect(serializer.deserializeFromString(object)).toEqual({
+    a: new Error('Test error'),
+  });
+});

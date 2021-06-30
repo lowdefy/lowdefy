@@ -28,6 +28,15 @@ const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
   if (customReplacer) {
     newValue = customReplacer(key, value);
   }
+  if (type.isError(newValue)) {
+    return {
+      _error: {
+        name: newValue.name,
+        message: newValue.message,
+        value: newValue.toString(),
+      },
+    };
+  }
   if (type.isObject(newValue)) {
     Object.keys(newValue).forEach((k) => {
       if (type.isDate(newValue[k])) {
@@ -53,6 +62,11 @@ const makeReviver = (customReviver) => (key, value) => {
   let newValue = value;
   if (customReviver) {
     newValue = customReviver(key, value);
+  }
+  if (type.isObject(newValue) && !type.isUndefined(newValue._error)) {
+    const error = new Error(newValue._error.message);
+    error.name = newValue._error.name;
+    return error;
   }
   if (type.isObject(newValue) && !type.isUndefined(newValue._date)) {
     if (type.isInt(newValue._date)) {

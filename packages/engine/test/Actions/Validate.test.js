@@ -751,7 +751,7 @@ test('Invalid Validate params', async () => {
     Array [
       Array [
         Object {
-          "content": "Action unsuccessful",
+          "content": "Invalid validate params.",
           "duration": 6,
           "status": "error",
         },
