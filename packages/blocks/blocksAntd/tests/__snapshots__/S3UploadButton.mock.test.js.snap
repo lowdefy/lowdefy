@@ -12,7 +12,7 @@ Array [
           Object {
             "__getS3PostPolicy": Array [
               Object {
-                "id": "default__getS3PostPolicy",
+                "id": "__getS3PostPolicy",
                 "params": Array [
                   "s3PostPolicyRequestId",
                 ],
@@ -69,7 +69,7 @@ Array [
           Object {
             "__getS3PostPolicy": Array [
               Object {
-                "id": "default__getS3PostPolicy",
+                "id": "__getS3PostPolicy",
                 "params": Array [
                   "s3PostPolicyRequestId",
                 ],
@@ -131,7 +131,7 @@ Array [
           Object {
             "__getS3PostPolicy": Array [
               Object {
-                "id": "properties.accept__getS3PostPolicy",
+                "id": "__getS3PostPolicy",
                 "params": Array [
                   "s3PostPolicyRequestId",
                 ],
@@ -188,7 +188,7 @@ Array [
           Object {
             "__getS3PostPolicy": Array [
               Object {
-                "id": "properties.accept__getS3PostPolicy",
+                "id": "__getS3PostPolicy",
                 "params": Array [
                   "s3PostPolicyRequestId",
                 ],
@@ -250,7 +250,7 @@ Array [
           Object {
             "__getS3PostPolicy": Array [
               Object {
-                "id": "properties.button__getS3PostPolicy",
+                "id": "__getS3PostPolicy",
                 "params": Array [
                   "s3PostPolicyRequestId",
                 ],
@@ -307,7 +307,7 @@ Array [
           Object {
             "__getS3PostPolicy": Array [
               Object {
-                "id": "properties.button__getS3PostPolicy",
+                "id": "__getS3PostPolicy",
                 "params": Array [
                   "s3PostPolicyRequestId",
                 ],
@@ -369,7 +369,7 @@ Array [
           Object {
             "__getS3PostPolicy": Array [
               Object {
-                "id": "properties.disabled__getS3PostPolicy",
+                "id": "__getS3PostPolicy",
                 "params": Array [
                   "s3PostPolicyRequestId",
                 ],
@@ -426,7 +426,7 @@ Array [
           Object {
             "__getS3PostPolicy": Array [
               Object {
-                "id": "properties.disabled__getS3PostPolicy",
+                "id": "__getS3PostPolicy",
                 "params": Array [
                   "s3PostPolicyRequestId",
                 ],
@@ -488,7 +488,7 @@ Array [
           Object {
             "__getS3PostPolicy": Array [
               Object {
-                "id": "properties.showUploadList__getS3PostPolicy",
+                "id": "__getS3PostPolicy",
                 "params": Array [
                   "s3PostPolicyRequestId",
                 ],
@@ -545,7 +545,7 @@ Array [
           Object {
             "__getS3PostPolicy": Array [
               Object {
-                "id": "properties.showUploadList__getS3PostPolicy",
+                "id": "__getS3PostPolicy",
                 "params": Array [
                   "s3PostPolicyRequestId",
                 ],
@@ -607,7 +607,7 @@ Array [
           Object {
             "__getS3PostPolicy": Array [
               Object {
-                "id": "properties.singleFile__getS3PostPolicy",
+                "id": "__getS3PostPolicy",
                 "params": Array [
                   "s3PostPolicyRequestId",
                 ],
@@ -664,7 +664,7 @@ Array [
           Object {
             "__getS3PostPolicy": Array [
               Object {
-                "id": "properties.singleFile__getS3PostPolicy",
+                "id": "__getS3PostPolicy",
                 "params": Array [
                   "s3PostPolicyRequestId",
                 ],

@@ -66,7 +66,7 @@ _ref:
         examples: |
           ###### Calculate an average of three inputs:
           ```yaml
-          _mql.aggregate:
+          _mql.expr:
             expr:
               $avg:
                 - $input1
