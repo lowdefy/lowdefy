@@ -52,10 +52,13 @@ _ref:
               - id: elasticsearch
                 type: Elasticsearch
                 properties:
-                  node: ELASTICSEARCH_HOST
+                  node:
+                    _secret: ELASTICSEARCH_HOST
                   auth:
-                    username: ELASTICSEARCH_USER
-                    password: ELASTICSEARCH_PASSWORD
+                    username:
+                      _secret: ELASTICSEARCH_USER
+                    password:
+                      _secret: ELASTICSEARCH_PASSWORD
             ```
             Environment variables:
             ```
@@ -70,8 +73,10 @@ _ref:
               - id: elasticsearch
                 type: Elasticsearch
                 properties:
-                  node: ELASTICSEARCH_HOST
-                  index: ELASTICSEARCH_INDEX
+                  node:
+                    _secret: ELASTICSEARCH_HOST
+                  index:
+                    _secret: ELASTICSEARCH_INDEX
             ```
             Environment variables:
             ```
