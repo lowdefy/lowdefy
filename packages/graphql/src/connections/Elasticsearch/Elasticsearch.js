@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import schema              from './ElasticsearchSchema.json';
+import schema from './ElasticsearchSchema.json';
 import ElasticsearchSearch from './ElasticsearchSearch/ElasticsearchSearch';
 
 export default {
-    schema,
-    requests: {
-        ElasticsearchSearch,
-    },
+  schema,
+  requests: {
+    ElasticsearchSearch,
+  },
 };
