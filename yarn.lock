@@ -1777,6 +1777,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@elastic/elasticsearch@npm:7.13.0":
+  version: 7.13.0
+  resolution: "@elastic/elasticsearch@npm:7.13.0"
+  dependencies:
+    debug: ^4.3.1
+    hpagent: ^0.1.1
+    ms: ^2.1.3
+    secure-json-parse: ^2.4.0
+  checksum: 9881b32643540512947ed55253005fb2c42ad41a4f4cb304c643a2ffa58fef3f23eb4eacd3c35e2a7bb16c4ce6837fff7668b974bed088a4f734507514cdaa1f
+  languageName: node
+  linkType: hard
+
 "@emotion/cache@npm:^10.0.27":
   version: 10.0.29
   resolution: "@emotion/cache@npm:10.0.29"
@@ -3267,6 +3279,7 @@ __metadata:
     "@babel/cli": 7.14.3
     "@babel/core": 7.14.3
     "@babel/preset-env": 7.14.4
+    "@elastic/elasticsearch": 7.13.0
     "@lowdefy/ajv": 3.18.1
     "@lowdefy/helpers": 3.18.1
     "@lowdefy/node-utils": 3.18.1
@@ -8037,7 +8050,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:4, debug@npm:^4, debug@npm:^4.0.0, debug@npm:^4.0.1, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.2.0":
+"debug@npm:4, debug@npm:^4, debug@npm:^4.0.0, debug@npm:^4.0.1, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.2.0, debug@npm:^4.3.1":
   version: 4.3.2
   resolution: "debug@npm:4.3.2"
   dependencies:
@@ -10993,6 +11006,13 @@ fsevents@^1.2.7:
     readable-stream: ^2.0.1
     wbuf: ^1.1.0
   checksum: a22a28aa318167f29d65994ac28a238356142a3dcbcdcf20b0a87f14a746af7017596c91a895933d79ee68edf0303a4de5e629a2141cb1dbddb2cd9cad07418b
+  languageName: node
+  linkType: hard
+
+"hpagent@npm:^0.1.1":
+  version: 0.1.2
+  resolution: "hpagent@npm:0.1.2"
+  checksum: a94ce21d487ebd69481b80d46bcc9336cd81bd27145ef1c21779782d516fd71504180809e1474f02aa06ab9ae0a201b6a66e4732a46db6e4175d31ef3026c67c
   languageName: node
   linkType: hard
 
@@ -14583,7 +14603,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"ms@npm:^2.0.0, ms@npm:^2.1.1":
+"ms@npm:^2.0.0, ms@npm:^2.1.1, ms@npm:^2.1.3":
   version: 2.1.3
   resolution: "ms@npm:2.1.3"
   checksum: 6e721e648a544154d5de4c114b32f573d8027ca8ec505cf6c1105e505986d6ac46934a1256735aa0eece8eb2f5b2a1230503b2dddd3b100f9f016fd8a4f15f33
@@ -18598,6 +18618,13 @@ resolve@^2.0.0-next.3:
   dependencies:
     compute-scroll-into-view: ^1.0.17
   checksum: 13417602248ffe5a371ce83c6c1471d6859683007ee65c7b5d103641f104b5821c04175afbd19a86bb4df140f137439d3aa96528fea16cd6be2f9cdb53ce427a
+  languageName: node
+  linkType: hard
+
+"secure-json-parse@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "secure-json-parse@npm:2.4.0"
+  checksum: bbf325b52d3eb399b23a337ef7185380424600b4d6c07e62e8d1ab9e9cc657258b897841e4da1ecca9c9d4a83e426756f74fff1685640b3fbe4f481f577517d4
   languageName: node
   linkType: hard
 
