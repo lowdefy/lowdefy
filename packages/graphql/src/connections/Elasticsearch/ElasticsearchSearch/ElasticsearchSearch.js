@@ -15,6 +15,7 @@
 */
 
 import { Client } from '@elastic/elasticsearch';
+import { get } from '@lowdefy/helpers';
 import schema from './ElasticsearchSearch.json';
 
 async function elasticsearchSearch({ request, connection }) {
@@ -46,7 +47,7 @@ async function elasticsearchSearch({ request, connection }) {
 
   // Use the actual documents from the response as the base return value, then
   // augment it with the additional, potentially interesting props.
-  const hits = response.body?.hits?.hits || [];
+  const hits = get(response, 'body.hits.hits', { default: [] });
 
   // Map the documents to a more useful representation in our context: We
   // merge the document ID, the source fields, and the document metadata into
@@ -73,7 +74,7 @@ async function elasticsearchSearch({ request, connection }) {
   // always override the document ID.
   const items = hits.map((hit) => ({
     id: hit._id,
-    ...(hit?._source || {}),
+    ...get(hit, '_source', { default: {} }),
     ...hit,
   }));
 
@@ -82,7 +83,7 @@ async function elasticsearchSearch({ request, connection }) {
   // annoying if missing.
   items.response = response.body;
 
-  const total = response.body?.hits?.total || {};
+  const total = get(response, 'body.hits.total', { default: {} });
 
   // Set the total number of results for convenience. If Elasticsearch
   // indicates it has more than 10k results, set the counter to Infinity to
@@ -90,8 +91,8 @@ async function elasticsearchSearch({ request, connection }) {
   // access the real total object if they need more details.
   items.total = total.relation === 'gte' && total.value === 10_000 ? Infinity : total.value || 0;
 
-  items.maxScore = response.body?.hits?.max_score || 0;
-  items.aggregations = response.body?.aggregations || {};
+  items.maxScore = get(response, 'body.hits.max_score', { default: 0 });
+  items.aggregations = get(response, 'body.aggregations', { default: {} });
 
   return items;
 }
