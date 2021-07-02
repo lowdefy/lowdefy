@@ -32,6 +32,7 @@ jobs:
         with:
           coverageLocations: |
             ${{github.workspace}}/packages/**/coverage/lcov.info:lcov
+        continue-on-error: true
 
   test-blocks:
     name: Test blocks
@@ -61,6 +62,7 @@ jobs:
         with:
           coverageLocations: |
             ${{github.workspace}}/packages/**/coverage/lcov.info:lcov
+        continue-on-error: true
 
   check-yarn-cache:
     name: Check yarn cache
