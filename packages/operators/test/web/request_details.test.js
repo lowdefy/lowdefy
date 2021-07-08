@@ -41,6 +41,7 @@ test('_request_details all requests', async () => {
     string: { loading: false, response: 'request String' },
     number: { loading: false, response: 500 },
     arr: { loading: false, response: [{ a: 'request a1' }, { a: 'request a2' }] },
+    returnsNull: { loading: false, response: null },
   });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -94,6 +95,7 @@ test('_request_details param object all', async () => {
     string: { loading: false, response: 'request String' },
     number: { loading: false, response: 500 },
     arr: { loading: false, response: [{ a: 'request a1' }, { a: 'request a2' }] },
+    returnsNull: { loading: false, response: null },
   });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -113,6 +115,7 @@ test('_request_details param object all and key', async () => {
     string: { loading: false, response: 'request String' },
     number: { loading: false, response: 500 },
     arr: { loading: false, response: [{ a: 'request a1' }, { a: 'request a2' }] },
+    returnsNull: { loading: false, response: null },
   });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });

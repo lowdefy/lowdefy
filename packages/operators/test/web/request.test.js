@@ -102,3 +102,12 @@ test('_request dot notation with arrayindices', async () => {
   expect(res.output).toEqual('request a2');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
+
+test('_request dot notation returns null if ', async () => {
+  const input = { _request: 'returnsNull.key' };
+  const parser = new WebParser({ context, contexts });
+  await parser.init();
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  expect(res.output).toEqual(null);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
