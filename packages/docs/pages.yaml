@@ -122,6 +122,7 @@
 - _ref: connections/AmazonRedshift.yaml
 - _ref: connections/AWSS3.yaml
 - _ref: connections/AxiosHttp.yaml
+- _ref: connections/Elasticsearch.yaml
 - _ref: connections/GoogleSheet.yaml
 - _ref: connections/Knex.yaml
 - _ref: connections/MariaDB.yaml

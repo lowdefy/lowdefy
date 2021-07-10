@@ -462,6 +462,11 @@
           pageId: AxiosHttp
           properties:
             title: Axios HTTP
+        - id: Elasticsearch
+          type: MenuLink
+          pageId: Elasticsearch
+          properties:
+            title: Elasticsearch
         - id: GoogleSheet
           type: MenuLink
           pageId: GoogleSheet
