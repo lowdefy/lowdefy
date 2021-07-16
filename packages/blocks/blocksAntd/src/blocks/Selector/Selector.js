@@ -76,7 +76,7 @@ const Selector = ({
               }
               showArrow={properties.showArrow}
               allowClear={properties.allowClear !== false}
-              showSearch={properties.showSearch}
+              showSearch={get(properties, 'showSearch', { default: true })}
               size={properties.size}
               filterOption={(input, option) =>
                 option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
