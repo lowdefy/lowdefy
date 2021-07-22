@@ -33,14 +33,6 @@ test('valid connection schema, single node', () => {
   };
   expect(validate({ schema, data: connection })).toEqual({ valid: true });
   connection = {
-    node: ['http://localhost:9200'],
-  };
-  expect(validate({ schema, data: connection })).toEqual({ valid: true });
-  connection = {
-    nodes: ['http://localhost:9200'],
-  };
-  expect(validate({ schema, data: connection })).toEqual({ valid: true });
-  connection = {
     node: {
       url: 'http://localhost:9200',
     },
