@@ -95,7 +95,7 @@ test('_change_case.capitalCase on: object, options: {convertKeys: false}', () =>
   ).toEqual({ field_1: 'Test String 1', field_2: 'Test String 2' });
 });
 
-test('_change_case.capitalCase on: object, options: {}', () => {
+test('_change_case.capitalCase on: object, options: {}. options.convertValue default true', () => {
   expect(
     change_case({
       params: {
@@ -106,6 +106,26 @@ test('_change_case.capitalCase on: object, options: {}', () => {
       methodName: 'capitalCase',
     })
   ).toEqual({ field_1: 'Test String 1', field_2: 'Test String 2' });
+});
+
+test('_change_case.capitalCase on: object nested', () => {
+  expect(
+    change_case({
+      params: {
+        on: {
+          field_1: 'test string 1',
+          field_2: 'test string 2',
+          field_3: { nested_1: 'nested value 1', nested_2: 'nested value 2' },
+        },
+      },
+      location: 'locationId',
+      methodName: 'capitalCase',
+    })
+  ).toEqual({
+    field_1: 'Test String 1',
+    field_2: 'Test String 2',
+    field_3: { nested_1: 'nested value 1', nested_2: 'nested value 2' },
+  });
 });
 
 test('_change_case.capitalCase on: object, options: {convertKeys: true, convertValues: false}', () => {
@@ -139,6 +159,21 @@ test('_change_case.capitalCase on: object, options: {convertValues: false}', () 
   ).toEqual({ field_1: 'test string 1', field_2: 'test string 2' });
 });
 
+test('_change_case.capitalCase on: object, options: {convertValues: true}', () => {
+  expect(
+    change_case({
+      params: {
+        on: testObject,
+        options: {
+          convertValues: true,
+        },
+      },
+      location: 'locationId',
+      methodName: 'capitalCase',
+    })
+  ).toEqual({ field_1: 'Test String 1', field_2: 'Test String 2' });
+});
+
 test('_change_case.capitalCase on: object, options: {convertKeys: true, delimiter: "-" }', () => {
   expect(
     change_case({
@@ -167,7 +202,7 @@ test('_change_case.capitalCase on: date', () => {
   ).toEqual(new Date('2000-01-01'));
 });
 
-test('_change_case.capitalCase on: array including not numbers', () => {
+test('_change_case.capitalCase on: array including not strings', () => {
   expect(
     change_case({
       params: {
@@ -179,23 +214,17 @@ test('_change_case.capitalCase on: array including not numbers', () => {
   ).toEqual(['Test String', 1, 'Test String 2', { field: 'value' }]);
 });
 
-// test('_change_case.noCase on: string', () => {
-// });
-
-// test('_change_case.paramCase on: string', () => {
-// });
-
-// test('_change_case.pascalCase on: string', () => {
-// });
-
-// test('_change_case.pathCase on: string', () => {
-// });
-
-// test('_change_case.sentenceCase on: string', () => {
-// });
-
-// test('_change_case.snakeCase on: string', () => {
-// });
+test('_change_case.capitalCase on: array only not strings', () => {
+  expect(
+    change_case({
+      params: {
+        on: [new Date('2000-01-01'), 1, 3.14, { field: 'value' }],
+      },
+      location: 'locationId',
+      methodName: 'capitalCase',
+    })
+  ).toEqual([new Date('2000-01-01'), 1, 3.14, { field: 'value' }]);
+});
 
 test('_change_case.(AllMethods) on: string', () => {
   expect(
