@@ -94,8 +94,9 @@ _ref:
             The `ElasticsearchSearch` request searches the Elasticsearch index.
 
             #### Properties
-            - `query: object`: The Elasticsearch query, expressed in the [JSON Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html). If you need to pass custom request body attributes, you should wrap the query within another `query` property (in that case, the top-level `query` object will be used as `body`).
-            - `aggs: object[]`: The [aggregations](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html) to request from the server.
+            - `body: object` The Elasticsearch query body, expressed in the [JSON Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html).
+              - `query: object`: The Elasticsearch query.
+              - `aggs: object`: The [aggregations](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html) to request from the server.
             - `_source: string|string[]|boolean`: True or false to return the _source field or not, or a list of fields to return.
             - `_source_excludes: string|string[]`: A list of fields to exclude from the returned _source field.
             - `_source_includes: string|string[]`: A list of fields to extract and return from the _source field.
@@ -123,8 +124,9 @@ _ref:
                 connectionId: elasticsearch
                 properties:
                   size: 10
-                  query:
-                    match_all: {}
+                  body:
+                    query:
+                      match_all: {}
             ```
 
             ###### Find a document with ID 42.
@@ -135,9 +137,10 @@ _ref:
                 connectionId: elasticsearch
                 properties:
                   size: 1
-                  query:
-                    term:
-                      _id: 42
+                  body:
+                    query:
+                      term:
+                        _id: 42
             ```
 
             ###### Fetch articles between yesterday and today, aggregate by author.
@@ -149,13 +152,14 @@ _ref:
                 properties:
                   size: 1
                   type: article
-                  query:
-                    range:
-                      timestamp:
-                        gte: now-1d/d
-                        lt: now/d
-                  aggs:
-                    author_aggregation:
-                      terms:
-                        field: author
+                  body:
+                    query:
+                      range:
+                        timestamp:
+                          gte: now-1d/d
+                          lt: now/d
+                    aggs:
+                      author_aggregation:
+                        terms:
+                          field: author
             ```
