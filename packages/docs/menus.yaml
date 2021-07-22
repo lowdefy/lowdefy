@@ -573,6 +573,9 @@
         - id: _base64
           type: MenuLink
           pageId: _base64
+        - id: _change_case
+          type: MenuLink
+          pageId: _change_case
         - id: _date
           type: MenuLink
           pageId: _date
