@@ -13,24 +13,36 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-
-import * as changeCase from 'change-case';
+/* eslint-disable import/namespace */
+import {
+  camelCase,
+  capitalCase,
+  constantCase,
+  dotCase,
+  headerCase,
+  noCase,
+  paramCase,
+  pascalCase,
+  pathCase,
+  sentenceCase,
+  snakeCase,
+} from 'change-case';
 import { get, type } from '@lowdefy/helpers';
 import runClass from '../runClass';
 
-const supportedMethods = [
-  'camelCase',
-  'capitalCase',
-  'constantCase',
-  'dotCase',
-  'headerCase',
-  'noCase',
-  'paramCase',
-  'pascalCase',
-  'pathCase',
-  'sentenceCase',
-  'snakeCase',
-];
+const changeCase = {
+  camelCase,
+  capitalCase,
+  constantCase,
+  dotCase,
+  headerCase,
+  noCase,
+  paramCase,
+  pascalCase,
+  pathCase,
+  sentenceCase,
+  snakeCase,
+};
 
 const convertArray = ({ methodName, on, options }) => {
   return on.map((item) => {
@@ -41,17 +53,21 @@ const convertArray = ({ methodName, on, options }) => {
   });
 };
 
-const convertObject = ({ methodName, on, options = {} }) => {
+const convertObject = ({ methodName, on, options }) => {
   const result = {};
-  const keyConverter = options.convertKeys
+  const keyConverter = get(options, 'convertKeys')
     ? (key) => changeCase[methodName](key, options)
     : (key) => key;
   const valueConverter = get(options, 'convertValues', { default: true })
     ? (val) => changeCase[methodName](val, options)
     : (val) => val;
 
-  Object.entries(on).forEach((item) => {
-    result[keyConverter(item[0])] = valueConverter(item[1]);
+  Object.entries(on).forEach(([key, value]) => {
+    if (type.isString(value)) {
+      result[keyConverter(key)] = valueConverter(value);
+    } else {
+      result[keyConverter(key)] = value;
+    }
   });
   return result;
 };
@@ -59,21 +75,22 @@ const convertObject = ({ methodName, on, options = {} }) => {
 const makeCaseChanger =
   ({ methodName }) =>
   (on, options = {}) => {
-    if (type.isObject(on)) {
-      return convertObject({ methodName, on, options });
+    if (type.isString(on)) {
+      return changeCase[methodName](on, options);
     }
     if (type.isArray(on)) {
       return convertArray({ methodName, on, options });
     }
-    if (type.isString(on)) {
-      return changeCase[methodName](on, options);
+    if (type.isObject(on)) {
+      return convertObject({ methodName, on, options });
     }
     return on;
   };
 
 const functions = {};
 const meta = {};
-supportedMethods.forEach((methodName) => {
+
+Object.keys(changeCase).forEach((methodName) => {
   functions[methodName] = makeCaseChanger({ methodName });
   meta[methodName] = { namedArgs: ['on', 'options'], validTypes: ['array', 'object'] };
 });
