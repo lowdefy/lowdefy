@@ -189,7 +189,7 @@
         },
         "showSearch": {
           "type": "boolean",
-          "default": false,
+          "default": true,
           "description": "Make the selector options searchable."
         },
         "size": {

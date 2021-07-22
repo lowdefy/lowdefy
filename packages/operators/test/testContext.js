@@ -65,6 +65,7 @@ const context = {
     string: { loading: false, response: 'request String' },
     number: { loading: false, response: 500 },
     arr: { loading: false, response: [{ a: 'request a1' }, { a: 'request a2' }] },
+    returnsNull: { loading: false, response: null },
   },
   lowdefy,
   state: {
