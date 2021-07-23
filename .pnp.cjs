@@ -3185,6 +3185,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@elastic/elasticsearch", [
+        ["npm:7.13.0", {
+          "packageLocation": "./.yarn/cache/@elastic-elasticsearch-npm-7.13.0-5b187e9b28-9881b32643.zip/node_modules/@elastic/elasticsearch/",
+          "packageDependencies": [
+            ["@elastic/elasticsearch", "npm:7.13.0"],
+            ["debug", "virtual:48933b28331d16c1d73786360e7ba20f54f6df4949c6ab5c13ac4c4353b5c70f2d36a97de9a9c531027ad3588d8fd7f384706f298f0eff0356b58bb9c47f63ec#npm:4.3.2"],
+            ["hpagent", "npm:0.1.2"],
+            ["ms", "npm:2.1.3"],
+            ["secure-json-parse", "npm:2.4.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@emotion/cache", [
         ["npm:10.0.29", {
           "packageLocation": "./.yarn/cache/@emotion-cache-npm-10.0.29-076efd3781-a2bdf4dd21.zip/node_modules/@emotion/cache/",
@@ -4804,6 +4817,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:7.14.3"],
             ["@babel/core", "npm:7.14.3"],
             ["@babel/preset-env", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:7.14.4"],
+            ["@elastic/elasticsearch", "npm:7.13.0"],
             ["@lowdefy/ajv", "workspace:packages/ajv"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
             ["@lowdefy/node-utils", "workspace:packages/nodeUtils"],
@@ -15854,6 +15868,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["hpagent", [
+        ["npm:0.1.2", {
+          "packageLocation": "./.yarn/cache/hpagent-npm-0.1.2-f4fe59bad9-a94ce21d48.zip/node_modules/hpagent/",
+          "packageDependencies": [
+            ["hpagent", "npm:0.1.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["html-element-map", [
         ["npm:1.3.1", {
           "packageLocation": "./.yarn/cache/html-element-map-npm-1.3.1-b11927792a-4c2e1e43b7.zip/node_modules/html-element-map/",
@@ -25242,6 +25265,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["scroll-into-view-if-needed", "npm:2.2.28"],
             ["compute-scroll-into-view", "npm:1.0.17"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["secure-json-parse", [
+        ["npm:2.4.0", {
+          "packageLocation": "./.yarn/cache/secure-json-parse-npm-2.4.0-161f104c50-bbf325b52d.zip/node_modules/secure-json-parse/",
+          "packageDependencies": [
+            ["secure-json-parse", "npm:2.4.0"]
           ],
           "linkType": "HARD",
         }]
