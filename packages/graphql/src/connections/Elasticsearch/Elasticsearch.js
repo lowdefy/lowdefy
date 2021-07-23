@@ -14,22 +14,12 @@
   limitations under the License.
 */
 
-import AwsS3Bucket from './AwsS3Bucket/AwsS3Bucket';
-import AxiosHttp from './AxiosHttp/AxiosHttp';
-import Elasticsearch from './Elasticsearch/Elasticsearch';
-import GoogleSheet from './GoogleSheet/GoogleSheet';
-import Knex from './Knex/Knex';
-import MongoDBCollection from './MongoDBCollection/MongoDBCollection';
-import SendGridMail from './SendGridMail/SendGridMail';
+import schema from './ElasticsearchSchema.json';
+import ElasticsearchSearch from './ElasticsearchSearch/ElasticsearchSearch';
 
-const resolvers = {
-  AwsS3Bucket,
-  AxiosHttp,
-  Elasticsearch,
-  GoogleSheet,
-  Knex,
-  MongoDBCollection,
-  SendGridMail,
+export default {
+  schema,
+  requests: {
+    ElasticsearchSearch,
+  },
 };
-
-export default resolvers;
