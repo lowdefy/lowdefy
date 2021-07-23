@@ -67,7 +67,11 @@ function getServer({
 
   const server = express();
 
-  gqlServer.applyMiddleware({ app: server, path: gqlExpressPath || '/api/graphql' });
+  gqlServer.applyMiddleware({
+    app: server,
+    path: gqlExpressPath || '/api/graphql',
+    bodyParserConfig: { limit: '5mb' },
+  });
 
   if (serveStaticFiles) {
     // serve index.html with appended html
