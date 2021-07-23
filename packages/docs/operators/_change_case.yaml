@@ -25,8 +25,8 @@ _ref:
       The `_change_case` operator takes `on` and `options` as arguments.
       The `on` argument is the input to be transformed and can be a `string`,  `array` or `object`.
       The `options` argument is an object with the following properties:
-        - `splitRegexp`: The regular expression used to split `on` into word segments.
-        - `stripRegexp`: The regular expression used to remove extraneous characters (default: `/[^A-Z0-9]/gi`).
+        - `splitRegexp`: The regular expression used to split `on` into word segments. Can be a `string` or an `object` with `pattern` and `flags`.
+        - `stripRegexp`: The regular expression used to remove extraneous characters (default: `/[^A-Z0-9]/gi`). Can be a `string` or an `object` with `pattern` and `flags`.
         - `delimiter`: Value used between words (e.g. " ").
         - `convertValues`: Only used when `on` is an object. Toggles whether the object values are converted to the new case (`true`) or left as-is (`false`). Default `true`.
         - `convertKeys`: Only used when `on` is an object. Toggles whether the object keys are converted to the new case (`true`) or left as-is (`false`). Default `false`.
@@ -72,6 +72,8 @@ _ref:
       _change_case.capitalCase:
         on:
           foo: 'bar'
+          options:
+            convertKeys: true
       ```
       Returns: `{ "Foo": "Bar" }`
 
@@ -80,6 +82,8 @@ _ref:
       _change_case.capitalCase:
         on:
           foo: 'bar'
+          options:
+            convertValues: false
       ```
       Returns: `{ "foo": "bar" }`
 
