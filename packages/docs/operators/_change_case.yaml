@@ -28,7 +28,6 @@ _ref:
         - `splitRegexp`: The regular expression used to split `on` into word segments.
         - `stripRegexp`: The regular expression used to remove extraneous characters (default: `/[^A-Z0-9]/gi`).
         - `delimiter`: Value used between words (e.g. " ").
-        - `transform`: Used to transform each word segment (e.g. `lowerCase`).
         - `convertValues`: Only used when `on` is an object. Toggles whether the object values are converted to the new case (`true`) or left as-is (`false`). Default `true`.
         - `convertKeys`: Only used when `on` is an object. Toggles whether the object keys are converted to the new case (`true`) or left as-is (`false`). Default `false`.
 
@@ -67,6 +66,63 @@ _ref:
           foo: 'bar'
       ```
       Returns: `{ "foo": "Bar" }`
+
+      ###### Object with options.convertKeys: true:
+      ```yaml
+      _change_case.capitalCase:
+        on:
+          foo: 'bar'
+      ```
+      Returns: `{ "Foo": "Bar" }`
+
+      ###### Object with options.convertValues: false:
+      ```yaml
+      _change_case.capitalCase:
+        on:
+          foo: 'bar'
+      ```
+      Returns: `{ "foo": "bar" }`
+
+      ###### String with options.splitRegexp string:
+      ```yaml
+      _change_case.sentenceCase:
+        on: 'foo8ar'
+        options:
+          splitRegexp: '([a-z])([A-Z0-9])'
+      ```
+      Returns: `"Foo 8ar"`
+
+      ###### String with options.stripRegexp string:
+      ```yaml
+      _change_case.sentenceCase:
+        on: 'FOO8AR'
+        options:
+          stripRegexp: '[^A-Z]'
+      ```
+      Returns: `"Foo ar"`
+
+      ###### String with options.splitRegexp object:
+      ```yaml
+      _change_case.sentenceCase:
+        on: 'foo8ar'
+        options:
+          splitRegexp:
+            pattern: '([a-z])([A-Z0-9])'
+            flags: 'gi'
+      ```
+      Returns: `"F oo 8a r"`
+
+      ###### String with options.stripRegexp object:
+      ```yaml
+      _change_case.sentenceCase:
+        on: 'foo8ar'
+        options:
+          stripRegexp:
+            pattern: '[^A-Z]'
+            flags: gi
+      ```
+      Returns: `"Foo ar"`
+
     methods:
       - name: camelCase
         types: |

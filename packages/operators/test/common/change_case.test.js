@@ -50,6 +50,131 @@ test('_change_case.capitalCase [string, {delimiter: "-"}]', () => {
   ).toEqual('Test-String');
 });
 
+test('_change_case.capitalCase on: string, options: [] throw', () => {
+  expect(() =>
+    change_case({
+      params: {
+        on: testString,
+        options: [],
+      },
+      location: 'locationId',
+      methodName: 'capitalCase',
+    })
+  ).toThrow('Operator Error: options must be an object.');
+});
+
+test('_change_case.sentenceCase on: string, options: {splitRegexp: "([a-z])([A-Z0-9])"}', () => {
+  expect(
+    change_case({
+      params: {
+        on: 'word2019',
+      },
+      location: 'locationId',
+      methodName: 'sentenceCase',
+    })
+  ).toEqual('Word2019');
+  expect(
+    change_case({
+      params: {
+        on: 'word2019',
+        options: {
+          splitRegexp: '([a-z])([A-Z0-9])',
+        },
+      },
+      location: 'locationId',
+      methodName: 'sentenceCase',
+    })
+  ).toEqual('Word 2019');
+  expect(
+    change_case({
+      params: {
+        on: 'word2019',
+        options: {
+          splitRegexp: {
+            pattern: '([a-z])([A-Z0-9])',
+            flags: 'gi',
+          },
+        },
+      },
+      location: 'locationId',
+      methodName: 'sentenceCase',
+    })
+  ).toEqual('W or d2019');
+});
+
+test('_change_case.capitalCase on: string, invalid regex throw', () => {
+  expect(() =>
+    change_case({
+      params: {
+        on: testString,
+        options: {
+          splitRegexp: '(a',
+        },
+      },
+      location: 'locationId',
+      methodName: 'capitalCase',
+    })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Operator Error: Invalid regular expression: /(a/: Unterminated group. Received: \\"(a\\" at locationId."`
+  );
+});
+
+test('_change_case.capitalCase on: string, regex not string or object throw', () => {
+  expect(() =>
+    change_case({
+      params: {
+        on: testString,
+        options: {
+          splitRegexp: [],
+        },
+      },
+      location: 'locationId',
+      methodName: 'capitalCase',
+    })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Operator Error: regex must be string or an object. Received [] at locationId."`
+  );
+});
+
+test('_change_case.sentenceCase on: string, options: {stripRegexp: "[^A-Z]"}', () => {
+  expect(
+    change_case({
+      params: {
+        on: 'word2019',
+      },
+      location: 'locationId',
+      methodName: 'sentenceCase',
+    })
+  ).toEqual('Word2019');
+  expect(
+    change_case({
+      params: {
+        on: 'word2019',
+        options: {
+          stripRegexp: '[^A-Z]',
+        },
+      },
+      location: 'locationId',
+      methodName: 'sentenceCase',
+    })
+  ).toEqual('');
+  expect(
+    change_case({
+      params: {
+        on: 'word2019',
+        options: {
+          stripRegexp: {
+            pattern: '[^A-Z]',
+            flags: 'gi',
+          },
+        },
+      },
+      location: 'locationId',
+      methodName: 'sentenceCase',
+    })
+  ).toEqual('Word');
+});
+
 test('_change_case.capitalCase on: array, options: {delimiter: "-"}', () => {
   expect(
     change_case({

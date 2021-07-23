@@ -44,6 +44,44 @@ const changeCase = {
   snakeCase,
 };
 
+const prepRegex = (prop, location) => {
+  const regex = type.isString(prop) ? { pattern: prop } : prop;
+  if (!type.isObject(regex)) {
+    throw new Error(
+      `Operator Error: regex must be string or an object. Received ${JSON.stringify(
+        prop
+      )} at ${location}.`
+    );
+  }
+  try {
+    return new RegExp(regex.pattern, regex.flags || 'gm');
+  } catch (e) {
+    throw new Error(
+      `Operator Error: ${e.message}. Received: ${JSON.stringify(prop)} at ${location}.`
+    );
+  }
+};
+
+const prep = (args, { location }) => {
+  const options = args[1];
+  if (!type.isNone(options) && !type.isObject(options)) {
+    throw new Error(
+      `Operator Error: options must be an object. Received ${JSON.stringify(
+        options
+      )} at ${location}.`
+    );
+  }
+  if (type.isObject(options)) {
+    if (options.splitRegexp) {
+      options.splitRegexp = prepRegex(options.splitRegexp, location);
+    }
+    if (options.stripRegexp) {
+      options.stripRegexp = prepRegex(options.stripRegexp, location);
+    }
+  }
+  return args;
+};
+
 const convertArray = ({ methodName, on, options }) => {
   return on.map((item) => {
     if (type.isString(item)) {
@@ -92,7 +130,7 @@ const meta = {};
 
 Object.keys(changeCase).forEach((methodName) => {
   functions[methodName] = makeCaseChanger({ methodName });
-  meta[methodName] = { namedArgs: ['on', 'options'], validTypes: ['array', 'object'] };
+  meta[methodName] = { namedArgs: ['on', 'options'], validTypes: ['array', 'object'], prep };
 });
 
 function change_case({ params, location, methodName }) {
