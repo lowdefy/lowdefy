@@ -18,6 +18,7 @@ export default {
   _and: 'common/and',
   _args: 'common/args',
   _array: 'common/array',
+  _change_case: 'common/change_case',
   _date: 'common/date',
   _divide: 'common/divide',
   _eq: 'common/eq',
