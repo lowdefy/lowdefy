@@ -3,7 +3,48 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [3.18.1](https://github.com/lowdefy/lowdefy/compare/v3.18.0...v3.18.1) (2021-06-30)
+# [3.19.0](https://github.com/lowdefy/lowdefy/compare/v3.18.1...v3.19.0) (2021-07-26)
+
+## Changes
+
+### Features
+
+- Adds support for Elasticsearch.
+- Adds the `_change_case` operator.
+
+### Fixes
+
+- Increases the server bodyParserConfig limit to 5mb. This is to mitigate errors where the payload is too large if their is a lot of data in state or global. This issue will be resolved in the next major version by [#641](https://github.com/lowdefy/lowdefy/issues/641).
+- Changes the default value of the `Selector` `showSearch` property to true.
+- The default value returned by the `_request` operator if values are not found is now `null`, like other getter operators.
+
+### Contributions
+
+- Thanks [Moritz Friedrich (Radiergummi)](https://github.com/Radiergummi) for contributing the Elasticsearch connection.
+
+## Commits
+
+### Bug Fixes
+
+- **blocksAntd:** Update Selector test snapshots. ([417e802](https://github.com/lowdefy/lowdefy/commit/417e802a89a9311578dad467c4580c502ec2c7c4))
+- **docs:** Comment fixes on \_change_case operator ([b2a30e7](https://github.com/lowdefy/lowdefy/commit/b2a30e713661d687705bb5e02289e8b35402a0b9))
+- **operators:** Fix regex in \_change_case operator. ([e4d577f](https://github.com/lowdefy/lowdefy/commit/e4d577f856e2bc96598ffc715170417855c8ad25))
+- Increase bodyParserConfig limit to 5mb. ([fc688a2](https://github.com/lowdefy/lowdefy/commit/fc688a237f27eb52f94425bf59bce0be7af92be1))
+- **graphql:** Throw correct request configuration error messge. ([5443154](https://github.com/lowdefy/lowdefy/commit/5443154e201b06e8034c374dfc58ea254f19c871))
+- **operators:** \_request getter default value should be null. ([755527f](https://github.com/lowdefy/lowdefy/commit/755527fe88cf45a00ab8ade8353f507c8c7918d8))
+- **operators:** Comments fixes and catch nested objects ([deb8fd5](https://github.com/lowdefy/lowdefy/commit/deb8fd51d6b69ab4f22999a8639c4c3c94620f93))
+- **operators:** Update tests with comments fixes and catch nested objects ([b6d63bb](https://github.com/lowdefy/lowdefy/commit/b6d63bb80dca1c1c8eb516b809d573c713734835))
+
+### Features
+
+- Update Elasticsearch docs. ([7b883e1](https://github.com/lowdefy/lowdefy/commit/7b883e123e9f8ebc6423ceafe8e2ad03ee20a761))
+- **blocks-antd:** Make Selector showSearch default true. ([6bf511a](https://github.com/lowdefy/lowdefy/commit/6bf511ab53ffc33676038a24f900aa0a5f30a0b6))
+- **docs:** Add \_change_case operator docs. ([f57d7eb](https://github.com/lowdefy/lowdefy/commit/f57d7ebc8040ba42f4e85977e9a82ef50a28effb))
+- **graphql:** Change ElasticsearchSearch request and response schema. ([efd70a3](https://github.com/lowdefy/lowdefy/commit/efd70a3804925ed024dea0ae3f33625fef37309e))
+- **operators:** Add \_change_case operator ([e617c31](https://github.com/lowdefy/lowdefy/commit/e617c31228f9538b0c5df8e0fd9f1fbc09c4697f))
+- **operators:** Add \_change_case tests ([87bf687](https://github.com/lowdefy/lowdefy/commit/87bf68757285d87c4d57a42e25929bfbb206134f))
+
+# [3.18.1](https://github.com/lowdefy/lowdefy/compare/v3.18.0...v3.18.1) (2021-06-30)
 
 ## Changes
 
