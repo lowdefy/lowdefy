@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.19.0](https://github.com/lowdefy/lowdefy/compare/v3.18.1...v3.19.0) (2021-07-26)
+
+
+### Bug Fixes
+
+* **docs:** Comment fixes on _change_case operator ([b2a30e7](https://github.com/lowdefy/lowdefy/commit/b2a30e713661d687705bb5e02289e8b35402a0b9))
+* **operators:** Fix regex in _change_case operator. ([e4d577f](https://github.com/lowdefy/lowdefy/commit/e4d577f856e2bc96598ffc715170417855c8ad25))
+
+
+### Features
+
+* Update Elasticsearch docs. ([7b883e1](https://github.com/lowdefy/lowdefy/commit/7b883e123e9f8ebc6423ceafe8e2ad03ee20a761))
+* **docs:** Add _change_case operator docs. ([f57d7eb](https://github.com/lowdefy/lowdefy/commit/f57d7ebc8040ba42f4e85977e9a82ef50a28effb))
+
+
+
+
+
 ## [3.18.1](https://github.com/lowdefy/lowdefy/compare/v3.18.0...v3.18.1) (2021-06-30)
 
 

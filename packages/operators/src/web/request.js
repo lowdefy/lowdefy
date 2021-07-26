@@ -33,6 +33,7 @@ function _request({ arrayIndices, params, requests, location }) {
     const key = keyParts.reduce((acc, value) => (acc === '' ? value : acc.concat('.', value)), '');
     return get(requests[requestId].response, applyArrayIndices(arrayIndices, key), {
       copy: true,
+      default: null,
     });
   }
   return null;

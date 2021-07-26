@@ -462,6 +462,11 @@
           pageId: AxiosHttp
           properties:
             title: Axios HTTP
+        - id: Elasticsearch
+          type: MenuLink
+          pageId: Elasticsearch
+          properties:
+            title: Elasticsearch
         - id: GoogleSheet
           type: MenuLink
           pageId: GoogleSheet
@@ -573,6 +578,9 @@
         - id: _base64
           type: MenuLink
           pageId: _base64
+        - id: _change_case
+          type: MenuLink
+          pageId: _change_case
         - id: _date
           type: MenuLink
           pageId: _date
@@ -726,9 +734,14 @@
         title: Lowdefy Versions
         icon: BranchesOutlined
       links:
-        - id: v3.18.1
+        - id: v3.19.0
           type: MenuLink
           url: https://docs.lowdefy.com
+          properties:
+            title: v3.19.0
+        - id: v3.18.1
+          type: MenuLink
+          url: https://60dc31741e179f0008eca44c--lowdefy-docs.netlify.app
           properties:
             title: v3.18.1
         - id: v3.17.2

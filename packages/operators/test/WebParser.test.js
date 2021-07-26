@@ -538,4 +538,13 @@ describe('parse operators', () => {
     expect(res.output).toEqual(3);
     expect(res.errors).toMatchInlineSnapshot(`Array []`);
   });
+
+  test('parse _change_case operator', async () => {
+    const input = { '_change_case.camelCase': { on: 'test string' } };
+    const parser = new WebParser({ context, contexts });
+    await parser.init();
+    const res = parser.parse({ input, location: 'locationId' });
+    expect(res.output).toEqual('testString');
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
 });

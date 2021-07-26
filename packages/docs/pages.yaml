@@ -122,6 +122,7 @@
 - _ref: connections/AmazonRedshift.yaml
 - _ref: connections/AWSS3.yaml
 - _ref: connections/AxiosHttp.yaml
+- _ref: connections/Elasticsearch.yaml
 - _ref: connections/GoogleSheet.yaml
 - _ref: connections/Knex.yaml
 - _ref: connections/MariaDB.yaml
@@ -153,6 +154,7 @@
 - _ref: operators/_args.yaml
 - _ref: operators/_array.yaml
 - _ref: operators/_base64.yaml
+- _ref: operators/_change_case.yaml
 - _ref: operators/_date.yaml
 - _ref: operators/_diff.yaml
 - _ref: operators/_divide.yaml

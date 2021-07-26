@@ -76,7 +76,7 @@ class RequestController {
       validate({ schema: connectionDefinition.schema, data: connectionProperties });
       validate({ schema: requestDefinition.schema, data: requestProperties });
     } catch (error) {
-      throw new ConfigurationError(error);
+      throw new ConfigurationError(error.message);
     }
 
     const response = await this.callResolver({
