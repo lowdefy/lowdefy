@@ -36,7 +36,7 @@
     "start": "webpack serve --config webpack.dev.js"
   },
   "dependencies": {
-    "@apollo/client": "3.3.19",
+    "@apollo/client": "3.4.0",
     "@apollo/link-context": "2.0.0-beta.3",
     "@apollo/link-error": "2.0.0-beta.3",
     "@apollo/link-retry": "2.0.0-beta.3",
