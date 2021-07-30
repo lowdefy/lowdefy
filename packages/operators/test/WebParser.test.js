@@ -553,7 +553,7 @@ describe('parse operators', () => {
     const parser = new WebParser({ context, contexts });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
-    expect(res.output).toEqual(12.34);
+    expect(res.output).toEqual('12.34');
     expect(res.errors).toMatchInlineSnapshot(`Array []`);
   });
 });
