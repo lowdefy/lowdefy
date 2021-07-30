@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.19.0](https://github.com/lowdefy/lowdefy/compare/v3.18.1...v3.19.0) (2021-07-26)
+
+
+### Bug Fixes
+
+* **graphql:** Throw correct request configuration error messge. ([5443154](https://github.com/lowdefy/lowdefy/commit/5443154e201b06e8034c374dfc58ea254f19c871))
+
+
+### Features
+
+* **graphql:** Change ElasticsearchSearch request and response schema. ([efd70a3](https://github.com/lowdefy/lowdefy/commit/efd70a3804925ed024dea0ae3f33625fef37309e))
+
+
+
+
+
 ## [3.18.1](https://github.com/lowdefy/lowdefy/compare/v3.18.0...v3.18.1) (2021-06-30)
 
 **Note:** Version bump only for package @lowdefy/graphql
