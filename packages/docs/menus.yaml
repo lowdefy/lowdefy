@@ -665,6 +665,9 @@
         - id: _not
           type: MenuLink
           pageId: _not
+        - id: _number
+          type: MenuLink
+          pageId: _number
         - id: _nunjucks
           type: MenuLink
           pageId: _nunjucks
