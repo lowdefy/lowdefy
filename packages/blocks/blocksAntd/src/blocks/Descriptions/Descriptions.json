@@ -16,6 +16,13 @@
           "default": false,
           "description": "Render items in a table."
         },
+        "excludeKeys": {
+          "type": "array",
+          "description": "Filter the list of displayed items by providing a list of keys to exclude.",
+          "items": {
+            "type": "string"
+          }
+        },
         "colon": {
           "type": "boolean",
           "default": true,
@@ -54,6 +61,42 @@
               }
             }
           ]
+        },
+        "includeKeys": {
+          "type": "array",
+          "description": "Filter the list of displayed items by providing a list of keys to include.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "itemOptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["key"],
+            "properties": {
+              "key": {
+                "type": "string",
+                "description": "Item key to which these settings should apply."
+              },
+              "span": {
+                "type": ["number", "object"],
+                "description": "Item span for this key. Can also be a function that receives item and index."
+              },
+              "style": {
+                "type": "object",
+                "description": "Item css style for this key. Can also be a function that receives item and index."
+              },
+              "transformLabel": {
+                "type": "object",
+                "description": "Function to transform item key or label. Function receives arguments label, item and index."
+              },
+              "transformValue": {
+                "type": "object",
+                "description": "Function to transform item value. Function receives arguments value, item and index."
+              }
+            }
+          }
         },
         "items": {
           "oneOf": [

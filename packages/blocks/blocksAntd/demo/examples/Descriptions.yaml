@@ -129,3 +129,69 @@
     items:
       field_one: "description one field with \n new line \t helps\n make better content."
       'one \n two;': "description two field with \n new line \t helps\n make better content."
+- id: 'properties.excludeKeys: []'
+  type: Descriptions
+  properties:
+    excludeKeys:
+      - field_one
+      - field_two
+    items:
+      field_one: value one
+      field_two: 2
+      field_three: value three
+      field_four: value 4
+- id: 'properties.includeKeys: []'
+  type: Descriptions
+  properties:
+    includeKeys:
+      - field_one
+      - field_two
+    items:
+      field_one: value one
+      field_two: 2
+      field_three: value three
+      field_four: value 4
+- id: 'properties.includeKeys: [] and properties.excludeKeys: []'
+  type: Descriptions
+  properties:
+    includeKeys:
+      - field_one
+      - field_two
+    excludeKeys:
+      - field_one
+    items:
+      field_one: value one
+      field_two: 2
+      field_three: value three
+      field_four: value 4
+- id: 'properties.itemOptions.span'
+  type: Descriptions
+  properties:
+    itemOptions:
+      - key: field_two
+        span: 2
+    items:
+      field_one: value one
+      field_two: 2
+      field_three: value three
+      field_four: value 4
+- id: 'properties.itemOptions.style'
+  type: Descriptions
+  properties:
+    itemOptions:
+      - key: field_two
+        style:
+          textAlign: right
+    items:
+      field_one: value one
+      field_two: 2
+      field_three: value three
+      field_four: value 4
+- id: 'properties.items html values'
+  type: Descriptions
+  properties:
+    items:
+      field_one: value one
+      field_four: '<div style="width: 150px; color: red; background: #afa; text-align: center;">value 4</div>'
+      field_two: 2
+      field_three: <a>value three</a>
