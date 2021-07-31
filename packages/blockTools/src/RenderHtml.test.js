@@ -46,7 +46,9 @@ test('Render default and id', async () => {
   const wrapper = await mount(<RenderHtml id="test-id" methods={methods} />);
   await wrapper.instance().componentDidMount();
   await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`"<div id=\\"test-id\\"></div>"`);
+  expect(wrapper.html()).toMatchInlineSnapshot(
+    `"<div id=\\"test-id\\" data-testid=\\"test-id\\"></div>"`
+  );
 });
 
 test('Render string', async () => {
@@ -68,15 +70,6 @@ test('Render boolean', async () => {
   await wrapper.instance().componentDidMount();
   await wrapper.update();
   expect(wrapper.html()).toMatchInlineSnapshot(`"<div></div>"`);
-});
-
-test('Render date', async () => {
-  const wrapper = await mount(<RenderHtml html={new Date(0)} methods={methods} />);
-  await wrapper.instance().componentDidMount();
-  await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(
-    `"<div>Thu Jan 01 1970 02:00:00 GMT+0200 (South Africa Standard Time)</div>"`
-  );
 });
 
 test('Render null', async () => {
@@ -134,24 +127,14 @@ test('Render bad html', async () => {
     <RenderHtml
       html={`
       <h1>Link<h1>
-
       <a href="https://lowdefy.com">Lowdefy link</a>
-
       <font size="+10">Description</font>
-
       <h1>Bad HTML</h1>
-
       <div onmouseover="alert('alpha')">
         <a href="javascript:alert('bravo')">delta</a>
-        <img src="x" onerror="alert('charlie')">
-        <iframe src="javascript:alert('delta')"></iframe>
-        <math>
-          <mi xlink:href="data:x,<script>alert('echo')</script>"></mi>
-        </math>
-      </div>
-      <script>
-        alert('script tag');
-      </script>
+        <img src="x" onerror="alert('charlie')"><iframe src="javascript:alert('delta')"></iframe>
+        <math><mi xlink:href="data:x,<script>alert('echo')</script>"></mi></math>
+      </div><script>alert('script tag');</script>
       `}
       methods={methods}
     />
@@ -161,22 +144,14 @@ test('Render bad html', async () => {
   expect(wrapper.html()).toMatchInlineSnapshot(`
     "<div>
           <h1>Link</h1><h1>
-
           <a href=\\"https://lowdefy.com\\">Lowdefy link</a>
-
           <font size=\\"+10\\">Description</font>
-
           </h1><h1>Bad HTML</h1>
-
           <div>
             <a>delta</a>
             <img src=\\"x\\">
-            
-            <math>
-              <mi></mi>
-            </math>
+            <math><mi></mi></math>
           </div>
-          
           </div>"
   `);
 });

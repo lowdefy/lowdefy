@@ -38,6 +38,7 @@ class RenderHtml extends React.Component {
     return (
       <div
         id={id}
+        data-testid={id}
         ref={(el) => {
           if (el) {
             this.div = el;
