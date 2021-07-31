@@ -183,6 +183,7 @@
 - _ref: operators/_mql.yaml
 - _ref: operators/_ne.yaml
 - _ref: operators/_not.yaml
+- _ref: operators/_number.yaml
 - _ref: operators/_nunjucks.yaml
 - _ref: operators/_object.yaml
 - _ref: operators/_operator.yaml

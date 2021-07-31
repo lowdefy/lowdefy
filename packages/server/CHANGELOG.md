@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.19.0](https://github.com/lowdefy/lowdefy/compare/v3.18.1...v3.19.0) (2021-07-26)
+
+
+### Bug Fixes
+
+* Increase bodyParserConfig limit to 5mb. ([fc688a2](https://github.com/lowdefy/lowdefy/commit/fc688a237f27eb52f94425bf59bce0be7af92be1))
+
+
+
+
+
 ## [3.18.1](https://github.com/lowdefy/lowdefy/compare/v3.18.0...v3.18.1) (2021-06-30)
 
 **Note:** Version bump only for package @lowdefy/server

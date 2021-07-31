@@ -40,6 +40,7 @@ export default {
   _mql: 'common/mql',
   _ne: 'common/ne',
   _not: 'common/not',
+  _number: 'common/number',
   _nunjucks: 'common/nunjucks',
   _object: 'common/object',
   _operator: 'common/operator',
