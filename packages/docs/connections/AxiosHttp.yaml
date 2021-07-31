@@ -106,7 +106,7 @@ _ref:
                   url:
                     _nunjucks: /orders/{{ order_id }}
                   method: post
-                  body:
+                  data:
                     _state: true
             ```
 
@@ -146,6 +146,6 @@ _ref:
                 properties:
                   url: api.otherapp.org/other/thing
                   method: post
-                  body:
+                  data:
                     _state: true
             ```
