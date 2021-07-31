@@ -547,4 +547,13 @@ describe('parse operators', () => {
     expect(res.output).toEqual('testString');
     expect(res.errors).toMatchInlineSnapshot(`Array []`);
   });
+
+  test('parse _number operator', async () => {
+    const input = { '_number.toFixed': { on: 12.33666, digits: 2 } };
+    const parser = new WebParser({ context, contexts });
+    await parser.init();
+    const res = parser.parse({ input, location: 'locationId' });
+    expect(res.output).toEqual('12.34');
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
 });
