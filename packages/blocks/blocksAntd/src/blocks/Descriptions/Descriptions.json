@@ -81,19 +81,31 @@
               },
               "span": {
                 "type": ["number", "object"],
-                "description": "Item span for this key. Can also be a function that receives item and index."
+                "description": "Item span for this key. Can also be a function that receives item and index.",
+                "docs": {
+                  "displayType": "number"
+                }
               },
               "style": {
                 "type": "object",
-                "description": "Item css style for this key. Can also be a function that receives item and index."
+                "description": "Item css style for this key. Can also be a function that receives item and index.",
+                "docs": {
+                  "displayType": "yaml"
+                }
               },
               "transformLabel": {
                 "type": "object",
-                "description": "Function to transform item key or label. Function receives arguments label, item and index."
+                "description": "Function to transform item key or label. Function receives arguments label, item and index.",
+                "docs": {
+                  "displayType": "yaml"
+                }
               },
               "transformValue": {
                 "type": "object",
-                "description": "Function to transform item value. Function receives arguments value, item and index."
+                "description": "Function to transform item value. Function receives arguments value, item and index.",
+                "docs": {
+                  "displayType": "yaml"
+                }
               }
             }
           }
