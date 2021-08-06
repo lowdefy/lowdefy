@@ -39,14 +39,15 @@ import writePages from './build/writePages';
 import writeRequests from './build/writeRequests';
 
 function createContext(options) {
-  const { logger, cacheDirectory, configDirectory, outputDirectory } = options;
+  const { blocksServerUrl, cacheDirectory, configDirectory, logger, outputDirectory } = options;
   const context = {
-    logger,
-    configLoader: createFileLoader({ baseDirectory: configDirectory }),
     artifactSetter: createFileSetter({ baseDirectory: outputDirectory }),
-    configDirectory,
-    outputDirectory,
+    configLoader: createFileLoader({ baseDirectory: configDirectory }),
+    blocksServerUrl,
     cacheDirectory,
+    configDirectory,
+    logger,
+    outputDirectory,
   };
   return context;
 }
