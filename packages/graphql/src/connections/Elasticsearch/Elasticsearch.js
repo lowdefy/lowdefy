@@ -15,6 +15,7 @@
 */
 
 import ElasticsearchDelete from './ElasticsearchDelete/ElasticsearchDelete';
+import ElasticsearchDeleteByQuery from './ElasticsearchDeleteByQuery/ElasticsearchDeleteByQuery';
 import ElasticsearchIndex from './ElasticsearchIndex/ElasticsearchIndex';
 import schema from './ElasticsearchSchema.json';
 import ElasticsearchSearch from './ElasticsearchSearch/ElasticsearchSearch';
@@ -24,6 +25,7 @@ export default {
   schema,
   requests: {
     ElasticsearchDelete,
+    ElasticsearchDeleteByQuery,
     ElasticsearchIndex,
     ElasticsearchSearch,
     ElasticsearchUpdate,
