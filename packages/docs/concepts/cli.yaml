@@ -75,6 +75,23 @@ _ref:
             - `--base-directory <base-directory>`: Change base directory. The default is the current working directory.
             - `--blocks-server-url <blocks-server-url>`: The URL from where Lowdefy blocks will be served. See below for more information.
             - `--port <port>`: Change the port the server is hosted at. The default is `3000`.
+            - `--watch <paths...>`: A list of paths to files or directories that should be watched for changes.
+            - `--watch-ignore <patterns...>`: A list of paths to files or directories that should be ignored by the file watcher. Globs are supported.
+
+            #### Examples
+
+
+            Run the dev server, watching a relative directory for file changes:
+            ```txt
+            lowdefy dev --watch ../other-project
+            ```
+
+            Run the dev server, ignoring the public directory:
+            ```txt
+            lowdefy dev --watch-ignore public/**
+            ```
+
+
 
             # Telemetry
 

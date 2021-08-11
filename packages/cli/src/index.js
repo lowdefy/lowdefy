@@ -82,6 +82,14 @@ program
     'The URL from where Lowdefy blocks will be served.'
   )
   .option('--port <port>', 'Change the port the server is hosted at. Default is 3000.')
+  .option(
+    '--watch <paths...>',
+    'A list of paths to files or directories that should be watched for changes.'
+  )
+  .option(
+    '--watch-ignore <paths...>',
+    'A list of paths to files or directories that should be ignored by the file watcher. Globs are supported.'
+  )
   .action(runCommand(dev));
 
 program
