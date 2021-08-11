@@ -273,6 +273,22 @@
                 true
             ],
             "default": false
+        },
+        "read": {
+            "type": "boolean",
+            "default": true,
+            "description": "Allow reads from the Elasticsearch index.",
+            "errorMessage": {
+                "type": "Elasticsearch connection property \"read\" should be a boolean."
+            }
+        },
+        "write": {
+            "type": "boolean",
+            "default": false,
+            "description": "Allow writes to the Elasticsearch index.",
+            "errorMessage": {
+                "type": "Elasticsearch connection property \"write\" should be a boolean."
+            }
         }
     },
     "definitions": {

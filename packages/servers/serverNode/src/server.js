@@ -19,10 +19,16 @@
 import getServer from '@lowdefy/server';
 import { shellDirectory } from '@lowdefy/shell';
 import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 
-const buildDirectory = process.env.LOWDEFY_SERVER_BUILD_DIRECTORY || './build';
-const publicDirectory = process.env.LOWDEFY_SERVER_PUBLIC_DIRECTORY || './public';
-const port = parseInt(process.env.LOWDEFY_SERVER_PORT) || 3000;
+const argv = yargs(hideBin(process.argv)).argv;
+
+const buildDirectory =
+  argv.buildDirectory || process.env.LOWDEFY_SERVER_BUILD_DIRECTORY || './.lowdefy/build';
+const publicDirectory =
+  argv.publicDirectory || process.env.LOWDEFY_SERVER_PUBLIC_DIRECTORY || './public';
+const port = argv.port || parseInt(process.env.LOWDEFY_SERVER_PORT) || 3000;
 
 const server = getServer({
   buildDirectory,
