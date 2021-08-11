@@ -28,18 +28,18 @@ Steps to fetch meta
 import { type as typeHelper } from '@lowdefy/helpers';
 import createFetchMetaCache from './fetchMetaCache';
 import createWriteMetaCache from './writeMetaCache';
-import defaultMetaLocations from './defaultMetaLocations';
+import metaLocations from './metaLocations';
 import fetchMetaUrl from './fetchMetaUrl';
 
-function createGetMeta({ types, cacheDirectory }) {
-  const metaLocations = {
-    ...defaultMetaLocations,
+function createGetMeta({ blocksServerUrl, cacheDirectory, types }) {
+  const allMetaLocations = {
+    ...metaLocations({ blocksServerUrl }),
     ...types,
   };
   const fetchMetaCache = createFetchMetaCache({ cacheDirectory });
   const writeMetaCache = createWriteMetaCache({ cacheDirectory });
   async function getMeta(type) {
-    const location = metaLocations[type];
+    const location = allMetaLocations[type];
     if (!location) {
       throw new Error(
         `Block type ${JSON.stringify(type)} is not defined. Specify type url in types array.`
