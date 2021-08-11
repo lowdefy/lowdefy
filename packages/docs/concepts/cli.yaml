@@ -51,6 +51,7 @@ _ref:
             The `build` command runs a Lowdefy build. The options are:
 
             - `--base-directory <base-directory>`: Change base directory. The default is the current working directory.
+            - `--blocks-server-url <blocks-server-url>`: The URL from where Lowdefy blocks will be served. See below for more information.
             - `--output-directory <output-directory>`: Change the directory to which build artifacts are saved. The default is `<base-directory>/.lowdefy/build`.
 
             ## build-netlify
@@ -59,6 +60,7 @@ _ref:
             We recommend setting the build command to `npx lowdefy@latest build-netlify`. The Netlify publish directory should be set to `.lowdefy/publish`, and the functions directory set to `.lowdefy/functions`.
 
             - `--base-directory <base-directory>`: Change base directory. The default is the current working directory (The base directory should rather be configured in the Netlify build settings).
+            - `--blocks-server-url <blocks-server-url>`: The URL from where Lowdefy blocks will be served. See below for more information.
 
             ## clean-cache
 
@@ -71,6 +73,7 @@ _ref:
             The `dev` command starts a Lowdefy development server, running locally. It can be accessed in a browser at [http://localhost:3000](http://localhost:3000). The CLI watches the file system, and rebuilds the app and reloads served pages every time a change is made to any of the files in the project directory.
 
             - `--base-directory <base-directory>`: Change base directory. The default is the current working directory.
+            - `--blocks-server-url <blocks-server-url>`: The URL from where Lowdefy blocks will be served. See below for more information.
             - `--port <port>`: Change the port the server is hosted at. The default is `3000`.
 
             # Telemetry
@@ -96,6 +99,22 @@ _ref:
             - If the CLI is being used in the Netlify CI environment (when using the `build-netlify` command).
             - Your IP address.
             - Error messages and stack traces for any errors.
+
+            # Blocks Server
+
+            The Lowdefy default blocks are not included in the Lowdefy build output, but are served from a CDN, and imported into the app using webpack module federation. All the default Lowdefy blocks are hosted at:
+
+            ```yaml
+            https://blocks-cdn.lowdefy.com/v{LOWDEFY_VERSION}/
+            ```
+
+            If you wish to host your own blocks instead, this url can be configured using the `--blocks-server-url` CLI option. This URL should serve the build artifacts of the Lowdefy default block packages (located in the `dist` directory). Each blocks package should be served under a path that corresponds to the package name. For example, `@lowdefy/blocks-basic` should be served under `{BLOCK_SERVER_URL}/blocks-basic/`. The required blocks packages and server paths are:
+
+              - `@lowdefy/blocks-basic` to be hosted at `{BLOCK_SERVER_URL}/blocks-basic/`.
+              - `@lowdefy/blocks-antd` to be hosted at `{BLOCK_SERVER_URL}/blocks-antd/`.
+              - `@lowdefy/blocks-color-selectors` to be hosted at `{BLOCK_SERVER_URL}/blocks-color-selectors/`.
+              - `@lowdefy/blocks-markdown` to be hosted at `{BLOCK_SERVER_URL}/blocks-markdown/`.
+              - `@lowdefy/blocks-echarts` to be hosted at `{BLOCK_SERVER_URL}/blocks-echarts/`.
 
       - _ref:
           path: templates/navigation_buttons.yaml

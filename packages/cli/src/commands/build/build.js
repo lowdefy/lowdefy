@@ -33,9 +33,10 @@ async function build({ context, options }) {
   await fse.emptyDir(path.resolve(context.cacheDirectory, './meta'));
   context.print.info('Starting build.');
   await buildScript({
-    logger: context.print,
+    blocksServerUrl: context.blocksServerUrl,
     cacheDirectory: context.cacheDirectory,
     configDirectory: context.baseDirectory,
+    logger: context.print,
     outputDirectory: context.outputDirectory,
   });
   await context.sendTelemetry();
