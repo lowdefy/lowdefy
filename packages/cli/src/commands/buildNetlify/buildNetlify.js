@@ -67,9 +67,10 @@ async function build({ context, buildScript, netlifyDir }) {
   context.print.log('Starting Lowdefy build.');
   const outputDirectory = path.resolve(netlifyDir, './package/dist/functions/graphql/build');
   await buildScript({
-    logger: context.print,
+    blocksServerUrl: context.blocksServerUrl,
     cacheDirectory: context.cacheDirectory,
     configDirectory: context.baseDirectory,
+    logger: context.print,
     outputDirectory,
   });
   context.print.log(`Build artifacts saved at ${outputDirectory}.`);

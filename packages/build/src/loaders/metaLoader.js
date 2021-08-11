@@ -19,9 +19,9 @@ import Dataloader from 'dataloader';
 import createGetMeta from '../utils/meta/getMeta';
 
 function createMetaBatchLoader({ components, context }) {
-  const { cacheDirectory } = context;
+  const { blocksServerUrl, cacheDirectory } = context;
   const { types } = components;
-  const getMeta = createGetMeta({ cacheDirectory, types });
+  const getMeta = createGetMeta({ blocksServerUrl, cacheDirectory, types });
   async function loader(keys) {
     const fetched = [];
     const promises = keys.map(async (key) => {

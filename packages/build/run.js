@@ -21,6 +21,7 @@ async function run() {
   // Webpack needs an async import to resolve shared dependencies.
   const build = await require('./dist/index.js').default.then((module) => module.default);
   await build({
+    // blocksServerUrl: 'https://blocks-cdn.lowdefy.com/v3.16.0',
     logger: console,
     // cacheDirectory: path.resolve(process.cwd(), '../servers/serverDev/.lowdefy/.cache'),
     cacheDirectory: path.resolve(process.cwd(), './.lowdefy/.cache'),

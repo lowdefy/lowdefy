@@ -18,6 +18,8 @@ import createGetMeta from './getMeta';
 import createFetchMetaCache from './fetchMetaCache';
 import createWriteMetaCache from './writeMetaCache';
 import fetchMetaUrl from './fetchMetaUrl';
+// eslint-disable-next-line no-unused-vars
+import metaLocations from './metaLocations';
 
 jest.mock('./fetchMetaCache', () => {
   const mockFetchMetaCache = jest.fn();
@@ -30,6 +32,15 @@ jest.mock('./writeMetaCache', () => {
 jest.mock('./fetchMetaUrl', () => {
   const mockFetchMetaUrl = jest.fn();
   return mockFetchMetaUrl;
+});
+
+jest.mock('./metaLocations', () => {
+  const mockMetaLocations = jest.fn(() => ({
+    DefaultType: {
+      url: 'defaultTypeUrl',
+    },
+  }));
+  return mockMetaLocations;
 });
 
 const mockFetchMetaCache = createFetchMetaCache();
@@ -102,6 +113,20 @@ test('getMeta fetches from url and writes to cache', async () => {
       },
     ],
   ]);
+});
+
+test('getMeta uses locations from metaLocations', async () => {
+  mockFetchMetaCache.mockImplementation((location) => {
+    if (location && location.url === 'defaultTypeUrl') {
+      return defaultMeta;
+    }
+    return null;
+  });
+  const res = await getMeta('DefaultType');
+  expect(res).toEqual({
+    type: 'DefaultType',
+    meta: defaultMeta,
+  });
 });
 
 test('getMeta type not in types', async () => {
