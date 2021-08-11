@@ -22,11 +22,12 @@ _ref:
       ```
       (pageId: string): void
       (params: {
-        pageId?: string,
+        back?: boolean,
         home?: boolean,
-        url?: string,
-        newTab?:boolean,
         input?: object,
+        newTab?:boolean,
+        pageId?: string,
+        url?: string,
         urlQuery? object
       }): void
       ```
@@ -39,11 +40,12 @@ _ref:
       The pageId of a page in the app to link to.
 
       ###### object
-      - `pageId: string`: The pageId of a page in the app to link to.
+      - `back: boolean`: Go to the previous page if true (has the same effect as using the browser back button).
       - `home: boolean`: Link to the home page. This is either the configured public or authenticated homepage, or the first page in the default menu visible to the user.
-      - `url: string`: Link to an external url.
-      - `newTab: boolean`: Open the link in a new tab.
       - `input: object`: Object to set as the input for the linked page.
+      - `newTab: boolean`: Open the link in a new tab.
+      - `pageId: string`: The pageId of a page in the app to link to.
+      - `url: string`: Link to an external url.
       - `urlQuery: object`: Object to set as the urlQuery for the linked page.
 
     examples: |
@@ -107,4 +109,12 @@ _ref:
           input:
             id:
               _args: row.id
+      ```
+
+      ###### Go to the previous page:
+      ```yaml
+      - id: link_back
+        type: Link
+        params:
+          back: true
       ```
