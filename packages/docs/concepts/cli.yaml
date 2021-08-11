@@ -127,11 +127,11 @@ _ref:
 
             If you wish to host your own blocks instead, this url can be configured using the `--blocks-server-url` CLI option. This URL should serve the build artifacts of the Lowdefy default block packages (located in the `dist` directory). Each blocks package should be served under a path that corresponds to the package name. For example, `@lowdefy/blocks-basic` should be served under `{BLOCK_SERVER_URL}/blocks-basic/`. The required blocks packages and server paths are:
 
-              - `@lowdefy/blocks-basic` - `blocks-basic/`
-              - `@lowdefy/blocks-antd` - `blocks-antd/`
-              - `@lowdefy/blocks-color-selectors-selectors` - `blocks-color-selectors-selectors/`
-              - `@lowdefy/blocks-markdown` - `blocks-markdown/`
-              - `@lowdefy/blocks-echarts` - `blocks-echarts/`
+              - `@lowdefy/blocks-basic` to be hosted at `{BLOCK_SERVER_URL}/blocks-basic/`.
+              - `@lowdefy/blocks-antd` to be hosted at `{BLOCK_SERVER_URL}/blocks-antd/`.
+              - `@lowdefy/blocks-color-selectors` to be hosted at `{BLOCK_SERVER_URL}/blocks-color-selectors/`.
+              - `@lowdefy/blocks-markdown` to be hosted at `{BLOCK_SERVER_URL}/blocks-markdown/`.
+              - `@lowdefy/blocks-echarts` to be hosted at `{BLOCK_SERVER_URL}/blocks-echarts/`.
 
       - _ref:
           path: templates/navigation_buttons.yaml
