@@ -14,16 +14,21 @@
   limitations under the License.
 */
 
-import ElasticsearchDelete from './ElasticsearchDelete/ElasticsearchDelete';
-import ElasticsearchIndex from './ElasticsearchIndex/ElasticsearchIndex';
-import schema from './ElasticsearchSchema.json';
-import ElasticsearchSearch from './ElasticsearchSearch/ElasticsearchSearch';
+import { Client } from '@elastic/elasticsearch';
+import schema from './ElasticsearchDelete.json';
 
-export default {
-  schema,
-  requests: {
-    ElasticsearchDelete,
-    ElasticsearchIndex,
-    ElasticsearchSearch,
-  },
-};
+async function elasticsearchDelete({ request, connection }) {
+  const client = new Client(connection);
+
+  const { body: response } = await client.delete({
+    ...request,
+    index: request.index || connection.index,
+  });
+
+  return {
+    id: response._id,
+    response,
+  };
+}
+
+export default { resolver: elasticsearchDelete, schema, checkRead: false, checkWrite: true };
