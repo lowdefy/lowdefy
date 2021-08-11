@@ -14,14 +14,22 @@
   limitations under the License.
 */
 
-import ElasticsearchIndex from './ElasticsearchIndex/ElasticsearchIndex';
-import schema from './ElasticsearchSchema.json';
-import ElasticsearchSearch from './ElasticsearchSearch/ElasticsearchSearch';
+import { Client } from '@elastic/elasticsearch';
+import schema from './ElasticsearchIndex.json';
 
-export default {
-  schema,
-  requests: {
-    ElasticsearchIndex,
-    ElasticsearchSearch,
-  },
-};
+async function elasticsearchIndex({ request, connection }) {
+  const client = new Client(connection);
+  const body = {
+    ...request,
+    index: request.index || connection.index,
+  };
+
+  const { body: response } = await client.index(body);
+
+  return {
+    response,
+    id: response._id,
+  };
+}
+
+export default { resolver: elasticsearchIndex, schema, checkRead: false, checkWrite: true };
