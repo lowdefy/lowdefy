@@ -45,7 +45,7 @@ async function dev({ context, options }) {
     serverSetupPromise,
   ]);
 
-  buildWatcher({ build, context, reloadFn });
+  buildWatcher({ build, context, options, reloadFn });
   envWatcher({ context });
   versionWatcher({ context });
 
