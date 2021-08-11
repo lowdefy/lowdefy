@@ -32,8 +32,8 @@ _ref:
 
             The Lowdefy server can be configured using the following environment variables:
 
-            - `LOWDEFY_SERVER_BUILD_DIRECTORY`: The directory of the the built Lowdefy configuration (The output of `lowdefy build`, usually found at `./.lowdefy/build` in your project repository). The default is `./build` (or `/home/node/lowdefy/build`).
-            - `LOWDEFY_SERVER_PUBLIC_DIRECTORY`: The directory of the the public assets to be served. The default is `./public` (or `/home/node/lowdefy/public`).
+            - `LOWDEFY_SERVER_BUILD_DIRECTORY`: The directory of the built Lowdefy configuration (The output of `lowdefy build`, usually found at `./.lowdefy/build` in your project repository). The default is `./build` (or `/home/node/lowdefy/build`).
+            - `LOWDEFY_SERVER_PUBLIC_DIRECTORY`: The directory of the public assets to be served. The default is `./public` (or `/home/node/lowdefy/public`).
             - `LOWDEFY_SERVER_PORT`: The port (inside the container) at which to run the server. The default is `3000`.
 
       - id: warning_update_dockerfile
@@ -49,7 +49,7 @@ _ref:
           content: |
             # Building a Lowdefy app image
 
-            To build the configuration into a image, the following Dockerfile can be used:
+            To build the configuration into an image, the following Dockerfile can be used:
             ```text
             FROM node:14-buster AS build
 
@@ -60,7 +60,7 @@ _ref:
 
             USER node
 
-            # Copy app config, and change ownership of files to "node" user
+            # Copy app config and change ownership of files to "node" user
             COPY  --chown=node:node  . .
 
             # Build the Lowdefy config using the Lowdefy CLI
@@ -91,7 +91,7 @@ _ref:
             docker build -t <tag> .
             ```
 
-            And the container can be run by:
+            The container can be run by:
             ```
             docker run -p 3000:3000 <tag>
             ```
