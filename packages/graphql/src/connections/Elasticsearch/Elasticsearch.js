@@ -20,6 +20,7 @@ import ElasticsearchIndex from './ElasticsearchIndex/ElasticsearchIndex';
 import schema from './ElasticsearchSchema.json';
 import ElasticsearchSearch from './ElasticsearchSearch/ElasticsearchSearch';
 import ElasticsearchUpdate from './ElasticsearchUpdate/ElasticsearchUpdate';
+import ElasticsearchUpdateByQuery from './ElasticsearchUpdateByQuery/ElasticsearchUpdateByQuery';
 
 export default {
   schema,
@@ -29,5 +30,6 @@ export default {
     ElasticsearchIndex,
     ElasticsearchSearch,
     ElasticsearchUpdate,
+    ElasticsearchUpdateByQuery,
   },
 };
