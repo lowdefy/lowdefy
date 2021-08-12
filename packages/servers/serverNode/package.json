@@ -1,13 +1,12 @@
 {
-  "name": "@lowdefy/server-docker",
+  "name": "@lowdefy/server-node",
   "version": "3.19.0",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
   "keywords": [
     "lowdefy",
-    "server",
-    "docker"
+    "server"
   ],
   "bugs": {
     "url": "https://github.com/lowdefy/lowdefy/issues"
@@ -26,14 +25,15 @@
     "type": "git",
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
+  "bin": {
+    "lowdefy-server": "dist/server.js"
+  },
   "files": [
     "dist/*"
   ],
   "scripts": {
     "babel": "babel src --out-dir dist",
     "build": "yarn babel",
-    "build:docker": "docker build --tag lowdefy/lowdefy .",
-    "build:lowdefy-default": "node lowdefyDefault.cjs && lowdefy build",
     "clean": "rm -rf dist && rm -rf .lowdefy",
     "prepare": "yarn build",
     "start": "node dist/server.js"
@@ -45,18 +45,17 @@
     "@lowdefy/shell": "3.19.0",
     "apollo-server-express": "2.25.0",
     "express": "4.17.1",
-    "graphql": "15.5.0"
+    "graphql": "15.5.0",
+    "yargs": "17.1.0"
   },
   "devDependencies": {
     "@babel/cli": "7.14.3",
     "@babel/core": "7.14.3",
     "@babel/preset-env": "7.14.4",
     "@babel/preset-react": "7.13.13",
-    "@lowdefy/block-tools": "3.19.0",
     "babel-jest": "26.6.3",
     "babel-loader": "8.2.2",
-    "jest": "26.6.3",
-    "lowdefy": "3.19.0"
+    "jest": "26.6.3"
   },
   "publishConfig": {
     "access": "public"
