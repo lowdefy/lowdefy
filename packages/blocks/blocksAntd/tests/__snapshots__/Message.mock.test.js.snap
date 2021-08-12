@@ -15,3 +15,5 @@ exports[`Mock render - properties.status: info - value[0] - default 1`] = `Array
 exports[`Mock render - properties.status: loading - value[0] - default 1`] = `Array []`;
 
 exports[`Mock render - properties.status: warning - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - with html content - value[0] - default 1`] = `Array []`;

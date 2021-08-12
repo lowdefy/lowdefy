@@ -15,7 +15,9 @@ exports[`Render default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -138,7 +140,9 @@ exports[`Render properties.allowClear: false - value[0] 1`] = `
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
-      properties.allowClear: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -261,7 +265,9 @@ exports[`Render properties.autoFocus: true - value[0] 1`] = `
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
-      properties.autoFocus: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -385,7 +391,9 @@ exports[`Render properties.clearIcon: ChromeFilled - value[0] 1`] = `
       htmlFor="properties.clearIcon: ChromeFilled_input"
       title="properties.clearIcon: ChromeFilled"
     >
-      properties.clearIcon: ChromeFilled
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -508,7 +516,9 @@ exports[`Render properties.clearIcon-object: ChromeFilled - value[0] 1`] = `
       htmlFor="properties.clearIcon-object: ChromeFilled_input"
       title="properties.clearIcon-object: ChromeFilled"
     >
-      properties.clearIcon-object: ChromeFilled
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -631,7 +641,9 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      properties.disabled: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -756,7 +768,9 @@ exports[`Render properties.label align: left - value[0] 1`] = `
       htmlFor="properties.label align: left_input"
       title="properties.label align: left"
     >
-      properties.label align: left
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -879,7 +893,9 @@ exports[`Render properties.label align: right - value[0] 1`] = `
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
-      properties.label align: right
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1002,7 +1018,9 @@ exports[`Render properties.label colon: false - value[0] 1`] = `
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
-      properties.label colon: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1236,7 +1254,9 @@ exports[`Render properties.label extra: showing extra - value[0] 1`] = `
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
-      properties.label extra: showing extra
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1343,7 +1363,9 @@ exports[`Render properties.label extra: showing extra - value[0] 1`] = `
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      showing extra
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
   </div>
 </div>
@@ -1368,7 +1390,9 @@ exports[`Render properties.label inline: true - value[0] 1`] = `
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
-      properties.label inline: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1495,7 +1519,9 @@ exports[`Render properties.label span: 12 - value[0] 1`] = `
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
-      properties.label span: 12
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1603,6 +1629,256 @@ exports[`Render properties.label span: 12 - value[0] 1`] = `
 </div>
 `;
 
+exports[`Render properties.options.label: html - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options.label: html"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options.label: html_input"
+      title="properties.options.label: html"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.options.label: html_popup"
+          />
+          <div
+            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-select-selector"
+              onClick={[Function]}
+              onMouseDown={[Function]}
+            >
+              <span
+                className="ant-select-selection-search"
+              >
+                <input
+                  aria-activedescendant="properties.options.label: html_input_list_0"
+                  aria-autocomplete="list"
+                  aria-controls="properties.options.label: html_input_list"
+                  aria-haspopup="listbox"
+                  aria-owns="properties.options.label: html_input_list"
+                  autoComplete="off"
+                  className="ant-select-selection-search-input"
+                  id="properties.options.label: html_input"
+                  onChange={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  onPaste={[Function]}
+                  readOnly={false}
+                  role="combobox"
+                  style={
+                    Object {
+                      "opacity": null,
+                    }
+                  }
+                  type="search"
+                  unselectable={null}
+                  value=""
+                />
+              </span>
+              <span
+                className="ant-select-selection-placeholder"
+              >
+                Select item
+              </span>
+            </div>
+            <span
+              aria-hidden={true}
+              className="ant-select-arrow"
+              onMouseDown={[Function]}
+              style={
+                Object {
+                  "WebkitUserSelect": "none",
+                  "userSelect": "none",
+                }
+              }
+              unselectable="on"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-select-suffix"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.options: html - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options: html"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options: html_input"
+      title="properties.options: html"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.options: html_popup"
+          />
+          <div
+            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-select-selector"
+              onClick={[Function]}
+              onMouseDown={[Function]}
+            >
+              <span
+                className="ant-select-selection-search"
+              >
+                <input
+                  aria-activedescendant="properties.options: html_input_list_0"
+                  aria-autocomplete="list"
+                  aria-controls="properties.options: html_input_list"
+                  aria-haspopup="listbox"
+                  aria-owns="properties.options: html_input_list"
+                  autoComplete="off"
+                  className="ant-select-selection-search-input"
+                  id="properties.options: html_input"
+                  onChange={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  onPaste={[Function]}
+                  readOnly={false}
+                  role="combobox"
+                  style={
+                    Object {
+                      "opacity": null,
+                    }
+                  }
+                  type="search"
+                  unselectable={null}
+                  value=""
+                />
+              </span>
+              <span
+                className="ant-select-selection-placeholder"
+              >
+                Select item
+              </span>
+            </div>
+            <span
+              aria-hidden={true}
+              className="ant-select-arrow"
+              onMouseDown={[Function]}
+              style={
+                Object {
+                  "WebkitUserSelect": "none",
+                  "userSelect": "none",
+                }
+              }
+              unselectable="on"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-select-suffix"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render properties.options-number - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
@@ -1618,7 +1894,9 @@ exports[`Render properties.options-number - value[0] 1`] = `
       htmlFor="properties.options-number_input"
       title="properties.options-number"
     >
-      properties.options-number
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1741,7 +2019,9 @@ exports[`Render properties.options-object - value[0] 1`] = `
       htmlFor="properties.options-object_input"
       title="properties.options-object"
     >
-      properties.options-object
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1864,7 +2144,9 @@ exports[`Render properties.options-string - value[0] 1`] = `
       htmlFor="properties.options-string_input"
       title="properties.options-string"
     >
-      properties.options-string
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1972,6 +2254,131 @@ exports[`Render properties.options-string - value[0] 1`] = `
 </div>
 `;
 
+exports[`Render properties.options-style - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options-style"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options-style_input"
+      title="properties.options-style"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.options-style_popup"
+          />
+          <div
+            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-select-selector"
+              onClick={[Function]}
+              onMouseDown={[Function]}
+            >
+              <span
+                className="ant-select-selection-search"
+              >
+                <input
+                  aria-activedescendant="properties.options-style_input_list_0"
+                  aria-autocomplete="list"
+                  aria-controls="properties.options-style_input_list"
+                  aria-haspopup="listbox"
+                  aria-owns="properties.options-style_input_list"
+                  autoComplete="off"
+                  className="ant-select-selection-search-input"
+                  id="properties.options-style_input"
+                  onChange={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  onPaste={[Function]}
+                  readOnly={false}
+                  role="combobox"
+                  style={
+                    Object {
+                      "opacity": null,
+                    }
+                  }
+                  type="search"
+                  unselectable={null}
+                  value=""
+                />
+              </span>
+              <span
+                className="ant-select-selection-placeholder"
+              >
+                Select item
+              </span>
+            </div>
+            <span
+              aria-hidden={true}
+              className="ant-select-arrow"
+              onMouseDown={[Function]}
+              style={
+                Object {
+                  "WebkitUserSelect": "none",
+                  "userSelect": "none",
+                }
+              }
+              unselectable="on"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-select-suffix"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render properties.placeholder: Find item in list - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
@@ -1987,7 +2394,9 @@ exports[`Render properties.placeholder: Find item in list - value[0] 1`] = `
       htmlFor="properties.placeholder: Find item in list_input"
       title="properties.placeholder: Find item in list"
     >
-      properties.placeholder: Find item in list
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2110,7 +2519,9 @@ exports[`Render properties.showArrow: false - value[0] 1`] = `
       htmlFor="properties.showArrow: false_input"
       title="properties.showArrow: false"
     >
-      properties.showArrow: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2201,7 +2612,9 @@ exports[`Render properties.showSearch: false - value[0] 1`] = `
       htmlFor="properties.showSearch: false_input"
       title="properties.showSearch: false"
     >
-      properties.showSearch: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2324,7 +2737,9 @@ exports[`Render properties.showSearch: true - value[0] 1`] = `
       htmlFor="properties.showSearch: true_input"
       title="properties.showSearch: true"
     >
-      properties.showSearch: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2447,7 +2862,9 @@ exports[`Render properties.size: default - value[0] 1`] = `
       htmlFor="properties.size: default_input"
       title="properties.size: default"
     >
-      properties.size: default
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2570,7 +2987,9 @@ exports[`Render properties.size: large - value[0] 1`] = `
       htmlFor="properties.size: large_input"
       title="properties.size: large"
     >
-      properties.size: large
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2693,7 +3112,9 @@ exports[`Render properties.size: small - value[0] 1`] = `
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
-      properties.size: small
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2816,7 +3237,9 @@ exports[`Render properties.suffixIcon: DoubleLeftOutlined - value[0] 1`] = `
       htmlFor="properties.suffixIcon: DoubleLeftOutlined_input"
       title="properties.suffixIcon: DoubleLeftOutlined"
     >
-      properties.suffixIcon: DoubleLeftOutlined
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2941,7 +3364,9 @@ exports[`Render properties.title: My Selector Title - value[0] 1`] = `
       htmlFor="properties.title: My Selector Title_input"
       title="My Selector Title"
     >
-      My Selector Title
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3064,7 +3489,9 @@ exports[`Render required = true default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3187,7 +3614,9 @@ exports[`Render required = true properties.allowClear: false - value[0] 1`] = `
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
-      properties.allowClear: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3310,7 +3739,9 @@ exports[`Render required = true properties.autoFocus: true - value[0] 1`] = `
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
-      properties.autoFocus: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3434,7 +3865,9 @@ exports[`Render required = true properties.clearIcon: ChromeFilled - value[0] 1`
       htmlFor="properties.clearIcon: ChromeFilled_input"
       title="properties.clearIcon: ChromeFilled"
     >
-      properties.clearIcon: ChromeFilled
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3557,7 +3990,9 @@ exports[`Render required = true properties.clearIcon-object: ChromeFilled - valu
       htmlFor="properties.clearIcon-object: ChromeFilled_input"
       title="properties.clearIcon-object: ChromeFilled"
     >
-      properties.clearIcon-object: ChromeFilled
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3680,7 +4115,9 @@ exports[`Render required = true properties.disabled: true - value[0] 1`] = `
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      properties.disabled: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3805,7 +4242,9 @@ exports[`Render required = true properties.label align: left - value[0] 1`] = `
       htmlFor="properties.label align: left_input"
       title="properties.label align: left"
     >
-      properties.label align: left
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3928,7 +4367,9 @@ exports[`Render required = true properties.label align: right - value[0] 1`] = `
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
-      properties.label align: right
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -4051,7 +4492,9 @@ exports[`Render required = true properties.label colon: false - value[0] 1`] = `
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
-      properties.label colon: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -4285,7 +4728,9 @@ exports[`Render required = true properties.label extra: showing extra - value[0]
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
-      properties.label extra: showing extra
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -4392,7 +4837,9 @@ exports[`Render required = true properties.label extra: showing extra - value[0]
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      showing extra
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
   </div>
 </div>
@@ -4417,7 +4864,9 @@ exports[`Render required = true properties.label inline: true - value[0] 1`] = `
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
-      properties.label inline: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -4544,7 +4993,9 @@ exports[`Render required = true properties.label span: 12 - value[0] 1`] = `
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
-      properties.label span: 12
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -4652,6 +5103,256 @@ exports[`Render required = true properties.label span: 12 - value[0] 1`] = `
 </div>
 `;
 
+exports[`Render required = true properties.options.label: html - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options.label: html"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options.label: html_input"
+      title="properties.options.label: html"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.options.label: html_popup"
+          />
+          <div
+            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-select-selector"
+              onClick={[Function]}
+              onMouseDown={[Function]}
+            >
+              <span
+                className="ant-select-selection-search"
+              >
+                <input
+                  aria-activedescendant="properties.options.label: html_input_list_0"
+                  aria-autocomplete="list"
+                  aria-controls="properties.options.label: html_input_list"
+                  aria-haspopup="listbox"
+                  aria-owns="properties.options.label: html_input_list"
+                  autoComplete="off"
+                  className="ant-select-selection-search-input"
+                  id="properties.options.label: html_input"
+                  onChange={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  onPaste={[Function]}
+                  readOnly={false}
+                  role="combobox"
+                  style={
+                    Object {
+                      "opacity": null,
+                    }
+                  }
+                  type="search"
+                  unselectable={null}
+                  value=""
+                />
+              </span>
+              <span
+                className="ant-select-selection-placeholder"
+              >
+                Select item
+              </span>
+            </div>
+            <span
+              aria-hidden={true}
+              className="ant-select-arrow"
+              onMouseDown={[Function]}
+              style={
+                Object {
+                  "WebkitUserSelect": "none",
+                  "userSelect": "none",
+                }
+              }
+              unselectable="on"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-select-suffix"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.options: html - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options: html"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options: html_input"
+      title="properties.options: html"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.options: html_popup"
+          />
+          <div
+            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-select-selector"
+              onClick={[Function]}
+              onMouseDown={[Function]}
+            >
+              <span
+                className="ant-select-selection-search"
+              >
+                <input
+                  aria-activedescendant="properties.options: html_input_list_0"
+                  aria-autocomplete="list"
+                  aria-controls="properties.options: html_input_list"
+                  aria-haspopup="listbox"
+                  aria-owns="properties.options: html_input_list"
+                  autoComplete="off"
+                  className="ant-select-selection-search-input"
+                  id="properties.options: html_input"
+                  onChange={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  onPaste={[Function]}
+                  readOnly={false}
+                  role="combobox"
+                  style={
+                    Object {
+                      "opacity": null,
+                    }
+                  }
+                  type="search"
+                  unselectable={null}
+                  value=""
+                />
+              </span>
+              <span
+                className="ant-select-selection-placeholder"
+              >
+                Select item
+              </span>
+            </div>
+            <span
+              aria-hidden={true}
+              className="ant-select-arrow"
+              onMouseDown={[Function]}
+              style={
+                Object {
+                  "WebkitUserSelect": "none",
+                  "userSelect": "none",
+                }
+              }
+              unselectable="on"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-select-suffix"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render required = true properties.options-number - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
@@ -4667,7 +5368,9 @@ exports[`Render required = true properties.options-number - value[0] 1`] = `
       htmlFor="properties.options-number_input"
       title="properties.options-number"
     >
-      properties.options-number
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -4790,7 +5493,9 @@ exports[`Render required = true properties.options-object - value[0] 1`] = `
       htmlFor="properties.options-object_input"
       title="properties.options-object"
     >
-      properties.options-object
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -4913,7 +5618,9 @@ exports[`Render required = true properties.options-string - value[0] 1`] = `
       htmlFor="properties.options-string_input"
       title="properties.options-string"
     >
-      properties.options-string
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5021,6 +5728,131 @@ exports[`Render required = true properties.options-string - value[0] 1`] = `
 </div>
 `;
 
+exports[`Render required = true properties.options-style - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options-style"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options-style_input"
+      title="properties.options-style"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.options-style_popup"
+          />
+          <div
+            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-select-selector"
+              onClick={[Function]}
+              onMouseDown={[Function]}
+            >
+              <span
+                className="ant-select-selection-search"
+              >
+                <input
+                  aria-activedescendant="properties.options-style_input_list_0"
+                  aria-autocomplete="list"
+                  aria-controls="properties.options-style_input_list"
+                  aria-haspopup="listbox"
+                  aria-owns="properties.options-style_input_list"
+                  autoComplete="off"
+                  className="ant-select-selection-search-input"
+                  id="properties.options-style_input"
+                  onChange={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  onPaste={[Function]}
+                  readOnly={false}
+                  role="combobox"
+                  style={
+                    Object {
+                      "opacity": null,
+                    }
+                  }
+                  type="search"
+                  unselectable={null}
+                  value=""
+                />
+              </span>
+              <span
+                className="ant-select-selection-placeholder"
+              >
+                Select item
+              </span>
+            </div>
+            <span
+              aria-hidden={true}
+              className="ant-select-arrow"
+              onMouseDown={[Function]}
+              style={
+                Object {
+                  "WebkitUserSelect": "none",
+                  "userSelect": "none",
+                }
+              }
+              unselectable="on"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-select-suffix"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render required = true properties.placeholder: Find item in list - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
@@ -5036,7 +5868,9 @@ exports[`Render required = true properties.placeholder: Find item in list - valu
       htmlFor="properties.placeholder: Find item in list_input"
       title="properties.placeholder: Find item in list"
     >
-      properties.placeholder: Find item in list
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5159,7 +5993,9 @@ exports[`Render required = true properties.showArrow: false - value[0] 1`] = `
       htmlFor="properties.showArrow: false_input"
       title="properties.showArrow: false"
     >
-      properties.showArrow: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5250,7 +6086,9 @@ exports[`Render required = true properties.showSearch: false - value[0] 1`] = `
       htmlFor="properties.showSearch: false_input"
       title="properties.showSearch: false"
     >
-      properties.showSearch: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5373,7 +6211,9 @@ exports[`Render required = true properties.showSearch: true - value[0] 1`] = `
       htmlFor="properties.showSearch: true_input"
       title="properties.showSearch: true"
     >
-      properties.showSearch: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5496,7 +6336,9 @@ exports[`Render required = true properties.size: default - value[0] 1`] = `
       htmlFor="properties.size: default_input"
       title="properties.size: default"
     >
-      properties.size: default
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5619,7 +6461,9 @@ exports[`Render required = true properties.size: large - value[0] 1`] = `
       htmlFor="properties.size: large_input"
       title="properties.size: large"
     >
-      properties.size: large
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5742,7 +6586,9 @@ exports[`Render required = true properties.size: small - value[0] 1`] = `
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
-      properties.size: small
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5865,7 +6711,9 @@ exports[`Render required = true properties.suffixIcon: DoubleLeftOutlined - valu
       htmlFor="properties.suffixIcon: DoubleLeftOutlined_input"
       title="properties.suffixIcon: DoubleLeftOutlined"
     >
-      properties.suffixIcon: DoubleLeftOutlined
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5990,7 +6838,9 @@ exports[`Render required = true properties.title: My Selector Title - value[0] 1
       htmlFor="properties.title: My Selector Title_input"
       title="My Selector Title"
     >
-      My Selector Title
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6113,7 +6963,9 @@ exports[`Render validation.status = error default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6264,7 +7116,9 @@ exports[`Render validation.status = error properties.allowClear: false - value[0
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
-      properties.allowClear: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6415,7 +7269,9 @@ exports[`Render validation.status = error properties.autoFocus: true - value[0] 
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
-      properties.autoFocus: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6567,7 +7423,9 @@ exports[`Render validation.status = error properties.clearIcon: ChromeFilled - v
       htmlFor="properties.clearIcon: ChromeFilled_input"
       title="properties.clearIcon: ChromeFilled"
     >
-      properties.clearIcon: ChromeFilled
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6718,7 +7576,9 @@ exports[`Render validation.status = error properties.clearIcon-object: ChromeFil
       htmlFor="properties.clearIcon-object: ChromeFilled_input"
       title="properties.clearIcon-object: ChromeFilled"
     >
-      properties.clearIcon-object: ChromeFilled
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6869,7 +7729,9 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      properties.disabled: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -7022,7 +7884,9 @@ exports[`Render validation.status = error properties.label align: left - value[0
       htmlFor="properties.label align: left_input"
       title="properties.label align: left"
     >
-      properties.label align: left
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -7173,7 +8037,9 @@ exports[`Render validation.status = error properties.label align: right - value[
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
-      properties.label align: right
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -7324,7 +8190,9 @@ exports[`Render validation.status = error properties.label colon: false - value[
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
-      properties.label colon: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -7614,7 +8482,9 @@ exports[`Render validation.status = error properties.label extra: showing extra 
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
-      properties.label extra: showing extra
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -7769,7 +8639,9 @@ exports[`Render validation.status = error properties.label inline: true - value[
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
-      properties.label inline: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -7924,7 +8796,9 @@ exports[`Render validation.status = error properties.label span: 12 - value[0] 1
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
-      properties.label span: 12
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -8060,6 +8934,312 @@ exports[`Render validation.status = error properties.label span: 12 - value[0] 1
 </div>
 `;
 
+exports[`Render validation.status = error properties.options.label: html - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options.label: html"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options.label: html_input"
+      title="properties.options.label: html"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.options.label: html_popup"
+          />
+          <div
+            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-select-selector"
+              onClick={[Function]}
+              onMouseDown={[Function]}
+            >
+              <span
+                className="ant-select-selection-search"
+              >
+                <input
+                  aria-activedescendant="properties.options.label: html_input_list_0"
+                  aria-autocomplete="list"
+                  aria-controls="properties.options.label: html_input_list"
+                  aria-haspopup="listbox"
+                  aria-owns="properties.options.label: html_input_list"
+                  autoComplete="off"
+                  className="ant-select-selection-search-input"
+                  id="properties.options.label: html_input"
+                  onChange={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  onPaste={[Function]}
+                  readOnly={false}
+                  role="combobox"
+                  style={
+                    Object {
+                      "opacity": null,
+                    }
+                  }
+                  type="search"
+                  unselectable={null}
+                  value=""
+                />
+              </span>
+              <span
+                className="ant-select-selection-placeholder"
+              >
+                Select item
+              </span>
+            </div>
+            <span
+              aria-hidden={true}
+              className="ant-select-arrow"
+              onMouseDown={[Function]}
+              style={
+                Object {
+                  "WebkitUserSelect": "none",
+                  "userSelect": "none",
+                }
+              }
+              unselectable="on"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-select-suffix"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="close-circle"
+          className="anticon anticon-close-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="close-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      validation error
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = error properties.options: html - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options: html"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options: html_input"
+      title="properties.options: html"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.options: html_popup"
+          />
+          <div
+            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-select-selector"
+              onClick={[Function]}
+              onMouseDown={[Function]}
+            >
+              <span
+                className="ant-select-selection-search"
+              >
+                <input
+                  aria-activedescendant="properties.options: html_input_list_0"
+                  aria-autocomplete="list"
+                  aria-controls="properties.options: html_input_list"
+                  aria-haspopup="listbox"
+                  aria-owns="properties.options: html_input_list"
+                  autoComplete="off"
+                  className="ant-select-selection-search-input"
+                  id="properties.options: html_input"
+                  onChange={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  onPaste={[Function]}
+                  readOnly={false}
+                  role="combobox"
+                  style={
+                    Object {
+                      "opacity": null,
+                    }
+                  }
+                  type="search"
+                  unselectable={null}
+                  value=""
+                />
+              </span>
+              <span
+                className="ant-select-selection-placeholder"
+              >
+                Select item
+              </span>
+            </div>
+            <span
+              aria-hidden={true}
+              className="ant-select-arrow"
+              onMouseDown={[Function]}
+              style={
+                Object {
+                  "WebkitUserSelect": "none",
+                  "userSelect": "none",
+                }
+              }
+              unselectable="on"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-select-suffix"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="close-circle"
+          className="anticon anticon-close-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="close-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      validation error
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render validation.status = error properties.options-number - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
@@ -8075,7 +9255,9 @@ exports[`Render validation.status = error properties.options-number - value[0] 1
       htmlFor="properties.options-number_input"
       title="properties.options-number"
     >
-      properties.options-number
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -8226,7 +9408,9 @@ exports[`Render validation.status = error properties.options-object - value[0] 1
       htmlFor="properties.options-object_input"
       title="properties.options-object"
     >
-      properties.options-object
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -8377,7 +9561,9 @@ exports[`Render validation.status = error properties.options-string - value[0] 1
       htmlFor="properties.options-string_input"
       title="properties.options-string"
     >
-      properties.options-string
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -8513,6 +9699,159 @@ exports[`Render validation.status = error properties.options-string - value[0] 1
 </div>
 `;
 
+exports[`Render validation.status = error properties.options-style - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options-style"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options-style_input"
+      title="properties.options-style"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.options-style_popup"
+          />
+          <div
+            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-select-selector"
+              onClick={[Function]}
+              onMouseDown={[Function]}
+            >
+              <span
+                className="ant-select-selection-search"
+              >
+                <input
+                  aria-activedescendant="properties.options-style_input_list_0"
+                  aria-autocomplete="list"
+                  aria-controls="properties.options-style_input_list"
+                  aria-haspopup="listbox"
+                  aria-owns="properties.options-style_input_list"
+                  autoComplete="off"
+                  className="ant-select-selection-search-input"
+                  id="properties.options-style_input"
+                  onChange={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  onPaste={[Function]}
+                  readOnly={false}
+                  role="combobox"
+                  style={
+                    Object {
+                      "opacity": null,
+                    }
+                  }
+                  type="search"
+                  unselectable={null}
+                  value=""
+                />
+              </span>
+              <span
+                className="ant-select-selection-placeholder"
+              >
+                Select item
+              </span>
+            </div>
+            <span
+              aria-hidden={true}
+              className="ant-select-arrow"
+              onMouseDown={[Function]}
+              style={
+                Object {
+                  "WebkitUserSelect": "none",
+                  "userSelect": "none",
+                }
+              }
+              unselectable="on"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-select-suffix"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="close-circle"
+          className="anticon anticon-close-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="close-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      validation error
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render validation.status = error properties.placeholder: Find item in list - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
@@ -8528,7 +9867,9 @@ exports[`Render validation.status = error properties.placeholder: Find item in l
       htmlFor="properties.placeholder: Find item in list_input"
       title="properties.placeholder: Find item in list"
     >
-      properties.placeholder: Find item in list
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -8679,7 +10020,9 @@ exports[`Render validation.status = error properties.showArrow: false - value[0]
       htmlFor="properties.showArrow: false_input"
       title="properties.showArrow: false"
     >
-      properties.showArrow: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -8798,7 +10141,9 @@ exports[`Render validation.status = error properties.showSearch: false - value[0
       htmlFor="properties.showSearch: false_input"
       title="properties.showSearch: false"
     >
-      properties.showSearch: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -8949,7 +10294,9 @@ exports[`Render validation.status = error properties.showSearch: true - value[0]
       htmlFor="properties.showSearch: true_input"
       title="properties.showSearch: true"
     >
-      properties.showSearch: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -9100,7 +10447,9 @@ exports[`Render validation.status = error properties.size: default - value[0] 1`
       htmlFor="properties.size: default_input"
       title="properties.size: default"
     >
-      properties.size: default
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -9251,7 +10600,9 @@ exports[`Render validation.status = error properties.size: large - value[0] 1`] 
       htmlFor="properties.size: large_input"
       title="properties.size: large"
     >
-      properties.size: large
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -9402,7 +10753,9 @@ exports[`Render validation.status = error properties.size: small - value[0] 1`] 
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
-      properties.size: small
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -9553,7 +10906,9 @@ exports[`Render validation.status = error properties.suffixIcon: DoubleLeftOutli
       htmlFor="properties.suffixIcon: DoubleLeftOutlined_input"
       title="properties.suffixIcon: DoubleLeftOutlined"
     >
-      properties.suffixIcon: DoubleLeftOutlined
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -9706,7 +11061,9 @@ exports[`Render validation.status = error properties.title: My Selector Title - 
       htmlFor="properties.title: My Selector Title_input"
       title="My Selector Title"
     >
-      My Selector Title
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -9857,7 +11214,9 @@ exports[`Render validation.status = null default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -9980,7 +11339,9 @@ exports[`Render validation.status = null properties.allowClear: false - value[0]
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
-      properties.allowClear: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -10103,7 +11464,9 @@ exports[`Render validation.status = null properties.autoFocus: true - value[0] 1
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
-      properties.autoFocus: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -10227,7 +11590,9 @@ exports[`Render validation.status = null properties.clearIcon: ChromeFilled - va
       htmlFor="properties.clearIcon: ChromeFilled_input"
       title="properties.clearIcon: ChromeFilled"
     >
-      properties.clearIcon: ChromeFilled
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -10350,7 +11715,9 @@ exports[`Render validation.status = null properties.clearIcon-object: ChromeFill
       htmlFor="properties.clearIcon-object: ChromeFilled_input"
       title="properties.clearIcon-object: ChromeFilled"
     >
-      properties.clearIcon-object: ChromeFilled
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -10473,7 +11840,9 @@ exports[`Render validation.status = null properties.disabled: true - value[0] 1`
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      properties.disabled: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -10598,7 +11967,9 @@ exports[`Render validation.status = null properties.label align: left - value[0]
       htmlFor="properties.label align: left_input"
       title="properties.label align: left"
     >
-      properties.label align: left
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -10721,7 +12092,9 @@ exports[`Render validation.status = null properties.label align: right - value[0
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
-      properties.label align: right
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -10844,7 +12217,9 @@ exports[`Render validation.status = null properties.label colon: false - value[0
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
-      properties.label colon: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -11078,7 +12453,9 @@ exports[`Render validation.status = null properties.label extra: showing extra -
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
-      properties.label extra: showing extra
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -11185,7 +12562,9 @@ exports[`Render validation.status = null properties.label extra: showing extra -
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      showing extra
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
   </div>
 </div>
@@ -11210,7 +12589,9 @@ exports[`Render validation.status = null properties.label inline: true - value[0
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
-      properties.label inline: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -11337,7 +12718,9 @@ exports[`Render validation.status = null properties.label span: 12 - value[0] 1`
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
-      properties.label span: 12
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -11445,6 +12828,256 @@ exports[`Render validation.status = null properties.label span: 12 - value[0] 1`
 </div>
 `;
 
+exports[`Render validation.status = null properties.options.label: html - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options.label: html"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options.label: html_input"
+      title="properties.options.label: html"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.options.label: html_popup"
+          />
+          <div
+            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-select-selector"
+              onClick={[Function]}
+              onMouseDown={[Function]}
+            >
+              <span
+                className="ant-select-selection-search"
+              >
+                <input
+                  aria-activedescendant="properties.options.label: html_input_list_0"
+                  aria-autocomplete="list"
+                  aria-controls="properties.options.label: html_input_list"
+                  aria-haspopup="listbox"
+                  aria-owns="properties.options.label: html_input_list"
+                  autoComplete="off"
+                  className="ant-select-selection-search-input"
+                  id="properties.options.label: html_input"
+                  onChange={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  onPaste={[Function]}
+                  readOnly={false}
+                  role="combobox"
+                  style={
+                    Object {
+                      "opacity": null,
+                    }
+                  }
+                  type="search"
+                  unselectable={null}
+                  value=""
+                />
+              </span>
+              <span
+                className="ant-select-selection-placeholder"
+              >
+                Select item
+              </span>
+            </div>
+            <span
+              aria-hidden={true}
+              className="ant-select-arrow"
+              onMouseDown={[Function]}
+              style={
+                Object {
+                  "WebkitUserSelect": "none",
+                  "userSelect": "none",
+                }
+              }
+              unselectable="on"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-select-suffix"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = null properties.options: html - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options: html"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options: html_input"
+      title="properties.options: html"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.options: html_popup"
+          />
+          <div
+            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-select-selector"
+              onClick={[Function]}
+              onMouseDown={[Function]}
+            >
+              <span
+                className="ant-select-selection-search"
+              >
+                <input
+                  aria-activedescendant="properties.options: html_input_list_0"
+                  aria-autocomplete="list"
+                  aria-controls="properties.options: html_input_list"
+                  aria-haspopup="listbox"
+                  aria-owns="properties.options: html_input_list"
+                  autoComplete="off"
+                  className="ant-select-selection-search-input"
+                  id="properties.options: html_input"
+                  onChange={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  onPaste={[Function]}
+                  readOnly={false}
+                  role="combobox"
+                  style={
+                    Object {
+                      "opacity": null,
+                    }
+                  }
+                  type="search"
+                  unselectable={null}
+                  value=""
+                />
+              </span>
+              <span
+                className="ant-select-selection-placeholder"
+              >
+                Select item
+              </span>
+            </div>
+            <span
+              aria-hidden={true}
+              className="ant-select-arrow"
+              onMouseDown={[Function]}
+              style={
+                Object {
+                  "WebkitUserSelect": "none",
+                  "userSelect": "none",
+                }
+              }
+              unselectable="on"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-select-suffix"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render validation.status = null properties.options-number - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
@@ -11460,7 +13093,9 @@ exports[`Render validation.status = null properties.options-number - value[0] 1`
       htmlFor="properties.options-number_input"
       title="properties.options-number"
     >
-      properties.options-number
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -11583,7 +13218,9 @@ exports[`Render validation.status = null properties.options-object - value[0] 1`
       htmlFor="properties.options-object_input"
       title="properties.options-object"
     >
-      properties.options-object
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -11706,7 +13343,9 @@ exports[`Render validation.status = null properties.options-string - value[0] 1`
       htmlFor="properties.options-string_input"
       title="properties.options-string"
     >
-      properties.options-string
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -11814,6 +13453,131 @@ exports[`Render validation.status = null properties.options-string - value[0] 1`
 </div>
 `;
 
+exports[`Render validation.status = null properties.options-style - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options-style"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options-style_input"
+      title="properties.options-style"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.options-style_popup"
+          />
+          <div
+            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-select-selector"
+              onClick={[Function]}
+              onMouseDown={[Function]}
+            >
+              <span
+                className="ant-select-selection-search"
+              >
+                <input
+                  aria-activedescendant="properties.options-style_input_list_0"
+                  aria-autocomplete="list"
+                  aria-controls="properties.options-style_input_list"
+                  aria-haspopup="listbox"
+                  aria-owns="properties.options-style_input_list"
+                  autoComplete="off"
+                  className="ant-select-selection-search-input"
+                  id="properties.options-style_input"
+                  onChange={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  onPaste={[Function]}
+                  readOnly={false}
+                  role="combobox"
+                  style={
+                    Object {
+                      "opacity": null,
+                    }
+                  }
+                  type="search"
+                  unselectable={null}
+                  value=""
+                />
+              </span>
+              <span
+                className="ant-select-selection-placeholder"
+              >
+                Select item
+              </span>
+            </div>
+            <span
+              aria-hidden={true}
+              className="ant-select-arrow"
+              onMouseDown={[Function]}
+              style={
+                Object {
+                  "WebkitUserSelect": "none",
+                  "userSelect": "none",
+                }
+              }
+              unselectable="on"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-select-suffix"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render validation.status = null properties.placeholder: Find item in list - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
@@ -11829,7 +13593,9 @@ exports[`Render validation.status = null properties.placeholder: Find item in li
       htmlFor="properties.placeholder: Find item in list_input"
       title="properties.placeholder: Find item in list"
     >
-      properties.placeholder: Find item in list
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -11952,7 +13718,9 @@ exports[`Render validation.status = null properties.showArrow: false - value[0] 
       htmlFor="properties.showArrow: false_input"
       title="properties.showArrow: false"
     >
-      properties.showArrow: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -12043,7 +13811,9 @@ exports[`Render validation.status = null properties.showSearch: false - value[0]
       htmlFor="properties.showSearch: false_input"
       title="properties.showSearch: false"
     >
-      properties.showSearch: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -12166,7 +13936,9 @@ exports[`Render validation.status = null properties.showSearch: true - value[0] 
       htmlFor="properties.showSearch: true_input"
       title="properties.showSearch: true"
     >
-      properties.showSearch: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -12289,7 +14061,9 @@ exports[`Render validation.status = null properties.size: default - value[0] 1`]
       htmlFor="properties.size: default_input"
       title="properties.size: default"
     >
-      properties.size: default
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -12412,7 +14186,9 @@ exports[`Render validation.status = null properties.size: large - value[0] 1`] =
       htmlFor="properties.size: large_input"
       title="properties.size: large"
     >
-      properties.size: large
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -12535,7 +14311,9 @@ exports[`Render validation.status = null properties.size: small - value[0] 1`] =
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
-      properties.size: small
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -12658,7 +14436,9 @@ exports[`Render validation.status = null properties.suffixIcon: DoubleLeftOutlin
       htmlFor="properties.suffixIcon: DoubleLeftOutlined_input"
       title="properties.suffixIcon: DoubleLeftOutlined"
     >
-      properties.suffixIcon: DoubleLeftOutlined
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -12783,7 +14563,9 @@ exports[`Render validation.status = null properties.title: My Selector Title - v
       htmlFor="properties.title: My Selector Title_input"
       title="My Selector Title"
     >
-      My Selector Title
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -12906,7 +14688,9 @@ exports[`Render validation.status = success default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -13052,7 +14836,9 @@ exports[`Render validation.status = success properties.allowClear: false - value
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
-      properties.allowClear: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -13198,7 +14984,9 @@ exports[`Render validation.status = success properties.autoFocus: true - value[0
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
-      properties.autoFocus: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -13345,7 +15133,9 @@ exports[`Render validation.status = success properties.clearIcon: ChromeFilled -
       htmlFor="properties.clearIcon: ChromeFilled_input"
       title="properties.clearIcon: ChromeFilled"
     >
-      properties.clearIcon: ChromeFilled
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -13491,7 +15281,9 @@ exports[`Render validation.status = success properties.clearIcon-object: ChromeF
       htmlFor="properties.clearIcon-object: ChromeFilled_input"
       title="properties.clearIcon-object: ChromeFilled"
     >
-      properties.clearIcon-object: ChromeFilled
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -13637,7 +15429,9 @@ exports[`Render validation.status = success properties.disabled: true - value[0]
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      properties.disabled: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -13785,7 +15579,9 @@ exports[`Render validation.status = success properties.label align: left - value
       htmlFor="properties.label align: left_input"
       title="properties.label align: left"
     >
-      properties.label align: left
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -13931,7 +15727,9 @@ exports[`Render validation.status = success properties.label align: right - valu
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
-      properties.label align: right
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -14077,7 +15875,9 @@ exports[`Render validation.status = success properties.label colon: false - valu
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
-      properties.label colon: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -14357,7 +16157,9 @@ exports[`Render validation.status = success properties.label extra: showing extr
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
-      properties.label extra: showing extra
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -14487,7 +16289,9 @@ exports[`Render validation.status = success properties.label extra: showing extr
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      showing extra
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
   </div>
 </div>
@@ -14512,7 +16316,9 @@ exports[`Render validation.status = success properties.label inline: true - valu
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
-      properties.label inline: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -14662,7 +16468,9 @@ exports[`Render validation.status = success properties.label span: 12 - value[0]
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
-      properties.label span: 12
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -14793,6 +16601,302 @@ exports[`Render validation.status = success properties.label span: 12 - value[0]
 </div>
 `;
 
+exports[`Render validation.status = success properties.options.label: html - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options.label: html"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options.label: html_input"
+      title="properties.options.label: html"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.options.label: html_popup"
+          />
+          <div
+            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-select-selector"
+              onClick={[Function]}
+              onMouseDown={[Function]}
+            >
+              <span
+                className="ant-select-selection-search"
+              >
+                <input
+                  aria-activedescendant="properties.options.label: html_input_list_0"
+                  aria-autocomplete="list"
+                  aria-controls="properties.options.label: html_input_list"
+                  aria-haspopup="listbox"
+                  aria-owns="properties.options.label: html_input_list"
+                  autoComplete="off"
+                  className="ant-select-selection-search-input"
+                  id="properties.options.label: html_input"
+                  onChange={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  onPaste={[Function]}
+                  readOnly={false}
+                  role="combobox"
+                  style={
+                    Object {
+                      "opacity": null,
+                    }
+                  }
+                  type="search"
+                  unselectable={null}
+                  value=""
+                />
+              </span>
+              <span
+                className="ant-select-selection-placeholder"
+              >
+                Select item
+              </span>
+            </div>
+            <span
+              aria-hidden={true}
+              className="ant-select-arrow"
+              onMouseDown={[Function]}
+              style={
+                Object {
+                  "WebkitUserSelect": "none",
+                  "userSelect": "none",
+                }
+              }
+              unselectable="on"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-select-suffix"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="check-circle"
+          className="anticon anticon-check-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="check-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm193.5 301.7l-210.6 292a31.8 31.8 0 01-51.7 0L318.5 484.9c-3.8-5.3 0-12.7 6.5-12.7h46.9c10.2 0 19.9 4.9 25.9 13.3l71.2 98.8 157.2-218c6-8.3 15.6-13.3 25.9-13.3H699c6.5 0 10.3 7.4 6.5 12.7z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = success properties.options: html - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options: html"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options: html_input"
+      title="properties.options: html"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.options: html_popup"
+          />
+          <div
+            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-select-selector"
+              onClick={[Function]}
+              onMouseDown={[Function]}
+            >
+              <span
+                className="ant-select-selection-search"
+              >
+                <input
+                  aria-activedescendant="properties.options: html_input_list_0"
+                  aria-autocomplete="list"
+                  aria-controls="properties.options: html_input_list"
+                  aria-haspopup="listbox"
+                  aria-owns="properties.options: html_input_list"
+                  autoComplete="off"
+                  className="ant-select-selection-search-input"
+                  id="properties.options: html_input"
+                  onChange={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  onPaste={[Function]}
+                  readOnly={false}
+                  role="combobox"
+                  style={
+                    Object {
+                      "opacity": null,
+                    }
+                  }
+                  type="search"
+                  unselectable={null}
+                  value=""
+                />
+              </span>
+              <span
+                className="ant-select-selection-placeholder"
+              >
+                Select item
+              </span>
+            </div>
+            <span
+              aria-hidden={true}
+              className="ant-select-arrow"
+              onMouseDown={[Function]}
+              style={
+                Object {
+                  "WebkitUserSelect": "none",
+                  "userSelect": "none",
+                }
+              }
+              unselectable="on"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-select-suffix"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="check-circle"
+          className="anticon anticon-check-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="check-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm193.5 301.7l-210.6 292a31.8 31.8 0 01-51.7 0L318.5 484.9c-3.8-5.3 0-12.7 6.5-12.7h46.9c10.2 0 19.9 4.9 25.9 13.3l71.2 98.8 157.2-218c6-8.3 15.6-13.3 25.9-13.3H699c6.5 0 10.3 7.4 6.5 12.7z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render validation.status = success properties.options-number - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
@@ -14808,7 +16912,9 @@ exports[`Render validation.status = success properties.options-number - value[0]
       htmlFor="properties.options-number_input"
       title="properties.options-number"
     >
-      properties.options-number
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -14954,7 +17060,9 @@ exports[`Render validation.status = success properties.options-object - value[0]
       htmlFor="properties.options-object_input"
       title="properties.options-object"
     >
-      properties.options-object
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -15100,7 +17208,9 @@ exports[`Render validation.status = success properties.options-string - value[0]
       htmlFor="properties.options-string_input"
       title="properties.options-string"
     >
-      properties.options-string
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -15231,6 +17341,154 @@ exports[`Render validation.status = success properties.options-string - value[0]
 </div>
 `;
 
+exports[`Render validation.status = success properties.options-style - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options-style"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options-style_input"
+      title="properties.options-style"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.options-style_popup"
+          />
+          <div
+            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-select-selector"
+              onClick={[Function]}
+              onMouseDown={[Function]}
+            >
+              <span
+                className="ant-select-selection-search"
+              >
+                <input
+                  aria-activedescendant="properties.options-style_input_list_0"
+                  aria-autocomplete="list"
+                  aria-controls="properties.options-style_input_list"
+                  aria-haspopup="listbox"
+                  aria-owns="properties.options-style_input_list"
+                  autoComplete="off"
+                  className="ant-select-selection-search-input"
+                  id="properties.options-style_input"
+                  onChange={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  onPaste={[Function]}
+                  readOnly={false}
+                  role="combobox"
+                  style={
+                    Object {
+                      "opacity": null,
+                    }
+                  }
+                  type="search"
+                  unselectable={null}
+                  value=""
+                />
+              </span>
+              <span
+                className="ant-select-selection-placeholder"
+              >
+                Select item
+              </span>
+            </div>
+            <span
+              aria-hidden={true}
+              className="ant-select-arrow"
+              onMouseDown={[Function]}
+              style={
+                Object {
+                  "WebkitUserSelect": "none",
+                  "userSelect": "none",
+                }
+              }
+              unselectable="on"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-select-suffix"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="check-circle"
+          className="anticon anticon-check-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="check-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm193.5 301.7l-210.6 292a31.8 31.8 0 01-51.7 0L318.5 484.9c-3.8-5.3 0-12.7 6.5-12.7h46.9c10.2 0 19.9 4.9 25.9 13.3l71.2 98.8 157.2-218c6-8.3 15.6-13.3 25.9-13.3H699c6.5 0 10.3 7.4 6.5 12.7z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render validation.status = success properties.placeholder: Find item in list - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
@@ -15246,7 +17504,9 @@ exports[`Render validation.status = success properties.placeholder: Find item in
       htmlFor="properties.placeholder: Find item in list_input"
       title="properties.placeholder: Find item in list"
     >
-      properties.placeholder: Find item in list
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -15392,7 +17652,9 @@ exports[`Render validation.status = success properties.showArrow: false - value[
       htmlFor="properties.showArrow: false_input"
       title="properties.showArrow: false"
     >
-      properties.showArrow: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -15506,7 +17768,9 @@ exports[`Render validation.status = success properties.showSearch: false - value
       htmlFor="properties.showSearch: false_input"
       title="properties.showSearch: false"
     >
-      properties.showSearch: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -15652,7 +17916,9 @@ exports[`Render validation.status = success properties.showSearch: true - value[
       htmlFor="properties.showSearch: true_input"
       title="properties.showSearch: true"
     >
-      properties.showSearch: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -15798,7 +18064,9 @@ exports[`Render validation.status = success properties.size: default - value[0] 
       htmlFor="properties.size: default_input"
       title="properties.size: default"
     >
-      properties.size: default
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -15944,7 +18212,9 @@ exports[`Render validation.status = success properties.size: large - value[0] 1`
       htmlFor="properties.size: large_input"
       title="properties.size: large"
     >
-      properties.size: large
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -16090,7 +18360,9 @@ exports[`Render validation.status = success properties.size: small - value[0] 1`
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
-      properties.size: small
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -16236,7 +18508,9 @@ exports[`Render validation.status = success properties.suffixIcon: DoubleLeftOut
       htmlFor="properties.suffixIcon: DoubleLeftOutlined_input"
       title="properties.suffixIcon: DoubleLeftOutlined"
     >
-      properties.suffixIcon: DoubleLeftOutlined
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -16384,7 +18658,9 @@ exports[`Render validation.status = success properties.title: My Selector Title 
       htmlFor="properties.title: My Selector Title_input"
       title="My Selector Title"
     >
-      My Selector Title
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -16530,7 +18806,9 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -16681,7 +18959,9 @@ exports[`Render validation.status = warning properties.allowClear: false - value
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
-      properties.allowClear: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -16832,7 +19112,9 @@ exports[`Render validation.status = warning properties.autoFocus: true - value[0
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
-      properties.autoFocus: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -16984,7 +19266,9 @@ exports[`Render validation.status = warning properties.clearIcon: ChromeFilled -
       htmlFor="properties.clearIcon: ChromeFilled_input"
       title="properties.clearIcon: ChromeFilled"
     >
-      properties.clearIcon: ChromeFilled
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -17135,7 +19419,9 @@ exports[`Render validation.status = warning properties.clearIcon-object: ChromeF
       htmlFor="properties.clearIcon-object: ChromeFilled_input"
       title="properties.clearIcon-object: ChromeFilled"
     >
-      properties.clearIcon-object: ChromeFilled
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -17286,7 +19572,9 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      properties.disabled: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -17439,7 +19727,9 @@ exports[`Render validation.status = warning properties.label align: left - value
       htmlFor="properties.label align: left_input"
       title="properties.label align: left"
     >
-      properties.label align: left
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -17590,7 +19880,9 @@ exports[`Render validation.status = warning properties.label align: right - valu
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
-      properties.label align: right
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -17741,7 +20033,9 @@ exports[`Render validation.status = warning properties.label colon: false - valu
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
-      properties.label colon: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -18031,7 +20325,9 @@ exports[`Render validation.status = warning properties.label extra: showing extr
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
-      properties.label extra: showing extra
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -18186,7 +20482,9 @@ exports[`Render validation.status = warning properties.label inline: true - valu
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
-      properties.label inline: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -18341,7 +20639,9 @@ exports[`Render validation.status = warning properties.label span: 12 - value[0]
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
-      properties.label span: 12
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -18477,6 +20777,312 @@ exports[`Render validation.status = warning properties.label span: 12 - value[0]
 </div>
 `;
 
+exports[`Render validation.status = warning properties.options.label: html - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options.label: html"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options.label: html_input"
+      title="properties.options.label: html"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.options.label: html_popup"
+          />
+          <div
+            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-select-selector"
+              onClick={[Function]}
+              onMouseDown={[Function]}
+            >
+              <span
+                className="ant-select-selection-search"
+              >
+                <input
+                  aria-activedescendant="properties.options.label: html_input_list_0"
+                  aria-autocomplete="list"
+                  aria-controls="properties.options.label: html_input_list"
+                  aria-haspopup="listbox"
+                  aria-owns="properties.options.label: html_input_list"
+                  autoComplete="off"
+                  className="ant-select-selection-search-input"
+                  id="properties.options.label: html_input"
+                  onChange={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  onPaste={[Function]}
+                  readOnly={false}
+                  role="combobox"
+                  style={
+                    Object {
+                      "opacity": null,
+                    }
+                  }
+                  type="search"
+                  unselectable={null}
+                  value=""
+                />
+              </span>
+              <span
+                className="ant-select-selection-placeholder"
+              >
+                Select item
+              </span>
+            </div>
+            <span
+              aria-hidden={true}
+              className="ant-select-arrow"
+              onMouseDown={[Function]}
+              style={
+                Object {
+                  "WebkitUserSelect": "none",
+                  "userSelect": "none",
+                }
+              }
+              unselectable="on"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-select-suffix"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="exclamation-circle"
+          className="anticon anticon-exclamation-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="exclamation-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 010-96 48.01 48.01 0 010 96z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      validation warning
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = warning properties.options: html - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options: html"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options: html_input"
+      title="properties.options: html"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.options: html_popup"
+          />
+          <div
+            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-select-selector"
+              onClick={[Function]}
+              onMouseDown={[Function]}
+            >
+              <span
+                className="ant-select-selection-search"
+              >
+                <input
+                  aria-activedescendant="properties.options: html_input_list_0"
+                  aria-autocomplete="list"
+                  aria-controls="properties.options: html_input_list"
+                  aria-haspopup="listbox"
+                  aria-owns="properties.options: html_input_list"
+                  autoComplete="off"
+                  className="ant-select-selection-search-input"
+                  id="properties.options: html_input"
+                  onChange={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  onPaste={[Function]}
+                  readOnly={false}
+                  role="combobox"
+                  style={
+                    Object {
+                      "opacity": null,
+                    }
+                  }
+                  type="search"
+                  unselectable={null}
+                  value=""
+                />
+              </span>
+              <span
+                className="ant-select-selection-placeholder"
+              >
+                Select item
+              </span>
+            </div>
+            <span
+              aria-hidden={true}
+              className="ant-select-arrow"
+              onMouseDown={[Function]}
+              style={
+                Object {
+                  "WebkitUserSelect": "none",
+                  "userSelect": "none",
+                }
+              }
+              unselectable="on"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-select-suffix"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="exclamation-circle"
+          className="anticon anticon-exclamation-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="exclamation-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 010-96 48.01 48.01 0 010 96z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      validation warning
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render validation.status = warning properties.options-number - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
@@ -18492,7 +21098,9 @@ exports[`Render validation.status = warning properties.options-number - value[0]
       htmlFor="properties.options-number_input"
       title="properties.options-number"
     >
-      properties.options-number
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -18643,7 +21251,9 @@ exports[`Render validation.status = warning properties.options-object - value[0]
       htmlFor="properties.options-object_input"
       title="properties.options-object"
     >
-      properties.options-object
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -18794,7 +21404,9 @@ exports[`Render validation.status = warning properties.options-string - value[0]
       htmlFor="properties.options-string_input"
       title="properties.options-string"
     >
-      properties.options-string
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -18930,6 +21542,159 @@ exports[`Render validation.status = warning properties.options-string - value[0]
 </div>
 `;
 
+exports[`Render validation.status = warning properties.options-style - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options-style"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options-style_input"
+      title="properties.options-style"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.options-style_popup"
+          />
+          <div
+            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-select-selector"
+              onClick={[Function]}
+              onMouseDown={[Function]}
+            >
+              <span
+                className="ant-select-selection-search"
+              >
+                <input
+                  aria-activedescendant="properties.options-style_input_list_0"
+                  aria-autocomplete="list"
+                  aria-controls="properties.options-style_input_list"
+                  aria-haspopup="listbox"
+                  aria-owns="properties.options-style_input_list"
+                  autoComplete="off"
+                  className="ant-select-selection-search-input"
+                  id="properties.options-style_input"
+                  onChange={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  onPaste={[Function]}
+                  readOnly={false}
+                  role="combobox"
+                  style={
+                    Object {
+                      "opacity": null,
+                    }
+                  }
+                  type="search"
+                  unselectable={null}
+                  value=""
+                />
+              </span>
+              <span
+                className="ant-select-selection-placeholder"
+              >
+                Select item
+              </span>
+            </div>
+            <span
+              aria-hidden={true}
+              className="ant-select-arrow"
+              onMouseDown={[Function]}
+              style={
+                Object {
+                  "WebkitUserSelect": "none",
+                  "userSelect": "none",
+                }
+              }
+              unselectable="on"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-select-suffix"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="exclamation-circle"
+          className="anticon anticon-exclamation-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="exclamation-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 010-96 48.01 48.01 0 010 96z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      validation warning
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render validation.status = warning properties.placeholder: Find item in list - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
@@ -18945,7 +21710,9 @@ exports[`Render validation.status = warning properties.placeholder: Find item in
       htmlFor="properties.placeholder: Find item in list_input"
       title="properties.placeholder: Find item in list"
     >
-      properties.placeholder: Find item in list
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -19096,7 +21863,9 @@ exports[`Render validation.status = warning properties.showArrow: false - value[
       htmlFor="properties.showArrow: false_input"
       title="properties.showArrow: false"
     >
-      properties.showArrow: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -19215,7 +21984,9 @@ exports[`Render validation.status = warning properties.showSearch: false - value
       htmlFor="properties.showSearch: false_input"
       title="properties.showSearch: false"
     >
-      properties.showSearch: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -19366,7 +22137,9 @@ exports[`Render validation.status = warning properties.showSearch: true - value[
       htmlFor="properties.showSearch: true_input"
       title="properties.showSearch: true"
     >
-      properties.showSearch: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -19517,7 +22290,9 @@ exports[`Render validation.status = warning properties.size: default - value[0] 
       htmlFor="properties.size: default_input"
       title="properties.size: default"
     >
-      properties.size: default
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -19668,7 +22443,9 @@ exports[`Render validation.status = warning properties.size: large - value[0] 1`
       htmlFor="properties.size: large_input"
       title="properties.size: large"
     >
-      properties.size: large
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -19819,7 +22596,9 @@ exports[`Render validation.status = warning properties.size: small - value[0] 1`
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
-      properties.size: small
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -19970,7 +22749,9 @@ exports[`Render validation.status = warning properties.suffixIcon: DoubleLeftOut
       htmlFor="properties.suffixIcon: DoubleLeftOutlined_input"
       title="properties.suffixIcon: DoubleLeftOutlined"
     >
-      properties.suffixIcon: DoubleLeftOutlined
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -20123,7 +22904,9 @@ exports[`Render validation.status = warning properties.title: My Selector Title 
       htmlFor="properties.title: My Selector Title_input"
       title="My Selector Title"
     >
-      My Selector Title
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -20311,6 +23094,14 @@ exports[`Test Schema properties.label span: 12 1`] = `true`;
 
 exports[`Test Schema properties.label span: 12 2`] = `null`;
 
+exports[`Test Schema properties.options.label: html 1`] = `true`;
+
+exports[`Test Schema properties.options.label: html 2`] = `null`;
+
+exports[`Test Schema properties.options: html 1`] = `true`;
+
+exports[`Test Schema properties.options: html 2`] = `null`;
+
 exports[`Test Schema properties.options-number 1`] = `true`;
 
 exports[`Test Schema properties.options-number 2`] = `null`;
@@ -20322,6 +23113,10 @@ exports[`Test Schema properties.options-object 2`] = `null`;
 exports[`Test Schema properties.options-string 1`] = `true`;
 
 exports[`Test Schema properties.options-string 2`] = `null`;
+
+exports[`Test Schema properties.options-style 1`] = `true`;
+
+exports[`Test Schema properties.options-style 2`] = `null`;
 
 exports[`Test Schema properties.placeholder: Find item in list 1`] = `true`;
 

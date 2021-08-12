@@ -25,7 +25,80 @@ Array [
             htmlFor="default_input"
             title="default"
           >
-            default
+            <RenderHtml
+              html="default"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -94,8 +167,81 @@ Array [
             title="Lorem ipsum dolor sit amet
 "
           >
-            Lorem ipsum dolor sit amet
-
+            <RenderHtml
+              html="Lorem ipsum dolor sit amet
+"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": "inherit",
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": "inherit",
+                          "whiteSpace": false,
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -131,8 +277,81 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+            <RenderHtml
+              html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": "inherit",
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": "inherit",
+                          "whiteSpace": false,
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </div>
         </mockConstructor>,
       ],
@@ -161,8 +380,81 @@ Array [
             title="Lorem ipsum dolor sit amet
 "
           >
-            Lorem ipsum dolor sit amet
-
+            <RenderHtml
+              html="Lorem ipsum dolor sit amet
+"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": "inherit",
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": "inherit",
+                          "whiteSpace": false,
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 40,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -198,8 +490,81 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+            <RenderHtml
+              html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": "inherit",
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": "inherit",
+                          "whiteSpace": false,
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 40,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </div>
         </mockConstructor>,
       ],
@@ -228,8 +593,81 @@ Array [
             title="Lorem ipsum dolor sit amet
 "
           >
-            Lorem ipsum dolor sit amet
-
+            <RenderHtml
+              html="Lorem ipsum dolor sit amet
+"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": "inherit",
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 0,
+                          "overflow": "inherit",
+                          "whiteSpace": false,
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 24,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": -4,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": -4,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":-4},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":-4},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -265,8 +703,81 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+            <RenderHtml
+              html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": "inherit",
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 0,
+                          "overflow": "inherit",
+                          "whiteSpace": false,
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 24,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": -4,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": -4,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":-4},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":-4},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </div>
         </mockConstructor>,
       ],
@@ -303,7 +814,80 @@ Array [
             htmlFor="properties.align: left_input"
             title="Label title"
           >
-            Label title
+            <RenderHtml
+              html="Label title"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -380,7 +964,80 @@ Array [
             htmlFor="properties.align: right_input"
             title="Label title"
           >
-            Label title
+            <RenderHtml
+              html="Label title"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -457,7 +1114,80 @@ Array [
             htmlFor="properties.colon: false_input"
             title="Label title"
           >
-            Label title
+            <RenderHtml
+              html="Label title"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -534,7 +1264,80 @@ Array [
             htmlFor="properties.colon: true_input"
             title="Label title"
           >
-            Label title
+            <RenderHtml
+              html="Label title"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -668,7 +1471,80 @@ Array [
             htmlFor="properties.extra: Extra long_input"
             title="Label title"
           >
-            Label title
+            <RenderHtml
+              html="Label title"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -713,8 +1589,81 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+            <RenderHtml
+              html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </div>
         </mockConstructor>,
       ],
@@ -742,7 +1691,80 @@ Array [
             htmlFor="properties.extra: Extra long with inline = true_input"
             title="Label title"
           >
-            Label title
+            <RenderHtml
+              html="Label title"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": "inherit",
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": "inherit",
+                          "whiteSpace": false,
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -778,8 +1800,81 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+            <RenderHtml
+              html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": "inherit",
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": "inherit",
+                          "whiteSpace": false,
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </div>
         </mockConstructor>,
       ],
@@ -807,7 +1902,80 @@ Array [
             htmlFor="properties.extra: Extra long with inline = true, size = large_input"
             title="Label title"
           >
-            Label title
+            <RenderHtml
+              html="Label title"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": "inherit",
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": "inherit",
+                          "whiteSpace": false,
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 40,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -843,8 +2011,81 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+            <RenderHtml
+              html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": "inherit",
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": "inherit",
+                          "whiteSpace": false,
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 40,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </div>
         </mockConstructor>,
       ],
@@ -872,7 +2113,80 @@ Array [
             htmlFor="properties.extra: Extra long with inline = true, size = small_input"
             title="Label title"
           >
-            Label title
+            <RenderHtml
+              html="Label title"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": "inherit",
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 0,
+                          "overflow": "inherit",
+                          "whiteSpace": false,
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 24,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": -4,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": -4,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":-4},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":-4},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -908,8 +2222,81 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+            <RenderHtml
+              html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": "inherit",
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 0,
+                          "overflow": "inherit",
+                          "whiteSpace": false,
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 24,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": -4,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": -4,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":-4},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":-4},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </div>
         </mockConstructor>,
       ],
@@ -938,8 +2325,81 @@ Array [
             title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+            <RenderHtml
+              html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": "inherit",
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": "inherit",
+                          "whiteSpace": false,
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -1007,7 +2467,80 @@ Array [
             htmlFor="properties.extra: Extra text_input"
             title="Label title"
           >
-            Label title
+            <RenderHtml
+              html="Label title"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -1052,12 +2585,315 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
-            Extra text
+            <RenderHtml
+              html="Extra text"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </div>
         </mockConstructor>,
       ],
       "className": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
       "id": "properties.extra: Extra text",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.extra: html in extra - value[0] - Col 1`] = `Array []`;
+
+exports[`Mock render - properties.extra: html in extra - value[0] - Row 1`] = `
+Array [
+  Array [
+    Object {
+      "children": Array [
+        <mockConstructor
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
+          sm={
+            Object {
+              "span": 24,
+            }
+          }
+          xs={
+            Object {
+              "span": 24,
+            }
+          }
+        >
+          <label
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+            htmlFor="properties.extra: html in extra_input"
+            title="label title"
+          >
+            <RenderHtml
+              html="label title"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          </label>
+        </mockConstructor>,
+        <mockConstructor
+          className="ant-form-item-control"
+          sm={
+            Object {
+              "span": 24,
+            }
+          }
+          xs={
+            Object {
+              "span": 24,
+            }
+          }
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <div
+                style={
+                  Object {
+                    "border": "1px solid red",
+                    "padding": 10,
+                  }
+                }
+              >
+                content
+              </div>
+            </div>
+          </div>
+          <ForwardRef
+            motionAppear={true}
+            motionName="show-help"
+            removeOnLeave={true}
+            visible={false}
+          >
+            [Function]
+          </ForwardRef>
+          <div
+            className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+          >
+            <RenderHtml
+              html=<span style="background:yellow;">
+  html in extra
+</span>
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          </div>
+        </mockConstructor>,
+      ],
+      "className": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
+      "id": "properties.extra: html in extra",
     },
     Object {},
   ],
@@ -1089,7 +2925,82 @@ Array [
             htmlFor="properties.extraStyle: border 1px purple_input"
             title="Label title"
           >
-            Label title
+            <RenderHtml
+              html="Label title"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          Object {
+                            "border": "1px solid purple",
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid purple\\"}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -1134,7 +3045,82 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid purple\\"}]}"
           >
-            Extra text
+            <RenderHtml
+              html="Extra text"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          Object {
+                            "border": "1px solid purple",
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid purple\\"}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </div>
         </mockConstructor>,
       ],
@@ -1171,7 +3157,82 @@ Array [
             htmlFor="properties.feedbackStyle: border 1px blue_input"
             title="Label title"
           >
-            Label title
+            <RenderHtml
+              html="Label title"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          Object {
+                            "border": "1px solid blue",
+                          },
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid blue\\"}]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -1216,7 +3277,82 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
-            The extra content
+            <RenderHtml
+              html="The extra content"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          Object {
+                            "border": "1px solid blue",
+                          },
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid blue\\"}]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </div>
         </mockConstructor>,
       ],
@@ -1244,7 +3380,80 @@ Array [
             htmlFor="properties.inline: true_input"
             title="Label title"
           >
-            Label title
+            <RenderHtml
+              html="Label title"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": "inherit",
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": "inherit",
+                          "whiteSpace": false,
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -1317,7 +3526,80 @@ Array [
             htmlFor="properties.span: 2_input"
             title="This is the long label title wrapped by short span"
           >
-            This is the long label title wrapped by short span
+            <RenderHtml
+              html="This is the long label title wrapped by short span"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -1404,7 +3686,80 @@ Array [
             htmlFor="properties.span: 2 with long work title_input"
             title="Thisisthelonglabeltitlea"
           >
-            Thisisthelonglabeltitlea
+            <RenderHtml
+              html="Thisisthelonglabeltitlea"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -1486,7 +3841,80 @@ Array [
             htmlFor="properties.title_input"
             title="Label title"
           >
-            Label title
+            <RenderHtml
+              html="Label title"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -1564,8 +3992,81 @@ Array [
             title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+            <RenderHtml
+              html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -1617,6 +4118,160 @@ Array [
 ]
 `;
 
+exports[`Mock render - properties.title: html in title - value[0] - Col 1`] = `Array []`;
+
+exports[`Mock render - properties.title: html in title - value[0] - Row 1`] = `
+Array [
+  Array [
+    Object {
+      "children": Array [
+        <mockConstructor
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
+          sm={
+            Object {
+              "span": 24,
+            }
+          }
+          xs={
+            Object {
+              "span": 24,
+            }
+          }
+        >
+          <label
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+            htmlFor="properties.title: html in title_input"
+            title=<span style="background:yellow;">
+  html in title
+</span>
+          >
+            <RenderHtml
+              html=<span style="background:yellow;">
+  html in title
+</span>
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          </label>
+        </mockConstructor>,
+        <mockConstructor
+          className="ant-form-item-control"
+          sm={
+            Object {
+              "span": 24,
+            }
+          }
+          xs={
+            Object {
+              "span": 24,
+            }
+          }
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <div
+                style={
+                  Object {
+                    "border": "1px solid red",
+                    "padding": 10,
+                  }
+                }
+              >
+                content
+              </div>
+            </div>
+          </div>
+          <ForwardRef
+            motionAppear={true}
+            motionName="show-help"
+            removeOnLeave={true}
+            visible={false}
+          >
+            [Function]
+          </ForwardRef>
+        </mockConstructor>,
+      ],
+      "className": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
+      "id": "properties.title: html in title",
+    },
+    Object {},
+  ],
+]
+`;
+
 exports[`Mock render - span, align right and long extra for default size - value[0] - Col 1`] = `Array []`;
 
 exports[`Mock render - span, align right and long extra for default size - value[0] - Row 1`] = `
@@ -1648,8 +4303,81 @@ Array [
             title="Lorem
 "
           >
-            Lorem
-
+            <RenderHtml
+              html="Lorem
+"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -1699,8 +4427,81 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+            <RenderHtml
+              html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </div>
         </mockConstructor>,
       ],
@@ -1743,8 +4544,81 @@ Array [
             title="Lorem
 "
           >
-            Lorem
-
+            <RenderHtml
+              html="Lorem
+"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 40,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -1794,8 +4668,81 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+            <RenderHtml
+              html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 40,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </div>
         </mockConstructor>,
       ],
@@ -1838,8 +4785,81 @@ Array [
             title="Lorem
 "
           >
-            Lorem
-
+            <RenderHtml
+              html="Lorem
+"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 0,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 24,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": -4,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": -4,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":-4},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":-4},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -1889,8 +4909,81 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+            <RenderHtml
+              html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 0,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 24,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": -4,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": -4,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":-4},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":-4},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </div>
         </mockConstructor>,
       ],
@@ -1933,8 +5026,81 @@ Array [
             title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+            <RenderHtml
+              html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -1984,8 +5150,81 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+            <RenderHtml
+              html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 32,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </div>
         </mockConstructor>,
       ],
@@ -2028,8 +5267,81 @@ Array [
             title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+            <RenderHtml
+              html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 40,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -2079,8 +5391,81 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+            <RenderHtml
+              html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 8,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 40,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": 0,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </div>
         </mockConstructor>,
       ],
@@ -2123,8 +5508,81 @@ Array [
             title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+            <RenderHtml
+              html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 0,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 24,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": -4,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": -4,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":-4},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":-4},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </label>
         </mockConstructor>,
         <mockConstructor
@@ -2174,8 +5632,81 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+            <RenderHtml
+              html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "flexWrap": undefined,
+                          "marginBottom": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "marginBottom": 0,
+                          "overflow": undefined,
+                          "whiteSpace": "normal",
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "height": "fit-content !important",
+                            "minHeight": 24,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": -4,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "marginTop": -4,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":-4},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"marginTop\\":-4},null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
           </div>
         </mockConstructor>,
       ],

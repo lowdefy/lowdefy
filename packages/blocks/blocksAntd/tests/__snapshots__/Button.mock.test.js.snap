@@ -5,7 +5,37 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": "default",
+      "children": <RenderHtml
+        html="default"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
@@ -29,7 +59,37 @@ Array [
   Array [
     Object {
       "block": true,
-      "children": "properties.block: true",
+      "children": <RenderHtml
+        html="properties.block: true"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
@@ -53,7 +113,43 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": "properties.color: #9c27b0",
+      "children": <RenderHtml
+        html="properties.color: #9c27b0"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": Object {
+                        "backgroundColor": "#75178a",
+                        "borderColor": "#75178a",
+                      },
+                      "&:hover": Object {
+                        "backgroundColor": "#af48bd",
+                        "borderColor": "#af48bd",
+                      },
+                      "backgroundColor": "#9c27b0",
+                      "borderColor": "#9c27b0",
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"backgroundColor\\":\\"#9c27b0\\",\\"borderColor\\":\\"#9c27b0\\",\\"&:active\\":{\\"backgroundColor\\":\\"#75178a\\",\\"borderColor\\":\\"#75178a\\"},\\"&:hover\\":{\\"backgroundColor\\":\\"#af48bd\\",\\"borderColor\\":\\"#af48bd\\"}},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "className": "{\\"style\\":[{\\"backgroundColor\\":\\"#9c27b0\\",\\"borderColor\\":\\"#9c27b0\\",\\"&:active\\":{\\"backgroundColor\\":\\"#75178a\\",\\"borderColor\\":\\"#75178a\\"},\\"&:hover\\":{\\"backgroundColor\\":\\"#af48bd\\",\\"borderColor\\":\\"#af48bd\\"}},null]}",
       "danger": undefined,
       "disabled": undefined,
@@ -77,7 +173,37 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": "properties.danger: true",
+      "children": <RenderHtml
+        html="properties.danger: true"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "className": "{\\"style\\":[{},null]}",
       "danger": true,
       "disabled": undefined,
@@ -101,7 +227,37 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": "properties.disabled: true",
+      "children": <RenderHtml
+        html="properties.disabled: true"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": true,
@@ -125,7 +281,37 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": "properties.ghost: true",
+      "children": <RenderHtml
+        html="properties.ghost: true"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
@@ -149,7 +335,37 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": "",
+      "children": <RenderHtml
+        html=""
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
@@ -197,7 +413,37 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": "properties.href: www.lowdefy.com",
+      "children": <RenderHtml
+        html="properties.href: www.lowdefy.com"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
@@ -221,7 +467,37 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": "properties.icon object",
+      "children": <RenderHtml
+        html="properties.icon object"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
@@ -274,7 +550,37 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": "properties.icon string",
+      "children": <RenderHtml
+        html="properties.icon string"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
@@ -322,7 +628,37 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": "properties.shape: circle",
+      "children": <RenderHtml
+        html="properties.shape: circle"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
@@ -346,7 +682,37 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": "properties.shape: round",
+      "children": <RenderHtml
+        html="properties.shape: round"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
@@ -370,7 +736,37 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": "properties.size: large",
+      "children": <RenderHtml
+        html="properties.size: large"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
@@ -394,7 +790,37 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": "properties.size: small",
+      "children": <RenderHtml
+        html="properties.size: small"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
@@ -418,7 +844,37 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": "Button title",
+      "children": <RenderHtml
+        html="Button title"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
@@ -442,7 +898,37 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": "properties.type: danger",
+      "children": <RenderHtml
+        html="properties.type: danger"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
@@ -466,7 +952,37 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": "properties.type: dashed",
+      "children": <RenderHtml
+        html="properties.type: dashed"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
@@ -490,7 +1006,37 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": "properties.type: default",
+      "children": <RenderHtml
+        html="properties.type: default"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
@@ -514,7 +1060,37 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": "properties.type: link",
+      "children": <RenderHtml
+        html="properties.type: link"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
@@ -538,7 +1114,37 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": "properties.type: text",
+      "children": <RenderHtml
+        html="properties.type: text"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
@@ -551,6 +1157,62 @@ Array [
       "shape": undefined,
       "size": undefined,
       "type": "text",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - with html in title - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "block": undefined,
+      "children": <RenderHtml
+        html=<div style="color: orange;">
+  Title
+</div>
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[{},null]}",
+      "danger": undefined,
+      "disabled": undefined,
+      "ghost": undefined,
+      "href": undefined,
+      "icon": undefined,
+      "id": "with html in title",
+      "loading": undefined,
+      "onClick": [Function],
+      "shape": undefined,
+      "size": undefined,
+      "type": "primary",
     },
     Object {},
   ],

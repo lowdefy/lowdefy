@@ -5,6 +5,13 @@ exports[`Render default - value[0] 1`] = `
   className="ant-descriptions"
 >
   <div
+    className="ant-descriptions-title"
+  >
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
+  </div>
+  <div
     className="ant-descriptions-view"
   >
     <table>
@@ -21,7 +28,9 @@ exports[`Render default title - value[0] 1`] = `
   <div
     className="ant-descriptions-title"
   >
-    Descriptions title
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
   </div>
   <div
     className="ant-descriptions-view"
@@ -38,6 +47,13 @@ exports[`Render properties.bordered: true - value[0] 1`] = `
   className="ant-descriptions ant-descriptions-bordered"
 >
   <div
+    className="ant-descriptions-title"
+  >
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
+  </div>
+  <div
     className="ant-descriptions-view"
   >
     <table>
@@ -49,42 +65,48 @@ exports[`Render properties.bordered: true - value[0] 1`] = `
             className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            field_one
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </th>
           <td
             className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <div
-              className="{}"
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
             />
           </td>
           <th
             className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            field_two
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </th>
           <td
             className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <div
-              className="{}"
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
             />
           </td>
           <th
             className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            field_three
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </th>
           <td
             className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <div
-              className="{}"
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
             />
           </td>
         </tr>
@@ -98,6 +120,13 @@ exports[`Render properties.colon: false - value[0] 1`] = `
 <div
   className="ant-descriptions"
 >
+  <div
+    className="ant-descriptions-title"
+  >
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
+  </div>
   <div
     className="ant-descriptions-view"
   >
@@ -113,13 +142,15 @@ exports[`Render properties.colon: false - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label ant-descriptions-item-no-colon"
             >
-              field_one
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -130,13 +161,15 @@ exports[`Render properties.colon: false - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label ant-descriptions-item-no-colon"
             >
-              field_two
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -147,13 +180,15 @@ exports[`Render properties.colon: false - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label ant-descriptions-item-no-colon"
             >
-              field_three
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -169,79 +204,12 @@ exports[`Render properties.column: 2 - value[0] 1`] = `
   className="ant-descriptions"
 >
   <div
-    className="ant-descriptions-view"
+    className="ant-descriptions-title"
   >
-    <table>
-      <tbody>
-        <tr
-          className="ant-descriptions-row"
-        >
-          <td
-            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
-            colSpan={1}
-          >
-            <span
-              className="ant-descriptions-item-label"
-            >
-              field_one
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
-              <div
-                className="{}"
-              />
-            </span>
-          </td>
-          <td
-            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
-            colSpan={1}
-          >
-            <span
-              className="ant-descriptions-item-label"
-            >
-              field_two
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
-              <div
-                className="{}"
-              />
-            </span>
-          </td>
-        </tr>
-        <tr
-          className="ant-descriptions-row"
-        >
-          <td
-            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
-            colSpan={2}
-          >
-            <span
-              className="ant-descriptions-item-label"
-            >
-              field_three
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
-              <div
-                className="{}"
-              />
-            </span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
   </div>
-</div>
-`;
-
-exports[`Render properties.excludeKeys: [] - value[0] 1`] = `
-<div
-  className="ant-descriptions"
->
   <div
     className="ant-descriptions-view"
   >
@@ -257,52 +225,18 @@ exports[`Render properties.excludeKeys: [] - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_three
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
-          <td
-            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
-            colSpan={2}
-          >
-            <span
-              className="ant-descriptions-item-label"
-            >
-              field_four
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
-              <div
-                className="{}"
-              />
-            </span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-`;
-
-exports[`Render properties.includeKeys: [] - value[0] 1`] = `
-<div
-  className="ant-descriptions"
->
-  <div
-    className="ant-descriptions-view"
-  >
-    <table>
-      <tbody>
-        <tr
-          className="ant-descriptions-row"
-        >
           <td
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
@@ -310,16 +244,22 @@ exports[`Render properties.includeKeys: [] - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_one
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
+        </tr>
+        <tr
+          className="ant-descriptions-row"
+        >
           <td
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={2}
@@ -327,49 +267,15 @@ exports[`Render properties.includeKeys: [] - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_two
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-`;
-
-exports[`Render properties.includeKeys: [] and properties.excludeKeys: [] - value[0] 1`] = `
-<div
-  className="ant-descriptions"
->
-  <div
-    className="ant-descriptions-view"
-  >
-    <table>
-      <tbody>
-        <tr
-          className="ant-descriptions-row"
-        >
-          <td
-            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
-            colSpan={3}
-          >
-            <span
-              className="ant-descriptions-item-label"
-            >
-              field_two
-            </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -385,6 +291,13 @@ exports[`Render properties.itemOptions.span - value[0] 1`] = `
   className="ant-descriptions"
 >
   <div
+    className="ant-descriptions-title"
+  >
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
+  </div>
+  <div
     className="ant-descriptions-view"
   >
     <table>
@@ -399,13 +312,15 @@ exports[`Render properties.itemOptions.span - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_one
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -416,13 +331,15 @@ exports[`Render properties.itemOptions.span - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_two
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -437,13 +354,15 @@ exports[`Render properties.itemOptions.span - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_three
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -454,13 +373,15 @@ exports[`Render properties.itemOptions.span - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_four
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -476,96 +397,12 @@ exports[`Render properties.itemOptions.style - value[0] 1`] = `
   className="ant-descriptions"
 >
   <div
-    className="ant-descriptions-view"
+    className="ant-descriptions-title"
   >
-    <table>
-      <tbody>
-        <tr
-          className="ant-descriptions-row"
-        >
-          <td
-            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
-            colSpan={1}
-          >
-            <span
-              className="ant-descriptions-item-label"
-            >
-              field_one
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
-              <div
-                className="{}"
-              />
-            </span>
-          </td>
-          <td
-            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},{\\"textAlign\\":\\"right\\"},null]}"
-            colSpan={1}
-          >
-            <span
-              className="ant-descriptions-item-label"
-            >
-              field_two
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
-              <div
-                className="{}"
-              />
-            </span>
-          </td>
-          <td
-            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
-            colSpan={1}
-          >
-            <span
-              className="ant-descriptions-item-label"
-            >
-              field_three
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
-              <div
-                className="{}"
-              />
-            </span>
-          </td>
-        </tr>
-        <tr
-          className="ant-descriptions-row"
-        >
-          <td
-            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
-            colSpan={3}
-          >
-            <span
-              className="ant-descriptions-item-label"
-            >
-              field_four
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
-              <div
-                className="{}"
-              />
-            </span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
   </div>
-</div>
-`;
-
-exports[`Render properties.items html values - value[0] 1`] = `
-<div
-  className="ant-descriptions"
->
   <div
     className="ant-descriptions-view"
   >
@@ -581,13 +418,34 @@ exports[`Render properties.items html values - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_one
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </td>
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},{\\"textAlign\\":\\"right\\"},null]}"
+            colSpan={1}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -598,30 +456,15 @@ exports[`Render properties.items html values - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_four
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
-          </td>
-          <td
-            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
-            colSpan={1}
-          >
-            <span
-              className="ant-descriptions-item-label"
-            >
-              field_two
-            </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -636,13 +479,121 @@ exports[`Render properties.items html values - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_three
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;
+
+exports[`Render properties.items html values - value[0] 1`] = `
+<div
+  className="ant-descriptions"
+>
+  <div
+    className="ant-descriptions-title"
+  >
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
+  </div>
+  <div
+    className="ant-descriptions-view"
+  >
+    <table>
+      <tbody>
+        <tr
+          className="ant-descriptions-row"
+        >
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </td>
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </td>
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </td>
+        </tr>
+        <tr
+          className="ant-descriptions-row"
+        >
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={3}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -660,7 +611,9 @@ exports[`Render properties.items-list - value[0] 1`] = `
   <div
     className="ant-descriptions-title"
   >
-    Title
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
   </div>
   <div
     className="ant-descriptions-view"
@@ -677,13 +630,15 @@ exports[`Render properties.items-list - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_one
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -694,13 +649,15 @@ exports[`Render properties.items-list - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_two
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -715,13 +672,15 @@ exports[`Render properties.items-list - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_three
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -739,7 +698,9 @@ exports[`Render properties.items-list with new lines - value[0] 1`] = `
   <div
     className="ant-descriptions-title"
   >
-    Title
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
   </div>
   <div
     className="ant-descriptions-view"
@@ -756,13 +717,15 @@ exports[`Render properties.items-list with new lines - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_one
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -773,13 +736,15 @@ exports[`Render properties.items-list with new lines - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              one \\n two;
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -797,7 +762,9 @@ exports[`Render properties.items-object - value[0] 1`] = `
   <div
     className="ant-descriptions-title"
   >
-    Title
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
   </div>
   <div
     className="ant-descriptions-view"
@@ -814,13 +781,15 @@ exports[`Render properties.items-object - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_one
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -831,13 +800,15 @@ exports[`Render properties.items-object - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_two
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -848,13 +819,15 @@ exports[`Render properties.items-object - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_three
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -872,7 +845,9 @@ exports[`Render properties.items-object with new lines - value[0] 1`] = `
   <div
     className="ant-descriptions-title"
   >
-    Title
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
   </div>
   <div
     className="ant-descriptions-view"
@@ -889,13 +864,15 @@ exports[`Render properties.items-object with new lines - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_one
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -906,13 +883,15 @@ exports[`Render properties.items-object with new lines - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              one \\n two;
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -930,7 +909,9 @@ exports[`Render properties.items-object-object - value[0] 1`] = `
   <div
     className="ant-descriptions-title"
   >
-    Title
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
   </div>
   <div
     className="ant-descriptions-view"
@@ -947,13 +928,15 @@ exports[`Render properties.items-object-object - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              one
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -964,13 +947,15 @@ exports[`Render properties.items-object-object - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              four
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -981,13 +966,15 @@ exports[`Render properties.items-object-object - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              seven
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -1003,6 +990,13 @@ exports[`Render properties.layout: vertical - value[0] 1`] = `
   className="ant-descriptions"
 >
   <div
+    className="ant-descriptions-title"
+  >
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
+  </div>
+  <div
     className="ant-descriptions-view"
   >
     <table>
@@ -1017,7 +1011,9 @@ exports[`Render properties.layout: vertical - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_one
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </th>
           <th
@@ -1027,7 +1023,9 @@ exports[`Render properties.layout: vertical - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_two
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </th>
           <th
@@ -1037,7 +1035,9 @@ exports[`Render properties.layout: vertical - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_three
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </th>
         </tr>
@@ -1052,7 +1052,7 @@ exports[`Render properties.layout: vertical - value[0] 1`] = `
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -1064,7 +1064,7 @@ exports[`Render properties.layout: vertical - value[0] 1`] = `
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -1076,7 +1076,7 @@ exports[`Render properties.layout: vertical - value[0] 1`] = `
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -1092,6 +1092,13 @@ exports[`Render properties.size: default - value[0] 1`] = `
   className="ant-descriptions"
 >
   <div
+    className="ant-descriptions-title"
+  >
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
+  </div>
+  <div
     className="ant-descriptions-view"
   >
     <table>
@@ -1106,13 +1113,15 @@ exports[`Render properties.size: default - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_one
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -1123,13 +1132,15 @@ exports[`Render properties.size: default - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_two
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -1140,13 +1151,15 @@ exports[`Render properties.size: default - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_three
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -1162,6 +1175,13 @@ exports[`Render properties.size: small - value[0] 1`] = `
   className="ant-descriptions ant-descriptions-small"
 >
   <div
+    className="ant-descriptions-title"
+  >
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
+  </div>
+  <div
     className="ant-descriptions-view"
   >
     <table>
@@ -1176,13 +1196,15 @@ exports[`Render properties.size: small - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_one
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -1193,13 +1215,15 @@ exports[`Render properties.size: small - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_two
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -1210,13 +1234,15 @@ exports[`Render properties.size: small - value[0] 1`] = `
             <span
               className="ant-descriptions-item-label"
             >
-              field_three
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
               <div
-                className="{}"
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
               />
             </span>
           </td>
@@ -1232,6 +1258,13 @@ exports[`Render properties.size: small, properties.bordered: true - value[0] 1`]
   className="ant-descriptions ant-descriptions-small ant-descriptions-bordered"
 >
   <div
+    className="ant-descriptions-title"
+  >
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
+  </div>
+  <div
     className="ant-descriptions-view"
   >
     <table>
@@ -1243,42 +1276,48 @@ exports[`Render properties.size: small, properties.bordered: true - value[0] 1`]
             className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            field_one
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </th>
           <td
             className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <div
-              className="{}"
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
             />
           </td>
           <th
             className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            field_two
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </th>
           <td
             className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <div
-              className="{}"
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
             />
           </td>
           <th
             className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            field_three
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </th>
           <td
             className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <div
-              className="{}"
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
             />
           </td>
         </tr>
@@ -1289,43 +1328,155 @@ exports[`Render properties.size: small, properties.bordered: true - value[0] 1`]
             className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            field_4
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </th>
           <td
             className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <div
-              className="{}"
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
             />
           </td>
           <th
             className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            field_5
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </th>
           <td
             className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <div
-              className="{}"
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
             />
           </td>
           <th
             className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            field_6
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </th>
           <td
             className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <div
-              className="{}"
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
             />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;
+
+exports[`Render properties.title html value - value[0] 1`] = `
+<div
+  className="ant-descriptions"
+>
+  <div
+    className="ant-descriptions-title"
+  >
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
+  </div>
+  <div
+    className="ant-descriptions-view"
+  >
+    <table>
+      <tbody>
+        <tr
+          className="ant-descriptions-row"
+        >
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </td>
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </td>
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </td>
+        </tr>
+        <tr
+          className="ant-descriptions-row"
+        >
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={3}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
           </td>
         </tr>
       </tbody>
@@ -1353,18 +1504,6 @@ exports[`Test Schema properties.colon: false 2`] = `null`;
 exports[`Test Schema properties.column: 2 1`] = `true`;
 
 exports[`Test Schema properties.column: 2 2`] = `null`;
-
-exports[`Test Schema properties.excludeKeys: [] 1`] = `true`;
-
-exports[`Test Schema properties.excludeKeys: [] 2`] = `null`;
-
-exports[`Test Schema properties.includeKeys: [] 1`] = `true`;
-
-exports[`Test Schema properties.includeKeys: [] 2`] = `null`;
-
-exports[`Test Schema properties.includeKeys: [] and properties.excludeKeys: [] 1`] = `true`;
-
-exports[`Test Schema properties.includeKeys: [] and properties.excludeKeys: [] 2`] = `null`;
 
 exports[`Test Schema properties.itemOptions.span 1`] = `true`;
 
@@ -1413,3 +1552,7 @@ exports[`Test Schema properties.size: small 2`] = `null`;
 exports[`Test Schema properties.size: small, properties.bordered: true 1`] = `true`;
 
 exports[`Test Schema properties.size: small, properties.bordered: true 2`] = `null`;
+
+exports[`Test Schema properties.title html value 1`] = `true`;
+
+exports[`Test Schema properties.title html value 2`] = `null`;

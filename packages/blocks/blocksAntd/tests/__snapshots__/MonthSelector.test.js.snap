@@ -15,7 +15,9 @@ exports[`Render default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -79,7 +81,9 @@ exports[`Render properties.disabledDates.dates - value[0] 1`] = `
       htmlFor="properties.disabledDates.dates_input"
       title="properties.disabledDates.dates"
     >
-      properties.disabledDates.dates
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -143,7 +147,9 @@ exports[`Render properties.disabledDates.max - value[0] 1`] = `
       htmlFor="properties.disabledDates.max_input"
       title="properties.disabledDates.max"
     >
-      properties.disabledDates.max
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -207,7 +213,9 @@ exports[`Render properties.disabledDates.min - value[0] 1`] = `
       htmlFor="properties.disabledDates.min_input"
       title="properties.disabledDates.min"
     >
-      properties.disabledDates.min
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -271,7 +279,9 @@ exports[`Render properties.disabledDates.ranges - value[0] 1`] = `
       htmlFor="properties.disabledDates.ranges_input"
       title="properties.disabledDates.ranges"
     >
-      properties.disabledDates.ranges
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -335,7 +345,9 @@ exports[`Render properties.inputStyle: CSS style applied - value[0] 1`] = `
       htmlFor="properties.inputStyle: CSS style applied_input"
       title="properties.inputStyle: CSS style applied"
     >
-      properties.inputStyle: CSS style applied
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -399,7 +411,9 @@ exports[`Render properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="Month selector"
     >
-      Month selector
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -463,7 +477,9 @@ exports[`Render property.allowClear: false - value[0] 1`] = `
       htmlFor="property.allowClear: false_input"
       title="property.allowClear: false"
     >
-      property.allowClear: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -527,7 +543,9 @@ exports[`Render property.autoFocus: true - value[0] 1`] = `
       htmlFor="property.autoFocus: true_input"
       title="property.autoFocus: true"
     >
-      property.autoFocus: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -592,7 +610,9 @@ exports[`Render property.disabled: true - value[0] 1`] = `
       htmlFor="property.disabled: true_input"
       title="property.disabled: true"
     >
-      property.disabled: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -657,7 +677,9 @@ exports[`Render property.format: YYYY-MMMM - value[0] 1`] = `
       htmlFor="property.format: YYYY-MMMM_input"
       title="property.format: YYYY-MMMM"
     >
-      property.format: YYYY-MMMM
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -721,7 +743,9 @@ exports[`Render property.label align: right - value[0] 1`] = `
       htmlFor="property.label align: right_input"
       title="property.label align: right"
     >
-      property.label align: right
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -785,7 +809,9 @@ exports[`Render property.label colon: true - value[0] 1`] = `
       htmlFor="property.label colon: true_input"
       title="property.label colon: true"
     >
-      property.label colon: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -901,7 +927,9 @@ exports[`Render property.label extra: extra text added - value[0] 1`] = `
       htmlFor="property.label extra: extra text added_input"
       title="property.label extra: extra text added"
     >
-      property.label extra: extra text added
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -949,7 +977,9 @@ exports[`Render property.label extra: extra text added - value[0] 1`] = `
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      extra text added
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
   </div>
 </div>
@@ -974,7 +1004,9 @@ exports[`Render property.label inline: true - value[0] 1`] = `
       htmlFor="property.label inline: true_input"
       title="property.label inline: true"
     >
-      property.label inline: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1042,7 +1074,9 @@ exports[`Render property.label span: 5 - value[0] 1`] = `
       htmlFor="property.label span: 5_input"
       title="property.label span: 5"
     >
-      property.label span: 5
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1106,7 +1140,9 @@ exports[`Render property.placeholder: - Select this Month - value[0] 1`] = `
       htmlFor="property.placeholder: - Select this Month_input"
       title="property.placeholder: - Select this Month"
     >
-      property.placeholder: - Select this Month
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1170,7 +1206,9 @@ exports[`Render property.size: large - value[0] 1`] = `
       htmlFor="property.size: large_input"
       title="property.size: large"
     >
-      property.size: large
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1234,7 +1272,9 @@ exports[`Render property.size: small - value[0] 1`] = `
       htmlFor="property.size: small_input"
       title="property.size: small"
     >
-      property.size: small
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1298,7 +1338,9 @@ exports[`Render property.suffixIcon: CalendarFilled - value[0] 1`] = `
       htmlFor="property.suffixIcon: CalendarFilled_input"
       title="property.suffixIcon: CalendarFilled"
     >
-      property.suffixIcon: CalendarFilled
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1387,7 +1429,9 @@ exports[`Render property.suffixIcon: CalendarFilled.blue - value[0] 1`] = `
       htmlFor="property.suffixIcon: CalendarFilled.blue_input"
       title="property.suffixIcon: CalendarFilled.blue"
     >
-      property.suffixIcon: CalendarFilled.blue
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1476,7 +1520,9 @@ exports[`Render required = true default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1540,7 +1586,9 @@ exports[`Render required = true properties.disabledDates.dates - value[0] 1`] = 
       htmlFor="properties.disabledDates.dates_input"
       title="properties.disabledDates.dates"
     >
-      properties.disabledDates.dates
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1604,7 +1652,9 @@ exports[`Render required = true properties.disabledDates.max - value[0] 1`] = `
       htmlFor="properties.disabledDates.max_input"
       title="properties.disabledDates.max"
     >
-      properties.disabledDates.max
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1668,7 +1718,9 @@ exports[`Render required = true properties.disabledDates.min - value[0] 1`] = `
       htmlFor="properties.disabledDates.min_input"
       title="properties.disabledDates.min"
     >
-      properties.disabledDates.min
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1732,7 +1784,9 @@ exports[`Render required = true properties.disabledDates.ranges - value[0] 1`] =
       htmlFor="properties.disabledDates.ranges_input"
       title="properties.disabledDates.ranges"
     >
-      properties.disabledDates.ranges
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1796,7 +1850,9 @@ exports[`Render required = true properties.inputStyle: CSS style applied - value
       htmlFor="properties.inputStyle: CSS style applied_input"
       title="properties.inputStyle: CSS style applied"
     >
-      properties.inputStyle: CSS style applied
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1860,7 +1916,9 @@ exports[`Render required = true properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="Month selector"
     >
-      Month selector
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1924,7 +1982,9 @@ exports[`Render required = true property.allowClear: false - value[0] 1`] = `
       htmlFor="property.allowClear: false_input"
       title="property.allowClear: false"
     >
-      property.allowClear: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1988,7 +2048,9 @@ exports[`Render required = true property.autoFocus: true - value[0] 1`] = `
       htmlFor="property.autoFocus: true_input"
       title="property.autoFocus: true"
     >
-      property.autoFocus: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2053,7 +2115,9 @@ exports[`Render required = true property.disabled: true - value[0] 1`] = `
       htmlFor="property.disabled: true_input"
       title="property.disabled: true"
     >
-      property.disabled: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2118,7 +2182,9 @@ exports[`Render required = true property.format: YYYY-MMMM - value[0] 1`] = `
       htmlFor="property.format: YYYY-MMMM_input"
       title="property.format: YYYY-MMMM"
     >
-      property.format: YYYY-MMMM
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2182,7 +2248,9 @@ exports[`Render required = true property.label align: right - value[0] 1`] = `
       htmlFor="property.label align: right_input"
       title="property.label align: right"
     >
-      property.label align: right
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2246,7 +2314,9 @@ exports[`Render required = true property.label colon: true - value[0] 1`] = `
       htmlFor="property.label colon: true_input"
       title="property.label colon: true"
     >
-      property.label colon: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2362,7 +2432,9 @@ exports[`Render required = true property.label extra: extra text added - value[0
       htmlFor="property.label extra: extra text added_input"
       title="property.label extra: extra text added"
     >
-      property.label extra: extra text added
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2410,7 +2482,9 @@ exports[`Render required = true property.label extra: extra text added - value[0
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      extra text added
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
   </div>
 </div>
@@ -2435,7 +2509,9 @@ exports[`Render required = true property.label inline: true - value[0] 1`] = `
       htmlFor="property.label inline: true_input"
       title="property.label inline: true"
     >
-      property.label inline: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2503,7 +2579,9 @@ exports[`Render required = true property.label span: 5 - value[0] 1`] = `
       htmlFor="property.label span: 5_input"
       title="property.label span: 5"
     >
-      property.label span: 5
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2567,7 +2645,9 @@ exports[`Render required = true property.placeholder: - Select this Month - valu
       htmlFor="property.placeholder: - Select this Month_input"
       title="property.placeholder: - Select this Month"
     >
-      property.placeholder: - Select this Month
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2631,7 +2711,9 @@ exports[`Render required = true property.size: large - value[0] 1`] = `
       htmlFor="property.size: large_input"
       title="property.size: large"
     >
-      property.size: large
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2695,7 +2777,9 @@ exports[`Render required = true property.size: small - value[0] 1`] = `
       htmlFor="property.size: small_input"
       title="property.size: small"
     >
-      property.size: small
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2759,7 +2843,9 @@ exports[`Render required = true property.suffixIcon: CalendarFilled - value[0] 1
       htmlFor="property.suffixIcon: CalendarFilled_input"
       title="property.suffixIcon: CalendarFilled"
     >
-      property.suffixIcon: CalendarFilled
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2848,7 +2934,9 @@ exports[`Render required = true property.suffixIcon: CalendarFilled.blue - value
       htmlFor="property.suffixIcon: CalendarFilled.blue_input"
       title="property.suffixIcon: CalendarFilled.blue"
     >
-      property.suffixIcon: CalendarFilled.blue
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2937,7 +3025,9 @@ exports[`Render validation.status = error default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3029,7 +3119,9 @@ exports[`Render validation.status = error properties.disabledDates.dates - value
       htmlFor="properties.disabledDates.dates_input"
       title="properties.disabledDates.dates"
     >
-      properties.disabledDates.dates
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3121,7 +3213,9 @@ exports[`Render validation.status = error properties.disabledDates.max - value[0
       htmlFor="properties.disabledDates.max_input"
       title="properties.disabledDates.max"
     >
-      properties.disabledDates.max
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3213,7 +3307,9 @@ exports[`Render validation.status = error properties.disabledDates.min - value[0
       htmlFor="properties.disabledDates.min_input"
       title="properties.disabledDates.min"
     >
-      properties.disabledDates.min
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3305,7 +3401,9 @@ exports[`Render validation.status = error properties.disabledDates.ranges - valu
       htmlFor="properties.disabledDates.ranges_input"
       title="properties.disabledDates.ranges"
     >
-      properties.disabledDates.ranges
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3397,7 +3495,9 @@ exports[`Render validation.status = error properties.inputStyle: CSS style appli
       htmlFor="properties.inputStyle: CSS style applied_input"
       title="properties.inputStyle: CSS style applied"
     >
-      properties.inputStyle: CSS style applied
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3489,7 +3589,9 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="Month selector"
     >
-      Month selector
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3581,7 +3683,9 @@ exports[`Render validation.status = error property.allowClear: false - value[0] 
       htmlFor="property.allowClear: false_input"
       title="property.allowClear: false"
     >
-      property.allowClear: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3673,7 +3777,9 @@ exports[`Render validation.status = error property.autoFocus: true - value[0] 1`
       htmlFor="property.autoFocus: true_input"
       title="property.autoFocus: true"
     >
-      property.autoFocus: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3766,7 +3872,9 @@ exports[`Render validation.status = error property.disabled: true - value[0] 1`]
       htmlFor="property.disabled: true_input"
       title="property.disabled: true"
     >
-      property.disabled: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3859,7 +3967,9 @@ exports[`Render validation.status = error property.format: YYYY-MMMM - value[0] 
       htmlFor="property.format: YYYY-MMMM_input"
       title="property.format: YYYY-MMMM"
     >
-      property.format: YYYY-MMMM
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3951,7 +4061,9 @@ exports[`Render validation.status = error property.label align: right - value[0]
       htmlFor="property.label align: right_input"
       title="property.label align: right"
     >
-      property.label align: right
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -4043,7 +4155,9 @@ exports[`Render validation.status = error property.label colon: true - value[0] 
       htmlFor="property.label colon: true_input"
       title="property.label colon: true"
     >
-      property.label colon: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -4215,7 +4329,9 @@ exports[`Render validation.status = error property.label extra: extra text added
       htmlFor="property.label extra: extra text added_input"
       title="property.label extra: extra text added"
     >
-      property.label extra: extra text added
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -4311,7 +4427,9 @@ exports[`Render validation.status = error property.label inline: true - value[0]
       htmlFor="property.label inline: true_input"
       title="property.label inline: true"
     >
-      property.label inline: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -4407,7 +4525,9 @@ exports[`Render validation.status = error property.label span: 5 - value[0] 1`] 
       htmlFor="property.label span: 5_input"
       title="property.label span: 5"
     >
-      property.label span: 5
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -4499,7 +4619,9 @@ exports[`Render validation.status = error property.placeholder: - Select this Mo
       htmlFor="property.placeholder: - Select this Month_input"
       title="property.placeholder: - Select this Month"
     >
-      property.placeholder: - Select this Month
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -4591,7 +4713,9 @@ exports[`Render validation.status = error property.size: large - value[0] 1`] = 
       htmlFor="property.size: large_input"
       title="property.size: large"
     >
-      property.size: large
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -4683,7 +4807,9 @@ exports[`Render validation.status = error property.size: small - value[0] 1`] = 
       htmlFor="property.size: small_input"
       title="property.size: small"
     >
-      property.size: small
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -4775,7 +4901,9 @@ exports[`Render validation.status = error property.suffixIcon: CalendarFilled - 
       htmlFor="property.suffixIcon: CalendarFilled_input"
       title="property.suffixIcon: CalendarFilled"
     >
-      property.suffixIcon: CalendarFilled
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -4892,7 +5020,9 @@ exports[`Render validation.status = error property.suffixIcon: CalendarFilled.bl
       htmlFor="property.suffixIcon: CalendarFilled.blue_input"
       title="property.suffixIcon: CalendarFilled.blue"
     >
-      property.suffixIcon: CalendarFilled.blue
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5009,7 +5139,9 @@ exports[`Render validation.status = null default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5073,7 +5205,9 @@ exports[`Render validation.status = null properties.disabledDates.dates - value[
       htmlFor="properties.disabledDates.dates_input"
       title="properties.disabledDates.dates"
     >
-      properties.disabledDates.dates
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5137,7 +5271,9 @@ exports[`Render validation.status = null properties.disabledDates.max - value[0]
       htmlFor="properties.disabledDates.max_input"
       title="properties.disabledDates.max"
     >
-      properties.disabledDates.max
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5201,7 +5337,9 @@ exports[`Render validation.status = null properties.disabledDates.min - value[0]
       htmlFor="properties.disabledDates.min_input"
       title="properties.disabledDates.min"
     >
-      properties.disabledDates.min
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5265,7 +5403,9 @@ exports[`Render validation.status = null properties.disabledDates.ranges - value
       htmlFor="properties.disabledDates.ranges_input"
       title="properties.disabledDates.ranges"
     >
-      properties.disabledDates.ranges
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5329,7 +5469,9 @@ exports[`Render validation.status = null properties.inputStyle: CSS style applie
       htmlFor="properties.inputStyle: CSS style applied_input"
       title="properties.inputStyle: CSS style applied"
     >
-      properties.inputStyle: CSS style applied
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5393,7 +5535,9 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="Month selector"
     >
-      Month selector
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5457,7 +5601,9 @@ exports[`Render validation.status = null property.allowClear: false - value[0] 1
       htmlFor="property.allowClear: false_input"
       title="property.allowClear: false"
     >
-      property.allowClear: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5521,7 +5667,9 @@ exports[`Render validation.status = null property.autoFocus: true - value[0] 1`]
       htmlFor="property.autoFocus: true_input"
       title="property.autoFocus: true"
     >
-      property.autoFocus: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5586,7 +5734,9 @@ exports[`Render validation.status = null property.disabled: true - value[0] 1`] 
       htmlFor="property.disabled: true_input"
       title="property.disabled: true"
     >
-      property.disabled: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5651,7 +5801,9 @@ exports[`Render validation.status = null property.format: YYYY-MMMM - value[0] 1
       htmlFor="property.format: YYYY-MMMM_input"
       title="property.format: YYYY-MMMM"
     >
-      property.format: YYYY-MMMM
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5715,7 +5867,9 @@ exports[`Render validation.status = null property.label align: right - value[0] 
       htmlFor="property.label align: right_input"
       title="property.label align: right"
     >
-      property.label align: right
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5779,7 +5933,9 @@ exports[`Render validation.status = null property.label colon: true - value[0] 1
       htmlFor="property.label colon: true_input"
       title="property.label colon: true"
     >
-      property.label colon: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5895,7 +6051,9 @@ exports[`Render validation.status = null property.label extra: extra text added 
       htmlFor="property.label extra: extra text added_input"
       title="property.label extra: extra text added"
     >
-      property.label extra: extra text added
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5943,7 +6101,9 @@ exports[`Render validation.status = null property.label extra: extra text added 
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      extra text added
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
   </div>
 </div>
@@ -5968,7 +6128,9 @@ exports[`Render validation.status = null property.label inline: true - value[0] 
       htmlFor="property.label inline: true_input"
       title="property.label inline: true"
     >
-      property.label inline: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6036,7 +6198,9 @@ exports[`Render validation.status = null property.label span: 5 - value[0] 1`] =
       htmlFor="property.label span: 5_input"
       title="property.label span: 5"
     >
-      property.label span: 5
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6100,7 +6264,9 @@ exports[`Render validation.status = null property.placeholder: - Select this Mon
       htmlFor="property.placeholder: - Select this Month_input"
       title="property.placeholder: - Select this Month"
     >
-      property.placeholder: - Select this Month
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6164,7 +6330,9 @@ exports[`Render validation.status = null property.size: large - value[0] 1`] = `
       htmlFor="property.size: large_input"
       title="property.size: large"
     >
-      property.size: large
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6228,7 +6396,9 @@ exports[`Render validation.status = null property.size: small - value[0] 1`] = `
       htmlFor="property.size: small_input"
       title="property.size: small"
     >
-      property.size: small
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6292,7 +6462,9 @@ exports[`Render validation.status = null property.suffixIcon: CalendarFilled - v
       htmlFor="property.suffixIcon: CalendarFilled_input"
       title="property.suffixIcon: CalendarFilled"
     >
-      property.suffixIcon: CalendarFilled
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6381,7 +6553,9 @@ exports[`Render validation.status = null property.suffixIcon: CalendarFilled.blu
       htmlFor="property.suffixIcon: CalendarFilled.blue_input"
       title="property.suffixIcon: CalendarFilled.blue"
     >
-      property.suffixIcon: CalendarFilled.blue
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6470,7 +6644,9 @@ exports[`Render validation.status = success default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6557,7 +6733,9 @@ exports[`Render validation.status = success properties.disabledDates.dates - val
       htmlFor="properties.disabledDates.dates_input"
       title="properties.disabledDates.dates"
     >
-      properties.disabledDates.dates
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6644,7 +6822,9 @@ exports[`Render validation.status = success properties.disabledDates.max - value
       htmlFor="properties.disabledDates.max_input"
       title="properties.disabledDates.max"
     >
-      properties.disabledDates.max
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6731,7 +6911,9 @@ exports[`Render validation.status = success properties.disabledDates.min - value
       htmlFor="properties.disabledDates.min_input"
       title="properties.disabledDates.min"
     >
-      properties.disabledDates.min
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6818,7 +7000,9 @@ exports[`Render validation.status = success properties.disabledDates.ranges - va
       htmlFor="properties.disabledDates.ranges_input"
       title="properties.disabledDates.ranges"
     >
-      properties.disabledDates.ranges
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6905,7 +7089,9 @@ exports[`Render validation.status = success properties.inputStyle: CSS style app
       htmlFor="properties.inputStyle: CSS style applied_input"
       title="properties.inputStyle: CSS style applied"
     >
-      properties.inputStyle: CSS style applied
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6992,7 +7178,9 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="Month selector"
     >
-      Month selector
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -7079,7 +7267,9 @@ exports[`Render validation.status = success property.allowClear: false - value[0
       htmlFor="property.allowClear: false_input"
       title="property.allowClear: false"
     >
-      property.allowClear: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -7166,7 +7356,9 @@ exports[`Render validation.status = success property.autoFocus: true - value[0] 
       htmlFor="property.autoFocus: true_input"
       title="property.autoFocus: true"
     >
-      property.autoFocus: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -7254,7 +7446,9 @@ exports[`Render validation.status = success property.disabled: true - value[0] 1
       htmlFor="property.disabled: true_input"
       title="property.disabled: true"
     >
-      property.disabled: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -7342,7 +7536,9 @@ exports[`Render validation.status = success property.format: YYYY-MMMM - value[0
       htmlFor="property.format: YYYY-MMMM_input"
       title="property.format: YYYY-MMMM"
     >
-      property.format: YYYY-MMMM
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -7429,7 +7625,9 @@ exports[`Render validation.status = success property.label align: right - value[
       htmlFor="property.label align: right_input"
       title="property.label align: right"
     >
-      property.label align: right
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -7516,7 +7714,9 @@ exports[`Render validation.status = success property.label colon: true - value[0
       htmlFor="property.label colon: true_input"
       title="property.label colon: true"
     >
-      property.label colon: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -7678,7 +7878,9 @@ exports[`Render validation.status = success property.label extra: extra text add
       htmlFor="property.label extra: extra text added_input"
       title="property.label extra: extra text added"
     >
-      property.label extra: extra text added
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -7749,7 +7951,9 @@ exports[`Render validation.status = success property.label extra: extra text add
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      extra text added
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
   </div>
 </div>
@@ -7774,7 +7978,9 @@ exports[`Render validation.status = success property.label inline: true - value[
       htmlFor="property.label inline: true_input"
       title="property.label inline: true"
     >
-      property.label inline: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -7865,7 +8071,9 @@ exports[`Render validation.status = success property.label span: 5 - value[0] 1`
       htmlFor="property.label span: 5_input"
       title="property.label span: 5"
     >
-      property.label span: 5
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -7952,7 +8160,9 @@ exports[`Render validation.status = success property.placeholder: - Select this 
       htmlFor="property.placeholder: - Select this Month_input"
       title="property.placeholder: - Select this Month"
     >
-      property.placeholder: - Select this Month
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -8039,7 +8249,9 @@ exports[`Render validation.status = success property.size: large - value[0] 1`] 
       htmlFor="property.size: large_input"
       title="property.size: large"
     >
-      property.size: large
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -8126,7 +8338,9 @@ exports[`Render validation.status = success property.size: small - value[0] 1`] 
       htmlFor="property.size: small_input"
       title="property.size: small"
     >
-      property.size: small
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -8213,7 +8427,9 @@ exports[`Render validation.status = success property.suffixIcon: CalendarFilled 
       htmlFor="property.suffixIcon: CalendarFilled_input"
       title="property.suffixIcon: CalendarFilled"
     >
-      property.suffixIcon: CalendarFilled
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -8325,7 +8541,9 @@ exports[`Render validation.status = success property.suffixIcon: CalendarFilled.
       htmlFor="property.suffixIcon: CalendarFilled.blue_input"
       title="property.suffixIcon: CalendarFilled.blue"
     >
-      property.suffixIcon: CalendarFilled.blue
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -8437,7 +8655,9 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -8529,7 +8749,9 @@ exports[`Render validation.status = warning properties.disabledDates.dates - val
       htmlFor="properties.disabledDates.dates_input"
       title="properties.disabledDates.dates"
     >
-      properties.disabledDates.dates
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -8621,7 +8843,9 @@ exports[`Render validation.status = warning properties.disabledDates.max - value
       htmlFor="properties.disabledDates.max_input"
       title="properties.disabledDates.max"
     >
-      properties.disabledDates.max
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -8713,7 +8937,9 @@ exports[`Render validation.status = warning properties.disabledDates.min - value
       htmlFor="properties.disabledDates.min_input"
       title="properties.disabledDates.min"
     >
-      properties.disabledDates.min
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -8805,7 +9031,9 @@ exports[`Render validation.status = warning properties.disabledDates.ranges - va
       htmlFor="properties.disabledDates.ranges_input"
       title="properties.disabledDates.ranges"
     >
-      properties.disabledDates.ranges
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -8897,7 +9125,9 @@ exports[`Render validation.status = warning properties.inputStyle: CSS style app
       htmlFor="properties.inputStyle: CSS style applied_input"
       title="properties.inputStyle: CSS style applied"
     >
-      properties.inputStyle: CSS style applied
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -8989,7 +9219,9 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="Month selector"
     >
-      Month selector
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -9081,7 +9313,9 @@ exports[`Render validation.status = warning property.allowClear: false - value[0
       htmlFor="property.allowClear: false_input"
       title="property.allowClear: false"
     >
-      property.allowClear: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -9173,7 +9407,9 @@ exports[`Render validation.status = warning property.autoFocus: true - value[0] 
       htmlFor="property.autoFocus: true_input"
       title="property.autoFocus: true"
     >
-      property.autoFocus: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -9266,7 +9502,9 @@ exports[`Render validation.status = warning property.disabled: true - value[0] 1
       htmlFor="property.disabled: true_input"
       title="property.disabled: true"
     >
-      property.disabled: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -9359,7 +9597,9 @@ exports[`Render validation.status = warning property.format: YYYY-MMMM - value[0
       htmlFor="property.format: YYYY-MMMM_input"
       title="property.format: YYYY-MMMM"
     >
-      property.format: YYYY-MMMM
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -9451,7 +9691,9 @@ exports[`Render validation.status = warning property.label align: right - value[
       htmlFor="property.label align: right_input"
       title="property.label align: right"
     >
-      property.label align: right
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -9543,7 +9785,9 @@ exports[`Render validation.status = warning property.label colon: true - value[0
       htmlFor="property.label colon: true_input"
       title="property.label colon: true"
     >
-      property.label colon: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -9715,7 +9959,9 @@ exports[`Render validation.status = warning property.label extra: extra text add
       htmlFor="property.label extra: extra text added_input"
       title="property.label extra: extra text added"
     >
-      property.label extra: extra text added
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -9811,7 +10057,9 @@ exports[`Render validation.status = warning property.label inline: true - value[
       htmlFor="property.label inline: true_input"
       title="property.label inline: true"
     >
-      property.label inline: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -9907,7 +10155,9 @@ exports[`Render validation.status = warning property.label span: 5 - value[0] 1`
       htmlFor="property.label span: 5_input"
       title="property.label span: 5"
     >
-      property.label span: 5
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -9999,7 +10249,9 @@ exports[`Render validation.status = warning property.placeholder: - Select this 
       htmlFor="property.placeholder: - Select this Month_input"
       title="property.placeholder: - Select this Month"
     >
-      property.placeholder: - Select this Month
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -10091,7 +10343,9 @@ exports[`Render validation.status = warning property.size: large - value[0] 1`] 
       htmlFor="property.size: large_input"
       title="property.size: large"
     >
-      property.size: large
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -10183,7 +10437,9 @@ exports[`Render validation.status = warning property.size: small - value[0] 1`] 
       htmlFor="property.size: small_input"
       title="property.size: small"
     >
-      property.size: small
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -10275,7 +10531,9 @@ exports[`Render validation.status = warning property.suffixIcon: CalendarFilled 
       htmlFor="property.suffixIcon: CalendarFilled_input"
       title="property.suffixIcon: CalendarFilled"
     >
-      property.suffixIcon: CalendarFilled
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -10392,7 +10650,9 @@ exports[`Render validation.status = warning property.suffixIcon: CalendarFilled.
       htmlFor="property.suffixIcon: CalendarFilled.blue_input"
       title="property.suffixIcon: CalendarFilled.blue"
     >
-      property.suffixIcon: CalendarFilled.blue
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div

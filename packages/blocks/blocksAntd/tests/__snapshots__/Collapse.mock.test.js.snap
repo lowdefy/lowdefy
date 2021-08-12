@@ -8,7 +8,19 @@ Array [
       "bordered": undefined,
       "children": Array [
         <mockConstructor
-          header="content"
+          header={
+            <RenderHtml
+              html="content"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
         >
           <div
             style={
@@ -42,7 +54,19 @@ Array [
       "bordered": undefined,
       "children": Array [
         <mockConstructor
-          header="Title One"
+          header={
+            <RenderHtml
+              html="Title One"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
         >
           <div
             style={
@@ -56,7 +80,19 @@ Array [
           </div>
         </mockConstructor>,
         <mockConstructor
-          header="Title Two"
+          header={
+            <RenderHtml
+              html="Title Two"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
         >
           <div
             style={
@@ -91,7 +127,19 @@ Array [
       "bordered": undefined,
       "children": Array [
         <mockConstructor
-          header="Title One"
+          header={
+            <RenderHtml
+              html="Title One"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
         >
           <div
             style={
@@ -105,7 +153,19 @@ Array [
           </div>
         </mockConstructor>,
         <mockConstructor
-          header="Title Two"
+          header={
+            <RenderHtml
+              html="Title Two"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
         >
           <div
             style={
@@ -139,7 +199,19 @@ Array [
       "bordered": false,
       "children": Array [
         <mockConstructor
-          header="Title One"
+          header={
+            <RenderHtml
+              html="Title One"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
         >
           <div
             style={
@@ -153,7 +225,19 @@ Array [
           </div>
         </mockConstructor>,
         <mockConstructor
-          header="Title Two"
+          header={
+            <RenderHtml
+              html="Title Two"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
         >
           <div
             style={
@@ -187,7 +271,19 @@ Array [
       "bordered": undefined,
       "children": Array [
         <mockConstructor
-          header="Title One"
+          header={
+            <RenderHtml
+              html="Title One"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
         >
           <div
             style={
@@ -201,7 +297,19 @@ Array [
           </div>
         </mockConstructor>,
         <mockConstructor
-          header="Title Two"
+          header={
+            <RenderHtml
+              html="Title Two"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
         >
           <div
             style={
@@ -235,7 +343,19 @@ Array [
       "bordered": undefined,
       "children": Array [
         <mockConstructor
-          header="Title One"
+          header={
+            <RenderHtml
+              html="Title One"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
         >
           <div
             style={
@@ -249,7 +369,19 @@ Array [
           </div>
         </mockConstructor>,
         <mockConstructor
-          header="Title Two"
+          header={
+            <RenderHtml
+              html="Title Two"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
         >
           <div
             style={
@@ -283,7 +415,19 @@ Array [
       "bordered": undefined,
       "children": Array [
         <mockConstructor
-          header="Title One"
+          header={
+            <RenderHtml
+              html="Title One"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
         >
           <div
             style={
@@ -297,7 +441,19 @@ Array [
           </div>
         </mockConstructor>,
         <mockConstructor
-          header="Title Two"
+          header={
+            <RenderHtml
+              html="Title Two"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
         >
           <div
             style={
@@ -331,7 +487,19 @@ Array [
       "bordered": undefined,
       "children": Array [
         <mockConstructor
-          header="Title One"
+          header={
+            <RenderHtml
+              html="Title One"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
         >
           <div
             style={
@@ -345,7 +513,19 @@ Array [
           </div>
         </mockConstructor>,
         <mockConstructor
-          header="Title Two"
+          header={
+            <RenderHtml
+              html="Title Two"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
         >
           <div
             style={
@@ -380,7 +560,19 @@ Array [
       "children": Array [
         <mockConstructor
           forceRender={true}
-          header="Title One"
+          header={
+            <RenderHtml
+              html="Title One"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
         >
           <div
             style={
@@ -395,7 +587,19 @@ Array [
         </mockConstructor>,
         <mockConstructor
           forceRender={true}
-          header="Title Two"
+          header={
+            <RenderHtml
+              html="Title Two"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
         >
           <div
             style={
@@ -428,7 +632,20 @@ Array [
       "accordion": undefined,
       "bordered": undefined,
       "children": Array [
-        <mockConstructor>
+        <mockConstructor
+          header={
+            <RenderHtml
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
+        >
           <div
             style={
               Object {
@@ -440,7 +657,20 @@ Array [
             content_one
           </div>
         </mockConstructor>,
-        <mockConstructor>
+        <mockConstructor
+          header={
+            <RenderHtml
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
+        >
           <div
             style={
               Object {
@@ -474,7 +704,19 @@ Array [
       "children": Array [
         <mockConstructor
           disabled={true}
-          header="Title One"
+          header={
+            <RenderHtml
+              html="Title One"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
         >
           <div
             style={
@@ -489,7 +731,19 @@ Array [
         </mockConstructor>,
         <mockConstructor
           disabled={true}
-          header="Title Two"
+          header={
+            <RenderHtml
+              html="Title Two"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
         >
           <div
             style={
@@ -535,7 +789,19 @@ Array [
               content_one_extra
             </div>
           }
-          header="Title One"
+          header={
+            <RenderHtml
+              html="Title One"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
         >
           <div
             style={
@@ -561,7 +827,19 @@ Array [
               content_two_extra
             </div>
           }
-          header="Title Two"
+          header={
+            <RenderHtml
+              html="Title Two"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
         >
           <div
             style={
@@ -595,7 +873,19 @@ Array [
       "bordered": undefined,
       "children": Array [
         <mockConstructor
-          header="Title One"
+          header={
+            <RenderHtml
+              html="Title One"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
         >
           <div
             style={
@@ -609,7 +899,19 @@ Array [
           </div>
         </mockConstructor>,
         <mockConstructor
-          header="Title Two"
+          header={
+            <RenderHtml
+              html="Title Two"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
         >
           <div
             style={
@@ -643,7 +945,19 @@ Array [
       "bordered": undefined,
       "children": Array [
         <mockConstructor
-          header="Title One"
+          header={
+            <RenderHtml
+              html="Title One"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
           showArrow={false}
         >
           <div
@@ -658,7 +972,19 @@ Array [
           </div>
         </mockConstructor>,
         <mockConstructor
-          header="Title Two"
+          header={
+            <RenderHtml
+              html="Title Two"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
           showArrow={false}
         >
           <div
@@ -678,6 +1004,60 @@ Array [
       "expandIcon": undefined,
       "expandIconPosition": undefined,
       "id": "properties.showArrow: false",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - with html in panel title - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "accordion": undefined,
+      "bordered": undefined,
+      "children": Array [
+        <mockConstructor
+          header={
+            <RenderHtml
+              html=<div style="color:blue">
+  Panel 1 Title
+</div>
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
+        />,
+        <mockConstructor
+          header={
+            <RenderHtml
+              html=<div style="color:green">
+  Panel 2 Title
+</div>
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
+        />,
+      ],
+      "defaultActiveKey": "content_one",
+      "destroyInactivePanel": undefined,
+      "expandIcon": undefined,
+      "expandIconPosition": undefined,
+      "id": "with html in panel title",
       "onChange": [Function],
     },
     Object {},

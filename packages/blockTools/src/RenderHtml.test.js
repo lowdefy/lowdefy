@@ -36,10 +36,14 @@ test('Render default', async () => {
   const wrapper = await mount(<RenderHtml methods={methods} />);
   await wrapper.instance().componentDidMount();
   await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`"<div></div>"`);
+  expect(wrapper.html()).toMatchInlineSnapshot(
+    `"<div class=\\"[{&quot;display&quot;:&quot;inline-block&quot;},null]\\"></div>"`
+  );
   await wrapper.instance().componentDidUpdate();
   await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`"<div></div>"`);
+  expect(wrapper.html()).toMatchInlineSnapshot(
+    `"<div class=\\"[{&quot;display&quot;:&quot;inline-block&quot;},null]\\"></div>"`
+  );
 });
 
 test('Render default and id', async () => {
@@ -47,7 +51,7 @@ test('Render default and id', async () => {
   await wrapper.instance().componentDidMount();
   await wrapper.update();
   expect(wrapper.html()).toMatchInlineSnapshot(
-    `"<div id=\\"test-id\\" data-testid=\\"test-id\\"></div>"`
+    `"<div id=\\"test-id\\" data-testid=\\"test-id\\" class=\\"[{&quot;display&quot;:&quot;inline-block&quot;},null]\\"></div>"`
   );
 });
 
@@ -55,28 +59,36 @@ test('Render string', async () => {
   const wrapper = await mount(<RenderHtml html="A string value" methods={methods} />);
   await wrapper.instance().componentDidMount();
   await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`"<div>A string value</div>"`);
+  expect(wrapper.html()).toMatchInlineSnapshot(
+    `"<div class=\\"[{&quot;display&quot;:&quot;inline-block&quot;},null]\\">A string value</div>"`
+  );
 });
 
 test('Render number', async () => {
   const wrapper = await mount(<RenderHtml html={123} methods={methods} />);
   await wrapper.instance().componentDidMount();
   await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`"<div>123</div>"`);
+  expect(wrapper.html()).toMatchInlineSnapshot(
+    `"<div class=\\"[{&quot;display&quot;:&quot;inline-block&quot;},null]\\">123</div>"`
+  );
 });
 
 test('Render boolean', async () => {
   const wrapper = await mount(<RenderHtml html={false} methods={methods} />);
   await wrapper.instance().componentDidMount();
   await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`"<div></div>"`);
+  expect(wrapper.html()).toMatchInlineSnapshot(
+    `"<div class=\\"[{&quot;display&quot;:&quot;inline-block&quot;},null]\\"></div>"`
+  );
 });
 
 test('Render null', async () => {
   const wrapper = await mount(<RenderHtml html={null} methods={methods} />);
   await wrapper.instance().componentDidMount();
   await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`"<div></div>"`);
+  expect(wrapper.html()).toMatchInlineSnapshot(
+    `"<div class=\\"[{&quot;display&quot;:&quot;inline-block&quot;},null]\\"></div>"`
+  );
 });
 
 test('Render html', async () => {
@@ -89,7 +101,7 @@ test('Render html', async () => {
   await wrapper.instance().componentDidMount();
   await wrapper.update();
   expect(wrapper.html()).toMatchInlineSnapshot(
-    `"<div><div style=\\"background: green; padding: 10px;\\">Content green background</div></div>"`
+    `"<div class=\\"[{&quot;display&quot;:&quot;inline-block&quot;},null]\\"><div style=\\"background: green; padding: 10px;\\">Content green background</div></div>"`
   );
 });
 
@@ -104,7 +116,7 @@ test('Render html and style', async () => {
   await wrapper.instance().componentDidMount();
   await wrapper.update();
   expect(wrapper.html()).toMatchInlineSnapshot(
-    `"<div class=\\"{&quot;color&quot;:&quot;red&quot;}\\"><div style=\\"background: green; padding: 10px;\\">Content green background</div></div>"`
+    `"<div class=\\"[{&quot;display&quot;:&quot;inline-block&quot;},{&quot;color&quot;:&quot;red&quot;}]\\"><div style=\\"background: green; padding: 10px;\\">Content green background</div></div>"`
   );
 });
 
@@ -119,7 +131,9 @@ test('Render html iframe', async () => {
   );
   await wrapper.instance().componentDidMount();
   await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`"<div></div>"`);
+  expect(wrapper.html()).toMatchInlineSnapshot(
+    `"<div class=\\"[{&quot;display&quot;:&quot;inline-block&quot;},null]\\"></div>"`
+  );
 });
 
 test('Render bad html', async () => {
@@ -142,7 +156,7 @@ test('Render bad html', async () => {
   await wrapper.instance().componentDidMount();
   await wrapper.update();
   expect(wrapper.html()).toMatchInlineSnapshot(`
-    "<div>
+    "<div class=\\"[{&quot;display&quot;:&quot;inline-block&quot;},null]\\">
           <h1>Link</h1><h1>
           <a href=\\"https://lowdefy.com\\">Lowdefy link</a>
           <font size=\\"+10\\">Description</font>

@@ -2,18 +2,34 @@
 
 exports[`Render default - value[0] 1`] = `
 <div
-  className="ant-divider ant-divider-horizontal"
+  className="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-center"
   id="default"
   role="separator"
-/>
+>
+  <span
+    className="ant-divider-inner-text"
+  >
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
+  </span>
+</div>
 `;
 
 exports[`Render properties.dashed: true - value[0] 1`] = `
 <div
-  className="ant-divider ant-divider-horizontal ant-divider-dashed"
+  className="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-center ant-divider-dashed"
   id="properties.dashed: true"
   role="separator"
-/>
+>
+  <span
+    className="ant-divider-inner-text"
+  >
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
+  </span>
+</div>
 `;
 
 exports[`Render properties.orientation: center - value[0] 1`] = `
@@ -25,7 +41,9 @@ exports[`Render properties.orientation: center - value[0] 1`] = `
   <span
     className="ant-divider-inner-text"
   >
-    Divider title
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
   </span>
 </div>
 `;
@@ -39,7 +57,9 @@ exports[`Render properties.orientation: left - value[0] 1`] = `
   <span
     className="ant-divider-inner-text"
   >
-    Divider title
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
   </span>
 </div>
 `;
@@ -53,7 +73,9 @@ exports[`Render properties.orientation: right - value[0] 1`] = `
   <span
     className="ant-divider-inner-text"
   >
-    Divider title
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
   </span>
 </div>
 `;
@@ -67,7 +89,9 @@ exports[`Render properties.title - value[0] 1`] = `
   <span
     className="ant-divider-inner-text"
   >
-    Divider title
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
   </span>
 </div>
 `;
@@ -81,7 +105,9 @@ exports[`Render properties.type: horizontal - value[0] 1`] = `
   <span
     className="ant-divider-inner-text"
   >
-    Divider title
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
   </span>
 </div>
 `;
@@ -95,7 +121,9 @@ exports[`Render properties.type: true - value[0] 1`] = `
   <span
     className="ant-divider-inner-text"
   >
-    Divider title
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
   </span>
 </div>
 `;
@@ -109,7 +137,25 @@ exports[`Render properties.type: vertical - value[0] 1`] = `
   <span
     className="ant-divider-inner-text"
   >
-    Divider title
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
+  </span>
+</div>
+`;
+
+exports[`Render with html in title - value[0] 1`] = `
+<div
+  className="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-center"
+  id="with html in title"
+  role="separator"
+>
+  <span
+    className="ant-divider-inner-text"
+  >
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
   </span>
 </div>
 `;
@@ -149,3 +195,7 @@ exports[`Test Schema properties.type: true 2`] = `null`;
 exports[`Test Schema properties.type: vertical 1`] = `true`;
 
 exports[`Test Schema properties.type: vertical 2`] = `null`;
+
+exports[`Test Schema with html in title 1`] = `true`;
+
+exports[`Test Schema with html in title 2`] = `null`;

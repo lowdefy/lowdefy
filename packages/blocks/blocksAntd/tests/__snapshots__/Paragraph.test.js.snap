@@ -10,7 +10,9 @@ exports[`Render default - value[0] 1`] = `
     }
   }
 >
-  
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </div>
 `;
 
@@ -25,8 +27,9 @@ exports[`Render properties.code: true - value[0] 1`] = `
   }
 >
   <code>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
   </code>
 </div>
 `;
@@ -41,8 +44,9 @@ exports[`Render properties.content - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </div>
 `;
 
@@ -56,8 +60,9 @@ exports[`Render properties.content short - value[0] 1`] = `
     }
   }
 >
-  This is a paragraph. It is a text component, and part of the 'Display Blocks' elements available.
-
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </div>
 `;
 
@@ -71,8 +76,9 @@ exports[`Render properties.copyable: icon - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
   <div
     aria-label="Copy"
     className="ant-typography-copy"
@@ -128,8 +134,9 @@ exports[`Render properties.copyable: icon: [] - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
   <div
     aria-label="Copy"
     className="ant-typography-copy"
@@ -206,8 +213,9 @@ exports[`Render properties.copyable: text: one - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
   <div
     aria-label="Copy"
     className="ant-typography-copy"
@@ -261,8 +269,9 @@ exports[`Render properties.copyable: tooltips: [] - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
   <div
     aria-label="Click to copy"
     className="ant-typography-copy"
@@ -316,8 +325,9 @@ exports[`Render properties.copyable: true - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
   <div
     aria-label="Copy"
     className="ant-typography-copy"
@@ -372,8 +382,9 @@ exports[`Render properties.delete: true - value[0] 1`] = `
   }
 >
   <del>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
   </del>
 </div>
 `;
@@ -388,8 +399,9 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </div>
 `;
 
@@ -403,8 +415,9 @@ exports[`Render properties.ellipsis: expandable, rows - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </div>
 `;
 
@@ -418,8 +431,9 @@ exports[`Render properties.ellipsis: rows - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </div>
 `;
 
@@ -433,8 +447,9 @@ exports[`Render properties.ellipsis: rows, suffix - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
   and other
 </div>
 `;
@@ -449,8 +464,9 @@ exports[`Render properties.ellipsis: true - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </div>
 `;
 
@@ -465,8 +481,9 @@ exports[`Render properties.mark: true - value[0] 1`] = `
   }
 >
   <mark>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
   </mark>
 </div>
 `;
@@ -482,8 +499,9 @@ exports[`Render properties.strong: true - value[0] 1`] = `
   }
 >
   <strong>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
   </strong>
 </div>
 `;
@@ -498,8 +516,9 @@ exports[`Render properties.type: danger - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </div>
 `;
 
@@ -513,8 +532,9 @@ exports[`Render properties.type: secondary - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </div>
 `;
 
@@ -528,8 +548,9 @@ exports[`Render properties.type: warning - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </div>
 `;
 
@@ -544,9 +565,26 @@ exports[`Render properties.underline: true - value[0] 1`] = `
   }
 >
   <u>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
   </u>
+</div>
+`;
+
+exports[`Render with html content - value[0] 1`] = `
+<div
+  className="ant-typography {}"
+  id="with html content"
+  style={
+    Object {
+      "WebkitLineClamp": null,
+    }
+  }
+>
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </div>
 `;
 
@@ -633,3 +671,7 @@ exports[`Test Schema properties.type: warning 2`] = `null`;
 exports[`Test Schema properties.underline: true 1`] = `true`;
 
 exports[`Test Schema properties.underline: true 2`] = `null`;
+
+exports[`Test Schema with html content 1`] = `true`;
+
+exports[`Test Schema with html content 2`] = `null`;

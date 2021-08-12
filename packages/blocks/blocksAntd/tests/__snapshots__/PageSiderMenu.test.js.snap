@@ -19,7 +19,7 @@ exports[`Render default - value[0] 1`] = `
           id="default_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
             id="default_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -45,6 +45,9 @@ exports[`Render default - value[0] 1`] = `
                 />
               </svg>
             </span>
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </button>
         </div>
       </div>
@@ -120,7 +123,7 @@ exports[`Render default - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-block"
                   id="default_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -146,6 +149,9 @@ exports[`Render default - value[0] 1`] = `
                       />
                     </svg>
                   </span>
+                  <div
+                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+                  />
                 </button>
               </div>
             </div>
@@ -194,7 +200,7 @@ exports[`Render properties.breadcrumb.list - value[0] 1`] = `
           id="properties.breadcrumb.list_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
             id="properties.breadcrumb.list_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -220,6 +226,9 @@ exports[`Render properties.breadcrumb.list - value[0] 1`] = `
                 />
               </svg>
             </span>
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </button>
         </div>
       </div>
@@ -295,7 +304,7 @@ exports[`Render properties.breadcrumb.list - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-block"
                   id="properties.breadcrumb.list_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -321,6 +330,9 @@ exports[`Render properties.breadcrumb.list - value[0] 1`] = `
                       />
                     </svg>
                   </span>
+                  <div
+                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+                  />
                 </button>
               </div>
             </div>
@@ -403,7 +415,7 @@ exports[`Render properties.content.style - value[0] 1`] = `
           id="properties.content.style_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
             id="properties.content.style_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -429,6 +441,9 @@ exports[`Render properties.content.style - value[0] 1`] = `
                 />
               </svg>
             </span>
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </button>
         </div>
       </div>
@@ -504,7 +519,7 @@ exports[`Render properties.content.style - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-block"
                   id="properties.content.style_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -530,6 +545,9 @@ exports[`Render properties.content.style - value[0] 1`] = `
                       />
                     </svg>
                   </span>
+                  <div
+                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+                  />
                 </button>
               </div>
             </div>
@@ -578,7 +596,7 @@ exports[`Render properties.footer.style - value[0] 1`] = `
           id="properties.footer.style_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
             id="properties.footer.style_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -604,6 +622,9 @@ exports[`Render properties.footer.style - value[0] 1`] = `
                 />
               </svg>
             </span>
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </button>
         </div>
       </div>
@@ -679,7 +700,7 @@ exports[`Render properties.footer.style - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-block"
                   id="properties.footer.style_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -705,6 +726,9 @@ exports[`Render properties.footer.style - value[0] 1`] = `
                       />
                     </svg>
                   </span>
+                  <div
+                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+                  />
                 </button>
               </div>
             </div>
@@ -768,7 +792,7 @@ exports[`Render properties.header.color - value[0] 1`] = `
           id="properties.header.color_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
             id="properties.header.color_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -794,6 +818,9 @@ exports[`Render properties.header.color - value[0] 1`] = `
                 />
               </svg>
             </span>
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </button>
         </div>
       </div>
@@ -956,7 +983,7 @@ exports[`Render properties.header.color - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-block"
                   id="properties.header.color_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -982,6 +1009,9 @@ exports[`Render properties.header.color - value[0] 1`] = `
                       />
                     </svg>
                   </span>
+                  <div
+                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+                  />
                 </button>
               </div>
             </div>
@@ -1040,7 +1070,7 @@ exports[`Render properties.header.style - value[0] 1`] = `
           id="properties.header.style_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
             id="properties.header.style_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -1066,6 +1096,9 @@ exports[`Render properties.header.style - value[0] 1`] = `
                 />
               </svg>
             </span>
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </button>
         </div>
       </div>
@@ -1141,7 +1174,7 @@ exports[`Render properties.header.style - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-block"
                   id="properties.header.style_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -1167,6 +1200,9 @@ exports[`Render properties.header.style - value[0] 1`] = `
                       />
                     </svg>
                   </span>
+                  <div
+                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+                  />
                 </button>
               </div>
             </div>
@@ -1215,7 +1251,7 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
           id="properties.header.theme: light_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
             id="properties.header.theme: light_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -1241,6 +1277,9 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
                 />
               </svg>
             </span>
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </button>
         </div>
       </div>
@@ -1403,7 +1442,7 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-block"
                   id="properties.header.theme: light_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -1429,6 +1468,9 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
                       />
                     </svg>
                   </span>
+                  <div
+                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+                  />
                 </button>
               </div>
             </div>
@@ -1477,7 +1519,7 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
           id="properties.logo.alt_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
             id="properties.logo.alt_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -1503,6 +1545,9 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
                 />
               </svg>
             </span>
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </button>
         </div>
       </div>
@@ -1665,7 +1710,7 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-block"
                   id="properties.logo.alt_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -1691,6 +1736,9 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
                       />
                     </svg>
                   </span>
+                  <div
+                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+                  />
                 </button>
               </div>
             </div>
@@ -1739,7 +1787,7 @@ exports[`Render properties.logo.size - value[0] 1`] = `
           id="properties.logo.size_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
             id="properties.logo.size_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -1765,6 +1813,9 @@ exports[`Render properties.logo.size - value[0] 1`] = `
                 />
               </svg>
             </span>
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </button>
         </div>
       </div>
@@ -1927,7 +1978,7 @@ exports[`Render properties.logo.size - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-block"
                   id="properties.logo.size_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -1953,6 +2004,9 @@ exports[`Render properties.logo.size - value[0] 1`] = `
                       />
                     </svg>
                   </span>
+                  <div
+                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+                  />
                 </button>
               </div>
             </div>
@@ -2001,7 +2055,7 @@ exports[`Render properties.logo.src - value[0] 1`] = `
           id="properties.logo.src_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
             id="properties.logo.src_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -2027,6 +2081,9 @@ exports[`Render properties.logo.src - value[0] 1`] = `
                 />
               </svg>
             </span>
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </button>
         </div>
       </div>
@@ -2189,7 +2246,7 @@ exports[`Render properties.logo.src - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-block"
                   id="properties.logo.src_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -2215,6 +2272,9 @@ exports[`Render properties.logo.src - value[0] 1`] = `
                       />
                     </svg>
                   </span>
+                  <div
+                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+                  />
                 </button>
               </div>
             </div>
@@ -2263,7 +2323,7 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
           id="properties.logo.srcSet_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
             id="properties.logo.srcSet_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -2289,6 +2349,9 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
                 />
               </svg>
             </span>
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </button>
         </div>
       </div>
@@ -2451,7 +2514,7 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-block"
                   id="properties.logo.srcSet_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -2477,6 +2540,9 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
                       />
                     </svg>
                   </span>
+                  <div
+                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+                  />
                 </button>
               </div>
             </div>
@@ -2525,7 +2591,7 @@ exports[`Render properties.logo.style - value[0] 1`] = `
           id="properties.logo.style_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
             id="properties.logo.style_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -2551,6 +2617,9 @@ exports[`Render properties.logo.style - value[0] 1`] = `
                 />
               </svg>
             </span>
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </button>
         </div>
       </div>
@@ -2626,7 +2695,7 @@ exports[`Render properties.logo.style - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-block"
                   id="properties.logo.style_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -2652,6 +2721,9 @@ exports[`Render properties.logo.style - value[0] 1`] = `
                       />
                     </svg>
                   </span>
+                  <div
+                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+                  />
                 </button>
               </div>
             </div>
@@ -2700,7 +2772,7 @@ exports[`Render properties.menu - value[0] 1`] = `
           id="properties.menu_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
             id="properties.menu_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -2726,6 +2798,9 @@ exports[`Render properties.menu - value[0] 1`] = `
                 />
               </svg>
             </span>
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </button>
         </div>
       </div>
@@ -2888,7 +2963,7 @@ exports[`Render properties.menu - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-block"
                   id="properties.menu_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -2914,6 +2989,9 @@ exports[`Render properties.menu - value[0] 1`] = `
                       />
                     </svg>
                   </span>
+                  <div
+                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+                  />
                 </button>
               </div>
             </div>
@@ -2962,7 +3040,7 @@ exports[`Render properties.menu.selectedColor - value[0] 1`] = `
           id="properties.menu.selectedColor_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
             id="properties.menu.selectedColor_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -2988,6 +3066,9 @@ exports[`Render properties.menu.selectedColor - value[0] 1`] = `
                 />
               </svg>
             </span>
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </button>
         </div>
       </div>
@@ -3150,7 +3231,7 @@ exports[`Render properties.menu.selectedColor - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-block"
                   id="properties.menu.selectedColor_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -3176,6 +3257,9 @@ exports[`Render properties.menu.selectedColor - value[0] 1`] = `
                       />
                     </svg>
                   </span>
+                  <div
+                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+                  />
                 </button>
               </div>
             </div>
@@ -3224,7 +3308,7 @@ exports[`Render properties.sider.color - value[0] 1`] = `
           id="properties.sider.color_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
             id="properties.sider.color_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -3250,6 +3334,9 @@ exports[`Render properties.sider.color - value[0] 1`] = `
                 />
               </svg>
             </span>
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </button>
         </div>
       </div>
@@ -3412,7 +3499,7 @@ exports[`Render properties.sider.color - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-block"
                   id="properties.sider.color_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -3438,6 +3525,9 @@ exports[`Render properties.sider.color - value[0] 1`] = `
                       />
                     </svg>
                   </span>
+                  <div
+                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+                  />
                 </button>
               </div>
             </div>
@@ -3486,7 +3576,7 @@ exports[`Render properties.sider.initialCollapsed - value[0] 1`] = `
           id="properties.sider.initialCollapsed_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
             id="properties.sider.initialCollapsed_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -3512,6 +3602,9 @@ exports[`Render properties.sider.initialCollapsed - value[0] 1`] = `
                 />
               </svg>
             </span>
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </button>
         </div>
       </div>
@@ -3598,7 +3691,7 @@ exports[`Render properties.sider.initialCollapsed - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-block"
                   id="properties.sider.initialCollapsed_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -3624,6 +3717,9 @@ exports[`Render properties.sider.initialCollapsed - value[0] 1`] = `
                       />
                     </svg>
                   </span>
+                  <div
+                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+                  />
                 </button>
               </div>
             </div>
@@ -3672,7 +3768,7 @@ exports[`Render properties.sider.style - value[0] 1`] = `
           id="properties.sider.style_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
             id="properties.sider.style_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -3698,6 +3794,9 @@ exports[`Render properties.sider.style - value[0] 1`] = `
                 />
               </svg>
             </span>
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </button>
         </div>
       </div>
@@ -3784,7 +3883,7 @@ exports[`Render properties.sider.style - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-block"
                   id="properties.sider.style_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -3810,6 +3909,9 @@ exports[`Render properties.sider.style - value[0] 1`] = `
                       />
                     </svg>
                   </span>
+                  <div
+                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+                  />
                 </button>
               </div>
             </div>
@@ -3858,7 +3960,7 @@ exports[`Render properties.sider.theme: dark - value[0] 1`] = `
           id="properties.sider.theme: dark_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
             id="properties.sider.theme: dark_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -3884,6 +3986,9 @@ exports[`Render properties.sider.theme: dark - value[0] 1`] = `
                 />
               </svg>
             </span>
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </button>
         </div>
       </div>
@@ -3959,7 +4064,7 @@ exports[`Render properties.sider.theme: dark - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-block"
                   id="properties.sider.theme: dark_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -3985,6 +4090,9 @@ exports[`Render properties.sider.theme: dark - value[0] 1`] = `
                       />
                     </svg>
                   </span>
+                  <div
+                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+                  />
                 </button>
               </div>
             </div>
@@ -4033,7 +4141,7 @@ exports[`Render properties.style - value[0] 1`] = `
           id="properties.style_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
             id="properties.style_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -4059,6 +4167,9 @@ exports[`Render properties.style - value[0] 1`] = `
                 />
               </svg>
             </span>
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </button>
         </div>
       </div>
@@ -4134,7 +4245,7 @@ exports[`Render properties.style - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-block"
                   id="properties.style_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -4160,6 +4271,9 @@ exports[`Render properties.style - value[0] 1`] = `
                       />
                     </svg>
                   </span>
+                  <div
+                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+                  />
                 </button>
               </div>
             </div>
@@ -4208,7 +4322,7 @@ exports[`Render properties.toggleSiderButton.hide - value[0] 1`] = `
           id="properties.toggleSiderButton.hide_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
             id="properties.toggleSiderButton.hide_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -4234,6 +4348,9 @@ exports[`Render properties.toggleSiderButton.hide - value[0] 1`] = `
                 />
               </svg>
             </span>
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </button>
         </div>
       </div>
@@ -4320,7 +4437,7 @@ exports[`Render properties.toggleSiderButton.hide - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-block"
                   id="properties.toggleSiderButton.hide_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -4346,6 +4463,9 @@ exports[`Render properties.toggleSiderButton.hide - value[0] 1`] = `
                       />
                     </svg>
                   </span>
+                  <div
+                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+                  />
                 </button>
               </div>
             </div>
@@ -4394,7 +4514,7 @@ exports[`Render properties.toggleSiderButton.type - value[0] 1`] = `
           id="properties.toggleSiderButton.type_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
             id="properties.toggleSiderButton.type_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -4420,6 +4540,9 @@ exports[`Render properties.toggleSiderButton.type - value[0] 1`] = `
                 />
               </svg>
             </span>
+            <div
+              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+            />
           </button>
         </div>
       </div>
@@ -4506,7 +4629,7 @@ exports[`Render properties.toggleSiderButton.type - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only ant-btn-block"
+                  className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-block"
                   id="properties.toggleSiderButton.type_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -4532,6 +4655,9 @@ exports[`Render properties.toggleSiderButton.type - value[0] 1`] = `
                       />
                     </svg>
                   </span>
+                  <div
+                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+                  />
                 </button>
               </div>
             </div>
