@@ -16,7 +16,7 @@
 
 import React, { useEffect } from 'react';
 import { Modal } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
 import Icon from '../Icon/Icon';
 
 const ConfirmModal = ({ blockId, events, content, methods, properties }) => {
@@ -31,7 +31,7 @@ const ConfirmModal = ({ blockId, events, content, methods, properties }) => {
       methods.triggerEvent({ name: 'onOpen' });
       Modal[args.status || properties.status || 'confirm']({
         id: `${blockId}_confirm_modal`,
-        title: properties.title,
+        title: <RenderHtml html={properties.title} methods={methods} />,
         content: (content.content && content.content()) || properties.content,
         className: methods.makeCssClass(properties.modalStyle),
         okText: properties.okText || 'Ok',
