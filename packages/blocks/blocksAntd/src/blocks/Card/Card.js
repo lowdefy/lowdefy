@@ -16,12 +16,14 @@
 
 import React from 'react';
 import { Card } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
 
 const CardBlock = ({ blockId, content, properties, methods }) => (
   <Card
     id={blockId}
-    title={content.title ? content.title() : properties.title}
+    title={
+      <RenderHtml html={content.title ? content.title() : properties.title} methods={methods} />
+    }
     headStyle={methods.makeCssClass(properties.headerStyle, { styleObjectOnly: true })}
     bodyStyle={methods.makeCssClass(properties.bodyStyle, { styleObjectOnly: true })}
     bordered={properties.bordered}

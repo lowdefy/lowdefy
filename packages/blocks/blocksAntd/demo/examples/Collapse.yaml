@@ -1,6 +1,6 @@
 - id: default
   type: Collapse
-- id: "properties.panels"
+- id: 'properties.panels'
   type: Collapse
   properties:
     panels:
@@ -15,7 +15,7 @@
       blocks:
         - id: ex_1_block_2
           type: Test
-- id: "properties.panels.title"
+- id: 'properties.panels.title'
   type: Collapse
   properties:
     panels:
@@ -32,7 +32,7 @@
       blocks:
         - id: ex_1_block_2
           type: Test
-- id: "properties.panels.disabled"
+- id: 'properties.panels.disabled'
   type: Collapse
   properties:
     panels:
@@ -51,7 +51,7 @@
       blocks:
         - id: ex_1_block_2
           type: Test
-- id: "properties.panels.extraKey"
+- id: 'properties.panels.extraKey'
   type: Collapse
   properties:
     accordion: true
@@ -79,7 +79,7 @@
       blocks:
         - id: ex_1_extra_2
           type: Test
-- id: "properties.accordion: true"
+- id: 'properties.accordion: true'
   type: Collapse
   properties:
     accordion: true
@@ -97,7 +97,7 @@
       blocks:
         - id: ex_1_block_2
           type: Test
-- id: "properties.activeKey: content_two"
+- id: 'properties.activeKey: content_two'
   type: Collapse
   properties:
     activeKey: content_two
@@ -115,7 +115,7 @@
       blocks:
         - id: ex_1_block_2
           type: Test
-- id: "properties.defaultActiveKey: content_two"
+- id: 'properties.defaultActiveKey: content_two'
   type: Collapse
   properties:
     defaultActiveKey: content_two
@@ -133,7 +133,7 @@
       blocks:
         - id: ex_1_block_2
           type: Test
-- id: "properties.bordered: false"
+- id: 'properties.bordered: false'
   type: Collapse
   properties:
     bordered: false
@@ -151,7 +151,7 @@
       blocks:
         - id: ex_1_block_2
           type: Test
-- id: "properties.destroyInactivePanel: true"
+- id: 'properties.destroyInactivePanel: true'
   type: Collapse
   properties:
     destroyInactivePanel: true
@@ -169,7 +169,7 @@
       blocks:
         - id: ex_1_block_2
           type: Test
-- id: "properties.expandIcon: ArrowRightOutlined"
+- id: 'properties.expandIcon: ArrowRightOutlined'
   type: Collapse
   properties:
     expandIcon: ArrowRightOutlined
@@ -187,7 +187,7 @@
       blocks:
         - id: ex_1_block_2
           type: Test
-- id: "properties.expandIconPosition: right"
+- id: 'properties.expandIconPosition: right'
   type: Collapse
   properties:
     expandIconPosition: right
@@ -205,7 +205,7 @@
       blocks:
         - id: ex_1_block_2
           type: Test
-- id: "properties.forceRender: true"
+- id: 'properties.forceRender: true'
   type: Collapse
   properties:
     forceRender: true
@@ -223,7 +223,7 @@
       blocks:
         - id: ex_1_block_2
           type: Test
-- id: "properties.showArrow: false"
+- id: 'properties.showArrow: false'
   type: Collapse
   properties:
     showArrow: false
@@ -236,8 +236,16 @@
     content_one:
       blocks:
         - id: ex_1_block_1
-          type: Test
+          type: Button
     content_two:
       blocks:
         - id: ex_1_block_2
           type: Test
+- id: 'with html in panel title'
+  type: Collapse
+  properties:
+    panels:
+      - key: content_one
+        title: '<div style="color:blue">Panel 1 Title</div>'
+      - key: content_two
+        title: '<div style="color:green">Panel 2 Title</div>'

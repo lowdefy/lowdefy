@@ -17,7 +17,7 @@
 import React from 'react';
 import { Collapse } from 'antd';
 import { type, serializer } from '@lowdefy/helpers';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
 
 import Icon from '../Icon/Icon';
 
@@ -62,7 +62,7 @@ const CollapseBlock = ({ blockId, events, content, methods, properties }) => {
           extra={content[panel.extraKey] && content[panel.extraKey]()}
           disabled={panel.disabled}
           forceRender={properties.forceRender}
-          header={panel.title}
+          header={<RenderHtml html={panel.title} methods={methods} />}
           key={panel.key}
           showArrow={properties.showArrow}
         >

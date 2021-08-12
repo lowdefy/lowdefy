@@ -190,7 +190,6 @@
 - id: 'properties.items html values'
   type: Descriptions
   properties:
-    title: '<div style="color: blue;">hello</div>'
     items:
       - label: '<h3>Good morning</h3>'
         value: value one
