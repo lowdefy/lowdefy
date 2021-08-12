@@ -17,8 +17,11 @@
 import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 import { makeContextId } from '@lowdefy/engine';
 
-function createLink({ sameOriginLink, newOriginLink, lowdefy }) {
-  function link({ urlQuery, pageId, url, newTab, home, input }) {
+function createLink({ backLink, lowdefy, newOriginLink, sameOriginLink }) {
+  function link({ back, home, input, newTab, pageId, url, urlQuery }) {
+    if (back) {
+      return backLink();
+    }
     const lowdefyUrlQuery = type.isNone(urlQuery) ? '' : `?${urlQueryFn.stringify(urlQuery)}`;
     if (home) pageId = lowdefy.homePageId;
     if (pageId) {
@@ -30,9 +33,9 @@ function createLink({ sameOriginLink, newOriginLink, lowdefy }) {
         });
         lowdefy.inputs[nextContextId] = input;
       }
-      sameOriginLink(`/${pageId}${lowdefyUrlQuery}`, newTab);
+      return sameOriginLink(`/${pageId}${lowdefyUrlQuery}`, newTab);
     } else if (url) {
-      newOriginLink(`${url}${lowdefyUrlQuery}`, newTab);
+      return newOriginLink(`${url}${lowdefyUrlQuery}`, newTab);
     } else {
       throw new Error(`Invalid Link.`);
     }

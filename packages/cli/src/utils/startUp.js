@@ -38,6 +38,9 @@ async function startUp({ context, options = {}, command, lowdefyFileNotRequired 
   } else {
     context.outputDirectory = path.resolve(context.baseDirectory, outputDirectoryPath);
   }
+
+  context.blocksServerUrl = options.blocksServerUrl;
+
   if (!lowdefyFileNotRequired) {
     const { appId, disableTelemetry, lowdefyVersion } = await getConfig(context);
     context.appId = appId;

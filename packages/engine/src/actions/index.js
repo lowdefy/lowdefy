@@ -25,6 +25,7 @@ import Reset from './Reset';
 import ScrollTo from './ScrollTo';
 import SetGlobal from './SetGlobal';
 import SetState from './SetState';
+import Throw from './Throw';
 import Validate from './Validate';
 import Wait from './Wait';
 
@@ -40,6 +41,7 @@ export default {
   ScrollTo,
   SetGlobal,
   SetState,
+  Throw,
   Validate,
   Wait,
 };

@@ -3556,20 +3556,10 @@ __metadata:
     apollo-server-express: 2.25.0
     babel-jest: 26.6.3
     babel-loader: 8.2.2
-    clean-webpack-plugin: 3.0.0
-    copy-webpack-plugin: 9.0.0
-    css-loader: 5.2.6
     express: 4.17.1
     graphql: 15.5.0
-    html-webpack-plugin: 5.3.1
     jest: 26.6.3
     lowdefy: 3.19.0
-    nodemon: 2.0.7
-    react: 17.0.2
-    react-dom: 17.0.2
-    style-loader: 2.0.0
-    webpack: 5.38.1
-    webpack-cli: 4.7.0
   languageName: unknown
   linkType: soft
 
@@ -3601,6 +3591,30 @@ __metadata:
     style-loader: 2.0.0
     webpack: 5.38.1
     webpack-cli: 4.7.0
+  languageName: unknown
+  linkType: soft
+
+"@lowdefy/server-node@workspace:packages/servers/serverNode":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/server-node@workspace:packages/servers/serverNode"
+  dependencies:
+    "@babel/cli": 7.14.3
+    "@babel/core": 7.14.3
+    "@babel/preset-env": 7.14.4
+    "@babel/preset-react": 7.13.13
+    "@lowdefy/graphql": 3.19.0
+    "@lowdefy/node-utils": 3.19.0
+    "@lowdefy/server": 3.19.0
+    "@lowdefy/shell": 3.19.0
+    apollo-server-express: 2.25.0
+    babel-jest: 26.6.3
+    babel-loader: 8.2.2
+    express: 4.17.1
+    graphql: 15.5.0
+    jest: 26.6.3
+    yargs: 17.1.0
+  bin:
+    lowdefy-server: dist/server.js
   languageName: unknown
   linkType: soft
 
@@ -21810,6 +21824,21 @@ resolve@^2.0.0-next.3:
   version: 20.2.7
   resolution: "yargs-parser@npm:20.2.7"
   checksum: 124e7f1c24c9609d5d1c343f14b83289634e19bb43770708ebb6a19852647aaa0f89edcbf0e5b18a21bee77f54513ab5051518b2950cda69eb607a7c6251aa4f
+  languageName: node
+  linkType: hard
+
+"yargs@npm:17.1.0":
+  version: 17.1.0
+  resolution: "yargs@npm:17.1.0"
+  dependencies:
+    cliui: ^7.0.2
+    escalade: ^3.1.1
+    get-caller-file: ^2.0.5
+    require-directory: ^2.1.1
+    string-width: ^4.2.0
+    y18n: ^5.0.5
+    yargs-parser: ^20.2.2
+  checksum: 3f39f16213bec069b18e744dee8d6de2a2e4396e7fa81578c83625b881ba04ace37a32a3e4090ed10392e3db83819502e818eb3bbd0f3bf4a9460fd0b5c19247
   languageName: node
   linkType: hard
 
