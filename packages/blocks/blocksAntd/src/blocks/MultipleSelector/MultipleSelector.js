@@ -124,7 +124,7 @@ const MultipleSelector = ({
                     <RenderHtml
                       html={type.isNone(opt.label) ? `${opt.value}` : opt.label}
                       methods={methods}
-                      style={{ ...opt.style }}
+                      style={opt.style}
                     />
                   </Option>
                 )

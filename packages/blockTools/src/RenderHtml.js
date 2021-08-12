@@ -44,7 +44,7 @@ class RenderHtml extends React.Component {
             this.div = el;
           }
         }}
-        className={methods.makeCssClass(style)}
+        className={methods.makeCssClass([{ display: 'inline-block' }, style])}
       />
     );
   }
