@@ -16,13 +16,6 @@
           "default": false,
           "description": "Render items in a table."
         },
-        "excludeKeys": {
-          "type": "array",
-          "description": "Filter the list of displayed items by providing a list of keys to exclude.",
-          "items": {
-            "type": "string"
-          }
-        },
         "colon": {
           "type": "boolean",
           "default": true,
@@ -61,13 +54,6 @@
               }
             }
           ]
-        },
-        "includeKeys": {
-          "type": "array",
-          "description": "Filter the list of displayed items by providing a list of keys to include.",
-          "items": {
-            "type": "string"
-          }
         },
         "itemOptions": {
           "type": "array",
@@ -131,11 +117,11 @@
                       },
                       {
                         "type": "number",
-                        "description": "Value of item - supports html."
+                        "description": "Value of item."
                       },
                       {
                         "type": "array",
-                        "description": "Value of item - supports html."
+                        "description": "Value of item."
                       }
                     ]
                   },
@@ -176,7 +162,7 @@
         },
         "title": {
           "type": "string",
-          "description": "The title of the description block, placed at the top."
+          "description": "The title of the description block, placed at the top - supports html."
         }
       }
     }

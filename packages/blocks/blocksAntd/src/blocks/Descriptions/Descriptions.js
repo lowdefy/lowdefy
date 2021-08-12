@@ -36,42 +36,37 @@ const DescriptionsBlock = ({ blockId, properties, methods }) => {
       layout={properties.layout}
       colon={properties.colon}
     >
-      {dataItem
-        .filter(
-          (item) => !properties.includeKeys || properties.includeKeys.includes(item.key) === true
-        )
-        .filter((item) => (properties.excludeKeys || []).includes(item.key) === false)
-        .map((item, i) => {
-          let row = item;
-          if (type.isPrimitive(item)) {
-            row = { value: item, key: item.toString() };
-          }
-          const itemOption =
-            (properties.itemOptions || []).find((item) => row.key === item.key) || {};
-          const value = type.isFunction(itemOption.transformValue)
-            ? itemOption.transformValue(row.value, row, i)
-            : row.value;
-          const label = type.isFunction(itemOption.transformLabel)
-            ? itemOption.transformLabel(row.key || row.label, row, i)
-            : row.key || row.label;
-          return (
-            <Descriptions.Item
-              key={i}
-              label={<RenderHtml html={label} methods={methods} />}
-              span={
-                row.span ||
-                (type.isFunction(itemOption.span) ? itemOption.span(row, i) : itemOption.span)
-              }
-              className={`${makeCssClass([
-                { whiteSpace: 'pre-wrap' },
-                type.isFunction(itemOption.style) ? itemOption.style(row, i) : itemOption.style,
-                row.style,
-              ])}`}
-            >
-              <RenderHtml html={value} methods={methods} />
-            </Descriptions.Item>
-          );
-        })}
+      {dataItem.map((item, i) => {
+        let row = item;
+        if (type.isPrimitive(item)) {
+          row = { value: item, key: item.toString() };
+        }
+        const itemOption =
+          (properties.itemOptions || []).find((item) => row.key === item.key) || {};
+        const value = type.isFunction(itemOption.transformValue)
+          ? itemOption.transformValue(row.value, row, i)
+          : row.value;
+        const label = type.isFunction(itemOption.transformLabel)
+          ? itemOption.transformLabel(row.key || row.label, row, i)
+          : row.key || row.label;
+        return (
+          <Descriptions.Item
+            key={i}
+            label={<RenderHtml html={label} methods={methods} />}
+            span={
+              row.span ||
+              (type.isFunction(itemOption.span) ? itemOption.span(row, i) : itemOption.span)
+            }
+            className={`${makeCssClass([
+              { whiteSpace: 'pre-wrap' },
+              type.isFunction(itemOption.style) ? itemOption.style(row, i) : itemOption.style,
+              row.style,
+            ])}`}
+          >
+            <RenderHtml html={value} methods={methods} />
+          </Descriptions.Item>
+        );
+      })}
     </Descriptions>
   );
 };
