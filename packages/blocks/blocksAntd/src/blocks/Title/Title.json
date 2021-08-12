@@ -25,7 +25,7 @@
         },
         "content": {
           "type": "string",
-          "description": "Title text content."
+          "description": "Title text content - supports html."
         },
         "copyable": {
           "default": false,

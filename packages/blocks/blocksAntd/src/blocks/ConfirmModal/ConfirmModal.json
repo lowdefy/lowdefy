@@ -40,7 +40,7 @@
       "properties": {
         "title": {
           "type": "string",
-          "description": "Modal title."
+          "description": "Modal title - supports html."
         },
         "centered": {
           "type": "boolean",

@@ -15,7 +15,7 @@
         },
         "content": {
           "type": "string",
-          "description": "Paragraph text content.",
+          "description": "Paragraph text content - supports html.",
           "docs": {
             "displayType": "text-area"
           }

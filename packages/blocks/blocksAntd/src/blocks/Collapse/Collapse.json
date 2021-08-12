@@ -59,7 +59,7 @@
             "properties": {
               "title": {
                 "type": "string",
-                "description": "Title of the panel."
+                "description": "Title of the panel - supports html."
               },
               "key": {
                 "type": "string",

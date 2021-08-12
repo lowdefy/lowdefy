@@ -121,21 +121,21 @@
                 "properties": {
                   "label": {
                     "type": "string",
-                    "description": "Item label."
+                    "description": "Item label - supports html."
                   },
                   "value": {
                     "oneOf": [
                       {
                         "type": "string",
-                        "description": "Value of item."
+                        "description": "Value of item - supports html."
                       },
                       {
                         "type": "number",
-                        "description": "Value of item."
+                        "description": "Value of item - supports html."
                       },
                       {
                         "type": "array",
-                        "description": "Value of item."
+                        "description": "Value of item - supports html."
                       }
                     ]
                   },
