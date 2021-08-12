@@ -124,8 +124,20 @@
                     "description": "Item label."
                   },
                   "value": {
-                    "type": "string",
-                    "description": "Value of item."
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "description": "Value of item."
+                      },
+                      {
+                        "type": "number",
+                        "description": "Value of item."
+                      },
+                      {
+                        "type": "array",
+                        "description": "Value of item."
+                      }
+                    ]
                   },
                   "span": {
                     "type": "integer",

@@ -190,8 +190,22 @@
 - id: 'properties.items html values'
   type: Descriptions
   properties:
+    title: '<div style="color: blue;">hello</div>'
+    items:
+      - label: '<h3>Good morning</h3>'
+        value: value one
+      - label: label 2
+        value: '<div style="width: 150px; color: red; background: #afa; text-align: center;">value 4</div>'
+      - label: label 3
+        value: 2
+      - label: label 4
+        value: <a>value three</a>
+- id: 'properties.title html value'
+  type: Descriptions
+  properties:
+    title: '<div style="color: blue;">hello</div>'
     items:
       field_one: value one
-      field_four: '<div style="width: 150px; color: red; background: #afa; text-align: center;">value 4</div>'
       field_two: 2
-      field_three: <a>value three</a>
+      field_three: value three
+      field_four: [value 4, value 5]

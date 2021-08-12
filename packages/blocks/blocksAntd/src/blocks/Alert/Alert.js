@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Alert } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
 
 import Icon from '../Icon/Icon';
 
@@ -33,12 +33,14 @@ const AlertBlock = ({ blockId, events, methods, properties }) => {
       banner={properties.banner}
       closable={properties.closable}
       closeText={properties.closeText}
-      description={properties.description}
+      description={<RenderHtml html={properties.description} methods={methods} />}
       id={blockId}
       message={
-        properties.message
-          ? properties.message
-          : !properties.description && <div style={{ height: '1.5175em' }}></div>
+        properties.message ? (
+          <RenderHtml html={properties.message} methods={methods} />
+        ) : (
+          !properties.description && <div style={{ height: '1.5175em' }}></div>
+        )
       }
       onClose={() => methods.triggerEvent({ name: 'onClose' })}
       showIcon={properties.showIcon === false ? false : true}
