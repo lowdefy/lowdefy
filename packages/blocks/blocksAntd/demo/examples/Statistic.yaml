@@ -54,4 +54,4 @@
   properties:
     title: '<div style="color:blue;">Very Html</div>'
     value: 100
-    suffix: %
+    suffix: '%'
