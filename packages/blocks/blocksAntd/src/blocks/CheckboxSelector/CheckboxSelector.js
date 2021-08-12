@@ -17,7 +17,7 @@
 import React from 'react';
 import { Checkbox } from 'antd';
 import { type } from '@lowdefy/helpers';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
 
 import Label from '../Label/Label';
 import getValueIndex from '../../getValueIndex';
@@ -73,11 +73,19 @@ const CheckboxSelector = ({
             {uniqueValueOptions.map((opt, i) =>
               type.isPrimitive(opt) ? (
                 <Checkbox id={`${blockId}_${i}`} key={i} value={i}>
-                  {`${opt}`}
+                  <RenderHtml
+                    html={`${opt}`}
+                    methods={methods}
+                    style={{ display: 'inline-block' }}
+                  />
                 </Checkbox>
               ) : (
                 <Checkbox id={`${blockId}_${i}`} key={i} value={i} disabled={opt.disabled}>
-                  {type.isNone(opt.label) ? `${opt.value}` : opt.label}
+                  <RenderHtml
+                    html={type.isNone(opt.label) ? `${opt.value}` : opt.label}
+                    methods={methods}
+                    style={{ display: 'inline-block', ...opt.style }}
+                  />
                 </Checkbox>
               )
             )}

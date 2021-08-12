@@ -49,7 +49,7 @@
         },
         "content": {
           "type": "string",
-          "description": "Modal content. Overridden by the \"content\" content area."
+          "description": "Modal content. Overridden by the \"content\" content area - supports html."
         },
         "icon": {
           "type": ["string", "object"],

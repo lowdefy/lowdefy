@@ -32,7 +32,9 @@ const ConfirmModal = ({ blockId, events, content, methods, properties }) => {
       Modal[args.status || properties.status || 'confirm']({
         id: `${blockId}_confirm_modal`,
         title: <RenderHtml html={properties.title} methods={methods} />,
-        content: (content.content && content.content()) || properties.content,
+        content: (content.content && content.content()) || (
+          <RenderHtml html={properties.content} methods={methods} />
+        ),
         className: methods.makeCssClass(properties.modalStyle),
         okText: properties.okText || 'Ok',
         okButtonProps: properties.okButton,

@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Select } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
 import { get, type } from '@lowdefy/helpers';
 import Label from '../Label/Label';
 import Icon from '../Icon/Icon';
@@ -111,7 +111,7 @@ const MultipleSelector = ({
                     value={i}
                     className={methods.makeCssClass(properties.optionsStyle)}
                   >
-                    {`${opt}`}
+                    <RenderHtml html={`${opt}`} methods={methods} />
                   </Option>
                 ) : (
                   <Option
@@ -121,7 +121,11 @@ const MultipleSelector = ({
                     disabled={opt.disabled}
                     className={methods.makeCssClass(properties.optionsStyle)}
                   >
-                    {type.isNone(opt.label) ? `${opt.value}` : opt.label}
+                    <RenderHtml
+                      html={type.isNone(opt.label) ? `${opt.value}` : opt.label}
+                      methods={methods}
+                      style={{ ...opt.style }}
+                    />
                   </Option>
                 )
               )}

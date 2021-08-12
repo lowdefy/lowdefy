@@ -43,7 +43,7 @@
           "oneOf": [
             {
               "type": "array",
-              "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+              "description": "Options can either be an array of primitive values, on an array of label, value pairs - supports html.",
               "items": {
                 "type": "string"
               }
@@ -71,7 +71,7 @@
                 "properties": {
                   "label": {
                     "type": "string",
-                    "description": "Value label shown to user."
+                    "description": "Value label shown to user - supports html."
                   },
                   "value": {
                     "description": "Value selected. Can be of any type.",
@@ -100,6 +100,13 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Disable the option if true."
+                  },
+                  "style": {
+                    "type": "object",
+                    "description": "Css style to applied to option.",
+                    "docs": {
+                      "displayType": "yaml"
+                    }
                   }
                 }
               }
