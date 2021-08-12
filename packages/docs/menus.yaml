@@ -551,6 +551,9 @@
         - id: SetState
           type: MenuLink
           pageId: SetState
+        - id: Throw
+          type: MenuLink
+          pageId: Throw
         - id: Validate
           type: MenuLink
           pageId: Validate
