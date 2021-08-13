@@ -29,7 +29,9 @@ test('disable telemetry', async () => {
   const sendTelemetry = getSendTelemetry({
     appId,
     cliVersion,
-    disableTelemetry: true,
+    options: {
+      disableTelemetry: true,
+    },
     lowdefyVersion,
   });
   await sendTelemetry({ data: { x: 1 } });
@@ -41,6 +43,7 @@ test('send telemetry', async () => {
     appId,
     cliVersion,
     lowdefyVersion,
+    options: {},
   });
   await sendTelemetry({ data: { x: 1 } });
   expect(axios.request.mock.calls).toEqual([
@@ -70,6 +73,7 @@ test('send telemetry should not throw', async () => {
     appId,
     cliVersion,
     lowdefyVersion,
+    options: {},
   });
   await sendTelemetry({ data: { x: 1 } });
   expect(true).toBe(true);

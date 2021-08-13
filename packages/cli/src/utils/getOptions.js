@@ -14,11 +14,14 @@
   limitations under the License.
 */
 
-import * as directories from './directories';
+function getOptions({ commandLineOptions, cliConfig }) {
+  // commandLineOptions take precedence over config in lowdefy.yaml
+  const options = {
+    ...cliConfig,
+    ...commandLineOptions,
+  };
 
-test('directories', () => {
-  expect(directories).toEqual({
-    cacheDirectoryPath: './.lowdefy/.cache',
-    outputDirectoryPath: './.lowdefy/build',
-  });
-});
+  return options;
+}
+
+export default getOptions;
