@@ -15,7 +15,9 @@
 */
 import { type, serializer } from '@lowdefy/helpers';
 
-async function JsAction({ context, params }) {
+import actionFns from './index.js';
+
+async function JsAction({ context, event, params, arrayIndices, blockId }) {
   if (!type.isString(params.name)) {
     throw new Error(`JsAction requires a string for 'params.name'.`);
   }
@@ -25,6 +27,19 @@ async function JsAction({ context, params }) {
   if (!type.isFunction(context.lowdefy.imports.jsActions[params.name])) {
     throw new Error(`JsAction ${params.name} is not a function.`);
   }
+
+  const actions = {};
+  Object.keys(actionFns).forEach((name) => {
+    actions[name] = (actionParams) =>
+      actionFns[name]({
+        arrayIndices,
+        blockId,
+        context,
+        event,
+        params: actionParams,
+      });
+  });
+
   return context.lowdefy.imports.jsActions[params.name](
     {
       ...serializer.copy({
@@ -34,6 +49,7 @@ async function JsAction({ context, params }) {
         urlQuery: context.lowdefy.urlQuery,
         input: context.lowdefy.inputs[context.id],
       }),
+      actions,
       contextId: context.id,
       pageId: context.pageId,
       requests: { ...context.requests },
