@@ -57,8 +57,8 @@ const arrayIndices = [];
 const eventName = 'eventName';
 
 // Comment out to use console.log
-// console.log = () => {};
-// console.error = () => {};
+console.log = () => {};
+console.error = () => {};
 
 beforeEach(() => {
   global.Date = mockDate;
@@ -184,51 +184,6 @@ test('call 2 actions', async () => {
         type: 'ActionAsync',
         index: 1,
         response: 'params2',
-      },
-    },
-    success: true,
-    startTimestamp: { date: 0 },
-    endTimestamp: { date: 0 },
-  });
-});
-
-test('call async then sync action', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'context',
-    },
-  };
-  const context = await testContext({
-    lowdefy,
-    rootBlock,
-  });
-  const Actions = context.Actions;
-  const res = await Actions.callActions({
-    actions: [
-      { id: 'test1', type: 'ActionAsync', params: 'params1' },
-      { id: 'test2', type: 'ActionSync', params: 'params2' },
-    ],
-    arrayIndices,
-    block: { blockId: 'blockId' },
-    catchActions: [],
-    event: {},
-    eventName,
-  });
-  expect(res).toEqual({
-    blockId: 'blockId',
-    event: {},
-    eventName: 'eventName',
-    responses: {
-      test1: {
-        type: 'ActionSync',
-        index: 1,
-        response: 'params2',
-      },
-      test2: {
-        type: 'ActionAsync',
-        index: 0,
-        response: 'params1',
       },
     },
     success: true,
@@ -1268,6 +1223,96 @@ test('call async: true with error', async () => {
         type: 'ActionAsyncError',
         error: new Error('Test error'),
         index: 0,
+      },
+    },
+    success: true,
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
+  });
+});
+
+test('call 2 actions, first with async: false', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+  });
+  const Actions = context.Actions;
+  const res = await Actions.callActions({
+    actions: [
+      { id: 'test1', type: 'ActionAsync', async: false, params: { ms: 100 } },
+      { id: 'test2', type: 'ActionSync', params: 'params2' },
+    ],
+    arrayIndices,
+    block: { blockId: 'blockId' },
+    catchActions: [],
+    event: {},
+    eventName,
+  });
+  expect(res).toEqual({
+    blockId: 'blockId',
+    event: {},
+    eventName: 'eventName',
+    responses: {
+      test1: {
+        type: 'ActionAsync',
+        index: 0,
+        response: { ms: 100 },
+      },
+      test2: {
+        type: 'ActionSync',
+        index: 1,
+        response: 'params2',
+      },
+    },
+    success: true,
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
+  });
+});
+
+test('call 2 actions, first with async: null', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+  });
+  const Actions = context.Actions;
+  const res = await Actions.callActions({
+    actions: [
+      { id: 'test1', type: 'ActionAsync', async: null, params: { ms: 100 } },
+      { id: 'test2', type: 'ActionSync', params: 'params2' },
+    ],
+    arrayIndices,
+    block: { blockId: 'blockId' },
+    catchActions: [],
+    event: {},
+    eventName,
+  });
+  expect(res).toEqual({
+    blockId: 'blockId',
+    event: {},
+    eventName: 'eventName',
+    responses: {
+      test1: {
+        type: 'ActionAsync',
+        index: 0,
+        response: { ms: 100 },
+      },
+      test2: {
+        type: 'ActionSync',
+        index: 1,
+        response: 'params2',
       },
     },
     success: true,
