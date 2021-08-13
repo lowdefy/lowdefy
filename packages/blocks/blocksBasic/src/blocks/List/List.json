@@ -7,6 +7,18 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "direction": {
+          "type": "string",
+          "description": "List content as row or column."
+        },
+        "wrap": {
+          "type": "string",
+          "description": "List content is wrap, nowrap or wrap-reverse."
+        },
+        "scroll": {
+          "type": "boolean",
+          "description": "List content scrolling is true or false."
+        },
         "style": {
           "type": "object",
           "description": "Css style object to apply to List div.",
