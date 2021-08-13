@@ -49,4 +49,4 @@ async function elasticsearchSearch({ request, connection }) {
   };
 }
 
-export default { resolver: elasticsearchSearch, schema, checkRead: false, checkWrite: false };
+export default { resolver: elasticsearchSearch, schema, checkRead: true, checkWrite: false };
