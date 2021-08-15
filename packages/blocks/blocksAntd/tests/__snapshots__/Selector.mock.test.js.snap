@@ -893,7 +893,7 @@ Array [
       "autoFocus": undefined,
       "children": Array [
         <mockConstructor
-          className="{}"
+          className="{\\"style\\":[null,null]}"
           id="properties.options.label: html_0"
           value={0}
         >
@@ -922,13 +922,22 @@ Array [
                       ],
                     ],
                     Array [
-                      undefined,
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
                     ],
                     Array [
-                      undefined,
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
                     ],
                     Array [
-                      undefined,
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
                     ],
                   ],
                   "results": Array [
@@ -942,15 +951,15 @@ Array [
                     },
                     Object {
                       "type": "return",
-                      "value": "{}",
+                      "value": "{\\"style\\":[null,null]}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{}",
+                      "value": "{\\"style\\":[null,null]}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{}",
+                      "value": "{\\"style\\":[null,null]}",
                     },
                   ],
                 },
@@ -963,7 +972,7 @@ Array [
           />
         </mockConstructor>,
         <mockConstructor
-          className="{}"
+          className="{\\"style\\":[null,null]}"
           id="properties.options.label: html_1"
           value={1}
         >
@@ -989,13 +998,22 @@ Array [
                       ],
                     ],
                     Array [
-                      undefined,
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
                     ],
                     Array [
-                      undefined,
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
                     ],
                     Array [
-                      undefined,
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
                     ],
                   ],
                   "results": Array [
@@ -1009,15 +1027,15 @@ Array [
                     },
                     Object {
                       "type": "return",
-                      "value": "{}",
+                      "value": "{\\"style\\":[null,null]}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{}",
+                      "value": "{\\"style\\":[null,null]}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{}",
+                      "value": "{\\"style\\":[null,null]}",
                     },
                   ],
                 },
@@ -1030,7 +1048,7 @@ Array [
           />
         </mockConstructor>,
         <mockConstructor
-          className="{}"
+          className="{\\"style\\":[null,null]}"
           id="properties.options.label: html_2"
           value={2}
         >
@@ -1054,13 +1072,22 @@ Array [
                       ],
                     ],
                     Array [
-                      undefined,
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
                     ],
                     Array [
-                      undefined,
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
                     ],
                     Array [
-                      undefined,
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
                     ],
                   ],
                   "results": Array [
@@ -1074,15 +1101,15 @@ Array [
                     },
                     Object {
                       "type": "return",
-                      "value": "{}",
+                      "value": "{\\"style\\":[null,null]}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{}",
+                      "value": "{\\"style\\":[null,null]}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{}",
+                      "value": "{\\"style\\":[null,null]}",
                     },
                   ],
                 },
@@ -1101,6 +1128,266 @@ Array [
       "filterOption": [Function],
       "getPopupContainer": [Function],
       "id": "properties.options.label: html_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": true,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.options.label: html and properties.options.filterString - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [
+        <mockConstructor
+          className="{\\"style\\":[null,null]}"
+          filterstring="Some main text"
+          id="properties.options.label: html and properties.options.filterString_0"
+          value={0}
+        >
+          <RenderHtml
+            html=<div>
+  Some main text
+</div>
+<div style="font-size: 6px;">
+  Some small subtext
+</div>
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          className="{\\"style\\":[null,null]}"
+          filterstring="Option green"
+          id="properties.options.label: html and properties.options.filterString_1"
+          value={1}
+        >
+          <RenderHtml
+            html=<div style="color: green;">
+  Option green
+</div>
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          className="{\\"style\\":[null,null]}"
+          id="properties.options.label: html and properties.options.filterString_2"
+          value={2}
+        >
+          <RenderHtml
+            html="Option 3"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.options.label: html and properties.options.filterString_input",
       "mode": "single",
       "notFoundContent": "Not found",
       "onChange": [Function],
@@ -1500,7 +1787,7 @@ Array [
       "autoFocus": undefined,
       "children": Array [
         <mockConstructor
-          className="{}"
+          className="{\\"style\\":[null,null]}"
           id="properties.options-object_0"
           value={0}
         >
@@ -1524,10 +1811,16 @@ Array [
                       ],
                     ],
                     Array [
-                      undefined,
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
                     ],
                     Array [
-                      undefined,
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
                     ],
                   ],
                   "results": Array [
@@ -1541,11 +1834,11 @@ Array [
                     },
                     Object {
                       "type": "return",
-                      "value": "{}",
+                      "value": "{\\"style\\":[null,null]}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{}",
+                      "value": "{\\"style\\":[null,null]}",
                     },
                   ],
                 },
@@ -1558,7 +1851,7 @@ Array [
           />
         </mockConstructor>,
         <mockConstructor
-          className="{}"
+          className="{\\"style\\":[null,null]}"
           id="properties.options-object_1"
           value={1}
         >
@@ -1582,10 +1875,16 @@ Array [
                       ],
                     ],
                     Array [
-                      undefined,
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
                     ],
                     Array [
-                      undefined,
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
                     ],
                   ],
                   "results": Array [
@@ -1599,11 +1898,11 @@ Array [
                     },
                     Object {
                       "type": "return",
-                      "value": "{}",
+                      "value": "{\\"style\\":[null,null]}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{}",
+                      "value": "{\\"style\\":[null,null]}",
                     },
                   ],
                 },
@@ -1790,7 +2089,7 @@ Array [
       "autoFocus": undefined,
       "children": Array [
         <mockConstructor
-          className="{}"
+          className="{\\"style\\":[null,{\\"color\\":\\"red\\"}]}"
           id="properties.options-style_0"
           value={0}
         >
@@ -1814,10 +2113,18 @@ Array [
                       ],
                     ],
                     Array [
-                      undefined,
+                      Array [
+                        undefined,
+                        Object {
+                          "color": "red",
+                        },
+                      ],
                     ],
                     Array [
-                      undefined,
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
                     ],
                   ],
                   "results": Array [
@@ -1831,11 +2138,11 @@ Array [
                     },
                     Object {
                       "type": "return",
-                      "value": "{}",
+                      "value": "{\\"style\\":[null,{\\"color\\":\\"red\\"}]}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{}",
+                      "value": "{\\"style\\":[null,null]}",
                     },
                   ],
                 },
@@ -1845,15 +2152,10 @@ Array [
                 "triggerEvent": [Function],
               }
             }
-            style={
-              Object {
-                "background": "red",
-              }
-            }
           />
         </mockConstructor>,
         <mockConstructor
-          className="{}"
+          className="{\\"style\\":[null,null]}"
           id="properties.options-style_1"
           value={1}
         >
@@ -1877,10 +2179,18 @@ Array [
                       ],
                     ],
                     Array [
-                      undefined,
+                      Array [
+                        undefined,
+                        Object {
+                          "color": "red",
+                        },
+                      ],
                     ],
                     Array [
-                      undefined,
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
                     ],
                   ],
                   "results": Array [
@@ -1894,11 +2204,11 @@ Array [
                     },
                     Object {
                       "type": "return",
-                      "value": "{}",
+                      "value": "{\\"style\\":[null,{\\"color\\":\\"red\\"}]}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{}",
+                      "value": "{\\"style\\":[null,null]}",
                     },
                   ],
                 },

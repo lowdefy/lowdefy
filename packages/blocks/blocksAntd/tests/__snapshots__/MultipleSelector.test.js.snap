@@ -60,6 +60,10 @@ exports[`Test Schema properties.options.label: html 1`] = `true`;
 
 exports[`Test Schema properties.options.label: html 2`] = `null`;
 
+exports[`Test Schema properties.options.label: html and properties.options.filterString 1`] = `true`;
+
+exports[`Test Schema properties.options.label: html and properties.options.filterString 2`] = `null`;
+
 exports[`Test Schema properties.options: html 1`] = `true`;
 
 exports[`Test Schema properties.options: html 2`] = `null`;

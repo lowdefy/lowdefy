@@ -53,7 +53,7 @@ exports[`Render default - value[0] 1`] = `
                     id="default_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -552,7 +552,7 @@ exports[`Render properties.inputStyle: CSS style applied - value[0] 1`] = `
                     id="properties.inputStyle: CSS style applied_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -1051,7 +1051,7 @@ exports[`Render properties.title - value[0] 1`] = `
                     id="properties.title_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -1550,7 +1550,7 @@ exports[`Render property.color: # - value[0] 1`] = `
                     id="property.color: #_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -2049,7 +2049,7 @@ exports[`Render property.disableIcons: true - value[0] 1`] = `
                     id="property.disableIcons: true_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -2951,7 +2951,7 @@ exports[`Render property.disabled: true - value[0] 1`] = `
                     id="property.disabled: true_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -3450,7 +3450,7 @@ exports[`Render property.label align: right - value[0] 1`] = `
                     id="property.label align: right_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -3949,7 +3949,7 @@ exports[`Render property.label colon: false - value[0] 1`] = `
                     id="property.label colon: false_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -4434,7 +4434,7 @@ exports[`Render property.label disabled: true - value[0] 1`] = `
                     id="property.label disabled: true_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -4933,7 +4933,7 @@ exports[`Render property.label extra: extra text added - value[0] 1`] = `
                     id="property.label extra: extra text added_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -5447,7 +5447,7 @@ exports[`Render property.label inline: true - value[0] 1`] = `
                     id="property.label inline: true_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -5946,7 +5946,7 @@ exports[`Render property.label span: 5 - value[0] 1`] = `
                     id="property.label span: 5_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -6445,7 +6445,7 @@ exports[`Render property.max: 14 - value[0] 1`] = `
                     id="property.max: 14_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -7048,7 +7048,7 @@ exports[`Render property.maxIcon: SmileTwoTone - value[0] 1`] = `
                     id="property.maxIcon: SmileTwoTone_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -7547,7 +7547,7 @@ exports[`Render property.min: 3 - value[0] 1`] = `
                     id="property.min: 3_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -7968,7 +7968,7 @@ exports[`Render property.minIcon: MehTwoTone - value[0] 1`] = `
                     id="property.minIcon: MehTwoTone_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -8467,7 +8467,7 @@ exports[`Render property.notApplicableLabel: Not Applicable - value[0] 1`] = `
                     id="property.notApplicableLabel: Not Applicable_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -8966,7 +8966,7 @@ exports[`Render property.showDots: false - value[0] 1`] = `
                     id="property.showDots: false_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -9153,7 +9153,7 @@ exports[`Render property.showMarks: false - value[0] 1`] = `
                     id="property.showMarks: false_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -9437,7 +9437,7 @@ exports[`Render property.step: 2 - value[0] 1`] = `
                     id="property.step: 2_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -9806,7 +9806,7 @@ exports[`Render property.tooltipVisible: always - value[0] 1`] = `
                     id="property.tooltipVisible: always_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -10305,7 +10305,7 @@ exports[`Render property.tooltipVisible: never - value[0] 1`] = `
                     id="property.tooltipVisible: never_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -20367,7 +20367,7 @@ exports[`Render validation.status = error default - value[0] 1`] = `
                     id="default_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -20894,7 +20894,7 @@ exports[`Render validation.status = error properties.inputStyle: CSS style appli
                     id="properties.inputStyle: CSS style applied_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -21421,7 +21421,7 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
                     id="properties.title_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -21948,7 +21948,7 @@ exports[`Render validation.status = error property.color: # - value[0] 1`] = `
                     id="property.color: #_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -22475,7 +22475,7 @@ exports[`Render validation.status = error property.disableIcons: true - value[0]
                     id="property.disableIcons: true_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -23433,7 +23433,7 @@ exports[`Render validation.status = error property.disabled: true - value[0] 1`]
                     id="property.disabled: true_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -23960,7 +23960,7 @@ exports[`Render validation.status = error property.label align: right - value[0]
                     id="property.label align: right_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -24487,7 +24487,7 @@ exports[`Render validation.status = error property.label colon: false - value[0]
                     id="property.label colon: false_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -25000,7 +25000,7 @@ exports[`Render validation.status = error property.label disabled: true - value[
                     id="property.label disabled: true_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -25527,7 +25527,7 @@ exports[`Render validation.status = error property.label extra: extra text added
                     id="property.label extra: extra text added_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -26062,7 +26062,7 @@ exports[`Render validation.status = error property.label inline: true - value[0]
                     id="property.label inline: true_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -26589,7 +26589,7 @@ exports[`Render validation.status = error property.label span: 5 - value[0] 1`] 
                     id="property.label span: 5_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -27116,7 +27116,7 @@ exports[`Render validation.status = error property.max: 14 - value[0] 1`] = `
                     id="property.max: 14_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -27747,7 +27747,7 @@ exports[`Render validation.status = error property.maxIcon: SmileTwoTone - value
                     id="property.maxIcon: SmileTwoTone_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -28274,7 +28274,7 @@ exports[`Render validation.status = error property.min: 3 - value[0] 1`] = `
                     id="property.min: 3_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -28723,7 +28723,7 @@ exports[`Render validation.status = error property.minIcon: MehTwoTone - value[0
                     id="property.minIcon: MehTwoTone_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -29250,7 +29250,7 @@ exports[`Render validation.status = error property.notApplicableLabel: Not Appli
                     id="property.notApplicableLabel: Not Applicable_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -29777,7 +29777,7 @@ exports[`Render validation.status = error property.showDots: false - value[0] 1`
                     id="property.showDots: false_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -29992,7 +29992,7 @@ exports[`Render validation.status = error property.showMarks: false - value[0] 1
                     id="property.showMarks: false_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -30304,7 +30304,7 @@ exports[`Render validation.status = error property.step: 2 - value[0] 1`] = `
                     id="property.step: 2_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -30701,7 +30701,7 @@ exports[`Render validation.status = error property.tooltipVisible: always - valu
                     id="property.tooltipVisible: always_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -31228,7 +31228,7 @@ exports[`Render validation.status = error property.tooltipVisible: never - value
                     id="property.tooltipVisible: never_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -31755,7 +31755,7 @@ exports[`Render validation.status = null default - value[0] 1`] = `
                     id="default_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -32254,7 +32254,7 @@ exports[`Render validation.status = null properties.inputStyle: CSS style applie
                     id="properties.inputStyle: CSS style applied_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -32753,7 +32753,7 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
                     id="properties.title_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -33252,7 +33252,7 @@ exports[`Render validation.status = null property.color: # - value[0] 1`] = `
                     id="property.color: #_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -33751,7 +33751,7 @@ exports[`Render validation.status = null property.disableIcons: true - value[0] 
                     id="property.disableIcons: true_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -34653,7 +34653,7 @@ exports[`Render validation.status = null property.disabled: true - value[0] 1`] 
                     id="property.disabled: true_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -35152,7 +35152,7 @@ exports[`Render validation.status = null property.label align: right - value[0] 
                     id="property.label align: right_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -35651,7 +35651,7 @@ exports[`Render validation.status = null property.label colon: false - value[0] 
                     id="property.label colon: false_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -36136,7 +36136,7 @@ exports[`Render validation.status = null property.label disabled: true - value[0
                     id="property.label disabled: true_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -36635,7 +36635,7 @@ exports[`Render validation.status = null property.label extra: extra text added 
                     id="property.label extra: extra text added_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -37149,7 +37149,7 @@ exports[`Render validation.status = null property.label inline: true - value[0] 
                     id="property.label inline: true_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -37648,7 +37648,7 @@ exports[`Render validation.status = null property.label span: 5 - value[0] 1`] =
                     id="property.label span: 5_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -38147,7 +38147,7 @@ exports[`Render validation.status = null property.max: 14 - value[0] 1`] = `
                     id="property.max: 14_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -38750,7 +38750,7 @@ exports[`Render validation.status = null property.maxIcon: SmileTwoTone - value[
                     id="property.maxIcon: SmileTwoTone_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -39249,7 +39249,7 @@ exports[`Render validation.status = null property.min: 3 - value[0] 1`] = `
                     id="property.min: 3_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -39670,7 +39670,7 @@ exports[`Render validation.status = null property.minIcon: MehTwoTone - value[0]
                     id="property.minIcon: MehTwoTone_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -40169,7 +40169,7 @@ exports[`Render validation.status = null property.notApplicableLabel: Not Applic
                     id="property.notApplicableLabel: Not Applicable_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -40668,7 +40668,7 @@ exports[`Render validation.status = null property.showDots: false - value[0] 1`]
                     id="property.showDots: false_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -40855,7 +40855,7 @@ exports[`Render validation.status = null property.showMarks: false - value[0] 1`
                     id="property.showMarks: false_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -41139,7 +41139,7 @@ exports[`Render validation.status = null property.step: 2 - value[0] 1`] = `
                     id="property.step: 2_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -41508,7 +41508,7 @@ exports[`Render validation.status = null property.tooltipVisible: always - value
                     id="property.tooltipVisible: always_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -42007,7 +42007,7 @@ exports[`Render validation.status = null property.tooltipVisible: never - value[
                     id="property.tooltipVisible: never_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -42506,7 +42506,7 @@ exports[`Render validation.status = success default - value[0] 1`] = `
                     id="default_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -43028,7 +43028,7 @@ exports[`Render validation.status = success properties.inputStyle: CSS style app
                     id="properties.inputStyle: CSS style applied_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -43550,7 +43550,7 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
                     id="properties.title_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -44072,7 +44072,7 @@ exports[`Render validation.status = success property.color: # - value[0] 1`] = `
                     id="property.color: #_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -44594,7 +44594,7 @@ exports[`Render validation.status = success property.disableIcons: true - value[
                     id="property.disableIcons: true_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -45542,7 +45542,7 @@ exports[`Render validation.status = success property.disabled: true - value[0] 1
                     id="property.disabled: true_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -46064,7 +46064,7 @@ exports[`Render validation.status = success property.label align: right - value[
                     id="property.label align: right_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -46586,7 +46586,7 @@ exports[`Render validation.status = success property.label colon: false - value[
                     id="property.label colon: false_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -47094,7 +47094,7 @@ exports[`Render validation.status = success property.label disabled: true - valu
                     id="property.label disabled: true_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -47616,7 +47616,7 @@ exports[`Render validation.status = success property.label extra: extra text add
                     id="property.label extra: extra text added_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -48153,7 +48153,7 @@ exports[`Render validation.status = success property.label inline: true - value[
                     id="property.label inline: true_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -48675,7 +48675,7 @@ exports[`Render validation.status = success property.label span: 5 - value[0] 1`
                     id="property.label span: 5_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -49197,7 +49197,7 @@ exports[`Render validation.status = success property.max: 14 - value[0] 1`] = `
                     id="property.max: 14_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -49823,7 +49823,7 @@ exports[`Render validation.status = success property.maxIcon: SmileTwoTone - val
                     id="property.maxIcon: SmileTwoTone_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -50345,7 +50345,7 @@ exports[`Render validation.status = success property.min: 3 - value[0] 1`] = `
                     id="property.min: 3_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -50789,7 +50789,7 @@ exports[`Render validation.status = success property.minIcon: MehTwoTone - value
                     id="property.minIcon: MehTwoTone_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -51311,7 +51311,7 @@ exports[`Render validation.status = success property.notApplicableLabel: Not App
                     id="property.notApplicableLabel: Not Applicable_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -51833,7 +51833,7 @@ exports[`Render validation.status = success property.showDots: false - value[0] 
                     id="property.showDots: false_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -52043,7 +52043,7 @@ exports[`Render validation.status = success property.showMarks: false - value[0]
                     id="property.showMarks: false_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -52350,7 +52350,7 @@ exports[`Render validation.status = success property.step: 2 - value[0] 1`] = `
                     id="property.step: 2_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -52742,7 +52742,7 @@ exports[`Render validation.status = success property.tooltipVisible: always - va
                     id="property.tooltipVisible: always_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -53264,7 +53264,7 @@ exports[`Render validation.status = success property.tooltipVisible: never - val
                     id="property.tooltipVisible: never_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -53786,7 +53786,7 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
                     id="default_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -54313,7 +54313,7 @@ exports[`Render validation.status = warning properties.inputStyle: CSS style app
                     id="properties.inputStyle: CSS style applied_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -54840,7 +54840,7 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
                     id="properties.title_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -55367,7 +55367,7 @@ exports[`Render validation.status = warning property.color: # - value[0] 1`] = `
                     id="property.color: #_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -55894,7 +55894,7 @@ exports[`Render validation.status = warning property.disableIcons: true - value[
                     id="property.disableIcons: true_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -56852,7 +56852,7 @@ exports[`Render validation.status = warning property.disabled: true - value[0] 1
                     id="property.disabled: true_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -57379,7 +57379,7 @@ exports[`Render validation.status = warning property.label align: right - value[
                     id="property.label align: right_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -57906,7 +57906,7 @@ exports[`Render validation.status = warning property.label colon: false - value[
                     id="property.label colon: false_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -58419,7 +58419,7 @@ exports[`Render validation.status = warning property.label disabled: true - valu
                     id="property.label disabled: true_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -58946,7 +58946,7 @@ exports[`Render validation.status = warning property.label extra: extra text add
                     id="property.label extra: extra text added_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -59481,7 +59481,7 @@ exports[`Render validation.status = warning property.label inline: true - value[
                     id="property.label inline: true_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -60008,7 +60008,7 @@ exports[`Render validation.status = warning property.label span: 5 - value[0] 1`
                     id="property.label span: 5_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -60535,7 +60535,7 @@ exports[`Render validation.status = warning property.max: 14 - value[0] 1`] = `
                     id="property.max: 14_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -61166,7 +61166,7 @@ exports[`Render validation.status = warning property.maxIcon: SmileTwoTone - val
                     id="property.maxIcon: SmileTwoTone_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -61693,7 +61693,7 @@ exports[`Render validation.status = warning property.min: 3 - value[0] 1`] = `
                     id="property.min: 3_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -62142,7 +62142,7 @@ exports[`Render validation.status = warning property.minIcon: MehTwoTone - value
                     id="property.minIcon: MehTwoTone_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -62669,7 +62669,7 @@ exports[`Render validation.status = warning property.notApplicableLabel: Not App
                     id="property.notApplicableLabel: Not Applicable_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -63196,7 +63196,7 @@ exports[`Render validation.status = warning property.showDots: false - value[0] 
                     id="property.showDots: false_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -63411,7 +63411,7 @@ exports[`Render validation.status = warning property.showMarks: false - value[0]
                     id="property.showMarks: false_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -63723,7 +63723,7 @@ exports[`Render validation.status = warning property.step: 2 - value[0] 1`] = `
                     id="property.step: 2_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -64120,7 +64120,7 @@ exports[`Render validation.status = warning property.tooltipVisible: always - va
                     id="property.tooltipVisible: always_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
@@ -64647,7 +64647,7 @@ exports[`Render validation.status = warning property.tooltipVisible: never - val
                     id="property.tooltipVisible: never_checkbox_selector_input"
                   >
                     <label
-                      className="ant-checkbox-wrapper"
+                      className="{} ant-checkbox-wrapper"
                     >
                       <span
                         className="ant-checkbox"
