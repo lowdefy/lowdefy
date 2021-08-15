@@ -127,7 +127,7 @@ const ParagraphInput = ({ blockId, events, properties, methods, value }) => {
       type={properties.type}
       underline={properties.underline}
     >
-      {value || ''}
+      {!type.isNone(value) ? value.toString() : ''}
     </Paragraph>
   );
 };

@@ -126,6 +126,7 @@ class Actions {
     try {
       response = await actions[action.type]({
         arrayIndices,
+        blockId: block.blockId,
         context: this.context,
         event,
         params: parsedAction.params,
