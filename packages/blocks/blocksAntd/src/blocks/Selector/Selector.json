@@ -172,6 +172,10 @@
                     "default": false,
                     "description": "Disable the option if true."
                   },
+                  "filterString": {
+                    "type": "string",
+                    "description": "String to match against when filtering selector options during. If no filterString is provided the filter method matches against options.label."
+                  },
                   "style": {
                     "type": "object",
                     "description": "Css style to applied to option.",

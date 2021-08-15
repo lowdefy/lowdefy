@@ -76,11 +76,16 @@ const RadioSelector = ({
                   <RenderHtml html={`${opt}`} methods={methods} />
                 </Radio>
               ) : (
-                <Radio id={`${blockId}_${i}`} key={i} value={i} disabled={opt.disabled}>
+                <Radio
+                  id={`${blockId}_${i}`}
+                  key={i}
+                  value={i}
+                  disabled={opt.disabled}
+                  className={methods.makeCssClass(opt.style)}
+                >
                   <RenderHtml
                     html={type.isNone(opt.label) ? `${opt.value}` : opt.label}
                     methods={methods}
-                    style={opt.style}
                   />
                 </Radio>
               )

@@ -76,11 +76,16 @@ const CheckboxSelector = ({
                   <RenderHtml html={`${opt}`} methods={methods} />
                 </Checkbox>
               ) : (
-                <Checkbox id={`${blockId}_${i}`} key={i} value={i} disabled={opt.disabled}>
+                <Checkbox
+                  id={`${blockId}_${i}`}
+                  key={i}
+                  value={i}
+                  disabled={opt.disabled}
+                  className={methods.makeCssClass(opt.style)}
+                >
                   <RenderHtml
                     html={type.isNone(opt.label) ? `${opt.value}` : opt.label}
                     methods={methods}
-                    style={opt.style}
                   />
                 </Checkbox>
               )
