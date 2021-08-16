@@ -43,11 +43,11 @@ async function JsAction({ context, event, params, arrayIndices, blockId }) {
   return context.lowdefy.imports.jsActions[params.name](
     {
       ...serializer.copy({
-        user: context.lowdefy.user,
         global: context.lowdefy.lowdefyGlobal,
+        input: context.lowdefy.inputs[context.id],
         state: context.state,
         urlQuery: context.lowdefy.urlQuery,
-        input: context.lowdefy.inputs[context.id],
+        user: context.lowdefy.user,
       }),
       actions,
       contextId: context.id,
