@@ -18,11 +18,8 @@ import { MongoClient } from 'mongodb';
 
 async function getCollection({ connection }) {
   let client;
-  const { databaseUri, databaseName, collection } = connection;
-  client = new MongoClient(databaseUri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  const { collection, databaseUri, databaseName, options } = connection;
+  client = new MongoClient(databaseUri, options);
   await client.connect();
   try {
     const db = client.db(databaseName);
