@@ -20,7 +20,7 @@ async function writePage({ page, context }) {
   if (!type.isObject(page)) {
     throw new Error(`Page is not an object. Received ${JSON.stringify(page)}`);
   }
-  await context.artifactSetter.set({
+  await context.writeBuildArtifact({
     filePath: `pages/${page.pageId}/${page.pageId}.json`,
     content: JSON.stringify(page, null, 2),
   });

@@ -17,18 +17,11 @@
 import path from 'path';
 import { writeFile } from '@lowdefy/node-utils';
 
-class FileSetter {
-  constructor({ baseDirectory }) {
-    this.baseDirectory = baseDirectory;
+function createWriteBuildArtifact({ outputDirectory }) {
+  async function writeBuildArtifact({ filePath, content }) {
+    return writeFile({ filePath: path.resolve(outputDirectory, filePath), content });
   }
-
-  async set({ filePath, content }) {
-    return writeFile({ filePath: path.resolve(this.baseDirectory, filePath), content });
-  }
+  return writeBuildArtifact;
 }
 
-function createFileSetter(options) {
-  return new FileSetter(options);
-}
-
-export default createFileSetter;
+export default createWriteBuildArtifact;

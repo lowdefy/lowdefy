@@ -17,7 +17,7 @@
 */
 
 import createFileLoader from './loaders/fileLoader';
-import createFileSetter from './loaders/fileSetter';
+import createWriteBuildArtifact from './utils/files/writeBuildArtifact';
 import createMetaLoader from './loaders/metaLoader';
 
 import addDefaultPages from './build/addDefaultPages/addDefaultPages';
@@ -41,7 +41,7 @@ import writeRequests from './build/writeRequests';
 function createContext(options) {
   const { blocksServerUrl, cacheDirectory, configDirectory, logger, outputDirectory } = options;
   const context = {
-    artifactSetter: createFileSetter({ baseDirectory: outputDirectory }),
+    writeBuildArtifact: createWriteBuildArtifact({ outputDirectory }),
     configLoader: createFileLoader({ baseDirectory: configDirectory }),
     blocksServerUrl,
     cacheDirectory,
