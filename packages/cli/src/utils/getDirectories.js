@@ -14,7 +14,18 @@
   limitations under the License.
 */
 
-const cacheDirectoryPath = './.lowdefy/.cache';
-const outputDirectoryPath = './.lowdefy/build';
+import path from 'path';
 
-export { cacheDirectoryPath, outputDirectoryPath };
+function getDirectories({ baseDirectory, options }) {
+  const cacheDirectory = path.resolve(baseDirectory, './.lowdefy/.cache');
+
+  let outputDirectory;
+  if (options.outputDirectory) {
+    outputDirectory = path.resolve(options.outputDirectory);
+  } else {
+    outputDirectory = path.resolve(baseDirectory, './.lowdefy/build');
+  }
+  return { cacheDirectory, outputDirectory };
+}
+
+export default getDirectories;

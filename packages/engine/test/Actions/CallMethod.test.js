@@ -242,7 +242,7 @@ test('CallMethod with args not an array', async () => {
       },
       error: {
         error: new Error(
-          'Failed to call method "blockMethod" on block "textInput": "args" should be an array.'
+          'Failed to call method "blockMethod" on block "textInput": "args" should be an array. Received "{"blockId":"textInput","method":"blockMethod","args":"arg"}".'
         ),
         index: 0,
         type: 'CallMethod',
@@ -253,7 +253,7 @@ test('CallMethod with args not an array', async () => {
         type: 'CallMethod',
         index: 0,
         error: new Error(
-          'Failed to call method "blockMethod" on block "textInput": "args" should be an array.'
+          'Failed to call method "blockMethod" on block "textInput": "args" should be an array. Received "{"blockId":"textInput","method":"blockMethod","args":"arg"}".'
         ),
       },
     },
@@ -483,4 +483,88 @@ test('CallMethod of block in array by block with same indices and id pattern', a
   await button0.triggerEvent({ name: 'onClick' });
   expect(blockMethod0.mock.calls).toEqual([['arg']]);
   expect(blockMethod1.mock.calls).toEqual([['arg']]);
+});
+
+test('CallMethod with method does not exist', async () => {
+  const blockMethod = jest.fn((...args) => ({ args }));
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            blockId: 'textInput',
+            type: 'TextInput',
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+          },
+          {
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [
+                {
+                  id: 'a',
+                  type: 'CallMethod',
+                  params: { blockId: 'textInput', method: 'no-method' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+    initState: { textInput: 'init' },
+  });
+  const { button } = context.RootBlocks.map;
+
+  const res = await button.triggerEvent({ name: 'onClick' });
+  expect(res).toEqual({
+    blockId: 'button',
+    event: undefined,
+    eventName: 'onClick',
+    error: {
+      action: {
+        id: 'a',
+        params: {
+          blockId: 'textInput',
+          method: 'no-method',
+        },
+        type: 'CallMethod',
+      },
+      error: {
+        error: new Error(
+          'Failed to call method "no-method" on block "textInput". Check if "no-method" is a valid block method for block "textInput". Received "{"blockId":"textInput","method":"no-method"}".'
+        ),
+        index: 0,
+        type: 'CallMethod',
+      },
+    },
+    responses: {
+      a: {
+        type: 'CallMethod',
+        index: 0,
+        error: new Error(
+          'Failed to call method "no-method" on block "textInput". Check if "no-method" is a valid block method for block "textInput". Received "{"blockId":"textInput","method":"no-method"}".'
+        ),
+      },
+    },
+    success: false,
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
+  });
+  expect(blockMethod.mock.calls).toEqual([]);
 });

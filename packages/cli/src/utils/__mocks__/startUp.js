@@ -14,28 +14,32 @@
   limitations under the License.
 */
 
-import path from 'path';
-import { cacheDirectoryPath, outputDirectoryPath } from '../directories';
+const mockStartUp = jest.fn().mockImplementation(mockStartUpImp);
 
-async function mockStartUp({ context, options = {} }) {
+async function mockStartUpImp({ context, options = {} }) {
+  context.command = 'test';
   context.cliVersion = 'cliVersion';
-  context.appId = 'appId';
-  context.disableTelemetry = false;
-  context.lowdefyVersion = 'lowdefyVersion';
-  context.sendTelemetry = jest.fn();
+  context.commandLineOptions = options;
+
   context.print = {
     info: jest.fn(),
     succeed: jest.fn(),
     log: jest.fn(),
   };
-  context.baseDirectory = path.resolve(options.baseDirectory || process.cwd());
-  context.cacheDirectory = path.resolve(context.baseDirectory, cacheDirectoryPath);
 
-  if (options.outputDirectory) {
-    context.outputDirectory = path.resolve(options.outputDirectory);
-  } else {
-    context.outputDirectory = path.resolve(context.baseDirectory, outputDirectoryPath);
-  }
+  context.baseDirectory = options.baseDirectory || 'baseDirectory';
+
+  context.cliConfig = {};
+  context.lowdefyVersion = 'lowdefyVersion';
+
+  context.appId = 'appId';
+  context.options = options;
+
+  context.cacheDirectory = `${context.baseDirectory}/cacheDirectory`;
+  context.outputDirectory = `${context.baseDirectory}/outputDirectory`;
+
+  context.sendTelemetry = jest.fn();
+
   return context;
 }
 

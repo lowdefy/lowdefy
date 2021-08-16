@@ -18,14 +18,16 @@ import path from 'path';
 import { get, type } from '@lowdefy/helpers';
 import { readFile } from '@lowdefy/node-utils';
 import YAML from 'js-yaml';
-import getCliJson from './getCliJson';
 
-async function getConfig(context) {
-  const lowdefyYaml = await readFile(path.resolve(context.baseDirectory, 'lowdefy.yaml'));
+async function getLowdefyYaml({ baseDirectory, command }) {
+  const lowdefyYaml = await readFile(path.resolve(baseDirectory, 'lowdefy.yaml'));
   if (!lowdefyYaml) {
-    throw new Error(
-      `Could not find "lowdefy.yaml" file in specified base directory ${context.baseDirectory}.`
-    );
+    if (!['init', 'clean-cache'].includes(command)) {
+      throw new Error(
+        `Could not find "lowdefy.yaml" file in specified base directory ${baseDirectory}.`
+      );
+    }
+    return { cliConfig: {} };
   }
   let lowdefy;
   try {
@@ -45,12 +47,10 @@ async function getConfig(context) {
       )}.`
     );
   }
-  const { appId } = await getCliJson(context);
   return {
-    appId,
     lowdefyVersion: lowdefy.lowdefy,
-    disableTelemetry: get(lowdefy, 'cli.disableTelemetry'),
+    cliConfig: get(lowdefy, 'cli', { default: {} }),
   };
 }
 
-export default getConfig;
+export default getLowdefyYaml;

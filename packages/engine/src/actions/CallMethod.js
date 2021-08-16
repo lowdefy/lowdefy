@@ -24,7 +24,16 @@ async function CallMethod({ arrayIndices, context, params }) {
     context.RootBlocks.map[applyArrayIndices(arrayIndices, blockId)].methods[method];
   if (!type.isArray(args)) {
     throw new Error(
-      `Failed to call method "${method}" on block "${blockId}": "args" should be an array.`
+      `Failed to call method "${method}" on block "${blockId}": "args" should be an array. Received "${JSON.stringify(
+        params
+      )}".`
+    );
+  }
+  if (!type.isFunction(blockMethod)) {
+    throw new Error(
+      `Failed to call method "${method}" on block "${blockId}". Check if "${method}" is a valid block method for block "${blockId}". Received "${JSON.stringify(
+        params
+      )}".`
     );
   }
   return blockMethod(...args);

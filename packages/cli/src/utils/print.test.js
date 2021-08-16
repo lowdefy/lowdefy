@@ -92,8 +92,11 @@ describe('memoise', () => {
     jest.isolateModules(() => {
       createPrint = require('./print').default;
     });
+    const realCI = process.env.CI;
+    process.env.CI = 'false';
     const print = createPrint();
     expect(print.type).toEqual('ora');
+    process.env.CI = realCI;
   });
 
   test('createBasicPrint', () => {
@@ -101,8 +104,11 @@ describe('memoise', () => {
     jest.isolateModules(() => {
       createPrint = require('./print').default;
     });
-    const print = createPrint({ basic: true });
+    const realCI = process.env.CI;
+    process.env.CI = 'true';
+    const print = createPrint();
     expect(print.type).toEqual('basic');
+    process.env.CI = realCI;
   });
 });
 describe('ora print', () => {

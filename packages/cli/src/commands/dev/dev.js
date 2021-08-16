@@ -26,34 +26,39 @@ import versionWatcher from './versionWatcher';
 
 async function initialBuild({ context }) {
   const build = await getBuild({ context });
-  await build();
+  try {
+    await build();
+    // eslint-disable-next-line no-empty
+  } catch (error) {}
   return build;
 }
 
-async function serverSetup({ context, options }) {
+async function serverSetup({ context }) {
   const gqlServer = await getGraphQL({ context });
-  return getExpress({ context, gqlServer, options });
+  return getExpress({ context, gqlServer });
 }
 
-async function dev({ context, options }) {
-  await prepare({ context, options });
+async function dev({ context }) {
+  await prepare({ context });
   const initialBuildPromise = initialBuild({ context });
-  const serverSetupPromise = serverSetup({ context, options });
+  const serverSetupPromise = serverSetup({ context });
 
   const [build, { expressApp, reloadFn }] = await Promise.all([
     initialBuildPromise,
     serverSetupPromise,
   ]);
 
-  buildWatcher({ build, context, options, reloadFn });
+  buildWatcher({ build, context, reloadFn });
   envWatcher({ context });
   versionWatcher({ context });
 
   context.print.log('Starting Lowdefy development server.');
-  expressApp.listen(expressApp.get('port'), function () {
-    context.print.info(`Development server listening on port ${options.port}`);
+
+  const port = expressApp.get('port');
+  expressApp.listen(port, function () {
+    context.print.info(`Development server listening on port ${port}`);
   });
-  opener(`http://localhost:${options.port}`);
+  opener(`http://localhost:${port}`);
 
   await context.sendTelemetry({
     data: {
