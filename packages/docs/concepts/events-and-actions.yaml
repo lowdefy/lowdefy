@@ -28,6 +28,7 @@ _ref:
             - Events are triggered when something happens on a page, like clicking a button or loading a page.
             - A list of actions are executed sequentially by a triggered event.
             - If an action errors, the actions that follow are skipped.
+            - Actions that are `async: true` will not executed sequentially nor stop the event if they error.
             - Action errors can be handled by providing a list of `try` and `catch` actions to the event.
             - Operators used in action `params` are evaluated right before the action is executed.
             - The [`_actions`](/_actions)) operator is available for sequential actions to use the values returned from preceding actions in the chain.
@@ -42,7 +43,9 @@ _ref:
 
             Blocks can define _events_ which the block can trigger when something happens on the page, like a button being clicked, an input's value being modified or a page being loaded. Some examples are `onClick` on a [`Button`](/Button) or `onEnter` on a [`PageHeaderMenu`](/PageHeaderMenu) block.
 
-            _Actions_ are tasks that can be executed, like calling a request, linking to a new page or changing a value in state. An array of actions can be defined for a event on a block. If that event gets triggered, those actions will execute sequentially. If any actions error while executing, the actions that follow it won't be executed, however, `catch` actions chain can be defined on a event to trigger when a error in a chain of actions occurs.
+            _Actions_ are tasks that can be executed, like calling a request, linking to a new page or changing a value in state. An array of actions can be defined for a event on a block. If that event gets triggered, those actions will execute sequentially. If any actions error while executing, the actions that follow it won't be executed, however, `catch` actions chain can be defined on a event to trigger when an error in a chain of actions occurs.
+
+            Actions which are `async: true` are an exception to the sequential rule of the actions chain. These actions will be executed asynchronously and the next actions in the chain will not wait for them to finish. If any `async: true` action throws an error, the chain will not be stopped and the event will still be completed successfully.
 
             Each action has an `id`, unique to that action chain, and a `type` field which are required.
 
@@ -57,6 +60,7 @@ _ref:
             - `id: string`: __Required__ - A identifier for the action. It must be unique within the action chain it is defined in.
             - `type: string`: __Required__ - The action type to be used. It must be a valid action type.
             - `skip: boolean`: The test that determines whether the action will be skipped or not. This is usually written as operators which evaluates to a `true` or `false`. __Operators are evaluated__.
+            - `async: boolean`: This determines whether the action will be evaluated asynchronously. Operators are __not__ evaluated on `async`.
             - `messages: object`:  __Operators are evaluated__.
               -  `error: boolean | string`: If `boolean`, whether an error message should be displayed if the action throws an error. Error messages are shown by default. If a `string`, the error message to show to the user.
               -  `loading: boolean | string`: If `boolean`, whether a loading message should be displayed while the action is executing. Loading messages are not shown by default. If a `string`, the loading message to show to the user.

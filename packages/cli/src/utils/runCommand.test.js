@@ -16,8 +16,10 @@
 
 import errorHandler from './errorHandler';
 import runCommand from './runCommand';
+import startUp from './startUp';
 
 jest.mock('./errorHandler');
+jest.mock('./startUp');
 
 async function wait(ms) {
   return new Promise((resolve) => {
@@ -29,10 +31,15 @@ beforeEach(() => {
   errorHandler.mockReset();
 });
 
+const options = { option: true };
+const command = {
+  command: true,
+};
+
 test('runCommand with synchronous function', async () => {
   const fn = jest.fn(() => 1 + 1);
   const wrapped = runCommand(fn);
-  const res = await wrapped();
+  const res = await wrapped(options, command);
   expect(res).toBe(2);
   expect(fn).toHaveBeenCalled();
 });
@@ -43,16 +50,79 @@ test('runCommand with asynchronous function', async () => {
     return 4;
   });
   const wrapped = runCommand(fn);
-  const res = await wrapped();
+  const res = await wrapped(options, command);
   expect(res).toBe(4);
   expect(fn).toHaveBeenCalled();
 });
 
-test('Pass options and context to function', async () => {
+test('runCommand calls startUp', async () => {
   const fn = jest.fn((...args) => args);
   const wrapped = runCommand(fn);
-  const res = await wrapped({ options: true });
-  expect(res).toEqual([{ options: { options: true }, context: {} }]);
+  const res = await wrapped(options, command);
+  expect(res).toMatchInlineSnapshot(`
+    Array [
+      Object {
+        "context": Object {
+          "appId": "appId",
+          "baseDirectory": "baseDirectory",
+          "cacheDirectory": "baseDirectory/cacheDirectory",
+          "cliConfig": Object {},
+          "cliVersion": "cliVersion",
+          "command": "test",
+          "commandLineOptions": Object {
+            "option": true,
+          },
+          "lowdefyVersion": "lowdefyVersion",
+          "options": Object {
+            "option": true,
+          },
+          "outputDirectory": "baseDirectory/outputDirectory",
+          "print": Object {
+            "info": [MockFunction],
+            "log": [MockFunction],
+            "succeed": [MockFunction],
+          },
+          "sendTelemetry": [MockFunction],
+        },
+      },
+    ]
+  `);
+  expect(startUp.mock.calls).toMatchInlineSnapshot(`
+    Array [
+      Array [
+        Object {
+          "command": Object {
+            "command": true,
+          },
+          "context": Object {
+            "appId": "appId",
+            "baseDirectory": "baseDirectory",
+            "cacheDirectory": "baseDirectory/cacheDirectory",
+            "cliConfig": Object {},
+            "cliVersion": "cliVersion",
+            "command": "test",
+            "commandLineOptions": Object {
+              "option": true,
+            },
+            "lowdefyVersion": "lowdefyVersion",
+            "options": Object {
+              "option": true,
+            },
+            "outputDirectory": "baseDirectory/outputDirectory",
+            "print": Object {
+              "info": [MockFunction],
+              "log": [MockFunction],
+              "succeed": [MockFunction],
+            },
+            "sendTelemetry": [MockFunction],
+          },
+          "options": Object {
+            "option": true,
+          },
+        },
+      ],
+    ]
+  `);
 });
 
 test('Catch error synchronous function', async () => {
@@ -60,16 +130,39 @@ test('Catch error synchronous function', async () => {
     throw new Error('Error');
   });
   const wrapped = runCommand(fn);
-  await wrapped();
+  await wrapped(options, command);
   expect(fn).toHaveBeenCalled();
-  expect(errorHandler.mock.calls).toEqual([
-    [
-      {
-        context: {},
-        error: new Error('Error'),
-      },
-    ],
-  ]);
+  expect(errorHandler.mock.calls).toMatchInlineSnapshot(`
+    Array [
+      Array [
+        Object {
+          "context": Object {
+            "appId": "appId",
+            "baseDirectory": "baseDirectory",
+            "cacheDirectory": "baseDirectory/cacheDirectory",
+            "cliConfig": Object {},
+            "cliVersion": "cliVersion",
+            "command": "test",
+            "commandLineOptions": Object {
+              "option": true,
+            },
+            "lowdefyVersion": "lowdefyVersion",
+            "options": Object {
+              "option": true,
+            },
+            "outputDirectory": "baseDirectory/outputDirectory",
+            "print": Object {
+              "info": [MockFunction],
+              "log": [MockFunction],
+              "succeed": [MockFunction],
+            },
+            "sendTelemetry": [MockFunction],
+          },
+          "error": [Error: Error],
+        },
+      ],
+    ]
+  `);
 });
 
 test('Catch error asynchronous function', async () => {
@@ -78,14 +171,37 @@ test('Catch error asynchronous function', async () => {
     throw new Error('Async Error');
   });
   const wrapped = runCommand(fn);
-  await wrapped();
+  await wrapped(options, command);
   expect(fn).toHaveBeenCalled();
-  expect(errorHandler.mock.calls).toEqual([
-    [
-      {
-        context: {},
-        error: new Error('Async Error'),
-      },
-    ],
-  ]);
+  expect(errorHandler.mock.calls).toMatchInlineSnapshot(`
+    Array [
+      Array [
+        Object {
+          "context": Object {
+            "appId": "appId",
+            "baseDirectory": "baseDirectory",
+            "cacheDirectory": "baseDirectory/cacheDirectory",
+            "cliConfig": Object {},
+            "cliVersion": "cliVersion",
+            "command": "test",
+            "commandLineOptions": Object {
+              "option": true,
+            },
+            "lowdefyVersion": "lowdefyVersion",
+            "options": Object {
+              "option": true,
+            },
+            "outputDirectory": "baseDirectory/outputDirectory",
+            "print": Object {
+              "info": [MockFunction],
+              "log": [MockFunction],
+              "succeed": [MockFunction],
+            },
+            "sendTelemetry": [MockFunction],
+          },
+          "error": [Error: Async Error],
+        },
+      ],
+    ]
+  `);
 });
