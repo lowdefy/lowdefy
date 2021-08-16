@@ -25,7 +25,6 @@ function makeRefDefinition(refDefinition) {
     path: getRefPath(refDefinition),
     vars: get(refDefinition, 'vars', { default: {} }),
     transformer: get(refDefinition, 'transformer'),
-    eval: get(refDefinition, 'eval'),
     original: refDefinition,
   };
 }
