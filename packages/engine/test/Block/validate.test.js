@@ -1,27 +1,27 @@
 /*
-   Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+      http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 */
 
 import testContext from '../testContext';
 
 const pageId = 'one';
+const match = () => true;
 const lowdefy = { pageId };
 
-// Comment out to use console.log
+// Comment out to use console
 console.log = () => {};
-// Comment out to use console.log
 console.error = () => {};
 
 test('parse validate on fields', async () => {
@@ -63,25 +63,24 @@ test('parse validate on fields', async () => {
   const { text } = context.RootBlocks.map;
 
   expect(context.state).toEqual({ text: 'a' });
-  expect(text.validationEval.output).toEqual({ errors: ["Not 'c'"], status: null, warnings: [] });
+  expect(text.eval.validation).toEqual({ errors: ["Not 'c'"], status: null, warnings: [] });
 
-  context.showValidationErrors = true;
-  context.update();
-  expect(text.validationEval.output).toEqual({
+  context.RootBlocks.validate(true, match);
+  expect(text.eval.validation).toEqual({
     errors: ["Not 'c'"],
     status: 'error',
     warnings: [],
   });
 
   text.setValue('c');
-  expect(text.validationEval.output).toEqual({
+  expect(text.eval.validation).toEqual({
     errors: ["Not 'a'"],
     status: 'error',
     warnings: [],
   });
 
   text.setValue('b');
-  expect(text.validationEval.output).toEqual({
+  expect(text.eval.validation).toEqual({
     errors: ["Not 'a'", "Not 'c'"],
     status: 'error',
     warnings: [],
@@ -121,9 +120,8 @@ test('validate should fail if parser has errors', async () => {
   });
   const { text } = context.RootBlocks.map;
 
-  context.showValidationErrors = true;
-  context.update();
-  expect(text.validationEval.output).toEqual({
+  context.RootBlocks.validate(true, match);
+  expect(text.eval.validation).toEqual({
     errors: ['Parser failed'],
     status: 'error',
     warnings: [],
@@ -168,9 +166,8 @@ test('validate, only test where parser failed should fail', async () => {
   });
   const { text } = context.RootBlocks.map;
 
-  context.showValidationErrors = true;
-  context.update();
-  expect(text.validationEval.output).toEqual({
+  context.RootBlocks.validate(true, match);
+  expect(text.eval.validation).toEqual({
     errors: ['Parser failed'],
     status: 'error',
     warnings: [],
@@ -211,20 +208,19 @@ test('parse validate, validate an object not an array', async () => {
   });
   const { text } = context.RootBlocks.map;
   expect(context.state).toEqual({ text: 'a' });
-  expect(text.validationEval.output).toEqual({ errors: ["Not 'c'"], status: null, warnings: [] });
+  expect(text.eval.validation).toEqual({ errors: ["Not 'c'"], status: null, warnings: [] });
 
-  context.showValidationErrors = true;
-  context.update();
-  expect(text.validationEval.output).toEqual({
+  context.RootBlocks.validate(true, match);
+  expect(text.eval.validation).toEqual({
     errors: ["Not 'c'"],
     status: 'error',
     warnings: [],
   });
   text.setValue('c');
-  expect(text.validationEval.output).toEqual({ errors: [], status: 'success', warnings: [] });
+  expect(text.eval.validation).toEqual({ errors: [], status: 'success', warnings: [] });
 });
 
-test('RootBlock.validate() to ignore errors where field not visible', async () => {
+test('RootBlock.validate(true, match) to ignore errors where field not visible', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -288,14 +284,10 @@ test('RootBlock.validate() to ignore errors where field not visible', async () =
     rootBlock,
   });
   const { text, list } = context.RootBlocks.map;
-  expect(context.RootBlocks.validate()).toEqual([]);
+  expect(context.RootBlocks.validate(true, match)).toEqual([]);
 
   text.setValue('1');
-  expect(context.RootBlocks.validate()).toEqual([]);
-
-  context.showValidationErrors = true;
-  context.RootBlocks.update();
-  expect(context.RootBlocks.validate()).toEqual([
+  expect(context.RootBlocks.validate(true, match)).toEqual([
     {
       blockId: 'list',
       validation: { errors: ['Error 123'], status: 'error', warnings: [] },
@@ -303,7 +295,7 @@ test('RootBlock.validate() to ignore errors where field not visible', async () =
   ]);
 
   text.setValue('12');
-  expect(context.RootBlocks.validate()).toEqual([
+  expect(context.RootBlocks.validate(true, match)).toEqual([
     {
       blockId: 'list',
       validation: { errors: ['Error 123'], status: 'error', warnings: [] },
@@ -311,11 +303,11 @@ test('RootBlock.validate() to ignore errors where field not visible', async () =
   ]);
 
   text.setValue('123');
-  expect(context.RootBlocks.validate()).toEqual([]);
+  expect(context.RootBlocks.validate(true, match)).toEqual([]);
 
   text.setValue('12');
   list.pushItem();
-  expect(context.RootBlocks.validate()).toEqual([
+  expect(context.RootBlocks.validate(true, match)).toEqual([
     { blockId: 'list', validation: { errors: ['Error 123'], status: 'error', warnings: [] } },
     {
       blockId: 'list.0.innerText',
@@ -325,7 +317,7 @@ test('RootBlock.validate() to ignore errors where field not visible', async () =
 
   text.setValue('123');
   list.pushItem();
-  expect(context.RootBlocks.validate()).toEqual([
+  expect(context.RootBlocks.validate(true, match)).toEqual([
     {
       blockId: 'list.0.innerText',
       validation: { errors: ['Error 1234'], status: 'error', warnings: [] },
@@ -337,13 +329,13 @@ test('RootBlock.validate() to ignore errors where field not visible', async () =
   ]);
 
   text.setValue('1234');
-  expect(context.RootBlocks.validate()).toEqual([]);
+  expect(context.RootBlocks.validate(true, match)).toEqual([]);
 
   text.setValue('0');
-  expect(context.RootBlocks.validate()).toEqual([]);
+  expect(context.RootBlocks.validate(true, match)).toEqual([]);
 
   text.setValue('12');
-  expect(context.RootBlocks.validate()).toEqual([
+  expect(context.RootBlocks.validate(true, match)).toEqual([
     { blockId: 'list', validation: { errors: ['Error 123'], status: 'error', warnings: [] } },
     {
       blockId: 'list.0.innerText',
@@ -356,7 +348,7 @@ test('RootBlock.validate() to ignore errors where field not visible', async () =
   ]);
 });
 
-test('required on input to return validation error on RootBlock.validate()', async () => {
+test('required on input to return validation error on RootBlock.validate(true, match)', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -386,18 +378,16 @@ test('required on input to return validation error on RootBlock.validate()', asy
   expect(context.state).toEqual({
     text: null,
   });
-  expect(context.RootBlocks.validate()).toEqual([]);
-  context.showValidationErrors = true;
-  expect(context.RootBlocks.validate()).toEqual([
+  expect(context.RootBlocks.validate(true, match)).toEqual([
     {
       blockId: 'text',
       validation: { errors: ['This field is required'], status: 'error', warnings: [] },
     },
   ]);
   text.setValue('a');
-  expect(context.RootBlocks.validate()).toEqual([]);
+  expect(context.RootBlocks.validate(true, match)).toEqual([]);
   text.setValue('');
-  expect(context.RootBlocks.validate()).toEqual([
+  expect(context.RootBlocks.validate(true, match)).toEqual([
     {
       blockId: 'text',
       validation: { errors: ['This field is required'], status: 'error', warnings: [] },
@@ -405,7 +395,7 @@ test('required on input to return validation error on RootBlock.validate()', asy
   ]);
 });
 
-test('required on input to return validation error with priority over validation errors on RootBlock.validate()', async () => {
+test('required on input to return validation error with priority over validation errors on RootBlock.validate(true, match)', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -442,9 +432,7 @@ test('required on input to return validation error with priority over validation
   expect(context.state).toEqual({
     text: null,
   });
-  expect(context.RootBlocks.validate()).toEqual([]);
-  context.showValidationErrors = true;
-  expect(context.RootBlocks.validate()).toEqual([
+  expect(context.RootBlocks.validate(true, match)).toEqual([
     {
       blockId: 'text',
       validation: {
@@ -455,7 +443,7 @@ test('required on input to return validation error with priority over validation
     },
   ]);
   text.setValue('a');
-  expect(context.RootBlocks.validate()).toEqual([
+  expect(context.RootBlocks.validate(true, match)).toEqual([
     {
       blockId: 'text',
       validation: {
@@ -466,9 +454,9 @@ test('required on input to return validation error with priority over validation
     },
   ]);
   text.setValue('1234');
-  expect(context.RootBlocks.validate()).toEqual([]);
+  expect(context.RootBlocks.validate(true, match)).toEqual([]);
   text.setValue('');
-  expect(context.RootBlocks.validate()).toEqual([
+  expect(context.RootBlocks.validate(true, match)).toEqual([
     {
       blockId: 'text',
       validation: {
@@ -480,7 +468,7 @@ test('required on input to return validation error with priority over validation
   ]);
 });
 
-test('nested arrays with validate, and RootBlock.validate() returns all validation errors', async () => {
+test('nested arrays with validate, and RootBlock.validate(true, match) returns all validation errors', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -609,11 +597,7 @@ test('nested arrays with validate, and RootBlock.validate() returns all validati
       { innerList: [], swtch: true },
     ],
   });
-  expect(context.RootBlocks.validate()).toEqual([]);
-
-  context.showValidationErrors = true;
-  context.RootBlocks.update();
-  expect(context.RootBlocks.validate()).toEqual([
+  expect(context.RootBlocks.validate(true, match)).toEqual([
     {
       blockId: 'list.0.swtch',
       validation: {
@@ -672,7 +656,7 @@ test('nested arrays with validate, and RootBlock.validate() returns all validati
     },
   ]);
   text.setValue('1');
-  expect(context.RootBlocks.validate()).toEqual([
+  expect(context.RootBlocks.validate(true, match)).toEqual([
     {
       blockId: 'list.0.swtch',
       validation: {
@@ -715,9 +699,9 @@ test('nested arrays with validate, and RootBlock.validate() returns all validati
     },
   ]);
   text.setValue('12');
-  expect(context.RootBlocks.validate()).toEqual([]);
+  expect(context.RootBlocks.validate(true, match)).toEqual([]);
   text.setValue('0');
-  expect(context.RootBlocks.validate()).toEqual([
+  expect(context.RootBlocks.validate(true, match)).toEqual([
     {
       blockId: 'list.0.swtch',
       validation: {
@@ -818,29 +802,28 @@ test('validation warnings', async () => {
   const { text } = context.RootBlocks.map;
 
   expect(context.state).toEqual({ text: 'a' });
-  expect(text.validationEval.output).toEqual({
+  expect(text.eval.validation).toEqual({
     errors: [],
-    status: 'warning',
+    status: null,
     warnings: ["Not 'c'"],
   });
 
-  context.showValidationErrors = true;
-  context.update();
-  expect(text.validationEval.output).toEqual({
+  context.RootBlocks.validate(true, match);
+  expect(text.eval.validation).toEqual({
     errors: [],
     status: 'warning',
     warnings: ["Not 'c'"],
   });
 
   text.setValue('c');
-  expect(text.validationEval.output).toEqual({
+  expect(text.eval.validation).toEqual({
     errors: [],
     status: 'warning',
     warnings: ["Not 'a'"],
   });
 
   text.setValue('b');
-  expect(text.validationEval.output).toEqual({
+  expect(text.eval.validation).toEqual({
     errors: [],
     status: 'warning',
     warnings: ["Not 'a'", "Not 'c'"],
