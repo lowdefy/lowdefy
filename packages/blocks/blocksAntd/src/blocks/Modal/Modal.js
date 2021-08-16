@@ -54,12 +54,13 @@ const ModalBlock = ({ blockId, content, properties, events, methods }) => {
         bodyStyle={methods.makeCssClass(properties.bodyStyle, { styleObjectOnly: true })}
         visible={openState}
         onOk={async () => {
-          await methods.triggerEvent({ name: 'onOk' });
-          // the visible should only close if actions finished successfully
+          const response = await methods.triggerEvent({ name: 'onOk' });
+          if (response.success === false) return;
           triggerSetOpen({ state: false, setOpen, methods });
         }}
         onCancel={async () => {
-          await methods.triggerEvent({ name: 'onCancel' });
+          const response = await methods.triggerEvent({ name: 'onCancel' });
+          if (response.success === false) return;
           triggerSetOpen({ state: false, setOpen, methods });
         }}
         afterClose={() => methods.triggerEvent({ name: 'afterClose' })}
