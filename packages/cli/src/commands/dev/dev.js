@@ -26,7 +26,10 @@ import versionWatcher from './versionWatcher';
 
 async function initialBuild({ context }) {
   const build = await getBuild({ context });
-  await build();
+  try {
+    await build();
+    // eslint-disable-next-line no-empty
+  } catch (error) {}
   return build;
 }
 
