@@ -141,7 +141,15 @@ test('triggerEvent no event defined', async () => {
   const promise = button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events).toEqual({});
   const res = await promise;
-  expect(res).toBe(undefined);
+  expect(res).toEqual({
+    blockId: 'button',
+    endTimestamp: { date: 0 },
+    event: undefined,
+    eventName: 'onClick',
+    responses: {},
+    startTimestamp: { date: 0 },
+    success: true,
+  });
 });
 
 test('triggerEvent x1', async () => {
