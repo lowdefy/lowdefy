@@ -9,19 +9,21 @@
       "properties": {
         "direction": {
           "type": "string",
-          "description": "List content as row or column."
+          "enum": ["row", "column"],
+          "description": "List content along a 'row' or down a 'column'. Applies the 'flex-direction' css property to the List block."
         },
         "wrap": {
           "type": "string",
-          "description": "List content is wrap, nowrap or wrap-reverse."
+          "enum": ["wrap", "nowrap", "wrap-reverse"],
+          "description": "Specifies wrapping style to be applied to List block as 'wrap', 'nowrap' or 'wrap-reverse'. Applies the 'flex-wrap' css property to the List block - defaults to 'wrap', requires List direction to be set."
         },
         "scroll": {
           "type": "boolean",
-          "description": "List content scrolling is true or false."
+          "description": "Specifies whether scrolling should be applied to the List, can be true or false. Applies the 'overflow' css property to the List block."
         },
         "style": {
           "type": "object",
-          "description": "Css style object to apply to List div.",
+          "description": "Css style object to apply to List block.",
           "docs": {
             "displayType": "yaml"
           }
