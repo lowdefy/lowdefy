@@ -16,11 +16,9 @@
 
 import path from 'path';
 import fse from 'fs-extra';
-import startUp from '../../utils/startUp';
 import getFederatedModule from '../../utils/getFederatedModule';
 
-async function build({ context, options }) {
-  await startUp({ context, options, command: 'build' });
+async function build({ context }) {
   const { default: buildScript } = await getFederatedModule({
     module: 'build',
     packageName: '@lowdefy/build',
@@ -30,10 +28,11 @@ async function build({ context, options }) {
   context.print.log(
     `Cleaning block meta cache at "${path.resolve(context.cacheDirectory, './meta')}".`
   );
+
   await fse.emptyDir(path.resolve(context.cacheDirectory, './meta'));
   context.print.info('Starting build.');
   await buildScript({
-    blocksServerUrl: context.blocksServerUrl,
+    blocksServerUrl: context.options.blocksServerUrl,
     cacheDirectory: context.cacheDirectory,
     configDirectory: context.baseDirectory,
     logger: context.print,
