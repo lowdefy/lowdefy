@@ -25,7 +25,7 @@ import buildAuth from './build/buildAuth/buildAuth';
 import buildConnections from './build/buildConnections';
 import buildMenu from './build/buildMenu';
 import buildPages from './build/buildPages/buildPages';
-import buildRefs from './build/buildRefs';
+import buildRefs from './build/buildRefs/buildRefs';
 import cleanOutputDirectory from './build/cleanOutputDirectory';
 import testSchema from './build/testSchema';
 import validateApp from './build/validateApp';
