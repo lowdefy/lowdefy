@@ -17,7 +17,6 @@ import path from 'path';
 import fse from 'fs-extra';
 
 import cleanCache from './cleanCache';
-// eslint-disable-next-line no-unused-vars
 import startUp from '../../utils/startUp';
 
 jest.mock('fs-extra', () => {
@@ -32,13 +31,15 @@ beforeEach(() => {
 });
 
 test('cleanCache', async () => {
-  await cleanCache({ context: {} });
-  const cachePath = path.resolve(process.cwd(), './.lowdefy/.cache');
-  expect(fse.emptyDir.mock.calls).toEqual([[cachePath]]);
+  const context = {};
+  await startUp({ context, options: {}, command: {} });
+  await cleanCache({ context });
+  expect(fse.emptyDir.mock.calls).toEqual([['baseDirectory/cacheDirectory']]);
 });
 
 test('cleanCache baseDir', async () => {
-  await cleanCache({ context: {}, options: { baseDirectory: 'baseDir' } });
-  const cachePath = path.resolve(process.cwd(), 'baseDir/.lowdefy/.cache');
-  expect(fse.emptyDir.mock.calls).toEqual([[cachePath]]);
+  const context = {};
+  await startUp({ context, options: { baseDirectory: 'baseDir' }, command: {} });
+  await cleanCache({ context });
+  expect(fse.emptyDir.mock.calls).toEqual([['baseDir/cacheDirectory']]);
 });

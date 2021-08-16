@@ -17,13 +17,10 @@ import path from 'path';
 import dotenv from 'dotenv';
 import fse from 'fs-extra';
 
-import startUp from '../../utils/startUp';
-
-async function prepare({ context, options }) {
+async function prepare({ context }) {
   dotenv.config({ silent: true });
   // Setup
-  if (!options.port) options.port = 3000;
-  await startUp({ context, options, command: 'dev' });
+  if (!context.options.port) context.options.port = 3000;
   context.print.log(
     `Cleaning block meta cache at "${path.resolve(context.cacheDirectory, './meta')}".`
   );

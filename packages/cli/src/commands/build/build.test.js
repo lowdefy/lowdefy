@@ -14,11 +14,9 @@
   limitations under the License.
 */
 
-import path from 'path';
 import build from './build';
 // eslint-disable-next-line no-unused-vars
 import getFederatedModule from '../../utils/getFederatedModule';
-// eslint-disable-next-line no-unused-vars
 import startUp from '../../utils/startUp';
 
 jest.mock('../../utils/getFederatedModule', () => {
@@ -31,11 +29,12 @@ jest.mock('../../utils/getFederatedModule', () => {
 jest.mock('../../utils/startUp');
 
 test('build', async () => {
-  const cacheDirectory = path.resolve(process.cwd(), '.lowdefy/.cache');
-  const outputDirectory = path.resolve(process.cwd(), '.lowdefy/build');
-  await build({ context: {} });
+  const context = {};
+  await startUp({ context, options: {}, command: {} });
+  await build({ context });
+
   const { default: buildScript } = getFederatedModule();
   expect(buildScript).toHaveBeenCalledTimes(1);
-  expect(buildScript.mock.calls[0][0].outputDirectory).toEqual(outputDirectory);
-  expect(buildScript.mock.calls[0][0].cacheDirectory).toEqual(cacheDirectory);
+  expect(buildScript.mock.calls[0][0].outputDirectory).toEqual('baseDirectory/outputDirectory');
+  expect(buildScript.mock.calls[0][0].cacheDirectory).toEqual('baseDirectory/cacheDirectory');
 });
