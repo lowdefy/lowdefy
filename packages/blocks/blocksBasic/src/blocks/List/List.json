@@ -9,7 +9,7 @@
       "properties": {
         "direction": {
           "type": "string",
-          "enum": ["row", "column"],
+          "enum": ["row", "column", "row-reverse", "column-reverse"],
           "description": "List content along a 'row' or down a 'column'. Applies the 'flex-direction' css property to the List block."
         },
         "wrap": {
