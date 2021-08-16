@@ -53,7 +53,15 @@ class Events {
   async triggerEvent({ name, event }) {
     const eventDescription = this.events[name];
     if (type.isUndefined(eventDescription)) {
-      return Promise.resolve();
+      return {
+        blockId: this.block.blockId,
+        event,
+        eventName: name,
+        responses: {},
+        endTimestamp: new Date(),
+        startTimestamp: new Date(),
+        success: true,
+      };
     }
     eventDescription.loading = true;
     this.block.update = true;
