@@ -105,14 +105,30 @@ _ref:
 
             #### Properties
             - `pipeline: object[]`: __Required__ - Array containing all the aggregation framework commands for the execution.
-            - `options: object`: Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/3.3/api/Collection.html#aggregate) for more information. Supported settings are:
-              - `readPreference: string | object`: The read preference.
+            - `options: object`: Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/4.0/classes/collection.html#aggregate) for more information. Supported settings are:
               - `allowDiskUse: boolean`: Default: `false` - Allow disk use on the MongoDB server to store temporary results for the aggregation.
-              - `maxTimeMS: number`: Specifies a cumulative time limit in milliseconds for processing operations on the cursor.
+              - `authdb: string`: Specifies the authentication information to be used.
+              - `batchSize: number`: The number of documents to return per batch.
+              - `bsonRegExp: boolean`: Return the BSON regular expressions as BSONRegExp instances.
               - `bypassDocumentValidation: boolean`: Default: `false` - Allow driver to bypass schema validation in MongoDB 3.2 or higher.
+              - `checkKeys: boolean`: The serializer will check if keys are valid.
               - `collation: object`: Specify collation (MongoDB 3.4 or higher) settings for update operation.
               - `comment: string`: Add a [comment](https://docs.mongodb.com/manual/reference/operator/query/comment/index.html) to the aggregation. These comments are visible in the MongoDB profile log, making them easier to interpret.
+              - `dbName: string`: The database name.
+              - `explain: boolean`: Specifies to return the information on the processing of the pipeline.
+              - `fullResponse: boolean`: Return the full server response for the command.
               - `hint: string | object`: Add an index selection hint to an aggregation command.
+              - `ignoreUndefined: boolean`: Default: `true` - Serialize will not emit undefined fields.
+              - `let: object`: Specifies an object with a list of variables. This allows you to improve command readability by separating the variables from the query text.
+              - `maxAwaitTimeMS: number`: The maximum amount of time for the server to wait on new documents to satisfy a tailable cursor query.
+              - `maxTimeMS: number`: Specifies a cumulative time limit in milliseconds for processing operations on the cursor.
+              - `noResponse: boolean`: Admin command option.
+              - `readConcern: object`: Specifies the level of isolation for read operations.
+              - `readPreference: string | object`: The read preference.
+              - `retryWrites: boolean`: Should retry failed writes.
+              - `serializeFunctions: boolean`: Default: `false` - Serialize the javascript functions.
+              - `willRetryWrites: boolean`: Option whether to retry writes.
+              - `writeConcern: object`: An object that expresses the write concern to use with the $out or $merge stage.
 
             #### Examples
 
