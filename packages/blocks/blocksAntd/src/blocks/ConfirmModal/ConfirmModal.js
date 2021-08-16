@@ -44,12 +44,12 @@ const ConfirmModal = ({ blockId, events, content, methods, properties }) => {
         width: properties.width,
         zIndex: properties.zIndex,
         onOk: async () => {
-          await methods.triggerEvent({ name: 'onOk' });
-          methods.triggerEvent({ name: 'onClose' });
+          const response = await methods.triggerEvent({ name: 'onOk' });
+          if (response.success === false) throw response;
         },
         onCancel: async () => {
-          await methods.triggerEvent({ name: 'onCancel' });
-          methods.triggerEvent({ name: 'onClose' });
+          const response = await methods.triggerEvent({ name: 'onCancel' });
+          if (response.success === false) throw response;
         },
         ...additionalProps,
       });

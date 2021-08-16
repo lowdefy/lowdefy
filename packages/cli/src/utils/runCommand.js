@@ -15,12 +15,14 @@
 */
 
 import errorHandler from './errorHandler';
+import startUp from './startUp';
 
 function runCommand(fn) {
-  async function run(options) {
+  async function run(options, command) {
     const context = {};
     try {
-      const res = await fn({ context, options });
+      await startUp({ context, options, command });
+      const res = await fn({ context });
       return res;
     } catch (error) {
       await errorHandler({ context, error });

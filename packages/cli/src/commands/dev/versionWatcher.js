@@ -15,11 +15,11 @@
 */
 import chokidar from 'chokidar';
 import BatchChanges from '../../utils/BatchChanges';
-import getConfig from '../../utils/getConfig';
+import getLowdefyYaml from '../../utils/getLowdefyYaml';
 
 function versionWatcher({ context }) {
   const changeLowdefyFileCallback = async () => {
-    const { lowdefyVersion } = await getConfig(context);
+    const { lowdefyVersion } = await getLowdefyYaml(context);
     if (lowdefyVersion !== context.lowdefyVersion) {
       context.print.warn('Lowdefy version changed. You should restart your development server.');
       process.exit();

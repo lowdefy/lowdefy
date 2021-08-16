@@ -8,6 +8,7 @@ The server consists of a Lowdefy Graphql server, and a static file server to ser
 
 ## Running a development server
 
+- Build the repository in development mode by running `yarn build:dev` at the root of the repository.
 - Create a `lowdefy.yaml` file in the root of the package directory, and build this configuration with the cli using `lowdefy build`.
 - Build the dev server using `yarn build`.
 - Run the dev server using `yarn start`.
