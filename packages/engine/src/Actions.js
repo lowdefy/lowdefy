@@ -27,18 +27,46 @@ class Actions {
     this.actions = actions;
   }
 
+  async callAsyncAction({ action, arrayIndices, block, event, index, responses }) {
+    try {
+      const response = await this.callAction({
+        action,
+        arrayIndices,
+        block,
+        event,
+        index,
+        responses,
+      });
+      responses[action.id] = response;
+    } catch (error) {
+      responses[action.id] = error;
+      console.error(error);
+    }
+  }
+
   async callActionLoop({ actions, arrayIndices, block, event, responses }) {
     for (const [index, action] of actions.entries()) {
       try {
-        const response = await this.callAction({
-          action,
-          arrayIndices,
-          block,
-          event,
-          index,
-          responses,
-        });
-        responses[action.id] = response;
+        if (action.async === true) {
+          this.callAsyncAction({
+            action,
+            arrayIndices,
+            block,
+            event,
+            index,
+            responses,
+          });
+        } else {
+          const response = await this.callAction({
+            action,
+            arrayIndices,
+            block,
+            event,
+            index,
+            responses,
+          });
+          responses[action.id] = response;
+        }
       } catch (error) {
         responses[action.id] = error;
         throw {
