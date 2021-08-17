@@ -21,7 +21,7 @@ const match = () => true;
 const lowdefy = { pageId };
 
 // Comment out to use console
-console.log = () => {};
+// console.log = () => {};
 console.error = () => {};
 
 test('parse validate on fields', async () => {
@@ -828,4 +828,261 @@ test('validation warnings', async () => {
     status: 'warning',
     warnings: ["Not 'a'", "Not 'c'"],
   });
+});
+
+test('showValidation only on fields that matches for error', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            type: 'TextInput',
+            blockId: 'text1',
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+            validate: [
+              {
+                pass: { _regex: { pattern: '1', key: 'text1' } },
+                message: "Not '1'",
+              },
+            ],
+          },
+          {
+            type: 'TextInput',
+            blockId: 'text2',
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+            validate: [
+              {
+                pass: { _regex: { pattern: '2', key: 'text2' } },
+                message: "Not '2'",
+              },
+            ],
+          },
+        ],
+      },
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+    initState: { text1: '3' },
+  });
+  const { text1, text2 } = context.RootBlocks.map;
+
+  expect(context.state).toEqual({ text1: '3', text2: null });
+  expect(text1.showValidation).toBe(false);
+  expect(text1.eval.validation).toEqual({ errors: ["Not '1'"], status: null, warnings: [] });
+  expect(text2.showValidation).toBe(false);
+  expect(text2.eval.validation).toEqual({ errors: ["Not '2'"], status: null, warnings: [] });
+  context.RootBlocks.validate(true, (id) => id === 'text1');
+  expect(text1.showValidation).toBe(true);
+  expect(text1.eval.validation).toEqual({
+    errors: ["Not '1'"],
+    status: 'error',
+    warnings: [],
+  });
+  expect(text2.showValidation).toBe(false);
+  expect(text2.eval.validation).toEqual({ errors: ["Not '2'"], status: null, warnings: [] });
+});
+
+test('showValidation only on fields that matches for warning', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            type: 'TextInput',
+            blockId: 'text1',
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+            validate: [
+              {
+                pass: { _regex: { pattern: '1', key: 'text1' } },
+                status: 'warning',
+                message: "Not '1'",
+              },
+            ],
+          },
+          {
+            type: 'TextInput',
+            blockId: 'text2',
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+            validate: [
+              {
+                pass: { _regex: { pattern: '2', key: 'text2' } },
+                status: 'warning',
+                message: "Not '2'",
+              },
+            ],
+          },
+        ],
+      },
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+    initState: { text1: '3' },
+  });
+  const { text1, text2 } = context.RootBlocks.map;
+
+  expect(context.state).toEqual({ text1: '3', text2: null });
+  expect(text1.showValidation).toBe(false);
+  expect(text1.eval.validation).toEqual({ warnings: ["Not '1'"], status: null, errors: [] });
+  expect(text2.showValidation).toBe(false);
+  expect(text2.eval.validation).toEqual({ warnings: ["Not '2'"], status: null, errors: [] });
+  context.RootBlocks.validate(true, (id) => id === 'text1');
+  expect(text1.showValidation).toBe(true);
+  expect(text1.eval.validation).toEqual({
+    errors: [],
+    status: 'warning',
+    warnings: ["Not '1'"],
+  });
+  expect(text2.showValidation).toBe(false);
+  expect(text2.eval.validation).toEqual({ warnings: ["Not '2'"], status: null, errors: [] });
+});
+
+test('showValidation only on fields that matches for success', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            type: 'TextInput',
+            blockId: 'text1',
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+            validate: [
+              {
+                pass: { _regex: { pattern: '1', key: 'text1' } },
+                status: 'error',
+                message: "Not '1'",
+              },
+            ],
+          },
+          {
+            type: 'TextInput',
+            blockId: 'text2',
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+            validate: [
+              {
+                pass: { _regex: { pattern: '2', key: 'text2' } },
+                status: 'error',
+                message: "Not '2'",
+              },
+            ],
+          },
+        ],
+      },
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+    initState: { text1: '1' },
+  });
+  const { text1, text2 } = context.RootBlocks.map;
+
+  expect(context.state).toEqual({ text1: '1', text2: null });
+  expect(text1.showValidation).toBe(false);
+  expect(text1.eval.validation).toEqual({ warnings: [], status: null, errors: [] });
+  expect(text2.showValidation).toBe(false);
+  expect(text2.eval.validation).toEqual({ warnings: [], status: null, errors: ["Not '2'"] });
+  context.RootBlocks.validate(true, (id) => id === 'text1');
+  expect(text1.showValidation).toBe(true);
+  expect(text1.eval.validation).toEqual({
+    errors: [],
+    status: 'success',
+    warnings: [],
+  });
+  expect(text2.showValidation).toBe(false);
+  expect(text2.eval.validation).toEqual({ warnings: [], status: null, errors: ["Not '2'"] });
+});
+
+test('drop showValidation on RootBlocks.reset()', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            type: 'TextInput',
+            blockId: 'text1',
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+            validate: [
+              {
+                pass: { _regex: { pattern: '1', key: 'text1' } },
+                status: 'error',
+                message: "Not '1'",
+              },
+            ],
+          },
+          {
+            type: 'TextInput',
+            blockId: 'text2',
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+            validate: [
+              {
+                pass: { _regex: { pattern: '2', key: 'text2' } },
+                status: 'error',
+                message: "Not '2'",
+              },
+            ],
+          },
+        ],
+      },
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+    initState: { text1: '1' },
+  });
+  const { text1, text2 } = context.RootBlocks.map;
+
+  expect(context.state).toEqual({ text1: '1', text2: null });
+  expect(text1.showValidation).toBe(false);
+  expect(text2.showValidation).toBe(false);
+  context.RootBlocks.validate(true, match);
+  expect(text1.showValidation).toBe(true);
+  expect(text2.showValidation).toBe(true);
+  context.RootBlocks.reset();
+  expect(text1.showValidation).toBe(false);
+  expect(text2.showValidation).toBe(false);
 });
