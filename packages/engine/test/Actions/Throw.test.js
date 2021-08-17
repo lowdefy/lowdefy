@@ -30,8 +30,9 @@ const RealDate = Date;
 const mockDate = jest.fn(() => ({ date: 0 }));
 mockDate.now = jest.fn(() => 0);
 
-// Comment out to use console.log
+// Comment out to use console
 console.log = () => {};
+console.error = () => {};
 
 beforeEach(() => {
   displayMessage.mockReset();

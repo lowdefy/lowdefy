@@ -217,6 +217,7 @@ class Blocks {
     const initState = serializer.copy(initWithState || this.context.state);
     this.loopBlocks((block) => {
       block.update = true;
+      block.showValidation = false;
       if (get(block, 'meta.category') === 'input' || get(block, 'meta.category') === 'list') {
         let blockValue = get(initState, block.field);
         if (type.isUndefined(blockValue)) {
@@ -368,13 +369,13 @@ class Blocks {
             }
           }
         });
-        if (this.context.showValidationErrors && validation.length > 0) {
+        if (validation.length > 0) {
           block.validationEval.output.status = 'success';
         }
         if (validationWarning) {
           block.validationEval.output.status = 'warning';
         }
-        if (this.context.showValidationErrors && validationError) {
+        if (validationError) {
           block.validationEval.output.status = 'error';
         }
 
@@ -497,18 +498,26 @@ class Blocks {
     });
   }
 
-  getValidateRec(result) {
+  getValidateRec(params, match, result) {
     this.loopBlocks((block) => {
-      if (block.visibleEval.output && block.validationEval.output.status === 'error') {
-        result.push({
-          blockId: block.blockId,
-          validation: block.validationEval.output,
-        });
+      if (match(block.blockId, params)) {
+        block.showValidation = true;
+        block.update = true;
+        if (
+          block.visibleEval.output !== false &&
+          block.validationEval.output &&
+          block.validationEval.output.status === 'error'
+        ) {
+          result.push({
+            blockId: block.blockId,
+            validation: block.validationEval.output,
+          });
+        }
       }
     });
     Object.keys(this.subBlocks).forEach((subKey) => {
       this.subBlocks[subKey].forEach((subBlock) => {
-        subBlock.getValidateRec(result);
+        subBlock.getValidateRec(params, match, result);
       });
     });
     return result;
@@ -536,9 +545,11 @@ class Blocks {
     });
   }
 
-  validate() {
-    this.update(); // update to recalculate validationEval with showValidationErrors set to raise block errors
-    return this.getValidateRec([]);
+  validate(params, match) {
+    this.updateStateFromRoot(); // update to recalculate validationEval to raise block errors
+    const validationErrors = this.getValidateRec(params, match, []); // get all relevant raised block errors and set showValidation
+    this.setBlocksCache(); // update cache to render
+    return validationErrors;
   }
 
   update() {
@@ -562,7 +573,10 @@ class Blocks {
           required: block.requiredEval.output,
           layout: block.layoutEval.output,
           style: block.styleEval.output,
-          validation: block.validationEval.output,
+          validation: {
+            ...(block.validationEval.output || {}),
+            status: block.showValidation ? (block.validationEval.output || {}).status : null,
+          },
           value: type.isNone(block.value) ? null : block.value,
           visible: block.visibleEval.output,
         };

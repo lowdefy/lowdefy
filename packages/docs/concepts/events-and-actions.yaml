@@ -160,11 +160,11 @@ _ref:
             - [`Message`](/Message) - Show a message to the user.
             - [`Notification`](/Notification) - Show a notification to the user.
             - [`Request`](/Request) - Call a request.
-            - [`Reset`](/Reset) - Reset the context.
+            - [`Reset`](/Reset) - Reset the page validation and `state`.
             - [`ScrollTo`](/ScrollTo) - Scroll to a point on the page.
             - [`SetGlobal`](/SetGlobal) - Set a value to the `global` variable object.
-            - [`SetState`](/SetState) - Set a value to the context `state`.
-            - [`Validate`](/Validate) - Validate the inputs in the context.
+            - [`SetState`](/SetState) - Set a value to the page `state`.
+            - [`Validate`](/Validate) - Validate the inputs on the page.
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:

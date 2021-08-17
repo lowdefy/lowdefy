@@ -80,6 +80,10 @@ const lowdefy = {
   urlQuery: { urlQuery: true },
 };
 
+// Comment out to use console
+console.log = () => {};
+console.error = () => {};
+
 beforeEach(() => {
   mockQuery.mockReset();
   mockQuery.mockImplementation(mockQueryImp);

@@ -18,7 +18,6 @@ import State from '../src/State';
 
 test('set', () => {
   const context = {
-    showValidationErrors: false,
     state: {},
   };
   const state = new State(context);
@@ -26,26 +25,21 @@ test('set', () => {
   expect(context.state).toEqual({ a: 1 });
 });
 
-test('resetState and clear showValidationErrors flag', () => {
+test('resetState', () => {
   const context = {
-    showValidationErrors: false,
     state: {},
   };
   const state = new State(context);
   state.freezeState();
   expect(context.state).toEqual({});
   state.set('a', 1);
-  context.showValidationErrors = true;
   expect(context.state).toEqual({ a: 1 });
-  expect(context.showValidationErrors).toEqual(true);
   state.resetState();
   expect(context.state).toEqual({});
-  expect(context.showValidationErrors).toEqual(false);
 });
 
 test('freezeState to only set when initialized is false and resetState restores frozenState', () => {
   const context = {
-    showValidationErrors: false,
     state: {},
   };
   const state = new State(context);
@@ -65,7 +59,6 @@ test('freezeState to only set when initialized is false and resetState restores 
 
 test('set on array', () => {
   const context = {
-    showValidationErrors: false,
     state: {},
   };
   const state = new State(context);
@@ -76,7 +69,6 @@ test('set on array', () => {
 
 test('set on array with nested arrays', () => {
   const context = {
-    showValidationErrors: false,
     state: {},
   };
   const state = new State(context);
@@ -89,7 +81,6 @@ test('set on array with nested arrays', () => {
 
 test('del', () => {
   const context = {
-    showValidationErrors: false,
     state: {},
   };
   const state = new State(context);
@@ -100,7 +91,6 @@ test('del', () => {
 
 test('del remove empty object', () => {
   const context = {
-    showValidationErrors: false,
     state: { a: { b: 1 } },
   };
   const state = new State(context);
@@ -111,7 +101,6 @@ test('del remove empty object', () => {
 
 test('del remove nested empty object', () => {
   const context = {
-    showValidationErrors: false,
     state: { a: { b: { c: { d: { e: 1 } } } } },
   };
   const state = new State(context);
@@ -122,7 +111,6 @@ test('del remove nested empty object', () => {
 
 test('del keep nested objects', () => {
   const context = {
-    showValidationErrors: false,
     state: { a: { b: 1, c: 2 } },
   };
   const state = new State(context);
@@ -133,7 +121,6 @@ test('del keep nested objects', () => {
 
 test('swapItems', () => {
   const context = {
-    showValidationErrors: false,
     state: {},
   };
   const state = new State(context);
@@ -144,7 +131,6 @@ test('swapItems', () => {
 
 test('removeItem', () => {
   const context = {
-    showValidationErrors: false,
     state: {},
   };
   const state = new State(context);
@@ -155,7 +141,6 @@ test('removeItem', () => {
 
 test('not an array', () => {
   const context = {
-    showValidationErrors: false,
     state: {},
   };
   const state = new State(context);
@@ -168,7 +153,6 @@ test('not an array', () => {
 
 test('out of array bounds', () => {
   const context = {
-    showValidationErrors: false,
     state: {},
   };
   const state = new State(context);
@@ -185,7 +169,6 @@ test('out of array bounds', () => {
 
 test('combinations', () => {
   const context = {
-    showValidationErrors: false,
     state: {},
   };
   const state = new State(context);

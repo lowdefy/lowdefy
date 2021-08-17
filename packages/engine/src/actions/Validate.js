@@ -16,23 +16,47 @@
 
 import { type } from '@lowdefy/helpers';
 
+const getMatch = (params) => (id) => {
+  if (params.blockIds === true || (type.isArray(params.blockIds) && params.blockIds.includes(id))) {
+    return true;
+  }
+  if (type.isArray(params.regex)) {
+    for (const regex of params.regex) {
+      if (regex.test(id)) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
 async function Validate({ context, params }) {
-  if (!type.isNone(params) && !type.isString(params) && !type.isArray(params)) {
+  let testParams = params;
+  if (type.isNone(testParams)) {
+    testParams = { blockIds: true };
+  }
+  if (type.isString(testParams)) {
+    testParams = { blockIds: [testParams] };
+  }
+  if (type.isArray(testParams)) {
+    testParams = { blockIds: testParams };
+  }
+  if (!type.isObject(testParams)) {
     throw new Error('Invalid validate params.');
   }
-  context.showValidationErrors = true;
-  let validationErrors = context.RootBlocks.validate();
-  if (params) {
-    const blockIds = type.isString(params) ? [params] : params;
-    validationErrors = validationErrors.filter((block) => {
-      return blockIds.includes(block.blockId);
-    });
+  if (type.isString(testParams.regex)) {
+    testParams.regex = [testParams.regex];
   }
+  if (type.isArray(testParams.regex)) {
+    testParams.regex = testParams.regex.map((regex) => new RegExp(regex));
+  }
+  const validationErrors = context.RootBlocks.validate(testParams, getMatch(testParams));
   if (validationErrors.length > 0) {
-    const message = `Your input has ${validationErrors.length} validation error${
-      validationErrors.length !== 1 ? 's' : ''
-    }.`;
-    const error = new Error(message);
+    const error = new Error(
+      `Your input has ${validationErrors.length} validation error${
+        validationErrors.length !== 1 ? 's' : ''
+      }.`
+    );
     throw error;
   }
 }

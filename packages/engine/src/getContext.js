@@ -81,7 +81,6 @@ const getContext = async ({ block, contextId, lowdefy }) => {
     lowdefy,
     pageId: lowdefy.pageId,
     rootBlock: blockData(block), // filter block to prevent circular structure
-    showValidationErrors: false,
     state: {},
     update: () => {}, // Initialize update since Requests might call it during context creation
     updateListeners: new Set(),
