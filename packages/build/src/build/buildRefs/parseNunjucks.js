@@ -13,20 +13,22 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { getFileSubExtension } from '@lowdefy/node-utils';
+import { nunjucksFunction } from '@lowdefy/nunjucks';
+import JSON5 from 'json5';
+import YAML from 'js-yaml';
 
-import { type } from '@lowdefy/helpers';
-
-async function writeGlobal({ components, context }) {
-  if (type.isNone(components.global)) {
-    components.global = {};
+function parseNunjucks(fileContent, vars, path) {
+  const template = nunjucksFunction(fileContent);
+  const templated = template(vars);
+  const subExt = getFileSubExtension(path);
+  if (subExt === 'yaml' || subExt === 'yml') {
+    return YAML.load(templated);
   }
-  if (!type.isObject(components.global)) {
-    throw new Error('Global is not an object.');
+  if (subExt === 'json') {
+    return JSON5.parse(templated);
   }
-  await context.writeBuildArtifact({
-    filePath: 'global.json',
-    content: JSON.stringify(components.global, null, 2),
-  });
+  return templated;
 }
 
-export default writeGlobal;
+export default parseNunjucks;

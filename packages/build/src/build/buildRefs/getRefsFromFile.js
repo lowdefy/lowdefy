@@ -13,20 +13,25 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-
 import { type } from '@lowdefy/helpers';
+import makeRefDefinition from './makeRefDefinition';
 
-async function writeGlobal({ components, context }) {
-  if (type.isNone(components.global)) {
-    components.global = {};
-  }
-  if (!type.isObject(components.global)) {
-    throw new Error('Global is not an object.');
-  }
-  await context.writeBuildArtifact({
-    filePath: 'global.json',
-    content: JSON.stringify(components.global, null, 2),
-  });
+function getRefsFromFile(fileContent) {
+  const foundRefs = [];
+  const reviver = (key, value) => {
+    if (type.isObject(value)) {
+      if (!type.isUndefined(value._ref)) {
+        const def = makeRefDefinition(value._ref);
+        foundRefs.push(def);
+        return {
+          _ref: def,
+        };
+      }
+    }
+    return value;
+  };
+  const fileContentBuiltRefs = JSON.parse(JSON.stringify(fileContent), reviver);
+  return { foundRefs, fileContentBuiltRefs };
 }
 
-export default writeGlobal;
+export default getRefsFromFile;

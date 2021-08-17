@@ -17,16 +17,12 @@
 import writeGlobal from './writeGlobal';
 import testContext from '../test/testContext';
 
-const mockSet = jest.fn();
+const mockWriteBuildArtifact = jest.fn();
 
-const artifactSetter = {
-  set: mockSet,
-};
-
-const context = testContext({ artifactSetter });
+const context = testContext({ writeBuildArtifact: mockWriteBuildArtifact });
 
 beforeEach(() => {
-  mockSet.mockReset();
+  mockWriteBuildArtifact.mockReset();
 });
 
 test('writeGlobal', async () => {
@@ -36,7 +32,7 @@ test('writeGlobal', async () => {
     },
   };
   await writeGlobal({ components, context });
-  expect(mockSet.mock.calls).toEqual([
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
       {
         filePath: 'global.json',
@@ -53,7 +49,7 @@ test('writeGlobal empty global', async () => {
     global: {},
   };
   await writeGlobal({ components, context });
-  expect(mockSet.mock.calls).toEqual([
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
       {
         filePath: 'global.json',
@@ -66,7 +62,7 @@ test('writeGlobal empty global', async () => {
 test('writeGlobal global undefined', async () => {
   const components = {};
   await writeGlobal({ components, context });
-  expect(mockSet.mock.calls).toEqual([
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
       {
         filePath: 'global.json',

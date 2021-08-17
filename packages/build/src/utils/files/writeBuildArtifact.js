@@ -14,19 +14,14 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import path from 'path';
+import { writeFile } from '@lowdefy/node-utils';
 
-async function writeGlobal({ components, context }) {
-  if (type.isNone(components.global)) {
-    components.global = {};
+function createWriteBuildArtifact({ outputDirectory }) {
+  async function writeBuildArtifact({ filePath, content }) {
+    return writeFile({ filePath: path.resolve(outputDirectory, filePath), content });
   }
-  if (!type.isObject(components.global)) {
-    throw new Error('Global is not an object.');
-  }
-  await context.writeBuildArtifact({
-    filePath: 'global.json',
-    content: JSON.stringify(components.global, null, 2),
-  });
+  return writeBuildArtifact;
 }
 
-export default writeGlobal;
+export default createWriteBuildArtifact;

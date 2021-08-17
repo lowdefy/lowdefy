@@ -14,19 +14,15 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import recursiveBuild from './recursiveBuild';
 
-async function writeGlobal({ components, context }) {
-  if (type.isNone(components.global)) {
-    components.global = {};
-  }
-  if (!type.isObject(components.global)) {
-    throw new Error('Global is not an object.');
-  }
-  await context.writeBuildArtifact({
-    filePath: 'global.json',
-    content: JSON.stringify(components.global, null, 2),
+async function buildRefs({ context }) {
+  return recursiveBuild({
+    context,
+    path: 'lowdefy.yaml',
+    vars: {},
+    count: 0,
   });
 }
 
-export default writeGlobal;
+export default buildRefs;

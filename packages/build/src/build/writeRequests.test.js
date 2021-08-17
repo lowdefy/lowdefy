@@ -17,16 +17,12 @@
 import writeRequests from './writeRequests';
 import testContext from '../test/testContext';
 
-const mockSet = jest.fn();
+const mockWriteBuildArtifact = jest.fn();
 
-const artifactSetter = {
-  set: mockSet,
-};
-
-const context = testContext({ artifactSetter });
+const context = testContext({ writeBuildArtifact: mockWriteBuildArtifact });
 
 beforeEach(() => {
-  mockSet.mockReset();
+  mockWriteBuildArtifact.mockReset();
 });
 
 test('writeRequests write request', async () => {
@@ -48,7 +44,7 @@ test('writeRequests write request', async () => {
     ],
   };
   await writeRequests({ components, context });
-  expect(mockSet.mock.calls).toEqual([
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
       {
         filePath: 'pages/page1/requests/page1/request1.json',
@@ -95,7 +91,7 @@ test('writeRequests write nested request', async () => {
     ],
   };
   await writeRequests({ components, context });
-  expect(mockSet.mock.calls).toEqual([
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
       {
         filePath: 'pages/page1/requests/page1/request1.json',
@@ -133,13 +129,13 @@ test('writeRequests empty pages array', async () => {
     pages: [],
   };
   await writeRequests({ components, context });
-  expect(mockSet.mock.calls).toEqual([]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([]);
 });
 
 test('writeRequests no pages array', async () => {
   const components = {};
   await writeRequests({ components, context });
-  expect(mockSet.mock.calls).toEqual([]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([]);
 });
 
 test('writeRequests pages not an array', async () => {

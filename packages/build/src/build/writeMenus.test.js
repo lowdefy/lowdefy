@@ -17,16 +17,12 @@
 import writeMenus from './writeMenus';
 import testContext from '../test/testContext';
 
-const mockSet = jest.fn();
+const mockWriteBuildArtifact = jest.fn();
 
-const artifactSetter = {
-  set: mockSet,
-};
-
-const context = testContext({ artifactSetter });
+const context = testContext({ writeBuildArtifact: mockWriteBuildArtifact });
 
 beforeEach(() => {
-  mockSet.mockReset();
+  mockWriteBuildArtifact.mockReset();
 });
 
 test('writeMenus', async () => {
@@ -40,7 +36,7 @@ test('writeMenus', async () => {
     ],
   };
   await writeMenus({ components, context });
-  expect(mockSet.mock.calls).toEqual([
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
       {
         filePath: 'menus.json',
@@ -61,7 +57,7 @@ test('writeMenus empty menus', async () => {
     menus: [],
   };
   await writeMenus({ components, context });
-  expect(mockSet.mock.calls).toEqual([
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
       {
         filePath: 'menus.json',

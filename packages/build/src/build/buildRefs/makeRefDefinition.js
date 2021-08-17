@@ -14,19 +14,19 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { get } from '@lowdefy/helpers';
+import { v1 as uuid } from 'uuid';
 
-async function writeGlobal({ components, context }) {
-  if (type.isNone(components.global)) {
-    components.global = {};
-  }
-  if (!type.isObject(components.global)) {
-    throw new Error('Global is not an object.');
-  }
-  await context.writeBuildArtifact({
-    filePath: 'global.json',
-    content: JSON.stringify(components.global, null, 2),
-  });
+import getRefPath from './getRefPath';
+
+function makeRefDefinition(refDefinition) {
+  return {
+    id: uuid(),
+    path: getRefPath(refDefinition),
+    vars: get(refDefinition, 'vars', { default: {} }),
+    transformer: get(refDefinition, 'transformer'),
+    original: refDefinition,
+  };
 }
 
-export default writeGlobal;
+export default makeRefDefinition;
