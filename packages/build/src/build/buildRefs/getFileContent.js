@@ -14,19 +14,12 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
-async function writeGlobal({ components, context }) {
-  if (type.isNone(components.global)) {
-    components.global = {};
+async function getFileContent({ context, path }) {
+  const content = await context.configLoader.load(path);
+  if (!content) {
+    throw new Error(`Tried to reference file with path "${path}", but file does not exist.`);
   }
-  if (!type.isObject(components.global)) {
-    throw new Error('Global is not an object.');
-  }
-  await context.writeBuildArtifact({
-    filePath: 'global.json',
-    content: JSON.stringify(components.global, null, 2),
-  });
+  return content;
 }
 
-export default writeGlobal;
+export default getFileContent;

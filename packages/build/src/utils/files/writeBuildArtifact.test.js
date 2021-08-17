@@ -1,12 +1,9 @@
 /*
   Copyright 2020-2021 Lowdefy, Inc
-
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-
       http://www.apache.org/licenses/LICENSE-2.0
-
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,20 +13,21 @@
 
 import fs from 'fs';
 import path from 'path';
-import createFileSetter from './fileSetter';
+import createWriteBuildArtifact from './writeBuildArtifact';
 
-const baseDirectory = path.resolve(process.cwd(), 'src/test/fileSetter');
+const outputDirectory = path.resolve(process.cwd(), 'src/test/fileSetter');
 
 test('writeFile', async () => {
-  const filePath = path.resolve(baseDirectory, 'writeFile.txt');
+  const filePath = path.resolve(outputDirectory, 'writeFile.txt');
   try {
     fs.unlinkSync(filePath);
   } catch (error) {
     //pass
   }
   expect(fs.existsSync(filePath)).toBe(false);
-  const fileSetter = createFileSetter({ baseDirectory });
-  await fileSetter.set({
+  const writeBuildArtifact = createWriteBuildArtifact({ outputDirectory });
+
+  await writeBuildArtifact({
     filePath: 'writeFile.txt',
     content: 'Test fileSetter file',
   });

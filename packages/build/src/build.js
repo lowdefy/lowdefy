@@ -17,15 +17,15 @@
 */
 
 import createFileLoader from './loaders/fileLoader';
-import createFileSetter from './loaders/fileSetter';
-import createMetaLoader from './loaders/metaLoader';
+import createGetMeta from './utils/meta/getMeta';
+import createWriteBuildArtifact from './utils/files/writeBuildArtifact';
 
 import addDefaultPages from './build/addDefaultPages/addDefaultPages';
 import buildAuth from './build/buildAuth/buildAuth';
 import buildConnections from './build/buildConnections';
 import buildMenu from './build/buildMenu';
 import buildPages from './build/buildPages/buildPages';
-import buildRefs from './build/buildRefs';
+import buildRefs from './build/buildRefs/buildRefs';
 import cleanOutputDirectory from './build/cleanOutputDirectory';
 import testSchema from './build/testSchema';
 import validateApp from './build/validateApp';
@@ -41,7 +41,7 @@ import writeRequests from './build/writeRequests';
 function createContext(options) {
   const { blocksServerUrl, cacheDirectory, configDirectory, logger, outputDirectory } = options;
   const context = {
-    artifactSetter: createFileSetter({ baseDirectory: outputDirectory }),
+    writeBuildArtifact: createWriteBuildArtifact({ outputDirectory }),
     configLoader: createFileLoader({ baseDirectory: configDirectory }),
     blocksServerUrl,
     cacheDirectory,
@@ -57,7 +57,7 @@ async function build(options) {
   try {
     let components = await buildRefs({ context });
     await testSchema({ components, context });
-    context.metaLoader = createMetaLoader({ components, context });
+    context.getMeta = createGetMeta(context);
     await validateApp({ components, context });
     await validateConfig({ components, context });
     await addDefaultPages({ components, context });

@@ -14,21 +14,21 @@
   limitations under the License.
 */
 
-import path from 'path';
-import { writeFile } from '@lowdefy/node-utils';
+import { type } from '@lowdefy/helpers';
 
-class FileSetter {
-  constructor({ baseDirectory }) {
-    this.baseDirectory = baseDirectory;
+function getRefPath(refDefinition) {
+  if (type.isObject(refDefinition)) {
+    if (refDefinition.path) {
+      return refDefinition.path;
+    }
+    if (refDefinition._var) {
+      return refDefinition;
+    }
   }
-
-  async set({ filePath, content }) {
-    return writeFile({ filePath: path.resolve(this.baseDirectory, filePath), content });
+  if (type.isString(refDefinition)) {
+    return refDefinition;
   }
+  return null;
 }
 
-function createFileSetter(options) {
-  return new FileSetter(options);
-}
-
-export default createFileSetter;
+export default getRefPath;

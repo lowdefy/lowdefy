@@ -17,16 +17,12 @@
 import writeConfig from './writeConfig';
 import testContext from '../test/testContext';
 
-const mockSet = jest.fn();
+const mockWriteBuildArtifact = jest.fn();
 
-const artifactSetter = {
-  set: mockSet,
-};
-
-const context = testContext({ artifactSetter });
+const context = testContext({ writeBuildArtifact: mockWriteBuildArtifact });
 
 beforeEach(() => {
-  mockSet.mockReset();
+  mockWriteBuildArtifact.mockReset();
 });
 
 test('writeConfig', async () => {
@@ -36,7 +32,7 @@ test('writeConfig', async () => {
     },
   };
   await writeConfig({ components, context });
-  expect(mockSet.mock.calls).toEqual([
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
       {
         filePath: 'config.json',
@@ -53,7 +49,7 @@ test('writeConfig empty config', async () => {
     config: {},
   };
   await writeConfig({ components, context });
-  expect(mockSet.mock.calls).toEqual([
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
       {
         filePath: 'config.json',
@@ -66,7 +62,7 @@ test('writeConfig empty config', async () => {
 test('writeConfig config undefined', async () => {
   const components = {};
   await writeConfig({ components, context });
-  expect(mockSet.mock.calls).toEqual([
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
       {
         filePath: 'config.json',

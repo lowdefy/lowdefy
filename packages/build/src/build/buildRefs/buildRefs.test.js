@@ -15,7 +15,7 @@
 */
 
 import buildRefs from './buildRefs';
-import testContext from '../test/testContext';
+import testContext from '../../test/testContext';
 
 const configLoaderMockImplementation = (files) => {
   const mockImp = (filePath) => {
@@ -124,39 +124,21 @@ test('buildRefs max recursion depth', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
-      content: {
-        1: { _ref: 'maxRecursion1.json' },
-      },
+      content: { _ref: 'maxRecursion1.json' },
     },
     {
       path: 'maxRecursion1.json',
-      content: {
-        2: { _ref: 'maxRecursion2.json' },
-      },
+      content: { _ref: 'maxRecursion2.json' },
     },
     {
       path: 'maxRecursion2.json',
-      content: {
-        3: { _ref: 'maxRecursion3.json' },
-      },
-    },
-    {
-      path: 'maxRecursion3.json',
-      content: {
-        4: { _ref: 'maxRecursion4.json' },
-      },
-    },
-    {
-      path: 'maxRecursion4.json',
-      content: {
-        4: 'done',
-      },
+      content: { _ref: 'maxRecursion1.json' },
     },
   ];
   mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
   await expect(buildRefs({ context: ctx })).rejects.toThrow();
   await expect(buildRefs({ context: ctx })).rejects.toThrow(
-    'Maximum recursion depth of references exceeded. Only 3 consecutive references are allowed'
+    'Maximum recursion depth of references exceeded.'
   );
 });
 
@@ -717,46 +699,6 @@ test('buildRefs with transformer function', async () => {
     json: '{"a":1}',
     var: 'var1',
   });
-});
-
-test('buildRefs with eval json content', async () => {
-  const files = [
-    {
-      path: 'lowdefy.yaml',
-      content: {
-        _ref: {
-          eval: 'src/test/testBuildRefsEvalJson.js',
-        },
-      },
-    },
-  ];
-  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
-  const res = await buildRefs({ context });
-  expect(res).toEqual({ a: 123 });
-});
-
-test('buildRefs with eval function', async () => {
-  const files = [
-    {
-      path: 'lowdefy.yaml',
-      content: {
-        _ref: {
-          eval: 'src/test/testBuildRefsEval.js',
-        },
-      },
-    },
-  ];
-  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
-  const res = await buildRefs({ context });
-  expect(res).toMatchInlineSnapshot(`
-    "function js(obj, vars) {
-      return {
-        json: JSON.stringify(obj),
-        add: add(obj.a, 42),
-        var: vars.var1,
-      };
-    }"
-  `);
 });
 
 test('buildRefs _var receives invalid type', async () => {

@@ -17,16 +17,12 @@
 import writeConnections from './writeConnections';
 import testContext from '../test/testContext';
 
-const mockSet = jest.fn();
+const mockWriteBuildArtifact = jest.fn();
 
-const artifactSetter = {
-  set: mockSet,
-};
-
-const context = testContext({ artifactSetter });
+const context = testContext({ writeBuildArtifact: mockWriteBuildArtifact });
 
 beforeEach(() => {
-  mockSet.mockReset();
+  mockWriteBuildArtifact.mockReset();
 });
 
 test('writeConnections write connection', async () => {
@@ -42,7 +38,7 @@ test('writeConnections write connection', async () => {
     ],
   };
   await writeConnections({ components, context });
-  expect(mockSet.mock.calls).toEqual([
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
       {
         filePath: 'connections/connection1.json',
@@ -72,7 +68,7 @@ test('writeConnections multiple connection', async () => {
     ],
   };
   await writeConnections({ components, context });
-  expect(mockSet.mock.calls).toEqual([
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
       {
         filePath: 'connections/connection1.json',
@@ -99,13 +95,13 @@ test('writeConnections no connections', async () => {
     connections: [],
   };
   await writeConnections({ components, context });
-  expect(mockSet.mock.calls).toEqual([]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([]);
 });
 
 test('writeConnections connections undefined', async () => {
   const components = {};
   await writeConnections({ components, context });
-  expect(mockSet.mock.calls).toEqual([]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([]);
 });
 
 test('writeConnections connections not an array', async () => {
