@@ -17,8 +17,8 @@
 */
 
 import createFileLoader from './loaders/fileLoader';
+import createGetMeta from './utils/meta/getMeta';
 import createWriteBuildArtifact from './utils/files/writeBuildArtifact';
-import createMetaLoader from './loaders/metaLoader';
 
 import addDefaultPages from './build/addDefaultPages/addDefaultPages';
 import buildAuth from './build/buildAuth/buildAuth';
@@ -57,7 +57,7 @@ async function build(options) {
   try {
     let components = await buildRefs({ context });
     await testSchema({ components, context });
-    context.metaLoader = createMetaLoader({ components, context });
+    context.getMeta = createGetMeta(context);
     await validateApp({ components, context });
     await validateConfig({ components, context });
     await addDefaultPages({ components, context });

@@ -168,7 +168,7 @@ const auth = {
   public: true,
 };
 
-const mockMetaLoader = (type) => {
+const getMeta = (type) => {
   const meta = blockMetas[type];
   if (!meta) {
     return null;
@@ -176,11 +176,7 @@ const mockMetaLoader = (type) => {
   return Promise.resolve(meta);
 };
 
-const metaLoader = {
-  load: mockMetaLoader,
-};
-
-const context = testContext({ logger, metaLoader });
+const context = testContext({ logger, getMeta });
 
 beforeEach(() => {
   mockLogWarn.mockReset();

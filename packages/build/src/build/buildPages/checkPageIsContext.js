@@ -16,7 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-async function checkPageIsContext(page, metaLoader) {
+async function checkPageIsContext(page, getMeta) {
   if (type.isNone(page.type)) {
     throw new Error(`Page type is not defined at ${page.pageId}.`);
   }
@@ -25,7 +25,7 @@ async function checkPageIsContext(page, metaLoader) {
       `Page type is not a string at ${page.pageId}. Received ${JSON.stringify(page.type)}`
     );
   }
-  const meta = await metaLoader.load(page.type);
+  const meta = await getMeta(page.type);
   if (!meta) {
     throw new Error(
       `Invalid block type at page ${page.pageId}. Received ${JSON.stringify(page.type)}`

@@ -19,7 +19,7 @@ function testContext({
   configDirectory,
   configLoader,
   logger = {},
-  metaLoader,
+  getMeta,
 } = {}) {
   const defaultLogger = {
     info: () => {},
@@ -31,11 +31,9 @@ function testContext({
 
   const context = {
     configDirectory: configDirectory || '',
+    getMeta: getMeta || (() => {}),
     writeBuildArtifact: writeBuildArtifact || (() => {}),
     configLoader: {
-      load: () => {},
-    },
-    metaLoader: {
       load: () => {},
     },
   };
@@ -46,9 +44,6 @@ function testContext({
   };
   if (configLoader) {
     context.configLoader = configLoader;
-  }
-  if (metaLoader) {
-    context.metaLoader = metaLoader;
   }
 
   return context;

@@ -31,6 +31,8 @@ import createWriteMetaCache from './writeMetaCache';
 import metaLocations from './metaLocations';
 import fetchMetaUrl from './fetchMetaUrl';
 
+const memoisedMeta = {};
+
 function createGetMeta({ blocksServerUrl, cacheDirectory, types }) {
   const allMetaLocations = {
     ...metaLocations({ blocksServerUrl }),
@@ -39,6 +41,10 @@ function createGetMeta({ blocksServerUrl, cacheDirectory, types }) {
   const fetchMetaCache = createFetchMetaCache({ cacheDirectory });
   const writeMetaCache = createWriteMetaCache({ cacheDirectory });
   async function getMeta(type) {
+    if (memoisedMeta[type]) {
+      memoisedMeta[type];
+    }
+
     const location = allMetaLocations[type];
     if (!location) {
       throw new Error(
@@ -51,19 +57,22 @@ function createGetMeta({ blocksServerUrl, cacheDirectory, types }) {
 
     if (cacheMeta) {
       meta = await fetchMetaCache(location);
-      if (meta)
+      if (meta) {
+        memoisedMeta[type] = meta;
         return {
           type,
           meta,
         };
-    }
-    meta = await fetchMetaUrl({ location, type });
-    if (cacheMeta) {
-      await writeMetaCache({ location, meta });
+      }
     }
 
+    meta = await fetchMetaUrl({ location, type });
     // TODO: implement Ajv schema check. Use testAjvSchema func from @lowdefy/ajv
     if (meta && typeHelper.isString(meta.category) && meta.moduleFederation) {
+      memoisedMeta[type] = meta;
+      if (cacheMeta) {
+        await writeMetaCache({ location, meta });
+      }
       return {
         type,
         meta,
