@@ -59,10 +59,7 @@ function createGetMeta({ blocksServerUrl, cacheDirectory, types }) {
       meta = await fetchMetaCache(location);
       if (meta) {
         memoisedMeta[type] = meta;
-        return {
-          type,
-          meta,
-        };
+        return meta;
       }
     }
 
@@ -73,10 +70,7 @@ function createGetMeta({ blocksServerUrl, cacheDirectory, types }) {
       if (cacheMeta) {
         await writeMetaCache({ location, meta });
       }
-      return {
-        type,
-        meta,
-      };
+      return meta;
     }
     throw new Error(
       `Block type ${JSON.stringify(type)} has invalid block meta at ${JSON.stringify(location)}.`

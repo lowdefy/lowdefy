@@ -88,10 +88,7 @@ test('getMeta cache returns from cache', async () => {
     return null;
   });
   const res = await getMeta('Type1');
-  expect(res).toEqual({
-    type: 'Type1',
-    meta: defaultMeta,
-  });
+  expect(res).toEqual(defaultMeta);
 });
 
 test('getMeta fetches from url and writes to cache', async () => {
@@ -107,10 +104,7 @@ test('getMeta fetches from url and writes to cache', async () => {
     return null;
   });
   const res = await getMeta('Type1');
-  expect(res).toEqual({
-    type: 'Type1',
-    meta: defaultMeta,
-  });
+  expect(res).toEqual(defaultMeta);
   expect(mockWriteMetaCache.mock.calls).toEqual([
     [
       {
@@ -136,10 +130,7 @@ test('getMeta uses locations from metaLocations', async () => {
     return null;
   });
   const res = await getMeta('DefaultType');
-  expect(res).toEqual({
-    type: 'DefaultType',
-    meta: defaultMeta,
-  });
+  expect(res).toEqual(defaultMeta);
 });
 
 test('getMeta type not in types', async () => {
@@ -187,7 +178,7 @@ test('getMeta invalid meta', async () => {
   );
 });
 
-test('getMeta fetches from url and writes to cache', async () => {
+test('getMeta fetches from url and does not write to cache if location is localhost', async () => {
   let createGetMeta;
   jest.isolateModules(() => {
     createGetMeta = require('./getMeta').default;
@@ -200,10 +191,7 @@ test('getMeta fetches from url and writes to cache', async () => {
     return null;
   });
   const res = await getMeta('Localhost');
-  expect(res).toEqual({
-    type: 'Localhost',
-    meta: defaultMeta,
-  });
+  expect(res).toEqual(defaultMeta);
   expect(mockFetchMetaCache.mock.calls).toEqual([]);
   expect(mockWriteMetaCache.mock.calls).toEqual([]);
 });
