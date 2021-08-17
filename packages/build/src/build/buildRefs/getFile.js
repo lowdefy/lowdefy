@@ -21,26 +21,16 @@ import { getFileExtension, readFile } from '@lowdefy/node-utils';
 
 async function getJsonFile(filePath) {
   const file = await readFile(filePath);
-  return {
-    filePath,
-    content: JSON5.parse(file),
-  };
+  return JSON5.parse(file);
 }
 
 async function getYamlFile(filePath) {
   const file = await readFile(filePath);
-  return {
-    filePath,
-    content: YAML.load(file),
-  };
+  return YAML.load(file);
 }
 
 async function getTextFile(filePath) {
-  const file = await readFile(filePath);
-  return {
-    filePath,
-    content: file,
-  };
+  return readFile(filePath);
 }
 
 async function handleFileType(filePath) {

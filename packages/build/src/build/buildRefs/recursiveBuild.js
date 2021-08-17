@@ -16,11 +16,10 @@
 
 import * as nodePath from 'path';
 
-import { getFileExtension, readFile } from '@lowdefy/node-utils';
+import { readFile } from '@lowdefy/node-utils';
 
-import getFileContent from './getFileContent';
+import getRefContent from './getRefContent';
 import getRefsFromFile from './getRefsFromFile';
-import parseNunjucks from './parseNunjucks';
 import refReviver from './refReviver';
 
 async function recursiveParseFile({ context, path, count, vars }) {
@@ -28,10 +27,7 @@ async function recursiveParseFile({ context, path, count, vars }) {
   if (count > 20) {
     throw new Error(`Maximum recursion depth of references exceeded.`);
   }
-  let fileContent = await getFileContent({ context, path });
-  if (getFileExtension(path) === 'njk') {
-    fileContent = parseNunjucks(fileContent, vars, path);
-  }
+  let fileContent = await getRefContent({ context, path, vars });
   const { foundRefs, fileContentBuiltRefs } = getRefsFromFile(fileContent);
   const parsedFiles = {};
 
@@ -42,30 +38,36 @@ async function recursiveParseFile({ context, path, count, vars }) {
 
   // eslint-disable-next-line no-restricted-syntax
   for (const refDef of foundRefs.values()) {
+    // TODO: This will now be valid if resolver is set
     if (refDef.path === null) {
       throw new Error(
         `Invalid _ref definition ${JSON.stringify({ _ref: refDef.original })} in file ${path}`
       );
     }
+
+    // Parse vars and path before passing down to parse new file
     const { path: parsedPath, vars: parsedVars } = JSON.parse(
       JSON.stringify(refDef),
       refReviver.bind({ parsedFiles, vars })
     );
+
     // eslint-disable-next-line no-await-in-loop
     let parsedFile = await recursiveParseFile({
       context,
       path: parsedPath,
-      // Parse vars before passing down to parse new file
       vars: parsedVars,
       count: count + 1,
     });
+
     if (refDef.transformer) {
+      // TODO: create a helper fn to handle reading and executing JS
       const transformerFile = await readFile(
         nodePath.resolve(context.configDirectory, refDef.transformer)
       );
       const transformerFn = eval(transformerFile);
       parsedFile = transformerFn(parsedFile, parsedVars);
     }
+
     parsedFiles[refDef.id] = parsedFile;
   }
   return JSON.parse(JSON.stringify(fileContentBuiltRefs), refReviver.bind({ parsedFiles, vars }));

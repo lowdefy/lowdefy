@@ -16,7 +16,6 @@
   limitations under the License.
 */
 
-import createFileLoader from './loaders/fileLoader';
 import createGetMeta from './utils/meta/getMeta';
 import createWriteBuildArtifact from './utils/files/writeBuildArtifact';
 
@@ -42,7 +41,6 @@ function createContext(options) {
   const { blocksServerUrl, cacheDirectory, configDirectory, logger, outputDirectory } = options;
   const context = {
     writeBuildArtifact: createWriteBuildArtifact({ outputDirectory }),
-    configLoader: createFileLoader({ baseDirectory: configDirectory }),
     blocksServerUrl,
     cacheDirectory,
     configDirectory,

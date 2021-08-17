@@ -14,12 +14,22 @@
   limitations under the License.
 */
 
-async function getFileContent({ context, path }) {
-  const content = await context.configLoader.load(path);
+import * as nodePath from 'path';
+import { getFileExtension } from '@lowdefy/node-utils';
+import parseNunjucks from './parseNunjucks';
+import getFile from './getFile';
+
+async function getRefContent({ context, path, vars }) {
+  let content;
+  content = await getFile(nodePath.resolve(context.configDirectory, path));
   if (!content) {
     throw new Error(`Tried to reference file with path "${path}", but file does not exist.`);
+  }
+
+  if (getFileExtension(path) === 'njk') {
+    content = parseNunjucks(content, vars, path);
   }
   return content;
 }
 
-export default getFileContent;
+export default getRefContent;
