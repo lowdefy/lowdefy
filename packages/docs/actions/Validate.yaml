@@ -23,20 +23,24 @@ _ref:
       (void): void
       (blockId: string): void
       (blockIds: string[]): void
+      (blockIds: string[]): void
+      (params: {
+        blockId?: string|string[],
+        regex?: string|string[],
+      }): void
       ```
     description: |
       The `Validate` action is used to validate a users input, usually before information is inserted into a database using a request.
       It is used in conjunction with the `required` and `validate` fields on input blocks. If the validation fails, the `Validate`
       action will fail, and this will stop the execution of actions that are defined after it.
 
-      The first time a `Validate` action is called, validation error are shown to the user. The `Reset` action resets this.
+      The first time a `Validate` action is called, validation errors and warnings are shown to the user. The `Reset` action resets the validation status and the page `state`. The `ResetValidation` action resets only the validation status.
 
-      Validate only validates the input blocks that are inside the context it is called from. Therefore, if you use two contexts
-      to separate two forms, only the one form will be validated.
+      Validate only validates the blocks that are on the page which matches the blockIds matching the `Validate` params criteria.
 
     params: |
       ###### void
-      The `Validate` action validates all blocks in the `context ` if called without params.
+      The `Validate` action validates all blocks on the page if called without params.
 
       ###### string
       A blockId of the block to validate.
@@ -44,25 +48,58 @@ _ref:
       ###### string[]
       An array of blockIds of the blocks to validate.
 
+      ###### object
+        - `blockId?: string|string[]`: A blockId or an array of the blockIds of the blocks to validate.
+        - `regex?: string|string[]`: A regex string pattern or an array of regex string patterns of the blocks to validate.
+
     examples: |
-      ###### Validate all inputs in the context:
+      ###### Validate all inputs on the page:
       ```yaml
-      - id: validate
+      - id: validate_foo
         type: Validate
       ```
 
       ###### Validate a single input:
       ```yaml
-      - id: validate_one
+      - id: validate_foo
         type: Validate
         params: my_text_input
       ```
 
       ###### Validate a list of inputs:
       ```yaml
-      - id: validate_one
+      - id: validate_foo
         type: Validate
         params:
           - my_text_input_1
           - my_text_input_2
+      ```
+
+      ###### Validate all inputs matching a regex pattern:
+      ```yaml
+      - id: validate_foo
+        type: Validate
+        params:
+          regex: ^foo\.
+      ```
+
+      ###### Validate all inputs matching a list of regex patterns:
+      ```yaml
+      - id: validate_foo_and_price
+        type: Validate
+        params:
+          regex:
+            - ^foo\.
+            - ^.*price.*$
+      ```
+
+      ###### Validate all inputs matching a list of regex patterns and a blockId:
+      ```yaml
+      - id: validate_foo_and_price
+        type: Validate
+        params:
+          blockId: my_text_input
+          regex:
+            - ^foo\.
+            - ^.*price.*$
       ```
