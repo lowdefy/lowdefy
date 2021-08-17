@@ -16,7 +16,6 @@
 
 import * as nodePath from 'path';
 
-import { type } from '@lowdefy/helpers';
 import { getFileExtension, readFile } from '@lowdefy/node-utils';
 
 import getFileContent from './getFileContent';

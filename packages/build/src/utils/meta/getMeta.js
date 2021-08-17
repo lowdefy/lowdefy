@@ -42,7 +42,7 @@ function createGetMeta({ blocksServerUrl, cacheDirectory, types }) {
   const writeMetaCache = createWriteMetaCache({ cacheDirectory });
   async function getMeta(type) {
     if (memoisedMeta[type]) {
-      memoisedMeta[type];
+      return memoisedMeta[type];
     }
 
     const location = allMetaLocations[type];
