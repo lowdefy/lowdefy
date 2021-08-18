@@ -18,9 +18,7 @@ import { type } from '@lowdefy/helpers';
 
 const getBlockMatcher = (params) => {
   let testParams = params;
-  if (type.isNone(testParams)) {
-    testParams = { blockIds: true };
-  }
+  if (type.isNone(testParams)) return () => true;
   if (type.isString(testParams)) {
     testParams = { blockIds: [testParams] };
   }

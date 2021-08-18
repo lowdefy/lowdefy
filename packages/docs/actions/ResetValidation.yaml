@@ -29,11 +29,11 @@ _ref:
       }): void
       ```
     description: |
-      The `ResetValidation` action is used to reset validation flags on input fields, usually after a `Validation` flag was called to remove input error and warning indications from fields.
+      The `ResetValidation` action is used to reset validation flags on input fields.
 
-      By default when a page is opened, no validation flags are set on any input fields. Once a `Validation` actions is called, a validation flag is set on input fields matching the validation params. To reset the validation flags, use the `ResetValidation` action.
+      By default when a page is opened, no validation flags are set on any input fields. When the `Validate` is called, a validation flag is set on input fields matching the validation params. To reset the validation flags, use the `ResetValidation` action.
 
-      The `ResetValidation` action `blockIds` or `regex` params are used to limit which blocks are validation errors and warnings should not be displayed.
+      The `ResetValidation` action `blockIds` or `regex` params are used to limit which blocks validation errors and warnings should be reset.
 
     params: |
       ###### void

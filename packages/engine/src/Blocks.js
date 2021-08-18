@@ -570,7 +570,6 @@ class Blocks {
   }
 
   resetValidation(match) {
-    this.updateStateFromRoot();
     this.resetValidationRec(match);
     this.setBlocksCache();
   }
