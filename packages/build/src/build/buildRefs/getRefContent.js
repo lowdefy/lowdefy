@@ -21,6 +21,22 @@ import YAML from 'js-yaml';
 
 import parseNunjucks from './parseNunjucks';
 
+function parseRefContent({ content, vars, path }) {
+  let ext = getFileExtension(path);
+  if (ext === 'njk') {
+    content = parseNunjucks(content, vars, path);
+    ext = getFileSubExtension(path);
+  }
+
+  if (ext === 'yaml' || ext === 'yml') {
+    return YAML.load(content);
+  }
+  if (ext === 'json') {
+    return JSON5.parse(content);
+  }
+  return content;
+}
+
 async function getRefContent({ context, refDef, referencedFrom }) {
   if (!type.isString(refDef.path)) {
     throw new Error(
@@ -37,19 +53,8 @@ async function getRefContent({ context, refDef, referencedFrom }) {
   if (content === null) {
     throw new Error(`Tried to reference file with path "${path}", but file does not exist.`);
   }
-  let ext = getFileExtension(path);
-  if (ext === 'njk') {
-    content = parseNunjucks(content, vars, path);
-    ext = getFileSubExtension(path);
-  }
 
-  if (ext === 'yaml' || ext === 'yml') {
-    return YAML.load(content);
-  }
-  if (ext === 'json') {
-    return JSON5.parse(content);
-  }
-  return content;
+  return parseRefContent({ content, vars, path });
 }
 
 export default getRefContent;

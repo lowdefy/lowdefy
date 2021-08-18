@@ -13,12 +13,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import path from 'path';
+import { readFile } from '@lowdefy/node-utils';
 
-import { nunjucksFunction } from '@lowdefy/nunjucks';
-
-function parseNunjucks(fileContent, vars) {
-  const template = nunjucksFunction(fileContent);
-  return template(vars);
+async function getUserJavascriptFunction({ context, filePath }) {
+  const jsFile = await readFile(path.resolve(context.configDirectory, filePath));
+  return eval(jsFile);
 }
 
-export default parseNunjucks;
+export default getUserJavascriptFunction;

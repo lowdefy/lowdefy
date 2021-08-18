@@ -16,7 +16,7 @@
 
 import getRefContent from './getRefContent';
 import getRefsFromFile from './getRefsFromFile';
-import refReviver from './refReviver';
+import populateRefs from './populateRefs';
 import runTransformer from './runTransformer';
 
 async function recursiveParseFile({ context, refDef, count, referencedFrom }) {
@@ -37,16 +37,19 @@ async function recursiveParseFile({ context, refDef, count, referencedFrom }) {
   // eslint-disable-next-line no-restricted-syntax
   for (const newRefDef of foundRefs.values()) {
     // Parse vars and path before passing down to parse new file
-    const parsedRefDef = JSON.parse(
-      JSON.stringify(newRefDef),
-      refReviver.bind({ parsedFiles, vars: refDef.vars })
-    );
+    const parsedRefDef = populateRefs({
+      toPopulate: newRefDef,
+      parsedFiles,
+      refDef,
+    });
+
     const parsedFile = await recursiveParseFile({
       context,
       refDef: parsedRefDef,
       count: count + 1,
       referencedFrom: refDef.path,
     });
+
     const transformedFile = await runTransformer({
       context,
       parsedFile,
@@ -55,10 +58,11 @@ async function recursiveParseFile({ context, refDef, count, referencedFrom }) {
 
     parsedFiles[newRefDef.id] = transformedFile;
   }
-  return JSON.parse(
-    JSON.stringify(fileContentBuiltRefs),
-    refReviver.bind({ parsedFiles, vars: refDef.vars })
-  );
+  return populateRefs({
+    toPopulate: fileContentBuiltRefs,
+    parsedFiles,
+    refDef,
+  });
 }
 
 export default recursiveParseFile;
