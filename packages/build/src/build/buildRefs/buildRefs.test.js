@@ -17,7 +17,7 @@
 import buildRefs from './buildRefs';
 import testContext from '../../test/testContext';
 
-const configLoaderMockImplementation = (files) => {
+const readConfigFileMockImplementation = (files) => {
   const mockImp = (filePath) => {
     const file = files.find((file) => file.path === filePath);
     if (!file) {
@@ -28,24 +28,22 @@ const configLoaderMockImplementation = (files) => {
   return mockImp;
 };
 
-const mockConfigLoader = jest.fn();
+const mockReadConfigFile = jest.fn();
 
 const context = testContext({
-  configLoader: {
-    load: mockConfigLoader,
-  },
+  readConfigFile: mockReadConfigFile,
 });
 
 test('buildRefs file not found', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
-      content: {
-        doesNotExist: { _ref: 'doesNotExist' },
-      },
+      content: `
+doesNotExist:
+  _ref: doesNotExist`,
     },
   ];
-  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   await expect(buildRefs({ context })).rejects.toThrow(
     'Tried to reference file with path "doesNotExist", but file does not exist.'
   );
@@ -55,12 +53,10 @@ test('buildRefs no refs', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
-      content: {
-        key: 'value',
-      },
+      content: `key: value`,
     },
   ];
-  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({ context });
   expect(res).toEqual({
     key: 'value',
@@ -71,73 +67,63 @@ test('buildRefs', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
-      content: {
-        jsonFile: { _ref: 'jsonFile.json' },
-        twoLevels: { _ref: 'twoLevels.json' },
-        vars: {
-          _ref: {
-            path: 'vars.json',
-            vars: {
-              var_1: 'var_1_value',
-            },
-          },
-        },
-      },
+      content: `
+jsonFile:
+  _ref: jsonFile.json
+twoLevels:
+  _ref: twoLevels.json
+vars:
+  _ref:
+    path: vars.yaml
+    vars:
+      var_1: var_1_value
+`,
     },
     {
       path: 'jsonFile.json',
-      content: {
-        path: 'jsonFile.json',
-      },
+      content: `{"file": "jsonFile.json"}`,
     },
     {
       path: 'twoLevels.json',
-      content: {
-        path: 'twoLevels.json',
-        jsonFile: { _ref: 'jsonFile.json' },
-      },
+      content: `{"file": "twoLevels.json", "jsonFile": { "_ref": "jsonFile.json" }}`,
     },
     {
-      path: 'vars.json',
-      content: {
-        path: 'vars.json',
-        var1: {
-          _var: 'var_1',
-        },
-      },
+      path: 'vars.yaml',
+      content: `
+file: vars.yaml
+var1:
+  _var: var_1
+`,
     },
   ];
-  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({ context });
   expect(res).toEqual({
-    jsonFile: { path: 'jsonFile.json' },
-    twoLevels: { path: 'twoLevels.json', jsonFile: { path: 'jsonFile.json' } },
-    vars: { path: 'vars.json', var1: 'var_1_value' },
+    jsonFile: { file: 'jsonFile.json' },
+    twoLevels: { file: 'twoLevels.json', jsonFile: { file: 'jsonFile.json' } },
+    vars: { file: 'vars.yaml', var1: 'var_1_value' },
   });
 });
 
 test('buildRefs max recursion depth', async () => {
-  const ctx = {
-    ...context,
-    MAX_RECURSION_DEPTH: 3,
-  };
   const files = [
     {
       path: 'lowdefy.yaml',
-      content: { _ref: 'maxRecursion1.json' },
+      content: `
+_ref: maxRecursion1.json`,
     },
     {
       path: 'maxRecursion1.json',
-      content: { _ref: 'maxRecursion2.json' },
+      content: `{ "_ref": "maxRecursion2.json" }`,
     },
     {
       path: 'maxRecursion2.json',
-      content: { _ref: 'maxRecursion1.json' },
+      content: `{ "_ref": "maxRecursion1.json" }`,
     },
   ];
-  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
-  await expect(buildRefs({ context: ctx })).rejects.toThrow();
-  await expect(buildRefs({ context: ctx })).rejects.toThrow(
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+  await expect(buildRefs({ context })).rejects.toThrow();
+  await expect(buildRefs({ context })).rejects.toThrow(
     'Maximum recursion depth of references exceeded.'
   );
 });
@@ -146,11 +132,14 @@ test('load refs to text files', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
-      content: {
-        text: { _ref: 'text.txt' },
-        html: { _ref: 'html.html' },
-        md: { _ref: 'markdown.md' },
-      },
+      content: `
+text:
+  _ref: text.txt
+html:
+  _ref: html.html
+md:
+  _ref: markdown.md
+`,
     },
     {
       path: 'text.txt',
@@ -172,7 +161,7 @@ Hello.`,
 Hello there`,
     },
   ];
-  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({ context });
   expect(res).toEqual({
     html: `<h1>Heading</h1>
@@ -192,32 +181,24 @@ test('buildRefs should copy vars', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
-      content: {
-        ref: {
-          _ref: {
-            path: 'file.yaml',
-            vars: {
-              var1: {
-                key: 'value',
-              },
-            },
-          },
-        },
-      },
+      content: `
+ref:
+  _ref:
+    path: file.yaml
+    vars:
+      var1:
+        key: value`,
     },
     {
       path: 'file.yaml',
-      content: {
-        ref1: {
-          _var: 'var1',
-        },
-        ref2: {
-          _var: 'var1',
-        },
-      },
+      content: `
+ref1:
+  _var: var1
+ref2:
+  _var: var1`,
     },
   ];
-  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({ context });
   expect(res).toEqual({
     ref: {
@@ -238,12 +219,12 @@ test('buildRefs null ref definition', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
-      content: {
-        invalid: { _ref: null },
-      },
+      content: `
+invalid:
+  _ref: null`,
     },
   ];
-  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   await expect(buildRefs({ context })).rejects.toThrow(
     'Invalid _ref definition {"_ref":null} in file lowdefy.yaml'
   );
@@ -253,12 +234,12 @@ test('buildRefs invalid ref definition', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
-      content: {
-        invalid: { _ref: 1 },
-      },
+      content: `
+invalid:
+  _ref: 1`,
     },
   ];
-  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   await expect(buildRefs({ context })).rejects.toThrow(
     'Invalid _ref definition {"_ref":1} in file lowdefy.yaml'
   );
@@ -268,12 +249,13 @@ test('buildRefs invalid ref definition 2', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
-      content: {
-        invalid: { _ref: { a: 'b' } },
-      },
+      content: `
+invalid:
+  _ref:
+    a: b`,
     },
   ];
-  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   await expect(buildRefs({ context })).rejects.toThrow(
     'Invalid _ref definition {"_ref":{"a":"b"}} in file lowdefy.yaml'
   );
@@ -283,23 +265,19 @@ test('buildRefs nunjucks text file', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
-      content: {
-        templated: {
-          _ref: {
-            path: 'template.njk',
-            vars: {
-              var_1: 'There',
-            },
-          },
-        },
-      },
+      content: `
+templated:
+  _ref:
+    path: template.njk
+    vars:
+      var_1: There`,
     },
     {
       path: 'template.njk',
       content: 'Hello {{ var_1 }}',
     },
   ];
-  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({ context });
   expect(res).toEqual({
     templated: 'Hello There',
@@ -310,23 +288,19 @@ test('buildRefs nunjucks json file', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
-      content: {
-        templated: {
-          _ref: {
-            path: 'template.json.njk',
-            vars: {
-              key: 'key1',
-            },
-          },
-        },
-      },
+      content: `
+templated:
+  _ref:
+    path: template.json.njk
+    vars:
+      key: key1`,
     },
     {
       path: 'template.json.njk',
       content: '{ "{{ key }}": true }',
     },
   ];
-  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({ context });
   expect(res).toEqual({
     templated: { key1: true },
@@ -337,16 +311,14 @@ test('buildRefs nunjucks yaml file', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
-      content: {
-        templated: {
-          _ref: {
-            path: 'template.yaml.njk',
-            vars: {
-              values: ['value1', 'value2'],
-            },
-          },
-        },
-      },
+      content: `
+templated:
+  _ref:
+    path: template.yaml.njk
+    vars:
+      values:
+        - value1
+        - value2`,
     },
     {
       path: 'template.yaml.njk',
@@ -354,10 +326,10 @@ test('buildRefs nunjucks yaml file', async () => {
 {% for value in values %}
   - key: {{ value }}
 {% endfor %}
-      `,
+`,
     },
   ];
-  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({ context });
   expect(res).toEqual({
     templated: { list: [{ key: 'value1' }, { key: 'value2' }] },
@@ -368,16 +340,14 @@ test('buildRefs nunjucks yml file', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
-      content: {
-        templated: {
-          _ref: {
-            path: 'template.yml.njk',
-            vars: {
-              values: ['value1', 'value2'],
-            },
-          },
-        },
-      },
+      content: `
+templated:
+  _ref:
+    path: template.yml.njk
+    vars:
+      values:
+        - value1
+        - value2`,
     },
     {
       path: 'template.yml.njk',
@@ -388,7 +358,7 @@ test('buildRefs nunjucks yml file', async () => {
       `,
     },
   ];
-  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({ context });
   expect(res).toEqual({
     templated: { list: [{ key: 'value1' }, { key: 'value2' }] },
@@ -399,42 +369,31 @@ test('buildRefs pass vars two levels', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
-      content: {
-        ref1: {
-          _ref: {
-            path: 'file1.yaml',
-            vars: {
-              var1: 'Hello',
-            },
-          },
-        },
-      },
+      content: `
+ref1:
+  _ref:
+    path: file1.yaml
+    vars:
+      var1: Hello`,
     },
     {
       path: 'file1.yaml',
-      content: {
-        ref2: {
-          _ref: {
-            path: 'file2.yaml',
-            vars: {
-              var2: {
-                _var: 'var1',
-              },
-            },
-          },
-        },
-      },
+      content: `
+ref2:
+  _ref:
+    path: file2.yaml
+    vars:
+      var2:
+        _var: var1`,
     },
     {
       path: 'file2.yaml',
-      content: {
-        value: {
-          _var: 'var2',
-        },
-      },
+      content: `
+value:
+  _var: var2`,
     },
   ];
-  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({ context });
   expect(res).toEqual({
     ref1: {
@@ -449,33 +408,26 @@ test('buildRefs use a ref in a var', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
-      content: {
-        ref1: {
-          _ref: {
-            path: 'file1.yaml',
-            vars: {
-              file2: {
-                _ref: 'file2.md',
-              },
-            },
-          },
-        },
-      },
+      content: `
+ref1:
+  _ref:
+    path: file1.yaml
+    vars:
+      file2:
+        _ref: file2.md`,
     },
     {
       path: 'file1.yaml',
-      content: {
-        content: {
-          _var: 'file2',
-        },
-      },
+      content: `
+content:
+  _var: file2`,
     },
     {
       path: 'file2.md',
       content: 'Hello',
     },
   ];
-  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({ context });
   expect(res).toEqual({
     ref1: {
@@ -488,68 +440,50 @@ test('buildRefs use a ref in var, with a var from parent as a var', async () => 
   const files = [
     {
       path: 'lowdefy.yaml',
-      content: {
-        ref1: {
-          _ref: {
-            path: 'file1.yaml',
-            vars: {
-              parent1: 1,
-              parent2: 2,
-            },
-          },
-        },
-      },
+      content: `
+ref1:
+  _ref:
+    path: file1.yaml
+    vars:
+      parent1: 1
+      parent2: 2`,
     },
     {
       path: 'file1.yaml',
-      content: {
-        ref2: {
-          _ref: {
-            path: 'file2.yaml',
-            vars: {
-              var: {
-                _var: 'parent1',
-              },
-              ref: {
-                _ref: {
-                  path: 'file3.yaml',
-                  vars: {
-                    var: {
-                      _var: 'parent2',
-                    },
-                    const: 3,
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
+      content: `
+ref2:
+  _ref:
+    path: file2.yaml
+    vars:
+      var:
+        _var: parent1
+      ref:
+        _ref:
+          path: file3.yaml
+          vars:
+            var:
+              _var: parent2
+            const: 3
+`,
     },
     {
       path: 'file2.yaml',
-      content: {
-        value: {
-          _var: 'var',
-        },
-        ref: {
-          _var: 'ref',
-        },
-      },
+      content: `
+value:
+  _var: var
+ref:
+  _var: ref`,
     },
     {
       path: 'file3.yaml',
-      content: {
-        value: {
-          _var: 'var',
-        },
-        const: {
-          _var: 'const',
-        },
-      },
+      content: `
+value:
+  _var: var
+const:
+  _var: const`,
     },
   ];
-  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({ context });
   expect(res).toEqual({
     ref1: {
@@ -568,29 +502,22 @@ test('buildRefs var specified by name', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
-      content: {
-        ref: {
-          _ref: {
-            path: 'file.yaml',
-            vars: {
-              var1: 'value',
-            },
-          },
-        },
-      },
+      content: `
+ref:
+  _ref:
+    path: file.yaml
+    vars:
+      var1: value`,
     },
     {
       path: 'file.yaml',
-      content: {
-        key: {
-          _var: {
-            name: 'var1',
-          },
-        },
-      },
+      content: `
+key:
+  _var:
+    name: var1`,
     },
   ];
-  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({ context });
   expect(res).toEqual({
     ref: {
@@ -603,30 +530,23 @@ test('buildRefs var with default value, but value specified', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
-      content: {
-        ref: {
-          _ref: {
-            path: 'file.yaml',
-            vars: {
-              var1: 'value',
-            },
-          },
-        },
-      },
+      content: `
+ref:
+  _ref:
+    path: file.yaml
+    vars:
+      var1: value`,
     },
     {
       path: 'file.yaml',
-      content: {
-        key: {
-          _var: {
-            name: 'var1',
-            default: 'default',
-          },
-        },
-      },
+      content: `
+key:
+  _var:
+    name: var1
+    default: default`,
     },
   ];
-  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({ context });
   expect(res).toEqual({
     ref: {
@@ -639,30 +559,23 @@ test('buildRefs var uses default value if value not specified', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
-      content: {
-        ref: {
-          _ref: {
-            path: 'file.yaml',
-            vars: {
-              var2: 'value',
-            },
-          },
-        },
-      },
+      content: `
+ref:
+  _ref:
+    path: file.yaml
+    vars:
+      var2: value`,
     },
     {
       path: 'file.yaml',
-      content: {
-        key: {
-          _var: {
-            name: 'var1',
-            default: 'default',
-          },
-        },
-      },
+      content: `
+key:
+  _var:
+    name: var1
+    default: default`,
     },
   ];
-  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({ context });
   expect(res).toEqual({
     ref: {
@@ -675,24 +588,19 @@ test('buildRefs with transformer function', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
-      content: {
-        _ref: {
-          path: 'target.yaml',
-          transformer: 'src/test/testBuildRefsTransform.js',
-          vars: {
-            var1: 'var1',
-          },
-        },
-      },
+      content: `
+_ref:
+  path: target.yaml
+  transformer: src/test/testBuildRefsTransform.js
+  vars:
+    var1: var1`,
     },
     {
       path: 'target.yaml',
-      content: {
-        a: 1,
-      },
+      content: 'a: 1',
     },
   ];
-  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({ context });
   expect(res).toEqual({
     add: 43,
@@ -705,27 +613,21 @@ test('buildRefs _var receives invalid type', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
-      content: {
-        ref: {
-          _ref: {
-            path: 'file.yaml',
-            vars: {
-              var1: 'value',
-            },
-          },
-        },
-      },
+      content: `
+ref:
+  _ref:
+    path: file.yaml
+    vars:
+      var1: value`,
     },
     {
       path: 'file.yaml',
-      content: {
-        key: {
-          _var: [1],
-        },
-      },
+      content: `
+key:
+  _var: [1]`,
     },
   ];
-  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   await expect(buildRefs({ context })).rejects.toThrow(
     '"_var" operator takes a string or object with name field as arguments. Received "{"_var":[1]}"'
   );
@@ -735,31 +637,25 @@ test('buildRefs _ref path is a var, shorthand path', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
-      content: {
-        _ref: {
-          path: 'file1.yaml',
-          vars: {
-            filePath: 'file2.md',
-          },
-        },
-      },
+      content: `
+_ref:
+  path: file1.yaml
+  vars:
+    filePath: file2.md`,
     },
     {
       path: 'file1.yaml',
-      content: {
-        text: {
-          _ref: {
-            _var: 'filePath',
-          },
-        },
-      },
+      content: `
+text:
+  _ref:
+    _var: filePath`,
     },
     {
       path: 'file2.md',
       content: 'Hello',
     },
   ];
-  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({ context });
   expect(res).toEqual({
     text: 'Hello',
@@ -770,33 +666,26 @@ test('buildRefs _ref path is a var', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
-      content: {
-        _ref: {
-          path: 'file1.yaml',
-          vars: {
-            filePath: 'file2.md',
-          },
-        },
-      },
+      content: `
+_ref:
+  path: file1.yaml
+  vars:
+    filePath: file2.md`,
     },
     {
       path: 'file1.yaml',
-      content: {
-        text: {
-          _ref: {
-            path: {
-              _var: 'filePath',
-            },
-          },
-        },
-      },
+      content: `
+text:
+  _ref:
+    path:
+      _var: filePath`,
     },
     {
       path: 'file2.md',
       content: 'Hello',
     },
   ];
-  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({ context });
   expect(res).toEqual({
     text: 'Hello',

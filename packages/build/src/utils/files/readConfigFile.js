@@ -13,11 +13,19 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { nunjucksFunction } from '@lowdefy/nunjucks';
 
-function parseNunjucks(fileContent, vars) {
-  const template = nunjucksFunction(fileContent);
-  return template(vars);
+import path from 'path';
+import { readFile } from '@lowdefy/node-utils';
+
+function createReadConfigFile({ configDirectory }) {
+  const files = {};
+  async function readConfigFile(filePath) {
+    if (files[filePath]) return files[filePath];
+    const fileContent = readFile(path.resolve(configDirectory, filePath));
+    files[filePath] = fileContent;
+    return fileContent;
+  }
+  return readConfigFile;
 }
 
-export default parseNunjucks;
+export default createReadConfigFile;

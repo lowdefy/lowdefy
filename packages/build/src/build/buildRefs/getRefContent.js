@@ -14,20 +14,36 @@
   limitations under the License.
 */
 
-import * as nodePath from 'path';
-import { getFileExtension } from '@lowdefy/node-utils';
+import { type } from '@lowdefy/helpers';
+import { getFileExtension, getFileSubExtension } from '@lowdefy/node-utils';
+import JSON5 from 'json5';
+import YAML from 'js-yaml';
+
 import parseNunjucks from './parseNunjucks';
-import getFile from './getFile';
 
 async function getRefContent({ context, path, vars }) {
+  if (!type.isString(path)) {
+    throw new Error(
+      `Tried to get file with file path ${JSON.stringify(path)}, but file path should be a string`
+    );
+  }
   let content;
-  content = await getFile(nodePath.resolve(context.configDirectory, path));
-  if (!content) {
+  content = await context.readConfigFile(path);
+
+  if (content === null) {
     throw new Error(`Tried to reference file with path "${path}", but file does not exist.`);
   }
-
-  if (getFileExtension(path) === 'njk') {
+  let ext = getFileExtension(path);
+  if (ext === 'njk') {
     content = parseNunjucks(content, vars, path);
+    ext = getFileSubExtension(path);
+  }
+
+  if (ext === 'yaml' || ext === 'yml') {
+    return YAML.load(content);
+  }
+  if (ext === 'json') {
+    return JSON5.parse(content);
   }
   return content;
 }
