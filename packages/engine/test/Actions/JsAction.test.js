@@ -225,6 +225,7 @@ test('JsAction with args, synchronous fn', async () => {
                 "Message": [Function],
                 "Request": [Function],
                 "Reset": [Function],
+                "ResetValidation": [Function],
                 "ScrollTo": [Function],
                 "SetGlobal": [Function],
                 "SetState": [Function],

@@ -27,28 +27,31 @@ class Blocks {
       .toString(36)
       .replace(/[^a-z]+/g, '')
       .substr(0, 5);
-    this.context = context;
     this.areas = serializer.copy(areas || []);
     this.arrayIndices = type.isArray(arrayIndices) ? arrayIndices : [];
-    this.subBlocks = {};
+    this.context = context;
     this.map = {};
     this.recCount = 0;
+    this.subBlocks = {};
+
+    this.generateBlockId = this.generateBlockId.bind(this);
+    this.getValidateRec = this.getValidateRec.bind(this);
     this.init = this.init.bind(this);
-    this.reset = this.reset.bind(this);
+    this.newBlocks = this.newBlocks.bind(this);
+    this.recContainerDelState = this.recContainerDelState.bind(this);
     this.recEval = this.recEval.bind(this);
+    this.recRemoveBlocksFromMap = this.recRemoveBlocksFromMap.bind(this);
+    this.recSetUndefined = this.recSetUndefined.bind(this);
+    this.recUpdateArrayIndices = this.recUpdateArrayIndices.bind(this);
+    this.reset = this.reset.bind(this);
+    this.resetValidation = this.resetValidation.bind(this);
+    this.resetValidationRec = this.resetValidationRec.bind(this);
+    this.setBlocksCache = this.setBlocksCache.bind(this);
+    this.setBlocksLoadingCache = this.setBlocksLoadingCache.bind(this);
+    this.update = this.update.bind(this);
     this.updateState = this.updateState.bind(this);
     this.updateStateFromRoot = this.updateStateFromRoot.bind(this);
-    this.setBlocksCache = this.setBlocksCache.bind(this);
-    this.recContainerDelState = this.recContainerDelState.bind(this);
-    this.recUpdateArrayIndices = this.recUpdateArrayIndices.bind(this);
-    this.recSetUndefined = this.recSetUndefined.bind(this);
-    this.newBlocks = this.newBlocks.bind(this);
-    this.getValidateRec = this.getValidateRec.bind(this);
-    this.setBlocksLoadingCache = this.setBlocksLoadingCache.bind(this);
-    this.generateBlockId = this.generateBlockId.bind(this);
-    this.update = this.update.bind(this);
     this.validate = this.validate.bind(this);
-    this.recRemoveBlocksFromMap = this.recRemoveBlocksFromMap.bind(this);
   }
 
   loopBlocks(fn) {
@@ -79,13 +82,13 @@ class Blocks {
       block.layout = type.isNone(block.layout) ? {} : block.layout;
       block.events = type.isNone(block.events) ? {} : block.events;
 
-      block.visibleEval = {};
+      block.areasLayoutEval = {};
+      block.layoutEval = {};
       block.propertiesEval = {};
       block.requiredEval = {};
-      block.validationEval = {};
       block.styleEval = {};
-      block.layoutEval = {};
-      block.areasLayoutEval = {};
+      block.validationEval = {};
+      block.visibleEval = {};
 
       if (!type.isNone(block.areas)) {
         block.areasLayout = {};
@@ -498,9 +501,9 @@ class Blocks {
     });
   }
 
-  getValidateRec(params, match, result) {
+  getValidateRec(match, result) {
     this.loopBlocks((block) => {
-      if (match(block.blockId, params)) {
+      if (match(block.blockId)) {
         block.showValidation = true;
         block.update = true;
         if (
@@ -517,7 +520,7 @@ class Blocks {
     });
     Object.keys(this.subBlocks).forEach((subKey) => {
       this.subBlocks[subKey].forEach((subBlock) => {
-        subBlock.getValidateRec(params, match, result);
+        subBlock.getValidateRec(match, result);
       });
     });
     return result;
@@ -545,11 +548,30 @@ class Blocks {
     });
   }
 
-  validate(params, match) {
+  validate(match) {
     this.updateStateFromRoot(); // update to recalculate validationEval to raise block errors
-    const validationErrors = this.getValidateRec(params, match, []); // get all relevant raised block errors and set showValidation
+    const validationErrors = this.getValidateRec(match, []); // get all relevant raised block errors and set showValidation
     this.setBlocksCache(); // update cache to render
     return validationErrors;
+  }
+
+  resetValidationRec(match) {
+    this.loopBlocks((block) => {
+      if (match(block.blockId)) {
+        block.showValidation = false;
+        block.update = true;
+      }
+    });
+    Object.keys(this.subBlocks).forEach((subKey) => {
+      this.subBlocks[subKey].forEach((subBlock) => {
+        subBlock.resetValidationRec(match);
+      });
+    });
+  }
+
+  resetValidation(match) {
+    this.resetValidationRec(match);
+    this.setBlocksCache();
   }
 
   update() {

@@ -22,6 +22,7 @@ import Logout from './Logout';
 import Message from './Message';
 import Request from './Request';
 import Reset from './Reset';
+import ResetValidation from './ResetValidation';
 import ScrollTo from './ScrollTo';
 import SetGlobal from './SetGlobal';
 import SetState from './SetState';
@@ -38,6 +39,7 @@ export default {
   Message,
   Request,
   Reset,
+  ResetValidation,
   ScrollTo,
   SetGlobal,
   SetState,
