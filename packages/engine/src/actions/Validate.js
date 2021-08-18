@@ -14,43 +14,10 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
-const getMatch = (params) => (id) => {
-  if (params.blockIds === true || (type.isArray(params.blockIds) && params.blockIds.includes(id))) {
-    return true;
-  }
-  if (type.isArray(params.regex)) {
-    for (const regex of params.regex) {
-      if (regex.test(id)) {
-        return true;
-      }
-    }
-  }
-  return false;
-};
+import getBlockMatcher from '../getBlockMatcher';
 
 async function Validate({ context, params }) {
-  let testParams = params;
-  if (type.isNone(testParams)) {
-    testParams = { blockIds: true };
-  }
-  if (type.isString(testParams)) {
-    testParams = { blockIds: [testParams] };
-  }
-  if (type.isArray(testParams)) {
-    testParams = { blockIds: testParams };
-  }
-  if (!type.isObject(testParams)) {
-    throw new Error('Invalid validate params.');
-  }
-  if (type.isString(testParams.regex)) {
-    testParams.regex = [testParams.regex];
-  }
-  if (type.isArray(testParams.regex)) {
-    testParams.regex = testParams.regex.map((regex) => new RegExp(regex));
-  }
-  const validationErrors = context.RootBlocks.validate(testParams, getMatch(testParams));
+  const validationErrors = context.RootBlocks.validate(getBlockMatcher(params));
   if (validationErrors.length > 0) {
     const error = new Error(
       `Your input has ${validationErrors.length} validation error${
