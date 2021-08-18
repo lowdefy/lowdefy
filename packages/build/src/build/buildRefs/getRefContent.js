@@ -21,12 +21,16 @@ import YAML from 'js-yaml';
 
 import parseNunjucks from './parseNunjucks';
 
-async function getRefContent({ context, path, vars }) {
-  if (!type.isString(path)) {
+async function getRefContent({ context, refDef, referencedFrom }) {
+  if (!type.isString(refDef.path)) {
     throw new Error(
-      `Tried to get file with file path ${JSON.stringify(path)}, but file path should be a string`
+      `Invalid _ref definition ${JSON.stringify({
+        _ref: refDef.original,
+      })} in file ${referencedFrom}`
     );
   }
+
+  const { path, vars } = refDef;
   let content;
   content = await context.readConfigFile(path);
 

@@ -14,21 +14,19 @@
   limitations under the License.
 */
 
-import * as nodePath from 'path';
-
-import { readFile } from '@lowdefy/node-utils';
-
 import getRefContent from './getRefContent';
 import getRefsFromFile from './getRefsFromFile';
 import refReviver from './refReviver';
+import runTransformer from './runTransformer';
 
-async function recursiveParseFile({ context, path, count, vars }) {
+async function recursiveParseFile({ context, refDef, count, referencedFrom }) {
   // TODO: Maybe it would be better to detect a cycle, since this is the real issue here?
   if (count > 20) {
     throw new Error(`Maximum recursion depth of references exceeded.`);
   }
-  let fileContent = await getRefContent({ context, path, vars });
+  let fileContent = await getRefContent({ context, refDef, referencedFrom });
   const { foundRefs, fileContentBuiltRefs } = getRefsFromFile(fileContent);
+
   const parsedFiles = {};
 
   // Since we can have references in the variables of a reference, we need to first parse
@@ -37,40 +35,30 @@ async function recursiveParseFile({ context, path, count, vars }) {
   // deepest nodes first we for loop over over foundRefs one by one, awaiting each result.
 
   // eslint-disable-next-line no-restricted-syntax
-  for (const refDef of foundRefs.values()) {
-    // TODO: This will now be valid if resolver is set
-    if (refDef.path === null) {
-      throw new Error(
-        `Invalid _ref definition ${JSON.stringify({ _ref: refDef.original })} in file ${path}`
-      );
-    }
-
+  for (const newRefDef of foundRefs.values()) {
     // Parse vars and path before passing down to parse new file
-    const { path: parsedPath, vars: parsedVars } = JSON.parse(
-      JSON.stringify(refDef),
-      refReviver.bind({ parsedFiles, vars })
+    const parsedRefDef = JSON.parse(
+      JSON.stringify(newRefDef),
+      refReviver.bind({ parsedFiles, vars: refDef.vars })
     );
-
-    // eslint-disable-next-line no-await-in-loop
-    let parsedFile = await recursiveParseFile({
+    const parsedFile = await recursiveParseFile({
       context,
-      path: parsedPath,
-      vars: parsedVars,
+      refDef: parsedRefDef,
       count: count + 1,
+      referencedFrom: refDef.path,
+    });
+    const transformedFile = await runTransformer({
+      context,
+      parsedFile,
+      refDef: newRefDef,
     });
 
-    if (refDef.transformer) {
-      // TODO: create a helper fn to handle reading and executing JS
-      const transformerFile = await readFile(
-        nodePath.resolve(context.configDirectory, refDef.transformer)
-      );
-      const transformerFn = eval(transformerFile);
-      parsedFile = transformerFn(parsedFile, parsedVars);
-    }
-
-    parsedFiles[refDef.id] = parsedFile;
+    parsedFiles[newRefDef.id] = transformedFile;
   }
-  return JSON.parse(JSON.stringify(fileContentBuiltRefs), refReviver.bind({ parsedFiles, vars }));
+  return JSON.parse(
+    JSON.stringify(fileContentBuiltRefs),
+    refReviver.bind({ parsedFiles, vars: refDef.vars })
+  );
 }
 
 export default recursiveParseFile;

@@ -13,16 +13,19 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import * as nodePath from 'path';
+import { readFile } from '@lowdefy/node-utils';
 
-import recursiveBuild from './recursiveBuild';
-import makeRefDefinition from './makeRefDefinition';
-
-async function buildRefs({ context }) {
-  return recursiveBuild({
-    context,
-    refDef: makeRefDefinition('lowdefy.yaml'),
-    count: 0,
-  });
+async function runTransformer({ context, parsedFile, refDef }) {
+  if (refDef.transformer) {
+    // TODO: create a helper fn to handle reading and executing JS
+    const transformerFile = await readFile(
+      nodePath.resolve(context.configDirectory, refDef.transformer)
+    );
+    const transformerFn = eval(transformerFile);
+    return transformerFn(parsedFile, refDef.vars);
+  }
+  return parsedFile;
 }
 
-export default buildRefs;
+export default runTransformer;
