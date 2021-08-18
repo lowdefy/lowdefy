@@ -49,7 +49,7 @@ _ref:
 
       ###### object
         - `blockId?: string|string[]`: A blockId or an array of the blockIds of the blocks to validate.
-        - `regex?: string|string[]`: A regex string pattern or an array of regex string patterns of the blocks to validate.
+        - `regex?: string|string[]`: A regex string pattern or an array of regex string patterns to match the blockIds to validate.
 
     examples: |
       ###### Validate all inputs on the page:

@@ -23,14 +23,13 @@ _ref:
       (void): void
       (blockId: string): void
       (blockIds: string[]): void
-      (blockIds: string[]): void
       (params: {
         blockId?: string|string[],
         regex?: string|string[],
       }): void
       ```
     description: |
-      The `ResetValidation` action is used to reset validation flags on input fields, usually to after a `Validation` flag was called to remove input error and warning indications from fields.
+      The `ResetValidation` action is used to reset validation flags on input fields, usually after a `Validation` flag was called to remove input error and warning indications from fields.
 
       By default when a page is opened, no validation flags are set on any input fields. Once a `Validation` actions is called, a validation flag is set on input fields matching the validation params. To reset the validation flags, use the `ResetValidation` action.
 
@@ -48,7 +47,7 @@ _ref:
 
       ###### object
         - `blockId?: string|string[]`: A blockId or an array of the blockIds of the blocks for which to lower validation flags
-        - `regex?: string|string[]`: A regex string pattern or an array of regex string patterns of the blocks for which to lower validation flags.
+        - `regex?: string|string[]`: A regex string pattern or an array of regex string patterns to match the blockIds for which to lower validation flags.
 
     examples: |
       ###### Lower validation flags for all inputs on the page:
