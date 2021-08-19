@@ -34,9 +34,12 @@
           "description": "Use simplified pagination display."
         },
         "showTotal": {
-          "type": "boolean",
+          "type": ["boolean", "string", "object"],
           "default": false,
-          "description": "Show pagination total number and range."
+          "description": "Show pagination total number and range if boolean, or define a custom string or function to display.",
+          "docs": {
+            "displayType": "string"
+          }
         },
         "showSizeChanger": {
           "type": "boolean",
