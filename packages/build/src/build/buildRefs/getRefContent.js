@@ -14,47 +14,21 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-import { getFileExtension, getFileSubExtension } from '@lowdefy/node-utils';
-import JSON5 from 'json5';
-import YAML from 'js-yaml';
-
-import parseNunjucks from './parseNunjucks';
-
-function parseRefContent({ content, vars, path }) {
-  let ext = getFileExtension(path);
-  if (ext === 'njk') {
-    content = parseNunjucks(content, vars, path);
-    ext = getFileSubExtension(path);
-  }
-
-  if (ext === 'yaml' || ext === 'yml') {
-    return YAML.load(content);
-  }
-  if (ext === 'json') {
-    return JSON5.parse(content);
-  }
-  return content;
-}
+import getConfigFile from './getConfigFile';
+import parseRefContent from './parseRefContent';
+import runRefResolver from './runRefResolver';
 
 async function getRefContent({ context, refDef, referencedFrom }) {
-  if (!type.isString(refDef.path)) {
-    throw new Error(
-      `Invalid _ref definition ${JSON.stringify({
-        _ref: refDef.original,
-      })} in file ${referencedFrom}`
-    );
-  }
-
-  const { path, vars } = refDef;
   let content;
-  content = await context.readConfigFile(path);
-
-  if (content === null) {
-    throw new Error(`Tried to reference file with path "${path}", but file does not exist.`);
+  if (refDef.path === 'lowdefy.yaml') {
+    content = await getConfigFile({ context, refDef, referencedFrom });
+  } else if (refDef.resolver || context.refResolver) {
+    content = await runRefResolver({ context, refDef, referencedFrom });
+  } else {
+    content = await getConfigFile({ context, refDef, referencedFrom });
   }
 
-  return parseRefContent({ content, vars, path });
+  return parseRefContent({ content, refDef });
 }
 
 export default getRefContent;

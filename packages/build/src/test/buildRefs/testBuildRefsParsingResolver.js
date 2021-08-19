@@ -14,20 +14,29 @@
   limitations under the License.
 */
 
-import { get } from '@lowdefy/helpers';
-import { v1 as uuid } from 'uuid';
-
-import getRefPath from './getRefPath';
-
-function makeRefDefinition(refDefinition) {
-  return {
-    id: uuid(),
-    original: refDefinition,
-    path: getRefPath(refDefinition),
-    resolver: get(refDefinition, 'resolver'),
-    transformer: get(refDefinition, 'transformer'),
-    vars: get(refDefinition, 'vars', { default: {} }),
-  };
+function resolver(path) {
+  switch (path) {
+    case 'target.yaml':
+      return `
+array:
+  - 1
+  - 2`;
+    case 'target.yml':
+      return `
+array:
+- 1
+- 2`;
+    case 'target.json':
+      return `{"a": 42}`;
+    case 'target.yaml.njk':
+      return 'a: {{ var }}';
+    case 'target.yml.njk':
+      return 'a: {{ var }}';
+    case 'target.json.njk':
+      return `{ "a": "{{ var }}" }`;
+    default:
+      return null;
+  }
 }
 
-export default makeRefDefinition;
+module.exports = resolver;
