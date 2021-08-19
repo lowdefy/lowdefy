@@ -105,10 +105,11 @@ test('init Events', async () => {
   const { button } = context.RootBlocks.map;
   expect(button.Events.events).toEqual({
     onClick: {
+      actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+      catchActions: [],
+      debounce: null,
       history: [],
       loading: false,
-      catchActions: [],
-      actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
     },
   });
 });
@@ -144,6 +145,7 @@ test('triggerEvent no event defined', async () => {
   const res = await promise;
   expect(res).toEqual({
     blockId: 'button',
+    bounced: false,
     endTimestamp: { date: 0 },
     event: undefined,
     eventName: 'onClick',
@@ -185,10 +187,11 @@ test('triggerEvent x1', async () => {
   const promise = button.triggerEvent({ name: 'onClick', event: { x: 1 } });
   expect(button.Events.events).toEqual({
     onClick: {
+      actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+      catchActions: [],
+      debounce: null,
       history: [],
       loading: true,
-      catchActions: [],
-      actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
     },
   });
   await promise;
@@ -353,10 +356,11 @@ test('registerEvent then triggerEvent x1', async () => {
   });
   expect(button.Events.events).toEqual({
     onClick: {
+      actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+      catchActions: [],
+      debounce: null,
       history: [],
       loading: false,
-      catchActions: [],
-      actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
     },
   });
   await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
@@ -424,6 +428,7 @@ test('triggerEvent skip', async () => {
           },
         ],
         "catchActions": Array [],
+        "debounce": null,
         "history": Array [
           Object {
             "blockId": "button",
@@ -523,6 +528,7 @@ test('triggerEvent skip tests === true', async () => {
           },
         ],
         "catchActions": Array [],
+        "debounce": null,
         "history": Array [
           Object {
             "blockId": "button",
@@ -611,8 +617,8 @@ test('Actions array defaults', async () => {
     actions: null,
   });
   expect(button.Events.events).toEqual({
-    onClick: { actions: [], history: [], loading: false, catchActions: [] },
-    registered: { actions: [], history: [], loading: false, catchActions: [] },
+    onClick: { actions: [], history: [], loading: false, catchActions: [], debounce: null },
+    registered: { actions: [], history: [], loading: false, catchActions: [], debounce: null },
   });
 });
 
@@ -649,7 +655,7 @@ test('Actions try catch array defaults', async () => {
   });
   const { button } = context.RootBlocks.map;
   expect(button.Events.events).toEqual({
-    onClick: { actions: [], history: [], loading: false, catchActions: [] },
+    onClick: { actions: [], history: [], loading: false, catchActions: [], debounce: undefined },
   });
 });
 
