@@ -59,7 +59,9 @@ const DrawerBlock = ({ blockId, content, properties, methods, rename, onClose })
         (async () => {
           const response = await methods.triggerEvent({ name: 'onClose' });
           if (response.success === false) return;
-          triggerSetOpen({ state: false, setOpen, methods, rename });
+          if (response.bounced !== true) {
+            triggerSetOpen({ state: false, setOpen, methods, rename });
+          }
         })
       }
       drawerStyle={methods.makeCssClass(properties.drawerStyle, { styleObjectOnly: true })}

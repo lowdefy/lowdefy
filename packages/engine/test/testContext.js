@@ -43,7 +43,6 @@ const testContext = async ({ lowdefy, rootBlock, initState = {} }) => {
     rootBlock,
     pageId: rootBlock.blockId,
     // routeHistory: [], // init new routeHistory for each test
-    showValidationErrors: false,
     state: {},
     updateListeners: new Set(),
   };

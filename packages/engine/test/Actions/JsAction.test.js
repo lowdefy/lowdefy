@@ -24,8 +24,9 @@ const RealDate = Date;
 const mockDate = jest.fn(() => ({ date: 0 }));
 mockDate.now = jest.fn(() => 0);
 
-// Comment out to use console.log
-// console.log = () => {};
+// Comment out to use console
+console.log = () => {};
+console.error = () => {};
 
 beforeAll(() => {
   global.Date = mockDate;
@@ -78,6 +79,7 @@ test('JsAction with no args, synchronous fn', async () => {
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     responses: {
@@ -144,6 +146,7 @@ test('JsAction with no args, async fn', async () => {
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     responses: {
@@ -205,6 +208,7 @@ test('JsAction with args, synchronous fn', async () => {
   expect(res).toMatchInlineSnapshot(`
     Object {
       "blockId": "button",
+      "bounced": false,
       "endTimestamp": Object {
         "date": 0,
       },
@@ -224,6 +228,7 @@ test('JsAction with args, synchronous fn', async () => {
                 "Message": [Function],
                 "Request": [Function],
                 "Reset": [Function],
+                "ResetValidation": [Function],
                 "ScrollTo": [Function],
                 "SetGlobal": [Function],
                 "SetState": [Function],
@@ -296,6 +301,7 @@ test('JsAction name not a string', async () => {
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     error: {
@@ -362,11 +368,11 @@ test('JsAction args not an array', async () => {
     lowdefy,
     rootBlock,
   });
-  const mockFn = jest.fn(() => 'js_fn');
   const { button } = context.RootBlocks.map;
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     error: {
@@ -435,11 +441,11 @@ test('JsAction args not a function', async () => {
     lowdefy,
     rootBlock,
   });
-  const mockFn = jest.fn(() => 'js_fn');
   const { button } = context.RootBlocks.map;
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     error: {

@@ -16,16 +16,8 @@
 
 import getBlockMatcher from '../getBlockMatcher';
 
-async function Validate({ context, params }) {
-  const validationErrors = context.RootBlocks.validate(getBlockMatcher(params));
-  if (validationErrors.length > 0) {
-    const error = new Error(
-      `Your input has ${validationErrors.length} validation error${
-        validationErrors.length !== 1 ? 's' : ''
-      }.`
-    );
-    throw error;
-  }
+async function ResetValidation({ context, params }) {
+  context.RootBlocks.resetValidation(getBlockMatcher(params));
 }
 
-export default Validate;
+export default ResetValidation;

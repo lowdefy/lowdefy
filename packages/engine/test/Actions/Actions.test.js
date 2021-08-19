@@ -93,6 +93,7 @@ test('call a synchronous action', async () => {
   });
   expect(res).toEqual({
     blockId: 'blockId',
+    bounced: false,
     event: {},
     eventName: 'eventName',
     responses: {
@@ -131,6 +132,7 @@ test('call a asynchronous action', async () => {
   });
   expect(res).toEqual({
     blockId: 'blockId',
+    bounced: false,
     event: {},
     eventName: 'eventName',
     responses: {
@@ -172,6 +174,7 @@ test('call 2 actions', async () => {
   });
   expect(res).toEqual({
     blockId: 'blockId',
+    bounced: false,
     event: {},
     eventName: 'eventName',
     responses: {
@@ -483,6 +486,7 @@ test('skip a action', async () => {
   });
   expect(res).toEqual({
     blockId: 'blockId',
+    bounced: false,
     event: {},
     eventName: 'eventName',
     responses: {
@@ -521,6 +525,7 @@ test('action throws a error', async () => {
   });
   expect(res).toEqual({
     blockId: 'blockId',
+    bounced: false,
     event: {},
     eventName: 'eventName',
     error: {
@@ -574,6 +579,7 @@ test('actions after a error are not called throws a error', async () => {
   });
   expect(res).toEqual({
     blockId: 'blockId',
+    bounced: false,
     event: {},
     eventName: 'eventName',
     error: {
@@ -625,6 +631,7 @@ test('Invalid action type', async () => {
   });
   expect(res).toEqual({
     blockId: 'blockId',
+    bounced: false,
     event: {},
     eventName: 'eventName',
     error: {
@@ -674,6 +681,7 @@ test('Parser error in action', async () => {
   });
   expect(res).toEqual({
     blockId: 'blockId',
+    bounced: false,
     event: {},
     eventName: 'eventName',
     error: {
@@ -968,6 +976,7 @@ test('Call catchActions when actions throws error', async () => {
   });
   expect(res).toEqual({
     blockId: 'blockId',
+    bounced: false,
     endTimestamp: {
       date: 0,
     },
@@ -1051,6 +1060,7 @@ test('Call catchActions when actions throws error and catchActions throws error'
   });
   expect(res).toEqual({
     blockId: 'blockId',
+    bounced: false,
     endTimestamp: {
       date: 0,
     },
@@ -1134,6 +1144,7 @@ test('call 2 actions, first with async: true', async () => {
   });
   expect(res).toEqual({
     blockId: 'blockId',
+    bounced: false,
     event: {},
     eventName: 'eventName',
     responses: {
@@ -1150,6 +1161,7 @@ test('call 2 actions, first with async: true', async () => {
   await timeout(110);
   expect(res).toEqual({
     blockId: 'blockId',
+    bounced: false,
     event: {},
     eventName: 'eventName',
     responses: {
@@ -1195,6 +1207,7 @@ test('call async: true with error', async () => {
   });
   expect(res).toEqual({
     blockId: 'blockId',
+    bounced: false,
     event: {},
     eventName: 'eventName',
     responses: {
@@ -1211,6 +1224,7 @@ test('call async: true with error', async () => {
   await timeout(110);
   expect(res).toEqual({
     blockId: 'blockId',
+    bounced: false,
     event: {},
     eventName: 'eventName',
     responses: {
@@ -1256,6 +1270,7 @@ test('call 2 actions, first with async: false', async () => {
   });
   expect(res).toEqual({
     blockId: 'blockId',
+    bounced: false,
     event: {},
     eventName: 'eventName',
     responses: {
@@ -1301,6 +1316,7 @@ test('call 2 actions, first with async: null', async () => {
   });
   expect(res).toEqual({
     blockId: 'blockId',
+    bounced: false,
     event: {},
     eventName: 'eventName',
     responses: {
