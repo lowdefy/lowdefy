@@ -179,9 +179,9 @@ _ref:
       async function useLocalOrSharedConfig(path, vars, context) {
         const localFile =  await readFilePromise(path.resolve(path), 'utf8');
 
-        if (localFile) return localFile
+        if (localFile) return localFile;
 
-        return readFilePromise(path.resolve('../shared', path), 'utf8')
+        return readFilePromise(path.resolve('../shared', path), 'utf8');
       }
 
       module.exports = useLocalOrSharedConfig;
@@ -207,7 +207,7 @@ _ref:
       function addFooter(page, vars) {
         const footer = {
           // ...
-        }
+        };
         page.areas.footer = footer;
         return page;
       }
