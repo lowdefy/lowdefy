@@ -24,7 +24,7 @@ import Icon from '../Icon/Icon';
 const ItemLink = ({ link, children, className }) => {
   if (type.isString(link.pageId)) {
     return (
-      <Link to={`/${link.pageId}`} className={className}>
+      <Link to={`${link.pageId}`} className={className}>
         {children}
       </Link>
     );

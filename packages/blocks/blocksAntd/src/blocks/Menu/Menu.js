@@ -34,7 +34,7 @@ const getTitle = (id, properties, defaultTitle) =>
 
 const MenuTitle = ({ id, makeCssClass, pageId, properties, url, linkStyle }) =>
   type.isString(pageId) ? (
-    <Link to={`/${pageId}`} className={makeCssClass([linkStyle])}>
+    <Link to={`${pageId}`} className={makeCssClass([linkStyle])}>
       {getTitle(id, properties, pageId)}
     </Link>
   ) : type.isString(url) ? (

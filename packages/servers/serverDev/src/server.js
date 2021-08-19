@@ -24,8 +24,7 @@ dotenv.config({ silent: true });
 const buildDirectory = process.env.LOWDEFY_SERVER_BUILD_DIRECTORY || './.lowdefy/build';
 const publicDirectory = process.env.LOWDEFY_SERVER_PUBLIC_DIRECTORY || defaultPublicDirectory;
 const port = parseInt(process.env.LOWDEFY_SERVER_PORT) || 3000;
-// const serverBasePath = process.env.LOWDEFY_SERVER_BASE_PATH;
-const serverBasePath = '/base';
+const serverBasePath = process.env.LOWDEFY_SERVER_BASE_PATH || '';
 
 const server = getServer({
   buildDirectory,

@@ -114,7 +114,7 @@ const PageHeaderMenu = ({
               content={{
                 content: () => (
                   <>
-                    <Link to={`/${homePageId}`}>
+                    <Link to={`${homePageId}`}>
                       <img
                         src={
                           (properties.logo && properties.logo.src) ||
