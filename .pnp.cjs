@@ -4741,7 +4741,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-jest", "virtual:caddf51df4928b33a437ca87b8f5ddfb6205ebd6d8231f74d4ee7223f3866e6f815b221aa1e2bd33e98915f701e95bae72a93d2288b49a34a6246bdbc2a4a132#npm:26.6.3"],
             ["babel-loader", "virtual:aad21d373d6721af7549b2798c35c4ea25d83c122770abeaa0a4343ba20d55700fd9e3c5fa3289a7e6f591d09e8790df14d525c719ca4729b178b8644cca082a#npm:8.2.2"],
             ["clean-webpack-plugin", "virtual:aad21d373d6721af7549b2798c35c4ea25d83c122770abeaa0a4343ba20d55700fd9e3c5fa3289a7e6f591d09e8790df14d525c719ca4729b178b8644cca082a#npm:3.0.0"],
-            ["dataloader", "npm:2.0.0"],
             ["jest", "npm:26.6.3"],
             ["js-yaml", "npm:4.1.0"],
             ["json5", "npm:2.2.0"],

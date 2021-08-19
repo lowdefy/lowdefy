@@ -14,11 +14,17 @@
   limitations under the License.
 */
 
-import { nunjucksFunction } from '@lowdefy/nunjucks';
+import getUserJavascriptFunction from './getUserJavascriptFunction';
 
-function parseNunjucks(fileContent, vars) {
-  const template = nunjucksFunction(fileContent);
-  return template(vars);
+async function runTransformer({ context, parsedFile, refDef }) {
+  if (refDef.transformer) {
+    const transformerFn = await getUserJavascriptFunction({
+      context,
+      filePath: refDef.transformer,
+    });
+    return transformerFn(parsedFile, refDef.vars);
+  }
+  return parsedFile;
 }
 
-export default parseNunjucks;
+export default runTransformer;

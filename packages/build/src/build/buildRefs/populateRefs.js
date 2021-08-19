@@ -40,4 +40,11 @@ function refReviver(key, value) {
   return value;
 }
 
-export default refReviver;
+function populateRefs({ parsedFiles, refDef, toPopulate }) {
+  return JSON.parse(
+    JSON.stringify(toPopulate),
+    refReviver.bind({ parsedFiles, vars: refDef.vars })
+  );
+}
+
+export default populateRefs;
