@@ -163,6 +163,7 @@ test('Link error', async () => {
   ]);
   expect(res).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     error: {

@@ -112,6 +112,7 @@ test('RestValidation after required field', async () => {
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     error: {
@@ -155,6 +156,7 @@ test('RestValidation after required field', async () => {
   await reset.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
+    bounced: false,
     endTimestamp: {
       date: 0,
     },
