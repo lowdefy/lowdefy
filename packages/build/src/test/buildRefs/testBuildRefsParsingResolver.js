@@ -14,19 +14,29 @@
   limitations under the License.
 */
 
-import getConfigFile from './getConfigFile';
-import parseRefContent from './parseRefContent';
-import runRefResolver from './runRefResolver';
-
-async function getRefContent({ context, refDef, referencedFrom }) {
-  let content;
-  if (refDef.resolver) {
-    content = await runRefResolver({ context, refDef, referencedFrom });
-  } else {
-    content = await getConfigFile({ context, refDef, referencedFrom });
+function resolver(path) {
+  switch (path) {
+    case 'target.yaml':
+      return `
+array:
+  - 1
+  - 2`;
+    case 'target.yml':
+      return `
+array:
+- 1
+- 2`;
+    case 'target.json':
+      return `{"a": 42}`;
+    case 'target.yaml.njk':
+      return 'a: {{ var }}';
+    case 'target.yml.njk':
+      return 'a: {{ var }}';
+    case 'target.json.njk':
+      return `{ "a": "{{ var }}" }`;
+    default:
+      return null;
   }
-
-  return parseRefContent({ content, refDef });
 }
 
-export default getRefContent;
+module.exports = resolver;

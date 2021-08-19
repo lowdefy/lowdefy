@@ -14,19 +14,26 @@
   limitations under the License.
 */
 
-import getConfigFile from './getConfigFile';
-import parseRefContent from './parseRefContent';
-import runRefResolver from './runRefResolver';
+import { type } from '@lowdefy/helpers';
 
-async function getRefContent({ context, refDef, referencedFrom }) {
-  let content;
-  if (refDef.resolver) {
-    content = await runRefResolver({ context, refDef, referencedFrom });
-  } else {
-    content = await getConfigFile({ context, refDef, referencedFrom });
+async function getConfigFile({ context, refDef, referencedFrom }) {
+  if (!type.isString(refDef.path)) {
+    throw new Error(
+      `Invalid _ref definition ${JSON.stringify({
+        _ref: refDef.original,
+      })} in file ${referencedFrom}`
+    );
   }
 
-  return parseRefContent({ content, refDef });
+  const content = context.readConfigFile(refDef.path);
+
+  if (content === null) {
+    throw new Error(
+      `Tried to reference file "${refDef.path}" from "${referencedFrom}", but file does not exist.`
+    );
+  }
+
+  return content;
 }
 
-export default getRefContent;
+export default getConfigFile;

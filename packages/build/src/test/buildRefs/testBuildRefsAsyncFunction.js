@@ -14,19 +14,13 @@
   limitations under the License.
 */
 
-import getConfigFile from './getConfigFile';
-import parseRefContent from './parseRefContent';
-import runRefResolver from './runRefResolver';
+const wait = (ms) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
 
-async function getRefContent({ context, refDef, referencedFrom }) {
-  let content;
-  if (refDef.resolver) {
-    content = await runRefResolver({ context, refDef, referencedFrom });
-  } else {
-    content = await getConfigFile({ context, refDef, referencedFrom });
-  }
-
-  return parseRefContent({ content, refDef });
+async function asyncFn() {
+  await wait(20);
+  return { async: true };
 }
 
-export default getRefContent;
+module.exports = asyncFn;

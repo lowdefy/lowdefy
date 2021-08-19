@@ -22,10 +22,11 @@ import getRefPath from './getRefPath';
 function makeRefDefinition(refDefinition) {
   return {
     id: uuid(),
-    path: getRefPath(refDefinition),
-    vars: get(refDefinition, 'vars', { default: {} }),
-    transformer: get(refDefinition, 'transformer'),
     original: refDefinition,
+    path: getRefPath(refDefinition),
+    resolver: get(refDefinition, 'resolver'),
+    transformer: get(refDefinition, 'transformer'),
+    vars: get(refDefinition, 'vars', { default: {} }),
   };
 }
 

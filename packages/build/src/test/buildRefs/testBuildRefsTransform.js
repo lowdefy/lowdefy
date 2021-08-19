@@ -14,19 +14,16 @@
   limitations under the License.
 */
 
-import getConfigFile from './getConfigFile';
-import parseRefContent from './parseRefContent';
-import runRefResolver from './runRefResolver';
-
-async function getRefContent({ context, refDef, referencedFrom }) {
-  let content;
-  if (refDef.resolver) {
-    content = await runRefResolver({ context, refDef, referencedFrom });
-  } else {
-    content = await getConfigFile({ context, refDef, referencedFrom });
-  }
-
-  return parseRefContent({ content, refDef });
+function add(a, b) {
+  return a + b;
 }
 
-export default getRefContent;
+function transformer(obj, vars) {
+  return {
+    json: JSON.stringify(obj),
+    add: add(obj.a, 42),
+    var: vars.var1,
+  };
+}
+
+module.exports = transformer;

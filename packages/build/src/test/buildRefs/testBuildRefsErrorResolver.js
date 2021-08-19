@@ -14,19 +14,8 @@
   limitations under the License.
 */
 
-import getConfigFile from './getConfigFile';
-import parseRefContent from './parseRefContent';
-import runRefResolver from './runRefResolver';
-
-async function getRefContent({ context, refDef, referencedFrom }) {
-  let content;
-  if (refDef.resolver) {
-    content = await runRefResolver({ context, refDef, referencedFrom });
-  } else {
-    content = await getConfigFile({ context, refDef, referencedFrom });
-  }
-
-  return parseRefContent({ content, refDef });
+function resolver() {
+  throw new Error('Test error');
 }
 
-export default getRefContent;
+module.exports = resolver;
