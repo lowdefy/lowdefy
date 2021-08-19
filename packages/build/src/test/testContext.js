@@ -17,7 +17,7 @@
 function testContext({
   writeBuildArtifact,
   configDirectory,
-  configLoader,
+  readConfigFile,
   logger = {},
   getMeta,
 } = {}) {
@@ -33,19 +33,13 @@ function testContext({
     configDirectory: configDirectory || '',
     getMeta: getMeta || (() => {}),
     writeBuildArtifact: writeBuildArtifact || (() => {}),
-    configLoader: {
-      load: () => {},
-    },
+    readConfigFile: readConfigFile || (() => {}),
   };
 
   context.logger = {
     ...defaultLogger,
     ...logger,
   };
-  if (configLoader) {
-    context.configLoader = configLoader;
-  }
-
   return context;
 }
 

@@ -16,7 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-async function setBlockMeta(block, getMeta, pageId) {
+async function setBlockMeta(block, { getMeta, pageId }) {
   if (type.isNone(block.type)) {
     throw new Error(`Block type is not defined at ${block.blockId} on page ${pageId}.`);
   }

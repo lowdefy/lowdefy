@@ -15,12 +15,12 @@
 */
 
 import recursiveBuild from './recursiveBuild';
+import makeRefDefinition from './makeRefDefinition';
 
 async function buildRefs({ context }) {
   return recursiveBuild({
     context,
-    path: 'lowdefy.yaml',
-    vars: {},
+    refDef: makeRefDefinition('lowdefy.yaml'),
     count: 0,
   });
 }
