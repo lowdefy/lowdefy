@@ -26,9 +26,6 @@ global:
     span: 23
     sm:
       span: 23
-types:
-  Pagination:
-    url: http://localhost:3002/meta/Pagination.json
 app:
   html:
     appendHead:
