@@ -37,6 +37,7 @@ async function build({ context }) {
     configDirectory: context.baseDirectory,
     logger: context.print,
     outputDirectory: context.outputDirectory,
+    refResolver: context.options.refResolver,
   });
   await context.sendTelemetry();
   context.print.log(`Build artifacts saved at ${context.outputDirectory}.`);

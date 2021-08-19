@@ -928,4 +928,33 @@ _ref:
       'Tried to reference with resolver "src/test/buildRefs/testBuildRefsNullResolver.js" from "lowdefy.yaml", but received "undefined".'
     );
   });
+
+  test('buildRefs with default resolver function', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+_ref: target`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({
+      context: {
+        ...context,
+        refResolver: 'src/test/buildRefs/testBuildRefsResolver.js',
+      },
+    });
+    expect(mockReadConfigFile.mock.calls).toEqual([['lowdefy.yaml']]);
+    // Return context gets JSON stringified and parsed, so functions are stripped
+    expect(res).toEqual({
+      resolved: true,
+      path: 'target',
+      vars: {},
+      context: {
+        configDirectory: '',
+        logger: {},
+        refResolver: 'src/test/buildRefs/testBuildRefsResolver.js',
+      },
+    });
+  });
 });

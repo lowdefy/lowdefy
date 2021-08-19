@@ -20,7 +20,7 @@ import getUserJavascriptFunction from './getUserJavascriptFunction';
 async function runRefResolver({ context, refDef, referencedFrom }) {
   const resolverFn = await getUserJavascriptFunction({
     context,
-    filePath: refDef.resolver,
+    filePath: refDef.resolver || context.refResolver,
   });
   let content;
   try {
