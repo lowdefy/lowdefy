@@ -38,7 +38,6 @@ class State {
     Object.keys(frozenCopy).forEach((key) => {
       this.set(key, frozenCopy[key]);
     });
-    this.context.showValidationErrors = false;
   }
 
   freezeState() {

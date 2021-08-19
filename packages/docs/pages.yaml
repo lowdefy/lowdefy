@@ -144,6 +144,7 @@
 - _ref: actions/Notification.yaml
 - _ref: actions/Request.yaml
 - _ref: actions/Reset.yaml
+- _ref: actions/ResetValidation.yaml
 - _ref: actions/ScrollTo.yaml
 - _ref: actions/SetGlobal.yaml
 - _ref: actions/SetState.yaml

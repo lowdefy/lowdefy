@@ -24,8 +24,9 @@ const RealDate = Date;
 const mockDate = jest.fn(() => ({ date: 0 }));
 mockDate.now = jest.fn(() => 0);
 
-// Comment out to use console.log
-// console.log = () => {};
+// Comment out to use console
+console.log = () => {};
+console.error = () => {};
 
 beforeAll(() => {
   global.Date = mockDate;
@@ -224,6 +225,7 @@ test('JsAction with args, synchronous fn', async () => {
                 "Message": [Function],
                 "Request": [Function],
                 "Reset": [Function],
+                "ResetValidation": [Function],
                 "ScrollTo": [Function],
                 "SetGlobal": [Function],
                 "SetState": [Function],
