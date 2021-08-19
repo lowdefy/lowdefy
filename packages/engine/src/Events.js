@@ -92,7 +92,7 @@ class Events {
 
     // no debounce
     if (type.isNone(eventDescription.debounce)) {
-      return await actionHandle();
+      return actionHandle();
     }
 
     // leading edge: bounce
