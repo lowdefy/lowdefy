@@ -97,18 +97,22 @@ _ref:
 
             When events are triggered, the can provide a data object describing the event (e.g. a description of the clicked item or uploaded file). This data object can be accessed using the [`_event`](/_event) operator in an action definition.
 
-            # Catching action errors
-
-            If one action in the chain of event actions fails by throwing an error, the actions in the list following the failed action will not be executed. To handle any errors thrown by an action, Lowdefy event actions can be provided as lists of `try` and `catch` actions.
-
             The schema for passing actions to Lowdefy events is:
             ```
               (eventName: action[])
               (eventName: {
+                debounce?: {
+                  ms?: number,
+                  immediate?: boolean,
+                },
                 try: action[],
                 catch?: action[],
               })
             ```
+
+            # Catching action errors
+
+            If one action in the chain of event actions fails by throwing an error, the actions in the list following the failed action will not be executed. To handle any errors thrown by an action, Lowdefy event actions can be provided as lists of `try` and `catch` actions.
 
             ###### Event try catch actions example for dealing with action errors:
             ```yaml
@@ -130,6 +134,51 @@ _ref:
                       type: ActionType1
                       params:
                         # ...
+            ```
+
+            # Debouncing events
+
+            Event debouncing can be turned on by setting the `debounce` field on event objects. If `debounce.immediate` is `true`, leading edge debouncing or throttling will apply, else it will be debounced as trailing edge.
+
+            To control the debounce delay, set `debounce.ms` to the number of milliseconds to delay. The default delay is 300 milliseconds. If an event is triggered within that time, the event will not be triggered again. See [debounce vs throttling](https://redd.one/blog/debounce-vs-throttle) for a more detailed explanation.
+
+            ###### Event trailing edge debouncing example:
+            ```yaml
+            - id: block_with_actions
+              type: Block
+              properties:
+                # ...
+              events:
+                onEvent1:
+                  debounce:
+                    ms: 1000
+                  try:
+                    - id: action1
+                      type: ActionType1
+                      params:
+                        # ...
+                    - id: action2
+                      type: ActionType2
+            ```
+
+            ###### Event throttling or leading edge debouncing example:
+            ```yaml
+            - id: block_with_actions
+              type: Block
+              properties:
+                # ...
+              events:
+                onEvent1:
+                  debounce:
+                    ms: 1000
+                    immediate: true
+                  try:
+                    - id: action1
+                      type: ActionType1
+                      params:
+                        # ...
+                    - id: action2
+                      type: ActionType2
             ```
 
             # Context initialisation events
