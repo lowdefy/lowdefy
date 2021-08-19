@@ -85,6 +85,7 @@ test('CallMethod with no args, synchronous method', async () => {
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     responses: {
@@ -161,6 +162,7 @@ test('CallMethod method return a promise', async () => {
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     responses: {
@@ -229,6 +231,7 @@ test('CallMethod with args not an array', async () => {
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     error: {
@@ -315,6 +318,7 @@ test('CallMethod with multiple positional args, synchronous method', async () =>
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     responses: {
@@ -535,6 +539,7 @@ test('CallMethod with method does not exist', async () => {
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     error: {

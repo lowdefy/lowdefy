@@ -141,6 +141,7 @@ test('Request call one request', async () => {
   });
   expect(res).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     responses: {
@@ -221,6 +222,7 @@ test('Request call all requests', async () => {
   });
   expect(res).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     responses: {
@@ -301,6 +303,7 @@ test('Request call array of requests', async () => {
   });
   expect(res).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     responses: {
@@ -400,6 +403,7 @@ test('Request call request error', async () => {
   });
   expect(res).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     error: {
@@ -469,6 +473,7 @@ test('Request call request graphql error', async () => {
   });
   expect(res).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     error: {

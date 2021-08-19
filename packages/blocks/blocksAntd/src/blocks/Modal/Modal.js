@@ -56,12 +56,16 @@ const ModalBlock = ({ blockId, content, properties, events, methods }) => {
         onOk={async () => {
           const response = await methods.triggerEvent({ name: 'onOk' });
           if (response.success === false) return;
-          triggerSetOpen({ state: false, setOpen, methods });
+          if (response.bounced !== true) {
+            triggerSetOpen({ state: false, setOpen, methods });
+          }
         }}
         onCancel={async () => {
           const response = await methods.triggerEvent({ name: 'onCancel' });
           if (response.success === false) return;
-          triggerSetOpen({ state: false, setOpen, methods });
+          if (response.bounced !== true) {
+            triggerSetOpen({ state: false, setOpen, methods });
+          }
         }}
         afterClose={() => methods.triggerEvent({ name: 'afterClose' })}
         confirmLoading={get(events, 'onOk.loading')}

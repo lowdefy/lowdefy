@@ -97,6 +97,7 @@ test('Validate required field', async () => {
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     error: {
@@ -143,6 +144,7 @@ test('Validate required field', async () => {
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     responses: {
@@ -235,6 +237,7 @@ test('Validate all fields', async () => {
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     error: {
@@ -286,6 +289,7 @@ test('Validate all fields', async () => {
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     error: {
@@ -337,6 +341,7 @@ test('Validate all fields', async () => {
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     responses: {
@@ -433,6 +438,7 @@ test('Validate only one field', async () => {
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     error: {
@@ -485,6 +491,7 @@ test('Validate only one field', async () => {
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     responses: {
@@ -606,6 +613,7 @@ test('Validate list of fields', async () => {
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     error: {
@@ -663,6 +671,7 @@ test('Validate list of fields', async () => {
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     responses: {
@@ -721,6 +730,7 @@ test('Invalid Validate params', async () => {
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     error: {
@@ -815,6 +825,7 @@ test('Validate does not fail on warnings', async () => {
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     responses: {
@@ -906,6 +917,7 @@ test('Validate on nested objects using params.regex string', async () => {
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
+    bounced: false,
     error: {
       error: { type: 'Validate', error: new Error('Your input has 1 validation error.'), index: 0 },
       action: { id: 'validate', type: 'Validate', params: { regex: '^obj.*1$' } },
@@ -1015,6 +1027,7 @@ test('Validate on nested objects using params.regex array', async () => {
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
+    bounced: false,
     error: {
       error: {
         type: 'Validate',
@@ -1139,6 +1152,7 @@ test('Validate on nested objects using params.regex array and blockIds', async (
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
+    bounced: false,
     error: {
       error: {
         type: 'Validate',

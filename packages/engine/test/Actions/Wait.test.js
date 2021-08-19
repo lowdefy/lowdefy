@@ -132,6 +132,7 @@ test('Wait ms not a integer', async () => {
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',
+    bounced: false,
     endTimestamp: { date: 0 },
     error: {
       action: { id: 'a', params: { ms: 1.1 }, type: 'Wait' },

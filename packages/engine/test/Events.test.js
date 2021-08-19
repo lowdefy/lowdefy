@@ -57,6 +57,10 @@ const lowdefy = {
   pageId,
 };
 
+const timeout = (ms) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
 // Comment out to use console
 console.log = () => {};
 console.error = () => {};
@@ -105,10 +109,11 @@ test('init Events', async () => {
   const { button } = context.RootBlocks.map;
   expect(button.Events.events).toEqual({
     onClick: {
+      actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+      catchActions: [],
+      debounce: null,
       history: [],
       loading: false,
-      catchActions: [],
-      actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
     },
   });
 });
@@ -144,6 +149,7 @@ test('triggerEvent no event defined', async () => {
   const res = await promise;
   expect(res).toEqual({
     blockId: 'button',
+    bounced: false,
     endTimestamp: { date: 0 },
     event: undefined,
     eventName: 'onClick',
@@ -185,15 +191,17 @@ test('triggerEvent x1', async () => {
   const promise = button.triggerEvent({ name: 'onClick', event: { x: 1 } });
   expect(button.Events.events).toEqual({
     onClick: {
+      actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+      catchActions: [],
+      debounce: null,
       history: [],
       loading: true,
-      catchActions: [],
-      actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
     },
   });
   await promise;
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
+    bounced: false,
     event: {
       x: 1,
     },
@@ -290,6 +298,7 @@ test('triggerEvent error', async () => {
   await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
+    bounced: false,
     event: {
       x: 1,
     },
@@ -353,15 +362,17 @@ test('registerEvent then triggerEvent x1', async () => {
   });
   expect(button.Events.events).toEqual({
     onClick: {
+      actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+      catchActions: [],
+      debounce: null,
       history: [],
       loading: false,
-      catchActions: [],
-      actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
     },
   });
   await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
+    bounced: false,
     event: {
       x: 1,
     },
@@ -424,9 +435,11 @@ test('triggerEvent skip', async () => {
           },
         ],
         "catchActions": Array [],
+        "debounce": null,
         "history": Array [
           Object {
             "blockId": "button",
+            "bounced": false,
             "endTimestamp": Object {
               "date": 0,
             },
@@ -455,6 +468,7 @@ test('triggerEvent skip', async () => {
     Array [
       Object {
         "blockId": "button",
+        "bounced": false,
         "endTimestamp": Object {
           "date": 0,
         },
@@ -523,9 +537,11 @@ test('triggerEvent skip tests === true', async () => {
           },
         ],
         "catchActions": Array [],
+        "debounce": null,
         "history": Array [
           Object {
             "blockId": "button",
+            "bounced": false,
             "endTimestamp": Object {
               "date": 0,
             },
@@ -554,6 +570,7 @@ test('triggerEvent skip tests === true', async () => {
     Array [
       Object {
         "blockId": "button",
+        "bounced": false,
         "endTimestamp": Object {
           "date": 0,
         },
@@ -611,8 +628,8 @@ test('Actions array defaults', async () => {
     actions: null,
   });
   expect(button.Events.events).toEqual({
-    onClick: { actions: [], history: [], loading: false, catchActions: [] },
-    registered: { actions: [], history: [], loading: false, catchActions: [] },
+    onClick: { actions: [], history: [], loading: false, catchActions: [], debounce: null },
+    registered: { actions: [], history: [], loading: false, catchActions: [], debounce: null },
   });
 });
 
@@ -649,7 +666,7 @@ test('Actions try catch array defaults', async () => {
   });
   const { button } = context.RootBlocks.map;
   expect(button.Events.events).toEqual({
-    onClick: { actions: [], history: [], loading: false, catchActions: [] },
+    onClick: { actions: [], history: [], loading: false, catchActions: [], debounce: undefined },
   });
 });
 
@@ -693,4 +710,345 @@ test('Actions try catch arrays', async () => {
       catchActions: [{ id: 'b', type: 'SetState', params: { b: 'b' } }],
     },
   });
+});
+
+test('Actions try catch arrays and debounce.immediate == true (leading edge)', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: {
+                debounce: {
+                  ms: 100,
+                  immediate: true,
+                },
+                try: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+              },
+            },
+          },
+        ],
+      },
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+  });
+  const { button } = context.RootBlocks.map;
+  expect(button.Events.events).toEqual({
+    onClick: {
+      actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+      history: [],
+      loading: false,
+      catchActions: [],
+      debounce: {
+        immediate: true,
+        ms: 100,
+      },
+    },
+  });
+  const firstClick = button.triggerEvent({ name: 'onClick', event: { x: 1 } });
+  await timeout(10);
+  expect(context.eventLog.length).toEqual(1);
+  const secondClick = button.triggerEvent({ name: 'onClick', event: { x: 1 } });
+  expect(context.eventLog.length).toEqual(2);
+  const secondClickResponse = await secondClick;
+  expect(secondClickResponse.bounced).toEqual(true);
+  const firstClickResponse = await firstClick;
+  expect(firstClickResponse.bounced).toEqual(false);
+  await timeout(100);
+  const thirdClick = await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
+  expect(thirdClick.bounced).toEqual(false);
+  expect(context.eventLog).toEqual([
+    {
+      blockId: 'button',
+      bounced: false,
+      endTimestamp: {
+        date: 0,
+      },
+      event: {
+        x: 1,
+      },
+      eventName: 'onClick',
+      responses: {
+        a: {
+          index: 0,
+          response: undefined,
+          type: 'SetState',
+        },
+      },
+      startTimestamp: {
+        date: 0,
+      },
+      success: true,
+    },
+    {
+      blockId: 'button',
+      bounced: true,
+      endTimestamp: {
+        date: 0,
+      },
+      event: {
+        x: 1,
+      },
+      eventName: 'onClick',
+      responses: {},
+      startTimestamp: {
+        date: 0,
+      },
+      success: true,
+    },
+    {
+      blockId: 'button',
+      bounced: false,
+      endTimestamp: {
+        date: 0,
+      },
+      event: {
+        x: 1,
+      },
+      eventName: 'onClick',
+      responses: {
+        a: {
+          index: 0,
+          response: undefined,
+          type: 'SetState',
+        },
+      },
+      startTimestamp: {
+        date: 0,
+      },
+      success: true,
+    },
+  ]);
+});
+
+test('Actions try catch arrays and debounce.immediate == undefined (trailing edge)', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: {
+                debounce: {
+                  ms: 100,
+                },
+                try: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+              },
+            },
+          },
+        ],
+      },
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+  });
+  const { button } = context.RootBlocks.map;
+  expect(button.Events.events).toEqual({
+    onClick: {
+      actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+      history: [],
+      loading: false,
+      catchActions: [],
+      debounce: {
+        ms: 100,
+      },
+    },
+  });
+  const firstClick = button.triggerEvent({ name: 'onClick', event: { x: 1 } });
+  await timeout(10);
+  const secondClick = button.triggerEvent({ name: 'onClick', event: { x: 1 } });
+  const firstClickResponse = await firstClick;
+  expect(firstClickResponse.bounced).toEqual(true);
+  const secondClickResponse = await secondClick;
+  expect(secondClickResponse.bounced).toEqual(false);
+  const thirdClick = await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
+  expect(thirdClick.bounced).toEqual(false);
+  expect(context.eventLog).toEqual([
+    {
+      blockId: 'button',
+      bounced: false,
+      endTimestamp: {
+        date: 0,
+      },
+      event: {
+        x: 1,
+      },
+      eventName: 'onClick',
+      responses: {
+        a: {
+          index: 0,
+          response: undefined,
+          type: 'SetState',
+        },
+      },
+      startTimestamp: {
+        date: 0,
+      },
+      success: true,
+    },
+    {
+      blockId: 'button',
+      bounced: false,
+      endTimestamp: {
+        date: 0,
+      },
+      event: {
+        x: 1,
+      },
+      eventName: 'onClick',
+      responses: {
+        a: {
+          index: 0,
+          response: undefined,
+          type: 'SetState',
+        },
+      },
+      startTimestamp: {
+        date: 0,
+      },
+      success: true,
+    },
+    {
+      blockId: 'button',
+      bounced: true,
+      endTimestamp: {
+        date: 0,
+      },
+      event: {
+        x: 1,
+      },
+      eventName: 'onClick',
+      responses: {},
+      startTimestamp: {
+        date: 0,
+      },
+      success: true,
+    },
+  ]);
+});
+
+test('Actions try catch arrays and debounce.immediate == false default ms (trailing edge)', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: {
+                debounce: {
+                  immediate: false,
+                },
+                try: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+              },
+            },
+          },
+        ],
+      },
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+  });
+  const { button } = context.RootBlocks.map;
+  expect(button.Events.events).toEqual({
+    onClick: {
+      actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+      history: [],
+      loading: false,
+      catchActions: [],
+      debounce: {
+        immediate: false,
+      },
+    },
+  });
+  const firstClick = button.triggerEvent({ name: 'onClick', event: { x: 1 } });
+  await timeout(10);
+  expect(context.eventLog.length).toEqual(0);
+  const secondClick = button.triggerEvent({ name: 'onClick', event: { x: 1 } });
+  expect(context.eventLog.length).toEqual(1);
+  await timeout(250);
+  expect(context.eventLog.length).toEqual(1);
+  await timeout(60);
+  expect(context.eventLog.length).toEqual(2);
+  const firstClickResponse = await firstClick;
+  expect(firstClickResponse.bounced).toEqual(true);
+  const secondClickResponse = await secondClick;
+  expect(secondClickResponse.bounced).toEqual(false);
+  expect(context.eventLog).toEqual([
+    {
+      blockId: 'button',
+      bounced: false,
+      endTimestamp: {
+        date: 0,
+      },
+      event: {
+        x: 1,
+      },
+      eventName: 'onClick',
+      responses: {
+        a: {
+          index: 0,
+          response: undefined,
+          type: 'SetState',
+        },
+      },
+      startTimestamp: {
+        date: 0,
+      },
+      success: true,
+    },
+    {
+      blockId: 'button',
+      bounced: true,
+      endTimestamp: {
+        date: 0,
+      },
+      event: {
+        x: 1,
+      },
+      eventName: 'onClick',
+      responses: {},
+      startTimestamp: {
+        date: 0,
+      },
+      success: true,
+    },
+  ]);
 });
