@@ -14,20 +14,13 @@
   limitations under the License.
 */
 
-import { get } from '@lowdefy/helpers';
-import { v1 as uuid } from 'uuid';
+const wait = (ms) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
 
-import getRefPath from './getRefPath';
-
-function makeRefDefinition(refDefinition) {
-  return {
-    id: uuid(),
-    original: refDefinition,
-    path: getRefPath(refDefinition),
-    resolver: get(refDefinition, 'resolver'),
-    transformer: get(refDefinition, 'transformer'),
-    vars: get(refDefinition, 'vars', { default: {} }),
-  };
+async function asyncFn() {
+  await wait(20);
+  return { async: true };
 }
 
-export default makeRefDefinition;
+module.exports = asyncFn;

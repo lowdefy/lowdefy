@@ -72,11 +72,12 @@ async function build({ context, buildScript }) {
     './package/dist/functions/graphql/build'
   );
   await buildScript({
-    blocksServerUrl: context.blocksServerUrl,
+    blocksServerUrl: context.options.blocksServerUrl,
     cacheDirectory: context.cacheDirectory,
     configDirectory: context.baseDirectory,
     logger: context.print,
     outputDirectory,
+    refResolver: context.options.refResolver,
   });
   context.print.log(`Build artifacts saved at ${outputDirectory}.`);
 }

@@ -54,6 +54,7 @@ _ref:
             - `--blocks-server-url <blocks-server-url>`: The URL from where Lowdefy blocks will be served. See below for more information.
             - `--disable-telemetry`: Disable telemetry.
             - `--output-directory <output-directory>`: Change the directory to which build artifacts are saved. The default is `<base-directory>/.lowdefy/build`.
+            - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
 
             ## build-netlify
             The `build-netlify` command creates a production build for the [Netlify](https://www.netlify.com) web hosting service. It is designed to run as the Netlify build command.
@@ -63,6 +64,7 @@ _ref:
             - `--base-directory <base-directory>`: Change base directory. The default is the current working directory (The base directory should rather be configured in the Netlify build settings).
             - `--blocks-server-url <blocks-server-url>`: The URL from where Lowdefy blocks will be served. See below for more information.
             - `--disable-telemetry`: Disable telemetry.
+            - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
 
             ## clean-cache
 
@@ -79,6 +81,7 @@ _ref:
             - `--blocks-server-url <blocks-server-url>`: The URL from where Lowdefy blocks will be served. See below for more information.
             - `--disable-telemetry`: Disable telemetry.
             - `--port <port>`: Change the port the server is hosted at. The default is `3000`.
+            - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
             - `--watch <paths...>`: A list of paths to files or directories that should be watched for changes.
             - `--watch-ignore <patterns...>`: A list of paths to files or directories that should be ignored by the file watcher. Globs are supported.
 
@@ -103,6 +106,7 @@ _ref:
             - `blocksServerUrl: string`: The URL from where Lowdefy blocks will be served. See below for more information.
             - `disableTelemetry: boolean`: Disable telemetry.
             - `outputDirectory: string`: Change the directory to which build artifacts are saved. The default is `<base-directory>/.lowdefy/build`.
+            - `refResolver: string`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
             - `port: number`: Change the port the server is hosted at. The default is `3000`.
             - `watch: string[]`: A list of paths to files or directories that should be watched for changes.
             - `watchIgnore: string[]`: A list of paths to files or directories that should be ignored by the file watcher. Globs are supported.
