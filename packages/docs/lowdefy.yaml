@@ -26,7 +26,6 @@ global:
     span: 23
     sm:
       span: 23
-
 app:
   html:
     appendHead:
