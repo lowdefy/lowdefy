@@ -42,7 +42,6 @@
     "@lowdefy/nunjucks": "3.19.0",
     "ajv": "6.12.6",
     "axios": "0.21.1",
-    "dataloader": "2.0.0",
     "js-yaml": "4.1.0",
     "json5": "2.2.0",
     "uuid": "8.3.2"

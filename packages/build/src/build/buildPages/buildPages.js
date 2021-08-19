@@ -48,7 +48,7 @@ async function buildPages({ components, context }) {
       );
     }
     page.pageId = page.id;
-    await checkPageIsContext(page, context.getMeta);
+    await checkPageIsContext(page, context);
     await buildBlock(page, {
       auth: page.auth,
       pageId: page.pageId,

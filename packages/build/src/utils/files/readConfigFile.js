@@ -14,12 +14,18 @@
   limitations under the License.
 */
 
-async function getFileContent({ context, path }) {
-  const content = await context.configLoader.load(path);
-  if (!content) {
-    throw new Error(`Tried to reference file with path "${path}", but file does not exist.`);
+import path from 'path';
+import { readFile } from '@lowdefy/node-utils';
+
+function createReadConfigFile({ configDirectory }) {
+  const files = {};
+  async function readConfigFile(filePath) {
+    if (files[filePath]) return files[filePath];
+    const fileContent = readFile(path.resolve(configDirectory, filePath));
+    files[filePath] = fileContent;
+    return fileContent;
   }
-  return content;
+  return readConfigFile;
 }
 
-export default getFileContent;
+export default createReadConfigFile;

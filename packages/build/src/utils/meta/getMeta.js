@@ -31,9 +31,8 @@ import createWriteMetaCache from './writeMetaCache';
 import metaLocations from './metaLocations';
 import fetchMetaUrl from './fetchMetaUrl';
 
-const memoisedMeta = {};
-
 function createGetMeta({ blocksServerUrl, cacheDirectory, types }) {
+  const memoisedMeta = {};
   const allMetaLocations = {
     ...metaLocations({ blocksServerUrl }),
     ...types,

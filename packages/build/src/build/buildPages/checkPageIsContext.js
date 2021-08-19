@@ -16,7 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-async function checkPageIsContext(page, getMeta) {
+async function checkPageIsContext(page, { getMeta }) {
   if (type.isNone(page.type)) {
     throw new Error(`Page type is not defined at ${page.pageId}.`);
   }
