@@ -94,7 +94,9 @@ class Events {
     if (type.isNone(eventDescription.debounce)) {
       return actionHandle();
     }
-
+    const delay = !type.isNone(eventDescription.debounce.ms)
+      ? eventDescription.debounce.ms
+      : this.defaultDebounceMs;
     // leading edge: bounce
     if (this.timeouts[name] && eventDescription.debounce.immediate === true) {
       result.bounced = true;
@@ -104,15 +106,9 @@ class Events {
     }
     // leading edge: trigger
     if (eventDescription.debounce.immediate === true) {
-      this.timeouts[name] = setTimeout(
-        () => {
-          clearTimeout(this.timeouts[name]);
-          this.timeouts[name] = null;
-        },
-        !type.isNone(eventDescription.debounce.ms)
-          ? eventDescription.debounce.ms
-          : this.defaultDebounceMs
-      );
+      this.timeouts[name] = setTimeout(() => {
+        this.timeouts[name] = null;
+      }, delay);
       return actionHandle();
     }
 
@@ -121,15 +117,11 @@ class Events {
       eventDescription.bouncer();
     }
     return new Promise((resolve) => {
-      const timeout = setTimeout(
-        async () => {
-          const res = await actionHandle();
-          resolve(res);
-        },
-        !type.isNone(eventDescription.debounce.ms)
-          ? eventDescription.debounce.ms
-          : this.defaultDebounceMs
-      );
+      const timeout = setTimeout(async () => {
+        eventDescription.bouncer = null;
+        const res = await actionHandle();
+        resolve(res);
+      }, delay);
 
       eventDescription.bouncer = () => {
         clearTimeout(timeout);
