@@ -90,33 +90,36 @@ class Actions {
         console.error(errorCatch);
         return {
           blockId: block.blockId,
+          bounced: false,
+          endTimestamp: new Date(),
           error,
           errorCatch,
           event,
           eventName,
           responses,
-          endTimestamp: new Date(),
           startTimestamp,
           success: false,
         };
       }
       return {
         blockId: block.blockId,
+        bounced: false,
+        endTimestamp: new Date(),
         error,
         event,
         eventName,
         responses,
-        endTimestamp: new Date(),
         startTimestamp,
         success: false,
       };
     }
     return {
       blockId: block.blockId,
+      bounced: false,
+      endTimestamp: new Date(),
       event,
       eventName,
       responses,
-      endTimestamp: new Date(),
       startTimestamp,
       success: true,
     };
