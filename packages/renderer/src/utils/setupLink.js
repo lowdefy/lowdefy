@@ -20,9 +20,9 @@ function setupLink(lowdefy) {
   const { routeHistory, window } = lowdefy;
   const sameOriginLink = (path, newTab) => {
     if (newTab) {
-      return window.open(`${window.location.origin}${path}`, '_blank').focus();
+      return window.open(`${window.location.origin}${lowdefy.basePath}/${path}`, '_blank').focus();
     } else {
-      return routeHistory.push(path);
+      return routeHistory.push(`${lowdefy.basePath}/${path}`);
     }
   };
   const newOriginLink = (path, newTab) => {

@@ -53,7 +53,8 @@ function refreshLogin({ lowdefy }) {
   return lowdefy.auth.login(loginInput);
 }
 
-const httpLink = ({ uri = '/api/graphql' }) => new HttpLink({ uri, credentials: 'same-origin' });
+const httpLink = ({ uri = '/api/graphql', basePath }) =>
+  new HttpLink({ uri: `${basePath}${uri}`, credentials: 'same-origin' });
 
 // TODO: Handle errors
 const errorHandler =
@@ -84,7 +85,7 @@ const useGqlClient = ({ gqlUri, lowdefy }) => {
       link: ApolloLink.from([
         retryLink,
         onError(errorHandler({ lowdefy })),
-        httpLink({ uri: gqlUri }),
+        httpLink({ uri: gqlUri, basePath: lowdefy.basePath }),
       ]),
       cache,
       resolvers,

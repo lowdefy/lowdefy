@@ -143,13 +143,13 @@ const Root = ({ gqlUri }) => {
             }}
           />
           <Switch>
-            <Route exact path="/">
+            <Route exact path={`${lowdefy.basePath}/`}>
               <Home lowdefy={lowdefy} />
             </Route>
-            <Route exact path="/auth/openid-callback">
+            <Route exact path={`${lowdefy.basePath}/auth/openid-callback`}>
               <OpenIdCallback lowdefy={lowdefy} />
             </Route>
-            <Route exact path="/:pageId">
+            <Route exact path={`${lowdefy.basePath}/:pageId`}>
               <Page lowdefy={lowdefy} />
             </Route>
           </Switch>
