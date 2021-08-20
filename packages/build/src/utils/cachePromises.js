@@ -14,16 +14,18 @@
   limitations under the License.
 */
 
-import path from 'path';
-import { readFile } from '@lowdefy/node-utils';
+function cachedPromises(getter) {
+  const cache = {};
 
-import cachedPromises from '../cachePromises';
-
-function createReadConfigFile({ configDirectory }) {
-  async function readConfigFile(filePath) {
-    return readFile(path.resolve(configDirectory, filePath));
+  function getCachedPromise(key) {
+    if (cache[key]) {
+      return Promise.resolve(cache[key]);
+    }
+    cache[key] = getter(key);
+    return Promise.resolve(cache[key]);
   }
-  return cachedPromises(readConfigFile);
+
+  return getCachedPromise;
 }
 
-export default createReadConfigFile;
+export default cachedPromises;
