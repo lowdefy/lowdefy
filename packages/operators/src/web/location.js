@@ -51,7 +51,7 @@ function _location({ arrayIndices, context, contexts, env, location, params }) {
     href: window.location.href,
     origin: window.location.origin,
     protocol: window.location.protocol,
-    homePageId: context.lowdefy.pageId,
+    homePageId: context.lowdefy.homePageId,
     host: window.location.host,
     hostname: window.location.hostname,
     port: window.location.port,
