@@ -53,7 +53,7 @@ async function recursiveParseFile({ context, refDef, count, referencedFrom }) {
     const transformedFile = await runTransformer({
       context,
       parsedFile,
-      refDef: newRefDef,
+      refDef: parsedRefDef,
     });
 
     parsedFiles[newRefDef.id] = transformedFile;

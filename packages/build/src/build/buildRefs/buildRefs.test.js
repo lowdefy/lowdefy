@@ -671,6 +671,49 @@ const:
       text: 'Hello',
     });
   });
+
+  test('buildRefs pass vars two levels with a transformer', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+ref1:
+  _ref:
+    path: file1.yaml
+    vars:
+      var1: Hello`,
+      },
+      {
+        path: 'file1.yaml',
+        content: `
+ref2:
+  _ref:
+    path: file2.yaml
+    transformer: src/test/buildRefs/testBuildRefsTransformIdentity.js
+    vars:
+      var2:
+        _var: var1`,
+      },
+      {
+        path: 'file2.yaml',
+        content: `a: 1`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res).toEqual({
+      ref1: {
+        ref2: {
+          obj: {
+            a: 1,
+          },
+          vars: {
+            var2: 'Hello',
+          },
+        },
+      },
+    });
+  });
 });
 
 describe('transformer functions', () => {
