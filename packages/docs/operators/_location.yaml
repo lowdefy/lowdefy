@@ -28,6 +28,7 @@ _ref:
       The `_location` operator gets a value from the browser [Location](https://developer.mozilla.org/en-US/docs/Web/API/Location) interface. The Location interface represents the location (URL) of the window object it is linked to, thus can return the URL elements of the current window. It can only be used on the web-client (Not in `requests` or `connections`).
 
       The following location properties are available.
+      - `basePath: string`: The application base path setting.
       - `hash: string`: A string containing a '#' followed by the fragment identifier of the URL.
       - `host: string`: A string containing the host, that is the hostname, a `:`, and the port of the URL.
       - `hostname: string`: The domain of the URL.
