@@ -21,6 +21,7 @@ Array [
       "children": Array [
         <mockConstructor>
           <ItemLink
+            basePath=""
             className="{\\"style\\":[{},null]}"
             link={
               Object {
@@ -30,6 +31,7 @@ Array [
             }
           >
             <IconBlock
+              basePath=""
               blockId="properties.list.icon_0_icon"
               content={Object {}}
               events={Object {}}
@@ -66,6 +68,7 @@ Array [
         </mockConstructor>,
         <mockConstructor>
           <ItemLink
+            basePath=""
             className="{\\"style\\":[{},null]}"
             link={
               Object {
@@ -75,6 +78,7 @@ Array [
             }
           >
             <IconBlock
+              basePath=""
               blockId="properties.list.icon_1_icon"
               content={Object {}}
               events={Object {}}
@@ -128,6 +132,7 @@ Array [
           onClick={[Function]}
         >
           <ItemLink
+            basePath=""
             className="{\\"style\\":[{\\"cursor\\":\\"pointer\\"},null]}"
             link={
               Object {
@@ -137,6 +142,7 @@ Array [
             }
           >
             <IconBlock
+              basePath=""
               blockId="properties.list.icon with onClick_0_icon"
               content={Object {}}
               events={
@@ -179,6 +185,7 @@ Array [
           onClick={[Function]}
         >
           <ItemLink
+            basePath=""
             className="{\\"style\\":[{\\"cursor\\":\\"pointer\\"},null]}"
             link={
               Object {
@@ -188,6 +195,7 @@ Array [
             }
           >
             <IconBlock
+              basePath=""
               blockId="properties.list.icon with onClick_1_icon"
               content={Object {}}
               events={
@@ -243,6 +251,7 @@ Array [
       "children": Array [
         <mockConstructor>
           <ItemLink
+            basePath=""
             className="{\\"style\\":[{},null]}"
             link="Page One"
           >
@@ -251,6 +260,7 @@ Array [
         </mockConstructor>,
         <mockConstructor>
           <ItemLink
+            basePath=""
             className="{\\"style\\":[{},null]}"
             link="Page two"
           >
@@ -274,6 +284,7 @@ Array [
       "children": Array [
         <mockConstructor>
           <ItemLink
+            basePath=""
             className="{\\"style\\":[{},null]}"
             link={
               Object {
@@ -286,6 +297,7 @@ Array [
         </mockConstructor>,
         <mockConstructor>
           <ItemLink
+            basePath=""
             className="{\\"style\\":[{},null]}"
             link={
               Object {
@@ -313,6 +325,7 @@ Array [
       "children": Array [
         <mockConstructor>
           <ItemLink
+            basePath=""
             className="{\\"style\\":[{},null]}"
             link={
               Object {
@@ -326,6 +339,7 @@ Array [
         </mockConstructor>,
         <mockConstructor>
           <ItemLink
+            basePath=""
             className="{\\"style\\":[{},null]}"
             link={
               Object {
@@ -339,6 +353,7 @@ Array [
         </mockConstructor>,
         <mockConstructor>
           <ItemLink
+            basePath=""
             className="{\\"style\\":[{},null]}"
             link={
               Object {
@@ -352,6 +367,7 @@ Array [
         </mockConstructor>,
         <mockConstructor>
           <ItemLink
+            basePath=""
             className="{\\"style\\":[{},null]}"
             link={
               Object {
@@ -365,6 +381,7 @@ Array [
         </mockConstructor>,
         <mockConstructor>
           <ItemLink
+            basePath=""
             className="{\\"style\\":[{},null]}"
             link={
               Object {
@@ -392,6 +409,7 @@ Array [
       "children": Array [
         <mockConstructor>
           <ItemLink
+            basePath=""
             className="{\\"style\\":[{},{\\"color\\":\\"blue\\"}]}"
             link={
               Object {
@@ -407,6 +425,7 @@ Array [
         </mockConstructor>,
         <mockConstructor>
           <ItemLink
+            basePath=""
             className="{\\"style\\":[{},{\\"color\\":\\"red\\"}]}"
             link={
               Object {
@@ -437,6 +456,7 @@ Array [
       "children": Array [
         <mockConstructor>
           <ItemLink
+            basePath=""
             className="{\\"style\\":[{},null]}"
             link={
               Object {
@@ -449,6 +469,7 @@ Array [
         </mockConstructor>,
         <mockConstructor>
           <ItemLink
+            basePath=""
             className="{\\"style\\":[{},null]}"
             link={
               Object {
@@ -476,6 +497,7 @@ Array [
       "children": Array [
         <mockConstructor>
           <ItemLink
+            basePath=""
             className="{\\"style\\":[{},null]}"
             link={
               Object {
@@ -488,6 +510,7 @@ Array [
         </mockConstructor>,
         <mockConstructor>
           <ItemLink
+            basePath=""
             className="{\\"style\\":[{},null]}"
             link={
               Object {
@@ -515,6 +538,7 @@ Array [
       "children": Array [
         <mockConstructor>
           <ItemLink
+            basePath=""
             className="{\\"style\\":[{},null]}"
             link={
               Object {
@@ -527,6 +551,7 @@ Array [
         </mockConstructor>,
         <mockConstructor>
           <ItemLink
+            basePath=""
             className="{\\"style\\":[{},null]}"
             link={
               Object {

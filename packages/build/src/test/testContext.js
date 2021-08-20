@@ -15,11 +15,11 @@
 */
 
 function testContext({
-  artifactSetter,
+  writeBuildArtifact,
   configDirectory,
-  configLoader,
+  readConfigFile,
   logger = {},
-  metaLoader,
+  getMeta,
 } = {}) {
   const defaultLogger = {
     info: () => {},
@@ -31,32 +31,15 @@ function testContext({
 
   const context = {
     configDirectory: configDirectory || '',
-    artifactSetter: {
-      set: () => [],
-    },
-    configLoader: {
-      load: () => {},
-    },
-    metaLoader: {
-      load: () => {},
-    },
+    getMeta: getMeta || (() => {}),
+    writeBuildArtifact: writeBuildArtifact || (() => {}),
+    readConfigFile: readConfigFile || (() => {}),
   };
 
   context.logger = {
     ...defaultLogger,
     ...logger,
   };
-
-  if (artifactSetter) {
-    context.artifactSetter = artifactSetter;
-  }
-  if (configLoader) {
-    context.configLoader = configLoader;
-  }
-  if (metaLoader) {
-    context.metaLoader = metaLoader;
-  }
-
   return context;
 }
 

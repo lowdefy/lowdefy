@@ -25,6 +25,7 @@ Array [
           color="red"
           dot={
             <IconBlock
+              basePath=""
               blockId="properties.mode: alternate_0_icon"
               content={Object {}}
               events={Object {}}
@@ -73,6 +74,7 @@ Array [
           color="green"
           dot={
             <IconBlock
+              basePath=""
               blockId="properties.mode: alternate_1_icon"
               content={Object {}}
               events={Object {}}
@@ -121,6 +123,7 @@ Array [
           color="blue"
           dot={
             <IconBlock
+              basePath=""
               blockId="properties.mode: alternate_2_icon"
               content={Object {}}
               events={Object {}}
@@ -187,6 +190,7 @@ Array [
           color="red"
           dot={
             <IconBlock
+              basePath=""
               blockId="properties.mode: left_0_icon"
               content={Object {}}
               events={Object {}}
@@ -235,6 +239,7 @@ Array [
           color="green"
           dot={
             <IconBlock
+              basePath=""
               blockId="properties.mode: left_1_icon"
               content={Object {}}
               events={Object {}}
@@ -283,6 +288,7 @@ Array [
           color="blue"
           dot={
             <IconBlock
+              basePath=""
               blockId="properties.mode: left_2_icon"
               content={Object {}}
               events={Object {}}
@@ -349,6 +355,7 @@ Array [
           color="red"
           dot={
             <IconBlock
+              basePath=""
               blockId="properties.mode: right_0_icon"
               content={Object {}}
               events={Object {}}
@@ -397,6 +404,7 @@ Array [
           color="green"
           dot={
             <IconBlock
+              basePath=""
               blockId="properties.mode: right_1_icon"
               content={Object {}}
               events={Object {}}
@@ -445,6 +453,7 @@ Array [
           color="blue"
           dot={
             <IconBlock
+              basePath=""
               blockId="properties.mode: right_2_icon"
               content={Object {}}
               events={Object {}}
@@ -511,6 +520,7 @@ Array [
           color="red"
           dot={
             <IconBlock
+              basePath=""
               blockId="properties.pending: true_0_icon"
               content={Object {}}
               events={Object {}}
@@ -559,6 +569,7 @@ Array [
           color="green"
           dot={
             <IconBlock
+              basePath=""
               blockId="properties.pending: true_1_icon"
               content={Object {}}
               events={Object {}}
@@ -607,6 +618,7 @@ Array [
           color="blue"
           dot={
             <IconBlock
+              basePath=""
               blockId="properties.pending: true_2_icon"
               content={Object {}}
               events={Object {}}
@@ -672,6 +684,7 @@ Array [
           color="red"
           dot={
             <IconBlock
+              basePath=""
               blockId="properties.pendingDotIcon: _0_icon"
               content={Object {}}
               events={Object {}}
@@ -720,6 +733,7 @@ Array [
           color="green"
           dot={
             <IconBlock
+              basePath=""
               blockId="properties.pendingDotIcon: _1_icon"
               content={Object {}}
               events={Object {}}
@@ -768,6 +782,7 @@ Array [
           color="blue"
           dot={
             <IconBlock
+              basePath=""
               blockId="properties.pendingDotIcon: _2_icon"
               content={Object {}}
               events={Object {}}
@@ -817,6 +832,7 @@ Array [
       "id": "properties.pendingDotIcon: ",
       "pending": true,
       "pendingDot": <IconBlock
+        basePath=""
         blockId="properties.pendingDotIcon: _pendingDotIcon"
         content={Object {}}
         events={Object {}}
@@ -863,6 +879,7 @@ Array [
           color="red"
           dot={
             <IconBlock
+              basePath=""
               blockId="properties.reverse: true_0_icon"
               content={Object {}}
               events={Object {}}
@@ -911,6 +928,7 @@ Array [
           color="green"
           dot={
             <IconBlock
+              basePath=""
               blockId="properties.reverse: true_1_icon"
               content={Object {}}
               events={Object {}}
@@ -959,6 +977,7 @@ Array [
           color="blue"
           dot={
             <IconBlock
+              basePath=""
               blockId="properties.reverse: true_2_icon"
               content={Object {}}
               events={Object {}}

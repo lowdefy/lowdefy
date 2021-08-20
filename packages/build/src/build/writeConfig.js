@@ -15,7 +15,7 @@
 */
 
 async function writeConfig({ components, context }) {
-  await context.artifactSetter.set({
+  await context.writeBuildArtifact({
     filePath: 'config.json',
     content: JSON.stringify(components.config || {}, null, 2),
   });

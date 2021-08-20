@@ -17,7 +17,7 @@
 import React, { useEffect } from 'react';
 import { message } from 'antd';
 import { type } from '@lowdefy/helpers';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
 
 import Icon from '../Icon/Icon';
 
@@ -26,7 +26,9 @@ const MessageBlock = ({ blockId, events, properties, methods }) => {
     methods.registerMethod('open', (args = {}) => {
       return message[args.status || properties.status || 'success']({
         id: `${blockId}_message`,
-        content: args.content || properties.content || blockId,
+        content: (
+          <RenderHtml html={args.content || properties.content || blockId} methods={methods} />
+        ),
         duration: type.isNone(args.duration) ? properties.duration : args.duration,
         onClose: () => methods.triggerEvent({ name: 'onClose' }),
         icon: (args.icon || properties.icon) && (

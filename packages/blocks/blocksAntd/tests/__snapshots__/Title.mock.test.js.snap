@@ -6,6 +6,8 @@ exports[`Mock render - properties. code: true - value[0] - default 1`] = `Array 
 
 exports[`Mock render - properties.color:  - value[0] - default 1`] = `Array []`;
 
+exports[`Mock render - properties.content with html - value[0] - default 1`] = `Array []`;
+
 exports[`Mock render - properties.copyable: icon - value[0] - default 1`] = `Array []`;
 
 exports[`Mock render - properties.copyable: icon: [] - value[0] - default 1`] = `Array []`;

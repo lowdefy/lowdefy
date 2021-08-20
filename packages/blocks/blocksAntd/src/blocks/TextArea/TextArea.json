@@ -77,11 +77,11 @@
             },
             "extra": {
               "type": "string",
-              "description": "Extra text to display beneath the content."
+              "description": "Extra text to display beneath the content - supports html."
             },
             "title": {
               "type": "string",
-              "description": "Label title."
+              "description": "Label title - supports html."
             },
             "span": {
               "type": "number",
@@ -129,7 +129,7 @@
         },
         "title": {
           "type": "string",
-          "description": "Title to describe the input component, if no title is specified the block id is displayed."
+          "description": "Title to describe the input component, if no title is specified the block id is displayed - supports html."
         }
       }
     },

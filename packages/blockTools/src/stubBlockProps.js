@@ -49,6 +49,7 @@ const stubBlockProps = ({ block, meta, logger, initialValue }) => {
   block.eventLog = [];
   // mock default block methods
   block.methods = {
+    makeCssClass,
     registerEvent: ({ name, actions }) => {
       block.events[name] = actions;
       return;
@@ -57,7 +58,6 @@ const stubBlockProps = ({ block, meta, logger, initialValue }) => {
       block.methods[method] = methodFn;
       return;
     },
-    makeCssClass,
     triggerEvent: (event) => block.eventLog.unshift(event),
   };
 

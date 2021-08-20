@@ -52,7 +52,7 @@
         },
         "description": {
           "type": "string",
-          "description": "The content of notification box."
+          "description": "The content of notification box - supports html."
         },
         "duration": {
           "type": "number",
@@ -75,7 +75,7 @@
         },
         "message": {
           "type": "string",
-          "description": "The title of notification box."
+          "description": "The title of notification box - supports html."
         },
         "notificationStyle": {
           "type": "object",

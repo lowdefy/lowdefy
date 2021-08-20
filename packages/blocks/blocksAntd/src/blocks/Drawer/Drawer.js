@@ -54,7 +54,16 @@ const DrawerBlock = ({ blockId, content, properties, methods, rename, onClose })
       zIndex={properties.zIndex}
       placement={properties.placement}
       keyboard={properties.keyboard}
-      onClose={onClose || (() => triggerSetOpen({ state: false, setOpen, methods, rename }))}
+      onClose={
+        onClose ||
+        (async () => {
+          const response = await methods.triggerEvent({ name: 'onClose' });
+          if (response.success === false) return;
+          if (response.bounced !== true) {
+            triggerSetOpen({ state: false, setOpen, methods, rename });
+          }
+        })
+      }
       drawerStyle={methods.makeCssClass(properties.drawerStyle, { styleObjectOnly: true })}
       headerStyle={methods.makeCssClass(properties.headerStyle, { styleObjectOnly: true })}
       bodyStyle={methods.makeCssClass(properties.bodyStyle, { styleObjectOnly: true })}

@@ -16,10 +16,11 @@
 
 import React from 'react';
 import { AutoComplete } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
-import { get, type } from '@lowdefy/helpers';
+import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
+import { type } from '@lowdefy/helpers';
 
 import Label from '../Label/Label';
+import getUniqueValues from '../../getUniqueValues';
 
 const Option = AutoComplete.Option;
 
@@ -33,6 +34,7 @@ const AutoCompleteInput = ({
   validation,
   value,
 }) => {
+  const uniqueValueOptions = getUniqueValues(properties.options || []);
   return (
     <Label
       blockId={blockId}
@@ -53,31 +55,49 @@ const AutoCompleteInput = ({
             placeholder={properties.placeholder || 'Type or select item'}
             allowClear={properties.allowClear !== false}
             size={properties.size}
-            filterOption={(input, option) => {
-              return (get(properties, `options.${option.key}`) || '')
+            filterOption={(input, option) =>
+              (option.filterstring || option.children.props.html || '')
                 .toLowerCase()
-                .includes(input.toLowerCase());
-            }}
+                .indexOf(input.toLowerCase()) >= 0
+            }
             onChange={(newVal) => {
-              if (newVal === '') {
-                methods.setValue(null);
-              } else {
-                methods.setValue(newVal);
+              let val = type.isPrimitive(uniqueValueOptions[newVal])
+                ? uniqueValueOptions[newVal]
+                : uniqueValueOptions[newVal].value;
+              if (type.isNone(val)) {
+                val = newVal;
               }
+              methods.setValue(val);
               methods.triggerEvent({ name: 'onChange' });
             }}
             value={type.isNone(value) ? undefined : value}
           >
-            {(properties.options || []).map((opt, i) => (
-              <Option
-                id={`${blockId}_${i}`}
-                key={`${i}`}
-                value={`${opt}`}
-                className={methods.makeCssClass(properties.optionsStyle)}
-              >
-                {`${opt}`}
-              </Option>
-            ))}
+            {(properties.options || []).map((opt, i) =>
+              type.isPrimitive(opt) ? (
+                <Option
+                  className={methods.makeCssClass(properties.optionsStyle)}
+                  id={`${blockId}_${i}`}
+                  key={i}
+                  value={i}
+                >
+                  <RenderHtml html={`${opt}`} methods={methods} />
+                </Option>
+              ) : (
+                <Option
+                  className={methods.makeCssClass([properties.optionsStyle, opt.style])}
+                  disabled={opt.disabled}
+                  filterstring={opt.filterString}
+                  id={`${blockId}_${i}`}
+                  key={i}
+                  value={i}
+                >
+                  <RenderHtml
+                    html={type.isNone(opt.label) ? `${opt.value}` : opt.label}
+                    methods={methods}
+                  />
+                </Option>
+              )
+            )}
           </AutoComplete>
         ),
       }}

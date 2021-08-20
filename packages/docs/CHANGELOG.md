@@ -3,6 +3,84 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.20.3](https://github.com/lowdefy/lowdefy/compare/v3.20.1...v3.20.3) (2021-08-20)
+
+
+### Bug Fixes
+
+* **docs:** Remove console log. ([41bc269](https://github.com/lowdefy/lowdefy/commit/41bc269d67c1d7d258ef5705fe845921068d3de1))
+
+
+
+
+
+## [3.20.2](https://github.com/lowdefy/lowdefy/compare/v3.20.1...v3.20.2) (2021-08-20)
+
+
+### Bug Fixes
+
+* **docs:** Remove console log. ([41bc269](https://github.com/lowdefy/lowdefy/commit/41bc269d67c1d7d258ef5705fe845921068d3de1))
+
+
+
+
+
+## [3.20.1](https://github.com/lowdefy/lowdefy/compare/v3.20.0...v3.20.1) (2021-08-20)
+
+
+### Bug Fixes
+
+* **build:** Fix unevaluated being passed to _ref transformer. ([537a776](https://github.com/lowdefy/lowdefy/commit/537a77651220d7ffab117572c40ff790e296af56))
+
+
+
+
+
+# [3.20.0](https://github.com/lowdefy/lowdefy/compare/v3.19.0...v3.20.0) (2021-08-20)
+
+
+### Bug Fixes
+
+* **blocksAntd:** Add option to define `showTotal` as a string or function. ([9ac3fc9](https://github.com/lowdefy/lowdefy/commit/9ac3fc9711df889a1d58d83a68ed2e6baf8f0946))
+* **docs:** Add more examples to Throw. ([8ef4bb3](https://github.com/lowdefy/lowdefy/commit/8ef4bb3349e2edf3d95ab5c7bb70fa34f70c318e))
+* **docs:** Docs typo fixes. ([df5770d](https://github.com/lowdefy/lowdefy/commit/df5770d13b9ae539df7af09bf1f28a00dcd8b834))
+* **docs:** Fix AxiosHttp examples, closes [#686](https://github.com/lowdefy/lowdefy/issues/686) ([1fc3329](https://github.com/lowdefy/lowdefy/commit/1fc33295f07a215f12b229557468cb49159addcc))
+* **docs:** Fix custom blocks basePath typo. ([eaee5aa](https://github.com/lowdefy/lowdefy/commit/eaee5aa4bf6c745de08892ac99ecccec3137f66e))
+* **docs:** Fix mongodb examples in docs. ([cde85b7](https://github.com/lowdefy/lowdefy/commit/cde85b7fb81b4a02e631ca4381c8212e581b7fd9))
+* **docs:** Fix sentences on Validation docs. ([d5a5b7f](https://github.com/lowdefy/lowdefy/commit/d5a5b7f8e5ad818c19ecb75c6d40eb2d714042cc))
+* **docs:** Remove documentation for eval option on _ref. ([baf1090](https://github.com/lowdefy/lowdefy/commit/baf1090be7774d427be476411cca9167d28382c7))
+* **docs:** Remove local types. ([282380a](https://github.com/lowdefy/lowdefy/commit/282380a75d83eb66464ebd0fb4fda44c53b7d2bd))
+* **docs:** Sort endpoints alphabetically ([26ca2b7](https://github.com/lowdefy/lowdefy/commit/26ca2b7b2b107bdcb7c6fd1c5859e1bf89cbd3fe))
+* **docs:** Update Netlify deployment steps ([071d402](https://github.com/lowdefy/lowdefy/commit/071d402dfbd06c6cf28b4d58388e2910adae43a4))
+* Add _number operator. ([1ca3966](https://github.com/lowdefy/lowdefy/commit/1ca3966495f96da9a66fa912a70703748c10d197))
+* Fix Docker server docs ([5171320](https://github.com/lowdefy/lowdefy/commit/517132043f18dce96729252c2aaac90e204df5d7))
+
+
+### Features
+
+* **cli:** Add option to configure cli from the lowdefy.yaml file ([e4f62d0](https://github.com/lowdefy/lowdefy/commit/e4f62d0cf4784ec1ffb872f876469fc6beea0efd))
+* **cli:** Add watch and watchIgnore options to dev command ([9eaf3e8](https://github.com/lowdefy/lowdefy/commit/9eaf3e8adb39eca7e7c7a9c8fe131776960002c8))
+* **docs:** Add event debounce. ([e4c5db4](https://github.com/lowdefy/lowdefy/commit/e4c5db4abdf63fc27719bf72890393f33004ef43))
+* **docs:** Add ResetValidation docs. ([289c762](https://github.com/lowdefy/lowdefy/commit/289c762696cdf35f28a53d8d7ce1c340f8ca3b9f))
+* **docs:** Document _ref resolver functions. ([446b383](https://github.com/lowdefy/lowdefy/commit/446b3833a9c3c861db609319ed11e1b14222327e))
+* **docs:** Document basePath setting. ([aa9601c](https://github.com/lowdefy/lowdefy/commit/aa9601c84935c60ec36c9bf752e94fe75a8b8505))
+* **docs:** Update docs for new Validation. ([a91a7c7](https://github.com/lowdefy/lowdefy/commit/a91a7c77e93f6ab20fd520b9aa9bd75ecbf9650d))
+* **engine:** Add async tests and update docs. ([fd967b9](https://github.com/lowdefy/lowdefy/commit/fd967b929b4ab57a787b1e052c74334dfc54e87b))
+* **engine:** Add Throw action. ([d2a23f0](https://github.com/lowdefy/lowdefy/commit/d2a23f0022aca6d9f0e330ef3652ad2a8f8364b7))
+* **engine:** Document Lowdefy action functions in JsAction. ([7634145](https://github.com/lowdefy/lowdefy/commit/7634145286cdb8483bbcd151343bbcb6d5a0a65f))
+* **graphql:** Updated mongo client to include connection options and documented command options. ([57127ee](https://github.com/lowdefy/lowdefy/commit/57127ee9240ae1e20fae109e4928048e232b9935))
+* **graphql:** Updated mongodb to 4.1.0 and documented MongoDBAggregation options. ([3fefe99](https://github.com/lowdefy/lowdefy/commit/3fefe9974362485d752a9de1c940d5e3f44932ea))
+* **operators:** Add basePath to _location. ([eb95c8a](https://github.com/lowdefy/lowdefy/commit/eb95c8a64b2b7698f006750cd3639ee71dbbf4a9))
+* **operators:** Add pageId and homePageId to _location. ([00842d4](https://github.com/lowdefy/lowdefy/commit/00842d48153fc2b49ac6bd6cd88d73c3cce0c178))
+* Add back option to link. ([b6cf705](https://github.com/lowdefy/lowdefy/commit/b6cf705d5c7e0b54a3c22d7a33116fc30dc9e191)), closes [#728](https://github.com/lowdefy/lowdefy/issues/728)
+* Document node server. ([20dfb7d](https://github.com/lowdefy/lowdefy/commit/20dfb7db70868a0b2006f4f004736562acc480dc))
+* Make blocks server URL configurable. ([65c9fe7](https://github.com/lowdefy/lowdefy/commit/65c9fe79b254bf5a20b87e0a2ec4fdcd1ecd5427)), closes [#670](https://github.com/lowdefy/lowdefy/issues/670)
+* Update Elasticsearch docs ([8feb78b](https://github.com/lowdefy/lowdefy/commit/8feb78b3cc168da818b156349d389c66ae8ddef3))
+
+
+
+
+
 # [3.19.0](https://github.com/lowdefy/lowdefy/compare/v3.18.1...v3.19.0) (2021-07-26)
 
 

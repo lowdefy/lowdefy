@@ -6,6 +6,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="default_header"
           content={
             Object {
@@ -53,6 +54,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="default_layout"
           content={
             Object {
@@ -96,6 +98,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.breadcrumb.list_header"
           content={
             Object {
@@ -143,6 +146,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.breadcrumb.list_layout"
           content={
             Object {
@@ -186,6 +190,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.content.style_header"
           content={
             Object {
@@ -233,6 +238,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.content.style_layout"
           content={
             Object {
@@ -276,6 +282,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.footer.style_header"
           content={
             Object {
@@ -323,6 +330,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.footer.style_layout"
           content={
             Object {
@@ -366,6 +374,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.header.color_header"
           content={
             Object {
@@ -414,6 +423,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.header.color_layout"
           content={
             Object {
@@ -457,6 +467,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.header.style_header"
           content={
             Object {
@@ -505,6 +516,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.header.style_layout"
           content={
             Object {
@@ -548,6 +560,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.header.theme: light_header"
           content={
             Object {
@@ -596,6 +609,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.header.theme: light_layout"
           content={
             Object {
@@ -639,6 +653,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.logo.alt_header"
           content={
             Object {
@@ -686,6 +701,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.logo.alt_layout"
           content={
             Object {
@@ -729,6 +745,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.logo.size_header"
           content={
             Object {
@@ -776,6 +793,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.logo.size_layout"
           content={
             Object {
@@ -819,6 +837,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.logo.src_header"
           content={
             Object {
@@ -866,6 +885,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.logo.src_layout"
           content={
             Object {
@@ -909,6 +929,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.logo.srcSet_header"
           content={
             Object {
@@ -956,6 +977,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.logo.srcSet_layout"
           content={
             Object {
@@ -999,6 +1021,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.logo.style_header"
           content={
             Object {
@@ -1046,6 +1069,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.logo.style_layout"
           content={
             Object {
@@ -1089,6 +1113,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.menu_header"
           content={
             Object {
@@ -1136,6 +1161,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.menu_layout"
           content={
             Object {
@@ -1179,6 +1205,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.menu.selectedColor_header"
           content={
             Object {
@@ -1226,6 +1253,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.menu.selectedColor_layout"
           content={
             Object {
@@ -1269,6 +1297,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.sider.color_header"
           content={
             Object {
@@ -1316,6 +1345,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.sider.color_layout"
           content={
             Object {
@@ -1359,6 +1389,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.sider.initialCollapsed_header"
           content={
             Object {
@@ -1406,6 +1437,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.sider.initialCollapsed_layout"
           content={
             Object {
@@ -1449,6 +1481,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.sider.style_header"
           content={
             Object {
@@ -1496,6 +1529,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.sider.style_layout"
           content={
             Object {
@@ -1539,6 +1573,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.sider.theme: dark_header"
           content={
             Object {
@@ -1586,6 +1621,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.sider.theme: dark_layout"
           content={
             Object {
@@ -1629,6 +1665,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.style_header"
           content={
             Object {
@@ -1676,6 +1713,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.style_layout"
           content={
             Object {
@@ -1719,6 +1757,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.toggleSiderButton.hide_header"
           content={
             Object {
@@ -1766,6 +1805,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.toggleSiderButton.hide_layout"
           content={
             Object {
@@ -1809,6 +1849,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.toggleSiderButton.type_header"
           content={
             Object {
@@ -1856,6 +1897,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.toggleSiderButton.type_layout"
           content={
             Object {

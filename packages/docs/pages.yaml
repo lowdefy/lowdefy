@@ -29,6 +29,7 @@
 - _ref: deployment/aws-lambda.yaml
 - _ref: deployment/docker.yaml
 - _ref: deployment/netlify.yaml
+- _ref: deployment/node-server.yaml
 
 - _ref: users/users-introduction.yaml
 - _ref: users/openid-connect.yaml
@@ -143,9 +144,11 @@
 - _ref: actions/Notification.yaml
 - _ref: actions/Request.yaml
 - _ref: actions/Reset.yaml
+- _ref: actions/ResetValidation.yaml
 - _ref: actions/ScrollTo.yaml
 - _ref: actions/SetGlobal.yaml
 - _ref: actions/SetState.yaml
+- _ref: actions/Throw.yaml
 - _ref: actions/Validate.yaml
 - _ref: actions/Wait.yaml
 
@@ -183,6 +186,7 @@
 - _ref: operators/_mql.yaml
 - _ref: operators/_ne.yaml
 - _ref: operators/_not.yaml
+- _ref: operators/_number.yaml
 - _ref: operators/_nunjucks.yaml
 - _ref: operators/_object.yaml
 - _ref: operators/_operator.yaml

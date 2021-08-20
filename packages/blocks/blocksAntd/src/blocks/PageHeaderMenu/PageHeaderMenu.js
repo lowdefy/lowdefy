@@ -28,6 +28,7 @@ import Menu from '../Menu/Menu';
 import MobileMenu from '../MobileMenu/MobileMenu';
 
 const PageHeaderMenu = ({
+  basePath,
   blockId,
   content,
   events,
@@ -114,19 +115,19 @@ const PageHeaderMenu = ({
               content={{
                 content: () => (
                   <>
-                    <Link to={`/${homePageId}`}>
+                    <Link to={`${basePath}/${homePageId}`}>
                       <img
                         src={
                           (properties.logo && properties.logo.src) ||
                           (get(properties, 'header.theme') === 'light'
-                            ? '/public/logo-light-theme.png'
-                            : '/public/logo-dark-theme.png')
+                            ? `${basePath}/public/logo-light-theme.png`
+                            : `${basePath}/public/logo-dark-theme.png`)
                         }
                         srcSet={
                           (properties.logo && (properties.logo.srcSet || properties.logo.src)) ||
                           (get(properties, 'header.theme') === 'light'
-                            ? '/public/logo-square-light-theme.png 40w, /public/logo-light-theme.png 577w'
-                            : '/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w')
+                            ? `${basePath}/public/logo-square-light-theme.png 40w, ${basePath}/public/logo-light-theme.png 577w`
+                            : `${basePath}/public/logo-square-dark-theme.png 40w, ${basePath}/public/logo-dark-theme.png 577w`)
                         }
                         sizes={
                           (properties.logo && properties.logo.sizes) ||
@@ -153,6 +154,7 @@ const PageHeaderMenu = ({
                       <div className={methods.makeCssClass([styles.desktop, styles.lgMenu])}>
                         <Menu
                           blockId={`${blockId}_menu`}
+                          basePath={basePath}
                           events={events}
                           methods={methods}
                           menus={menus}
@@ -179,6 +181,7 @@ const PageHeaderMenu = ({
                       <div className={methods.makeCssClass([styles.mobile, styles.mdMenu])}>
                         <MobileMenu
                           blockId={`${blockId}_mobile_menu`}
+                          basePath={basePath}
                           events={events}
                           methods={methods}
                           menus={menus}
@@ -201,6 +204,7 @@ const PageHeaderMenu = ({
                     {!type.isNone(properties.breadcrumb) ? (
                       <Breadcrumb
                         blockId={`${blockId}_breadcrumb`}
+                        basePath={basePath}
                         events={events}
                         methods={methods}
                         properties={mergeObjects([

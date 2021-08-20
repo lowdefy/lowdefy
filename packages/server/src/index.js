@@ -22,13 +22,14 @@ import { get } from '@lowdefy/helpers';
 import { readFile } from '@lowdefy/node-utils';
 
 function getServer({
-  development = false,
   buildDirectory,
+  development = false,
+  getSecrets,
   gqlExpressPath,
   gqlUri,
   logger,
-  getSecrets,
   publicDirectory,
+  serverBasePath = '',
   serveStaticFiles = true,
   shellDirectory,
 }) {
@@ -47,6 +48,10 @@ function getServer({
 
   let indexHtml = null;
 
+  if (serverBasePath !== '') {
+    serverBasePath = `/${serverBasePath}`;
+  }
+
   const serveIndex = async (req, res) => {
     // TODO: can do better here?
     if (!indexHtml || development) {
@@ -61,6 +66,7 @@ function getServer({
         '<!-- __LOWDEFY_APP_BODY_HTML__ -->',
         get(appConfig, 'html.appendBody', { default: '' })
       );
+      indexHtml = indexHtml.replaceAll('__LOWDEFY_SERVER_BASE_PATH__', serverBasePath);
     }
     res.send(indexHtml);
   };
@@ -69,23 +75,23 @@ function getServer({
 
   gqlServer.applyMiddleware({
     app: server,
-    path: gqlExpressPath || '/api/graphql',
+    path: gqlExpressPath || `${serverBasePath}/api/graphql`,
     bodyParserConfig: { limit: '5mb' },
   });
 
   if (serveStaticFiles) {
     // serve index.html with appended html
     // else static server serves without appended html
-    server.get('/', serveIndex);
+    server.get(`${serverBasePath}/`, serveIndex);
 
-    server.use('/shell', express.static(path.resolve(shellDirectory)));
+    server.use(`${serverBasePath}/shell`, express.static(path.resolve(shellDirectory)));
 
     // serve public files
-    server.use('/public', express.static(path.resolve(publicDirectory)));
+    server.use(`${serverBasePath}/public`, express.static(path.resolve(publicDirectory)));
 
     // Redirect all 404 to index.html with status 200
     // This should always be the last route
-    server.use(serveIndex);
+    server.use(`${serverBasePath}/*`, serveIndex);
   }
   return server;
 }

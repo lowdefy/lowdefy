@@ -13,23 +13,26 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import path from 'path';
 import chokidar from 'chokidar';
 import BatchChanges from '../../utils/BatchChanges';
 
 function buildWatcher({ build, context, reloadFn }) {
-  let started = false;
+  const { watch = [], watchIgnore = [] } = context.options;
+  const resolvedWatchPaths = watch.map((pathName) => path.resolve(pathName));
+
   const buildCallback = async () => {
-    if (started) {
-      await build();
-      reloadFn();
-    } else {
-      started = true;
-    }
+    await build();
+    reloadFn();
   };
   const buildBatchChanges = new BatchChanges({ fn: buildCallback, context });
-  const configWatcher = chokidar.watch('.', {
-    ignored: /(^|[/\\])\../, // ignore dotfiles
+  const configWatcher = chokidar.watch(['.', ...resolvedWatchPaths], {
+    ignored: [
+      /(^|[/\\])\../, // ignore dotfiles
+      ...watchIgnore,
+    ],
     persistent: true,
+    ignoreInitial: true,
   });
   configWatcher.on('add', () => buildBatchChanges.newChange());
   configWatcher.on('change', () => buildBatchChanges.newChange());

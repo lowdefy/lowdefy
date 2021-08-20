@@ -166,6 +166,7 @@ Array [
       </div>,
       "color": undefined,
       "count": <IconBlock
+        basePath=""
         blockId="properties.icon object_icon"
         content={Object {}}
         events={Object {}}
@@ -225,6 +226,7 @@ Array [
       </div>,
       "color": undefined,
       "count": <IconBlock
+        basePath=""
         blockId="properties.icon string_icon"
         content={Object {}}
         events={Object {}}

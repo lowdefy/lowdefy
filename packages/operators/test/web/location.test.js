@@ -39,7 +39,7 @@ beforeEach(() => {
 
 const input = {
   arrayIndices: [0],
-  context: { context: true },
+  context: { context: true, lowdefy: { basePath: 'base', homePageId: 'home', pageId: 'page-one' } },
   contexts: { contexts: true },
   env: 'env',
   location: 'location',
@@ -55,6 +55,7 @@ test('location calls getFromObject', () => {
         arrayIndices: [0],
         context: {
           context: true,
+          lowdefy: { basePath: 'base', homePageId: 'home', pageId: 'page-one' },
         },
         contexts: {
           contexts: true,
@@ -62,12 +63,15 @@ test('location calls getFromObject', () => {
         env: 'env',
         location: 'location',
         object: {
+          basePath: 'base',
           hash: '#XYZ',
+          homePageId: 'home',
           host: 'localhost:3000',
           hostname: 'localhost',
           href: 'http://localhost:3000/details?_id=%22ABCD%22#XYZ',
           origin: 'http://localhost:3000',
           pathname: '/details',
+          pageId: 'page-one',
           port: '3000',
           protocol: 'http:',
           search: '?_id=%22ABCD%22',
@@ -92,6 +96,6 @@ test('_location throw on no location', () => {
 
 test('_location throw invalid param', () => {
   expect(() => location({ ...input, params: 'none' })).toThrow(
-    'Operator Error: _location only returns values for href, origin, protocol, host, hostname, port, pathname, search, hash. Received: "none" at location.'
+    'Operator Error: _location only returns values for basePath, href, origin, protocol, homePageId, host, hostname, port, pageId, pathname, search, hash. Received: "none" at location.'
   );
 });

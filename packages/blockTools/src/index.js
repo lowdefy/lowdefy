@@ -24,6 +24,7 @@ import makeCssClass from './makeCssClass.js';
 import mediaToCssObject from './mediaToCssObject.js';
 import mockBlock from './mockBlock';
 import runBlockSchemaTests from './runBlockSchemaTests';
+import RenderHtml from './RenderHtml';
 import runMockMethodTests from './runMockMethodTests';
 import runMockRenderTests from './runMockRenderTests';
 import runRenderTests from './runRenderTests';
@@ -47,6 +48,7 @@ export {
   makeCssClass,
   mediaToCssObject,
   mockBlock,
+  RenderHtml,
   runBlockSchemaTests,
   runMockMethodTests,
   runMockRenderTests,

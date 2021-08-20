@@ -89,7 +89,6 @@ test('create context', async () => {
   expect(context.requests).toEqual({});
   expect(context.pageId).toEqual('pageId');
   expect(context.rootBlock).toBeDefined();
-  expect(context.showValidationErrors).toEqual(false);
   expect(context.state).toEqual({});
   expect(context.update).toBeDefined();
   expect(context.updateListeners).toEqual(new Set());

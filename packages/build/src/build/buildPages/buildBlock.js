@@ -36,14 +36,14 @@ async function buildBlock(block, blockContext) {
   }
   block.blockId = block.id;
   block.id = `block:${blockContext.pageId}:${block.id}`;
-  await setBlockMeta(block, blockContext.metaLoader, blockContext.pageId);
+  await setBlockMeta(block, blockContext);
 
   let newBlockContext = blockContext;
   if (block.meta.category === 'context') {
     newBlockContext = {
       auth: blockContext.auth,
       contextId: block.blockId,
-      metaLoader: blockContext.metaLoader,
+      getMeta: blockContext.getMeta,
       pageId: blockContext.pageId,
       requests: [],
     };

@@ -21,14 +21,25 @@ import actions from '../../src/actions/index.js';
 
 jest.mock('../../src/actions/index.js', () => ({
   ActionSync: jest.fn(({ params }) => params),
-  ActionAsync: jest.fn(({ params }) => Promise.resolve(params)),
+  ActionAsync: jest.fn(async ({ params }) => {
+    await timeout(params.ms || 1);
+    return params;
+  }),
   ActionError: jest.fn(() => {
     throw new Error('Test error');
   }),
   CatchActionError: jest.fn(() => {
     throw new Error('Test catch error');
   }),
+  ActionAsyncError: jest.fn(async ({ params }) => {
+    await timeout(params.ms || 1);
+    throw new Error('Test error');
+  }),
 }));
+
+const timeout = (ms) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
 
 const pageId = 'one';
 
@@ -82,6 +93,7 @@ test('call a synchronous action', async () => {
   });
   expect(res).toEqual({
     blockId: 'blockId',
+    bounced: false,
     event: {},
     eventName: 'eventName',
     responses: {
@@ -120,6 +132,7 @@ test('call a asynchronous action', async () => {
   });
   expect(res).toEqual({
     blockId: 'blockId',
+    bounced: false,
     event: {},
     eventName: 'eventName',
     responses: {
@@ -161,6 +174,7 @@ test('call 2 actions', async () => {
   });
   expect(res).toEqual({
     blockId: 'blockId',
+    bounced: false,
     event: {},
     eventName: 'eventName',
     responses: {
@@ -472,6 +486,7 @@ test('skip a action', async () => {
   });
   expect(res).toEqual({
     blockId: 'blockId',
+    bounced: false,
     event: {},
     eventName: 'eventName',
     responses: {
@@ -510,6 +525,7 @@ test('action throws a error', async () => {
   });
   expect(res).toEqual({
     blockId: 'blockId',
+    bounced: false,
     event: {},
     eventName: 'eventName',
     error: {
@@ -563,6 +579,7 @@ test('actions after a error are not called throws a error', async () => {
   });
   expect(res).toEqual({
     blockId: 'blockId',
+    bounced: false,
     event: {},
     eventName: 'eventName',
     error: {
@@ -614,6 +631,7 @@ test('Invalid action type', async () => {
   });
   expect(res).toEqual({
     blockId: 'blockId',
+    bounced: false,
     event: {},
     eventName: 'eventName',
     error: {
@@ -663,6 +681,7 @@ test('Parser error in action', async () => {
   });
   expect(res).toEqual({
     blockId: 'blockId',
+    bounced: false,
     event: {},
     eventName: 'eventName',
     error: {
@@ -957,6 +976,7 @@ test('Call catchActions when actions throws error', async () => {
   });
   expect(res).toEqual({
     blockId: 'blockId',
+    bounced: false,
     endTimestamp: {
       date: 0,
     },
@@ -1040,6 +1060,7 @@ test('Call catchActions when actions throws error and catchActions throws error'
   });
   expect(res).toEqual({
     blockId: 'blockId',
+    bounced: false,
     endTimestamp: {
       date: 0,
     },
@@ -1096,4 +1117,222 @@ test('Call catchActions when actions throws error and catchActions throws error'
     success: false,
   });
   expect(actions.ActionAsync.mock.calls.length).toBe(1);
+});
+
+test('call 2 actions, first with async: true', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+  });
+  const Actions = context.Actions;
+  const res = await Actions.callActions({
+    actions: [
+      { id: 'test1', type: 'ActionAsync', async: true, params: { ms: 100 } },
+      { id: 'test2', type: 'ActionSync', params: 'params2' },
+    ],
+    arrayIndices,
+    block: { blockId: 'blockId' },
+    catchActions: [],
+    event: {},
+    eventName,
+  });
+  expect(res).toEqual({
+    blockId: 'blockId',
+    bounced: false,
+    event: {},
+    eventName: 'eventName',
+    responses: {
+      test2: {
+        type: 'ActionSync',
+        index: 1,
+        response: 'params2',
+      },
+    },
+    success: true,
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
+  });
+  await timeout(110);
+  expect(res).toEqual({
+    blockId: 'blockId',
+    bounced: false,
+    event: {},
+    eventName: 'eventName',
+    responses: {
+      test1: {
+        type: 'ActionAsync',
+        index: 0,
+        response: { ms: 100 },
+      },
+      test2: {
+        type: 'ActionSync',
+        index: 1,
+        response: 'params2',
+      },
+    },
+    success: true,
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
+  });
+});
+
+test('call async: true with error', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+  });
+  const Actions = context.Actions;
+  const res = await Actions.callActions({
+    actions: [
+      { id: 'test1', type: 'ActionAsyncError', async: true, params: { ms: 100 } },
+      { id: 'test2', type: 'ActionSync', params: 'params2' },
+    ],
+    arrayIndices,
+    block: { blockId: 'blockId' },
+    catchActions: [],
+    event: {},
+    eventName,
+  });
+  expect(res).toEqual({
+    blockId: 'blockId',
+    bounced: false,
+    event: {},
+    eventName: 'eventName',
+    responses: {
+      test2: {
+        type: 'ActionSync',
+        response: 'params2',
+        index: 1,
+      },
+    },
+    endTimestamp: { date: 0 },
+    startTimestamp: { date: 0 },
+    success: true,
+  });
+  await timeout(110);
+  expect(res).toEqual({
+    blockId: 'blockId',
+    bounced: false,
+    event: {},
+    eventName: 'eventName',
+    responses: {
+      test2: {
+        type: 'ActionSync',
+        response: 'params2',
+        index: 1,
+      },
+      test1: {
+        type: 'ActionAsyncError',
+        error: new Error('Test error'),
+        index: 0,
+      },
+    },
+    success: true,
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
+  });
+});
+
+test('call 2 actions, first with async: false', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+  });
+  const Actions = context.Actions;
+  const res = await Actions.callActions({
+    actions: [
+      { id: 'test1', type: 'ActionAsync', async: false, params: { ms: 100 } },
+      { id: 'test2', type: 'ActionSync', params: 'params2' },
+    ],
+    arrayIndices,
+    block: { blockId: 'blockId' },
+    catchActions: [],
+    event: {},
+    eventName,
+  });
+  expect(res).toEqual({
+    blockId: 'blockId',
+    bounced: false,
+    event: {},
+    eventName: 'eventName',
+    responses: {
+      test1: {
+        type: 'ActionAsync',
+        index: 0,
+        response: { ms: 100 },
+      },
+      test2: {
+        type: 'ActionSync',
+        index: 1,
+        response: 'params2',
+      },
+    },
+    success: true,
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
+  });
+});
+
+test('call 2 actions, first with async: null', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+  });
+  const Actions = context.Actions;
+  const res = await Actions.callActions({
+    actions: [
+      { id: 'test1', type: 'ActionAsync', async: null, params: { ms: 100 } },
+      { id: 'test2', type: 'ActionSync', params: 'params2' },
+    ],
+    arrayIndices,
+    block: { blockId: 'blockId' },
+    catchActions: [],
+    event: {},
+    eventName,
+  });
+  expect(res).toEqual({
+    blockId: 'blockId',
+    bounced: false,
+    event: {},
+    eventName: 'eventName',
+    responses: {
+      test1: {
+        type: 'ActionAsync',
+        index: 0,
+        response: { ms: 100 },
+      },
+      test2: {
+        type: 'ActionSync',
+        index: 1,
+        response: 'params2',
+      },
+    },
+    success: true,
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
+  });
 });

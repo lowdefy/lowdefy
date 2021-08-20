@@ -27,18 +27,46 @@ class Actions {
     this.actions = actions;
   }
 
+  async callAsyncAction({ action, arrayIndices, block, event, index, responses }) {
+    try {
+      const response = await this.callAction({
+        action,
+        arrayIndices,
+        block,
+        event,
+        index,
+        responses,
+      });
+      responses[action.id] = response;
+    } catch (error) {
+      responses[action.id] = error;
+      console.error(error);
+    }
+  }
+
   async callActionLoop({ actions, arrayIndices, block, event, responses }) {
     for (const [index, action] of actions.entries()) {
       try {
-        const response = await this.callAction({
-          action,
-          arrayIndices,
-          block,
-          event,
-          index,
-          responses,
-        });
-        responses[action.id] = response;
+        if (action.async === true) {
+          this.callAsyncAction({
+            action,
+            arrayIndices,
+            block,
+            event,
+            index,
+            responses,
+          });
+        } else {
+          const response = await this.callAction({
+            action,
+            arrayIndices,
+            block,
+            event,
+            index,
+            responses,
+          });
+          responses[action.id] = response;
+        }
       } catch (error) {
         responses[action.id] = error;
         throw {
@@ -62,33 +90,36 @@ class Actions {
         console.error(errorCatch);
         return {
           blockId: block.blockId,
+          bounced: false,
+          endTimestamp: new Date(),
           error,
           errorCatch,
           event,
           eventName,
           responses,
-          endTimestamp: new Date(),
           startTimestamp,
           success: false,
         };
       }
       return {
         blockId: block.blockId,
+        bounced: false,
+        endTimestamp: new Date(),
         error,
         event,
         eventName,
         responses,
-        endTimestamp: new Date(),
         startTimestamp,
         success: false,
       };
     }
     return {
       blockId: block.blockId,
+      bounced: false,
+      endTimestamp: new Date(),
       event,
       eventName,
       responses,
-      endTimestamp: new Date(),
       startTimestamp,
       success: true,
     };
@@ -126,6 +157,7 @@ class Actions {
     try {
       response = await actions[action.type]({
         arrayIndices,
+        blockId: block.blockId,
         context: this.context,
         event,
         params: parsedAction.params,

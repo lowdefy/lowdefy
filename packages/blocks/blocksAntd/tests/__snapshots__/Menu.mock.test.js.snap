@@ -36,6 +36,7 @@ Array [
           popupClassName="{\\"style\\":[null,null,null]}"
           title={
             <MenuTitle
+              basePath=""
               id="default_menu_group_1"
               makeCssClass={
                 [MockFunction] {
@@ -95,6 +96,7 @@ Array [
         >
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="default_menu_item_1_1"
               makeCssClass={
                 [MockFunction] {
@@ -185,6 +187,7 @@ Array [
           popupClassName="{\\"style\\":[null,null,null]}"
           title={
             <MenuTitle
+              basePath=""
               id="menu_group_1"
               makeCssClass={
                 [MockFunction] {
@@ -244,6 +247,7 @@ Array [
         >
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_1_1"
               makeCssClass={
                 [MockFunction] {
@@ -305,6 +309,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_2_icon"
               content={Object {}}
               events={Object {}}
@@ -332,6 +337,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_2"
             makeCssClass={
               [MockFunction] {
@@ -422,6 +428,7 @@ Array [
           popupClassName="{\\"style\\":[null,null,null]}"
           title={
             <MenuTitle
+              basePath=""
               id="menu_group_1"
               makeCssClass={
                 [MockFunction] {
@@ -481,6 +488,7 @@ Array [
         >
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_1_1"
               makeCssClass={
                 [MockFunction] {
@@ -542,6 +550,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_2_icon"
               content={Object {}}
               events={Object {}}
@@ -569,6 +578,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_2"
             makeCssClass={
               [MockFunction] {
@@ -657,6 +667,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_2_icon"
               content={Object {}}
               events={Object {}}
@@ -684,6 +695,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_2"
             makeCssClass={
               [MockFunction] {
@@ -747,6 +759,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_2_icon"
               content={Object {}}
               events={Object {}}
@@ -774,6 +787,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_2"
             makeCssClass={
               [MockFunction] {
@@ -838,6 +852,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_2_icon"
               content={Object {}}
               events={Object {}}
@@ -865,6 +880,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_2"
             makeCssClass={
               [MockFunction] {
@@ -930,6 +946,7 @@ Array [
           popupClassName="{\\"style\\":[{\\"& > ul\\":{\\"backgroundColor\\":\\"#004715 !important\\"}},null,null]}"
           title={
             <MenuTitle
+              basePath=""
               id="menu_group_1"
               makeCssClass={
                 [MockFunction] {
@@ -995,6 +1012,7 @@ Array [
         >
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_1_1"
               makeCssClass={
                 [MockFunction] {
@@ -1061,6 +1079,7 @@ Array [
           <mockConstructor
             title={
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2"
                 makeCssClass={
                   [MockFunction] {
@@ -1126,6 +1145,7 @@ Array [
           >
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_1"
                 makeCssClass={
                   [MockFunction] {
@@ -1191,6 +1211,7 @@ Array [
             </mockConstructor>
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_2"
                 makeCssClass={
                   [MockFunction] {
@@ -1259,6 +1280,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_2_icon"
               content={Object {}}
               events={Object {}}
@@ -1286,6 +1308,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_2"
             makeCssClass={
               [MockFunction] {
@@ -1353,6 +1376,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_3_icon"
               content={Object {}}
               events={Object {}}
@@ -1380,6 +1404,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_3"
             makeCssClass={
               [MockFunction] {
@@ -1482,6 +1507,7 @@ Array [
           popupClassName="{\\"style\\":[null,null,null]}"
           title={
             <MenuTitle
+              basePath=""
               id="menu_group_1"
               makeCssClass={
                 [MockFunction] {
@@ -1541,6 +1567,7 @@ Array [
         >
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_1_1"
               makeCssClass={
                 [MockFunction] {
@@ -1601,6 +1628,7 @@ Array [
           <mockConstructor
             title={
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2"
                 makeCssClass={
                   [MockFunction] {
@@ -1660,6 +1688,7 @@ Array [
           >
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_1"
                 makeCssClass={
                   [MockFunction] {
@@ -1719,6 +1748,7 @@ Array [
             </mockConstructor>
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_2"
                 makeCssClass={
                   [MockFunction] {
@@ -1781,6 +1811,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_2_icon"
               content={Object {}}
               events={Object {}}
@@ -1808,6 +1839,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_2"
             makeCssClass={
               [MockFunction] {
@@ -1869,6 +1901,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_3_icon"
               content={Object {}}
               events={Object {}}
@@ -1896,6 +1929,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_3"
             makeCssClass={
               [MockFunction] {
@@ -1990,6 +2024,7 @@ Array [
           popupClassName="{\\"style\\":[null,null,null]}"
           title={
             <MenuTitle
+              basePath=""
               id="menu_group_1"
               makeCssClass={
                 [MockFunction] {
@@ -2049,6 +2084,7 @@ Array [
         >
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_1_1"
               makeCssClass={
                 [MockFunction] {
@@ -2109,6 +2145,7 @@ Array [
           <mockConstructor
             title={
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2"
                 makeCssClass={
                   [MockFunction] {
@@ -2168,6 +2205,7 @@ Array [
           >
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_1"
                 makeCssClass={
                   [MockFunction] {
@@ -2227,6 +2265,7 @@ Array [
             </mockConstructor>
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_2"
                 makeCssClass={
                   [MockFunction] {
@@ -2289,6 +2328,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_2_icon"
               content={Object {}}
               events={Object {}}
@@ -2316,6 +2356,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_2"
             makeCssClass={
               [MockFunction] {
@@ -2377,6 +2418,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_3_icon"
               content={Object {}}
               events={Object {}}
@@ -2404,6 +2446,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_3"
             makeCssClass={
               [MockFunction] {
@@ -2498,6 +2541,7 @@ Array [
           popupClassName="{\\"style\\":[null,{\\"& > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}}},false]}"
           title={
             <MenuTitle
+              basePath=""
               id="menu_group_1"
               makeCssClass={
                 [MockFunction] {
@@ -2629,6 +2673,7 @@ Array [
         >
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_1_1"
               makeCssClass={
                 [MockFunction] {
@@ -2761,6 +2806,7 @@ Array [
           <mockConstructor
             title={
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2"
                 makeCssClass={
                   [MockFunction] {
@@ -2892,6 +2938,7 @@ Array [
           >
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_1"
                 makeCssClass={
                   [MockFunction] {
@@ -3023,6 +3070,7 @@ Array [
             </mockConstructor>
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_2"
                 makeCssClass={
                   [MockFunction] {
@@ -3157,6 +3205,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_2_icon"
               content={Object {}}
               events={Object {}}
@@ -3184,6 +3233,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_2"
             makeCssClass={
               [MockFunction] {
@@ -3317,6 +3367,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_3_icon"
               content={Object {}}
               events={Object {}}
@@ -3344,6 +3395,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_3"
             makeCssClass={
               [MockFunction] {
@@ -3512,6 +3564,7 @@ Array [
           popupClassName="{\\"style\\":[{\\"& > ul\\":{\\"backgroundColor\\":\\"#004715 !important\\"}},{\\"& > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}}},false]}"
           title={
             <MenuTitle
+              basePath=""
               id="menu_group_1"
               makeCssClass={
                 [MockFunction] {
@@ -3649,6 +3702,7 @@ Array [
         >
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_1_1"
               makeCssClass={
                 [MockFunction] {
@@ -3787,6 +3841,7 @@ Array [
           <mockConstructor
             title={
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2"
                 makeCssClass={
                   [MockFunction] {
@@ -3924,6 +3979,7 @@ Array [
           >
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_1"
                 makeCssClass={
                   [MockFunction] {
@@ -4061,6 +4117,7 @@ Array [
             </mockConstructor>
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_2"
                 makeCssClass={
                   [MockFunction] {
@@ -4201,6 +4258,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_2_icon"
               content={Object {}}
               events={Object {}}
@@ -4228,6 +4286,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_2"
             makeCssClass={
               [MockFunction] {
@@ -4367,6 +4426,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_3_icon"
               content={Object {}}
               events={Object {}}
@@ -4394,6 +4454,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_3"
             makeCssClass={
               [MockFunction] {
@@ -4568,6 +4629,7 @@ Array [
           popupClassName="{\\"style\\":[null,null,null]}"
           title={
             <MenuTitle
+              basePath=""
               id="menu_group_1"
               makeCssClass={
                 [MockFunction] {
@@ -4627,6 +4689,7 @@ Array [
         >
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_1_1"
               makeCssClass={
                 [MockFunction] {
@@ -4687,6 +4750,7 @@ Array [
           <mockConstructor
             title={
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2"
                 makeCssClass={
                   [MockFunction] {
@@ -4746,6 +4810,7 @@ Array [
           >
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_1"
                 makeCssClass={
                   [MockFunction] {
@@ -4805,6 +4870,7 @@ Array [
             </mockConstructor>
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_2"
                 makeCssClass={
                   [MockFunction] {
@@ -4867,6 +4933,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_2_icon"
               content={Object {}}
               events={Object {}}
@@ -4894,6 +4961,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_2"
             makeCssClass={
               [MockFunction] {
@@ -4955,6 +5023,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_3_icon"
               content={Object {}}
               events={Object {}}
@@ -4982,6 +5051,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_3"
             makeCssClass={
               [MockFunction] {
@@ -5077,6 +5147,7 @@ Array [
           popupClassName="{\\"style\\":[null,null,null]}"
           title={
             <MenuTitle
+              basePath=""
               id="menu_group_1"
               makeCssClass={
                 [MockFunction] {
@@ -5136,6 +5207,7 @@ Array [
         >
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_1_1"
               makeCssClass={
                 [MockFunction] {
@@ -5196,6 +5268,7 @@ Array [
           <mockConstructor
             title={
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2"
                 makeCssClass={
                   [MockFunction] {
@@ -5255,6 +5328,7 @@ Array [
           >
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_1"
                 makeCssClass={
                   [MockFunction] {
@@ -5314,6 +5388,7 @@ Array [
             </mockConstructor>
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_2"
                 makeCssClass={
                   [MockFunction] {
@@ -5376,6 +5451,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_2_icon"
               content={Object {}}
               events={Object {}}
@@ -5403,6 +5479,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_2"
             makeCssClass={
               [MockFunction] {
@@ -5464,6 +5541,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_3_icon"
               content={Object {}}
               events={Object {}}
@@ -5491,6 +5569,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_3"
             makeCssClass={
               [MockFunction] {
@@ -5586,6 +5665,7 @@ Array [
           popupClassName="{\\"style\\":[null,null,null]}"
           title={
             <MenuTitle
+              basePath=""
               id="menu_group_1"
               makeCssClass={
                 [MockFunction] {
@@ -5645,6 +5725,7 @@ Array [
         >
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_1_1"
               makeCssClass={
                 [MockFunction] {
@@ -5705,6 +5786,7 @@ Array [
           <mockConstructor
             title={
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2"
                 makeCssClass={
                   [MockFunction] {
@@ -5764,6 +5846,7 @@ Array [
           >
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_1"
                 makeCssClass={
                   [MockFunction] {
@@ -5823,6 +5906,7 @@ Array [
             </mockConstructor>
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_2"
                 makeCssClass={
                   [MockFunction] {
@@ -5885,6 +5969,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_2_icon"
               content={Object {}}
               events={Object {}}
@@ -5912,6 +5997,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_2"
             makeCssClass={
               [MockFunction] {
@@ -5973,6 +6059,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_3_icon"
               content={Object {}}
               events={Object {}}
@@ -6000,6 +6087,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_3"
             makeCssClass={
               [MockFunction] {
@@ -6096,6 +6184,7 @@ Array [
           popupClassName="{\\"style\\":[null,false,{\\"& > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#cea7f2 !important\\",\\"color\\":\\"#6e2bcc !important\\",\\"& > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"& > * > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"borderColor\\":\\"#6e2bcc !important\\",\\"&:after\\":{\\"borderColor\\":\\"#6e2bcc !important\\"}},\\"& > ul > li.ant-menu-item:hover\\":{\\"color\\":\\"#6e2bcc !important\\",\\"& > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"& > * > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"borderColor\\":\\"#6e2bcc !important\\",\\"&:after\\":{\\"borderColor\\":\\"#6e2bcc !important\\"}},\\"& > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#cea7f2 !important\\",\\"color\\":\\"#6e2bcc !important\\",\\"& > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"& > * > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"borderColor\\":\\"#6e2bcc !important\\",\\"&:after\\":{\\"borderColor\\":\\"#6e2bcc !important\\"}}}]}"
           title={
             <MenuTitle
+              basePath=""
               id="menu_group_1"
               makeCssClass={
                 [MockFunction] {
@@ -6297,6 +6386,7 @@ Array [
         >
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_1_1"
               makeCssClass={
                 [MockFunction] {
@@ -6499,6 +6589,7 @@ Array [
           <mockConstructor
             title={
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2"
                 makeCssClass={
                   [MockFunction] {
@@ -6700,6 +6791,7 @@ Array [
           >
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_1"
                 makeCssClass={
                   [MockFunction] {
@@ -6901,6 +6993,7 @@ Array [
             </mockConstructor>
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_2"
                 makeCssClass={
                   [MockFunction] {
@@ -7105,6 +7198,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_2_icon"
               content={Object {}}
               events={Object {}}
@@ -7132,6 +7226,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_2"
             makeCssClass={
               [MockFunction] {
@@ -7335,6 +7430,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_3_icon"
               content={Object {}}
               events={Object {}}
@@ -7362,6 +7458,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_3"
             makeCssClass={
               [MockFunction] {
@@ -7600,6 +7697,7 @@ Array [
           popupClassName="{\\"style\\":[{\\"& > ul\\":{\\"backgroundColor\\":\\"#6da6a8 !important\\"}},false,{\\"& > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > ul > li.ant-menu-item:hover\\":{\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}}}]}"
           title={
             <MenuTitle
+              basePath=""
               id="menu_group_1"
               makeCssClass={
                 [MockFunction] {
@@ -7807,6 +7905,7 @@ Array [
         >
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_1_1"
               makeCssClass={
                 [MockFunction] {
@@ -8015,6 +8114,7 @@ Array [
           <mockConstructor
             title={
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2"
                 makeCssClass={
                   [MockFunction] {
@@ -8222,6 +8322,7 @@ Array [
           >
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_1"
                 makeCssClass={
                   [MockFunction] {
@@ -8429,6 +8530,7 @@ Array [
             </mockConstructor>
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_2"
                 makeCssClass={
                   [MockFunction] {
@@ -8639,6 +8741,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_2_icon"
               content={Object {}}
               events={Object {}}
@@ -8666,6 +8769,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_2"
             makeCssClass={
               [MockFunction] {
@@ -8875,6 +8979,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_3_icon"
               content={Object {}}
               events={Object {}}
@@ -8902,6 +9007,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_3"
             makeCssClass={
               [MockFunction] {
@@ -9146,6 +9252,7 @@ Array [
           popupClassName="{\\"style\\":[{\\"& > ul\\":{\\"backgroundColor\\":\\"#004715 !important\\"}},null,null]}"
           title={
             <MenuTitle
+              basePath=""
               id="menu_group_1"
               makeCssClass={
                 [MockFunction] {
@@ -9211,6 +9318,7 @@ Array [
         >
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_1_1"
               makeCssClass={
                 [MockFunction] {
@@ -9277,6 +9385,7 @@ Array [
           <mockConstructor
             title={
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2"
                 makeCssClass={
                   [MockFunction] {
@@ -9342,6 +9451,7 @@ Array [
           >
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_1"
                 makeCssClass={
                   [MockFunction] {
@@ -9407,6 +9517,7 @@ Array [
             </mockConstructor>
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_2"
                 makeCssClass={
                   [MockFunction] {
@@ -9475,6 +9586,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_2_icon"
               content={Object {}}
               events={Object {}}
@@ -9502,6 +9614,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_2"
             makeCssClass={
               [MockFunction] {
@@ -9569,6 +9682,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_3_icon"
               content={Object {}}
               events={Object {}}
@@ -9596,6 +9710,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_3"
             makeCssClass={
               [MockFunction] {
@@ -9694,6 +9809,7 @@ Array [
           popupClassName="{\\"style\\":[null,null,null]}"
           title={
             <MenuTitle
+              basePath=""
               id="menu_group_1"
               makeCssClass={
                 [MockFunction] {
@@ -9753,6 +9869,7 @@ Array [
         >
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_1_1"
               makeCssClass={
                 [MockFunction] {
@@ -9813,6 +9930,7 @@ Array [
           <mockConstructor
             title={
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2"
                 makeCssClass={
                   [MockFunction] {
@@ -9872,6 +9990,7 @@ Array [
           >
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_1"
                 makeCssClass={
                   [MockFunction] {
@@ -9931,6 +10050,7 @@ Array [
             </mockConstructor>
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_2"
                 makeCssClass={
                   [MockFunction] {
@@ -9993,6 +10113,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_2_icon"
               content={Object {}}
               events={Object {}}
@@ -10020,6 +10141,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_2"
             makeCssClass={
               [MockFunction] {
@@ -10081,6 +10203,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_3_icon"
               content={Object {}}
               events={Object {}}
@@ -10108,6 +10231,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_3"
             makeCssClass={
               [MockFunction] {
@@ -10198,6 +10322,7 @@ Array [
           popupClassName="{\\"style\\":[null,{\\"& > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}}},false]}"
           title={
             <MenuTitle
+              basePath=""
               id="menu_group_1"
               makeCssClass={
                 [MockFunction] {
@@ -10329,6 +10454,7 @@ Array [
         >
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_1_1"
               makeCssClass={
                 [MockFunction] {
@@ -10461,6 +10587,7 @@ Array [
           <mockConstructor
             title={
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2"
                 makeCssClass={
                   [MockFunction] {
@@ -10592,6 +10719,7 @@ Array [
           >
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_1"
                 makeCssClass={
                   [MockFunction] {
@@ -10723,6 +10851,7 @@ Array [
             </mockConstructor>
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_2"
                 makeCssClass={
                   [MockFunction] {
@@ -10857,6 +10986,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_2_icon"
               content={Object {}}
               events={Object {}}
@@ -10884,6 +11014,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_2"
             makeCssClass={
               [MockFunction] {
@@ -11017,6 +11148,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_3_icon"
               content={Object {}}
               events={Object {}}
@@ -11044,6 +11176,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_3"
             makeCssClass={
               [MockFunction] {
@@ -11208,6 +11341,7 @@ Array [
           popupClassName="{\\"style\\":[{\\"& > ul\\":{\\"backgroundColor\\":\\"#004715 !important\\"}},{\\"& > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}}},false]}"
           title={
             <MenuTitle
+              basePath=""
               id="menu_group_1"
               makeCssClass={
                 [MockFunction] {
@@ -11345,6 +11479,7 @@ Array [
         >
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_1_1"
               makeCssClass={
                 [MockFunction] {
@@ -11483,6 +11618,7 @@ Array [
           <mockConstructor
             title={
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2"
                 makeCssClass={
                   [MockFunction] {
@@ -11620,6 +11756,7 @@ Array [
           >
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_1"
                 makeCssClass={
                   [MockFunction] {
@@ -11757,6 +11894,7 @@ Array [
             </mockConstructor>
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_2"
                 makeCssClass={
                   [MockFunction] {
@@ -11897,6 +12035,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_2_icon"
               content={Object {}}
               events={Object {}}
@@ -11924,6 +12063,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_2"
             makeCssClass={
               [MockFunction] {
@@ -12063,6 +12203,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_3_icon"
               content={Object {}}
               events={Object {}}
@@ -12090,6 +12231,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_3"
             makeCssClass={
               [MockFunction] {
@@ -12260,6 +12402,7 @@ Array [
           popupClassName="{\\"style\\":[null,null,null]}"
           title={
             <MenuTitle
+              basePath=""
               id="menu_group_1"
               makeCssClass={
                 [MockFunction] {
@@ -12319,6 +12462,7 @@ Array [
         >
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_1_1"
               makeCssClass={
                 [MockFunction] {
@@ -12379,6 +12523,7 @@ Array [
           <mockConstructor
             title={
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2"
                 makeCssClass={
                   [MockFunction] {
@@ -12438,6 +12583,7 @@ Array [
           >
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_1"
                 makeCssClass={
                   [MockFunction] {
@@ -12497,6 +12643,7 @@ Array [
             </mockConstructor>
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_2"
                 makeCssClass={
                   [MockFunction] {
@@ -12559,6 +12706,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_2_icon"
               content={Object {}}
               events={Object {}}
@@ -12586,6 +12734,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_2"
             makeCssClass={
               [MockFunction] {
@@ -12647,6 +12796,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_3_icon"
               content={Object {}}
               events={Object {}}
@@ -12674,6 +12824,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_3"
             makeCssClass={
               [MockFunction] {
@@ -12765,6 +12916,7 @@ Array [
           popupClassName="{\\"style\\":[null,null,null]}"
           title={
             <MenuTitle
+              basePath=""
               id="menu_group_1"
               makeCssClass={
                 [MockFunction] {
@@ -12824,6 +12976,7 @@ Array [
         >
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_1_1"
               makeCssClass={
                 [MockFunction] {
@@ -12884,6 +13037,7 @@ Array [
           <mockConstructor
             title={
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2"
                 makeCssClass={
                   [MockFunction] {
@@ -12943,6 +13097,7 @@ Array [
           >
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_1"
                 makeCssClass={
                   [MockFunction] {
@@ -13002,6 +13157,7 @@ Array [
             </mockConstructor>
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_2"
                 makeCssClass={
                   [MockFunction] {
@@ -13064,6 +13220,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_2_icon"
               content={Object {}}
               events={Object {}}
@@ -13091,6 +13248,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_2"
             makeCssClass={
               [MockFunction] {
@@ -13152,6 +13310,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_3_icon"
               content={Object {}}
               events={Object {}}
@@ -13179,6 +13338,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_3"
             makeCssClass={
               [MockFunction] {
@@ -13270,6 +13430,7 @@ Array [
           popupClassName="{\\"style\\":[null,null,null]}"
           title={
             <MenuTitle
+              basePath=""
               id="menu_group_1"
               makeCssClass={
                 [MockFunction] {
@@ -13329,6 +13490,7 @@ Array [
         >
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_1_1"
               makeCssClass={
                 [MockFunction] {
@@ -13389,6 +13551,7 @@ Array [
           <mockConstructor
             title={
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2"
                 makeCssClass={
                   [MockFunction] {
@@ -13448,6 +13611,7 @@ Array [
           >
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_1"
                 makeCssClass={
                   [MockFunction] {
@@ -13507,6 +13671,7 @@ Array [
             </mockConstructor>
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_2"
                 makeCssClass={
                   [MockFunction] {
@@ -13569,6 +13734,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_2_icon"
               content={Object {}}
               events={Object {}}
@@ -13596,6 +13762,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_2"
             makeCssClass={
               [MockFunction] {
@@ -13657,6 +13824,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_3_icon"
               content={Object {}}
               events={Object {}}
@@ -13684,6 +13852,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_3"
             makeCssClass={
               [MockFunction] {
@@ -13776,6 +13945,7 @@ Array [
           popupClassName="{\\"style\\":[{\\"& > ul\\":{\\"backgroundColor\\":\\"#004715 !important\\"}},false,{\\"& > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > ul > li.ant-menu-item:hover\\":{\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}}}]}"
           title={
             <MenuTitle
+              basePath=""
               id="menu_group_1"
               makeCssClass={
                 [MockFunction] {
@@ -13983,6 +14153,7 @@ Array [
         >
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_1_1"
               makeCssClass={
                 [MockFunction] {
@@ -14191,6 +14362,7 @@ Array [
           <mockConstructor
             title={
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2"
                 makeCssClass={
                   [MockFunction] {
@@ -14398,6 +14570,7 @@ Array [
           >
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_1"
                 makeCssClass={
                   [MockFunction] {
@@ -14605,6 +14778,7 @@ Array [
             </mockConstructor>
             <mockConstructor>
               <MenuTitle
+                basePath=""
                 id="menu_item_1_2_2"
                 makeCssClass={
                   [MockFunction] {
@@ -14815,6 +14989,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_2_icon"
               content={Object {}}
               events={Object {}}
@@ -14842,6 +15017,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_2"
             makeCssClass={
               [MockFunction] {
@@ -15051,6 +15227,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_3_icon"
               content={Object {}}
               events={Object {}}
@@ -15078,6 +15255,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_3"
             makeCssClass={
               [MockFunction] {
@@ -15318,6 +15496,7 @@ Array [
           popupClassName="{\\"style\\":[null,null,null]}"
           title={
             <MenuTitle
+              basePath=""
               id="menu_group_1"
               makeCssClass={
                 [MockFunction] {
@@ -15377,6 +15556,7 @@ Array [
         >
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_1"
               makeCssClass={
                 [MockFunction] {
@@ -15435,6 +15615,7 @@ Array [
           </mockConstructor>
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_2"
               makeCssClass={
                 [MockFunction] {
@@ -15524,6 +15705,7 @@ Array [
           popupClassName="{\\"style\\":[null,null,null]}"
           title={
             <MenuTitle
+              basePath=""
               id="menu_group_1"
               makeCssClass={
                 [MockFunction] {
@@ -15583,6 +15765,7 @@ Array [
         >
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_1_1"
               makeCssClass={
                 [MockFunction] {
@@ -15642,6 +15825,7 @@ Array [
           </mockConstructor>
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_1_2"
               makeCssClass={
                 [MockFunction] {
@@ -15704,6 +15888,7 @@ Array [
           danger={true}
           icon={
             <IconBlock
+              basePath=""
               blockId="menu_item_2_icon"
               content={Object {}}
               events={Object {}}
@@ -15731,6 +15916,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="menu_item_2"
             makeCssClass={
               [MockFunction] {
@@ -15820,6 +16006,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="Menu_item_one_icon"
               content={Object {}}
               events={Object {}}
@@ -15847,6 +16034,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="Menu_item_one"
             makeCssClass={
               [MockFunction] {
@@ -15883,6 +16071,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="Menu Item two_icon"
               content={Object {}}
               events={Object {}}
@@ -15910,6 +16099,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="Menu Item two"
             makeCssClass={
               [MockFunction] {
@@ -15972,6 +16162,7 @@ Array [
       "children": Array [
         <mockConstructor>
           <MenuTitle
+            basePath=""
             id="Menu_item_one"
             makeCssClass={
               [MockFunction] {
@@ -16002,6 +16193,7 @@ Array [
         </mockConstructor>,
         <mockConstructor>
           <MenuTitle
+            basePath=""
             id="Menu Item two"
             makeCssClass={
               [MockFunction] {
@@ -16062,6 +16254,7 @@ Array [
           popupClassName="{\\"style\\":[null,null,null]}"
           title={
             <MenuTitle
+              basePath=""
               id="menu_group_1"
               makeCssClass={
                 [MockFunction] {
@@ -16121,6 +16314,7 @@ Array [
         >
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_1"
               makeCssClass={
                 [MockFunction] {
@@ -16180,6 +16374,7 @@ Array [
           </mockConstructor>
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_2"
               makeCssClass={
                 [MockFunction] {
@@ -16270,6 +16465,7 @@ Array [
           popupClassName="{\\"style\\":[null,null,null]}"
           title={
             <MenuTitle
+              basePath=""
               id="menu_group_1"
               makeCssClass={
                 [MockFunction] {
@@ -16329,6 +16525,7 @@ Array [
         >
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_1"
               makeCssClass={
                 [MockFunction] {
@@ -16388,6 +16585,7 @@ Array [
           </mockConstructor>
           <mockConstructor>
             <MenuTitle
+              basePath=""
               id="menu_item_2"
               makeCssClass={
                 [MockFunction] {
@@ -16475,6 +16673,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="Menu_item_one_icon"
               content={Object {}}
               events={Object {}}
@@ -16502,6 +16701,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="Menu_item_one"
             makeCssClass={
               [MockFunction] {
@@ -16539,6 +16739,7 @@ Array [
         <mockConstructor
           icon={
             <IconBlock
+              basePath=""
               blockId="Menu Item two_icon"
               content={Object {}}
               events={Object {}}
@@ -16566,6 +16767,7 @@ Array [
           }
         >
           <MenuTitle
+            basePath=""
             id="Menu Item two"
             makeCssClass={
               [MockFunction] {

@@ -49,3 +49,9 @@
   properties:
     value: 3.45
     suffixIcon: AccountBookFilled
+- id: 'properties.title with html'
+  type: Statistic
+  properties:
+    title: '<div style="color:blue;">Very Html</div>'
+    value: 100
+    suffix: '%'

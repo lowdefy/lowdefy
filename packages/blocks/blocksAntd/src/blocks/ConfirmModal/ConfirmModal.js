@@ -16,7 +16,7 @@
 
 import React, { useEffect } from 'react';
 import { Modal } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
 import Icon from '../Icon/Icon';
 
 const ConfirmModal = ({ blockId, events, content, methods, properties }) => {
@@ -31,8 +31,10 @@ const ConfirmModal = ({ blockId, events, content, methods, properties }) => {
       methods.triggerEvent({ name: 'onOpen' });
       Modal[args.status || properties.status || 'confirm']({
         id: `${blockId}_confirm_modal`,
-        title: properties.title,
-        content: (content.content && content.content()) || properties.content,
+        title: <RenderHtml html={properties.title} methods={methods} />,
+        content: (content.content && content.content()) || (
+          <RenderHtml html={properties.content} methods={methods} />
+        ),
         className: methods.makeCssClass(properties.modalStyle),
         okText: properties.okText || 'Ok',
         okButtonProps: properties.okButton,
@@ -44,12 +46,12 @@ const ConfirmModal = ({ blockId, events, content, methods, properties }) => {
         width: properties.width,
         zIndex: properties.zIndex,
         onOk: async () => {
-          await methods.triggerEvent({ name: 'onOk' });
-          methods.triggerEvent({ name: 'onClose' });
+          const response = await methods.triggerEvent({ name: 'onOk' });
+          if (response.success === false && response.bounced !== true) throw response;
         },
         onCancel: async () => {
-          await methods.triggerEvent({ name: 'onCancel' });
-          methods.triggerEvent({ name: 'onClose' });
+          const response = await methods.triggerEvent({ name: 'onCancel' });
+          if (response.success === false && response.bounced !== true) throw response;
         },
         ...additionalProps,
       });

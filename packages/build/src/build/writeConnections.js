@@ -22,7 +22,7 @@ async function writeConnections({ components, context }) {
     throw new Error(`Connections is not an array.`);
   }
   const writePromises = components.connections.map(async (connection) => {
-    await context.artifactSetter.set({
+    await context.writeBuildArtifact({
       filePath: `connections/${connection.connectionId}.json`,
       content: JSON.stringify(connection, null, 2),
     });

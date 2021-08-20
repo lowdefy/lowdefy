@@ -21,7 +21,7 @@ import { get } from '@lowdefy/helpers';
 import { readFile } from '@lowdefy/node-utils';
 import findOpenPort from '../../utils/findOpenPort';
 
-async function getExpress({ context, gqlServer, options }) {
+async function getExpress({ context, gqlServer }) {
   const serveIndex = async (req, res) => {
     let indexHtml = await readFile(path.resolve(__dirname, 'shell/index.html'));
     let appConfig = await readFile(path.resolve(context.outputDirectory, 'app.json'));
@@ -39,7 +39,8 @@ async function getExpress({ context, gqlServer, options }) {
 
   const app = express();
 
-  app.set('port', parseInt(options.port));
+  // port is initialized to 3000 in prepare function
+  app.set('port', parseInt(context.options.port));
 
   gqlServer.applyMiddleware({ app, path: '/api/graphql' });
 

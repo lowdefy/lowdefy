@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Typography } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
 import { type } from '@lowdefy/helpers';
 
 import Icon from '../Icon/Icon';
@@ -94,7 +94,7 @@ const ParagraphBlock = ({ blockId, events, properties, methods }) => (
     type={properties.type}
     underline={properties.underline}
   >
-    {properties.content}
+    <RenderHtml html={properties.content} methods={methods} />
   </Paragraph>
 );
 

@@ -48,12 +48,12 @@ async function buildPages({ components, context }) {
       );
     }
     page.pageId = page.id;
-    await checkPageIsContext(page, context.metaLoader);
+    await checkPageIsContext(page, context);
     await buildBlock(page, {
       auth: page.auth,
       pageId: page.pageId,
       requests: [],
-      metaLoader: context.metaLoader,
+      getMeta: context.getMeta,
     });
     // set page.id since buildBlock sets id as well.
     page.id = `page:${page.pageId}`;

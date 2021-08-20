@@ -16,16 +16,16 @@
   limitations under the License.
 */
 
-import createFileLoader from './loaders/fileLoader';
-import createFileSetter from './loaders/fileSetter';
-import createMetaLoader from './loaders/metaLoader';
+import createGetMeta from './utils/meta/getMeta';
+import createWriteBuildArtifact from './utils/files/writeBuildArtifact';
+import createReadConfigFile from './utils/files/readConfigFile';
 
 import addDefaultPages from './build/addDefaultPages/addDefaultPages';
 import buildAuth from './build/buildAuth/buildAuth';
 import buildConnections from './build/buildConnections';
 import buildMenu from './build/buildMenu';
 import buildPages from './build/buildPages/buildPages';
-import buildRefs from './build/buildRefs';
+import buildRefs from './build/buildRefs/buildRefs';
 import cleanOutputDirectory from './build/cleanOutputDirectory';
 import testSchema from './build/testSchema';
 import validateApp from './build/validateApp';
@@ -39,14 +39,17 @@ import writePages from './build/writePages';
 import writeRequests from './build/writeRequests';
 
 function createContext(options) {
-  const { logger, cacheDirectory, configDirectory, outputDirectory } = options;
+  const { blocksServerUrl, cacheDirectory, configDirectory, logger, outputDirectory, refResolver } =
+    options;
   const context = {
-    logger,
-    configLoader: createFileLoader({ baseDirectory: configDirectory }),
-    artifactSetter: createFileSetter({ baseDirectory: outputDirectory }),
-    configDirectory,
-    outputDirectory,
+    writeBuildArtifact: createWriteBuildArtifact({ outputDirectory }),
+    readConfigFile: createReadConfigFile({ configDirectory }),
+    blocksServerUrl,
     cacheDirectory,
+    configDirectory,
+    logger,
+    outputDirectory,
+    refResolver,
   };
   return context;
 }
@@ -56,7 +59,7 @@ async function build(options) {
   try {
     let components = await buildRefs({ context });
     await testSchema({ components, context });
-    context.metaLoader = createMetaLoader({ components, context });
+    context.getMeta = createGetMeta(context);
     await validateApp({ components, context });
     await validateConfig({ components, context });
     await addDefaultPages({ components, context });

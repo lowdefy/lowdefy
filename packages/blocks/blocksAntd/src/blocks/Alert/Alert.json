@@ -27,7 +27,7 @@
         },
         "description": {
           "type": "string",
-          "description": "Content description of alert."
+          "description": "Content description of alert - supports html."
         },
         "icon": {
           "type": ["string", "object"],
@@ -38,7 +38,7 @@
         },
         "message": {
           "type": "string",
-          "description": "Content message of alert."
+          "description": "Content message of alert - supports html."
         },
         "showIcon": {
           "type": "boolean",

@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Radio } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
 import { type } from '@lowdefy/helpers';
 
 import Label from '../Label/Label';
@@ -72,11 +72,20 @@ const ButtonSelector = ({
             {uniqueValueOptions.map((opt, i) =>
               type.isPrimitive(opt) ? (
                 <Radio.Button id={`${blockId}_${i}`} key={i} value={i}>
-                  {`${opt}`}
+                  <RenderHtml html={`${opt}`} methods={methods} />
                 </Radio.Button>
               ) : (
-                <Radio.Button id={`${blockId}_${i}`} key={i} value={i} disabled={opt.disabled}>
-                  {type.isNone(opt.label) ? `${opt.value}` : opt.label}
+                <Radio.Button
+                  id={`${blockId}_${i}`}
+                  key={i}
+                  value={i}
+                  disabled={opt.disabled}
+                  className={methods.makeCssClass(opt.style)}
+                >
+                  <RenderHtml
+                    html={type.isNone(opt.label) ? `${opt.value}` : opt.label}
+                    methods={methods}
+                  />
                 </Radio.Button>
               )
             )}

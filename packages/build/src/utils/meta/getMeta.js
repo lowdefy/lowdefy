@@ -26,20 +26,22 @@ Steps to fetch meta
 */
 
 import { type as typeHelper } from '@lowdefy/helpers';
+
+import cachedPromises from '../cachePromises';
 import createFetchMetaCache from './fetchMetaCache';
 import createWriteMetaCache from './writeMetaCache';
-import defaultMetaLocations from './defaultMetaLocations';
+import metaLocations from './metaLocations';
 import fetchMetaUrl from './fetchMetaUrl';
 
-function createGetMeta({ types, cacheDirectory }) {
-  const metaLocations = {
-    ...defaultMetaLocations,
+function createGetMeta({ blocksServerUrl, cacheDirectory, types }) {
+  const allMetaLocations = {
+    ...metaLocations({ blocksServerUrl }),
     ...types,
   };
   const fetchMetaCache = createFetchMetaCache({ cacheDirectory });
   const writeMetaCache = createWriteMetaCache({ cacheDirectory });
   async function getMeta(type) {
-    const location = metaLocations[type];
+    const location = allMetaLocations[type];
     if (!location) {
       throw new Error(
         `Block type ${JSON.stringify(type)} is not defined. Specify type url in types array.`
@@ -51,30 +53,25 @@ function createGetMeta({ types, cacheDirectory }) {
 
     if (cacheMeta) {
       meta = await fetchMetaCache(location);
-      if (meta)
-        return {
-          type,
-          meta,
-        };
-    }
-    meta = await fetchMetaUrl({ location, type });
-    if (cacheMeta) {
-      await writeMetaCache({ location, meta });
+      if (meta) {
+        return meta;
+      }
     }
 
+    meta = await fetchMetaUrl({ location, type });
     // TODO: implement Ajv schema check. Use testAjvSchema func from @lowdefy/ajv
     if (meta && typeHelper.isString(meta.category) && meta.moduleFederation) {
-      return {
-        type,
-        meta,
-      };
+      if (cacheMeta) {
+        await writeMetaCache({ location, meta });
+      }
+      return meta;
     }
     throw new Error(
       `Block type ${JSON.stringify(type)} has invalid block meta at ${JSON.stringify(location)}.`
     );
   }
 
-  return getMeta;
+  return cachedPromises(getMeta);
 }
 
 export default createGetMeta;

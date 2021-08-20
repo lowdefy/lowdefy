@@ -34,7 +34,7 @@
       "properties": {
         "content": {
           "type": "string",
-          "description": "The content of the message."
+          "description": "The content of the message - supports html."
         },
         "duration": {
           "type": "number",

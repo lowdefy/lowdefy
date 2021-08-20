@@ -18,10 +18,16 @@ exports[`Mock render - properties.label: inline_true - value[0] - default 1`] = 
 
 exports[`Mock render - properties.label: span_12 - value[0] - default 1`] = `Array []`;
 
+exports[`Mock render - properties.options.label: html - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - properties.options: html - value[0] - default 1`] = `Array []`;
+
 exports[`Mock render - properties.options-number - value[0] - default 1`] = `Array []`;
 
 exports[`Mock render - properties.options-object - value[0] - default 1`] = `Array []`;
 
 exports[`Mock render - properties.options-string - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - properties.options-style - value[0] - default 1`] = `Array []`;
 
 exports[`Mock render - properties.title - value[0] - default 1`] = `Array []`;

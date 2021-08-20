@@ -56,6 +56,18 @@ exports[`Test Schema properties.label span: 12 1`] = `true`;
 
 exports[`Test Schema properties.label span: 12 2`] = `null`;
 
+exports[`Test Schema properties.options.label: html 1`] = `true`;
+
+exports[`Test Schema properties.options.label: html 2`] = `null`;
+
+exports[`Test Schema properties.options.label: html and properties.options.filterString 1`] = `true`;
+
+exports[`Test Schema properties.options.label: html and properties.options.filterString 2`] = `null`;
+
+exports[`Test Schema properties.options: html 1`] = `true`;
+
+exports[`Test Schema properties.options: html 2`] = `null`;
+
 exports[`Test Schema properties.options-boolean 1`] = `true`;
 
 exports[`Test Schema properties.options-boolean 2`] = `null`;
@@ -71,6 +83,10 @@ exports[`Test Schema properties.options-object 2`] = `null`;
 exports[`Test Schema properties.options-string 1`] = `true`;
 
 exports[`Test Schema properties.options-string 2`] = `null`;
+
+exports[`Test Schema properties.options-style 1`] = `true`;
+
+exports[`Test Schema properties.options-style 2`] = `null`;
 
 exports[`Test Schema properties.optionsStyle: CSS style applied 1`] = `true`;
 

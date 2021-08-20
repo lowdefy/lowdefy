@@ -17,12 +17,15 @@
 import getFromObject from '../getFromObject';
 
 const validProperties = [
+  'basePath',
   'href',
   'origin',
   'protocol',
+  'homePageId',
   'host',
   'hostname',
   'port',
+  'pageId',
   'pathname',
   'search',
   'hash',
@@ -44,12 +47,15 @@ function _location({ arrayIndices, context, contexts, env, location, params }) {
     );
   }
   const windowLocation = {
+    basePath: context.lowdefy.basePath,
     href: window.location.href,
     origin: window.location.origin,
     protocol: window.location.protocol,
+    homePageId: context.lowdefy.homePageId,
     host: window.location.host,
     hostname: window.location.hostname,
     port: window.location.port,
+    pageId: context.lowdefy.pageId,
     pathname: window.location.pathname,
     search: window.location.search,
     hash: window.location.hash,

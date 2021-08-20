@@ -1,6 +1,6 @@
 - id: default
   type: AutoComplete
-- id: "properties.options-string"
+- id: 'properties.options-string'
   type: AutoComplete
   properties:
     options:
@@ -9,15 +9,15 @@
 - id: properties.title
   type: AutoComplete
   properties:
-    title: "properties.title: My AutoComplete Title"
-- id: "properties.allowClear: false"
+    title: 'properties.title: My AutoComplete Title'
+- id: 'properties.allowClear: false'
   type: AutoComplete
   properties:
     options:
       - Option 1
       - Option 2
     allowClear: false
-- id: "properties.inputStyle: CSS style applied"
+- id: 'properties.inputStyle: CSS style applied'
   type: AutoComplete
   properties:
     options:
@@ -25,7 +25,7 @@
       - Option 2
     inputStyle:
       border: 1px solid red
-- id: "properties.optionsStyle: CSS style applied"
+- id: 'properties.optionsStyle: CSS style applied'
   type: AutoComplete
   properties:
     options:
@@ -33,15 +33,22 @@
       - Option 2
     optionsStyle:
       color: blue
-
-- id: "properties.autoFocus: true"
+- id: 'properties.options-object'
+  type: AutoComplete
+  properties:
+    options:
+      - label: one
+        value: 'abc'
+      - label: two
+        value: 'def'
+- id: 'properties.autoFocus: true'
   type: AutoComplete
   properties:
     options:
       - Option 1
       - Option 2
     autoFocus: true
-- id: "properties.backfill: true"
+- id: 'properties.backfill: true'
   type: AutoComplete
   properties:
     options:
@@ -61,18 +68,18 @@
 #   type: AutoComplete
 #   properties:
 #     disabled: true
-- id: "properties.placeholder_Text_inside_block"
+- id: 'properties.placeholder_Text_inside_block'
   type: AutoComplete"
   properties:
     placeholder: Text inside block
-- id: "properties.size: small"
+- id: 'properties.size: small'
   type: AutoComplete
   properties:
     options:
       - Option 1
       - Option 2
     size: small
-- id: "properties.size: large"
+- id: 'properties.size: large'
   type: AutoComplete
   properties:
     options:
@@ -114,3 +121,42 @@
     label:
       colon: false
       extra: showing extra
+- id: 'properties.options: html'
+  type: AutoComplete
+  properties:
+    options:
+      - '<div>Some main text</div><div style="font-size: 6px;">Some small subtext</div>'
+      - '<div style="color: green;">Option green</div>'
+      - Option 3
+- id: 'properties.options.label: html'
+  type: AutoComplete
+  properties:
+    options:
+      - label: '<div>Some main text</div><div style="font-size: 6px;">Some small subtext</div>'
+        value: 'one value'
+      - label: '<div style="color: green;">Option green</div>'
+        value: 'two value'
+      - label: Option 3
+        value: 'three'
+- id: 'properties.options-style'
+  type: AutoComplete
+  properties:
+    options:
+      - label: one
+        value: 'one value'
+        style:
+          color: red
+      - label: two
+        value: 'two value'
+- id: 'properties.options.label: html and properties.options.filterString'
+  type: AutoComplete
+  properties:
+    options:
+      - label: '<div>Some main text</div><div style="font-size: 6px;">Some small subtext</div>'
+        filterString: 'Some main text'
+        value: 'one value'
+      - label: '<div style="color: green;">Option green</div>'
+        filterString: 'Option green'
+        value: 'two value'
+      - label: Option 3
+        value: 'three value'
