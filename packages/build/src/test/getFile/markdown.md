@@ -1,3 +1,0 @@
-### Markdown title
-
-Markdown body

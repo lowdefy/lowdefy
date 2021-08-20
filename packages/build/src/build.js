@@ -39,7 +39,8 @@ import writePages from './build/writePages';
 import writeRequests from './build/writeRequests';
 
 function createContext(options) {
-  const { blocksServerUrl, cacheDirectory, configDirectory, logger, outputDirectory } = options;
+  const { blocksServerUrl, cacheDirectory, configDirectory, logger, outputDirectory, refResolver } =
+    options;
   const context = {
     writeBuildArtifact: createWriteBuildArtifact({ outputDirectory }),
     readConfigFile: createReadConfigFile({ configDirectory }),
@@ -48,6 +49,7 @@ function createContext(options) {
     configDirectory,
     logger,
     outputDirectory,
+    refResolver,
   };
   return context;
 }

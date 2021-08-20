@@ -14,20 +14,26 @@
   limitations under the License.
 */
 
-import { get } from '@lowdefy/helpers';
-import { v1 as uuid } from 'uuid';
+import { type } from '@lowdefy/helpers';
 
-import getRefPath from './getRefPath';
+async function getConfigFile({ context, refDef, referencedFrom }) {
+  if (!type.isString(refDef.path)) {
+    throw new Error(
+      `Invalid _ref definition ${JSON.stringify({
+        _ref: refDef.original,
+      })} in file ${referencedFrom}`
+    );
+  }
 
-function makeRefDefinition(refDefinition) {
-  return {
-    id: uuid(),
-    original: refDefinition,
-    path: getRefPath(refDefinition),
-    resolver: get(refDefinition, 'resolver'),
-    transformer: get(refDefinition, 'transformer'),
-    vars: get(refDefinition, 'vars', { default: {} }),
-  };
+  const content = context.readConfigFile(refDef.path);
+
+  if (content === null) {
+    throw new Error(
+      `Tried to reference file "${refDef.path}" from "${referencedFrom}", but file does not exist.`
+    );
+  }
+
+  return content;
 }
 
-export default makeRefDefinition;
+export default getConfigFile;

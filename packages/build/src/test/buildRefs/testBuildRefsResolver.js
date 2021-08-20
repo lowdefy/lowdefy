@@ -14,20 +14,13 @@
   limitations under the License.
 */
 
-import { get } from '@lowdefy/helpers';
-import { v1 as uuid } from 'uuid';
-
-import getRefPath from './getRefPath';
-
-function makeRefDefinition(refDefinition) {
+function resolver(path, vars, context) {
   return {
-    id: uuid(),
-    original: refDefinition,
-    path: getRefPath(refDefinition),
-    resolver: get(refDefinition, 'resolver'),
-    transformer: get(refDefinition, 'transformer'),
-    vars: get(refDefinition, 'vars', { default: {} }),
+    resolved: true,
+    path,
+    vars,
+    context,
   };
 }
 
-export default makeRefDefinition;
+module.exports = resolver;

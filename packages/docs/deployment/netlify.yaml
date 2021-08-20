@@ -48,25 +48,19 @@ _ref:
 
             - Set your build command to `npx lowdefy@latest build-netlify`.
             - Set your publish directory to `.lowdefy/publish`.
-            - Review the other settings, and deploy your site.
-
-            > Your site won't work yet. You first need to configure the Lowdefy server in the next step.
 
             #### Step 4
 
             Configure the Lowdefy server.
 
-            - Click the "Site settings" button.
-            - Choose the "Functions" section in the left menu.
-            - Edit the settings and set your functions directory to `.lowdefy/functions`.
+            - Click the "Advanced build settings" button.
+            - Set the functions directory to `.lowdefy/functions`.
 
             #### Step 5
 
-            Redeploy your site.
+            Deploy your site.
 
-            - Go to the "Deploys" tab.
-            - Click the "Trigger deploy" button and deploy your site.
-            - Wait for you site to finish deploying.
+            - Click "Deploy site"
 
             On the "Site overview" tab you will find your site url.
 

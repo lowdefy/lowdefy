@@ -21,7 +21,7 @@ import runTransformer from './runTransformer';
 
 async function recursiveParseFile({ context, refDef, count, referencedFrom }) {
   // TODO: Maybe it would be better to detect a cycle, since this is the real issue here?
-  if (count > 20) {
+  if (count > 40) {
     throw new Error(`Maximum recursion depth of references exceeded.`);
   }
   let fileContent = await getRefContent({ context, refDef, referencedFrom });
