@@ -7,6 +7,7 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
+        basePath=""
         blockId="default_checkedIcon"
         content={Object {}}
         events={Object {}}
@@ -42,6 +43,7 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
+        basePath=""
         blockId="default_uncheckedIcon"
         content={Object {}}
         events={Object {}}
@@ -83,6 +85,7 @@ Array [
       "autoFocus": true,
       "checked": false,
       "checkedChildren": <IconBlock
+        basePath=""
         blockId="properties.autoFocus: true_checkedIcon"
         content={Object {}}
         events={Object {}}
@@ -118,6 +121,7 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
+        basePath=""
         blockId="properties.autoFocus: true_uncheckedIcon"
         content={Object {}}
         events={Object {}}
@@ -159,6 +163,7 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
+        basePath=""
         blockId="properties.checkedIcon: CheckCircleOutlined_checkedIcon"
         content={Object {}}
         events={Object {}}
@@ -194,6 +199,7 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
+        basePath=""
         blockId="properties.checkedIcon: CheckCircleOutlined_uncheckedIcon"
         content={Object {}}
         events={Object {}}
@@ -244,6 +250,7 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
+        basePath=""
         blockId="properties.checkedText: Checked_uncheckedIcon"
         content={Object {}}
         events={Object {}}
@@ -285,6 +292,7 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
+        basePath=""
         blockId="properties.color: #_checkedIcon"
         content={Object {}}
         events={Object {}}
@@ -320,6 +328,7 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
+        basePath=""
         blockId="properties.color: #_uncheckedIcon"
         content={Object {}}
         events={Object {}}
@@ -361,6 +370,7 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
+        basePath=""
         blockId="properties.disabled: true_checkedIcon"
         content={Object {}}
         events={Object {}}
@@ -396,6 +406,7 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
+        basePath=""
         blockId="properties.disabled: true_uncheckedIcon"
         content={Object {}}
         events={Object {}}
@@ -437,6 +448,7 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
+        basePath=""
         blockId="properties.inputStyle: CSS style applied_checkedIcon"
         content={Object {}}
         events={Object {}}
@@ -472,6 +484,7 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
+        basePath=""
         blockId="properties.inputStyle: CSS style applied_uncheckedIcon"
         content={Object {}}
         events={Object {}}
@@ -513,6 +526,7 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
+        basePath=""
         blockId="properties.label align: right_checkedIcon"
         content={Object {}}
         events={Object {}}
@@ -548,6 +562,7 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
+        basePath=""
         blockId="properties.label align: right_uncheckedIcon"
         content={Object {}}
         events={Object {}}
@@ -589,6 +604,7 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
+        basePath=""
         blockId="properties.label colon: false_checkedIcon"
         content={Object {}}
         events={Object {}}
@@ -624,6 +640,7 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
+        basePath=""
         blockId="properties.label colon: false_uncheckedIcon"
         content={Object {}}
         events={Object {}}
@@ -665,6 +682,7 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
+        basePath=""
         blockId="properties.label disabled: true_checkedIcon"
         content={Object {}}
         events={Object {}}
@@ -700,6 +718,7 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
+        basePath=""
         blockId="properties.label disabled: true_uncheckedIcon"
         content={Object {}}
         events={Object {}}
@@ -741,6 +760,7 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
+        basePath=""
         blockId="properties.label extra: showing extra_checkedIcon"
         content={Object {}}
         events={Object {}}
@@ -776,6 +796,7 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
+        basePath=""
         blockId="properties.label extra: showing extra_uncheckedIcon"
         content={Object {}}
         events={Object {}}
@@ -817,6 +838,7 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
+        basePath=""
         blockId="properties.label inline: true_checkedIcon"
         content={Object {}}
         events={Object {}}
@@ -852,6 +874,7 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
+        basePath=""
         blockId="properties.label inline: true_uncheckedIcon"
         content={Object {}}
         events={Object {}}
@@ -893,6 +916,7 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
+        basePath=""
         blockId="properties.label span: 4_checkedIcon"
         content={Object {}}
         events={Object {}}
@@ -928,6 +952,7 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
+        basePath=""
         blockId="properties.label span: 4_uncheckedIcon"
         content={Object {}}
         events={Object {}}
@@ -969,6 +994,7 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
+        basePath=""
         blockId="properties.size: small_checkedIcon"
         content={Object {}}
         events={Object {}}
@@ -1004,6 +1030,7 @@ Array [
       "onChange": [Function],
       "size": "small",
       "unCheckedChildren": <IconBlock
+        basePath=""
         blockId="properties.size: small_uncheckedIcon"
         content={Object {}}
         events={Object {}}
@@ -1045,6 +1072,7 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
+        basePath=""
         blockId="properties.title_checkedIcon"
         content={Object {}}
         events={Object {}}
@@ -1080,6 +1108,7 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
+        basePath=""
         blockId="properties.title_uncheckedIcon"
         content={Object {}}
         events={Object {}}
@@ -1121,6 +1150,7 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
+        basePath=""
         blockId="properties.uncheckedIcon: UnlockFilled_checkedIcon"
         content={Object {}}
         events={Object {}}
@@ -1156,6 +1186,7 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
+        basePath=""
         blockId="properties.uncheckedIcon: UnlockFilled_uncheckedIcon"
         content={Object {}}
         events={Object {}}
@@ -1197,6 +1228,7 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
+        basePath=""
         blockId="properties.uncheckedText: Unchecked_checkedIcon"
         content={Object {}}
         events={Object {}}

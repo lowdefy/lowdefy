@@ -473,6 +473,7 @@ Array [
       "showToday": undefined,
       "size": undefined,
       "suffixIcon": <IconBlock
+        basePath=""
         blockId="properties.suffixIcon: CalendarTwoTone_suffixIcon"
         content={Object {}}
         events={Object {}}

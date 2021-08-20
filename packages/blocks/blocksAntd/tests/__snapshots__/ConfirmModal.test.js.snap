@@ -183,6 +183,7 @@ Array [
         content
       </div>,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon: AndroidFilled_icon"
         content={Object {}}
         events={Object {}}
@@ -864,6 +865,7 @@ Array [
         content
       </div>,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon: AndroidFilled_icon"
         content={Object {}}
         events={Object {}}
@@ -1545,6 +1547,7 @@ Array [
         content
       </div>,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon: AndroidFilled_icon"
         content={Object {}}
         events={Object {}}
@@ -2234,6 +2237,7 @@ Array [
         content
       </div>,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon: AndroidFilled_icon"
         content={Object {}}
         events={Object {}}
@@ -2907,6 +2911,7 @@ Array [
         content
       </div>,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon: AndroidFilled_icon"
         content={Object {}}
         events={Object {}}

@@ -11,6 +11,7 @@ Array [
       >
         <br />
         <ButtonBlock
+          basePath=""
           blockId="default_add_button"
           content={Object {}}
           events={Object {}}
@@ -68,6 +69,7 @@ Array [
       >
         <br />
         <ButtonBlock
+          basePath=""
           blockId="properties.addItemButton: title: Add new Item_add_button"
           content={Object {}}
           events={Object {}}
@@ -126,6 +128,7 @@ Array [
       >
         <br />
         <ButtonBlock
+          basePath=""
           blockId="properties.addToFront: true_add_button"
           content={Object {}}
           events={Object {}}
@@ -202,6 +205,7 @@ Array [
       >
         <br />
         <ButtonBlock
+          basePath=""
           blockId="properties.noDataTitle: No title display_add_button"
           content={Object {}}
           events={Object {}}
@@ -259,6 +263,7 @@ Array [
       >
         <br />
         <ButtonBlock
+          basePath=""
           blockId="properties.removeItemIcon: DeleteOutlined_add_button"
           content={Object {}}
           events={Object {}}
@@ -316,6 +321,7 @@ Array [
       >
         <br />
         <ButtonBlock
+          basePath=""
           blockId="properties.removeItemIcon: name: DeleteOutlined_add_button"
           content={Object {}}
           events={Object {}}
@@ -373,6 +379,7 @@ Array [
       >
         <br />
         <ButtonBlock
+          basePath=""
           blockId="properties.size: large_add_button"
           content={Object {}}
           events={Object {}}
@@ -430,6 +437,7 @@ Array [
       >
         <br />
         <ButtonBlock
+          basePath=""
           blockId="properties.size: small_add_button"
           content={Object {}}
           events={Object {}}
@@ -487,6 +495,7 @@ Array [
       >
         <br />
         <ButtonBlock
+          basePath=""
           blockId="properties.title_add_button"
           content={Object {}}
           events={Object {}}

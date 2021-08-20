@@ -949,6 +949,7 @@ Array [
               className="{}"
             >
               <IconBlock
+                basePath=""
                 blockId="properties.tabs.icon_icon"
                 content={Object {}}
                 events={Object {}}
@@ -1014,6 +1015,7 @@ Array [
               className="{}"
             >
               <IconBlock
+                basePath=""
                 blockId="properties.tabs.icon_icon"
                 content={Object {}}
                 events={Object {}}
