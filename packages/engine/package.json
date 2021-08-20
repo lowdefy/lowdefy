@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/engine",
-  "version": "3.20.1",
+  "version": "3.20.2",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -36,8 +36,8 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/helpers": "3.20.1",
-    "@lowdefy/operators": "3.20.1",
+    "@lowdefy/helpers": "3.20.2",
+    "@lowdefy/operators": "3.20.2",
     "graphql": "15.5.0",
     "graphql-tag": "2.12.4"
   },

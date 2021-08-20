@@ -53,7 +53,7 @@ _ref:
 
             ```yaml
             name: google-analytics-example
-            lowdefy: 3.20.1
+            lowdefy: 3.20.2
             # ...
             app:
               html:
@@ -98,7 +98,7 @@ _ref:
             ```yaml
             # /lowdefy.yaml
             name: json-todos
-            lowdefy: 3.20.1
+            lowdefy: 3.20.2
             app:
               html:
                 appendHead:
@@ -156,7 +156,7 @@ _ref:
             ```yaml
             # /lowdefy.yaml
             name: operator-example
-            lowdefy: 3.20.1
+            lowdefy: 3.20.2
             app:
               html:
                 appendHead:

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.20.2](https://github.com/lowdefy/lowdefy/compare/v3.20.1...v3.20.2) (2021-08-20)
+
+
+### Bug Fixes
+
+* **docs:** Remove console log. ([41bc269](https://github.com/lowdefy/lowdefy/commit/41bc269d67c1d7d258ef5705fe845921068d3de1))
+
+
+
+
+
 ## [3.20.1](https://github.com/lowdefy/lowdefy/compare/v3.20.0...v3.20.1) (2021-08-20)
 
 
