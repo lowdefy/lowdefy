@@ -17,6 +17,7 @@
 import makeCssClass from './makeCssClass';
 
 const blockDefaultProps = {
+  basePath: '',
   blockId: 'undefined_id',
   content: {},
   events: {},

@@ -22,7 +22,7 @@ import Button from '../Button/Button';
 import Drawer from '../Drawer/Drawer';
 import Menu from '../Menu/Menu';
 
-const MobileMenu = ({ blockId, events, methods, menus, pageId, properties, rename }) => {
+const MobileMenu = ({ basePath, blockId, events, methods, menus, pageId, properties, rename }) => {
   const [openState, setOpen] = useState(false);
   useEffect(() => {
     methods.registerMethod(get(rename, 'methods.toggleOpen', { default: 'toggleOpen' }), () => {
@@ -78,6 +78,7 @@ const MobileMenu = ({ blockId, events, methods, menus, pageId, properties, renam
           content: () => (
             <>
               <Menu
+                basePath={basePath}
                 blockId={`${blockId}_menu`}
                 methods={methods}
                 events={events}

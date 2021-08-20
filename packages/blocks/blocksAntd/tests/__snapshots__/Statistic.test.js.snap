@@ -152,6 +152,7 @@ exports[`Render properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
     >
       <span
         aria-label="loading-3-quarters"
+        basePath=""
         className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
         id="properties.prefixIcon: AccountBookFilled_prefixIcon"
         required={false}
@@ -252,6 +253,7 @@ exports[`Render properties.suffixIcon: AccountBookFilled - value[0] 1`] = `
     >
       <span
         aria-label="loading-3-quarters"
+        basePath=""
         className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
         id="properties.suffixIcon: AccountBookFilled_suffixIcon"
         required={false}

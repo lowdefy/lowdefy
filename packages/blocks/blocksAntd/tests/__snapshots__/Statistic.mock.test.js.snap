@@ -110,6 +110,7 @@ Array [
       "id": "properties.prefixIcon: AccountBookFilled",
       "precision": undefined,
       "prefix": <IconBlock
+        basePath=""
         blockId="properties.prefixIcon: AccountBookFilled_prefixIcon"
         content={Object {}}
         events={Object {}}
@@ -175,6 +176,7 @@ Array [
       "precision": undefined,
       "prefix": "",
       "suffix": <IconBlock
+        basePath=""
         blockId="properties.suffixIcon: AccountBookFilled_suffixIcon"
         content={Object {}}
         events={Object {}}

@@ -76,6 +76,7 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon object_icon"
         content={Object {}}
         events={Object {}}
@@ -127,6 +128,7 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon string_icon"
         content={Object {}}
         events={Object {}}
@@ -512,6 +514,7 @@ Array [
       "closeText": undefined,
       "description": "This is a description for the block.",
       "icon": <IconBlock
+        basePath=""
         blockId="with description properties.icon object_icon"
         content={Object {}}
         events={Object {}}
@@ -563,6 +566,7 @@ Array [
       "closeText": undefined,
       "description": "This is a description for the block.",
       "icon": <IconBlock
+        basePath=""
         blockId="with description properties.icon string_icon"
         content={Object {}}
         events={Object {}}

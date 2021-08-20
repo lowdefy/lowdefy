@@ -83,6 +83,7 @@ Array [
       "content": "Args message content",
       "duration": undefined,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon_icon"
         content={Object {}}
         events={Object {}}
@@ -291,6 +292,7 @@ Array [
       "content": "Message content",
       "duration": 1,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon_icon"
         content={Object {}}
         events={Object {}}
@@ -501,6 +503,7 @@ Array [
       "content": "Message content",
       "duration": undefined,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon_icon"
         content={Object {}}
         events={Object {}}
@@ -707,6 +710,7 @@ Array [
       "content": "Message content",
       "duration": undefined,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon_icon"
         content={Object {}}
         events={Object {}}

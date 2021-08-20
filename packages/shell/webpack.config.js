@@ -45,7 +45,7 @@ module.exports = (env) => ({
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       minify: false,
-      publicPath: '/shell',
+      publicPath: '__LOWDEFY_SERVER_BASE_PATH__/shell',
       template: './src/shell/index.html',
     }),
     new webpack.DefinePlugin({

@@ -121,6 +121,7 @@ _ref:
 
             The React component will receive the following props:
 
+            - `basePath: string`: The base path setting for the application. This variable is used to prefix route paths for example `${basePath}/public/logo-square-light-theme.png`. The default base path is ''.
             - `blockId: string`: The block's id within the Lowdefy app, this is useful for setting a unique `id` on DOM elements.
             - `content: object`: Passed to `container` and `context` block categories. The `content` object with methods to render sub blocks into content areas. The method name is the same as the area key, for example, 'content.content()` renders a blocks default `content` area.
             - `events: object`: All events defined on the block in the Lowdefy app config.

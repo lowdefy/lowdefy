@@ -580,6 +580,7 @@ exports[`Render properties.prefixIcon.size: 24 - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
               required={false}
@@ -655,6 +656,7 @@ exports[`Render properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
               required={false}
@@ -884,6 +886,7 @@ exports[`Render properties.suffixIcon.size 24 - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
               required={false}
@@ -959,6 +962,7 @@ exports[`Render properties.suffixIcon: AlertFilled - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
               required={false}
@@ -1610,6 +1614,7 @@ exports[`Render required = true properties.prefixIcon.size: 24 - value[0] 1`] = 
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
               required={false}
@@ -1685,6 +1690,7 @@ exports[`Render required = true properties.prefixIcon: AccountBookFilled - value
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
               required={false}
@@ -1914,6 +1920,7 @@ exports[`Render required = true properties.suffixIcon.size 24 - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
               required={false}
@@ -1989,6 +1996,7 @@ exports[`Render required = true properties.suffixIcon: AlertFilled - value[0] 1`
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
               required={false}
@@ -2971,6 +2979,7 @@ exports[`Render validation.status = error properties.prefixIcon.size: 24 - value
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
               required={false}
@@ -3074,6 +3083,7 @@ exports[`Render validation.status = error properties.prefixIcon: AccountBookFill
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
               required={false}
@@ -3415,6 +3425,7 @@ exports[`Render validation.status = error properties.suffixIcon.size 24 - value[
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
               required={false}
@@ -3518,6 +3529,7 @@ exports[`Render validation.status = error properties.suffixIcon: AlertFilled - v
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
               required={false}
@@ -4225,6 +4237,7 @@ exports[`Render validation.status = null properties.prefixIcon.size: 24 - value[
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
               required={false}
@@ -4300,6 +4313,7 @@ exports[`Render validation.status = null properties.prefixIcon: AccountBookFille
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
               required={false}
@@ -4529,6 +4543,7 @@ exports[`Render validation.status = null properties.suffixIcon.size 24 - value[0
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
               required={false}
@@ -4604,6 +4619,7 @@ exports[`Render validation.status = null properties.suffixIcon: AlertFilled - va
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
               required={false}
@@ -5531,6 +5547,7 @@ exports[`Render validation.status = success properties.prefixIcon.size: 24 - val
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
               required={false}
@@ -5629,6 +5646,7 @@ exports[`Render validation.status = success properties.prefixIcon: AccountBookFi
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
               required={false}
@@ -5950,6 +5968,7 @@ exports[`Render validation.status = success properties.suffixIcon.size 24 - valu
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
               required={false}
@@ -6048,6 +6067,7 @@ exports[`Render validation.status = success properties.suffixIcon: AlertFilled -
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
               required={false}
@@ -7076,6 +7096,7 @@ exports[`Render validation.status = warning properties.prefixIcon.size: 24 - val
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
               required={false}
@@ -7179,6 +7200,7 @@ exports[`Render validation.status = warning properties.prefixIcon: AccountBookFi
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
               required={false}
@@ -7520,6 +7542,7 @@ exports[`Render validation.status = warning properties.suffixIcon.size 24 - valu
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
               required={false}
@@ -7623,6 +7646,7 @@ exports[`Render validation.status = warning properties.suffixIcon: AlertFilled -
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
               required={false}

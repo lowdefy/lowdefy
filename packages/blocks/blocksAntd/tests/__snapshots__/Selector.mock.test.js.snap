@@ -138,6 +138,7 @@ Array [
       ],
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": <IconBlock
+        basePath=""
         blockId="properties.clearIcon: ChromeFilled_clearIcon"
         content={Object {}}
         events={Object {}}
@@ -205,6 +206,7 @@ Array [
       ],
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": <IconBlock
+        basePath=""
         blockId="properties.clearIcon-object: ChromeFilled_clearIcon"
         content={Object {}}
         events={Object {}}
@@ -853,6 +855,7 @@ Array [
       "showSearch": true,
       "size": undefined,
       "suffixIcon": <IconBlock
+        basePath=""
         blockId="properties.suffixIcon: DoubleLeftOutlined_suffixIcon"
         content={Object {}}
         events={Object {}}

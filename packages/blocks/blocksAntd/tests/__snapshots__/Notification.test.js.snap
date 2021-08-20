@@ -66,6 +66,7 @@ Array [
     Object {
       "bottom": undefined,
       "btn": <ButtonBlock
+        basePath=""
         blockId="properties.button: icon_button"
         content={Object {}}
         events={Object {}}
@@ -126,6 +127,7 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": <IconBlock
+        basePath=""
         blockId="properties.closeIcon: AlertOutlined_closeIcon"
         content={Object {}}
         events={Object {}}
@@ -237,6 +239,7 @@ Array [
       "description": "Args description",
       "duration": undefined,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon_icon"
         content={Object {}}
         events={Object {}}
@@ -564,6 +567,7 @@ Array [
     Object {
       "bottom": undefined,
       "btn": <ButtonBlock
+        basePath=""
         blockId="properties.button: icon_button"
         content={Object {}}
         events={Object {}}
@@ -624,6 +628,7 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": <IconBlock
+        basePath=""
         blockId="properties.closeIcon: AlertOutlined_closeIcon"
         content={Object {}}
         events={Object {}}
@@ -735,6 +740,7 @@ Array [
       "description": undefined,
       "duration": 1,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon_icon"
         content={Object {}}
         events={Object {}}
@@ -1062,6 +1068,7 @@ Array [
     Object {
       "bottom": undefined,
       "btn": <ButtonBlock
+        basePath=""
         blockId="properties.button: icon_button"
         content={Object {}}
         events={Object {}}
@@ -1122,6 +1129,7 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": <IconBlock
+        basePath=""
         blockId="properties.closeIcon: AlertOutlined_closeIcon"
         content={Object {}}
         events={Object {}}
@@ -1233,6 +1241,7 @@ Array [
       "description": undefined,
       "duration": undefined,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon_icon"
         content={Object {}}
         events={Object {}}
@@ -1562,6 +1571,7 @@ Array [
     Object {
       "bottom": undefined,
       "btn": <ButtonBlock
+        basePath=""
         blockId="properties.button: icon_button"
         content={Object {}}
         events={Object {}}
@@ -1622,6 +1632,7 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": <IconBlock
+        basePath=""
         blockId="properties.closeIcon: AlertOutlined_closeIcon"
         content={Object {}}
         events={Object {}}
@@ -1733,6 +1744,7 @@ Array [
       "description": undefined,
       "duration": undefined,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon_icon"
         content={Object {}}
         events={Object {}}
@@ -2058,6 +2070,7 @@ Array [
     Object {
       "bottom": undefined,
       "btn": <ButtonBlock
+        basePath=""
         blockId="properties.button: icon_button"
         content={Object {}}
         events={Object {}}
@@ -2118,6 +2131,7 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": <IconBlock
+        basePath=""
         blockId="properties.closeIcon: AlertOutlined_closeIcon"
         content={Object {}}
         events={Object {}}
@@ -2229,6 +2243,7 @@ Array [
       "description": undefined,
       "duration": undefined,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon_icon"
         content={Object {}}
         events={Object {}}

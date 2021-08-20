@@ -129,6 +129,7 @@ Array [
       "className": "{\\"style\\":[{},null]}",
       "gap": undefined,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon object_icon"
         content={Object {}}
         events={Object {}}
@@ -178,6 +179,7 @@ Array [
       "className": "{\\"style\\":[{},null]}",
       "gap": undefined,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon string_icon"
         content={Object {}}
         events={Object {}}
@@ -222,6 +224,7 @@ Array [
       "className": "{\\"style\\":[{},null]}",
       "gap": undefined,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon string properties.shape square_icon"
         content={Object {}}
         events={Object {}}
