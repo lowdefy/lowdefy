@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.20.0](https://github.com/lowdefy/lowdefy/compare/v3.19.0...v3.20.0) (2021-08-20)
+
+
+### Bug Fixes
+
+* **blocks-antd:**  Fix Descriptions block items schema ([525e8eb](https://github.com/lowdefy/lowdefy/commit/525e8eb8e3927e21e7b886cde0712ccb6d4c5b03))
+* **blocks-antd:** Update snapshot tests for basePath ([5add1a7](https://github.com/lowdefy/lowdefy/commit/5add1a72a3bc341761be7aee0626b9e29a5ded67))
+* Fixes for configurable basePath. ([63955bb](https://github.com/lowdefy/lowdefy/commit/63955bbd1131da3b27b537d4e0d72dc943119287))
+* **blocksAntd:** Add additional properties to Descriptions and use RenderHtml. ([dfc468d](https://github.com/lowdefy/lowdefy/commit/dfc468d1fef7b9aebb611c82ff19285260bc5d7e))
+* **blocksAntd:** Add blocks display type to Descriptions schema. ([bd78efc](https://github.com/lowdefy/lowdefy/commit/bd78efc0deb0702fb91bafd154f4aa64662d4f85))
+* **blocksAntd:** Add option to define `showTotal` as a string or function. ([9ac3fc9](https://github.com/lowdefy/lowdefy/commit/9ac3fc9711df889a1d58d83a68ed2e6baf8f0946))
+* **blocksAntd:** Added string output for ParagraphInput and TitleInput. ([5735bbf](https://github.com/lowdefy/lowdefy/commit/5735bbf1a51f9ea263797e62e69958cb9cfd5b3c))
+* **blocksAntd:** Do not close modals and drawer if event is bounced. ([33814b0](https://github.com/lowdefy/lowdefy/commit/33814b04fd70bad08cdca50f40ee8b05f13de9e6))
+* **blocksAntd:** Use relative paths with Link. ([f43762f](https://github.com/lowdefy/lowdefy/commit/f43762fc9eccd1876b0f240f3ea1ac64373238a3))
+* **blockTools:** RenderHtml should default to display-inline block. ([dcaf615](https://github.com/lowdefy/lowdefy/commit/dcaf61575c09a9f253f1197826ff4ea60bdcd685))
+
+
+### Features
+
+* **blocksAntd:** Add support for html on all input Label title and extra. ([59979c7](https://github.com/lowdefy/lowdefy/commit/59979c7ed2afd9ffadb97f06d59fca323a1ac589))
+* **blocksAntd:** Add support for html to Descriptions and refactor. ([6261355](https://github.com/lowdefy/lowdefy/commit/6261355f313a4d240407373c34c80608b4c1efd3))
+* **blocksAntd:** Added onclose action chain error detection to ConfirmModal, Drawer, Modal. ([66e0692](https://github.com/lowdefy/lowdefy/commit/66e0692d9c9dc8a25be9115d2522e4cb77075c50))
+* **blocksAntd:** options labels to support html. ([3533a96](https://github.com/lowdefy/lowdefy/commit/3533a96cb2031ba83932135a2d72fb554d9b9c12))
+* **blocksAntd:** Selector option.label can be html. ([9200e34](https://github.com/lowdefy/lowdefy/commit/9200e3461ccb719f40578e9f2c15de12fe3c7053))
+* Ability to use html in ConfirmModal, Divider, Message, Modal. ([ec69fb7](https://github.com/lowdefy/lowdefy/commit/ec69fb7ed8759c2d84302da87b25ece52c2988e2))
+* Added ability to use html in Alert, Descriptions and Notification. ([efa61bd](https://github.com/lowdefy/lowdefy/commit/efa61bd7a08172938a56025b68ca15f08195a088))
+* Added ability to use html in Button, Card and Collapse. ([6d4d696](https://github.com/lowdefy/lowdefy/commit/6d4d696ce35c327c22e014929e363aa8cc5c5954))
+* Added ability to use html in Paragraph, Result and Statistic. ([483eee6](https://github.com/lowdefy/lowdefy/commit/483eee6eecacffe90f76221e5cb62ddaa07e2649))
+* Added ability to use html in Title and Tooltip. ([9329d24](https://github.com/lowdefy/lowdefy/commit/9329d2487edda363a633eb4081914dd8fb7a1c9c))
+* Updated antd blocks fields .json that support html. ([c9ae5e7](https://github.com/lowdefy/lowdefy/commit/c9ae5e745fe2010337228a6d6f75ca5903f0c0b0))
+
+
+
+
+
 # [3.19.0](https://github.com/lowdefy/lowdefy/compare/v3.18.1...v3.19.0) (2021-07-26)
 
 

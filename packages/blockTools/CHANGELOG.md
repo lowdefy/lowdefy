@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.20.0](https://github.com/lowdefy/lowdefy/compare/v3.19.0...v3.20.0) (2021-08-20)
+
+
+### Bug Fixes
+
+* Fixes for configurable basePath. ([63955bb](https://github.com/lowdefy/lowdefy/commit/63955bbd1131da3b27b537d4e0d72dc943119287))
+* **blockTools:** Add RenderHtml to blockTools. ([7662de1](https://github.com/lowdefy/lowdefy/commit/7662de1d1bf19b781cefcb2425e6b66f14e146ef))
+* **blockTools:** RenderHtml should default to display-inline block. ([dcaf615](https://github.com/lowdefy/lowdefy/commit/dcaf61575c09a9f253f1197826ff4ea60bdcd685))
+
+
+
+
+
 # [3.19.0](https://github.com/lowdefy/lowdefy/compare/v3.18.1...v3.19.0) (2021-07-26)
 
 **Note:** Version bump only for package @lowdefy/block-tools
