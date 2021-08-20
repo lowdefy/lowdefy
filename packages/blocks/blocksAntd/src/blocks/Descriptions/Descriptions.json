@@ -110,20 +110,8 @@
                     "description": "Item label - supports html."
                   },
                   "value": {
-                    "oneOf": [
-                      {
-                        "type": "string",
-                        "description": "Value of item - supports html."
-                      },
-                      {
-                        "type": "number",
-                        "description": "Value of item."
-                      },
-                      {
-                        "type": "array",
-                        "description": "Value of item."
-                      }
-                    ]
+                    "type": "string",
+                    "description": "Value of item - supports html."
                   },
                   "span": {
                     "type": "integer",
