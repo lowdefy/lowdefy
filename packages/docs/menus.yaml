@@ -547,6 +547,9 @@
         - id: Reset
           type: MenuLink
           pageId: Reset
+        - id: ResetValidation
+          type: MenuLink
+          pageId: ResetValidation
         - id: ScrollTo
           type: MenuLink
           pageId: ScrollTo

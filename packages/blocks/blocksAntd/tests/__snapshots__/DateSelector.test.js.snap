@@ -1319,6 +1319,7 @@ exports[`Render properties.suffixIcon: CalendarTwoTone - value[0] 1`] = `
               >
                 <span
                   aria-label="loading-3-quarters"
+                  basePath=""
                   className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
                   id="properties.suffixIcon: CalendarTwoTone_suffixIcon"
                   required={false}
@@ -2733,6 +2734,7 @@ exports[`Render required = true properties.suffixIcon: CalendarTwoTone - value[0
               >
                 <span
                   aria-label="loading-3-quarters"
+                  basePath=""
                   className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
                   id="properties.suffixIcon: CalendarTwoTone_suffixIcon"
                   required={false}
@@ -4672,6 +4674,7 @@ exports[`Render validation.status = error properties.suffixIcon: CalendarTwoTone
               >
                 <span
                   aria-label="loading-3-quarters"
+                  basePath=""
                   className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
                   id="properties.suffixIcon: CalendarTwoTone_suffixIcon"
                   required={false}
@@ -6142,6 +6145,7 @@ exports[`Render validation.status = null properties.suffixIcon: CalendarTwoTone 
               >
                 <span
                   aria-label="loading-3-quarters"
+                  basePath=""
                   className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
                   id="properties.suffixIcon: CalendarTwoTone_suffixIcon"
                   required={false}
@@ -7993,6 +7997,7 @@ exports[`Render validation.status = success properties.suffixIcon: CalendarTwoTo
               >
                 <span
                   aria-label="loading-3-quarters"
+                  basePath=""
                   className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
                   id="properties.suffixIcon: CalendarTwoTone_suffixIcon"
                   required={false}
@@ -9978,6 +9983,7 @@ exports[`Render validation.status = warning properties.suffixIcon: CalendarTwoTo
               >
                 <span
                   aria-label="loading-3-quarters"
+                  basePath=""
                   className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
                   id="properties.suffixIcon: CalendarTwoTone_suffixIcon"
                   required={false}

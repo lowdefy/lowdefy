@@ -6,6 +6,7 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
+        basePath=""
         blockId="default_button"
         content={Object {}}
         events={
@@ -63,6 +64,7 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
+        basePath=""
         blockId="default_button"
         content={Object {}}
         events={
@@ -125,6 +127,7 @@ Array [
     Object {
       "accept": ".png,.jpg",
       "children": <ButtonBlock
+        basePath=""
         blockId="properties.accept_button"
         content={Object {}}
         events={
@@ -182,6 +185,7 @@ Array [
     Object {
       "accept": ".png,.jpg",
       "children": <ButtonBlock
+        basePath=""
         blockId="properties.accept_button"
         content={Object {}}
         events={
@@ -244,6 +248,7 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
+        basePath=""
         blockId="properties.button_button"
         content={Object {}}
         events={
@@ -301,6 +306,7 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
+        basePath=""
         blockId="properties.button_button"
         content={Object {}}
         events={
@@ -363,6 +369,7 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
+        basePath=""
         blockId="properties.disabled_button"
         content={Object {}}
         events={
@@ -420,6 +427,7 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
+        basePath=""
         blockId="properties.disabled_button"
         content={Object {}}
         events={
@@ -482,6 +490,7 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
+        basePath=""
         blockId="properties.showUploadList_button"
         content={Object {}}
         events={
@@ -539,6 +548,7 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
+        basePath=""
         blockId="properties.showUploadList_button"
         content={Object {}}
         events={
@@ -601,6 +611,7 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
+        basePath=""
         blockId="properties.singleFile_button"
         content={Object {}}
         events={
@@ -658,6 +669,7 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
+        basePath=""
         blockId="properties.singleFile_button"
         content={Object {}}
         events={

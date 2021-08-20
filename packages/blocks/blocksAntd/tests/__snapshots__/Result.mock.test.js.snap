@@ -113,6 +113,7 @@ Array [
       </div>,
       "extra": undefined,
       "icon": <IconBlock
+        basePath=""
         blockId="properties. icon: ApiFilled_icon"
         content={Object {}}
         events={Object {}}

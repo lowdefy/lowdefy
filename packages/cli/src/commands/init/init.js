@@ -18,11 +18,9 @@ import path from 'path';
 import fse from 'fs-extra';
 import { writeFile } from '@lowdefy/node-utils';
 
-import startUp from '../../utils/startUp';
 import lowdefyFile from './lowdefyFile';
 
-async function init({ context, options }) {
-  await startUp({ context, options, command: 'init', lowdefyFileNotRequired: true });
+async function init({ context }) {
   const lowdefyFilePath = path.resolve('./lowdefy.yaml');
   const fileExists = fse.existsSync(lowdefyFilePath);
   if (fileExists) {

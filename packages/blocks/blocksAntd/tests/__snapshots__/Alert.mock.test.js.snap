@@ -132,6 +132,7 @@ Array [
         }
       />,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon object_icon"
         content={Object {}}
         events={Object {}}
@@ -202,6 +203,7 @@ Array [
         }
       />,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon string_icon"
         content={Object {}}
         events={Object {}}
@@ -914,6 +916,7 @@ Array [
         }
       />,
       "icon": <IconBlock
+        basePath=""
         blockId="with description properties.icon object_icon"
         content={Object {}}
         events={Object {}}
@@ -985,6 +988,7 @@ Array [
         }
       />,
       "icon": <IconBlock
+        basePath=""
         blockId="with description properties.icon string_icon"
         content={Object {}}
         events={Object {}}

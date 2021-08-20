@@ -15,43 +15,49 @@
 */
 
 import path from 'path';
+import { type } from '@lowdefy/helpers';
+
 import checkForUpdatedVersions from './checkForUpdatedVersions';
-import getConfig from './getConfig';
+import getCliJson from './getCliJson';
+import getDirectories from './getDirectories';
+import getLowdefyYaml from './getLowdefyYaml';
+import getOptions from './getOptions';
 import getSendTelemetry from './getSendTelemetry';
 import createPrint from './print';
-import { cacheDirectoryPath, outputDirectoryPath } from './directories';
 import packageJson from '../../package.json';
 const { version: cliVersion } = packageJson;
 
-async function startUp({ context, options = {}, command, lowdefyFileNotRequired }) {
-  context.command = command;
+async function startUp({ context, options = {}, command }) {
+  context.command = command.name();
   context.cliVersion = cliVersion;
-  context.print = createPrint({
-    basic: options.basicPrint,
-  });
-
+  context.commandLineOptions = options;
+  context.print = createPrint();
   context.baseDirectory = path.resolve(options.baseDirectory || process.cwd());
-  context.cacheDirectory = path.resolve(context.baseDirectory, cacheDirectoryPath);
 
-  if (options.outputDirectory) {
-    context.outputDirectory = path.resolve(options.outputDirectory);
-  } else {
-    context.outputDirectory = path.resolve(context.baseDirectory, outputDirectoryPath);
-  }
+  const { cliConfig, lowdefyVersion } = await getLowdefyYaml(context);
+  context.cliConfig = cliConfig;
+  context.lowdefyVersion = lowdefyVersion;
 
-  context.blocksServerUrl = options.blocksServerUrl;
+  const { appId } = await getCliJson(context);
+  context.appId = appId;
 
-  if (!lowdefyFileNotRequired) {
-    const { appId, disableTelemetry, lowdefyVersion } = await getConfig(context);
-    context.appId = appId;
-    context.disableTelemetry = disableTelemetry;
-    context.lowdefyVersion = lowdefyVersion;
-    context.print.log(`Running 'lowdefy ${command}'. Lowdefy app version ${lowdefyVersion}.`);
-  } else {
-    context.print.log(`Running 'lowdefy ${command}'.`);
-  }
+  context.options = getOptions(context);
+
+  const { cacheDirectory, outputDirectory } = getDirectories(context);
+  context.cacheDirectory = cacheDirectory;
+  context.outputDirectory = outputDirectory;
+
   await checkForUpdatedVersions(context);
+
   context.sendTelemetry = getSendTelemetry(context);
+
+  if (type.isNone(lowdefyVersion)) {
+    context.print.log(`Running 'lowdefy ${context.command}'.`);
+  } else {
+    context.print.log(
+      `Running 'lowdefy ${context.command}'. Lowdefy app version ${lowdefyVersion}.`
+    );
+  }
   return context;
 }
 

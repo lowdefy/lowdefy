@@ -30,7 +30,19 @@ const List = ({ blockId, events, list, methods, properties }) => {
     <Box
       blockId={blockId}
       events={events}
-      properties={{ style: properties.style }}
+      properties={{
+        style: {
+          ...(properties.direction
+            ? {
+                display: 'flex',
+                flexDirection: properties.direction,
+                flexWrap: properties.wrap ? properties.wrap : 'wrap',
+                overflow: properties.scroll ? 'auto' : 'visible',
+              }
+            : {}),
+          ...properties.style,
+        },
+      }}
       methods={methods}
       content={{
         content: () => list.map((item) => item.content()),

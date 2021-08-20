@@ -47,11 +47,11 @@ const ConfirmModal = ({ blockId, events, content, methods, properties }) => {
         zIndex: properties.zIndex,
         onOk: async () => {
           const response = await methods.triggerEvent({ name: 'onOk' });
-          if (response.success === false) throw response;
+          if (response.success === false && response.bounced !== true) throw response;
         },
         onCancel: async () => {
           const response = await methods.triggerEvent({ name: 'onCancel' });
-          if (response.success === false) throw response;
+          if (response.success === false && response.bounced !== true) throw response;
         },
         ...additionalProps,
       });

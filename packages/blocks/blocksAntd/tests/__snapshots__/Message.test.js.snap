@@ -199,6 +199,7 @@ Array [
       />,
       "duration": undefined,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon_icon"
         content={Object {}}
         events={Object {}}
@@ -691,6 +692,7 @@ Array [
       />,
       "duration": 1,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon_icon"
         content={Object {}}
         events={Object {}}
@@ -1189,6 +1191,7 @@ Array [
       />,
       "duration": undefined,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon_icon"
         content={Object {}}
         events={Object {}}
@@ -1683,6 +1686,7 @@ Array [
       />,
       "duration": undefined,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon_icon"
         content={Object {}}
         events={Object {}}

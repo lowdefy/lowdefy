@@ -51,7 +51,7 @@ async function writeRequestsOnPage({ page, context }) {
   getRequestsOnBlock({ block: page, requests, pageId: page.pageId });
 
   return requests.map(async (request) => {
-    await context.artifactSetter.set({
+    await context.writeBuildArtifact({
       filePath: `pages/${page.pageId}/requests/${request.contextId}/${request.requestId}.json`,
       content: JSON.stringify(request, null, 2),
     });

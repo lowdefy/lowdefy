@@ -17,6 +17,7 @@
 import getFromObject from '../getFromObject';
 
 const validProperties = [
+  'basePath',
   'href',
   'origin',
   'protocol',
@@ -44,6 +45,7 @@ function _location({ arrayIndices, context, contexts, env, location, params }) {
     );
   }
   const windowLocation = {
+    basePath: context.lowdefy.basePath,
     href: window.location.href,
     origin: window.location.origin,
     protocol: window.location.protocol,

@@ -237,6 +237,7 @@ exports[`Render properties.copyable: icon - value[0] 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
+      basePath=""
       className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.copyable: icon_copyable_icon"
       required={false}
@@ -333,6 +334,7 @@ exports[`Render properties.copyable: icon: [] - value[0] 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
+      basePath=""
       className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_before_icon"
       required={false}
@@ -354,6 +356,7 @@ exports[`Render properties.copyable: icon: [] - value[0] 1`] = `
     </span>
     <span
       aria-label="loading-3-quarters"
+      basePath=""
       className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_after_icon"
       required={false}
@@ -1889,6 +1892,7 @@ exports[`Render required = true properties.copyable: icon - value[0] 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
+      basePath=""
       className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.copyable: icon_copyable_icon"
       required={false}
@@ -1985,6 +1989,7 @@ exports[`Render required = true properties.copyable: icon: [] - value[0] 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
+      basePath=""
       className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_before_icon"
       required={false}
@@ -2006,6 +2011,7 @@ exports[`Render required = true properties.copyable: icon: [] - value[0] 1`] = `
     </span>
     <span
       aria-label="loading-3-quarters"
+      basePath=""
       className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_after_icon"
       required={false}
@@ -3541,6 +3547,7 @@ exports[`Render validation.status = error properties.copyable: icon - value[0] 1
   >
     <span
       aria-label="loading-3-quarters"
+      basePath=""
       className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.copyable: icon_copyable_icon"
       required={false}
@@ -3637,6 +3644,7 @@ exports[`Render validation.status = error properties.copyable: icon: [] - value[
   >
     <span
       aria-label="loading-3-quarters"
+      basePath=""
       className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_before_icon"
       required={false}
@@ -3658,6 +3666,7 @@ exports[`Render validation.status = error properties.copyable: icon: [] - value[
     </span>
     <span
       aria-label="loading-3-quarters"
+      basePath=""
       className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_after_icon"
       required={false}
@@ -5193,6 +5202,7 @@ exports[`Render validation.status = null properties.copyable: icon - value[0] 1`
   >
     <span
       aria-label="loading-3-quarters"
+      basePath=""
       className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.copyable: icon_copyable_icon"
       required={false}
@@ -5289,6 +5299,7 @@ exports[`Render validation.status = null properties.copyable: icon: [] - value[0
   >
     <span
       aria-label="loading-3-quarters"
+      basePath=""
       className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_before_icon"
       required={false}
@@ -5310,6 +5321,7 @@ exports[`Render validation.status = null properties.copyable: icon: [] - value[0
     </span>
     <span
       aria-label="loading-3-quarters"
+      basePath=""
       className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_after_icon"
       required={false}
@@ -6845,6 +6857,7 @@ exports[`Render validation.status = success properties.copyable: icon - value[0]
   >
     <span
       aria-label="loading-3-quarters"
+      basePath=""
       className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.copyable: icon_copyable_icon"
       required={false}
@@ -6941,6 +6954,7 @@ exports[`Render validation.status = success properties.copyable: icon: [] - valu
   >
     <span
       aria-label="loading-3-quarters"
+      basePath=""
       className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_before_icon"
       required={false}
@@ -6962,6 +6976,7 @@ exports[`Render validation.status = success properties.copyable: icon: [] - valu
     </span>
     <span
       aria-label="loading-3-quarters"
+      basePath=""
       className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_after_icon"
       required={false}
@@ -8497,6 +8512,7 @@ exports[`Render validation.status = warning properties.copyable: icon - value[0]
   >
     <span
       aria-label="loading-3-quarters"
+      basePath=""
       className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.copyable: icon_copyable_icon"
       required={false}
@@ -8593,6 +8609,7 @@ exports[`Render validation.status = warning properties.copyable: icon: [] - valu
   >
     <span
       aria-label="loading-3-quarters"
+      basePath=""
       className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_before_icon"
       required={false}
@@ -8614,6 +8631,7 @@ exports[`Render validation.status = warning properties.copyable: icon: [] - valu
     </span>
     <span
       aria-label="loading-3-quarters"
+      basePath=""
       className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_after_icon"
       required={false}

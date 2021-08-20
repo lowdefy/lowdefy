@@ -30,12 +30,15 @@ const publicDirectory =
   argv.publicDirectory || process.env.LOWDEFY_SERVER_PUBLIC_DIRECTORY || './public';
 const port = argv.port || parseInt(process.env.LOWDEFY_SERVER_PORT) || 3000;
 
+const serverBasePath = process.env.LOWDEFY_SERVER_BASE_PATH;
+
 const server = getServer({
   buildDirectory,
   development: false,
   getSecrets: createGetSecretsFromEnv(),
   logger: console,
   publicDirectory,
+  serverBasePath,
   shellDirectory,
 });
 

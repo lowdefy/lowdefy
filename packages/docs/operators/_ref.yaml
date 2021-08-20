@@ -24,9 +24,10 @@ _ref:
       ```
       (path: string): any
       (arguments: {
-        path: string,
-        vars?: object,
+        path?: string,
+        resolver?: string,
         transformer?: string,
+        vars?: object,
       }): any
       ```
     description: |
@@ -46,59 +47,28 @@ _ref:
 
       Variables defined in the `vars` argument can be accessed in the referenced file using the [`_var`](/_var), and as template variables in Nunjucks files.
 
+      ###### Resolver
+
+      A resolver is a JavaScript function that overwrites the default way configuration files are read from the filesystem. It does not need to read from the filesystem, it could generate a value to return programmatically, or it could fetch the configuration using HTTP (from Github for example). The `resolver` argument should be the file path (relative to the root of the project) to a JavaScript file that exports a resolver function.
+
+      The resolver function receives the `path`, `vars`, and a `context` object as arguments. If a resolver function is specified, the `path` argument to the `_ref` operator is optional, and does not need to correspond to a path to a file. If `path` ends with `.yaml`, `.yml`, `.json`, `.njk`, `.yaml.njk`, `.yml.njk`, or `.json.njk`, the returned result will be parsed as YAML/JSON/Nunjucks template.
+
+      A default `_ref` resolver can be specified in the `lowdefy.yaml` `cli` section (as `refResolver`), or as a command-line option when running the CLI (as `--ref-resolver`). This resolver will then be used for all references in the app, unless another resolver is specified.
+
       ###### Transformer
 
-      A transformer is a JavaScript function that receives the result of the `_ref` operator, and its `vars`. The value returned by this function will be included in the configuration as the final result of the `_ref` operator. The `transformer` argument should be the file path (relative to the root of the project) to a JavaScript file that exports a transformer function. For example:
+      A transformer is a JavaScript function that receives the result of the `_ref` operator, and its `vars` as arguments. The value returned by this function will be included in the configuration as the final result of the `_ref` operator. The `transformer` argument should be the file path (relative to the root of the project) to a JavaScript file that exports a transformer function.
 
-      ```js
-      // transformer.js
-      function transformer(input, vars) {
-        // Do something with input
-        return result
-      }
-      module.exports = transformer;
-      ```
-
-      ###### Evaluating JavaScript
-
-      JavaScript can be evaluated during build time by referencing a JavaScript file to the `eval` argument. The result of `_ref` operator will be the exported result of the evaluated JavaScript using [`eval`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval). If the exported result is a function, `function.toString()` will be returned, useful for loading `code` for the [`_js`](/_js) operator. The `eval` argument should be the file path (relative to the root of the project) to a JavaScript file that exports the a JSON serializable result or function when evaluated.
-
-      For example:
-      ```js
-      // fooHelpers/fooFn.js
-      function fooFn(value) {
-        return { foo: value };
-      }
-      module.exports = fooFn(10);
-      ```
-      This will evaluate to an object: `{ foo: 10 }`.
-
-      And when returning a function will provide the exported function, for example:
-      ```js
-      // fooHelpers/makePrimes.js
-      function a() {
-        // some other js function
-      };
-      function fooFn(value) {
-        return { foo: value };
-      }
-      module.exports = fooFn;
-      ```
-      This will evaluate to the exported function as a string:
-      ```yaml
-      "function fooFn(value) {
-        return { foo: value };
-      }"
-      ```
     arguments: |
       ###### string
       The file path to the referenced file, from the root of the project directory.
 
       ###### object
-        - `path: string`: __Required__ - The file path to the referenced file, from the root of the project directory.
-        - `vars: object`: An object to be used as variables for the `_var` operator in the referenced file, and as template variables in Nunjucks template files.
+        - `path: string`:  The file path to the referenced file, from the root of the project directory. If no `resolver` is specified, `path` is required.
+        - `resolver: string`: The file path to a JavaScript file, from the root of the project directory, that exports a resolver function.
         - `transformer: string`: The file path to a JavaScript file, from the root of the project directory, that exports a transformer function.
-        - `eval: string`: The file path to a JavaScript file which to evaluate, from the root of the project directory.
+        - `vars: object`: An object to be used as variables for the `_var` operator in the referenced file, and as template variables in Nunjucks template files.
+
     examples: |
       ###### Reference pages:
       ```yaml
@@ -192,4 +162,63 @@ _ref:
               colon: false
               extraStyle:
                 color: '#546358'
+      ```
+
+      ###### Local or shared resolver:
+
+      This resolver function will first look for the configuration file in the current working directory, but if the file is not found it will be read from an adjacent "shared" directory. This pattern can be used to build apps that mostly use a shared configuration, with a few components that are customised per app.
+
+      ```js
+      // resolvers/useLocalOrSharedConfig.js
+      const fs = require('fs')
+      const path = require('path')
+      const { promisify } = require('util');
+
+      const readFilePromise = promisify(fs.readFile);
+
+      async function useLocalOrSharedConfig(path, vars, context) {
+        const localFile =  await readFilePromise(path.resolve(path), 'utf8');
+
+        if (localFile) return localFile;
+
+        return readFilePromise(path.resolve('../shared', path), 'utf8');
+      }
+
+      module.exports = useLocalOrSharedConfig;
+      ```
+
+      ```yaml
+      // lowdefy.yaml
+      lowdefy: 3.19.0
+
+      cli:
+        refResolver: resolvers/useLocalOrSharedConfig.js
+
+      pages:
+        - _ref: pages/local-page.yaml
+        - _ref: pages/shared-page.yaml
+      ```
+
+      ###### This transformer adds a standard footer to each page:
+
+      ```js
+      //  transformers/addFooter.js
+
+      function addFooter(page, vars) {
+        const footer = {
+          // ...
+        };
+        page.areas.footer = footer;
+        return page;
+      }
+      module.exports = addFooter;
+      ```
+      ```yaml
+      // lowdefy.yaml
+      lowdefy: 3.19.0
+
+      pages:
+        - _ref:
+            path: pages/page1.yaml
+            transformer: transformers/addFooter.js
       ```

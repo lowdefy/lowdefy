@@ -17,8 +17,8 @@ import path from 'path';
 import chokidar from 'chokidar';
 import BatchChanges from '../../utils/BatchChanges';
 
-function buildWatcher({ build, context, options, reloadFn }) {
-  const { watch = [], watchIgnore = [] } = options;
+function buildWatcher({ build, context, reloadFn }) {
+  const { watch = [], watchIgnore = [] } = context.options;
   const resolvedWatchPaths = watch.map((pathName) => path.resolve(pathName));
 
   const buildCallback = async () => {

@@ -30,8 +30,9 @@ const RealDate = Date;
 const mockDate = jest.fn(() => ({ date: 0 }));
 mockDate.now = jest.fn(() => 0);
 
-// Comment out to use console.log
+// Comment out to use console
 console.log = () => {};
+console.error = () => {};
 
 beforeEach(() => {
   displayMessage.mockReset();
@@ -91,6 +92,7 @@ test('Throw no params', async () => {
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     responses: {
@@ -152,6 +154,7 @@ test('Throw throw true no message or metaData', async () => {
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
+    bounced: false,
     error: {
       error: {
         type: 'Throw',
@@ -235,6 +238,7 @@ test('Throw throw true message no metaData', async () => {
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
+    bounced: false,
     error: {
       error: {
         type: 'Throw',
@@ -318,6 +322,7 @@ test('Throw throw true message metaData string', async () => {
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
+    bounced: false,
     error: {
       error: {
         type: 'Throw',
@@ -409,6 +414,7 @@ test('Throw throw true message metaData object', async () => {
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
+    bounced: false,
     error: {
       error: {
         type: 'Throw',
@@ -500,6 +506,7 @@ test('Throw throw false', async () => {
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     responses: {
@@ -561,6 +568,7 @@ test('Throw throw invalid', async () => {
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
+    bounced: false,
     error: {
       error: {
         type: 'Throw',

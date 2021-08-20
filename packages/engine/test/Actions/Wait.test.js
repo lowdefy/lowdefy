@@ -29,6 +29,10 @@ const RealDate = Date;
 const mockDate = jest.fn(() => ({ date: 0 }));
 mockDate.now = jest.fn(() => 0);
 
+// Comment out to use console
+console.log = () => {};
+console.error = () => {};
+
 beforeEach(() => {
   global.Date = mockDate;
   lowdefy.auth.login.mockReset();
@@ -128,6 +132,7 @@ test('Wait ms not a integer', async () => {
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',
+    bounced: false,
     endTimestamp: { date: 0 },
     error: {
       action: { id: 'a', params: { ms: 1.1 }, type: 'Wait' },

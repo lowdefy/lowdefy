@@ -21,10 +21,10 @@ import { Breadcrumb } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 import Icon from '../Icon/Icon';
 
-const ItemLink = ({ link, children, className }) => {
+const ItemLink = ({ basePath, link, children, className }) => {
   if (type.isString(link.pageId)) {
     return (
-      <Link to={`/${link.pageId}`} className={className}>
+      <Link to={`${basePath}/${link.pageId}`} className={className}>
         {children}
       </Link>
     );
@@ -39,7 +39,7 @@ const ItemLink = ({ link, children, className }) => {
   return <span className={className}>{children}</span>;
 };
 
-const BreadcrumbBlock = ({ blockId, events, methods, properties, rename }) => {
+const BreadcrumbBlock = ({ basePath, blockId, events, methods, properties, rename }) => {
   const onClickActionName = get(rename, 'events.onClick', { default: 'onClick' });
   return (
     <Breadcrumb
@@ -56,6 +56,7 @@ const BreadcrumbBlock = ({ blockId, events, methods, properties, rename }) => {
           }
         >
           <ItemLink
+            basePath={basePath}
             className={methods.makeCssClass([
               {
                 cursor: events[onClickActionName] && 'pointer',

@@ -181,6 +181,7 @@ exports[`Render properties.icon object - value[0] 1`] = `
 >
   <span
     aria-label="loading-3-quarters"
+    basePath=""
     className="anticon anticon-loading-3-quarters anticon-spin ant-alert-icon"
     id="properties.icon object_icon"
     required={false}
@@ -224,6 +225,7 @@ exports[`Render properties.icon string - value[0] 1`] = `
 >
   <span
     aria-label="loading-3-quarters"
+    basePath=""
     className="anticon anticon-loading-3-quarters anticon-spin ant-alert-icon"
     id="properties.icon string_icon"
     required={false}
@@ -935,6 +937,7 @@ exports[`Render with description properties.icon object - value[0] 1`] = `
 >
   <span
     aria-label="loading-3-quarters"
+    basePath=""
     className="anticon anticon-loading-3-quarters anticon-spin ant-alert-icon"
     id="with description properties.icon object_icon"
     required={false}
@@ -978,6 +981,7 @@ exports[`Render with description properties.icon string - value[0] 1`] = `
 >
   <span
     aria-label="loading-3-quarters"
+    basePath=""
     className="anticon anticon-loading-3-quarters anticon-spin ant-alert-icon"
     id="with description properties.icon string_icon"
     required={false}

@@ -76,8 +76,9 @@ const RealDate = Date;
 const mockDate = jest.fn(() => ({ date: 0 }));
 mockDate.now = jest.fn(() => 0);
 
-// Comment out to use console.log
+// Comment out to use console
 console.log = () => {};
+console.error = () => {};
 
 beforeAll(() => {
   global.Date = mockDate;
@@ -140,6 +141,7 @@ test('Request call one request', async () => {
   });
   expect(res).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     responses: {
@@ -220,6 +222,7 @@ test('Request call all requests', async () => {
   });
   expect(res).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     responses: {
@@ -300,6 +303,7 @@ test('Request call array of requests', async () => {
   });
   expect(res).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     responses: {
@@ -399,6 +403,7 @@ test('Request call request error', async () => {
   });
   expect(res).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     error: {
@@ -468,6 +473,7 @@ test('Request call request graphql error', async () => {
   });
   expect(res).toEqual({
     blockId: 'button',
+    bounced: false,
     event: undefined,
     eventName: 'onClick',
     error: {

@@ -372,6 +372,7 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.hideTitle: true_icon"
         content={Object {}}
         events={Object {}}
@@ -504,6 +505,7 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon object_icon"
         content={Object {}}
         events={Object {}}
@@ -587,6 +589,7 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon string_icon"
         content={Object {}}
         events={Object {}}

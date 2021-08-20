@@ -27,28 +27,31 @@ class Blocks {
       .toString(36)
       .replace(/[^a-z]+/g, '')
       .substr(0, 5);
-    this.context = context;
     this.areas = serializer.copy(areas || []);
     this.arrayIndices = type.isArray(arrayIndices) ? arrayIndices : [];
-    this.subBlocks = {};
+    this.context = context;
     this.map = {};
     this.recCount = 0;
+    this.subBlocks = {};
+
+    this.generateBlockId = this.generateBlockId.bind(this);
+    this.getValidateRec = this.getValidateRec.bind(this);
     this.init = this.init.bind(this);
-    this.reset = this.reset.bind(this);
+    this.newBlocks = this.newBlocks.bind(this);
+    this.recContainerDelState = this.recContainerDelState.bind(this);
     this.recEval = this.recEval.bind(this);
+    this.recRemoveBlocksFromMap = this.recRemoveBlocksFromMap.bind(this);
+    this.recSetUndefined = this.recSetUndefined.bind(this);
+    this.recUpdateArrayIndices = this.recUpdateArrayIndices.bind(this);
+    this.reset = this.reset.bind(this);
+    this.resetValidation = this.resetValidation.bind(this);
+    this.resetValidationRec = this.resetValidationRec.bind(this);
+    this.setBlocksCache = this.setBlocksCache.bind(this);
+    this.setBlocksLoadingCache = this.setBlocksLoadingCache.bind(this);
+    this.update = this.update.bind(this);
     this.updateState = this.updateState.bind(this);
     this.updateStateFromRoot = this.updateStateFromRoot.bind(this);
-    this.setBlocksCache = this.setBlocksCache.bind(this);
-    this.recContainerDelState = this.recContainerDelState.bind(this);
-    this.recUpdateArrayIndices = this.recUpdateArrayIndices.bind(this);
-    this.recSetUndefined = this.recSetUndefined.bind(this);
-    this.newBlocks = this.newBlocks.bind(this);
-    this.getValidateRec = this.getValidateRec.bind(this);
-    this.setBlocksLoadingCache = this.setBlocksLoadingCache.bind(this);
-    this.generateBlockId = this.generateBlockId.bind(this);
-    this.update = this.update.bind(this);
     this.validate = this.validate.bind(this);
-    this.recRemoveBlocksFromMap = this.recRemoveBlocksFromMap.bind(this);
   }
 
   loopBlocks(fn) {
@@ -79,13 +82,13 @@ class Blocks {
       block.layout = type.isNone(block.layout) ? {} : block.layout;
       block.events = type.isNone(block.events) ? {} : block.events;
 
-      block.visibleEval = {};
+      block.areasLayoutEval = {};
+      block.layoutEval = {};
       block.propertiesEval = {};
       block.requiredEval = {};
-      block.validationEval = {};
       block.styleEval = {};
-      block.layoutEval = {};
-      block.areasLayoutEval = {};
+      block.validationEval = {};
+      block.visibleEval = {};
 
       if (!type.isNone(block.areas)) {
         block.areasLayout = {};
@@ -217,6 +220,7 @@ class Blocks {
     const initState = serializer.copy(initWithState || this.context.state);
     this.loopBlocks((block) => {
       block.update = true;
+      block.showValidation = false;
       if (get(block, 'meta.category') === 'input' || get(block, 'meta.category') === 'list') {
         let blockValue = get(initState, block.field);
         if (type.isUndefined(blockValue)) {
@@ -368,13 +372,13 @@ class Blocks {
             }
           }
         });
-        if (this.context.showValidationErrors && validation.length > 0) {
+        if (validation.length > 0) {
           block.validationEval.output.status = 'success';
         }
         if (validationWarning) {
           block.validationEval.output.status = 'warning';
         }
-        if (this.context.showValidationErrors && validationError) {
+        if (validationError) {
           block.validationEval.output.status = 'error';
         }
 
@@ -497,18 +501,26 @@ class Blocks {
     });
   }
 
-  getValidateRec(result) {
+  getValidateRec(match, result) {
     this.loopBlocks((block) => {
-      if (block.visibleEval.output && block.validationEval.output.status === 'error') {
-        result.push({
-          blockId: block.blockId,
-          validation: block.validationEval.output,
-        });
+      if (match(block.blockId)) {
+        block.showValidation = true;
+        block.update = true;
+        if (
+          block.visibleEval.output !== false &&
+          block.validationEval.output &&
+          block.validationEval.output.status === 'error'
+        ) {
+          result.push({
+            blockId: block.blockId,
+            validation: block.validationEval.output,
+          });
+        }
       }
     });
     Object.keys(this.subBlocks).forEach((subKey) => {
       this.subBlocks[subKey].forEach((subBlock) => {
-        subBlock.getValidateRec(result);
+        subBlock.getValidateRec(match, result);
       });
     });
     return result;
@@ -536,9 +548,30 @@ class Blocks {
     });
   }
 
-  validate() {
-    this.update(); // update to recalculate validationEval with showValidationErrors set to raise block errors
-    return this.getValidateRec([]);
+  validate(match) {
+    this.updateStateFromRoot(); // update to recalculate validationEval to raise block errors
+    const validationErrors = this.getValidateRec(match, []); // get all relevant raised block errors and set showValidation
+    this.setBlocksCache(); // update cache to render
+    return validationErrors;
+  }
+
+  resetValidationRec(match) {
+    this.loopBlocks((block) => {
+      if (match(block.blockId)) {
+        block.showValidation = false;
+        block.update = true;
+      }
+    });
+    Object.keys(this.subBlocks).forEach((subKey) => {
+      this.subBlocks[subKey].forEach((subBlock) => {
+        subBlock.resetValidationRec(match);
+      });
+    });
+  }
+
+  resetValidation(match) {
+    this.resetValidationRec(match);
+    this.setBlocksCache();
   }
 
   update() {
@@ -562,7 +595,10 @@ class Blocks {
           required: block.requiredEval.output,
           layout: block.layoutEval.output,
           style: block.styleEval.output,
-          validation: block.validationEval.output,
+          validation: {
+            ...(block.validationEval.output || {}),
+            status: block.showValidation ? (block.validationEval.output || {}).status : null,
+          },
           value: type.isNone(block.value) ? null : block.value,
           visible: block.visibleEval.output,
         };

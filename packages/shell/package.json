@@ -32,6 +32,7 @@
   "scripts": {
     "babel": "babel src/location.js --out-dir dist",
     "build": "yarn webpack && yarn babel",
+    "build:dev": "NODE_ENV=development yarn webpack && yarn babel",
     "clean": "rm -rf dist",
     "prepare": "yarn build",
     "webpack": "webpack --config webpack.config.js"
