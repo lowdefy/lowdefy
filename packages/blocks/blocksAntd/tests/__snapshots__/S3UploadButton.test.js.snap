@@ -59,9 +59,9 @@ exports[`Render default - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Upload
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </span>
   </div>
@@ -130,9 +130,9 @@ exports[`Render properties.accept - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Upload
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </span>
   </div>
@@ -201,9 +201,9 @@ exports[`Render properties.button - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Upload
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </span>
   </div>
@@ -267,9 +267,9 @@ exports[`Render properties.disabled - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Upload
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </span>
   </div>
@@ -338,9 +338,9 @@ exports[`Render properties.showUploadList - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Upload
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </span>
   </div>
@@ -409,9 +409,9 @@ exports[`Render properties.singleFile - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Upload
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </span>
   </div>

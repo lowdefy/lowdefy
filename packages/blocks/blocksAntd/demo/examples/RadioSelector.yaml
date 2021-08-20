@@ -6,26 +6,26 @@
     options:
       - Option 1
       - Option 2
-    title: "properties.title: My RadioSelector Title "
-- id: "properties.options-string"
+    title: 'properties.title: My RadioSelector Title '
+- id: 'properties.options-string'
   type: RadioSelector
   properties:
     options:
       - Option 1
       - Option 2
-- id: "properties.options-number"
+- id: 'properties.options-number'
   type: RadioSelector
   properties:
     options:
       - 16
       - 20
-- id: "properties.options-boolean"
+- id: 'properties.options-boolean'
   type: RadioSelector
   properties:
     options:
       - true
       - false
-- id: "properties.options-object"
+- id: 'properties.options-object'
   type: RadioSelector
   properties:
     options:
@@ -33,7 +33,7 @@
         value: 1
       - label: two
         value: 2
-- id: "properties.inputStyle. CSS style"
+- id: 'properties.inputStyle. CSS style'
   type: RadioSelector
   properties:
     options:
@@ -41,21 +41,21 @@
       - Option 2
     inputStyle:
       borderBottom: 1px solid red
-- id: "properties.color_red"
+- id: 'properties.color_red'
   type: RadioSelector
   properties:
     options:
       - Option 1
       - Option 2
     color: red
-- id: "properties.disabled: true"
+- id: 'properties.disabled: true'
   type: RadioSelector
   properties:
     options:
       - Option 1
       - Option 2
     disabled: true
-- id: "properties.label: span_12"
+- id: 'properties.label: span_12'
   type: RadioSelector
   properties:
     options:
@@ -63,7 +63,7 @@
       - Option 2
     label:
       span: 12
-- id: "properties.label: align_right"
+- id: 'properties.label: align_right'
   type: RadioSelector
   properties:
     options:
@@ -71,7 +71,7 @@
       - Option 2
     label:
       align: right
-- id: "properties.label: inline_true"
+- id: 'properties.label: inline_true'
   type: RadioSelector
   properties:
     options:
@@ -79,7 +79,7 @@
       - Option 2
     label:
       inline: true
-- id: "properties.label.disabled: true"
+- id: 'properties.label.disabled: true'
   type: RadioSelector
   properties:
     options:
@@ -87,7 +87,7 @@
       - Option 2
     label:
       disabled: true
-- id: "properties.label.colon: false"
+- id: 'properties.label.colon: false'
   type: RadioSelector
   properties:
     options:
@@ -95,7 +95,7 @@
       - Option 2
     label:
       colon: false
-- id: "properties.label.extra: showingextra"
+- id: 'properties.label.extra: showingextra'
   type: RadioSelector
   properties:
     options:
@@ -103,3 +103,30 @@
       - Option 2
     label:
       extra: showing extra
+- id: 'properties.options: html'
+  type: RadioSelector
+  properties:
+    options:
+      - '<div>Some main text</div><div style="font-size: 6px;">Some small subtext</div>'
+      - '<div style="color: green;">Option green</div>'
+      - Option 3
+- id: 'properties.options.label: html'
+  type: RadioSelector
+  properties:
+    options:
+      - label: '<div>Some main text</div><div style="font-size: 6px;">Some small subtext</div>'
+        value: 1
+      - label: '<div style="color: green;">Option green</div>'
+        value: 2
+      - label: Option 3
+        value: 3
+- id: 'properties.options-style'
+  type: RadioSelector
+  properties:
+    options:
+      - label: one
+        value: 1
+        style:
+          background: red
+      - label: two
+        value: 2

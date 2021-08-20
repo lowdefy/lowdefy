@@ -15,41 +15,11 @@
 */
 
 import React from 'react';
-import DOMPurify from 'dompurify';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
 
-class HtmlBlock extends React.Component {
-  constructor(props) {
-    super(props);
-    this.div = {
-      innerHTML: '',
-    };
-  }
-
-  componentDidMount() {
-    this.div.innerHTML = DOMPurify.sanitize(this.props.properties.html);
-  }
-
-  componentDidUpdate() {
-    this.div.innerHTML = DOMPurify.sanitize(this.props.properties.html);
-  }
-
-  render() {
-    const { blockId, properties, methods } = this.props;
-    return (
-      <div
-        id={blockId}
-        data-testid={blockId}
-        ref={(el) => {
-          if (el) {
-            this.div = el;
-          }
-        }}
-        className={methods.makeCssClass(properties.style)}
-      />
-    );
-  }
-}
+const HtmlBlock = ({ blockId, properties, methods }) => (
+  <RenderHtml id={blockId} html={properties.html} methods={methods} style={properties.style} />
+);
 
 HtmlBlock.defaultProps = blockDefaultProps;
 

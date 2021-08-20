@@ -16,9 +16,9 @@
 
 import React from 'react';
 import { Divider } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
 
-const DividerBlock = ({ blockId, properties }) => (
+const DividerBlock = ({ blockId, properties, methods }) => (
   <Divider
     id={blockId}
     style={properties.style}
@@ -27,7 +27,7 @@ const DividerBlock = ({ blockId, properties }) => (
     type={properties.type}
     plain={properties.plain}
   >
-    {properties.title}
+    <RenderHtml html={properties.title} methods={methods} />
   </Divider>
 );
 

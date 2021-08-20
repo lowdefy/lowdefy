@@ -5,6 +5,13 @@ exports[`Render default - value[0] 1`] = `
   className="ant-statistic {}"
 >
   <div
+    className="ant-statistic-title"
+  >
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
+  </div>
+  <div
     className="ant-statistic-content"
   >
     
@@ -28,6 +35,13 @@ exports[`Render properties.decimalSeparator: ',' - value[0] 1`] = `
 <div
   className="ant-statistic {}"
 >
+  <div
+    className="ant-statistic-title"
+  >
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
+  </div>
   <div
     className="ant-statistic-content"
   >
@@ -57,6 +71,13 @@ exports[`Render properties.groupSeparator: ',' - value[0] 1`] = `
   className="ant-statistic {}"
 >
   <div
+    className="ant-statistic-title"
+  >
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
+  </div>
+  <div
     className="ant-statistic-content"
   >
     
@@ -85,6 +106,13 @@ exports[`Render properties.precision: 2 - value[0] 1`] = `
   className="ant-statistic {}"
 >
   <div
+    className="ant-statistic-title"
+  >
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
+  </div>
+  <div
     className="ant-statistic-content"
   >
     
@@ -112,6 +140,13 @@ exports[`Render properties.prefix: R - value[0] 1`] = `
 <div
   className="ant-statistic {}"
 >
+  <div
+    className="ant-statistic-title"
+  >
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
+  </div>
   <div
     className="ant-statistic-content"
   >
@@ -144,6 +179,13 @@ exports[`Render properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
 <div
   className="ant-statistic {}"
 >
+  <div
+    className="ant-statistic-title"
+  >
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
+  </div>
   <div
     className="ant-statistic-content"
   >
@@ -198,6 +240,13 @@ exports[`Render properties.suffix: Rand - value[0] 1`] = `
   className="ant-statistic {}"
 >
   <div
+    className="ant-statistic-title"
+  >
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
+  </div>
+  <div
     className="ant-statistic-content"
   >
     
@@ -229,6 +278,13 @@ exports[`Render properties.suffixIcon: AccountBookFilled - value[0] 1`] = `
 <div
   className="ant-statistic {}"
 >
+  <div
+    className="ant-statistic-title"
+  >
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
+  </div>
   <div
     className="ant-statistic-content"
   >
@@ -285,7 +341,9 @@ exports[`Render properties.title - value[0] 1`] = `
   <div
     className="ant-statistic-title"
   >
-    Statistic title
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
   </div>
   <div
     className="ant-statistic-content"
@@ -307,10 +365,52 @@ exports[`Render properties.title - value[0] 1`] = `
 </div>
 `;
 
+exports[`Render properties.title with html - value[0] 1`] = `
+<div
+  className="ant-statistic {}"
+>
+  <div
+    className="ant-statistic-title"
+  >
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
+  </div>
+  <div
+    className="ant-statistic-content"
+  >
+    
+    <span
+      className="ant-statistic-content-value"
+    >
+      <span
+        className="ant-statistic-content-value-int"
+      >
+        
+        100
+      </span>
+      
+    </span>
+    <span
+      className="ant-statistic-content-suffix"
+    >
+      %
+    </span>
+  </div>
+</div>
+`;
+
 exports[`Render properties.value: '3.45' as string - value[0] 1`] = `
 <div
   className="ant-statistic {}"
 >
+  <div
+    className="ant-statistic-title"
+  >
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
+  </div>
   <div
     className="ant-statistic-content"
   >
@@ -339,6 +439,13 @@ exports[`Render properties.value: 3.45 as number - value[0] 1`] = `
 <div
   className="ant-statistic {}"
 >
+  <div
+    className="ant-statistic-title"
+  >
+    <div
+      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    />
+  </div>
   <div
     className="ant-statistic-content"
   >
@@ -398,6 +505,10 @@ exports[`Test Schema properties.suffixIcon: AccountBookFilled 2`] = `null`;
 exports[`Test Schema properties.title 1`] = `true`;
 
 exports[`Test Schema properties.title 2`] = `null`;
+
+exports[`Test Schema properties.title with html 1`] = `true`;
+
+exports[`Test Schema properties.title with html 2`] = `null`;
 
 exports[`Test Schema properties.value: '3.45' as string 1`] = `true`;
 

@@ -41,7 +41,9 @@ exports[`Render default - value[0] 1`] = `
           />
         </svg>
       </span>
-      content
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
     <div
       className="ant-collapse-content ant-collapse-content-active"
@@ -107,7 +109,9 @@ exports[`Render properties.accordion: true - value[0] 1`] = `
           />
         </svg>
       </span>
-      Title One
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
     <div
       className="ant-collapse-content ant-collapse-content-active"
@@ -159,7 +163,9 @@ exports[`Render properties.accordion: true - value[0] 1`] = `
           />
         </svg>
       </span>
-      Title Two
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
   </div>
 </div>
@@ -200,7 +206,9 @@ exports[`Render properties.activeKey: content_two - value[0] 1`] = `
           />
         </svg>
       </span>
-      Title One
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
   </div>
   <div
@@ -239,7 +247,9 @@ exports[`Render properties.activeKey: content_two - value[0] 1`] = `
           />
         </svg>
       </span>
-      Title Two
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
     <div
       className="ant-collapse-content ant-collapse-content-active"
@@ -305,7 +315,9 @@ exports[`Render properties.bordered: false - value[0] 1`] = `
           />
         </svg>
       </span>
-      Title One
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
     <div
       className="ant-collapse-content ant-collapse-content-active"
@@ -357,7 +369,9 @@ exports[`Render properties.bordered: false - value[0] 1`] = `
           />
         </svg>
       </span>
-      Title Two
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
   </div>
 </div>
@@ -398,7 +412,9 @@ exports[`Render properties.defaultActiveKey: content_two - value[0] 1`] = `
           />
         </svg>
       </span>
-      Title One
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
   </div>
   <div
@@ -437,7 +453,9 @@ exports[`Render properties.defaultActiveKey: content_two - value[0] 1`] = `
           />
         </svg>
       </span>
-      Title Two
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
     <div
       className="ant-collapse-content ant-collapse-content-active"
@@ -503,7 +521,9 @@ exports[`Render properties.destroyInactivePanel: true - value[0] 1`] = `
           />
         </svg>
       </span>
-      Title One
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
     <div
       className="ant-collapse-content ant-collapse-content-active"
@@ -555,7 +575,9 @@ exports[`Render properties.destroyInactivePanel: true - value[0] 1`] = `
           />
         </svg>
       </span>
-      Title Two
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
   </div>
 </div>
@@ -605,7 +627,9 @@ exports[`Render properties.expandIcon: ArrowRightOutlined - value[0] 1`] = `
           />
         </svg>
       </span>
-      Title One
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
     <div
       className="ant-collapse-content ant-collapse-content-active"
@@ -660,7 +684,9 @@ exports[`Render properties.expandIcon: ArrowRightOutlined - value[0] 1`] = `
           />
         </svg>
       </span>
-      Title Two
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
   </div>
 </div>
@@ -707,7 +733,9 @@ exports[`Render properties.expandIconPosition: right - value[0] 1`] = `
           />
         </svg>
       </span>
-      Title One
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
     <div
       className="ant-collapse-content ant-collapse-content-active"
@@ -759,7 +787,9 @@ exports[`Render properties.expandIconPosition: right - value[0] 1`] = `
           />
         </svg>
       </span>
-      Title Two
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
   </div>
 </div>
@@ -806,7 +836,9 @@ exports[`Render properties.forceRender: true - value[0] 1`] = `
           />
         </svg>
       </span>
-      Title One
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
     <div
       className="ant-collapse-content ant-collapse-content-active"
@@ -858,7 +890,9 @@ exports[`Render properties.forceRender: true - value[0] 1`] = `
           />
         </svg>
       </span>
-      Title Two
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
     <div
       className="ant-collapse-content ant-collapse-content-inactive"
@@ -924,6 +958,9 @@ exports[`Render properties.panels - value[0] 1`] = `
           />
         </svg>
       </span>
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
     <div
       className="ant-collapse-content ant-collapse-content-active"
@@ -975,6 +1012,9 @@ exports[`Render properties.panels - value[0] 1`] = `
           />
         </svg>
       </span>
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
   </div>
 </div>
@@ -1021,7 +1061,9 @@ exports[`Render properties.panels.disabled - value[0] 1`] = `
           />
         </svg>
       </span>
-      Title One
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
     <div
       className="ant-collapse-content ant-collapse-content-active"
@@ -1073,7 +1115,9 @@ exports[`Render properties.panels.disabled - value[0] 1`] = `
           />
         </svg>
       </span>
-      Title Two
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
   </div>
 </div>
@@ -1120,7 +1164,9 @@ exports[`Render properties.panels.extraKey - value[0] 1`] = `
           />
         </svg>
       </span>
-      Title One
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
       <div
         className="ant-collapse-extra"
       >
@@ -1186,7 +1232,9 @@ exports[`Render properties.panels.extraKey - value[0] 1`] = `
           />
         </svg>
       </span>
-      Title Two
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
       <div
         className="ant-collapse-extra"
       >
@@ -1247,7 +1295,9 @@ exports[`Render properties.panels.title - value[0] 1`] = `
           />
         </svg>
       </span>
-      Title One
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
     <div
       className="ant-collapse-content ant-collapse-content-active"
@@ -1299,7 +1349,9 @@ exports[`Render properties.panels.title - value[0] 1`] = `
           />
         </svg>
       </span>
-      Title Two
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
   </div>
 </div>
@@ -1321,7 +1373,9 @@ exports[`Render properties.showArrow: false - value[0] 1`] = `
       role="button"
       tabIndex={0}
     >
-      Title One
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
     <div
       className="ant-collapse-content ant-collapse-content-active"
@@ -1354,7 +1408,101 @@ exports[`Render properties.showArrow: false - value[0] 1`] = `
       role="button"
       tabIndex={0}
     >
-      Title Two
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render with html in panel title - value[0] 1`] = `
+<div
+  className="ant-collapse ant-collapse-icon-position-left"
+  role={null}
+>
+  <div
+    className="ant-collapse-item ant-collapse-item-active"
+  >
+    <div
+      aria-expanded="true"
+      className="ant-collapse-header"
+      onClick={[Function]}
+      onKeyPress={[Function]}
+      role="button"
+      tabIndex={0}
+    >
+      <span
+        aria-label="right"
+        className="anticon anticon-right ant-collapse-arrow"
+        role="img"
+      >
+        <svg
+          aria-hidden="true"
+          data-icon="right"
+          fill="currentColor"
+          focusable="false"
+          height="1em"
+          style={
+            Object {
+              "msTransform": "rotate(90deg)",
+              "transform": "rotate(90deg)",
+            }
+          }
+          viewBox="64 64 896 896"
+          width="1em"
+        >
+          <path
+            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+          />
+        </svg>
+      </span>
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </div>
+    <div
+      className="ant-collapse-content ant-collapse-content-active"
+      role={null}
+    >
+      <div
+        className="ant-collapse-content-box"
+      />
+    </div>
+  </div>
+  <div
+    className="ant-collapse-item"
+  >
+    <div
+      aria-expanded="false"
+      className="ant-collapse-header"
+      onClick={[Function]}
+      onKeyPress={[Function]}
+      role="button"
+      tabIndex={0}
+    >
+      <span
+        aria-label="right"
+        className="anticon anticon-right ant-collapse-arrow"
+        role="img"
+      >
+        <svg
+          aria-hidden="true"
+          data-icon="right"
+          fill="currentColor"
+          focusable="false"
+          height="1em"
+          viewBox="64 64 896 896"
+          width="1em"
+        >
+          <path
+            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+          />
+        </svg>
+      </span>
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
   </div>
 </div>
@@ -1415,3 +1563,7 @@ exports[`Test Schema properties.panels.title 2`] = `null`;
 exports[`Test Schema properties.showArrow: false 1`] = `true`;
 
 exports[`Test Schema properties.showArrow: false 2`] = `null`;
+
+exports[`Test Schema with html in panel title 1`] = `true`;
+
+exports[`Test Schema with html in panel title 2`] = `null`;

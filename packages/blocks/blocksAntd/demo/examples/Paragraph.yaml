@@ -88,7 +88,7 @@
   type: Paragraph
   properties:
     copyable:
-      icon: 
+      icon:
         - WarningOutlined
         - RocketOutlined
     content: |
@@ -97,7 +97,7 @@
   type: Paragraph
   properties:
     copyable:
-      tooltips: 
+      tooltips:
         - Click to copy
         - Copy done
     content: |
@@ -115,7 +115,7 @@
   style:
     width: 300
   properties:
-    ellipsis: 
+    ellipsis:
       rows: 3
     content: |
       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -124,7 +124,7 @@
   style:
     width: 300
   properties:
-    ellipsis: 
+    ellipsis:
       rows: 3
       expandable: true
     content: |
@@ -134,7 +134,7 @@
   style:
     width: 300
   properties:
-    ellipsis: 
+    ellipsis:
       rows: 3
       suffix: and other
     content: |
@@ -145,7 +145,12 @@
 #   style:
 #     width: 300
 #   properties:
-#     ellipsis: 
+#     ellipsis:
 #       symbol: '???'
 #     content: |
 #       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+- id: 'with html content'
+  type: Paragraph
+  properties:
+    content: |
+      <div style="background-color:blue;color:white;">Lorem ipsum dolor sit amet...</div>

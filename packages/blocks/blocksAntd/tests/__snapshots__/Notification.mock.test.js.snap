@@ -29,3 +29,7 @@ exports[`Mock render - properties.status: info - value[0] - default 1`] = `Array
 exports[`Mock render - properties.status: warning - value[0] - default 1`] = `Array []`;
 
 exports[`Mock render - properties.top: 250 placement: topLeft - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - with description uses html - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - with message uses html - value[0] - default 1`] = `Array []`;

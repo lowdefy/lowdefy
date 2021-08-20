@@ -7,9 +7,9 @@ exports[`Render default - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    default
-  </span>
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </button>
 `;
 
@@ -20,9 +20,9 @@ exports[`Render properties.block: true - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.block: true
-  </span>
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </button>
 `;
 
@@ -33,9 +33,9 @@ exports[`Render properties.color: #9c27b0 - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.color: #9c27b0
-  </span>
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </button>
 `;
 
@@ -46,9 +46,9 @@ exports[`Render properties.danger: true - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.danger: true
-  </span>
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </button>
 `;
 
@@ -60,9 +60,9 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.disabled: true
-  </span>
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </button>
 `;
 
@@ -73,15 +73,15 @@ exports[`Render properties.ghost: true - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.ghost: true
-  </span>
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </button>
 `;
 
 exports[`Render properties.hideTitle: true - value[0] 1`] = `
 <button
-  className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+  className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
   id="properties.hideTitle: true"
   onClick={[Function]}
   type="button"
@@ -108,6 +108,9 @@ exports[`Render properties.hideTitle: true - value[0] 1`] = `
       />
     </svg>
   </span>
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </button>
 `;
 
@@ -118,9 +121,9 @@ exports[`Render properties.href: www.lowdefy.com - value[0] 1`] = `
   id="properties.href: www.lowdefy.com"
   onClick={[Function]}
 >
-  <span>
-    properties.href: www.lowdefy.com
-  </span>
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </a>
 `;
 
@@ -153,9 +156,9 @@ exports[`Render properties.icon object - value[0] 1`] = `
       />
     </svg>
   </span>
-  <span>
-    properties.icon object
-  </span>
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </button>
 `;
 
@@ -188,9 +191,9 @@ exports[`Render properties.icon string - value[0] 1`] = `
       />
     </svg>
   </span>
-  <span>
-    properties.icon string
-  </span>
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </button>
 `;
 
@@ -201,9 +204,9 @@ exports[`Render properties.shape: circle - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.shape: circle
-  </span>
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </button>
 `;
 
@@ -214,9 +217,9 @@ exports[`Render properties.shape: round - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.shape: round
-  </span>
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </button>
 `;
 
@@ -227,9 +230,9 @@ exports[`Render properties.size: large - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.size: large
-  </span>
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </button>
 `;
 
@@ -240,9 +243,9 @@ exports[`Render properties.size: small - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.size: small
-  </span>
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </button>
 `;
 
@@ -253,9 +256,9 @@ exports[`Render properties.title - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    Button title
-  </span>
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </button>
 `;
 
@@ -266,9 +269,9 @@ exports[`Render properties.type: danger - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.type: danger
-  </span>
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </button>
 `;
 
@@ -279,9 +282,9 @@ exports[`Render properties.type: dashed - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.type: dashed
-  </span>
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </button>
 `;
 
@@ -292,9 +295,9 @@ exports[`Render properties.type: default - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.type: default
-  </span>
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </button>
 `;
 
@@ -305,9 +308,9 @@ exports[`Render properties.type: link - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.type: link
-  </span>
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </button>
 `;
 
@@ -318,9 +321,22 @@ exports[`Render properties.type: text - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.type: text
-  </span>
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
+</button>
+`;
+
+exports[`Render with html in title - value[0] 1`] = `
+<button
+  className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+  id="with html in title"
+  onClick={[Function]}
+  type="button"
+>
+  <div
+    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  />
 </button>
 `;
 
@@ -403,3 +419,7 @@ exports[`Test Schema properties.type: link 2`] = `null`;
 exports[`Test Schema properties.type: text 1`] = `true`;
 
 exports[`Test Schema properties.type: text 2`] = `null`;
+
+exports[`Test Schema with html in title 1`] = `true`;
+
+exports[`Test Schema with html in title 2`] = `null`;

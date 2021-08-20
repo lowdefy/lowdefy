@@ -34,3 +34,7 @@
   properties:
     content: Message content
     duration: 5
+- id: 'with html content'
+  type: Message
+  properties:
+    content: '<div style="color:pink;"><strong>Message Content Html</strong></div>'

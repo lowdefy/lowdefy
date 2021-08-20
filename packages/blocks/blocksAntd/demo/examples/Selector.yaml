@@ -134,3 +134,42 @@
   properties:
     label:
       extra: showing extra
+- id: 'properties.options: html'
+  type: Selector
+  properties:
+    options:
+      - '<div>Some main text</div><div style="font-size: 6px;">Some small subtext</div>'
+      - '<div style="color: green;">Option green</div>'
+      - Option 3
+- id: 'properties.options.label: html'
+  type: Selector
+  properties:
+    options:
+      - label: '<div>Some main text</div><div style="font-size: 6px;">Some small subtext</div>'
+        value: 1
+      - label: '<div style="color: green;">Option green</div>'
+        value: 2
+      - label: Option 3
+        value: 3
+- id: 'properties.options-style'
+  type: Selector
+  properties:
+    options:
+      - label: one
+        value: 1
+        style:
+          color: red
+      - label: two
+        value: 2
+- id: 'properties.options.label: html and properties.options.filterString'
+  type: Selector
+  properties:
+    options:
+      - label: '<div>Some main text</div><div style="font-size: 6px;">Some small subtext</div>'
+        filterString: 'Some main text'
+        value: 1
+      - label: '<div style="color: green;">Option green</div>'
+        filterString: 'Option green'
+        value: 2
+      - label: Option 3
+        value: 3

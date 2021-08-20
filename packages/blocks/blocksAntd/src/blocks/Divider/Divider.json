@@ -24,7 +24,7 @@
         },
         "title": {
           "type": "string",
-          "description": "Divider title."
+          "description": "Divider title - supports html."
         },
         "type": {
           "type": "string",

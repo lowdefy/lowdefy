@@ -53,9 +53,9 @@ exports[`Render default - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -115,9 +115,9 @@ exports[`Render properties.addItemButton: title: Add new Item - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add new Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -164,9 +164,9 @@ exports[`Render properties.addToFront: true - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -260,9 +260,9 @@ exports[`Render properties.noDataTitle: No title display - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -322,9 +322,9 @@ exports[`Render properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -384,9 +384,9 @@ exports[`Render properties.removeItemIcon: name: DeleteOutlined - value[0] 1`] =
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -446,9 +446,9 @@ exports[`Render properties.size: large - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -508,9 +508,9 @@ exports[`Render properties.size: small - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -590,9 +590,9 @@ exports[`Render properties.title - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -652,9 +652,9 @@ exports[`Render required = true default - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -714,9 +714,9 @@ exports[`Render required = true properties.addItemButton: title: Add new Item - 
             />
           </svg>
         </span>
-        <span>
-          Add new Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -763,9 +763,9 @@ exports[`Render required = true properties.addToFront: true - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -859,9 +859,9 @@ exports[`Render required = true properties.noDataTitle: No title display - value
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -921,9 +921,9 @@ exports[`Render required = true properties.removeItemIcon: DeleteOutlined - valu
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -983,9 +983,9 @@ exports[`Render required = true properties.removeItemIcon: name: DeleteOutlined 
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -1045,9 +1045,9 @@ exports[`Render required = true properties.size: large - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -1107,9 +1107,9 @@ exports[`Render required = true properties.size: small - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -1189,9 +1189,9 @@ exports[`Render required = true properties.title - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -1251,9 +1251,9 @@ exports[`Render validation.status = error default - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -1313,9 +1313,9 @@ exports[`Render validation.status = error properties.addItemButton: title: Add n
             />
           </svg>
         </span>
-        <span>
-          Add new Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -1362,9 +1362,9 @@ exports[`Render validation.status = error properties.addToFront: true - value[0]
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -1458,9 +1458,9 @@ exports[`Render validation.status = error properties.noDataTitle: No title displ
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -1520,9 +1520,9 @@ exports[`Render validation.status = error properties.removeItemIcon: DeleteOutli
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -1582,9 +1582,9 @@ exports[`Render validation.status = error properties.removeItemIcon: name: Delet
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -1644,9 +1644,9 @@ exports[`Render validation.status = error properties.size: large - value[0] 1`] 
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -1706,9 +1706,9 @@ exports[`Render validation.status = error properties.size: small - value[0] 1`] 
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -1788,9 +1788,9 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -1850,9 +1850,9 @@ exports[`Render validation.status = null default - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -1912,9 +1912,9 @@ exports[`Render validation.status = null properties.addItemButton: title: Add ne
             />
           </svg>
         </span>
-        <span>
-          Add new Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -1961,9 +1961,9 @@ exports[`Render validation.status = null properties.addToFront: true - value[0] 
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -2057,9 +2057,9 @@ exports[`Render validation.status = null properties.noDataTitle: No title displa
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -2119,9 +2119,9 @@ exports[`Render validation.status = null properties.removeItemIcon: DeleteOutlin
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -2181,9 +2181,9 @@ exports[`Render validation.status = null properties.removeItemIcon: name: Delete
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -2243,9 +2243,9 @@ exports[`Render validation.status = null properties.size: large - value[0] 1`] =
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -2305,9 +2305,9 @@ exports[`Render validation.status = null properties.size: small - value[0] 1`] =
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -2387,9 +2387,9 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -2449,9 +2449,9 @@ exports[`Render validation.status = success default - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -2511,9 +2511,9 @@ exports[`Render validation.status = success properties.addItemButton: title: Add
             />
           </svg>
         </span>
-        <span>
-          Add new Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -2560,9 +2560,9 @@ exports[`Render validation.status = success properties.addToFront: true - value[
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -2656,9 +2656,9 @@ exports[`Render validation.status = success properties.noDataTitle: No title dis
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -2718,9 +2718,9 @@ exports[`Render validation.status = success properties.removeItemIcon: DeleteOut
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -2780,9 +2780,9 @@ exports[`Render validation.status = success properties.removeItemIcon: name: Del
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -2842,9 +2842,9 @@ exports[`Render validation.status = success properties.size: large - value[0] 1`
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -2904,9 +2904,9 @@ exports[`Render validation.status = success properties.size: small - value[0] 1`
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -2986,9 +2986,9 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -3048,9 +3048,9 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -3110,9 +3110,9 @@ exports[`Render validation.status = warning properties.addItemButton: title: Add
             />
           </svg>
         </span>
-        <span>
-          Add new Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -3159,9 +3159,9 @@ exports[`Render validation.status = warning properties.addToFront: true - value[
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -3255,9 +3255,9 @@ exports[`Render validation.status = warning properties.noDataTitle: No title dis
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -3317,9 +3317,9 @@ exports[`Render validation.status = warning properties.removeItemIcon: DeleteOut
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -3379,9 +3379,9 @@ exports[`Render validation.status = warning properties.removeItemIcon: name: Del
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -3441,9 +3441,9 @@ exports[`Render validation.status = warning properties.size: large - value[0] 1`
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -3503,9 +3503,9 @@ exports[`Render validation.status = warning properties.size: small - value[0] 1`
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>
@@ -3585,9 +3585,9 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </button>
     </div>
   </div>

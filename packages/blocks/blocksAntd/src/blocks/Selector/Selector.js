@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Select } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
 import { get, type } from '@lowdefy/helpers';
 import Label from '../Label/Label';
 import Icon from '../Icon/Icon';
@@ -79,7 +79,9 @@ const Selector = ({
               showSearch={get(properties, 'showSearch', { default: true })}
               size={properties.size}
               filterOption={(input, option) =>
-                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                (option.filterstring || option.children.props.html || '')
+                  .toLowerCase()
+                  .indexOf(input.toLowerCase()) >= 0
               }
               notFoundContent="Not found"
               onChange={(newVal) => {
@@ -95,22 +97,26 @@ const Selector = ({
               {uniqueValueOptions.map((opt, i) =>
                 type.isPrimitive(opt) ? (
                   <Option
+                    className={methods.makeCssClass(properties.optionsStyle)}
                     id={`${blockId}_${i}`}
                     key={i}
                     value={i}
-                    className={methods.makeCssClass(properties.optionsStyle)}
                   >
-                    {`${opt}`}
+                    <RenderHtml html={`${opt}`} methods={methods} />
                   </Option>
                 ) : (
                   <Option
+                    className={methods.makeCssClass([properties.optionsStyle, opt.style])}
+                    disabled={opt.disabled}
+                    filterstring={opt.filterString}
                     id={`${blockId}_${i}`}
                     key={i}
                     value={i}
-                    disabled={opt.disabled}
-                    className={methods.makeCssClass(properties.optionsStyle)}
                   >
-                    {type.isNone(opt.label) ? `${opt.value}` : opt.label}
+                    <RenderHtml
+                      html={type.isNone(opt.label) ? `${opt.value}` : opt.label}
+                      methods={methods}
+                    />
                   </Option>
                 )
               )}

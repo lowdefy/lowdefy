@@ -15,7 +15,9 @@ exports[`Render areas.extra: - value[0] 1`] = `
       <div
         className="ant-card-head-title"
       >
-        Card block
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </div>
       <div
         className="ant-card-extra"
@@ -57,6 +59,22 @@ exports[`Render default - value[0] 1`] = `
   id="default"
 >
   <div
+    className="ant-card-head"
+    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+  >
+    <div
+      className="ant-card-head-wrapper"
+    >
+      <div
+        className="ant-card-head-title"
+      >
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
+      </div>
+    </div>
+  </div>
+  <div
     className="ant-card-body"
     style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
   >
@@ -89,7 +107,9 @@ exports[`Render properties.bodyStyle: border: 5px solid blue - value[0] 1`] = `
       <div
         className="ant-card-head-title"
       >
-        Card block
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </div>
     </div>
   </div>
@@ -126,7 +146,9 @@ exports[`Render properties.bordered: false - value[0] 1`] = `
       <div
         className="ant-card-head-title"
       >
-        Card block
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </div>
     </div>
   </div>
@@ -163,7 +185,9 @@ exports[`Render properties.headerStyle: border: 5px solid blue - value[0] 1`] = 
       <div
         className="ant-card-head-title"
       >
-        Card block
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </div>
     </div>
   </div>
@@ -200,7 +224,9 @@ exports[`Render properties.hoverable: true - value[0] 1`] = `
       <div
         className="ant-card-head-title"
       >
-        Card block
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </div>
     </div>
   </div>
@@ -237,7 +263,9 @@ exports[`Render properties.inner: true - value[0] 1`] = `
       <div
         className="ant-card-head-title"
       >
-        Card block
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </div>
     </div>
   </div>
@@ -274,7 +302,9 @@ exports[`Render properties.size: small - value[0] 1`] = `
       <div
         className="ant-card-head-title"
       >
-        Card block small
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </div>
     </div>
   </div>
@@ -311,7 +341,48 @@ exports[`Render properties.title - value[0] 1`] = `
       <div
         className="ant-card-head-title"
       >
-        Card block
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    className="ant-card-body"
+    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+  >
+    <div
+      style={
+        Object {
+          "border": "1px solid red",
+          "padding": 10,
+        }
+      }
+    >
+      content
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render with html in title - value[0] 1`] = `
+<div
+  className="ant-card ant-card-bordered"
+  id="with html in title"
+>
+  <div
+    className="ant-card-head"
+    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+  >
+    <div
+      className="ant-card-head-wrapper"
+    >
+      <div
+        className="ant-card-head-title"
+      >
+        <div
+          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        />
       </div>
     </div>
   </div>
@@ -368,3 +439,7 @@ exports[`Test Schema properties.size: small 2`] = `null`;
 exports[`Test Schema properties.title 1`] = `true`;
 
 exports[`Test Schema properties.title 2`] = `null`;
+
+exports[`Test Schema with html in title 1`] = `true`;
+
+exports[`Test Schema with html in title 2`] = `null`;

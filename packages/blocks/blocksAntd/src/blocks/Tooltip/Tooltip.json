@@ -52,7 +52,20 @@
         },
         "placement": {
           "type": "string",
-          "enum": ["top", "left", "right", "bottom", "topLeft", "topRight", "bottomLeft", "bottomRight", "leftTop", "leftBottom", "rightTop", "rightBottom"],
+          "enum": [
+            "top",
+            "left",
+            "right",
+            "bottom",
+            "topLeft",
+            "topRight",
+            "bottomLeft",
+            "bottomRight",
+            "leftTop",
+            "leftBottom",
+            "rightTop",
+            "rightBottom"
+          ],
           "default": "top",
           "description": "The position of the tooltip relative to the target."
         },
@@ -64,7 +77,7 @@
         },
         "title": {
           "type": "string",
-          "description": "Title to show in the title area. Overwritten by blocks in the title content area."
+          "description": "Title to show in the title area - supports html. Overwritten by blocks in the title content area."
         },
         "zIndex": {
           "type": "integer",

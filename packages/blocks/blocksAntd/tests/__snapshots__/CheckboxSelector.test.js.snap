@@ -15,7 +15,9 @@ exports[`Render default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -53,7 +55,9 @@ exports[`Render properties.color_red - value[0] 1`] = `
       htmlFor="properties.color_red_input"
       title="properties.color_red"
     >
-      properties.color_red
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -95,7 +99,9 @@ exports[`Render properties.color_red - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -123,7 +129,9 @@ exports[`Render properties.color_red - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -148,7 +156,9 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      properties.disabled: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -191,7 +201,9 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -220,7 +232,9 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -245,7 +259,9 @@ exports[`Render properties.label.colon: false - value[0] 1`] = `
       htmlFor="properties.label.colon: false_input"
       title="properties.label.colon: false"
     >
-      properties.label.colon: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -287,7 +303,9 @@ exports[`Render properties.label.colon: false - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -315,7 +333,9 @@ exports[`Render properties.label.colon: false - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -370,7 +390,9 @@ exports[`Render properties.label.disabled: true - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -398,7 +420,9 @@ exports[`Render properties.label.disabled: true - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -423,7 +447,9 @@ exports[`Render properties.label.extra: showingextra - value[0] 1`] = `
       htmlFor="properties.label.extra: showingextra_input"
       title="properties.label.extra: showingextra"
     >
-      properties.label.extra: showingextra
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -465,7 +491,9 @@ exports[`Render properties.label.extra: showingextra - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -493,7 +521,9 @@ exports[`Render properties.label.extra: showingextra - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -502,7 +532,9 @@ exports[`Render properties.label.extra: showingextra - value[0] 1`] = `
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      showing extra
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
   </div>
 </div>
@@ -523,7 +555,9 @@ exports[`Render properties.label: align_right - value[0] 1`] = `
       htmlFor="properties.label: align_right_input"
       title="properties.label: align_right"
     >
-      properties.label: align_right
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -565,7 +599,9 @@ exports[`Render properties.label: align_right - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -593,7 +629,9 @@ exports[`Render properties.label: align_right - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -622,7 +660,9 @@ exports[`Render properties.label: inline_true - value[0] 1`] = `
       htmlFor="properties.label: inline_true_input"
       title="properties.label: inline_true"
     >
-      properties.label: inline_true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -668,7 +708,9 @@ exports[`Render properties.label: inline_true - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -696,7 +738,9 @@ exports[`Render properties.label: inline_true - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -721,7 +765,9 @@ exports[`Render properties.label: span_12 - value[0] 1`] = `
       htmlFor="properties.label: span_12_input"
       title="properties.label: span_12"
     >
-      properties.label: span_12
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -763,7 +809,9 @@ exports[`Render properties.label: span_12 - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -791,7 +839,271 @@ exports[`Render properties.label: span_12 - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.options.label: html - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options.label: html"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options.label: html_input"
+      title="properties.options.label: html"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-checkbox-group {\\"style\\":[null,null]}"
+          id="properties.options.label: html_input"
+        >
+          <label
+            className="{} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options.label: html_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={0}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="{} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options.label: html_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={1}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="{} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options.label: html_2"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={2}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.options: html - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options: html"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options: html_input"
+      title="properties.options: html"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-checkbox-group {\\"style\\":[null,null]}"
+          id="properties.options: html_input"
+        >
+          <label
+            className="ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options: html_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={0}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options: html_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={1}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options: html_2"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={2}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -816,7 +1128,9 @@ exports[`Render properties.options-number - value[0] 1`] = `
       htmlFor="properties.options-number_input"
       title="properties.options-number"
     >
-      properties.options-number
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -858,7 +1172,9 @@ exports[`Render properties.options-number - value[0] 1`] = `
               />
             </span>
             <span>
-              15
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -886,7 +1202,9 @@ exports[`Render properties.options-number - value[0] 1`] = `
               />
             </span>
             <span>
-              20
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -911,7 +1229,9 @@ exports[`Render properties.options-object - value[0] 1`] = `
       htmlFor="properties.options-object_input"
       title="properties.options-object"
     >
-      properties.options-object
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -929,7 +1249,7 @@ exports[`Render properties.options-object - value[0] 1`] = `
           id="properties.options-object_input"
         >
           <label
-            className="ant-checkbox-wrapper"
+            className="{} ant-checkbox-wrapper"
           >
             <span
               className="ant-checkbox"
@@ -953,11 +1273,13 @@ exports[`Render properties.options-object - value[0] 1`] = `
               />
             </span>
             <span>
-              one
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
-            className="ant-checkbox-wrapper"
+            className="{} ant-checkbox-wrapper"
           >
             <span
               className="ant-checkbox"
@@ -981,7 +1303,9 @@ exports[`Render properties.options-object - value[0] 1`] = `
               />
             </span>
             <span>
-              two
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -1006,7 +1330,9 @@ exports[`Render properties.options-string - value[0] 1`] = `
       htmlFor="properties.options-string_input"
       title="properties.options-string"
     >
-      properties.options-string
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1048,7 +1374,9 @@ exports[`Render properties.options-string - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -1076,7 +1404,110 @@ exports[`Render properties.options-string - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.options-style - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options-style"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options-style_input"
+      title="properties.options-style"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-checkbox-group {\\"style\\":[null,null]}"
+          id="properties.options-style_input"
+        >
+          <label
+            className="{\\"style\\":{\\"background\\":\\"red\\"}} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options-style_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={0}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="{} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options-style_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={1}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -1101,7 +1532,9 @@ exports[`Render properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="properties.title: My CheckboxSelector Title"
     >
-      properties.title: My CheckboxSelector Title
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1143,7 +1576,9 @@ exports[`Render properties.title - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -1171,7 +1606,9 @@ exports[`Render properties.title - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -1196,7 +1633,9 @@ exports[`Render required = true default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1234,7 +1673,9 @@ exports[`Render required = true properties.color_red - value[0] 1`] = `
       htmlFor="properties.color_red_input"
       title="properties.color_red"
     >
-      properties.color_red
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1276,7 +1717,9 @@ exports[`Render required = true properties.color_red - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -1304,7 +1747,9 @@ exports[`Render required = true properties.color_red - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -1329,7 +1774,9 @@ exports[`Render required = true properties.disabled: true - value[0] 1`] = `
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      properties.disabled: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1372,7 +1819,9 @@ exports[`Render required = true properties.disabled: true - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -1401,7 +1850,9 @@ exports[`Render required = true properties.disabled: true - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -1426,7 +1877,9 @@ exports[`Render required = true properties.label.colon: false - value[0] 1`] = `
       htmlFor="properties.label.colon: false_input"
       title="properties.label.colon: false"
     >
-      properties.label.colon: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1468,7 +1921,9 @@ exports[`Render required = true properties.label.colon: false - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -1496,7 +1951,9 @@ exports[`Render required = true properties.label.colon: false - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -1551,7 +2008,9 @@ exports[`Render required = true properties.label.disabled: true - value[0] 1`] =
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -1579,7 +2038,9 @@ exports[`Render required = true properties.label.disabled: true - value[0] 1`] =
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -1604,7 +2065,9 @@ exports[`Render required = true properties.label.extra: showingextra - value[0] 
       htmlFor="properties.label.extra: showingextra_input"
       title="properties.label.extra: showingextra"
     >
-      properties.label.extra: showingextra
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1646,7 +2109,9 @@ exports[`Render required = true properties.label.extra: showingextra - value[0] 
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -1674,7 +2139,9 @@ exports[`Render required = true properties.label.extra: showingextra - value[0] 
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -1683,7 +2150,9 @@ exports[`Render required = true properties.label.extra: showingextra - value[0] 
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      showing extra
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
   </div>
 </div>
@@ -1704,7 +2173,9 @@ exports[`Render required = true properties.label: align_right - value[0] 1`] = `
       htmlFor="properties.label: align_right_input"
       title="properties.label: align_right"
     >
-      properties.label: align_right
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1746,7 +2217,9 @@ exports[`Render required = true properties.label: align_right - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -1774,7 +2247,9 @@ exports[`Render required = true properties.label: align_right - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -1803,7 +2278,9 @@ exports[`Render required = true properties.label: inline_true - value[0] 1`] = `
       htmlFor="properties.label: inline_true_input"
       title="properties.label: inline_true"
     >
-      properties.label: inline_true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1849,7 +2326,9 @@ exports[`Render required = true properties.label: inline_true - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -1877,7 +2356,9 @@ exports[`Render required = true properties.label: inline_true - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -1902,7 +2383,9 @@ exports[`Render required = true properties.label: span_12 - value[0] 1`] = `
       htmlFor="properties.label: span_12_input"
       title="properties.label: span_12"
     >
-      properties.label: span_12
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -1944,7 +2427,9 @@ exports[`Render required = true properties.label: span_12 - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -1972,7 +2457,271 @@ exports[`Render required = true properties.label: span_12 - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.options.label: html - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options.label: html"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options.label: html_input"
+      title="properties.options.label: html"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-checkbox-group {\\"style\\":[null,null]}"
+          id="properties.options.label: html_input"
+        >
+          <label
+            className="{} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options.label: html_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={0}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="{} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options.label: html_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={1}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="{} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options.label: html_2"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={2}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.options: html - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options: html"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options: html_input"
+      title="properties.options: html"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-checkbox-group {\\"style\\":[null,null]}"
+          id="properties.options: html_input"
+        >
+          <label
+            className="ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options: html_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={0}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options: html_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={1}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options: html_2"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={2}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -1997,7 +2746,9 @@ exports[`Render required = true properties.options-number - value[0] 1`] = `
       htmlFor="properties.options-number_input"
       title="properties.options-number"
     >
-      properties.options-number
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2039,7 +2790,9 @@ exports[`Render required = true properties.options-number - value[0] 1`] = `
               />
             </span>
             <span>
-              15
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -2067,7 +2820,9 @@ exports[`Render required = true properties.options-number - value[0] 1`] = `
               />
             </span>
             <span>
-              20
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -2092,7 +2847,9 @@ exports[`Render required = true properties.options-object - value[0] 1`] = `
       htmlFor="properties.options-object_input"
       title="properties.options-object"
     >
-      properties.options-object
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2110,7 +2867,7 @@ exports[`Render required = true properties.options-object - value[0] 1`] = `
           id="properties.options-object_input"
         >
           <label
-            className="ant-checkbox-wrapper"
+            className="{} ant-checkbox-wrapper"
           >
             <span
               className="ant-checkbox"
@@ -2134,11 +2891,13 @@ exports[`Render required = true properties.options-object - value[0] 1`] = `
               />
             </span>
             <span>
-              one
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
-            className="ant-checkbox-wrapper"
+            className="{} ant-checkbox-wrapper"
           >
             <span
               className="ant-checkbox"
@@ -2162,7 +2921,9 @@ exports[`Render required = true properties.options-object - value[0] 1`] = `
               />
             </span>
             <span>
-              two
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -2187,7 +2948,9 @@ exports[`Render required = true properties.options-string - value[0] 1`] = `
       htmlFor="properties.options-string_input"
       title="properties.options-string"
     >
-      properties.options-string
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2229,7 +2992,9 @@ exports[`Render required = true properties.options-string - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -2257,7 +3022,110 @@ exports[`Render required = true properties.options-string - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.options-style - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options-style"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options-style_input"
+      title="properties.options-style"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-checkbox-group {\\"style\\":[null,null]}"
+          id="properties.options-style_input"
+        >
+          <label
+            className="{\\"style\\":{\\"background\\":\\"red\\"}} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options-style_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={0}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="{} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options-style_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={1}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -2282,7 +3150,9 @@ exports[`Render required = true properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="properties.title: My CheckboxSelector Title"
     >
-      properties.title: My CheckboxSelector Title
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2324,7 +3194,9 @@ exports[`Render required = true properties.title - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -2352,7 +3224,9 @@ exports[`Render required = true properties.title - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -2377,7 +3251,9 @@ exports[`Render validation.status = error default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2443,7 +3319,9 @@ exports[`Render validation.status = error properties.color_red - value[0] 1`] = 
       htmlFor="properties.color_red_input"
       title="properties.color_red"
     >
-      properties.color_red
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2485,7 +3363,9 @@ exports[`Render validation.status = error properties.color_red - value[0] 1`] = 
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -2513,7 +3393,9 @@ exports[`Render validation.status = error properties.color_red - value[0] 1`] = 
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -2566,7 +3448,9 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      properties.disabled: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2609,7 +3493,9 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -2638,7 +3524,9 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -2691,7 +3579,9 @@ exports[`Render validation.status = error properties.label.colon: false - value[
       htmlFor="properties.label.colon: false_input"
       title="properties.label.colon: false"
     >
-      properties.label.colon: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2733,7 +3623,9 @@ exports[`Render validation.status = error properties.label.colon: false - value[
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -2761,7 +3653,9 @@ exports[`Render validation.status = error properties.label.colon: false - value[
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -2844,7 +3738,9 @@ exports[`Render validation.status = error properties.label.disabled: true - valu
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -2872,7 +3768,9 @@ exports[`Render validation.status = error properties.label.disabled: true - valu
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -2925,7 +3823,9 @@ exports[`Render validation.status = error properties.label.extra: showingextra -
       htmlFor="properties.label.extra: showingextra_input"
       title="properties.label.extra: showingextra"
     >
-      properties.label.extra: showingextra
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -2967,7 +3867,9 @@ exports[`Render validation.status = error properties.label.extra: showingextra -
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -2995,7 +3897,9 @@ exports[`Render validation.status = error properties.label.extra: showingextra -
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -3048,7 +3952,9 @@ exports[`Render validation.status = error properties.label: align_right - value[
       htmlFor="properties.label: align_right_input"
       title="properties.label: align_right"
     >
-      properties.label: align_right
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3090,7 +3996,9 @@ exports[`Render validation.status = error properties.label: align_right - value[
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -3118,7 +4026,9 @@ exports[`Render validation.status = error properties.label: align_right - value[
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -3175,7 +4085,9 @@ exports[`Render validation.status = error properties.label: inline_true - value[
       htmlFor="properties.label: inline_true_input"
       title="properties.label: inline_true"
     >
-      properties.label: inline_true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3221,7 +4133,9 @@ exports[`Render validation.status = error properties.label: inline_true - value[
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -3249,7 +4163,9 @@ exports[`Render validation.status = error properties.label: inline_true - value[
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -3302,7 +4218,9 @@ exports[`Render validation.status = error properties.label: span_12 - value[0] 1
       htmlFor="properties.label: span_12_input"
       title="properties.label: span_12"
     >
-      properties.label: span_12
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3344,7 +4262,9 @@ exports[`Render validation.status = error properties.label: span_12 - value[0] 1
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -3372,7 +4292,327 @@ exports[`Render validation.status = error properties.label: span_12 - value[0] 1
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="close-circle"
+          className="anticon anticon-close-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="close-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      validation error
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = error properties.options.label: html - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options.label: html"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options.label: html_input"
+      title="properties.options.label: html"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-checkbox-group {\\"style\\":[null,null]}"
+          id="properties.options.label: html_input"
+        >
+          <label
+            className="{} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options.label: html_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={0}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="{} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options.label: html_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={1}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="{} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options.label: html_2"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={2}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="close-circle"
+          className="anticon anticon-close-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="close-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      validation error
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = error properties.options: html - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options: html"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options: html_input"
+      title="properties.options: html"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-checkbox-group {\\"style\\":[null,null]}"
+          id="properties.options: html_input"
+        >
+          <label
+            className="ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options: html_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={0}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options: html_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={1}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options: html_2"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={2}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -3425,7 +4665,9 @@ exports[`Render validation.status = error properties.options-number - value[0] 1
       htmlFor="properties.options-number_input"
       title="properties.options-number"
     >
-      properties.options-number
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3467,7 +4709,9 @@ exports[`Render validation.status = error properties.options-number - value[0] 1
               />
             </span>
             <span>
-              15
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -3495,7 +4739,9 @@ exports[`Render validation.status = error properties.options-number - value[0] 1
               />
             </span>
             <span>
-              20
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -3548,7 +4794,9 @@ exports[`Render validation.status = error properties.options-object - value[0] 1
       htmlFor="properties.options-object_input"
       title="properties.options-object"
     >
-      properties.options-object
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3566,7 +4814,7 @@ exports[`Render validation.status = error properties.options-object - value[0] 1
           id="properties.options-object_input"
         >
           <label
-            className="ant-checkbox-wrapper"
+            className="{} ant-checkbox-wrapper"
           >
             <span
               className="ant-checkbox"
@@ -3590,11 +4838,13 @@ exports[`Render validation.status = error properties.options-object - value[0] 1
               />
             </span>
             <span>
-              one
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
-            className="ant-checkbox-wrapper"
+            className="{} ant-checkbox-wrapper"
           >
             <span
               className="ant-checkbox"
@@ -3618,7 +4868,9 @@ exports[`Render validation.status = error properties.options-object - value[0] 1
               />
             </span>
             <span>
-              two
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -3671,7 +4923,9 @@ exports[`Render validation.status = error properties.options-string - value[0] 1
       htmlFor="properties.options-string_input"
       title="properties.options-string"
     >
-      properties.options-string
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3713,7 +4967,9 @@ exports[`Render validation.status = error properties.options-string - value[0] 1
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -3741,7 +4997,138 @@ exports[`Render validation.status = error properties.options-string - value[0] 1
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="close-circle"
+          className="anticon anticon-close-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="close-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      validation error
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = error properties.options-style - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options-style"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options-style_input"
+      title="properties.options-style"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-checkbox-group {\\"style\\":[null,null]}"
+          id="properties.options-style_input"
+        >
+          <label
+            className="{\\"style\\":{\\"background\\":\\"red\\"}} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options-style_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={0}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="{} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options-style_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={1}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -3794,7 +5181,9 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="properties.title: My CheckboxSelector Title"
     >
-      properties.title: My CheckboxSelector Title
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3836,7 +5225,9 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -3864,7 +5255,9 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -3917,7 +5310,9 @@ exports[`Render validation.status = null default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3955,7 +5350,9 @@ exports[`Render validation.status = null properties.color_red - value[0] 1`] = `
       htmlFor="properties.color_red_input"
       title="properties.color_red"
     >
-      properties.color_red
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -3997,7 +5394,9 @@ exports[`Render validation.status = null properties.color_red - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -4025,7 +5424,9 @@ exports[`Render validation.status = null properties.color_red - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -4050,7 +5451,9 @@ exports[`Render validation.status = null properties.disabled: true - value[0] 1`
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      properties.disabled: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -4093,7 +5496,9 @@ exports[`Render validation.status = null properties.disabled: true - value[0] 1`
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -4122,7 +5527,9 @@ exports[`Render validation.status = null properties.disabled: true - value[0] 1`
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -4147,7 +5554,9 @@ exports[`Render validation.status = null properties.label.colon: false - value[0
       htmlFor="properties.label.colon: false_input"
       title="properties.label.colon: false"
     >
-      properties.label.colon: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -4189,7 +5598,9 @@ exports[`Render validation.status = null properties.label.colon: false - value[0
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -4217,7 +5628,9 @@ exports[`Render validation.status = null properties.label.colon: false - value[0
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -4272,7 +5685,9 @@ exports[`Render validation.status = null properties.label.disabled: true - value
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -4300,7 +5715,9 @@ exports[`Render validation.status = null properties.label.disabled: true - value
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -4325,7 +5742,9 @@ exports[`Render validation.status = null properties.label.extra: showingextra - 
       htmlFor="properties.label.extra: showingextra_input"
       title="properties.label.extra: showingextra"
     >
-      properties.label.extra: showingextra
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -4367,7 +5786,9 @@ exports[`Render validation.status = null properties.label.extra: showingextra - 
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -4395,7 +5816,9 @@ exports[`Render validation.status = null properties.label.extra: showingextra - 
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -4404,7 +5827,9 @@ exports[`Render validation.status = null properties.label.extra: showingextra - 
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      showing extra
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
   </div>
 </div>
@@ -4425,7 +5850,9 @@ exports[`Render validation.status = null properties.label: align_right - value[0
       htmlFor="properties.label: align_right_input"
       title="properties.label: align_right"
     >
-      properties.label: align_right
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -4467,7 +5894,9 @@ exports[`Render validation.status = null properties.label: align_right - value[0
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -4495,7 +5924,9 @@ exports[`Render validation.status = null properties.label: align_right - value[0
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -4524,7 +5955,9 @@ exports[`Render validation.status = null properties.label: inline_true - value[0
       htmlFor="properties.label: inline_true_input"
       title="properties.label: inline_true"
     >
-      properties.label: inline_true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -4570,7 +6003,9 @@ exports[`Render validation.status = null properties.label: inline_true - value[0
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -4598,7 +6033,9 @@ exports[`Render validation.status = null properties.label: inline_true - value[0
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -4623,7 +6060,9 @@ exports[`Render validation.status = null properties.label: span_12 - value[0] 1`
       htmlFor="properties.label: span_12_input"
       title="properties.label: span_12"
     >
-      properties.label: span_12
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -4665,7 +6104,9 @@ exports[`Render validation.status = null properties.label: span_12 - value[0] 1`
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -4693,7 +6134,271 @@ exports[`Render validation.status = null properties.label: span_12 - value[0] 1`
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = null properties.options.label: html - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options.label: html"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options.label: html_input"
+      title="properties.options.label: html"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-checkbox-group {\\"style\\":[null,null]}"
+          id="properties.options.label: html_input"
+        >
+          <label
+            className="{} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options.label: html_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={0}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="{} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options.label: html_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={1}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="{} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options.label: html_2"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={2}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = null properties.options: html - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options: html"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options: html_input"
+      title="properties.options: html"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-checkbox-group {\\"style\\":[null,null]}"
+          id="properties.options: html_input"
+        >
+          <label
+            className="ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options: html_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={0}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options: html_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={1}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options: html_2"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={2}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -4718,7 +6423,9 @@ exports[`Render validation.status = null properties.options-number - value[0] 1`
       htmlFor="properties.options-number_input"
       title="properties.options-number"
     >
-      properties.options-number
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -4760,7 +6467,9 @@ exports[`Render validation.status = null properties.options-number - value[0] 1`
               />
             </span>
             <span>
-              15
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -4788,7 +6497,9 @@ exports[`Render validation.status = null properties.options-number - value[0] 1`
               />
             </span>
             <span>
-              20
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -4813,7 +6524,9 @@ exports[`Render validation.status = null properties.options-object - value[0] 1`
       htmlFor="properties.options-object_input"
       title="properties.options-object"
     >
-      properties.options-object
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -4831,7 +6544,7 @@ exports[`Render validation.status = null properties.options-object - value[0] 1`
           id="properties.options-object_input"
         >
           <label
-            className="ant-checkbox-wrapper"
+            className="{} ant-checkbox-wrapper"
           >
             <span
               className="ant-checkbox"
@@ -4855,11 +6568,13 @@ exports[`Render validation.status = null properties.options-object - value[0] 1`
               />
             </span>
             <span>
-              one
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
-            className="ant-checkbox-wrapper"
+            className="{} ant-checkbox-wrapper"
           >
             <span
               className="ant-checkbox"
@@ -4883,7 +6598,9 @@ exports[`Render validation.status = null properties.options-object - value[0] 1`
               />
             </span>
             <span>
-              two
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -4908,7 +6625,9 @@ exports[`Render validation.status = null properties.options-string - value[0] 1`
       htmlFor="properties.options-string_input"
       title="properties.options-string"
     >
-      properties.options-string
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -4950,7 +6669,9 @@ exports[`Render validation.status = null properties.options-string - value[0] 1`
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -4978,7 +6699,110 @@ exports[`Render validation.status = null properties.options-string - value[0] 1`
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = null properties.options-style - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options-style"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options-style_input"
+      title="properties.options-style"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-checkbox-group {\\"style\\":[null,null]}"
+          id="properties.options-style_input"
+        >
+          <label
+            className="{\\"style\\":{\\"background\\":\\"red\\"}} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options-style_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={0}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="{} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options-style_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={1}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -5003,7 +6827,9 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="properties.title: My CheckboxSelector Title"
     >
-      properties.title: My CheckboxSelector Title
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5045,7 +6871,9 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -5073,7 +6901,9 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -5098,7 +6928,9 @@ exports[`Render validation.status = success default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5159,7 +6991,9 @@ exports[`Render validation.status = success properties.color_red - value[0] 1`] 
       htmlFor="properties.color_red_input"
       title="properties.color_red"
     >
-      properties.color_red
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5201,7 +7035,9 @@ exports[`Render validation.status = success properties.color_red - value[0] 1`] 
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -5229,7 +7065,9 @@ exports[`Render validation.status = success properties.color_red - value[0] 1`] 
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -5277,7 +7115,9 @@ exports[`Render validation.status = success properties.disabled: true - value[0]
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      properties.disabled: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5320,7 +7160,9 @@ exports[`Render validation.status = success properties.disabled: true - value[0]
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -5349,7 +7191,9 @@ exports[`Render validation.status = success properties.disabled: true - value[0]
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -5397,7 +7241,9 @@ exports[`Render validation.status = success properties.label.colon: false - valu
       htmlFor="properties.label.colon: false_input"
       title="properties.label.colon: false"
     >
-      properties.label.colon: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5439,7 +7285,9 @@ exports[`Render validation.status = success properties.label.colon: false - valu
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -5467,7 +7315,9 @@ exports[`Render validation.status = success properties.label.colon: false - valu
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -5545,7 +7395,9 @@ exports[`Render validation.status = success properties.label.disabled: true - va
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -5573,7 +7425,9 @@ exports[`Render validation.status = success properties.label.disabled: true - va
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -5621,7 +7475,9 @@ exports[`Render validation.status = success properties.label.extra: showingextra
       htmlFor="properties.label.extra: showingextra_input"
       title="properties.label.extra: showingextra"
     >
-      properties.label.extra: showingextra
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5663,7 +7519,9 @@ exports[`Render validation.status = success properties.label.extra: showingextra
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -5691,7 +7549,9 @@ exports[`Render validation.status = success properties.label.extra: showingextra
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -5723,7 +7583,9 @@ exports[`Render validation.status = success properties.label.extra: showingextra
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      showing extra
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </div>
   </div>
 </div>
@@ -5744,7 +7606,9 @@ exports[`Render validation.status = success properties.label: align_right - valu
       htmlFor="properties.label: align_right_input"
       title="properties.label: align_right"
     >
-      properties.label: align_right
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5786,7 +7650,9 @@ exports[`Render validation.status = success properties.label: align_right - valu
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -5814,7 +7680,9 @@ exports[`Render validation.status = success properties.label: align_right - valu
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -5866,7 +7734,9 @@ exports[`Render validation.status = success properties.label: inline_true - valu
       htmlFor="properties.label: inline_true_input"
       title="properties.label: inline_true"
     >
-      properties.label: inline_true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -5912,7 +7782,9 @@ exports[`Render validation.status = success properties.label: inline_true - valu
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -5940,7 +7812,9 @@ exports[`Render validation.status = success properties.label: inline_true - valu
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -5988,7 +7862,9 @@ exports[`Render validation.status = success properties.label: span_12 - value[0]
       htmlFor="properties.label: span_12_input"
       title="properties.label: span_12"
     >
-      properties.label: span_12
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6030,7 +7906,9 @@ exports[`Render validation.status = success properties.label: span_12 - value[0]
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -6058,7 +7936,317 @@ exports[`Render validation.status = success properties.label: span_12 - value[0]
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="check-circle"
+          className="anticon anticon-check-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="check-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm193.5 301.7l-210.6 292a31.8 31.8 0 01-51.7 0L318.5 484.9c-3.8-5.3 0-12.7 6.5-12.7h46.9c10.2 0 19.9 4.9 25.9 13.3l71.2 98.8 157.2-218c6-8.3 15.6-13.3 25.9-13.3H699c6.5 0 10.3 7.4 6.5 12.7z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = success properties.options.label: html - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options.label: html"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options.label: html_input"
+      title="properties.options.label: html"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-checkbox-group {\\"style\\":[null,null]}"
+          id="properties.options.label: html_input"
+        >
+          <label
+            className="{} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options.label: html_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={0}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="{} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options.label: html_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={1}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="{} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options.label: html_2"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={2}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="check-circle"
+          className="anticon anticon-check-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="check-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm193.5 301.7l-210.6 292a31.8 31.8 0 01-51.7 0L318.5 484.9c-3.8-5.3 0-12.7 6.5-12.7h46.9c10.2 0 19.9 4.9 25.9 13.3l71.2 98.8 157.2-218c6-8.3 15.6-13.3 25.9-13.3H699c6.5 0 10.3 7.4 6.5 12.7z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = success properties.options: html - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options: html"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options: html_input"
+      title="properties.options: html"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-checkbox-group {\\"style\\":[null,null]}"
+          id="properties.options: html_input"
+        >
+          <label
+            className="ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options: html_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={0}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options: html_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={1}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options: html_2"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={2}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -6106,7 +8294,9 @@ exports[`Render validation.status = success properties.options-number - value[0]
       htmlFor="properties.options-number_input"
       title="properties.options-number"
     >
-      properties.options-number
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6148,7 +8338,9 @@ exports[`Render validation.status = success properties.options-number - value[0]
               />
             </span>
             <span>
-              15
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -6176,7 +8368,9 @@ exports[`Render validation.status = success properties.options-number - value[0]
               />
             </span>
             <span>
-              20
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -6224,7 +8418,9 @@ exports[`Render validation.status = success properties.options-object - value[0]
       htmlFor="properties.options-object_input"
       title="properties.options-object"
     >
-      properties.options-object
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6242,7 +8438,7 @@ exports[`Render validation.status = success properties.options-object - value[0]
           id="properties.options-object_input"
         >
           <label
-            className="ant-checkbox-wrapper"
+            className="{} ant-checkbox-wrapper"
           >
             <span
               className="ant-checkbox"
@@ -6266,11 +8462,13 @@ exports[`Render validation.status = success properties.options-object - value[0]
               />
             </span>
             <span>
-              one
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
-            className="ant-checkbox-wrapper"
+            className="{} ant-checkbox-wrapper"
           >
             <span
               className="ant-checkbox"
@@ -6294,7 +8492,9 @@ exports[`Render validation.status = success properties.options-object - value[0]
               />
             </span>
             <span>
-              two
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -6342,7 +8542,9 @@ exports[`Render validation.status = success properties.options-string - value[0]
       htmlFor="properties.options-string_input"
       title="properties.options-string"
     >
-      properties.options-string
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6384,7 +8586,9 @@ exports[`Render validation.status = success properties.options-string - value[0]
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -6412,7 +8616,133 @@ exports[`Render validation.status = success properties.options-string - value[0]
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="check-circle"
+          className="anticon anticon-check-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="check-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm193.5 301.7l-210.6 292a31.8 31.8 0 01-51.7 0L318.5 484.9c-3.8-5.3 0-12.7 6.5-12.7h46.9c10.2 0 19.9 4.9 25.9 13.3l71.2 98.8 157.2-218c6-8.3 15.6-13.3 25.9-13.3H699c6.5 0 10.3 7.4 6.5 12.7z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = success properties.options-style - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options-style"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options-style_input"
+      title="properties.options-style"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-checkbox-group {\\"style\\":[null,null]}"
+          id="properties.options-style_input"
+        >
+          <label
+            className="{\\"style\\":{\\"background\\":\\"red\\"}} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options-style_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={0}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="{} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options-style_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={1}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -6460,7 +8790,9 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="properties.title: My CheckboxSelector Title"
     >
-      properties.title: My CheckboxSelector Title
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6502,7 +8834,9 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -6530,7 +8864,9 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -6578,7 +8914,9 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6644,7 +8982,9 @@ exports[`Render validation.status = warning properties.color_red - value[0] 1`] 
       htmlFor="properties.color_red_input"
       title="properties.color_red"
     >
-      properties.color_red
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6686,7 +9026,9 @@ exports[`Render validation.status = warning properties.color_red - value[0] 1`] 
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -6714,7 +9056,9 @@ exports[`Render validation.status = warning properties.color_red - value[0] 1`] 
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -6767,7 +9111,9 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      properties.disabled: true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6810,7 +9156,9 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -6839,7 +9187,9 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -6892,7 +9242,9 @@ exports[`Render validation.status = warning properties.label.colon: false - valu
       htmlFor="properties.label.colon: false_input"
       title="properties.label.colon: false"
     >
-      properties.label.colon: false
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -6934,7 +9286,9 @@ exports[`Render validation.status = warning properties.label.colon: false - valu
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -6962,7 +9316,9 @@ exports[`Render validation.status = warning properties.label.colon: false - valu
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -7045,7 +9401,9 @@ exports[`Render validation.status = warning properties.label.disabled: true - va
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -7073,7 +9431,9 @@ exports[`Render validation.status = warning properties.label.disabled: true - va
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -7126,7 +9486,9 @@ exports[`Render validation.status = warning properties.label.extra: showingextra
       htmlFor="properties.label.extra: showingextra_input"
       title="properties.label.extra: showingextra"
     >
-      properties.label.extra: showingextra
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -7168,7 +9530,9 @@ exports[`Render validation.status = warning properties.label.extra: showingextra
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -7196,7 +9560,9 @@ exports[`Render validation.status = warning properties.label.extra: showingextra
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -7249,7 +9615,9 @@ exports[`Render validation.status = warning properties.label: align_right - valu
       htmlFor="properties.label: align_right_input"
       title="properties.label: align_right"
     >
-      properties.label: align_right
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -7291,7 +9659,9 @@ exports[`Render validation.status = warning properties.label: align_right - valu
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -7319,7 +9689,9 @@ exports[`Render validation.status = warning properties.label: align_right - valu
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -7376,7 +9748,9 @@ exports[`Render validation.status = warning properties.label: inline_true - valu
       htmlFor="properties.label: inline_true_input"
       title="properties.label: inline_true"
     >
-      properties.label: inline_true
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -7422,7 +9796,9 @@ exports[`Render validation.status = warning properties.label: inline_true - valu
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -7450,7 +9826,9 @@ exports[`Render validation.status = warning properties.label: inline_true - valu
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -7503,7 +9881,9 @@ exports[`Render validation.status = warning properties.label: span_12 - value[0]
       htmlFor="properties.label: span_12_input"
       title="properties.label: span_12"
     >
-      properties.label: span_12
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -7545,7 +9925,9 @@ exports[`Render validation.status = warning properties.label: span_12 - value[0]
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -7573,7 +9955,327 @@ exports[`Render validation.status = warning properties.label: span_12 - value[0]
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="exclamation-circle"
+          className="anticon anticon-exclamation-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="exclamation-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 010-96 48.01 48.01 0 010 96z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      validation warning
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = warning properties.options.label: html - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options.label: html"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options.label: html_input"
+      title="properties.options.label: html"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-checkbox-group {\\"style\\":[null,null]}"
+          id="properties.options.label: html_input"
+        >
+          <label
+            className="{} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options.label: html_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={0}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="{} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options.label: html_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={1}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="{} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options.label: html_2"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={2}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="exclamation-circle"
+          className="anticon anticon-exclamation-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="exclamation-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 010-96 48.01 48.01 0 010 96z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      validation warning
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = warning properties.options: html - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options: html"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options: html_input"
+      title="properties.options: html"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-checkbox-group {\\"style\\":[null,null]}"
+          id="properties.options: html_input"
+        >
+          <label
+            className="ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options: html_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={0}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options: html_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={1}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options: html_2"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={2}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -7626,7 +10328,9 @@ exports[`Render validation.status = warning properties.options-number - value[0]
       htmlFor="properties.options-number_input"
       title="properties.options-number"
     >
-      properties.options-number
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -7668,7 +10372,9 @@ exports[`Render validation.status = warning properties.options-number - value[0]
               />
             </span>
             <span>
-              15
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -7696,7 +10402,9 @@ exports[`Render validation.status = warning properties.options-number - value[0]
               />
             </span>
             <span>
-              20
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -7749,7 +10457,9 @@ exports[`Render validation.status = warning properties.options-object - value[0]
       htmlFor="properties.options-object_input"
       title="properties.options-object"
     >
-      properties.options-object
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -7767,7 +10477,7 @@ exports[`Render validation.status = warning properties.options-object - value[0]
           id="properties.options-object_input"
         >
           <label
-            className="ant-checkbox-wrapper"
+            className="{} ant-checkbox-wrapper"
           >
             <span
               className="ant-checkbox"
@@ -7791,11 +10501,13 @@ exports[`Render validation.status = warning properties.options-object - value[0]
               />
             </span>
             <span>
-              one
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
-            className="ant-checkbox-wrapper"
+            className="{} ant-checkbox-wrapper"
           >
             <span
               className="ant-checkbox"
@@ -7819,7 +10531,9 @@ exports[`Render validation.status = warning properties.options-object - value[0]
               />
             </span>
             <span>
-              two
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -7872,7 +10586,9 @@ exports[`Render validation.status = warning properties.options-string - value[0]
       htmlFor="properties.options-string_input"
       title="properties.options-string"
     >
-      properties.options-string
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -7914,7 +10630,9 @@ exports[`Render validation.status = warning properties.options-string - value[0]
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -7942,7 +10660,138 @@ exports[`Render validation.status = warning properties.options-string - value[0]
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="exclamation-circle"
+          className="anticon anticon-exclamation-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="exclamation-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 010-96 48.01 48.01 0 010 96z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      validation warning
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = warning properties.options-style - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.options-style"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.options-style_input"
+      title="properties.options-style"
+    >
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-checkbox-group {\\"style\\":[null,null]}"
+          id="properties.options-style_input"
+        >
+          <label
+            className="{\\"style\\":{\\"background\\":\\"red\\"}} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options-style_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={0}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
+            </span>
+          </label>
+          <label
+            className="{} ant-checkbox-wrapper"
+          >
+            <span
+              className="ant-checkbox"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-checkbox-input"
+                id="properties.options-style_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
+                type="checkbox"
+                value={1}
+              />
+              <span
+                className="ant-checkbox-inner"
+              />
+            </span>
+            <span>
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -7995,7 +10844,9 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="properties.title: My CheckboxSelector Title"
     >
-      properties.title: My CheckboxSelector Title
+      <div
+        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      />
     </label>
   </div>
   <div
@@ -8037,7 +10888,9 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
           <label
@@ -8065,7 +10918,9 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <div
+                className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+              />
             </span>
           </label>
         </div>
@@ -8139,6 +10994,14 @@ exports[`Test Schema properties.label: span_12 1`] = `true`;
 
 exports[`Test Schema properties.label: span_12 2`] = `null`;
 
+exports[`Test Schema properties.options.label: html 1`] = `true`;
+
+exports[`Test Schema properties.options.label: html 2`] = `null`;
+
+exports[`Test Schema properties.options: html 1`] = `true`;
+
+exports[`Test Schema properties.options: html 2`] = `null`;
+
 exports[`Test Schema properties.options-number 1`] = `true`;
 
 exports[`Test Schema properties.options-number 2`] = `null`;
@@ -8150,6 +11013,10 @@ exports[`Test Schema properties.options-object 2`] = `null`;
 exports[`Test Schema properties.options-string 1`] = `true`;
 
 exports[`Test Schema properties.options-string 2`] = `null`;
+
+exports[`Test Schema properties.options-style 1`] = `true`;
+
+exports[`Test Schema properties.options-style 2`] = `null`;
 
 exports[`Test Schema properties.title 1`] = `true`;
 
