@@ -15,7 +15,6 @@
 */
 
 const transformer = (_, obj) => {
-  console.log('transformer', _, obj);
   const examples = {
     id: 'examples',
     type: 'Box',
