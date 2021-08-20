@@ -30,6 +30,7 @@ import Page from './page/Page';
 import parseJwt from './utils/auth/parseJwt';
 
 const lowdefy = {
+  basePath: window.lowdefy.basePath,
   contexts: {},
   displayMessage: () => () => undefined,
   document,
@@ -118,9 +119,9 @@ const RootQuery = ({ children, lowdefy }) => {
 const Home = ({ lowdefy }) => {
   const { search } = useLocation();
   if (lowdefy.homePageId) {
-    return <Redirect to={{ pathname: `/${lowdefy.homePageId}`, search }} />;
+    return <Redirect to={{ pathname: `${lowdefy.basePath}/${lowdefy.homePageId}`, search }} />;
   }
-  return <Redirect to="/404" />;
+  return <Redirect to={`${lowdefy.basePath}/404`} />;
 };
 
 const Root = ({ gqlUri }) => {

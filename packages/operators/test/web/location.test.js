@@ -94,6 +94,6 @@ test('_location throw on no location', () => {
 
 test('_location throw invalid param', () => {
   expect(() => location({ ...input, params: 'none' })).toThrow(
-    'Operator Error: _location only returns values for href, origin, protocol, host, hostname, port, pathname, search, hash. Received: "none" at location.'
+    'Operator Error: _location only returns values for basePath, href, origin, protocol, host, hostname, port, pathname, search, hash. Received: "none" at location.'
   );
 });

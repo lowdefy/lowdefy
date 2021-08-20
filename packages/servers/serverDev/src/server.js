@@ -36,4 +36,10 @@ const server = getServer({
   shellDirectory,
 });
 
-server.listen({ port }, () => console.log(`🚀 Server ready at http://localhost:${port}`));
+server.listen({ port }, () =>
+  console.log(
+    `🚀 Server ready at http://localhost:${port}${
+      serverBasePath !== '' ? `/${serverBasePath}` : serverBasePath
+    }`
+  )
+);

@@ -97,6 +97,7 @@ const CategorySwitch = ({ block, Blocks, Component, context, isRoot, lowdefy }) 
               setValue: block.setValue,
               triggerEvent: block.triggerEvent,
             })}
+            basePath={lowdefy.basePath}
             blockId={block.blockId}
             events={block.eval.events}
             homePageId={lowdefy.homePageId}
@@ -128,8 +129,9 @@ const CategorySwitch = ({ block, Blocks, Component, context, isRoot, lowdefy }) 
               registerMethod: block.registerMethod,
               triggerEvent: block.triggerEvent,
             })}
-            events={block.eval.events}
+            basePath={lowdefy.basePath}
             blockId={block.blockId}
+            events={block.eval.events}
             homePageId={lowdefy.homePageId}
             key={block.blockId}
             loading={block.loading}

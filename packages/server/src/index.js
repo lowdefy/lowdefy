@@ -48,6 +48,10 @@ function getServer({
 
   let indexHtml = null;
 
+  if (serverBasePath !== '') {
+    serverBasePath = `/${serverBasePath}`;
+  }
+
   const serveIndex = async (req, res) => {
     // TODO: can do better here?
     if (!indexHtml || development) {
@@ -62,10 +66,7 @@ function getServer({
         '<!-- __LOWDEFY_APP_BODY_HTML__ -->',
         get(appConfig, 'html.appendBody', { default: '' })
       );
-      indexHtml = indexHtml.replaceAll(
-        '__LOWDEFY_SERVER_BASE_PATH__',
-        appConfig.serverBasePath || serverBasePath
-      );
+      indexHtml = indexHtml.replaceAll('__LOWDEFY_SERVER_BASE_PATH__', serverBasePath);
     }
     res.send(indexHtml);
   };
