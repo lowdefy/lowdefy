@@ -59,7 +59,7 @@ async function build(options) {
   try {
     let components = await buildRefs({ context });
     await testSchema({ components, context });
-    context.getMeta = createGetMeta(context);
+    context.getMeta = createGetMeta({ components, context });
     await validateApp({ components, context });
     await validateConfig({ components, context });
     await addDefaultPages({ components, context });

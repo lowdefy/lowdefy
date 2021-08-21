@@ -22,7 +22,11 @@ const CardBlock = ({ blockId, content, properties, methods }) => (
   <Card
     id={blockId}
     title={
-      <RenderHtml html={content.title ? content.title() : properties.title} methods={methods} />
+      content.title ? (
+        content.title()
+      ) : properties.title ? (
+        <RenderHtml html={properties.title} methods={methods} />
+      ) : undefined
     }
     headStyle={methods.makeCssClass(properties.headerStyle, { styleObjectOnly: true })}
     bodyStyle={methods.makeCssClass(properties.bodyStyle, { styleObjectOnly: true })}

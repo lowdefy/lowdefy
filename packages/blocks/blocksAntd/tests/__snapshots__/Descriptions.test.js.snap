@@ -1407,39 +1407,9 @@ exports[`Test Schema properties.itemOptions.style 1`] = `true`;
 
 exports[`Test Schema properties.itemOptions.style 2`] = `null`;
 
-exports[`Test Schema properties.items html values 1`] = `false`;
+exports[`Test Schema properties.items html values 1`] = `true`;
 
-exports[`Test Schema properties.items html values 2`] = `
-Array [
-  Object {
-    "dataPath": "/properties/items/2/value",
-    "keyword": "type",
-    "message": "should be string",
-    "params": Object {
-      "type": "string",
-    },
-    "schemaPath": "#/properties/properties/properties/items/oneOf/0/items/properties/value/type",
-  },
-  Object {
-    "dataPath": "/properties/items",
-    "keyword": "type",
-    "message": "should be object",
-    "params": Object {
-      "type": "object",
-    },
-    "schemaPath": "#/properties/properties/properties/items/oneOf/1/type",
-  },
-  Object {
-    "dataPath": "/properties/items",
-    "keyword": "oneOf",
-    "message": "should match exactly one schema in oneOf",
-    "params": Object {
-      "passingSchemas": null,
-    },
-    "schemaPath": "#/properties/properties/properties/items/oneOf",
-  },
-]
-`;
+exports[`Test Schema properties.items html values 2`] = `null`;
 
 exports[`Test Schema properties.items-list 1`] = `true`;
 
