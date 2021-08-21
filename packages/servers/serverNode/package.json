@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/server-node",
-  "version": "3.20.1",
+  "version": "3.20.3",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -39,10 +39,10 @@
     "start": "node dist/server.js"
   },
   "dependencies": {
-    "@lowdefy/graphql": "3.20.1",
-    "@lowdefy/node-utils": "3.20.1",
-    "@lowdefy/server": "3.20.1",
-    "@lowdefy/shell": "3.20.1",
+    "@lowdefy/graphql": "3.20.3",
+    "@lowdefy/node-utils": "3.20.3",
+    "@lowdefy/server": "3.20.3",
+    "@lowdefy/shell": "3.20.3",
     "apollo-server-express": "2.25.0",
     "express": "4.17.1",
     "graphql": "15.5.0",
