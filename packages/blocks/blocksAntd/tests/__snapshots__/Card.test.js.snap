@@ -59,22 +59,6 @@ exports[`Render default - value[0] 1`] = `
   id="default"
 >
   <div
-    className="ant-card-head"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
-  >
-    <div
-      className="ant-card-head-wrapper"
-    >
-      <div
-        className="ant-card-head-title"
-      >
-        <div
-          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-        />
-      </div>
-    </div>
-  </div>
-  <div
     className="ant-card-body"
     style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
   >

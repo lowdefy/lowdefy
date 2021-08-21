@@ -94,41 +94,7 @@ Array [
       "hoverable": undefined,
       "id": "default",
       "size": undefined,
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
       "type": null,
     },
     Object {},
