@@ -69,6 +69,9 @@ const defaultMeta = {
   },
 };
 
+const components = { types };
+const context = { cacheDirectory: 'cacheDirectory' };
+
 beforeEach(() => {
   mockFetchMetaCache.mockReset();
   mockWriteMetaCache.mockReset();
@@ -76,7 +79,7 @@ beforeEach(() => {
 });
 
 test('getMeta cache returns from cache', async () => {
-  const getMeta = createGetMeta({ types, cacheDirectory: 'cacheDirectory' });
+  const getMeta = createGetMeta({ components, context });
   mockFetchMetaCache.mockImplementation((location) => {
     if (location && location.url === 'type1Url') {
       return defaultMeta;
@@ -88,7 +91,7 @@ test('getMeta cache returns from cache', async () => {
 });
 
 test('getMeta fetches from url and writes to cache', async () => {
-  const getMeta = createGetMeta({ types, cacheDirectory: 'cacheDirectory' });
+  const getMeta = createGetMeta({ components, context });
   mockFetchMetaUrl.mockImplementation(({ location }) => {
     if (location && location.url === 'type1Url') {
       return defaultMeta;
@@ -110,7 +113,7 @@ test('getMeta fetches from url and writes to cache', async () => {
 });
 
 test('getMeta uses locations from metaLocations', async () => {
-  const getMeta = createGetMeta({ types, cacheDirectory: 'cacheDirectory' });
+  const getMeta = createGetMeta({ components, context });
   mockFetchMetaCache.mockImplementation((location) => {
     if (location && location.url === 'defaultTypeUrl') {
       return defaultMeta;
@@ -122,28 +125,28 @@ test('getMeta uses locations from metaLocations', async () => {
 });
 
 test('getMeta type not in types', async () => {
-  const getMeta = createGetMeta({ types, cacheDirectory: 'cacheDirectory' });
+  const getMeta = createGetMeta({ components, context });
   await expect(getMeta('Undefined')).rejects.toThrow(
     'Block type "Undefined" is not defined. Specify type url in types array.'
   );
 });
 
 test('getMeta undefined type', async () => {
-  const getMeta = createGetMeta({ types, cacheDirectory: 'cacheDirectory' });
+  const getMeta = createGetMeta({ components, context });
   await expect(getMeta()).rejects.toThrow(
     'Block type undefined is not defined. Specify type url in types array.'
   );
 });
 
 test('getMeta meta not found in cache or url', async () => {
-  const getMeta = createGetMeta({ types, cacheDirectory: 'cacheDirectory' });
+  const getMeta = createGetMeta({ components, context });
   await expect(getMeta('Type2')).rejects.toThrow(
     'Block type "Type2" has invalid block meta at {"url":"type2Url"}.'
   );
 });
 
 test('getMeta invalid meta', async () => {
-  const getMeta = createGetMeta({ types, cacheDirectory: 'cacheDirectory' });
+  const getMeta = createGetMeta({ components, context });
   mockFetchMetaUrl.mockImplementation(() => ({ invalidMeta: true }));
   await expect(getMeta('Type2')).rejects.toThrow(
     'Block type "Type2" has invalid block meta at {"url":"type2Url"}.'
@@ -151,7 +154,7 @@ test('getMeta invalid meta', async () => {
 });
 
 test('getMeta fetches from url and does not write to cache if location is localhost', async () => {
-  const getMeta = createGetMeta({ types, cacheDirectory: 'cacheDirectory' });
+  const getMeta = createGetMeta({ components, context });
   mockFetchMetaUrl.mockImplementation(({ location }) => {
     if (location && location.url === 'http://localhost:3003/meta/Block.json') {
       return defaultMeta;
@@ -165,7 +168,7 @@ test('getMeta fetches from url and does not write to cache if location is localh
 });
 
 test('getMeta meta is memoised when returned from cache', async () => {
-  const getMeta = createGetMeta({ types, cacheDirectory: 'cacheDirectory' });
+  const getMeta = createGetMeta({ components, context });
   mockFetchMetaCache.mockImplementation((location) => {
     if (location && location.url === 'defaultTypeUrl') {
       return defaultMeta;
@@ -184,7 +187,7 @@ test('getMeta meta is memoised when returned from cache', async () => {
 });
 
 test('getMeta meta is memoised when returned from cache', async () => {
-  const getMeta = createGetMeta({ types, cacheDirectory: 'cacheDirectory' });
+  const getMeta = createGetMeta({ components, context });
   mockFetchMetaUrl.mockImplementation(({ location }) => {
     if (location && location.url === 'defaultTypeUrl') {
       return defaultMeta;
@@ -207,6 +210,20 @@ test('getMeta meta is memoised when returned from cache', async () => {
           url: 'defaultTypeUrl',
         },
         type: 'DefaultType',
+      },
+    ],
+  ]);
+});
+
+test('blocksServerUrl is passed to metaLoactions', async () => {
+  createGetMeta({
+    components,
+    context: { blocksServerUrl: 'blocksServerUrl', cacheDirectory: 'cacheDirectory' },
+  });
+  expect(metaLocations.mock.calls).toEqual([
+    [
+      {
+        blocksServerUrl: 'blocksServerUrl',
       },
     ],
   ]);
