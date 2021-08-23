@@ -34,9 +34,26 @@ class RenderHtml extends React.Component {
   }
 
   render() {
-    const { id, methods, style } = this.props;
+    const { div, html, id, methods, style } = this.props;
+    if (!html) {
+      return '';
+    }
+    if (div === true) {
+      return (
+        <div
+          id={id}
+          data-testid={id}
+          ref={(el) => {
+            if (el) {
+              this.div = el;
+            }
+          }}
+          className={methods.makeCssClass(style)}
+        />
+      );
+    }
     return (
-      <div
+      <span
         id={id}
         data-testid={id}
         ref={(el) => {
@@ -44,7 +61,7 @@ class RenderHtml extends React.Component {
             this.div = el;
           }
         }}
-        className={methods.makeCssClass([{ display: 'inline-block' }, style])}
+        className={methods.makeCssClass(style)}
       />
     );
   }

@@ -41,8 +41,8 @@ exports[`Render default - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
     <div
@@ -109,8 +109,8 @@ exports[`Render properties.accordion: true - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
     <div
@@ -163,8 +163,8 @@ exports[`Render properties.accordion: true - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -206,8 +206,8 @@ exports[`Render properties.activeKey: content_two - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -247,8 +247,8 @@ exports[`Render properties.activeKey: content_two - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
     <div
@@ -315,8 +315,8 @@ exports[`Render properties.bordered: false - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
     <div
@@ -369,8 +369,8 @@ exports[`Render properties.bordered: false - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -412,8 +412,8 @@ exports[`Render properties.defaultActiveKey: content_two - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -453,8 +453,8 @@ exports[`Render properties.defaultActiveKey: content_two - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
     <div
@@ -521,8 +521,8 @@ exports[`Render properties.destroyInactivePanel: true - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
     <div
@@ -575,8 +575,8 @@ exports[`Render properties.destroyInactivePanel: true - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -627,8 +627,8 @@ exports[`Render properties.expandIcon: ArrowRightOutlined - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
     <div
@@ -684,8 +684,8 @@ exports[`Render properties.expandIcon: ArrowRightOutlined - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -733,8 +733,8 @@ exports[`Render properties.expandIconPosition: right - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
     <div
@@ -787,8 +787,8 @@ exports[`Render properties.expandIconPosition: right - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -836,8 +836,8 @@ exports[`Render properties.forceRender: true - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
     <div
@@ -890,8 +890,8 @@ exports[`Render properties.forceRender: true - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
     <div
@@ -958,9 +958,7 @@ exports[`Render properties.panels - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-      />
+      
     </div>
     <div
       className="ant-collapse-content ant-collapse-content-active"
@@ -1012,9 +1010,7 @@ exports[`Render properties.panels - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-      />
+      
     </div>
   </div>
 </div>
@@ -1061,8 +1057,8 @@ exports[`Render properties.panels.disabled - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
     <div
@@ -1115,8 +1111,8 @@ exports[`Render properties.panels.disabled - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -1164,8 +1160,8 @@ exports[`Render properties.panels.extraKey - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
       <div
         className="ant-collapse-extra"
@@ -1232,8 +1228,8 @@ exports[`Render properties.panels.extraKey - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
       <div
         className="ant-collapse-extra"
@@ -1295,8 +1291,8 @@ exports[`Render properties.panels.title - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
     <div
@@ -1349,8 +1345,8 @@ exports[`Render properties.panels.title - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -1373,8 +1369,8 @@ exports[`Render properties.showArrow: false - value[0] 1`] = `
       role="button"
       tabIndex={0}
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
     <div
@@ -1408,8 +1404,8 @@ exports[`Render properties.showArrow: false - value[0] 1`] = `
       role="button"
       tabIndex={0}
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -1457,8 +1453,8 @@ exports[`Render with html in panel title - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
     <div
@@ -1500,8 +1496,8 @@ exports[`Render with html in panel title - value[0] 1`] = `
           />
         </svg>
       </span>
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>

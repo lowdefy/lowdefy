@@ -15,8 +15,8 @@ exports[`Render areas.extra: - value[0] 1`] = `
       <div
         className="ant-card-head-title"
       >
-        <div
-          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        <span
+          className="{}"
         />
       </div>
       <div
@@ -91,8 +91,8 @@ exports[`Render properties.bodyStyle: border: 5px solid blue - value[0] 1`] = `
       <div
         className="ant-card-head-title"
       >
-        <div
-          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        <span
+          className="{}"
         />
       </div>
     </div>
@@ -130,8 +130,8 @@ exports[`Render properties.bordered: false - value[0] 1`] = `
       <div
         className="ant-card-head-title"
       >
-        <div
-          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        <span
+          className="{}"
         />
       </div>
     </div>
@@ -169,8 +169,8 @@ exports[`Render properties.headerStyle: border: 5px solid blue - value[0] 1`] = 
       <div
         className="ant-card-head-title"
       >
-        <div
-          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        <span
+          className="{}"
         />
       </div>
     </div>
@@ -208,8 +208,8 @@ exports[`Render properties.hoverable: true - value[0] 1`] = `
       <div
         className="ant-card-head-title"
       >
-        <div
-          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        <span
+          className="{}"
         />
       </div>
     </div>
@@ -247,8 +247,8 @@ exports[`Render properties.inner: true - value[0] 1`] = `
       <div
         className="ant-card-head-title"
       >
-        <div
-          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        <span
+          className="{}"
         />
       </div>
     </div>
@@ -286,8 +286,8 @@ exports[`Render properties.size: small - value[0] 1`] = `
       <div
         className="ant-card-head-title"
       >
-        <div
-          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        <span
+          className="{}"
         />
       </div>
     </div>
@@ -325,8 +325,8 @@ exports[`Render properties.title - value[0] 1`] = `
       <div
         className="ant-card-head-title"
       >
-        <div
-          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        <span
+          className="{}"
         />
       </div>
     </div>
@@ -364,8 +364,8 @@ exports[`Render with html in title - value[0] 1`] = `
       <div
         className="ant-card-head-title"
       >
-        <div
-          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        <span
+          className="{}"
         />
       </div>
     </div>

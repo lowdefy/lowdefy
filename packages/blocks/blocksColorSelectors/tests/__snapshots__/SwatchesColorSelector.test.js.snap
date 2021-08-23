@@ -15,8 +15,8 @@ exports[`Render colors - value[0] 1`] = `
       htmlFor="colors_input"
       title="colors"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -358,8 +358,8 @@ exports[`Render default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -5374,8 +5374,8 @@ exports[`Render defaultColor - value[0] 1`] = `
       htmlFor="defaultColor_input"
       title="defaultColor"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -10390,8 +10390,8 @@ exports[`Render height - value[0] 1`] = `
       htmlFor="height_input"
       title="height"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -15406,8 +15406,8 @@ exports[`Render inputStyle - value[0] 1`] = `
       htmlFor="inputStyle_input"
       title="inputStyle"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -25424,8 +25424,8 @@ exports[`Render title - value[0] 1`] = `
       htmlFor="title_input"
       title="The color selector"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -30440,8 +30440,8 @@ exports[`Render width - value[0] 1`] = `
       htmlFor="width_input"
       title="width"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>

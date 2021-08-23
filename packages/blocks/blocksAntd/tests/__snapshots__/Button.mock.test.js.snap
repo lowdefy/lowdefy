@@ -335,37 +335,7 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": <RenderHtml
-        html=""
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Array [
-                    Object {
-                      "&:active": undefined,
-                      "&:hover": undefined,
-                      "backgroundColor": undefined,
-                      "borderColor": undefined,
-                    },
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{},null]}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "children": false,
       "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
@@ -1210,6 +1180,87 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": undefined,
+      "id": "with html in title",
+      "loading": undefined,
+      "onClick": [Function],
+      "shape": undefined,
+      "size": undefined,
+      "type": "primary",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - with html in title - value[0] - default 2`] = `
+Array [
+  Array [
+    Object {
+      "block": undefined,
+      "children": <RenderHtml
+        html=<div style="color: red;">
+  Title
+</div>
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[{},null]}",
+      "danger": undefined,
+      "disabled": undefined,
+      "ghost": undefined,
+      "href": undefined,
+      "icon": <IconBlock
+        basePath=""
+        blockId="with html in title_icon"
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties="SaveOutlined"
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
       "id": "with html in title",
       "loading": undefined,
       "onClick": [Function],
