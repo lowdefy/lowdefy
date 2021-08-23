@@ -270,6 +270,24 @@
                       "items": {
                         "$ref": "#/definitions/action"
                       }
+                    },
+                    "debounce": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "immediate": {
+                          "type": "boolean",
+                          "errorMessage": {
+                            "type": "Event \"debounce.immediate\" should be an boolean."
+                          }
+                        },
+                        "ms": {
+                          "type": "number",
+                          "errorMessage": {
+                            "type": "Event \"debounce.ms\" should be a number."
+                          }
+                        }
+                      }
                     }
                   }
                 }
