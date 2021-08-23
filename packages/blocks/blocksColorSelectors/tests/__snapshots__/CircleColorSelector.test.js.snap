@@ -15,8 +15,8 @@ exports[`Render circleSize - value[0] 1`] = `
       htmlFor="circleSize_input"
       title="circleSize"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1184,8 +1184,8 @@ exports[`Render circleSpacing - value[0] 1`] = `
       htmlFor="circleSpacing_input"
       title="circleSpacing"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2353,8 +2353,8 @@ exports[`Render colors - value[0] 1`] = `
       htmlFor="colors_input"
       title="colors"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2530,8 +2530,8 @@ exports[`Render default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -3699,8 +3699,8 @@ exports[`Render defaultColor - value[0] 1`] = `
       htmlFor="defaultColor_input"
       title="defaultColor"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -4868,8 +4868,8 @@ exports[`Render inputStyle - value[0] 1`] = `
       htmlFor="inputStyle_input"
       title="inputStyle"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -7192,8 +7192,8 @@ exports[`Render showValue - value[0] 1`] = `
       htmlFor="showValue_input"
       title="showValue"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -8366,8 +8366,8 @@ exports[`Render showValue, value - value[0] 1`] = `
       htmlFor="showValue, value_input"
       title="showValue, value"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -9540,8 +9540,8 @@ exports[`Render showValue, value - value[1] 1`] = `
       htmlFor="showValue, value_input"
       title="showValue, value"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -10714,8 +10714,8 @@ exports[`Render title - value[0] 1`] = `
       htmlFor="title_input"
       title="The color selector"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -11883,8 +11883,8 @@ exports[`Render valueStyle - value[0] 1`] = `
       htmlFor="valueStyle_input"
       title="valueStyle"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -13057,8 +13057,8 @@ exports[`Render width - value[0] 1`] = `
       htmlFor="width_input"
       title="width"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
