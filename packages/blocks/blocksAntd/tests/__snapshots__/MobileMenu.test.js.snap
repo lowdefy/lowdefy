@@ -32,9 +32,7 @@ exports[`Render backgroundColor: #016e1e - value[0] 1`] = `
         />
       </svg>
     </span>
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </button>
 </div>
 `;
@@ -71,9 +69,7 @@ exports[`Render default - value[0] 1`] = `
         />
       </svg>
     </span>
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </button>
 </div>
 `;
@@ -110,9 +106,7 @@ exports[`Render menus: default - value[0] 1`] = `
         />
       </svg>
     </span>
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </button>
 </div>
 `;
@@ -149,9 +143,7 @@ exports[`Render menus: links[0] - value[0] 1`] = `
         />
       </svg>
     </span>
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </button>
 </div>
 `;
@@ -188,9 +180,7 @@ exports[`Render menus: properties.menuId: menu_one - value[0] 1`] = `
         />
       </svg>
     </span>
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </button>
 </div>
 `;
@@ -227,9 +217,7 @@ exports[`Render menusTitle pageId - value[0] 1`] = `
         />
       </svg>
     </span>
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </button>
 </div>
 `;
@@ -266,9 +254,7 @@ exports[`Render menusTitle properties.title - value[0] 1`] = `
         />
       </svg>
     </span>
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </button>
 </div>
 `;
@@ -305,9 +291,7 @@ exports[`Render menusTitle url - value[0] 1`] = `
         />
       </svg>
     </span>
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </button>
 </div>
 `;
@@ -344,9 +328,7 @@ exports[`Render properties.MenuGroup with MenuLInks - value[0] 1`] = `
         />
       </svg>
     </span>
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </button>
 </div>
 `;
@@ -383,9 +365,7 @@ exports[`Render properties.danger: true - value[0] 1`] = `
         />
       </svg>
     </span>
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </button>
 </div>
 `;
@@ -422,9 +402,7 @@ exports[`Render properties.icon - value[0] 1`] = `
         />
       </svg>
     </span>
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </button>
 </div>
 `;
@@ -461,9 +439,7 @@ exports[`Render properties.links - value[0] 1`] = `
         />
       </svg>
     </span>
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </button>
 </div>
 `;
@@ -500,9 +476,7 @@ exports[`Render properties.subMenuCloseDelay: 3 - value[0] 1`] = `
         />
       </svg>
     </span>
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </button>
 </div>
 `;
@@ -539,9 +513,7 @@ exports[`Render properties.subMenuOpenDelay: 3 - value[0] 1`] = `
         />
       </svg>
     </span>
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </button>
 </div>
 `;
@@ -578,9 +550,7 @@ exports[`Render properties.title - value[0] 1`] = `
         />
       </svg>
     </span>
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </button>
 </div>
 `;
@@ -617,9 +587,7 @@ exports[`Render selectedColor: #f16e1e - value[0] 1`] = `
         />
       </svg>
     </span>
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </button>
 </div>
 `;
@@ -656,9 +624,7 @@ exports[`Render selectedColor: #f16e1e, backgroundColor: #016e1e - value[0] 1`] 
         />
       </svg>
     </span>
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </button>
 </div>
 `;
@@ -695,9 +661,7 @@ exports[`Render theme: light - value[0] 1`] = `
         />
       </svg>
     </span>
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </button>
 </div>
 `;
@@ -734,9 +698,7 @@ exports[`Render theme: light, selectedColor: #6C2ACB - value[0] 1`] = `
         />
       </svg>
     </span>
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </button>
 </div>
 `;
@@ -773,9 +735,7 @@ exports[`Render theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e -
         />
       </svg>
     </span>
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </button>
 </div>
 `;

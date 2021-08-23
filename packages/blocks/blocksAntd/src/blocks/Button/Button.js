@@ -57,12 +57,12 @@ const ButtonBlock = ({ blockId, events, loading, methods, onClick, properties, r
       }
       onClick={onClick || (() => methods.triggerEvent({ name: onClickActionName }))}
     >
-      <RenderHtml
-        html={
-          properties.hideTitle ? '' : type.isNone(properties.title) ? blockId : properties.title
-        }
-        methods={methods}
-      />
+      {!properties.hideTitle && (
+        <RenderHtml
+          html={type.isNone(properties.title) ? blockId : properties.title}
+          methods={methods}
+        />
+      )}
     </Button>
   );
 };

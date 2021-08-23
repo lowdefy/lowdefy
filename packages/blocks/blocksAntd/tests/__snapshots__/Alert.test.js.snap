@@ -41,9 +41,7 @@ exports[`Render default - value[0] 1`] = `
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </span>
 </div>
 `;
@@ -78,16 +76,14 @@ exports[`Render properties.closable: true - value[0] 1`] = `
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </span>
   <button
     className="ant-alert-close-icon"
@@ -148,16 +144,14 @@ exports[`Render properties.closeText: Close Text - value[0] 1`] = `
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </span>
   <button
     className="ant-alert-close-icon"
@@ -204,16 +198,14 @@ exports[`Render properties.icon object - value[0] 1`] = `
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </span>
 </div>
 `;
@@ -248,16 +240,14 @@ exports[`Render properties.icon string - value[0] 1`] = `
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </span>
 </div>
 `;
@@ -292,16 +282,14 @@ exports[`Render properties.message - value[0] 1`] = `
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </span>
 </div>
 `;
@@ -336,16 +324,14 @@ exports[`Render properties.type: error - value[0] 1`] = `
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </span>
 </div>
 `;
@@ -380,16 +366,14 @@ exports[`Render properties.type: error banner: true - value[0] 1`] = `
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </span>
 </div>
 `;
@@ -402,16 +386,14 @@ exports[`Render properties.type: error showIcon: false - value[0] 1`] = `
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </span>
 </div>
 `;
@@ -446,16 +428,14 @@ exports[`Render properties.type: info - value[0] 1`] = `
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </span>
 </div>
 `;
@@ -490,16 +470,14 @@ exports[`Render properties.type: info banner: true - value[0] 1`] = `
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </span>
 </div>
 `;
@@ -512,16 +490,14 @@ exports[`Render properties.type: info showIcon: false - value[0] 1`] = `
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </span>
 </div>
 `;
@@ -556,16 +532,14 @@ exports[`Render properties.type: success - value[0] 1`] = `
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </span>
 </div>
 `;
@@ -600,16 +574,14 @@ exports[`Render properties.type: success banner: true - value[0] 1`] = `
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </span>
 </div>
 `;
@@ -622,16 +594,14 @@ exports[`Render properties.type: success showIcon: false - value[0] 1`] = `
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </span>
 </div>
 `;
@@ -666,16 +636,14 @@ exports[`Render properties.type: warning - value[0] 1`] = `
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </span>
 </div>
 `;
@@ -710,16 +678,14 @@ exports[`Render properties.type: warning banner: true - value[0] 1`] = `
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </span>
 </div>
 `;
@@ -732,16 +698,14 @@ exports[`Render properties.type: warning showIcon: false - value[0] 1`] = `
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </span>
 </div>
 `;
@@ -779,8 +743,8 @@ exports[`Render with description only - value[0] 1`] = `
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
 </div>
@@ -797,8 +761,8 @@ exports[`Render with description only and icon false - value[0] 1`] = `
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
 </div>
@@ -834,15 +798,15 @@ exports[`Render with description properties.closable: true - value[0] 1`] = `
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <button
@@ -904,15 +868,15 @@ exports[`Render with description properties.closeText: Close Text - value[0] 1`]
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <button
@@ -960,15 +924,15 @@ exports[`Render with description properties.icon object - value[0] 1`] = `
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
 </div>
@@ -1004,15 +968,15 @@ exports[`Render with description properties.icon string - value[0] 1`] = `
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
 </div>
@@ -1048,15 +1012,15 @@ exports[`Render with description properties.message - value[0] 1`] = `
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
 </div>
@@ -1092,15 +1056,15 @@ exports[`Render with description properties.type: error - value[0] 1`] = `
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
 </div>
@@ -1136,15 +1100,15 @@ exports[`Render with description properties.type: error banner: true - value[0] 
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
 </div>
@@ -1158,15 +1122,15 @@ exports[`Render with description properties.type: error showIcon: false - value[
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
 </div>
@@ -1202,15 +1166,15 @@ exports[`Render with description properties.type: info - value[0] 1`] = `
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
 </div>
@@ -1246,15 +1210,15 @@ exports[`Render with description properties.type: info banner: true - value[0] 1
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
 </div>
@@ -1268,15 +1232,15 @@ exports[`Render with description properties.type: info showIcon: false - value[0
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
 </div>
@@ -1312,15 +1276,15 @@ exports[`Render with description properties.type: success - value[0] 1`] = `
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
 </div>
@@ -1356,15 +1320,15 @@ exports[`Render with description properties.type: success banner: true - value[0
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
 </div>
@@ -1378,15 +1342,15 @@ exports[`Render with description properties.type: success showIcon: false - valu
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
 </div>
@@ -1422,15 +1386,15 @@ exports[`Render with description properties.type: warning - value[0] 1`] = `
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
 </div>
@@ -1466,15 +1430,15 @@ exports[`Render with description properties.type: warning banner: true - value[0
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
 </div>
@@ -1488,15 +1452,15 @@ exports[`Render with description properties.type: warning showIcon: false - valu
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
 </div>
@@ -1535,8 +1499,8 @@ exports[`Render with description uses html - value[0] 1`] = `
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
 </div>
@@ -1572,16 +1536,14 @@ exports[`Render with message uses html - value[0] 1`] = `
   <span
     className="ant-alert-message"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </span>
   <span
     className="ant-alert-description"
   >
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-    />
+    
   </span>
 </div>
 `;

@@ -15,8 +15,8 @@ exports[`Render default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -144,8 +144,8 @@ exports[`Render properties.autoFocus: true - value[0] 1`] = `
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -274,8 +274,8 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -406,8 +406,8 @@ exports[`Render properties.inputStyle: CSS style applied - value[0] 1`] = `
       htmlFor="properties.inputStyle: CSS style applied_input"
       title="properties.inputStyle: CSS style applied"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -535,8 +535,8 @@ exports[`Render properties.label align: right - value[0] 1`] = `
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -664,8 +664,8 @@ exports[`Render properties.label colon: false - value[0] 1`] = `
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -908,8 +908,8 @@ exports[`Render properties.label extra: showing extra - value[0] 1`] = `
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1021,8 +1021,8 @@ exports[`Render properties.label extra: showing extra - value[0] 1`] = `
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -1048,8 +1048,8 @@ exports[`Render properties.label inline: true - value[0] 1`] = `
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1181,8 +1181,8 @@ exports[`Render properties.label span: 5 - value[0] 1`] = `
       htmlFor="properties.label span: 5_input"
       title="properties.label span: 5"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1310,8 +1310,8 @@ exports[`Render properties.placeholder: Please enter a number between 10 and 250
       htmlFor="properties.placeholder: Please enter a number between 10 and 250_input"
       title="properties.placeholder: Please enter a number between 10 and 250"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1440,8 +1440,8 @@ exports[`Render properties.size: large - value[0] 1`] = `
       htmlFor="properties.size: large_input"
       title="properties.size: large"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1569,8 +1569,8 @@ exports[`Render properties.size: small - value[0] 1`] = `
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1698,8 +1698,8 @@ exports[`Render properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="Number Input Title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1827,8 +1827,8 @@ exports[`Render property.decimalSeparator: "," - value[0] 1`] = `
       htmlFor="property.decimalSeparator: \\",\\"_input"
       title="property.decimalSeparator: \\",\\""
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1956,8 +1956,8 @@ exports[`Render property.max: 250 - value[0] 1`] = `
       htmlFor="property.max: 250_input"
       title="property.max: 250"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2085,8 +2085,8 @@ exports[`Render property.min: 10 - value[0] 1`] = `
       htmlFor="property.min: 10_input"
       title="property.min: 10"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2214,8 +2214,8 @@ exports[`Render property.precision: 1 - value[0] 1`] = `
       htmlFor="property.precision: 1_input"
       title="property.precision: 1"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2343,8 +2343,8 @@ exports[`Render property.step: 3 - value[0] 1`] = `
       htmlFor="property.step: 3_input"
       title="property.step: 3"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2472,8 +2472,8 @@ exports[`Render required = true default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2601,8 +2601,8 @@ exports[`Render required = true properties.autoFocus: true - value[0] 1`] = `
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2731,8 +2731,8 @@ exports[`Render required = true properties.disabled: true - value[0] 1`] = `
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2863,8 +2863,8 @@ exports[`Render required = true properties.inputStyle: CSS style applied - value
       htmlFor="properties.inputStyle: CSS style applied_input"
       title="properties.inputStyle: CSS style applied"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2992,8 +2992,8 @@ exports[`Render required = true properties.label align: right - value[0] 1`] = `
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -3121,8 +3121,8 @@ exports[`Render required = true properties.label colon: false - value[0] 1`] = `
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -3365,8 +3365,8 @@ exports[`Render required = true properties.label extra: showing extra - value[0]
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -3478,8 +3478,8 @@ exports[`Render required = true properties.label extra: showing extra - value[0]
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -3505,8 +3505,8 @@ exports[`Render required = true properties.label inline: true - value[0] 1`] = `
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -3638,8 +3638,8 @@ exports[`Render required = true properties.label span: 5 - value[0] 1`] = `
       htmlFor="properties.label span: 5_input"
       title="properties.label span: 5"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -3767,8 +3767,8 @@ exports[`Render required = true properties.placeholder: Please enter a number be
       htmlFor="properties.placeholder: Please enter a number between 10 and 250_input"
       title="properties.placeholder: Please enter a number between 10 and 250"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -3897,8 +3897,8 @@ exports[`Render required = true properties.size: large - value[0] 1`] = `
       htmlFor="properties.size: large_input"
       title="properties.size: large"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -4026,8 +4026,8 @@ exports[`Render required = true properties.size: small - value[0] 1`] = `
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -4155,8 +4155,8 @@ exports[`Render required = true properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="Number Input Title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -4284,8 +4284,8 @@ exports[`Render required = true property.decimalSeparator: "," - value[0] 1`] = 
       htmlFor="property.decimalSeparator: \\",\\"_input"
       title="property.decimalSeparator: \\",\\""
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -4413,8 +4413,8 @@ exports[`Render required = true property.max: 250 - value[0] 1`] = `
       htmlFor="property.max: 250_input"
       title="property.max: 250"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -4542,8 +4542,8 @@ exports[`Render required = true property.min: 10 - value[0] 1`] = `
       htmlFor="property.min: 10_input"
       title="property.min: 10"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -4671,8 +4671,8 @@ exports[`Render required = true property.precision: 1 - value[0] 1`] = `
       htmlFor="property.precision: 1_input"
       title="property.precision: 1"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -4800,8 +4800,8 @@ exports[`Render required = true property.step: 3 - value[0] 1`] = `
       htmlFor="property.step: 3_input"
       title="property.step: 3"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -4929,8 +4929,8 @@ exports[`Render validation.status = error default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -5086,8 +5086,8 @@ exports[`Render validation.status = error properties.autoFocus: true - value[0] 
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -5244,8 +5244,8 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -5404,8 +5404,8 @@ exports[`Render validation.status = error properties.inputStyle: CSS style appli
       htmlFor="properties.inputStyle: CSS style applied_input"
       title="properties.inputStyle: CSS style applied"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -5561,8 +5561,8 @@ exports[`Render validation.status = error properties.label align: right - value[
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -5718,8 +5718,8 @@ exports[`Render validation.status = error properties.label colon: false - value[
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -6018,8 +6018,8 @@ exports[`Render validation.status = error properties.label extra: showing extra 
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -6179,8 +6179,8 @@ exports[`Render validation.status = error properties.label inline: true - value[
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -6340,8 +6340,8 @@ exports[`Render validation.status = error properties.label span: 5 - value[0] 1`
       htmlFor="properties.label span: 5_input"
       title="properties.label span: 5"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -6497,8 +6497,8 @@ exports[`Render validation.status = error properties.placeholder: Please enter a
       htmlFor="properties.placeholder: Please enter a number between 10 and 250_input"
       title="properties.placeholder: Please enter a number between 10 and 250"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -6655,8 +6655,8 @@ exports[`Render validation.status = error properties.size: large - value[0] 1`] 
       htmlFor="properties.size: large_input"
       title="properties.size: large"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -6812,8 +6812,8 @@ exports[`Render validation.status = error properties.size: small - value[0] 1`] 
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -6969,8 +6969,8 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="Number Input Title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -7126,8 +7126,8 @@ exports[`Render validation.status = error property.decimalSeparator: "," - value
       htmlFor="property.decimalSeparator: \\",\\"_input"
       title="property.decimalSeparator: \\",\\""
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -7283,8 +7283,8 @@ exports[`Render validation.status = error property.max: 250 - value[0] 1`] = `
       htmlFor="property.max: 250_input"
       title="property.max: 250"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -7440,8 +7440,8 @@ exports[`Render validation.status = error property.min: 10 - value[0] 1`] = `
       htmlFor="property.min: 10_input"
       title="property.min: 10"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -7597,8 +7597,8 @@ exports[`Render validation.status = error property.precision: 1 - value[0] 1`] =
       htmlFor="property.precision: 1_input"
       title="property.precision: 1"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -7754,8 +7754,8 @@ exports[`Render validation.status = error property.step: 3 - value[0] 1`] = `
       htmlFor="property.step: 3_input"
       title="property.step: 3"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -7911,8 +7911,8 @@ exports[`Render validation.status = null default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -8040,8 +8040,8 @@ exports[`Render validation.status = null properties.autoFocus: true - value[0] 1
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -8170,8 +8170,8 @@ exports[`Render validation.status = null properties.disabled: true - value[0] 1`
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -8302,8 +8302,8 @@ exports[`Render validation.status = null properties.inputStyle: CSS style applie
       htmlFor="properties.inputStyle: CSS style applied_input"
       title="properties.inputStyle: CSS style applied"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -8431,8 +8431,8 @@ exports[`Render validation.status = null properties.label align: right - value[0
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -8560,8 +8560,8 @@ exports[`Render validation.status = null properties.label colon: false - value[0
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -8804,8 +8804,8 @@ exports[`Render validation.status = null properties.label extra: showing extra -
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -8917,8 +8917,8 @@ exports[`Render validation.status = null properties.label extra: showing extra -
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -8944,8 +8944,8 @@ exports[`Render validation.status = null properties.label inline: true - value[0
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -9077,8 +9077,8 @@ exports[`Render validation.status = null properties.label span: 5 - value[0] 1`]
       htmlFor="properties.label span: 5_input"
       title="properties.label span: 5"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -9206,8 +9206,8 @@ exports[`Render validation.status = null properties.placeholder: Please enter a 
       htmlFor="properties.placeholder: Please enter a number between 10 and 250_input"
       title="properties.placeholder: Please enter a number between 10 and 250"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -9336,8 +9336,8 @@ exports[`Render validation.status = null properties.size: large - value[0] 1`] =
       htmlFor="properties.size: large_input"
       title="properties.size: large"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -9465,8 +9465,8 @@ exports[`Render validation.status = null properties.size: small - value[0] 1`] =
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -9594,8 +9594,8 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="Number Input Title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -9723,8 +9723,8 @@ exports[`Render validation.status = null property.decimalSeparator: "," - value[
       htmlFor="property.decimalSeparator: \\",\\"_input"
       title="property.decimalSeparator: \\",\\""
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -9852,8 +9852,8 @@ exports[`Render validation.status = null property.max: 250 - value[0] 1`] = `
       htmlFor="property.max: 250_input"
       title="property.max: 250"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -9981,8 +9981,8 @@ exports[`Render validation.status = null property.min: 10 - value[0] 1`] = `
       htmlFor="property.min: 10_input"
       title="property.min: 10"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -10110,8 +10110,8 @@ exports[`Render validation.status = null property.precision: 1 - value[0] 1`] = 
       htmlFor="property.precision: 1_input"
       title="property.precision: 1"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -10239,8 +10239,8 @@ exports[`Render validation.status = null property.step: 3 - value[0] 1`] = `
       htmlFor="property.step: 3_input"
       title="property.step: 3"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -10368,8 +10368,8 @@ exports[`Render validation.status = success default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -10520,8 +10520,8 @@ exports[`Render validation.status = success properties.autoFocus: true - value[0
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -10673,8 +10673,8 @@ exports[`Render validation.status = success properties.disabled: true - value[0]
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -10828,8 +10828,8 @@ exports[`Render validation.status = success properties.inputStyle: CSS style app
       htmlFor="properties.inputStyle: CSS style applied_input"
       title="properties.inputStyle: CSS style applied"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -10980,8 +10980,8 @@ exports[`Render validation.status = success properties.label align: right - valu
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -11132,8 +11132,8 @@ exports[`Render validation.status = success properties.label colon: false - valu
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -11422,8 +11422,8 @@ exports[`Render validation.status = success properties.label extra: showing extr
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -11558,8 +11558,8 @@ exports[`Render validation.status = success properties.label extra: showing extr
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -11585,8 +11585,8 @@ exports[`Render validation.status = success properties.label inline: true - valu
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -11741,8 +11741,8 @@ exports[`Render validation.status = success properties.label span: 5 - value[0] 
       htmlFor="properties.label span: 5_input"
       title="properties.label span: 5"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -11893,8 +11893,8 @@ exports[`Render validation.status = success properties.placeholder: Please enter
       htmlFor="properties.placeholder: Please enter a number between 10 and 250_input"
       title="properties.placeholder: Please enter a number between 10 and 250"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -12046,8 +12046,8 @@ exports[`Render validation.status = success properties.size: large - value[0] 1`
       htmlFor="properties.size: large_input"
       title="properties.size: large"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -12198,8 +12198,8 @@ exports[`Render validation.status = success properties.size: small - value[0] 1`
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -12350,8 +12350,8 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="Number Input Title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -12502,8 +12502,8 @@ exports[`Render validation.status = success property.decimalSeparator: "," - val
       htmlFor="property.decimalSeparator: \\",\\"_input"
       title="property.decimalSeparator: \\",\\""
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -12654,8 +12654,8 @@ exports[`Render validation.status = success property.max: 250 - value[0] 1`] = `
       htmlFor="property.max: 250_input"
       title="property.max: 250"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -12806,8 +12806,8 @@ exports[`Render validation.status = success property.min: 10 - value[0] 1`] = `
       htmlFor="property.min: 10_input"
       title="property.min: 10"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -12958,8 +12958,8 @@ exports[`Render validation.status = success property.precision: 1 - value[0] 1`]
       htmlFor="property.precision: 1_input"
       title="property.precision: 1"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -13110,8 +13110,8 @@ exports[`Render validation.status = success property.step: 3 - value[0] 1`] = `
       htmlFor="property.step: 3_input"
       title="property.step: 3"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -13262,8 +13262,8 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -13419,8 +13419,8 @@ exports[`Render validation.status = warning properties.autoFocus: true - value[0
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -13577,8 +13577,8 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -13737,8 +13737,8 @@ exports[`Render validation.status = warning properties.inputStyle: CSS style app
       htmlFor="properties.inputStyle: CSS style applied_input"
       title="properties.inputStyle: CSS style applied"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -13894,8 +13894,8 @@ exports[`Render validation.status = warning properties.label align: right - valu
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -14051,8 +14051,8 @@ exports[`Render validation.status = warning properties.label colon: false - valu
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -14351,8 +14351,8 @@ exports[`Render validation.status = warning properties.label extra: showing extr
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -14512,8 +14512,8 @@ exports[`Render validation.status = warning properties.label inline: true - valu
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -14673,8 +14673,8 @@ exports[`Render validation.status = warning properties.label span: 5 - value[0] 
       htmlFor="properties.label span: 5_input"
       title="properties.label span: 5"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -14830,8 +14830,8 @@ exports[`Render validation.status = warning properties.placeholder: Please enter
       htmlFor="properties.placeholder: Please enter a number between 10 and 250_input"
       title="properties.placeholder: Please enter a number between 10 and 250"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -14988,8 +14988,8 @@ exports[`Render validation.status = warning properties.size: large - value[0] 1`
       htmlFor="properties.size: large_input"
       title="properties.size: large"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -15145,8 +15145,8 @@ exports[`Render validation.status = warning properties.size: small - value[0] 1`
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -15302,8 +15302,8 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="Number Input Title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -15459,8 +15459,8 @@ exports[`Render validation.status = warning property.decimalSeparator: "," - val
       htmlFor="property.decimalSeparator: \\",\\"_input"
       title="property.decimalSeparator: \\",\\""
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -15616,8 +15616,8 @@ exports[`Render validation.status = warning property.max: 250 - value[0] 1`] = `
       htmlFor="property.max: 250_input"
       title="property.max: 250"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -15773,8 +15773,8 @@ exports[`Render validation.status = warning property.min: 10 - value[0] 1`] = `
       htmlFor="property.min: 10_input"
       title="property.min: 10"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -15930,8 +15930,8 @@ exports[`Render validation.status = warning property.precision: 1 - value[0] 1`]
       htmlFor="property.precision: 1_input"
       title="property.precision: 1"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -16087,8 +16087,8 @@ exports[`Render validation.status = warning property.step: 3 - value[0] 1`] = `
       htmlFor="property.step: 3_input"
       title="property.step: 3"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
