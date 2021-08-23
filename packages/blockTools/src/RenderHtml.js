@@ -38,13 +38,15 @@ class RenderHtml extends React.Component {
     if (!html) {
       return '';
     }
-    if (div) {
+    if (div === true) {
       return (
         <div
           id={id}
           data-testid={id}
           ref={(el) => {
-            this.div = el;
+            if (el) {
+              this.div = el;
+            }
           }}
           className={methods.makeCssClass(style)}
         />
@@ -55,7 +57,9 @@ class RenderHtml extends React.Component {
         id={id}
         data-testid={id}
         ref={(el) => {
-          this.div = el;
+          if (el) {
+            this.div = el;
+          }
         }}
         className={methods.makeCssClass(style)}
       />
