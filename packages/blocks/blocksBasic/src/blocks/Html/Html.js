@@ -18,7 +18,13 @@ import React from 'react';
 import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
 
 const HtmlBlock = ({ blockId, properties, methods }) => (
-  <RenderHtml id={blockId} html={properties.html} methods={methods} style={properties.style} />
+  <RenderHtml
+    div={true}
+    html={properties.html}
+    id={blockId}
+    methods={methods}
+    style={properties.style}
+  />
 );
 
 HtmlBlock.defaultProps = blockDefaultProps;
