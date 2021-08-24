@@ -40,8 +40,9 @@ _ref:
 
             -----------
 
-
             Blocks can define _events_ which the block can trigger when something happens on the page, like a button being clicked, an input's value being modified or a page being loaded. Some examples are `onClick` on a [`Button`](/Button) or `onEnter` on a [`PageHeaderMenu`](/PageHeaderMenu) block.
+
+            All blocks implements `onMount` and `onMountAsync` events. These are useful for triggering actions when a block is mounted. For the `onMount` event, the block only mounts when the event action chain is completed, however, for the `onMountAsync` event, the block will mount as soon as possible while the event actions completes execution.
 
             _Actions_ are tasks that can be executed, like calling a request, linking to a new page or changing a value in state. An array of actions can be defined for a event on a block. If that event gets triggered, those actions will execute sequentially. If any actions error while executing, the actions that follow it won't be executed, however, `catch` actions chain can be defined on a event to trigger when an error in a chain of actions occurs.
 
