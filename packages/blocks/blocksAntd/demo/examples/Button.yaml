@@ -83,3 +83,8 @@
   type: Button
   properties:
     title: '<div style="color: orange;">Title</div>'
+- id: 'with html in title'
+  type: Button
+  properties:
+    icon: SaveOutlined
+    title: '<div style="color: red;">Title</div>'

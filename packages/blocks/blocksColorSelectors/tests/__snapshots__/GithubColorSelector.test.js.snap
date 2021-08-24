@@ -15,8 +15,8 @@ exports[`Render colors - value[0] 1`] = `
       htmlFor="colors_input"
       title="colors"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -168,8 +168,8 @@ exports[`Render default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -825,8 +825,8 @@ exports[`Render defaultColor - value[0] 1`] = `
       htmlFor="defaultColor_input"
       title="defaultColor"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1482,8 +1482,8 @@ exports[`Render inputStyle - value[0] 1`] = `
       htmlFor="inputStyle_input"
       title="inputStyle"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2782,8 +2782,8 @@ exports[`Render title - value[0] 1`] = `
       htmlFor="title_input"
       title="The color selector"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -3439,8 +3439,8 @@ exports[`Render triangle-top-left - value[0] 1`] = `
       htmlFor="triangle-top-left_input"
       title="triangle-top-left"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -4098,8 +4098,8 @@ exports[`Render triangle-top-right - value[0] 1`] = `
       htmlFor="triangle-top-right_input"
       title="triangle-top-right"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -4757,8 +4757,8 @@ exports[`Render width - value[0] 1`] = `
       htmlFor="width_input"
       title="width"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>

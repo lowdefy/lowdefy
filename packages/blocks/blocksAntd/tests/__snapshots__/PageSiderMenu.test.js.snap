@@ -46,9 +46,7 @@ exports[`Render default - value[0] 1`] = `
                 />
               </svg>
             </span>
-            <div
-              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-            />
+            
           </button>
         </div>
       </div>
@@ -151,9 +149,7 @@ exports[`Render default - value[0] 1`] = `
                       />
                     </svg>
                   </span>
-                  <div
-                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-                  />
+                  
                 </button>
               </div>
             </div>
@@ -229,9 +225,7 @@ exports[`Render properties.breadcrumb.list - value[0] 1`] = `
                 />
               </svg>
             </span>
-            <div
-              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-            />
+            
           </button>
         </div>
       </div>
@@ -334,9 +328,7 @@ exports[`Render properties.breadcrumb.list - value[0] 1`] = `
                       />
                     </svg>
                   </span>
-                  <div
-                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-                  />
+                  
                 </button>
               </div>
             </div>
@@ -446,9 +438,7 @@ exports[`Render properties.content.style - value[0] 1`] = `
                 />
               </svg>
             </span>
-            <div
-              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-            />
+            
           </button>
         </div>
       </div>
@@ -551,9 +541,7 @@ exports[`Render properties.content.style - value[0] 1`] = `
                       />
                     </svg>
                   </span>
-                  <div
-                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-                  />
+                  
                 </button>
               </div>
             </div>
@@ -629,9 +617,7 @@ exports[`Render properties.footer.style - value[0] 1`] = `
                 />
               </svg>
             </span>
-            <div
-              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-            />
+            
           </button>
         </div>
       </div>
@@ -734,9 +720,7 @@ exports[`Render properties.footer.style - value[0] 1`] = `
                       />
                     </svg>
                   </span>
-                  <div
-                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-                  />
+                  
                 </button>
               </div>
             </div>
@@ -827,9 +811,7 @@ exports[`Render properties.header.color - value[0] 1`] = `
                 />
               </svg>
             </span>
-            <div
-              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-            />
+            
           </button>
         </div>
       </div>
@@ -1021,9 +1003,7 @@ exports[`Render properties.header.color - value[0] 1`] = `
                       />
                     </svg>
                   </span>
-                  <div
-                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-                  />
+                  
                 </button>
               </div>
             </div>
@@ -1109,9 +1089,7 @@ exports[`Render properties.header.style - value[0] 1`] = `
                 />
               </svg>
             </span>
-            <div
-              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-            />
+            
           </button>
         </div>
       </div>
@@ -1214,9 +1192,7 @@ exports[`Render properties.header.style - value[0] 1`] = `
                       />
                     </svg>
                   </span>
-                  <div
-                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-                  />
+                  
                 </button>
               </div>
             </div>
@@ -1292,9 +1268,7 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
                 />
               </svg>
             </span>
-            <div
-              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-            />
+            
           </button>
         </div>
       </div>
@@ -1486,9 +1460,7 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
                       />
                     </svg>
                   </span>
-                  <div
-                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-                  />
+                  
                 </button>
               </div>
             </div>
@@ -1564,9 +1536,7 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
                 />
               </svg>
             </span>
-            <div
-              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-            />
+            
           </button>
         </div>
       </div>
@@ -1758,9 +1728,7 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
                       />
                     </svg>
                   </span>
-                  <div
-                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-                  />
+                  
                 </button>
               </div>
             </div>
@@ -1836,9 +1804,7 @@ exports[`Render properties.logo.size - value[0] 1`] = `
                 />
               </svg>
             </span>
-            <div
-              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-            />
+            
           </button>
         </div>
       </div>
@@ -2030,9 +1996,7 @@ exports[`Render properties.logo.size - value[0] 1`] = `
                       />
                     </svg>
                   </span>
-                  <div
-                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-                  />
+                  
                 </button>
               </div>
             </div>
@@ -2108,9 +2072,7 @@ exports[`Render properties.logo.src - value[0] 1`] = `
                 />
               </svg>
             </span>
-            <div
-              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-            />
+            
           </button>
         </div>
       </div>
@@ -2302,9 +2264,7 @@ exports[`Render properties.logo.src - value[0] 1`] = `
                       />
                     </svg>
                   </span>
-                  <div
-                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-                  />
+                  
                 </button>
               </div>
             </div>
@@ -2380,9 +2340,7 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
                 />
               </svg>
             </span>
-            <div
-              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-            />
+            
           </button>
         </div>
       </div>
@@ -2574,9 +2532,7 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
                       />
                     </svg>
                   </span>
-                  <div
-                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-                  />
+                  
                 </button>
               </div>
             </div>
@@ -2652,9 +2608,7 @@ exports[`Render properties.logo.style - value[0] 1`] = `
                 />
               </svg>
             </span>
-            <div
-              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-            />
+            
           </button>
         </div>
       </div>
@@ -2757,9 +2711,7 @@ exports[`Render properties.logo.style - value[0] 1`] = `
                       />
                     </svg>
                   </span>
-                  <div
-                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-                  />
+                  
                 </button>
               </div>
             </div>
@@ -2835,9 +2787,7 @@ exports[`Render properties.menu - value[0] 1`] = `
                 />
               </svg>
             </span>
-            <div
-              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-            />
+            
           </button>
         </div>
       </div>
@@ -3029,9 +2979,7 @@ exports[`Render properties.menu - value[0] 1`] = `
                       />
                     </svg>
                   </span>
-                  <div
-                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-                  />
+                  
                 </button>
               </div>
             </div>
@@ -3107,9 +3055,7 @@ exports[`Render properties.menu.selectedColor - value[0] 1`] = `
                 />
               </svg>
             </span>
-            <div
-              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-            />
+            
           </button>
         </div>
       </div>
@@ -3301,9 +3247,7 @@ exports[`Render properties.menu.selectedColor - value[0] 1`] = `
                       />
                     </svg>
                   </span>
-                  <div
-                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-                  />
+                  
                 </button>
               </div>
             </div>
@@ -3379,9 +3323,7 @@ exports[`Render properties.sider.color - value[0] 1`] = `
                 />
               </svg>
             </span>
-            <div
-              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-            />
+            
           </button>
         </div>
       </div>
@@ -3573,9 +3515,7 @@ exports[`Render properties.sider.color - value[0] 1`] = `
                       />
                     </svg>
                   </span>
-                  <div
-                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-                  />
+                  
                 </button>
               </div>
             </div>
@@ -3651,9 +3591,7 @@ exports[`Render properties.sider.initialCollapsed - value[0] 1`] = `
                 />
               </svg>
             </span>
-            <div
-              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-            />
+            
           </button>
         </div>
       </div>
@@ -3767,9 +3705,7 @@ exports[`Render properties.sider.initialCollapsed - value[0] 1`] = `
                       />
                     </svg>
                   </span>
-                  <div
-                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-                  />
+                  
                 </button>
               </div>
             </div>
@@ -3845,9 +3781,7 @@ exports[`Render properties.sider.style - value[0] 1`] = `
                 />
               </svg>
             </span>
-            <div
-              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-            />
+            
           </button>
         </div>
       </div>
@@ -3961,9 +3895,7 @@ exports[`Render properties.sider.style - value[0] 1`] = `
                       />
                     </svg>
                   </span>
-                  <div
-                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-                  />
+                  
                 </button>
               </div>
             </div>
@@ -4039,9 +3971,7 @@ exports[`Render properties.sider.theme: dark - value[0] 1`] = `
                 />
               </svg>
             </span>
-            <div
-              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-            />
+            
           </button>
         </div>
       </div>
@@ -4144,9 +4074,7 @@ exports[`Render properties.sider.theme: dark - value[0] 1`] = `
                       />
                     </svg>
                   </span>
-                  <div
-                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-                  />
+                  
                 </button>
               </div>
             </div>
@@ -4222,9 +4150,7 @@ exports[`Render properties.style - value[0] 1`] = `
                 />
               </svg>
             </span>
-            <div
-              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-            />
+            
           </button>
         </div>
       </div>
@@ -4327,9 +4253,7 @@ exports[`Render properties.style - value[0] 1`] = `
                       />
                     </svg>
                   </span>
-                  <div
-                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-                  />
+                  
                 </button>
               </div>
             </div>
@@ -4405,9 +4329,7 @@ exports[`Render properties.toggleSiderButton.hide - value[0] 1`] = `
                 />
               </svg>
             </span>
-            <div
-              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-            />
+            
           </button>
         </div>
       </div>
@@ -4521,9 +4443,7 @@ exports[`Render properties.toggleSiderButton.hide - value[0] 1`] = `
                       />
                     </svg>
                   </span>
-                  <div
-                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-                  />
+                  
                 </button>
               </div>
             </div>
@@ -4599,9 +4519,7 @@ exports[`Render properties.toggleSiderButton.type - value[0] 1`] = `
                 />
               </svg>
             </span>
-            <div
-              className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-            />
+            
           </button>
         </div>
       </div>
@@ -4715,9 +4633,7 @@ exports[`Render properties.toggleSiderButton.type - value[0] 1`] = `
                       />
                     </svg>
                   </span>
-                  <div
-                    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-                  />
+                  
                 </button>
               </div>
             </div>

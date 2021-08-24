@@ -15,8 +15,8 @@ exports[`Render default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -66,8 +66,8 @@ exports[`Render inline and long extra default size - value[0] 1`] = `
       title="Lorem ipsum dolor sit amet
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -100,8 +100,8 @@ exports[`Render inline and long extra default size - value[0] 1`] = `
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -128,8 +128,8 @@ exports[`Render inline and long extra large size - value[0] 1`] = `
       title="Lorem ipsum dolor sit amet
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -162,8 +162,8 @@ exports[`Render inline and long extra large size - value[0] 1`] = `
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -190,8 +190,8 @@ exports[`Render inline and long extra small size - value[0] 1`] = `
       title="Lorem ipsum dolor sit amet
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -224,8 +224,8 @@ exports[`Render inline and long extra small size - value[0] 1`] = `
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -247,8 +247,8 @@ exports[`Render properties.align: left - value[0] 1`] = `
       htmlFor="properties.align: left_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -293,8 +293,8 @@ exports[`Render properties.align: right - value[0] 1`] = `
       htmlFor="properties.align: right_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -339,8 +339,8 @@ exports[`Render properties.colon: false - value[0] 1`] = `
       htmlFor="properties.colon: false_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -385,8 +385,8 @@ exports[`Render properties.colon: true - value[0] 1`] = `
       htmlFor="properties.colon: true_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -463,8 +463,8 @@ exports[`Render properties.extra: Extra long - value[0] 1`] = `
       htmlFor="properties.extra: Extra long_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -493,8 +493,8 @@ exports[`Render properties.extra: Extra long - value[0] 1`] = `
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -520,8 +520,8 @@ exports[`Render properties.extra: Extra long with inline = true - value[0] 1`] =
       htmlFor="properties.extra: Extra long with inline = true_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -554,8 +554,8 @@ exports[`Render properties.extra: Extra long with inline = true - value[0] 1`] =
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -581,8 +581,8 @@ exports[`Render properties.extra: Extra long with inline = true, size = large - 
       htmlFor="properties.extra: Extra long with inline = true, size = large_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -615,8 +615,8 @@ exports[`Render properties.extra: Extra long with inline = true, size = large - 
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -642,8 +642,8 @@ exports[`Render properties.extra: Extra long with inline = true, size = small - 
       htmlFor="properties.extra: Extra long with inline = true, size = small_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -676,8 +676,8 @@ exports[`Render properties.extra: Extra long with inline = true, size = small - 
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -704,8 +704,8 @@ exports[`Render properties.extra: Extra long with inline true - value[0] 1`] = `
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -754,8 +754,8 @@ exports[`Render properties.extra: Extra text - value[0] 1`] = `
       htmlFor="properties.extra: Extra text_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -784,8 +784,8 @@ exports[`Render properties.extra: Extra text - value[0] 1`] = `
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -807,8 +807,8 @@ exports[`Render properties.extra: html in extra - value[0] 1`] = `
       htmlFor="properties.extra: html in extra_input"
       title="label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -837,8 +837,8 @@ exports[`Render properties.extra: html in extra - value[0] 1`] = `
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -860,8 +860,8 @@ exports[`Render properties.extraStyle: border 1px purple - value[0] 1`] = `
       htmlFor="properties.extraStyle: border 1px purple_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -890,8 +890,8 @@ exports[`Render properties.extraStyle: border 1px purple - value[0] 1`] = `
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid purple\\"}]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -913,8 +913,8 @@ exports[`Render properties.feedbackStyle: border 1px blue - value[0] 1`] = `
       htmlFor="properties.feedbackStyle: border 1px blue_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -943,8 +943,8 @@ exports[`Render properties.feedbackStyle: border 1px blue - value[0] 1`] = `
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -970,8 +970,8 @@ exports[`Render properties.inline: true - value[0] 1`] = `
       htmlFor="properties.inline: true_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1020,8 +1020,8 @@ exports[`Render properties.span: 2 - value[0] 1`] = `
       htmlFor="properties.span: 2_input"
       title="This is the long label title wrapped by short span"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1066,8 +1066,8 @@ exports[`Render properties.span: 2 with long work title - value[0] 1`] = `
       htmlFor="properties.span: 2 with long work title_input"
       title="Thisisthelonglabeltitlea"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1112,8 +1112,8 @@ exports[`Render properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1159,8 +1159,8 @@ exports[`Render properties.title long - value[0] 1`] = `
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1207,8 +1207,8 @@ exports[`Render properties.title: html in title - value[0] 1`] = `
   html in title
 </span>
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1253,8 +1253,8 @@ exports[`Render required = true default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1304,8 +1304,8 @@ exports[`Render required = true inline and long extra default size - value[0] 1`
       title="Lorem ipsum dolor sit amet
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1338,8 +1338,8 @@ exports[`Render required = true inline and long extra default size - value[0] 1`
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -1366,8 +1366,8 @@ exports[`Render required = true inline and long extra large size - value[0] 1`] 
       title="Lorem ipsum dolor sit amet
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1400,8 +1400,8 @@ exports[`Render required = true inline and long extra large size - value[0] 1`] 
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -1428,8 +1428,8 @@ exports[`Render required = true inline and long extra small size - value[0] 1`] 
       title="Lorem ipsum dolor sit amet
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1462,8 +1462,8 @@ exports[`Render required = true inline and long extra small size - value[0] 1`] 
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -1485,8 +1485,8 @@ exports[`Render required = true properties.align: left - value[0] 1`] = `
       htmlFor="properties.align: left_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1531,8 +1531,8 @@ exports[`Render required = true properties.align: right - value[0] 1`] = `
       htmlFor="properties.align: right_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1577,8 +1577,8 @@ exports[`Render required = true properties.colon: false - value[0] 1`] = `
       htmlFor="properties.colon: false_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1623,8 +1623,8 @@ exports[`Render required = true properties.colon: true - value[0] 1`] = `
       htmlFor="properties.colon: true_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1701,8 +1701,8 @@ exports[`Render required = true properties.extra: Extra long - value[0] 1`] = `
       htmlFor="properties.extra: Extra long_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1731,8 +1731,8 @@ exports[`Render required = true properties.extra: Extra long - value[0] 1`] = `
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -1758,8 +1758,8 @@ exports[`Render required = true properties.extra: Extra long with inline = true 
       htmlFor="properties.extra: Extra long with inline = true_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1792,8 +1792,8 @@ exports[`Render required = true properties.extra: Extra long with inline = true 
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -1819,8 +1819,8 @@ exports[`Render required = true properties.extra: Extra long with inline = true,
       htmlFor="properties.extra: Extra long with inline = true, size = large_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1853,8 +1853,8 @@ exports[`Render required = true properties.extra: Extra long with inline = true,
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -1880,8 +1880,8 @@ exports[`Render required = true properties.extra: Extra long with inline = true,
       htmlFor="properties.extra: Extra long with inline = true, size = small_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1914,8 +1914,8 @@ exports[`Render required = true properties.extra: Extra long with inline = true,
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -1942,8 +1942,8 @@ exports[`Render required = true properties.extra: Extra long with inline true - 
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -1992,8 +1992,8 @@ exports[`Render required = true properties.extra: Extra text - value[0] 1`] = `
       htmlFor="properties.extra: Extra text_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2022,8 +2022,8 @@ exports[`Render required = true properties.extra: Extra text - value[0] 1`] = `
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -2045,8 +2045,8 @@ exports[`Render required = true properties.extra: html in extra - value[0] 1`] =
       htmlFor="properties.extra: html in extra_input"
       title="label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2075,8 +2075,8 @@ exports[`Render required = true properties.extra: html in extra - value[0] 1`] =
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -2098,8 +2098,8 @@ exports[`Render required = true properties.extraStyle: border 1px purple - value
       htmlFor="properties.extraStyle: border 1px purple_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2128,8 +2128,8 @@ exports[`Render required = true properties.extraStyle: border 1px purple - value
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid purple\\"}]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -2151,8 +2151,8 @@ exports[`Render required = true properties.feedbackStyle: border 1px blue - valu
       htmlFor="properties.feedbackStyle: border 1px blue_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2181,8 +2181,8 @@ exports[`Render required = true properties.feedbackStyle: border 1px blue - valu
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -2208,8 +2208,8 @@ exports[`Render required = true properties.inline: true - value[0] 1`] = `
       htmlFor="properties.inline: true_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2258,8 +2258,8 @@ exports[`Render required = true properties.span: 2 - value[0] 1`] = `
       htmlFor="properties.span: 2_input"
       title="This is the long label title wrapped by short span"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2304,8 +2304,8 @@ exports[`Render required = true properties.span: 2 with long work title - value[
       htmlFor="properties.span: 2 with long work title_input"
       title="Thisisthelonglabeltitlea"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2350,8 +2350,8 @@ exports[`Render required = true properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2397,8 +2397,8 @@ exports[`Render required = true properties.title long - value[0] 1`] = `
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2445,8 +2445,8 @@ exports[`Render required = true properties.title: html in title - value[0] 1`] =
   html in title
 </span>
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2492,8 +2492,8 @@ exports[`Render required = true span, align right and long extra for default siz
       title="Lorem
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2522,8 +2522,8 @@ exports[`Render required = true span, align right and long extra for default siz
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -2546,8 +2546,8 @@ exports[`Render required = true span, align right and long extra for large size 
       title="Lorem
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2576,8 +2576,8 @@ exports[`Render required = true span, align right and long extra for large size 
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -2600,8 +2600,8 @@ exports[`Render required = true span, align right and long extra for small size 
       title="Lorem
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2630,8 +2630,8 @@ exports[`Render required = true span, align right and long extra for small size 
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -2654,8 +2654,8 @@ exports[`Render required = true span, align right, long title and long extra for
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2684,8 +2684,8 @@ exports[`Render required = true span, align right, long title and long extra for
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -2708,8 +2708,8 @@ exports[`Render required = true span, align right, long title and long extra for
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2738,8 +2738,8 @@ exports[`Render required = true span, align right, long title and long extra for
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -2762,8 +2762,8 @@ exports[`Render required = true span, align right, long title and long extra for
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2792,8 +2792,8 @@ exports[`Render required = true span, align right, long title and long extra for
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -2816,8 +2816,8 @@ exports[`Render span, align right and long extra for default size - value[0] 1`]
       title="Lorem
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2846,8 +2846,8 @@ exports[`Render span, align right and long extra for default size - value[0] 1`]
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -2870,8 +2870,8 @@ exports[`Render span, align right and long extra for large size - value[0] 1`] =
       title="Lorem
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2900,8 +2900,8 @@ exports[`Render span, align right and long extra for large size - value[0] 1`] =
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -2924,8 +2924,8 @@ exports[`Render span, align right and long extra for small size - value[0] 1`] =
       title="Lorem
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -2954,8 +2954,8 @@ exports[`Render span, align right and long extra for small size - value[0] 1`] =
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -2978,8 +2978,8 @@ exports[`Render span, align right, long title and long extra for default size - 
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -3008,8 +3008,8 @@ exports[`Render span, align right, long title and long extra for default size - 
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -3032,8 +3032,8 @@ exports[`Render span, align right, long title and long extra for large size - va
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -3062,8 +3062,8 @@ exports[`Render span, align right, long title and long extra for large size - va
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -3086,8 +3086,8 @@ exports[`Render span, align right, long title and long extra for small size - va
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -3116,8 +3116,8 @@ exports[`Render span, align right, long title and long extra for small size - va
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -3139,8 +3139,8 @@ exports[`Render validation.status = error default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -3218,8 +3218,8 @@ exports[`Render validation.status = error inline and long extra default size - v
       title="Lorem ipsum dolor sit amet
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -3301,8 +3301,8 @@ exports[`Render validation.status = error inline and long extra large size - val
       title="Lorem ipsum dolor sit amet
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -3384,8 +3384,8 @@ exports[`Render validation.status = error inline and long extra small size - val
       title="Lorem ipsum dolor sit amet
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -3462,8 +3462,8 @@ exports[`Render validation.status = error properties.align: left - value[0] 1`] 
       htmlFor="properties.align: left_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -3536,8 +3536,8 @@ exports[`Render validation.status = error properties.align: right - value[0] 1`]
       htmlFor="properties.align: right_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -3610,8 +3610,8 @@ exports[`Render validation.status = error properties.colon: false - value[0] 1`]
       htmlFor="properties.colon: false_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -3684,8 +3684,8 @@ exports[`Render validation.status = error properties.colon: true - value[0] 1`] 
       htmlFor="properties.colon: true_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -3818,8 +3818,8 @@ exports[`Render validation.status = error properties.extra: Extra long - value[0
       htmlFor="properties.extra: Extra long_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -3896,8 +3896,8 @@ exports[`Render validation.status = error properties.extra: Extra long with inli
       htmlFor="properties.extra: Extra long with inline = true_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -3978,8 +3978,8 @@ exports[`Render validation.status = error properties.extra: Extra long with inli
       htmlFor="properties.extra: Extra long with inline = true, size = large_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -4060,8 +4060,8 @@ exports[`Render validation.status = error properties.extra: Extra long with inli
       htmlFor="properties.extra: Extra long with inline = true, size = small_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -4143,8 +4143,8 @@ exports[`Render validation.status = error properties.extra: Extra long with inli
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -4221,8 +4221,8 @@ exports[`Render validation.status = error properties.extra: Extra text - value[0
       htmlFor="properties.extra: Extra text_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -4295,8 +4295,8 @@ exports[`Render validation.status = error properties.extra: html in extra - valu
       htmlFor="properties.extra: html in extra_input"
       title="label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -4369,8 +4369,8 @@ exports[`Render validation.status = error properties.extraStyle: border 1px purp
       htmlFor="properties.extraStyle: border 1px purple_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -4443,8 +4443,8 @@ exports[`Render validation.status = error properties.feedbackStyle: border 1px b
       htmlFor="properties.feedbackStyle: border 1px blue_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -4521,8 +4521,8 @@ exports[`Render validation.status = error properties.inline: true - value[0] 1`]
       htmlFor="properties.inline: true_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -4599,8 +4599,8 @@ exports[`Render validation.status = error properties.span: 2 - value[0] 1`] = `
       htmlFor="properties.span: 2_input"
       title="This is the long label title wrapped by short span"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -4673,8 +4673,8 @@ exports[`Render validation.status = error properties.span: 2 with long work titl
       htmlFor="properties.span: 2 with long work title_input"
       title="Thisisthelonglabeltitlea"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -4747,8 +4747,8 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -4822,8 +4822,8 @@ exports[`Render validation.status = error properties.title long - value[0] 1`] =
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -4898,8 +4898,8 @@ exports[`Render validation.status = error properties.title: html in title - valu
   html in title
 </span>
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -4973,8 +4973,8 @@ exports[`Render validation.status = error span, align right and long extra for d
       title="Lorem
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -5048,8 +5048,8 @@ exports[`Render validation.status = error span, align right and long extra for l
       title="Lorem
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -5123,8 +5123,8 @@ exports[`Render validation.status = error span, align right and long extra for s
       title="Lorem
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -5198,8 +5198,8 @@ exports[`Render validation.status = error span, align right, long title and long
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -5273,8 +5273,8 @@ exports[`Render validation.status = error span, align right, long title and long
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -5348,8 +5348,8 @@ exports[`Render validation.status = error span, align right, long title and long
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -5422,8 +5422,8 @@ exports[`Render validation.status = null default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -5473,8 +5473,8 @@ exports[`Render validation.status = null inline and long extra default size - va
       title="Lorem ipsum dolor sit amet
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -5507,8 +5507,8 @@ exports[`Render validation.status = null inline and long extra default size - va
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -5535,8 +5535,8 @@ exports[`Render validation.status = null inline and long extra large size - valu
       title="Lorem ipsum dolor sit amet
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -5569,8 +5569,8 @@ exports[`Render validation.status = null inline and long extra large size - valu
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -5597,8 +5597,8 @@ exports[`Render validation.status = null inline and long extra small size - valu
       title="Lorem ipsum dolor sit amet
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -5631,8 +5631,8 @@ exports[`Render validation.status = null inline and long extra small size - valu
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -5654,8 +5654,8 @@ exports[`Render validation.status = null properties.align: left - value[0] 1`] =
       htmlFor="properties.align: left_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -5700,8 +5700,8 @@ exports[`Render validation.status = null properties.align: right - value[0] 1`] 
       htmlFor="properties.align: right_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -5746,8 +5746,8 @@ exports[`Render validation.status = null properties.colon: false - value[0] 1`] 
       htmlFor="properties.colon: false_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -5792,8 +5792,8 @@ exports[`Render validation.status = null properties.colon: true - value[0] 1`] =
       htmlFor="properties.colon: true_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -5870,8 +5870,8 @@ exports[`Render validation.status = null properties.extra: Extra long - value[0]
       htmlFor="properties.extra: Extra long_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -5900,8 +5900,8 @@ exports[`Render validation.status = null properties.extra: Extra long - value[0]
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -5927,8 +5927,8 @@ exports[`Render validation.status = null properties.extra: Extra long with inlin
       htmlFor="properties.extra: Extra long with inline = true_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -5961,8 +5961,8 @@ exports[`Render validation.status = null properties.extra: Extra long with inlin
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -5988,8 +5988,8 @@ exports[`Render validation.status = null properties.extra: Extra long with inlin
       htmlFor="properties.extra: Extra long with inline = true, size = large_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -6022,8 +6022,8 @@ exports[`Render validation.status = null properties.extra: Extra long with inlin
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -6049,8 +6049,8 @@ exports[`Render validation.status = null properties.extra: Extra long with inlin
       htmlFor="properties.extra: Extra long with inline = true, size = small_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -6083,8 +6083,8 @@ exports[`Render validation.status = null properties.extra: Extra long with inlin
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -6111,8 +6111,8 @@ exports[`Render validation.status = null properties.extra: Extra long with inlin
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -6161,8 +6161,8 @@ exports[`Render validation.status = null properties.extra: Extra text - value[0]
       htmlFor="properties.extra: Extra text_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -6191,8 +6191,8 @@ exports[`Render validation.status = null properties.extra: Extra text - value[0]
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -6214,8 +6214,8 @@ exports[`Render validation.status = null properties.extra: html in extra - value
       htmlFor="properties.extra: html in extra_input"
       title="label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -6244,8 +6244,8 @@ exports[`Render validation.status = null properties.extra: html in extra - value
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -6267,8 +6267,8 @@ exports[`Render validation.status = null properties.extraStyle: border 1px purpl
       htmlFor="properties.extraStyle: border 1px purple_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -6297,8 +6297,8 @@ exports[`Render validation.status = null properties.extraStyle: border 1px purpl
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid purple\\"}]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -6320,8 +6320,8 @@ exports[`Render validation.status = null properties.feedbackStyle: border 1px bl
       htmlFor="properties.feedbackStyle: border 1px blue_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -6350,8 +6350,8 @@ exports[`Render validation.status = null properties.feedbackStyle: border 1px bl
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -6377,8 +6377,8 @@ exports[`Render validation.status = null properties.inline: true - value[0] 1`] 
       htmlFor="properties.inline: true_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -6427,8 +6427,8 @@ exports[`Render validation.status = null properties.span: 2 - value[0] 1`] = `
       htmlFor="properties.span: 2_input"
       title="This is the long label title wrapped by short span"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -6473,8 +6473,8 @@ exports[`Render validation.status = null properties.span: 2 with long work title
       htmlFor="properties.span: 2 with long work title_input"
       title="Thisisthelonglabeltitlea"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -6519,8 +6519,8 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -6566,8 +6566,8 @@ exports[`Render validation.status = null properties.title long - value[0] 1`] = 
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -6614,8 +6614,8 @@ exports[`Render validation.status = null properties.title: html in title - value
   html in title
 </span>
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -6661,8 +6661,8 @@ exports[`Render validation.status = null span, align right and long extra for de
       title="Lorem
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -6691,8 +6691,8 @@ exports[`Render validation.status = null span, align right and long extra for de
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -6715,8 +6715,8 @@ exports[`Render validation.status = null span, align right and long extra for la
       title="Lorem
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -6745,8 +6745,8 @@ exports[`Render validation.status = null span, align right and long extra for la
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -6769,8 +6769,8 @@ exports[`Render validation.status = null span, align right and long extra for sm
       title="Lorem
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -6799,8 +6799,8 @@ exports[`Render validation.status = null span, align right and long extra for sm
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -6823,8 +6823,8 @@ exports[`Render validation.status = null span, align right, long title and long 
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -6853,8 +6853,8 @@ exports[`Render validation.status = null span, align right, long title and long 
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -6877,8 +6877,8 @@ exports[`Render validation.status = null span, align right, long title and long 
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -6907,8 +6907,8 @@ exports[`Render validation.status = null span, align right, long title and long 
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -6931,8 +6931,8 @@ exports[`Render validation.status = null span, align right, long title and long 
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -6961,8 +6961,8 @@ exports[`Render validation.status = null span, align right, long title and long 
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -6984,8 +6984,8 @@ exports[`Render validation.status = success default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -7058,8 +7058,8 @@ exports[`Render validation.status = success inline and long extra default size -
       title="Lorem ipsum dolor sit amet
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -7115,8 +7115,8 @@ exports[`Render validation.status = success inline and long extra default size -
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -7143,8 +7143,8 @@ exports[`Render validation.status = success inline and long extra large size - v
       title="Lorem ipsum dolor sit amet
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -7200,8 +7200,8 @@ exports[`Render validation.status = success inline and long extra large size - v
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -7228,8 +7228,8 @@ exports[`Render validation.status = success inline and long extra small size - v
       title="Lorem ipsum dolor sit amet
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -7285,8 +7285,8 @@ exports[`Render validation.status = success inline and long extra small size - v
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -7308,8 +7308,8 @@ exports[`Render validation.status = success properties.align: left - value[0] 1`
       htmlFor="properties.align: left_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -7377,8 +7377,8 @@ exports[`Render validation.status = success properties.align: right - value[0] 1
       htmlFor="properties.align: right_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -7446,8 +7446,8 @@ exports[`Render validation.status = success properties.colon: false - value[0] 1
       htmlFor="properties.colon: false_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -7515,8 +7515,8 @@ exports[`Render validation.status = success properties.colon: true - value[0] 1`
       htmlFor="properties.colon: true_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -7639,8 +7639,8 @@ exports[`Render validation.status = success properties.extra: Extra long - value
       htmlFor="properties.extra: Extra long_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -7692,8 +7692,8 @@ exports[`Render validation.status = success properties.extra: Extra long - value
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -7719,8 +7719,8 @@ exports[`Render validation.status = success properties.extra: Extra long with in
       htmlFor="properties.extra: Extra long with inline = true_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -7776,8 +7776,8 @@ exports[`Render validation.status = success properties.extra: Extra long with in
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -7803,8 +7803,8 @@ exports[`Render validation.status = success properties.extra: Extra long with in
       htmlFor="properties.extra: Extra long with inline = true, size = large_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -7860,8 +7860,8 @@ exports[`Render validation.status = success properties.extra: Extra long with in
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -7887,8 +7887,8 @@ exports[`Render validation.status = success properties.extra: Extra long with in
       htmlFor="properties.extra: Extra long with inline = true, size = small_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -7944,8 +7944,8 @@ exports[`Render validation.status = success properties.extra: Extra long with in
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -7972,8 +7972,8 @@ exports[`Render validation.status = success properties.extra: Extra long with in
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -8045,8 +8045,8 @@ exports[`Render validation.status = success properties.extra: Extra text - value
       htmlFor="properties.extra: Extra text_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -8098,8 +8098,8 @@ exports[`Render validation.status = success properties.extra: Extra text - value
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -8121,8 +8121,8 @@ exports[`Render validation.status = success properties.extra: html in extra - va
       htmlFor="properties.extra: html in extra_input"
       title="label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -8174,8 +8174,8 @@ exports[`Render validation.status = success properties.extra: html in extra - va
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -8197,8 +8197,8 @@ exports[`Render validation.status = success properties.extraStyle: border 1px pu
       htmlFor="properties.extraStyle: border 1px purple_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -8250,8 +8250,8 @@ exports[`Render validation.status = success properties.extraStyle: border 1px pu
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid purple\\"}]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -8273,8 +8273,8 @@ exports[`Render validation.status = success properties.feedbackStyle: border 1px
       htmlFor="properties.feedbackStyle: border 1px blue_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -8326,8 +8326,8 @@ exports[`Render validation.status = success properties.feedbackStyle: border 1px
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -8353,8 +8353,8 @@ exports[`Render validation.status = success properties.inline: true - value[0] 1
       htmlFor="properties.inline: true_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -8426,8 +8426,8 @@ exports[`Render validation.status = success properties.span: 2 - value[0] 1`] = 
       htmlFor="properties.span: 2_input"
       title="This is the long label title wrapped by short span"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -8495,8 +8495,8 @@ exports[`Render validation.status = success properties.span: 2 with long work ti
       htmlFor="properties.span: 2 with long work title_input"
       title="Thisisthelonglabeltitlea"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -8564,8 +8564,8 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -8634,8 +8634,8 @@ exports[`Render validation.status = success properties.title long - value[0] 1`]
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -8705,8 +8705,8 @@ exports[`Render validation.status = success properties.title: html in title - va
   html in title
 </span>
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -8775,8 +8775,8 @@ exports[`Render validation.status = success span, align right and long extra for
       title="Lorem
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -8828,8 +8828,8 @@ exports[`Render validation.status = success span, align right and long extra for
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -8852,8 +8852,8 @@ exports[`Render validation.status = success span, align right and long extra for
       title="Lorem
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -8905,8 +8905,8 @@ exports[`Render validation.status = success span, align right and long extra for
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -8929,8 +8929,8 @@ exports[`Render validation.status = success span, align right and long extra for
       title="Lorem
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -8982,8 +8982,8 @@ exports[`Render validation.status = success span, align right and long extra for
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -9006,8 +9006,8 @@ exports[`Render validation.status = success span, align right, long title and lo
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -9059,8 +9059,8 @@ exports[`Render validation.status = success span, align right, long title and lo
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -9083,8 +9083,8 @@ exports[`Render validation.status = success span, align right, long title and lo
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -9136,8 +9136,8 @@ exports[`Render validation.status = success span, align right, long title and lo
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -9160,8 +9160,8 @@ exports[`Render validation.status = success span, align right, long title and lo
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -9213,8 +9213,8 @@ exports[`Render validation.status = success span, align right, long title and lo
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </div>
   </div>
@@ -9236,8 +9236,8 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -9315,8 +9315,8 @@ exports[`Render validation.status = warning inline and long extra default size -
       title="Lorem ipsum dolor sit amet
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -9398,8 +9398,8 @@ exports[`Render validation.status = warning inline and long extra large size - v
       title="Lorem ipsum dolor sit amet
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -9481,8 +9481,8 @@ exports[`Render validation.status = warning inline and long extra small size - v
       title="Lorem ipsum dolor sit amet
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -9559,8 +9559,8 @@ exports[`Render validation.status = warning properties.align: left - value[0] 1`
       htmlFor="properties.align: left_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -9633,8 +9633,8 @@ exports[`Render validation.status = warning properties.align: right - value[0] 1
       htmlFor="properties.align: right_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -9707,8 +9707,8 @@ exports[`Render validation.status = warning properties.colon: false - value[0] 1
       htmlFor="properties.colon: false_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -9781,8 +9781,8 @@ exports[`Render validation.status = warning properties.colon: true - value[0] 1`
       htmlFor="properties.colon: true_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -9915,8 +9915,8 @@ exports[`Render validation.status = warning properties.extra: Extra long - value
       htmlFor="properties.extra: Extra long_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -9993,8 +9993,8 @@ exports[`Render validation.status = warning properties.extra: Extra long with in
       htmlFor="properties.extra: Extra long with inline = true_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -10075,8 +10075,8 @@ exports[`Render validation.status = warning properties.extra: Extra long with in
       htmlFor="properties.extra: Extra long with inline = true, size = large_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -10157,8 +10157,8 @@ exports[`Render validation.status = warning properties.extra: Extra long with in
       htmlFor="properties.extra: Extra long with inline = true, size = small_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -10240,8 +10240,8 @@ exports[`Render validation.status = warning properties.extra: Extra long with in
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -10318,8 +10318,8 @@ exports[`Render validation.status = warning properties.extra: Extra text - value
       htmlFor="properties.extra: Extra text_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -10392,8 +10392,8 @@ exports[`Render validation.status = warning properties.extra: html in extra - va
       htmlFor="properties.extra: html in extra_input"
       title="label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -10466,8 +10466,8 @@ exports[`Render validation.status = warning properties.extraStyle: border 1px pu
       htmlFor="properties.extraStyle: border 1px purple_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -10540,8 +10540,8 @@ exports[`Render validation.status = warning properties.feedbackStyle: border 1px
       htmlFor="properties.feedbackStyle: border 1px blue_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -10618,8 +10618,8 @@ exports[`Render validation.status = warning properties.inline: true - value[0] 1
       htmlFor="properties.inline: true_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -10696,8 +10696,8 @@ exports[`Render validation.status = warning properties.span: 2 - value[0] 1`] = 
       htmlFor="properties.span: 2_input"
       title="This is the long label title wrapped by short span"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -10770,8 +10770,8 @@ exports[`Render validation.status = warning properties.span: 2 with long work ti
       htmlFor="properties.span: 2 with long work title_input"
       title="Thisisthelonglabeltitlea"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -10844,8 +10844,8 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="Label title"
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -10919,8 +10919,8 @@ exports[`Render validation.status = warning properties.title long - value[0] 1`]
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -10995,8 +10995,8 @@ exports[`Render validation.status = warning properties.title: html in title - va
   html in title
 </span>
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -11070,8 +11070,8 @@ exports[`Render validation.status = warning span, align right and long extra for
       title="Lorem
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -11145,8 +11145,8 @@ exports[`Render validation.status = warning span, align right and long extra for
       title="Lorem
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -11220,8 +11220,8 @@ exports[`Render validation.status = warning span, align right and long extra for
       title="Lorem
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -11295,8 +11295,8 @@ exports[`Render validation.status = warning span, align right, long title and lo
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -11370,8 +11370,8 @@ exports[`Render validation.status = warning span, align right, long title and lo
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
@@ -11445,8 +11445,8 @@ exports[`Render validation.status = warning span, align right, long title and lo
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      <div
-        className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+      <span
+        className="{}"
       />
     </label>
   </div>
