@@ -56,11 +56,11 @@ test('_uuid.v3: ["hello", "world"]', () => {
   );
   expect(uuid.v3).toHaveBeenCalled();
 });
-test('_uuid.v3: [["hello"], ["world"]]', () => {
+test('_uuid.v3: {"name":"hello", "namespace":"world"}', () => {
   expect(
     _uuid({
       methodName: 'v3',
-      params: [['hello'], ['world']],
+      params: { name: 'hello', namespace: 'world' },
       location: 'locationId',
     })
   ).toEqual('ABC-v3');
@@ -76,11 +76,11 @@ test('_uuid.v5: ["hello", "world"]', () => {
   );
   expect(uuid.v5).toHaveBeenCalled();
 });
-test('_uuid.v5: [["hello"], ["world"]]', () => {
+test('_uuid.v5: {"name":"hello", "namespace":"world"}', () => {
   expect(
     _uuid({
       methodName: 'v5',
-      params: [1, ['world']],
+      params: { name: 'hello', namespace: 'world' },
       location: 'locationId',
     })
   ).toEqual('ABC-v5');

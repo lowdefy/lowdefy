@@ -123,7 +123,7 @@ _ref:
             - `name: string[]`: An array.
             - `namespace: string[]`: Array[16] - Namespace UUID.
         examples: |
-          ###### Generate a v5 uuid:
+          ###### Generate a version 5 uuid:
           ```yaml
           _uuid.v5:
             name: hello
