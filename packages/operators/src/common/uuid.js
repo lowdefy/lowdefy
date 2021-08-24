@@ -14,10 +14,33 @@
   limitations under the License.
 */
 
-import { v4 as uuidv4 } from 'uuid';
+import { v1, v2, v3, v4, v5 } from 'uuid';
+import { type } from '@lowdefy/helpers';
 
-function _uuid() {
-  return uuidv4();
+function _uuid({ params, location }) {
+  if (type.isNone(params) || params === true) {
+    return v4();
+  }
+  if (params === 'v1') {
+    return v1();
+  }
+  if (params === 'v2') {
+    return v2();
+  }
+  if (params === 'v3') {
+    return v3();
+  }
+  if (params === 'v4') {
+    return v4();
+  }
+  if (params === 'v5') {
+    return v5();
+  }
+  throw new Error(
+    `Operator Error: _uuid must be a one of v1, v2, v3, v4 or true. Received: ${JSON.stringify(
+      params
+    )} at ${location}.`
+  );
 }
 
 export default _uuid;

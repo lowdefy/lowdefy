@@ -14,16 +14,51 @@
   limitations under the License.
 */
 
-import { v4 as uuidv4 } from 'uuid';
-import uuid from '../../src/common/uuid';
+import uuid from 'uuid';
+import _uuid from '../../src/common/uuid';
 
 jest.mock('uuid', () => {
   return {
-    v4: jest.fn(() => 'ABC'),
+    v1: jest.fn(() => 'ABC-v1'),
+    v2: jest.fn(() => 'ABC-v2'),
+    v3: jest.fn(() => 'ABC-v3'),
+    v4: jest.fn(() => 'ABC-v4'),
+    v5: jest.fn(() => 'ABC-v5'),
   };
 });
 
-test('_uuid', () => {
-  expect(uuid({ params: true, location: 'locationId' })).toEqual('ABC');
-  expect(uuidv4).toHaveBeenCalled();
+test('_uuid: true', () => {
+  expect(_uuid({ params: true, location: 'locationId' })).toEqual('ABC-v4');
+  expect(uuid.v4).toHaveBeenCalled();
+});
+test('_uuid: null', () => {
+  expect(_uuid({ params: null, location: 'locationId' })).toEqual('ABC-v4');
+  expect(uuid.v4).toHaveBeenCalled();
+});
+test('_uuid: undefined', () => {
+  expect(_uuid({ params: undefined, location: 'locationId' })).toEqual('ABC-v4');
+  expect(uuid.v4).toHaveBeenCalled();
+});
+test('_uuid: v1', () => {
+  expect(_uuid({ params: 'v1', location: 'locationId' })).toEqual('ABC-v1');
+  expect(uuid.v1).toHaveBeenCalled();
+});
+test('_uuid: v2', () => {
+  expect(_uuid({ params: 'v2', location: 'locationId' })).toEqual('ABC-v2');
+  expect(uuid.v2).toHaveBeenCalled();
+});
+test('_uuid: v3', () => {
+  expect(_uuid({ params: 'v3', location: 'locationId' })).toEqual('ABC-v3');
+  expect(uuid.v3).toHaveBeenCalled();
+});
+test('_uuid: v4', () => {
+  expect(_uuid({ params: 'v4', location: 'locationId' })).toEqual('ABC-v4');
+  expect(uuid.v4).toHaveBeenCalled();
+});
+test('_uuid: v5', () => {
+  expect(_uuid({ params: 'v5', location: 'locationId' })).toEqual('ABC-v5');
+  expect(uuid.v5).toHaveBeenCalled();
+});
+test('_uuid: error', () => {
+  expect(() => _uuid({ params: 'error', location: 'locationId' })).toThrow();
 });
