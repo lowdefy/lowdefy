@@ -20,7 +20,6 @@ import _uuid from '../../src/common/uuid';
 jest.mock('uuid', () => {
   return {
     v1: jest.fn(() => 'ABC-v1'),
-    v2: jest.fn(() => 'ABC-v2'),
     v3: jest.fn(() => 'ABC-v3'),
     v4: jest.fn(() => 'ABC-v4'),
     v5: jest.fn(() => 'ABC-v5'),
@@ -40,23 +39,51 @@ test('_uuid: undefined', () => {
   expect(uuid.v4).toHaveBeenCalled();
 });
 test('_uuid: v1', () => {
-  expect(_uuid({ params: 'v1', location: 'locationId' })).toEqual('ABC-v1');
+  expect(_uuid({ methodName: 'v1', location: 'locationId' })).toEqual('ABC-v1');
   expect(uuid.v1).toHaveBeenCalled();
 });
-test('_uuid: v2', () => {
-  expect(_uuid({ params: 'v2', location: 'locationId' })).toEqual('ABC-v2');
-  expect(uuid.v2).toHaveBeenCalled();
-});
-test('_uuid: v3', () => {
-  expect(_uuid({ params: 'v3', location: 'locationId' })).toEqual('ABC-v3');
-  expect(uuid.v3).toHaveBeenCalled();
-});
 test('_uuid: v4', () => {
-  expect(_uuid({ params: 'v4', location: 'locationId' })).toEqual('ABC-v4');
+  expect(_uuid({ methodName: 'v4', location: 'locationId' })).toEqual('ABC-v4');
   expect(uuid.v4).toHaveBeenCalled();
 });
-test('_uuid: v5', () => {
-  expect(_uuid({ params: 'v5', location: 'locationId' })).toEqual('ABC-v5');
+test('_uuid.v1:', () => {
+  expect(_uuid({ methodName: 'v1', location: 'locationId' })).toEqual('ABC-v1');
+  expect(uuid.v1).toHaveBeenCalled();
+});
+test('_uuid.v3: ["hello", "world"]', () => {
+  expect(_uuid({ methodName: 'v3', params: ['hello', 'world'], location: 'locationId' })).toEqual(
+    'ABC-v3'
+  );
+  expect(uuid.v3).toHaveBeenCalled();
+});
+test('_uuid.v3: [["hello"], ["world"]]', () => {
+  expect(
+    _uuid({
+      methodName: 'v3',
+      params: [['hello'], ['world']],
+      location: 'locationId',
+    })
+  ).toEqual('ABC-v3');
+  expect(uuid.v3).toHaveBeenCalled();
+});
+test('_uuid.v4:', () => {
+  expect(_uuid({ methodName: 'v4', location: 'locationId' })).toEqual('ABC-v4');
+  expect(uuid.v4).toHaveBeenCalled();
+});
+test('_uuid.v5: ["hello", "world"]', () => {
+  expect(_uuid({ methodName: 'v5', params: ['hello', 'world'], location: 'locationId' })).toEqual(
+    'ABC-v5'
+  );
+  expect(uuid.v5).toHaveBeenCalled();
+});
+test('_uuid.v5: [["hello"], ["world"]]', () => {
+  expect(
+    _uuid({
+      methodName: 'v5',
+      params: [1, ['world']],
+      location: 'locationId',
+    })
+  ).toEqual('ABC-v5');
   expect(uuid.v5).toHaveBeenCalled();
 });
 test('_uuid: error', () => {

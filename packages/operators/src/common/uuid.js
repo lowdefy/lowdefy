@@ -14,33 +14,31 @@
   limitations under the License.
 */
 
-import { v1, v2, v3, v4, v5 } from 'uuid';
+import { v1, v3, v4, v5 } from 'uuid';
 import { type } from '@lowdefy/helpers';
+import runClass from '../runClass';
 
-function _uuid({ params, location }) {
-  if (type.isNone(params) || params === true) {
+const meta = {
+  v1: { noArgs: true },
+  v3: { namedArgs: ['name', 'namespace'], validTypes: ['string', 'array'] },
+  v4: { noArgs: true },
+  v5: { namedArgs: ['name', 'namespace'], validTypes: ['string', 'array'] },
+};
+
+const functions = { v1, v3, v4, v5 };
+
+function _uuid({ params, location, methodName }) {
+  if (type.isNone(methodName) && (type.isNone(params) || params === true)) {
     return v4();
   }
-  if (params === 'v1') {
-    return v1();
-  }
-  if (params === 'v2') {
-    return v2();
-  }
-  if (params === 'v3') {
-    return v3();
-  }
-  if (params === 'v4') {
-    return v4();
-  }
-  if (params === 'v5') {
-    return v5();
-  }
-  throw new Error(
-    `Operator Error: _uuid must be a one of v1, v2, v3, v4 or true. Received: ${JSON.stringify(
-      params
-    )} at ${location}.`
-  );
+  return runClass({
+    functions: functions,
+    location,
+    meta,
+    methodName,
+    operator: '_uuid',
+    params,
+  });
 }
 
 export default _uuid;
