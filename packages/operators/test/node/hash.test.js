@@ -233,3 +233,57 @@ test('_hash.sha512 null', () => {
           Received: {\\"_hash.sha512\\":null} at locationId."
   `);
 });
+
+test('_hash.ripemd160 a string', () => {
+  expect(
+    hash({ params: 'A string value', location: 'locationId', methodName: 'ripemd160' })
+  ).toEqual('a6267e14418b2833da3a44ff2513e544e71e1242');
+});
+
+test('_hash.ripemd160 a number', () => {
+  expect(() => hash({ params: 10, location: 'locationId', methodName: 'ripemd160' }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Operator Error: _hash.ripemd160 accepts one of the following types: string.
+          Received: {\\"_hash.ripemd160\\":10} at locationId."
+  `);
+});
+
+test('_hash.ripemd160 a boolean', () => {
+  expect(() => hash({ params: true, location: 'locationId', methodName: 'ripemd160' }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Operator Error: _hash.ripemd160 accepts one of the following types: string.
+          Received: {\\"_hash.ripemd160\\":true} at locationId."
+  `);
+});
+
+test('_hash.ripemd160 a object', () => {
+  expect(() => hash({ params: { a: 1 }, location: 'locationId', methodName: 'ripemd160' }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Operator Error: _hash.ripemd160 accepts one of the following types: string.
+          Received: {\\"_hash.ripemd160\\":{\\"a\\":1}} at locationId."
+  `);
+});
+
+test('_hash.ripemd160 a array', () => {
+  expect(() => hash({ params: ['a', 'b'], location: 'locationId', methodName: 'ripemd160' }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Operator Error: _hash.ripemd160 accepts one of the following types: string.
+          Received: {\\"_hash.ripemd160\\":[\\"a\\",\\"b\\"]} at locationId."
+  `);
+});
+
+test('_hash.ripemd160 undefined', () => {
+  expect(() => hash({ location: 'locationId', methodName: 'ripemd160' }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Operator Error: _hash.ripemd160 accepts one of the following types: string.
+          Received: {\\"_hash.ripemd160\\":undefined} at locationId."
+  `);
+});
+
+test('_hash.ripemd160 null', () => {
+  expect(() => hash({ params: null, location: 'locationId', methodName: 'ripemd160' }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Operator Error: _hash.ripemd160 accepts one of the following types: string.
+          Received: {\\"_hash.ripemd160\\":null} at locationId."
+  `);
+});

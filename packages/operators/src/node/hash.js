@@ -37,13 +37,18 @@ function sha512(data) {
   return hash('sha512', data);
 }
 
-const functions = { md5, sha1, sha256, sha512 };
+function ripemd160(data) {
+  return hash('ripemd160', data);
+}
+
+const functions = { md5, sha1, sha256, sha512, ripemd160 };
 
 const meta = {
   md5: { validTypes: ['string'], singleArg: true },
   sha1: { validTypes: ['string'], singleArg: true },
   sha256: { validTypes: ['string'], singleArg: true },
   sha512: { validTypes: ['string'], singleArg: true },
+  ripemd160: { validTypes: ['string'], singleArg: true },
 };
 
 function _hash({ params, location, methodName }) {

@@ -90,3 +90,20 @@ _ref:
           _hash.sha512: Hello World!
           ```
           Returns: `"861844d6704e8573fec34d967e20bcfef3d424cf48be04e6dc08f2bd58c729743371015ead891cc3cf1c9d34b49264b510751b1ff9e537937bc46b5d6ff4ecc8"`.
+
+      - name: ripemd160
+        types: |
+          ```
+          (value: string): string
+          ```
+        description: |
+          The `_hash.ripemd160` method generates the [RIPEMD-160](https://en.wikipedia.org/wiki/RIPEMD160) hash of the input value.
+        arguments: |
+          ###### string
+          The string to hash.
+        examples: |
+          ###### Hash a string:
+          ```yaml
+          _hash.ripemd160: Hello World!
+          ```
+          Returns: `"8476ee4631b9b30ac2754b0ee0c47e161d3f724c"`.
