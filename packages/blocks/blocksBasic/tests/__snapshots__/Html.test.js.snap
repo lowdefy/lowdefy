@@ -1,16 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default - value[0] 1`] = `
-<div
-  className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-  data-testid="default"
-  id="default"
-/>
-`;
+exports[`Render default - value[0] 1`] = `""`;
 
 exports[`Render properties.html - value[0] 1`] = `
 <div
-  className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  className="{}"
   data-testid="properties.html"
   id="properties.html"
 />
@@ -18,7 +12,7 @@ exports[`Render properties.html - value[0] 1`] = `
 
 exports[`Render properties.html-bad-code - value[0] 1`] = `
 <div
-  className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  className="{}"
   data-testid="properties.html-bad-code"
   id="properties.html-bad-code"
 />
@@ -26,7 +20,7 @@ exports[`Render properties.html-bad-code - value[0] 1`] = `
 
 exports[`Render properties.html-iframe - value[0] 1`] = `
 <div
-  className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  className="{}"
   data-testid="properties.html-iframe"
   id="properties.html-iframe"
 />
@@ -34,7 +28,7 @@ exports[`Render properties.html-iframe - value[0] 1`] = `
 
 exports[`Render properties.html-styled - value[0] 1`] = `
 <div
-  className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},{\\"background\\":\\"yellow\\",\\"padding\\":10}]}"
+  className="{\\"style\\":{\\"background\\":\\"yellow\\",\\"padding\\":10}}"
   data-testid="properties.html-styled"
   id="properties.html-styled"
 />
@@ -42,7 +36,7 @@ exports[`Render properties.html-styled - value[0] 1`] = `
 
 exports[`Render properties.style - value[0] 1`] = `
 <div
-  className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},{\\"background\\":\\"yellow\\",\\"padding\\":10}]}"
+  className="{\\"style\\":{\\"background\\":\\"yellow\\",\\"padding\\":10}}"
   data-testid="properties.style"
   id="properties.style"
 />
