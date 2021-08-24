@@ -24,16 +24,32 @@ _ref:
       (void): string
       ```
     description: |
-      The `_uuid` operator creates a version 4 [UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier). A UUID is a random identifier that is, for all practical purposes, unique. It looks like:
+      The `_uuid` operator creates [UUIDs](https://en.wikipedia.org/wiki/Universally_unique_identifier). A UUID is a random identifier that is, for all practical purposes, unique. It looks like:
 
       ```
       123e4567-e89b-12d3-a456-426614174000
       ```
     arguments: |
-      The `_uuid` operator does not take any arguments.
+      ###### string
+      If the `_uuid` operator is called with a string argument, and can be one of the following:
+        - `_uuid: v1`: A version 1 UUID.
+        - `_uuid: v2`: A version 2 UUID.
+        - `_uuid: v3`: A version 3 UUID.
+        - `_uuid: v4`: A version 4 UUID.
+        - `_uuid: v5`: A version 5 UUID.
+
+      ###### default
+      `_uuid: true`, `_uuid: null` or `_uuid: undefined` returns a version 4 UUID.
+
     examples: |
-      ###### Generate a uuid:
+      ###### Generate a v4 uuid:
       ```yaml
       _uuid: null
       ```
       Returns: A version 4 UUID.
+
+      ###### Generate a v5 uuid:
+      ```yaml
+      _uuid: v5
+      ```
+      Returns: A version 5 UUID.
