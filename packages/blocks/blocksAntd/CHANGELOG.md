@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.20.4](https://github.com/lowdefy/lowdefy/compare/v3.20.3...v3.20.4) (2021-08-21)
+
+
+### Bug Fixes
+
+* **blocksAntd:** Fix Card block title area. ([475aef6](https://github.com/lowdefy/lowdefy/commit/475aef6a817068ee6734cba32b8b684c459e2a7c))
+* **blocksAntd:** Fix Card title if no title is specified. ([60074f9](https://github.com/lowdefy/lowdefy/commit/60074f991d5893929cbf21fabe4b428e7eb4dc43))
+* **blocksAntd:** Update Card block snapshot tests. ([4c67f41](https://github.com/lowdefy/lowdefy/commit/4c67f41f4299c107257efa1f7a34bc163f78c88f))
+* **blocksAntd:** Update schema for Descriptions. ([50bf48c](https://github.com/lowdefy/lowdefy/commit/50bf48c6606ad327c989b34d58f0404406cbf2a3))
+
+
+
+
+
 ## [3.20.3](https://github.com/lowdefy/lowdefy/compare/v3.20.1...v3.20.3) (2021-08-20)
 
 **Note:** Version bump only for package @lowdefy/blocks-antd
