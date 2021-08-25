@@ -54,9 +54,6 @@ _ref:
           ```yaml
           _uuid.v1: null
           ```
-          ```yaml
-          _uuid: v1
-          ```
           Returns: A version 1 UUID.
       - name: v3
         types: |
@@ -79,7 +76,6 @@ _ref:
             namespace: world
           ```
           Returns: A version 3 UUID.
-
       - name: v4
         types: |
           ```
@@ -93,9 +89,6 @@ _ref:
           ###### Generate a version 4 UUID:
           ```yaml
           _uuid.v4: null
-          ```
-          ```yaml
-          _uuid: v4
           ```
           Returns: A version 4 UUID.
       - name: v5
