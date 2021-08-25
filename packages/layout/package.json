@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/layout",
-  "version": "3.20.3",
+  "version": "3.20.4",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -37,8 +37,8 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/block-tools": "3.20.3",
-    "@lowdefy/helpers": "3.20.3",
+    "@lowdefy/block-tools": "3.20.4",
+    "@lowdefy/helpers": "3.20.4",
     "antd": "4.4.2",
     "react": "17.0.2",
     "react-dom": "17.0.2"
