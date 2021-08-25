@@ -16,7 +16,7 @@
 
 import React, { useEffect, useState } from 'react';
 
-const OnEvents = ({ asyncEventName, context, eventName, triggerEvent, children }) => {
+const MountEvents = ({ asyncEventName, context, eventName, triggerEvent, children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   useEffect(() => {
@@ -45,4 +45,4 @@ const OnEvents = ({ asyncEventName, context, eventName, triggerEvent, children }
   return <>{children(context)}</>;
 };
 
-export default OnEvents;
+export default MountEvents;

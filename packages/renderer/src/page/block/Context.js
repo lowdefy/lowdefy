@@ -17,7 +17,7 @@
 import React, { useEffect, useState } from 'react';
 import getContext from '@lowdefy/engine';
 
-import OnEvents from './OnEvents';
+import MountEvents from './MountEvents';
 import LoadingBlock from './LoadingBlock';
 
 const Context = ({ block, children, contextId, lowdefy }) => {
@@ -51,7 +51,7 @@ const Context = ({ block, children, contextId, lowdefy }) => {
   if (error) throw error;
 
   return (
-    <OnEvents
+    <MountEvents
       asyncEventName="onEnterAsync"
       context={context}
       eventName="onEnter"
@@ -60,7 +60,7 @@ const Context = ({ block, children, contextId, lowdefy }) => {
       }
     >
       {() => children(context)}
-    </OnEvents>
+    </MountEvents>
   );
 };
 

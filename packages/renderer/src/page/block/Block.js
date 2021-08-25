@@ -21,7 +21,7 @@ import { ErrorBoundary } from '@lowdefy/block-tools';
 import CategorySwitch from './CategorySwitch';
 import LoadBlock from './LoadBlock';
 import LoadingBlock from './LoadingBlock';
-import OnEvents from './OnEvents';
+import MountEvents from './MountEvents';
 
 const Block = ({ block, Blocks, context, isRoot, lowdefy }) => {
   const [updates, setUpdate] = useState(0);
@@ -35,7 +35,7 @@ const Block = ({ block, Blocks, context, isRoot, lowdefy }) => {
       >
         <LoadBlock meta={block.meta}>
           {(Comp) => (
-            <OnEvents
+            <MountEvents
               asyncEventName="onMountAsync"
               context={context}
               eventName="onMount"
@@ -59,7 +59,7 @@ const Block = ({ block, Blocks, context, isRoot, lowdefy }) => {
                   />
                 );
               }}
-            </OnEvents>
+            </MountEvents>
           )}
         </LoadBlock>
       </Suspense>
