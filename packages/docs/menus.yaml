@@ -625,6 +625,9 @@
         - id: _gte
           type: MenuLink
           pageId: _gte
+        - id: _hash
+          type: MenuLink
+          pageId: _hash
         - id: _if
           type: MenuLink
           pageId: _if

@@ -169,6 +169,7 @@
 - _ref: operators/_global.yaml
 - _ref: operators/_gt.yaml
 - _ref: operators/_gte.yaml
+- _ref: operators/_hash.yaml
 - _ref: operators/_if.yaml
 - _ref: operators/_if_none.yaml
 - _ref: operators/_index.yaml
