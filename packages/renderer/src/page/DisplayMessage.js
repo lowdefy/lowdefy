@@ -21,7 +21,7 @@ import { ErrorBoundary, makeCssClass } from '@lowdefy/block-tools';
 
 import LoadBlock from './block/LoadBlock';
 
-const Block = ({ methods }) => {
+const DisplayMessage = ({ methods }) => {
   return (
     <ErrorBoundary>
       <Suspense fallback={''}>
@@ -34,23 +34,27 @@ const Block = ({ methods }) => {
               remoteEntryUrl: `https://blocks-cdn.lowdefy.com/v${packageJson.version}/blocks-antd/remoteEntry.js`,
             },
           }}
-          Loading={''}
-          render={(Comp) => (
-            <Comp
-              blockId="__display_message"
-              key="__display_message"
-              methods={{
-                makeCssClass,
-                registerMethod: methods.registerMethod,
-                triggerEvent: () => undefined,
-              }}
-              properties={{}}
-            />
-          )}
-        />
+        >
+          {(Comp) =>
+            Comp === false ? (
+              ''
+            ) : (
+              <Comp
+                blockId="__display_message"
+                key="__display_message"
+                methods={{
+                  makeCssClass,
+                  registerMethod: methods.registerMethod,
+                  triggerEvent: () => undefined,
+                }}
+                properties={{}}
+              />
+            )
+          }
+        </LoadBlock>
       </Suspense>
     </ErrorBoundary>
   );
 };
 
-export default Block;
+export default DisplayMessage;

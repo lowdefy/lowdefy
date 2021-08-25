@@ -66,7 +66,7 @@ function getServer({
         '<!-- __LOWDEFY_APP_BODY_HTML__ -->',
         get(appConfig, 'html.appendBody', { default: '' })
       );
-      indexHtml = indexHtml.replaceAll('__LOWDEFY_SERVER_BASE_PATH__', serverBasePath);
+      indexHtml = indexHtml.replace(/__LOWDEFY_SERVER_BASE_PATH__/g, serverBasePath);
     }
     res.send(indexHtml);
   };

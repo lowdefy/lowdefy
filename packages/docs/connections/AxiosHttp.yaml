@@ -85,6 +85,45 @@ _ref:
 
             Properties for a AxiosHttp can be set on either the connection, the request, or both. However, both a connection and request need to be defined.
 
+            ###### A basic full example requesting data from https://jsonplaceholder.typicode.com
+
+            ```yaml
+            lowdefy: 3.20.4
+            name: Lowdefy starter
+            connections:
+              - id: my_api
+                type: AxiosHttp
+                properties:
+                  baseURL: https://jsonplaceholder.typicode.com
+            pages:
+              - id: welcome
+                type: PageHeaderMenu
+                requests:
+                  - id: get_posts
+                    type: AxiosHttp
+                    connectionId: my_api
+                    properties:
+                      url: /posts
+                events:
+                  onEnter:
+                    - id: fetch_get_posts
+                      type: Request
+                      params: get_posts
+                blocks:
+                  - id: rest_data
+                    type: Markdown
+                    properties:
+                      content:
+                        _string.concat:
+                          - |
+                            ```yaml
+                          - _yaml.stringify:
+                              - _log:
+                                  _request: get_posts
+                          - |
+                            ```
+            ```
+
             ###### Using the connection to set baseURL and authorization, and handle specific requests as requests.
             ```yaml
             connections:
