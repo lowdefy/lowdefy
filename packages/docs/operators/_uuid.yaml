@@ -59,7 +59,7 @@ _ref:
         types: |
           ```
           ({name: string, namespace: string}): string
-          ({name: string[], namespace: string[]}): string
+          ([name: string, namespace: string]): string
           ```
         description: |
           Create a version 3 (namespace w/ MD5) UUID.
@@ -95,7 +95,7 @@ _ref:
         types: |
           ```
           ({name: string, namespace: string}): string
-          ({name: string[], namespace: string[]}): string
+          ([name: string, namespace: string]): string
           ```
         description: |
           Create a version 5 (namespace w/ SHA-1) UUID.
