@@ -67,18 +67,12 @@ _ref:
         description: |
           Create a version 3 (namespace w/ MD5) UUID.
         arguments: |
-          ###### string:
+          ###### object:
           If the `_uuid` operator is called with arguments, it can be one of the following:
-            - `name: string`: A string.
-            - `namespace: string`: Namespace UUID.
-
-          ###### string[]:
-          If the `_uuid` operator is called with arguments, it can be one of the following:
-            - `name: string[]`: An array.
-            - `namespace: string[]`: Array[16] - Namespace UUID.
-
+            - `name: string | string[]`: A string or an array.
+            - `namespace: string | string[]`: A string or an Array[16] - Namespace UUID.
         examples: |
-          ###### Generate a v3 uuid:
+          ###### Generate a version 3 UUID:
           ```yaml
           _uuid.v3:
             name: hello
@@ -113,17 +107,12 @@ _ref:
         description: |
           Create a version 5 (namespace w/ SHA-1) UUID.
         arguments: |
-          ###### string:
+          ###### object:
           If the `_uuid` operator is called with arguments, it can be one of the following:
-            - `name: string`: A string.
-            - `namespace: string`: Namespace UUID.
-
-          ###### string[]:
-          If the `_uuid` operator is called with arguments, it can be one of the following:
-            - `name: string[]`: An array.
-            - `namespace: string[]`: Array[16] - Namespace UUID.
+            - `name: string | string[]`: A string or an array.
+            - `namespace: string | string[]`: A string or an Array[16] - Namespace UUID.
         examples: |
-          ###### Generate a version 5 uuid:
+          ###### Generate a version 5 UUID:
           ```yaml
           _uuid.v5:
             name: hello
