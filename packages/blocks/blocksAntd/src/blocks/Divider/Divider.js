@@ -27,7 +27,7 @@ const DividerBlock = ({ blockId, properties, methods }) => (
     type={properties.type}
     plain={properties.plain}
   >
-    <RenderHtml html={properties.title} methods={methods} />
+    {properties.title && <RenderHtml html={properties.title} methods={methods} />}
   </Divider>
 );
 

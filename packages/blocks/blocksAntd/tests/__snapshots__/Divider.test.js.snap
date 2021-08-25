@@ -2,30 +2,18 @@
 
 exports[`Render default - value[0] 1`] = `
 <div
-  className="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-center"
+  className="ant-divider ant-divider-horizontal"
   id="default"
   role="separator"
->
-  <span
-    className="ant-divider-inner-text"
-  >
-    
-  </span>
-</div>
+/>
 `;
 
 exports[`Render properties.dashed: true - value[0] 1`] = `
 <div
-  className="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-center ant-divider-dashed"
+  className="ant-divider ant-divider-horizontal ant-divider-dashed"
   id="properties.dashed: true"
   role="separator"
->
-  <span
-    className="ant-divider-inner-text"
-  >
-    
-  </span>
-</div>
+/>
 `;
 
 exports[`Render properties.orientation: center - value[0] 1`] = `
