@@ -38,14 +38,6 @@ test('_uuid: undefined', () => {
   expect(_uuid({ params: undefined, location: 'locationId' })).toEqual('ABC-v4');
   expect(uuid.v4).toHaveBeenCalled();
 });
-test('_uuid: v1', () => {
-  expect(_uuid({ methodName: 'v1', location: 'locationId' })).toEqual('ABC-v1');
-  expect(uuid.v1).toHaveBeenCalled();
-});
-test('_uuid: v4', () => {
-  expect(_uuid({ methodName: 'v4', location: 'locationId' })).toEqual('ABC-v4');
-  expect(uuid.v4).toHaveBeenCalled();
-});
 test('_uuid.v1', () => {
   expect(_uuid({ methodName: 'v1', location: 'locationId' })).toEqual('ABC-v1');
   expect(uuid.v1).toHaveBeenCalled();
