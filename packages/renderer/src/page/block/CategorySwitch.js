@@ -49,7 +49,8 @@ const CategorySwitch = ({ block, Blocks, Component, context, isRoot, lowdefy }) 
             blockId: block.blockId,
           })}
           lowdefy={lowdefy}
-          render={(context) => (
+        >
+          {(context) => (
             <Container
               block={context.RootBlocks.areas.root.blocks[0]}
               Blocks={context.RootBlocks}
@@ -58,7 +59,7 @@ const CategorySwitch = ({ block, Blocks, Component, context, isRoot, lowdefy }) 
               lowdefy={lowdefy}
             />
           )}
-        />
+        </Context>
       );
     case 'list':
       return (
