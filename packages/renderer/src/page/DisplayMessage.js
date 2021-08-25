@@ -21,7 +21,7 @@ import { ErrorBoundary, makeCssClass } from '@lowdefy/block-tools';
 
 import LoadBlock from './block/LoadBlock';
 
-const Block = ({ methods }) => {
+const DisplayMessage = ({ methods }) => {
   return (
     <ErrorBoundary>
       <Suspense fallback={''}>
@@ -57,4 +57,4 @@ const Block = ({ methods }) => {
   );
 };
 
-export default Block;
+export default DisplayMessage;

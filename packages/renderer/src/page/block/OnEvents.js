@@ -16,7 +16,7 @@
 
 import React, { useEffect, useState } from 'react';
 
-const OnEnter = ({ asyncEventName, context, eventName, triggerEvent, children }) => {
+const OnEvents = ({ asyncEventName, context, eventName, triggerEvent, children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   useEffect(() => {
@@ -45,4 +45,4 @@ const OnEnter = ({ asyncEventName, context, eventName, triggerEvent, children })
   return <>{children(context)}</>;
 };
 
-export default OnEnter;
+export default OnEvents;
