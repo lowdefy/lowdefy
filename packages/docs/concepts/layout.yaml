@@ -1405,6 +1405,92 @@ _ref:
                               html: |
                                 <div style="background: #69c0ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 15</div>
 
+      - id: markdown_responsive_setup
+        type: Markdown
+        style:
+          marginTop: 16px
+        properties:
+          content: |
+            # Responsive Setup
+
+            All the settings defined in the Block layout properties can be defined for the various responsive breakpoints, eg: `{ xs: ... sm: ... md: ... lg: ... xl: ... xxl: ... }`
+
+            The responsive breakpoints are:
+
+              - `xs`: width less than 576px
+              - `sm`: width between 576px and 768px
+              - `md`: width between 768px and 992px
+              - `lg`: width between 992px and 1200px
+              - `xl`: width between 1200px and 1600px
+              - `xxl`: width greater than 1600px
+
+            The properties that can be set in `layout` for each breakpoint are:
+
+              - `align`: _Enum_
+              - `flex`: _String_
+              - `grow`: _Number_
+              - `order`: _Number_
+              - `offset`: _Number_
+              - `pull`: _Number_
+              - `push`: _Number_
+              - `shrink`: _Number_
+              - `size`: _String_ | _Number_
+              - `span`: _Number_
+
+            The responsive breakpoints can also be used in `style` when defining the css properties to be used in a block.
+
+            ### Responsive setup examples:
+
+      - id: responsive_setup_usage_examples_collapse
+        type: Collapse
+        properties:
+          panels:
+            - title: Layout example
+              key: layout
+            - title: Style example
+              key: style
+        areas:
+          layout:
+            blocks:
+              - id: markdown_span_layout_example
+                type: Markdown
+                style:
+                  marginTop: 16px
+                properties:
+                  content: |
+                    ```yaml
+                    - id: button
+                      type: Button
+                      layout:
+                        xs:
+                          span: 15
+                        sm:
+                          span: 10
+                        md:
+                          span: 5
+                      properties:
+                        title: A Button
+          style:
+            blocks:
+              - id: markdown_align_style_example
+                type: Markdown
+                style:
+                  marginTop: 16px
+                properties:
+                  content: |
+                    ```yaml
+                    - id: title
+                      type: Title
+                      style:
+                        lg:
+                          textAlign: left
+                        md:
+                          textAlign: center
+                        sm:
+                          textAlign: right
+                      properties:
+                        content: A Title
+
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
