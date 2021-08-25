@@ -1470,6 +1470,7 @@ _ref:
                           span: 5
                       properties:
                         title: A Button
+                    ```
           style:
             blocks:
               - id: markdown_align_style_example
@@ -1490,6 +1491,7 @@ _ref:
                           textAlign: right
                       properties:
                         content: A Title
+                    ```
 
       - _ref:
           path: templates/navigation_buttons.yaml
