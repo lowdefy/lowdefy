@@ -4,16 +4,7 @@ exports[`Mock render - default - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "children": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "children": undefined,
       "dashed": undefined,
       "id": "default",
       "orientation": undefined,
@@ -30,16 +21,7 @@ exports[`Mock render - properties.dashed: true - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "children": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "children": undefined,
       "dashed": true,
       "id": "properties.dashed: true",
       "orientation": undefined,
