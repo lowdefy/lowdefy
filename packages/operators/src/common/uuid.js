@@ -20,9 +20,9 @@ import runClass from '../runClass';
 
 const meta = {
   v1: { noArgs: true },
-  v3: { namedArgs: ['name', 'namespace'], validTypes: ['object'] },
+  v3: { namedArgs: ['name', 'namespace'], validTypes: ['array', 'object'] },
   v4: { noArgs: true },
-  v5: { namedArgs: ['name', 'namespace'], validTypes: ['object'] },
+  v5: { namedArgs: ['name', 'namespace'], validTypes: ['array', 'object'] },
 };
 
 const functions = { v1, v3, v4, v5 };
