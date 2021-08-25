@@ -36,7 +36,7 @@ _ref:
 
             ###### List specific public pages:
             ```yaml
-            lowdefy: 3.20.4
+            lowdefy: 3.21.0
             config:
               auth:
                 pages:
@@ -48,7 +48,7 @@ _ref:
             ````
             ###### List specific protected pages:
             ```yaml
-            lowdefy: 3.20.4
+            lowdefy: 3.21.0
             config:
               auth:
                 pages:

@@ -10,9 +10,7 @@ exports[`Render default - value[0] 1`] = `
     }
   }
 >
-  <div
-    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
-  />
+  
 </div>
 `;
 
@@ -27,8 +25,8 @@ exports[`Render properties.code: true - value[0] 1`] = `
   }
 >
   <code>
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </code>
 </div>
@@ -44,8 +42,8 @@ exports[`Render properties.content - value[0] 1`] = `
     }
   }
 >
-  <div
-    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  <span
+    className="{}"
   />
 </div>
 `;
@@ -60,8 +58,8 @@ exports[`Render properties.content short - value[0] 1`] = `
     }
   }
 >
-  <div
-    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  <span
+    className="{}"
   />
 </div>
 `;
@@ -76,8 +74,8 @@ exports[`Render properties.copyable: icon - value[0] 1`] = `
     }
   }
 >
-  <div
-    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  <span
+    className="{}"
   />
   <div
     aria-label="Copy"
@@ -135,8 +133,8 @@ exports[`Render properties.copyable: icon: [] - value[0] 1`] = `
     }
   }
 >
-  <div
-    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  <span
+    className="{}"
   />
   <div
     aria-label="Copy"
@@ -216,8 +214,8 @@ exports[`Render properties.copyable: text: one - value[0] 1`] = `
     }
   }
 >
-  <div
-    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  <span
+    className="{}"
   />
   <div
     aria-label="Copy"
@@ -272,8 +270,8 @@ exports[`Render properties.copyable: tooltips: [] - value[0] 1`] = `
     }
   }
 >
-  <div
-    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  <span
+    className="{}"
   />
   <div
     aria-label="Click to copy"
@@ -328,8 +326,8 @@ exports[`Render properties.copyable: true - value[0] 1`] = `
     }
   }
 >
-  <div
-    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  <span
+    className="{}"
   />
   <div
     aria-label="Copy"
@@ -385,8 +383,8 @@ exports[`Render properties.delete: true - value[0] 1`] = `
   }
 >
   <del>
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </del>
 </div>
@@ -402,8 +400,8 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
     }
   }
 >
-  <div
-    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  <span
+    className="{}"
   />
 </div>
 `;
@@ -418,8 +416,8 @@ exports[`Render properties.ellipsis: expandable, rows - value[0] 1`] = `
     }
   }
 >
-  <div
-    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  <span
+    className="{}"
   />
 </div>
 `;
@@ -434,8 +432,8 @@ exports[`Render properties.ellipsis: rows - value[0] 1`] = `
     }
   }
 >
-  <div
-    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  <span
+    className="{}"
   />
 </div>
 `;
@@ -450,8 +448,8 @@ exports[`Render properties.ellipsis: rows, suffix - value[0] 1`] = `
     }
   }
 >
-  <div
-    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  <span
+    className="{}"
   />
   and other
 </div>
@@ -467,8 +465,8 @@ exports[`Render properties.ellipsis: true - value[0] 1`] = `
     }
   }
 >
-  <div
-    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  <span
+    className="{}"
   />
 </div>
 `;
@@ -484,8 +482,8 @@ exports[`Render properties.mark: true - value[0] 1`] = `
   }
 >
   <mark>
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </mark>
 </div>
@@ -502,8 +500,8 @@ exports[`Render properties.strong: true - value[0] 1`] = `
   }
 >
   <strong>
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </strong>
 </div>
@@ -519,8 +517,8 @@ exports[`Render properties.type: danger - value[0] 1`] = `
     }
   }
 >
-  <div
-    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  <span
+    className="{}"
   />
 </div>
 `;
@@ -535,8 +533,8 @@ exports[`Render properties.type: secondary - value[0] 1`] = `
     }
   }
 >
-  <div
-    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  <span
+    className="{}"
   />
 </div>
 `;
@@ -551,8 +549,8 @@ exports[`Render properties.type: warning - value[0] 1`] = `
     }
   }
 >
-  <div
-    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  <span
+    className="{}"
   />
 </div>
 `;
@@ -568,8 +566,8 @@ exports[`Render properties.underline: true - value[0] 1`] = `
   }
 >
   <u>
-    <div
-      className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+    <span
+      className="{}"
     />
   </u>
 </div>
@@ -585,8 +583,8 @@ exports[`Render with html content - value[0] 1`] = `
     }
   }
 >
-  <div
-    className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+  <span
+    className="{}"
   />
 </div>
 `;

@@ -57,11 +57,11 @@ test('update on properties.html change', () => {
   );
   const wrapper = mount(<Shell properties={config.properties} />);
   expect(wrapper.html()).toMatchInlineSnapshot(
-    `"<div id=\\"update\\" data-testid=\\"update\\" class=\\"{&quot;style&quot;:[{&quot;display&quot;:&quot;inline-block&quot;},null]}\\"><div>one</div></div>"`
+    `"<div id=\\"update\\" data-testid=\\"update\\" class=\\"{}\\"><div>one</div></div>"`
   );
   wrapper.setProps({ properties: { html: '<div>two</div>' } });
   wrapper.update();
   expect(wrapper.html()).toMatchInlineSnapshot(
-    `"<div id=\\"update\\" data-testid=\\"update\\" class=\\"{&quot;style&quot;:[{&quot;display&quot;:&quot;inline-block&quot;},null]}\\"><div>two</div></div>"`
+    `"<div id=\\"update\\" data-testid=\\"update\\" class=\\"{}\\"><div>two</div></div>"`
   );
 });

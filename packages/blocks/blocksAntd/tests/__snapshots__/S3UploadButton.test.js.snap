@@ -59,8 +59,8 @@ exports[`Render default - value[0] 1`] = `
             />
           </svg>
         </span>
-        <div
-          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        <span
+          className="{}"
         />
       </button>
     </span>
@@ -130,8 +130,8 @@ exports[`Render properties.accept - value[0] 1`] = `
             />
           </svg>
         </span>
-        <div
-          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        <span
+          className="{}"
         />
       </button>
     </span>
@@ -201,8 +201,8 @@ exports[`Render properties.button - value[0] 1`] = `
             />
           </svg>
         </span>
-        <div
-          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        <span
+          className="{}"
         />
       </button>
     </span>
@@ -267,8 +267,8 @@ exports[`Render properties.disabled - value[0] 1`] = `
             />
           </svg>
         </span>
-        <div
-          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        <span
+          className="{}"
         />
       </button>
     </span>
@@ -338,8 +338,8 @@ exports[`Render properties.showUploadList - value[0] 1`] = `
             />
           </svg>
         </span>
-        <div
-          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        <span
+          className="{}"
         />
       </button>
     </span>
@@ -409,8 +409,8 @@ exports[`Render properties.singleFile - value[0] 1`] = `
             />
           </svg>
         </span>
-        <div
-          className="{\\"style\\":[{\\"display\\":\\"inline-block\\"},null]}"
+        <span
+          className="{}"
         />
       </button>
     </span>

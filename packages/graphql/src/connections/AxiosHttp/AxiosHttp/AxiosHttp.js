@@ -14,6 +14,9 @@
   limitations under the License.
 */
 
+import http from 'http';
+import https from 'https';
+
 import axios from 'axios';
 import { mergeObjects } from '@lowdefy/helpers';
 
@@ -22,6 +25,12 @@ import schema from '../AxiosHttpSchema.json';
 async function axiosHTTP({ request, connection }) {
   try {
     const config = mergeObjects([connection, request]);
+    if (config.httpAgentOptions) {
+      config.httpAgent = new http.Agent(config.httpAgentOptions);
+    }
+    if (config.httpsAgentOptions) {
+      config.httpsAgent = new https.Agent(config.httpsAgentOptions);
+    }
     const res = await axios(config);
     const { status, statusText, headers, method, path, data } = res;
     return { status, statusText, headers, method, path, data };

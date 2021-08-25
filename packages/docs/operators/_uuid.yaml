@@ -19,22 +19,96 @@ _ref:
     pageId: _uuid
     pageTitle: _uuid
     filePath: operators/_uuid.yaml
-    env: Server Only
-    types: |
-      ```
-      (void): string
-      ```
     description: |
-      The `_uuid` operator creates a version 4 [UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier). A UUID is a random identifier that is, for all practical purposes, unique. It looks like:
+      The `_uuid` operator creates [UUIDs](https://en.wikipedia.org/wiki/Universally_unique_identifier). A UUID is a random identifier that is, for all practical purposes, unique. It looks like:
 
       ```
       123e4567-e89b-12d3-a456-426614174000
       ```
+    types: |
+      ```
+      (void): string
+      ```
     arguments: |
-      The `_uuid` operator does not take any arguments.
+      ###### default:
+      `_uuid: true`, `_uuid: null` or `_uuid: undefined` returns a version 4 UUID.
+
     examples: |
-      ###### Generate a uuid:
+      ###### Generate a v4 uuid:
       ```yaml
       _uuid: null
       ```
       Returns: A version 4 UUID.
+    methods:
+      - name: v1
+        types: |
+          ```
+          (void): string
+          ```
+        description: |
+          Create a version 1 (timestamp) UUID.
+        arguments: |
+          The `_uuid.v1` method does not take any arguments.
+        examples: |
+          ###### Generate a version 1 UUID:
+          ```yaml
+          _uuid.v1: null
+          ```
+          Returns: A version 1 UUID.
+      - name: v3
+        types: |
+          ```
+          ({name: string | string[], namespace: string | string[]}): string
+          ([name: string | string[], namespace: string | string[]]): string
+          ```
+        description: |
+          Create a version 3 (namespace w/ MD5) UUID.
+        arguments: |
+          ###### object:
+          If the `_uuid` operator is called with arguments, it can be one of the following:
+            - `name: string | string[]`: A string or an array.
+            - `namespace: string | string[]`: A string or an Array[16] - Namespace UUID.
+        examples: |
+          ###### Generate a version 3 UUID:
+          ```yaml
+          _uuid.v3:
+            name: hello
+            namespace: world
+          ```
+          Returns: A version 3 UUID.
+      - name: v4
+        types: |
+          ```
+          (void): string
+          ```
+        description: |
+          Create a version 4 (random) UUID.
+        arguments: |
+          The `_uuid.v4` method does not take any arguments.
+        examples: |
+          ###### Generate a version 4 UUID:
+          ```yaml
+          _uuid.v4: null
+          ```
+          Returns: A version 4 UUID.
+      - name: v5
+        types: |
+          ```
+          ({name: string | string[], namespace: string | string[]}): string
+          ([name: string | string[], namespace: string | string[]]): string
+          ```
+        description: |
+          Create a version 5 (namespace w/ SHA-1) UUID.
+        arguments: |
+          ###### object:
+          If the `_uuid` operator is called with arguments, it can be one of the following:
+            - `name: string | string[]`: A string or an array.
+            - `namespace: string | string[]`: A string or an Array[16] - Namespace UUID.
+        examples: |
+          ###### Generate a version 5 UUID:
+          ```yaml
+          _uuid.v5:
+            name: hello
+            namespace: world
+          ```
+          Returns: A version 5 UUID.

@@ -3,6 +3,75 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.21.0](https://github.com/lowdefy/lowdefy/compare/v3.20.4...v3.21.0) (2021-08-25)
+
+## Changes
+
+#### Actions
+
+- Add onMount and onMountAsync actions for all blocks.
+- Add debounce to the build schema.
+
+#### Blocks
+
+- Divider not to render empty title.
+- RenderHtml to return span by default.
+
+#### Renderer
+
+- Refactor renderer to work with `props.children` instead of a render function.
+
+#### Connections
+
+- Add https agent options to AxiosHttp connection.
+
+#### Docs
+
+- Add basic full example for AxiosHttp.
+
+#### Operators
+
+- Add `_hash` operator.
+- Add \_uuid v1, v3, v4, and v5 options.
+
+#### Servers
+
+- Fix replaceAll not a function.
+
+## Commits
+
+### Bug Fixes
+
+- **blocksAntd:** Divider not to render empty title, closes [#790](https://github.com/lowdefy/lowdefy/issues/790) ([790fb89](https://github.com/lowdefy/lowdefy/commit/790fb89522538baccb8617d929dc7e3bcbe2e7fb))
+- **blocksBasic:** Html test change to new RenderHtml. ([e43617a](https://github.com/lowdefy/lowdefy/commit/e43617a47a04b1e7d9297379207d6455bf66a453))
+- **blocksBasic:** Test change to new RenderHtml. ([ee9e3f0](https://github.com/lowdefy/lowdefy/commit/ee9e3f0d6150fdcd5ea42d0cfc1c0b6be8cc43a9))
+- **blocksColorSelectors:** Update tests. ([dcbbf0b](https://github.com/lowdefy/lowdefy/commit/dcbbf0b25db1a88d19f4f7785a60d5e56d7355d8))
+- **blockTools:** RenderHtml to only update ref after render. ([9351255](https://github.com/lowdefy/lowdefy/commit/9351255d3a05d3cbfb0f1241b714feb8960878df))
+- **blockTools:** RenderHtml to return span by default, closes [#775](https://github.com/lowdefy/lowdefy/issues/775) [#777](https://github.com/lowdefy/lowdefy/issues/777) ([abbd823](https://github.com/lowdefy/lowdefy/commit/abbd8237174ba3565d5af149c846ca99ada9d06b))
+- **build:** Add debounce to the build schema. ([2ea31b1](https://github.com/lowdefy/lowdefy/commit/2ea31b1f3e770a1edbcdefa790908f9df7c04997))
+- **docs:** Add basic full example for AxiosHttp. ([1e689d2](https://github.com/lowdefy/lowdefy/commit/1e689d2cf27d9d94c1202bd4f716369b7aea8313))
+- **docs:** Reformat v3 and v5 uuid argument definitions. ([98cd626](https://github.com/lowdefy/lowdefy/commit/98cd626550734313fb0cd3ab1206a13d258064ca))
+- **docs:** Update \_uuid docs. ([07178f1](https://github.com/lowdefy/lowdefy/commit/07178f1bd59d5fb52f94bcfd08f860026aaeb83d))
+- **docs:** Updated docs to remove legacy v1, v4 uuid operators. ([8544dc9](https://github.com/lowdefy/lowdefy/commit/8544dc9e69bce7345099508bfec3042b5e8997bd))
+- **docs:** Updated documented v3, v5 uuid function definitions. ([bd0e777](https://github.com/lowdefy/lowdefy/commit/bd0e777c9744e668d7bf25e5aeb2b293e6337464))
+- **operators:** Remove array param type from v3, v5 uuid operator. ([5141fdf](https://github.com/lowdefy/lowdefy/commit/5141fdff7f1d60ded07e89a659762d881e7fc4f7))
+- **operators:** Updated tests to remove legacy v1, v4 uuid operators. ([f43a054](https://github.com/lowdefy/lowdefy/commit/f43a054d2c7dcff219936cebfe8ad69810dc362a))
+- **renderer:** Add crypto build fallback. ([1f74ca7](https://github.com/lowdefy/lowdefy/commit/1f74ca7674f48241060ebcb4030378f279431376))
+- **server:** replaceAll not a function, closes [#789](https://github.com/lowdefy/lowdefy/issues/789) ([055a2ac](https://github.com/lowdefy/lowdefy/commit/055a2ac4bad52402ebb200ebff02dea183af56e2))
+- Add array and object param types to v3 and v5 uuid methods. ([0a551e9](https://github.com/lowdefy/lowdefy/commit/0a551e9d9303c9f4e7a15e82b439ec6291c49187))
+
+### Features
+
+- **docs:** Add onMount and onMountAsync docs. ([a3c698d](https://github.com/lowdefy/lowdefy/commit/a3c698dde629b475a8d1858613f85a67c4ec13f6))
+- **graphql:** Add https agent options to AxiosHttp connection. ([df94e01](https://github.com/lowdefy/lowdefy/commit/df94e0191bf5dfbc539a3703d2090331ef810c24)), closes [#794](https://github.com/lowdefy/lowdefy/issues/794)
+- **operators:** Add \_hash operator. ([0d3244a](https://github.com/lowdefy/lowdefy/commit/0d3244af5b13633c640bc471ed72cb7df035b415))
+- **operators:** Add \_uuid v1, v2, v3, v4, and v5 options. ([3f2fc75](https://github.com/lowdefy/lowdefy/commit/3f2fc757224ec4a766b138d45ebcc68d47c56463))
+- **operators:** Add array param type from v3, v5 uuid operator. ([764051b](https://github.com/lowdefy/lowdefy/commit/764051b950864dbe59de50930383caede966e1be))
+- **renderer:** Refactoring renderer and implementing onMount and onMountAsyc, closes [#778](https://github.com/lowdefy/lowdefy/issues/778) ([101d23a](https://github.com/lowdefy/lowdefy/commit/101d23a3f9f495549553ddecbd5420867e9023db))
+- Add support for v1, v3, v4 and v5 to the \_uuid operator. ([c9ef4b9](https://github.com/lowdefy/lowdefy/commit/c9ef4b93fadf3dfa9b01ffb43fbd0375706bcb25))
+- **operators:** Add RIPEMD-160 algorithm. ([3e07218](https://github.com/lowdefy/lowdefy/commit/3e07218df07737fce28de4525f8d1fc69702e729))
+- **operators:** Add uuid to client, closes [#783](https://github.com/lowdefy/lowdefy/issues/783) ([6dc8d28](https://github.com/lowdefy/lowdefy/commit/6dc8d28608f18317986f21613af59a513d84cef8))
+
 ## [3.20.4](https://github.com/lowdefy/lowdefy/compare/v3.20.3...v3.20.4) (2021-08-21)
 
 ### Bug Fixes
