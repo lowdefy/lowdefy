@@ -16,24 +16,16 @@
 
 import React, { useEffect, useState } from 'react';
 
-import LoadingBlock from './LoadingBlock';
-
-const triggerEvent = ({ name, context }) => {
-  return context.RootBlocks.areas.root.blocks[0].triggerEvent({
-    name,
-  });
-};
-
-const OnEnter = ({ block, context, render, lowdefy }) => {
+const MountEvents = ({ asyncEventName, context, eventName, triggerEvent, children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   useEffect(() => {
     let mounted = true;
     const mount = async () => {
       try {
-        await triggerEvent({ name: 'onEnter', context });
+        await triggerEvent({ name: eventName, context });
         if (mounted) {
-          triggerEvent({ name: 'onEnterAsync', context });
+          triggerEvent({ name: asyncEventName, context });
           setLoading(false);
         }
       } catch (err) {
@@ -48,10 +40,9 @@ const OnEnter = ({ block, context, render, lowdefy }) => {
 
   if (error) throw error;
 
-  if (loading)
-    return <LoadingBlock block={block} highlightBorders={lowdefy.lowdefyGlobal.highlightBorders} />;
+  if (loading) return <>{children(false)}</>;
 
-  return render(context);
+  return <>{children(context)}</>;
 };
 
-export default OnEnter;
+export default MountEvents;

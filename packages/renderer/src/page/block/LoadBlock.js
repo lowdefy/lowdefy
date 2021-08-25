@@ -19,14 +19,14 @@ import { loadWebpackFederatedModule, useDynamicScript } from '@lowdefy/block-too
 
 const Components = {};
 
-const LoadBlock = ({ meta, render, Loading }) => {
+const LoadBlock = ({ meta, children }) => {
   const typeId = `${meta.moduleFederation.scope}:${meta.moduleFederation.module}`;
   const { ready, failed } = useDynamicScript({
     src: meta.moduleFederation.remoteEntryUrl,
   });
   if (!Components[typeId]) {
     if (!ready) {
-      return Loading;
+      return <>{children(false)}</>;
     }
     if (failed) {
       // TODO retry
@@ -36,7 +36,7 @@ const LoadBlock = ({ meta, render, Loading }) => {
       loadWebpackFederatedModule(meta.moduleFederation.scope, meta.moduleFederation.module)
     );
   }
-  return render(Components[typeId]);
+  return <>{children(Components[typeId])}</>;
 };
 
 export default LoadBlock;
