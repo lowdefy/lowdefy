@@ -19,5 +19,4 @@ export default {
   _base64: 'node/base64',
   _secret: 'node/secret',
   _hash: 'node/hash',
-  _uuid: 'node/uuid',
 };

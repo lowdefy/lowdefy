@@ -56,5 +56,6 @@ export default {
   _uri: 'common/uri',
   _url_query: 'common/url_query',
   _user: 'common/user',
+  _uuid: 'common/uuid',
   _yaml: 'common/yaml',
 };

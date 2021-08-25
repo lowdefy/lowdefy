@@ -485,6 +485,15 @@ describe('parse operators', () => {
     expect(res.errors).toMatchInlineSnapshot(`Array []`);
   });
 
+  test('parse _uuid operator', async () => {
+    const input = { a: { _uuid: true } };
+    const parser = new WebParser({ context, contexts });
+    await parser.init();
+    const res = parser.parse({ input, location: 'locationId' });
+    expect(res.output.a.length).toEqual(36);
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
+
   test('parse _get operator', async () => {
     const input = { _get: { key: 'key', from: { key: 'value' } } };
     const parser = new WebParser({ context, contexts });
