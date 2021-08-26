@@ -29,7 +29,7 @@ _ref:
             Roles can be read from a custom claim on the OpenID Connect `idToken`. This should be an array of strings which are the role names. This needs to be configured at the OpenID Connect provider. The field that contains the roles array is configured in the `config.auth.openId` field in the Lowdefy configuration.
 
             ```yaml
-            lowdefy: 3.21.0
+            lowdefy: 3.21.1
             config:
               auth:
                 openId:
@@ -43,7 +43,7 @@ _ref:
 
             ###### Protect pages using roles:
             ```yaml
-            lowdefy: 3.21.0
+            lowdefy: 3.21.1
             config:
               auth:
                 openId:

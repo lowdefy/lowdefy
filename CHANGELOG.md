@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.21.1](https://github.com/lowdefy/lowdefy/compare/v3.21.0...v3.21.1) (2021-08-26)
+
+### Bug Fixes
+
+- **blocksAntd:** Fix Alert padding. ([9fb9686](https://github.com/lowdefy/lowdefy/commit/9fb9686cd2bfc9ed5028a44a24146d8c587a8ca2))
+- **docs:** Add missing hash docs. ([2520555](https://github.com/lowdefy/lowdefy/commit/2520555212b699bf58d9a01b5db996cb2f5b44cb))
+- **docs:** Add responsive layout docs and video. ([5c31dac](https://github.com/lowdefy/lowdefy/commit/5c31dacda32ec8688dcf6605756c6a1262867adf))
+- **docs:** Update node server docs. ([bb64d3e](https://github.com/lowdefy/lowdefy/commit/bb64d3e850b0c60a5129babbb5b144a577d8635d))
+- **renderer:** Fix loading skeletons, closes [#798](https://github.com/lowdefy/lowdefy/issues/798) ([e4dd10e](https://github.com/lowdefy/lowdefy/commit/e4dd10e4b35e6fc957abe955d4c1a5b6767ecc66))
+- **docs:** Added responsive setup to Layout Concepts. ([0635433](https://github.com/lowdefy/lowdefy/commit/0635433df47ff1fd1fe067231ea0a9ff4b3f652e))
+
 # [3.21.0](https://github.com/lowdefy/lowdefy/compare/v3.20.4...v3.21.0) (2021-08-25)
 
 ## Changes
