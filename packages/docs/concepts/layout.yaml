@@ -320,6 +320,56 @@ _ref:
             - `size`: _String_ | _Number_ - Set the [`flex-basis`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-basis) CSS property. Default `auto`.
             - `span`: _Number_ - Number of grid cells the block should occupy.
 
+            ### Responsive layouts
+      - id: video_responsive
+        type: DangerousHtml
+        style:
+          marginTop: 16px
+        properties:
+          DOMPurifyOptions:
+            ADD_TAGS:
+              - iframe
+          html: |
+            <div style="position: relative; padding-bottom: 62.5%; height: 0;"><iframe src="https://www.loom.com/embed/3912ece430ee48dbbc87a9f87dba027e" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
+      - id: markdown_block_properties_responsive
+        type: Markdown
+        style:
+          marginTop: 16px
+        properties:
+          content: |
+            All the settings defined in the Block `layout` and `style` properties can be defined for the various responsive breakpoints. Breakpoints apply to all window width sizes smaller than the breakpoint width, where the smallest breakpoint setting takes precedence.
+
+            The responsive breakpoints are:
+
+              - `xs`: window width less than 576px
+              - `sm`: window width greater than 576px
+              - `md`: window width greater than 768px
+              - `lg`: window width greater than 992px
+              - `xl`: window width greater than 1200px
+              - `xxl`: window width greater than  1600px
+
+            The responsive layout settings are applied to the `layout` object. For example making a block half container width and full container width for devices like tablets or smaller:
+            ```yaml
+            id: responsive_block
+            type: Box
+            layout:
+              span: 12
+              md:
+                span: 24
+            ```
+
+            The same can be done for the `style` object, for example, making reducing padding on xs and sm devices:
+            ```yaml
+            id: responsive_block
+            type: Box
+            style:
+              padding: 64
+              sm:
+                padding: 32
+            ```
+
+            The responsive breakpoint settings applies to all properties in `layout` and `style` objects on blocks.
+
             ### Block layout properties usage examples:
       - id: usage_examples_collapse
         type: Collapse
