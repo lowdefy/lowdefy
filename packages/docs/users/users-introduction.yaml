@@ -48,7 +48,7 @@ _ref:
           content: |
             Most authorization and authentication settings are configured in the `config.auth` object in the Lowdefy configuration. The following config can be set:
             ```yaml
-            lowdefy: 3.20.4
+            lowdefy: 3.21.0
             config:
               auth:
                 openId:
