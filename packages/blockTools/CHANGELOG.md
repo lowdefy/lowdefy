@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.21.0](https://github.com/lowdefy/lowdefy/compare/v3.20.4...v3.21.0) (2021-08-25)
+
+
+### Bug Fixes
+
+* **blockTools:** RenderHtml to only update ref after render. ([9351255](https://github.com/lowdefy/lowdefy/commit/9351255d3a05d3cbfb0f1241b714feb8960878df))
+* **blockTools:** RenderHtml to return span by default, closes [#775](https://github.com/lowdefy/lowdefy/issues/775) [#777](https://github.com/lowdefy/lowdefy/issues/777) ([abbd823](https://github.com/lowdefy/lowdefy/commit/abbd8237174ba3565d5af149c846ca99ada9d06b))
+
+
+
+
+
 ## [3.20.4](https://github.com/lowdefy/lowdefy/compare/v3.20.3...v3.20.4) (2021-08-21)
 
 **Note:** Version bump only for package @lowdefy/block-tools

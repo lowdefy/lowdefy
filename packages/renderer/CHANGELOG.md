@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.21.0](https://github.com/lowdefy/lowdefy/compare/v3.20.4...v3.21.0) (2021-08-25)
+
+
+### Bug Fixes
+
+* **renderer:** Add crypto build fallback. ([1f74ca7](https://github.com/lowdefy/lowdefy/commit/1f74ca7674f48241060ebcb4030378f279431376))
+
+
+### Features
+
+* **renderer:** Refactoring renderer and implementing onMount and onMountAsyc, closes [#778](https://github.com/lowdefy/lowdefy/issues/778) ([101d23a](https://github.com/lowdefy/lowdefy/commit/101d23a3f9f495549553ddecbd5420867e9023db))
+
+
+
+
+
 ## [3.20.4](https://github.com/lowdefy/lowdefy/compare/v3.20.3...v3.20.4) (2021-08-21)
 
 **Note:** Version bump only for package @lowdefy/renderer
