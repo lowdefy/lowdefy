@@ -3,11 +3,11 @@ import { Loading, makeCssClass } from '@lowdefy/block-tools';
 import { get } from '@lowdefy/helpers';
 import { BlockLayout } from '@lowdefy/layout';
 
-const LoadingBlock = ({ block, highlightBorders }) => (
+const LoadingBlock = ({ block, lowdefy }) => (
   <BlockLayout
     id={`bl-loading-${block.blockId}`}
     blockStyle={get(block, 'eval.style') || get(block, 'meta.loading.style', { default: {} })}
-    highlightBorders={highlightBorders}
+    highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
     layout={get(block, 'eval.layout') || get(block, 'meta.loading.layout', { default: {} })}
     makeCssClass={makeCssClass}
   >
