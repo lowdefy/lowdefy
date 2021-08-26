@@ -28,11 +28,7 @@ const Block = ({ block, Blocks, context, isRoot, lowdefy }) => {
   lowdefy.updaters[block.id] = () => setUpdate(updates + 1);
   return (
     <ErrorBoundary>
-      <Suspense
-        fallback={() => (
-          <LoadingBlock block={block} highlightBorders={lowdefy.lowdefyGlobal.highlightBorders} />
-        )}
-      >
+      <Suspense fallback={<LoadingBlock block={block} lowdefy={lowdefy} />}>
         <LoadBlock meta={block.meta}>
           {(Comp) => (
             <MountEvents
@@ -41,12 +37,9 @@ const Block = ({ block, Blocks, context, isRoot, lowdefy }) => {
               eventName="onMount"
               triggerEvent={block.triggerEvent}
             >
-              {(loaded) => {
-                return !Comp || !loaded ? (
-                  <LoadingBlock
-                    block={block}
-                    highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
-                  />
+              {(loaded) =>
+                !Comp || !loaded ? (
+                  <LoadingBlock block={block} lowdefy={lowdefy} />
                 ) : (
                   <CategorySwitch
                     block={block}
@@ -57,8 +50,8 @@ const Block = ({ block, Blocks, context, isRoot, lowdefy }) => {
                     lowdefy={lowdefy}
                     updates={updates}
                   />
-                );
-              }}
+                )
+              }
             </MountEvents>
           )}
         </LoadBlock>

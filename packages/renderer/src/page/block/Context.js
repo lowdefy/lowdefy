@@ -45,8 +45,8 @@ const Context = ({ block, children, contextId, lowdefy }) => {
       mounted = false;
     };
   }, [block, lowdefy, contextId]);
-  if (context.id !== contextId)
-    return <LoadingBlock block={block} highlightBorders={lowdefy.lowdefyGlobal.highlightBorders} />;
+
+  if (context.id !== contextId) return <LoadingBlock block={block} lowdefy={lowdefy} />;
 
   if (error) throw error;
 
@@ -59,7 +59,7 @@ const Context = ({ block, children, contextId, lowdefy }) => {
         context.RootBlocks.areas.root.blocks[0].triggerEvent({ name })
       }
     >
-      {() => children(context)}
+      {(loaded) => (!loaded ? <LoadingBlock block={block} lowdefy={lowdefy} /> : children(context))}
     </MountEvents>
   );
 };

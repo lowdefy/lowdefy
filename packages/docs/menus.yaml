@@ -625,6 +625,9 @@
         - id: _gte
           type: MenuLink
           pageId: _gte
+        - id: _hash
+          type: MenuLink
+          pageId: _hash
         - id: _if
           type: MenuLink
           pageId: _if
@@ -748,11 +751,11 @@
         title: Lowdefy Versions
         icon: BranchesOutlined
       links:
-        - id: v3.21.0
+        - id: v3.21.1
           type: MenuLink
           url: https://docs.lowdefy.com
           properties:
-            title: v3.21.0
+            title: v3.21.1
         - id: v3.20.4
           type: MenuLink
           url: https://6121f02416ea332ef213ab7d--lowdefy-docs.netlify.app
