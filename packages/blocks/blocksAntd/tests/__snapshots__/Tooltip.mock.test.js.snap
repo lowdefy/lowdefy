@@ -28,7 +28,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": <RenderHtml
+      "title": <UNDEFINED
         html="Tooltip block"
         methods={
           Object {
@@ -90,31 +90,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
       "trigger": "hover",
       "zIndex": undefined,
     },
@@ -151,7 +127,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": "topLeft",
-      "title": <RenderHtml
+      "title": <UNDEFINED
         html="arrowPointAtCenter true"
         methods={
           Object {
@@ -213,7 +189,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": "right",
-      "title": <RenderHtml
+      "title": <UNDEFINED
         html="autoAdjustOverflow false"
         methods={
           Object {
@@ -275,7 +251,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": "right",
-      "title": <RenderHtml
+      "title": <UNDEFINED
         html="autoAdjustOverflow true"
         methods={
           Object {
@@ -337,7 +313,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": <RenderHtml
+      "title": <UNDEFINED
         html="color blue"
         methods={
           Object {
@@ -399,7 +375,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": <RenderHtml
+      "title": <UNDEFINED
         html="defaultVisible true"
         methods={
           Object {
@@ -461,7 +437,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": <RenderHtml
+      "title": <UNDEFINED
         html="mouseEnterDelay 1"
         methods={
           Object {
@@ -523,7 +499,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": <RenderHtml
+      "title": <UNDEFINED
         html="mouseLeaveDelay 1"
         methods={
           Object {
@@ -585,7 +561,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"style\\":{\\"border\\":\\"5px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": <RenderHtml
+      "title": <UNDEFINED
         html="Tooltip block"
         methods={
           Object {
@@ -649,7 +625,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": "topLeft",
-      "title": <RenderHtml
+      "title": <UNDEFINED
         html="placement topLeft"
         methods={
           Object {
@@ -711,7 +687,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": <RenderHtml
+      "title": <UNDEFINED
         html="Tooltip block"
         methods={
           Object {
@@ -773,7 +749,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": <RenderHtml
+      "title": <UNDEFINED
         html=<div style="background-color:orange;">
   Tooltip Html
 </div>
@@ -837,7 +813,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": <RenderHtml
+      "title": <UNDEFINED
         html="trigger click"
         methods={
           Object {
@@ -899,7 +875,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": <RenderHtml
+      "title": <UNDEFINED
         html="zIndex 1000"
         methods={
           Object {
