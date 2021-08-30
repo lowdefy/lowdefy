@@ -28,7 +28,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": <UNDEFINED
+      "title": <RenderHtml
         html="Tooltip block"
         methods={
           Object {
@@ -127,7 +127,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": "topLeft",
-      "title": <UNDEFINED
+      "title": <RenderHtml
         html="arrowPointAtCenter true"
         methods={
           Object {
@@ -189,7 +189,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": "right",
-      "title": <UNDEFINED
+      "title": <RenderHtml
         html="autoAdjustOverflow false"
         methods={
           Object {
@@ -251,7 +251,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": "right",
-      "title": <UNDEFINED
+      "title": <RenderHtml
         html="autoAdjustOverflow true"
         methods={
           Object {
@@ -313,7 +313,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": <UNDEFINED
+      "title": <RenderHtml
         html="color blue"
         methods={
           Object {
@@ -375,7 +375,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": <UNDEFINED
+      "title": <RenderHtml
         html="defaultVisible true"
         methods={
           Object {
@@ -437,7 +437,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": <UNDEFINED
+      "title": <RenderHtml
         html="mouseEnterDelay 1"
         methods={
           Object {
@@ -499,7 +499,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": <UNDEFINED
+      "title": <RenderHtml
         html="mouseLeaveDelay 1"
         methods={
           Object {
@@ -561,7 +561,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"style\\":{\\"border\\":\\"5px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": <UNDEFINED
+      "title": <RenderHtml
         html="Tooltip block"
         methods={
           Object {
@@ -625,7 +625,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": "topLeft",
-      "title": <UNDEFINED
+      "title": <RenderHtml
         html="placement topLeft"
         methods={
           Object {
@@ -687,7 +687,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": <UNDEFINED
+      "title": <RenderHtml
         html="Tooltip block"
         methods={
           Object {
@@ -749,7 +749,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": <UNDEFINED
+      "title": <RenderHtml
         html=<div style="background-color:orange;">
   Tooltip Html
 </div>
@@ -813,7 +813,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": <UNDEFINED
+      "title": <RenderHtml
         html="trigger click"
         methods={
           Object {
@@ -875,7 +875,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": <UNDEFINED
+      "title": <RenderHtml
         html="zIndex 1000"
         methods={
           Object {
