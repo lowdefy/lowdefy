@@ -21,7 +21,7 @@ import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
 const TooltipBlock = ({ blockId, content, properties, methods }) => (
   <Tooltip
     id={blockId}
-    title={<RenderHtml html={properties.title} methods={methods} />}
+    title={properties.title && <RenderHtml html={properties.title} methods={methods} />}
     overlayStyle={methods.makeCssClass(properties.overlayStyle, { styleObjectOnly: true })}
     arrowPointAtCenter={properties.arrowPointAtCenter}
     autoAdjustOverflow={properties.autoAdjustOverflow}
