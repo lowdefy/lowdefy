@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.21.2](https://github.com/lowdefy/lowdefy/compare/v3.21.2-alpha.0...v3.21.2) (2021-08-31)
+
+**Note:** Version bump only for package @lowdefy/blocks-antd
+
+
+
+
+
+## [3.21.2-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.1...v3.21.2-alpha.0) (2021-08-31)
+
+
+### Bug Fixes
+
+* **blocksAntd:** Fix blocks tooltip tests. ([b869fb0](https://github.com/lowdefy/lowdefy/commit/b869fb0f3c352ca6111b2974c719de9de76e8d71))
+* **blocksAntd:** Fix undefined Tooltip title showing empty tooltip. ([358e423](https://github.com/lowdefy/lowdefy/commit/358e423bf10d35fab904267225c336749bfd4232))
+
+
+
+
+
 ## [3.21.1](https://github.com/lowdefy/lowdefy/compare/v3.21.0...v3.21.1) (2021-08-26)
 
 

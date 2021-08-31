@@ -90,31 +90,7 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
       "trigger": "hover",
       "zIndex": undefined,
     },
