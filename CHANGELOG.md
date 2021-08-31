@@ -3,20 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [3.21.2-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.1...v3.21.2-alpha.0) (2021-08-31)
+## [3.21.2](https://github.com/lowdefy/lowdefy/compare/v3.21.2-alpha.0...v3.21.2) (2021-08-31)
 
+## Changes
+
+#### Blocks
+
+- Fix undefined Tooltip title showing empty tooltip.
+
+#### Build
+
+- Add async option to actions schema
+
+#### Connections
+
+- Fix MongoDB in AWS Lambda by downgrading to the LTS version (3.6.12) of the mongodb driver. MongoDB connections were throwing a `right-hand side of instanceof is not an object` error.
+
+## Commits
 
 ### Bug Fixes
 
-* Downgrade mongodb driver to LTS version 3.6.12. ([24f94f6](https://github.com/lowdefy/lowdefy/commit/24f94f644256cfc4f1b09c3122f2525c58f1502c))
-* **blocksAntd:** Fix blocks tooltip tests. ([b869fb0](https://github.com/lowdefy/lowdefy/commit/b869fb0f3c352ca6111b2974c719de9de76e8d71))
-* **blocksAntd:** Fix undefined Tooltip title showing empty tooltip. ([358e423](https://github.com/lowdefy/lowdefy/commit/358e423bf10d35fab904267225c336749bfd4232))
-* **build:** Add async to actions schema. ([1276422](https://github.com/lowdefy/lowdefy/commit/127642294ac962ac215303612e16455e395860d4))
-* **deps:** Update dependency mongodb to v4.1.1. ([96aa9a6](https://github.com/lowdefy/lowdefy/commit/96aa9a65cd7a567eef493e52d17684005e34b2a1))
+- Downgrade mongodb driver to LTS version 3.6.12. ([24f94f6](https://github.com/lowdefy/lowdefy/commit/24f94f644256cfc4f1b09c3122f2525c58f1502c))
+- **blocksAntd:** Fix blocks tooltip tests. ([b869fb0](https://github.com/lowdefy/lowdefy/commit/b869fb0f3c352ca6111b2974c719de9de76e8d71))
+- **blocksAntd:** Fix undefined Tooltip title showing empty tooltip. ([358e423](https://github.com/lowdefy/lowdefy/commit/358e423bf10d35fab904267225c336749bfd4232))
+- **build:** Add async to actions schema. ([1276422](https://github.com/lowdefy/lowdefy/commit/127642294ac962ac215303612e16455e395860d4))
+- **deps:** Update dependency mongodb to v4.1.1. ([96aa9a6](https://github.com/lowdefy/lowdefy/commit/96aa9a65cd7a567eef493e52d17684005e34b2a1))
 
+## [3.21.2-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.1...v3.21.2-alpha.0) (2021-08-31)
 
+### Bug Fixes
 
-
+- Downgrade mongodb driver to LTS version 3.6.12. ([24f94f6](https://github.com/lowdefy/lowdefy/commit/24f94f644256cfc4f1b09c3122f2525c58f1502c))
+- **blocksAntd:** Fix blocks tooltip tests. ([b869fb0](https://github.com/lowdefy/lowdefy/commit/b869fb0f3c352ca6111b2974c719de9de76e8d71))
+- **blocksAntd:** Fix undefined Tooltip title showing empty tooltip. ([358e423](https://github.com/lowdefy/lowdefy/commit/358e423bf10d35fab904267225c336749bfd4232))
+- **build:** Add async to actions schema. ([1276422](https://github.com/lowdefy/lowdefy/commit/127642294ac962ac215303612e16455e395860d4))
+- **deps:** Update dependency mongodb to v4.1.1. ([96aa9a6](https://github.com/lowdefy/lowdefy/commit/96aa9a65cd7a567eef493e52d17684005e34b2a1))
 
 ## [3.21.1](https://github.com/lowdefy/lowdefy/compare/v3.21.0...v3.21.1) (2021-08-26)
 
