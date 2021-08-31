@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.21.2](https://github.com/lowdefy/lowdefy/compare/v3.21.2-alpha.0...v3.21.2) (2021-08-31)
+
+**Note:** Version bump only for package @lowdefy/docs
+
+
+
+
+
+## [3.21.2-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.1...v3.21.2-alpha.0) (2021-08-31)
+
+
+### Bug Fixes
+
+* Downgrade mongodb driver to LTS version 3.6.12. ([24f94f6](https://github.com/lowdefy/lowdefy/commit/24f94f644256cfc4f1b09c3122f2525c58f1502c))
+
+
+
+
+
 ## [3.21.1](https://github.com/lowdefy/lowdefy/compare/v3.21.0...v3.21.1) (2021-08-26)
 
 
