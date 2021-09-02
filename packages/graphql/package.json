@@ -65,7 +65,8 @@
     "openid-client": "4.7.4",
     "pg": "8.6.0",
     "saslprep": "1.0.3",
-    "sqlite3": "5.0.2"
+    "sqlite3": "5.0.2",
+    "stripe": "8.172.0"
   },
   "devDependencies": {
     "@babel/cli": "7.14.3",
