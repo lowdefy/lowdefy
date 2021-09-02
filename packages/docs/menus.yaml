@@ -510,6 +510,9 @@
         - id: SQLite
           type: MenuLink
           pageId: SQLite
+        - id: Stripe
+          type: MenuLink
+          pageId: Stripe
     - id: actions
       type: MenuGroup
       properties:

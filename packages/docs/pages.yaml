@@ -134,6 +134,7 @@
 - _ref: connections/PostgreSQL.yaml
 - _ref: connections/SendGridMail.yaml
 - _ref: connections/SQLite.yaml
+- _ref: connections/Stripe.yaml
 
 - _ref: actions/CallMethod.yaml
 - _ref: actions/JsAction.yaml
