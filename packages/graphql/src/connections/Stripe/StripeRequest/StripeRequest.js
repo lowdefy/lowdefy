@@ -37,8 +37,6 @@ async function stripeRequest({ request, connection }) {
   } while (args && !Array.isArray(args));
 
   const resource = get(stripe, path.slice(0, -1).join('.'));
-
-  /** @var {function} method */
   const method = get(stripe, path.join('.'));
 
   if (!resource || !method || typeof method !== 'function') {
