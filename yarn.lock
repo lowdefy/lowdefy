@@ -3312,6 +3312,7 @@ __metadata:
     pg: 8.6.0
     saslprep: 1.0.3
     sqlite3: 5.0.2
+    stripe: 8.172.0
     webpack: 5.38.1
     webpack-cli: 4.7.0
   languageName: unknown
@@ -4545,6 +4546,13 @@ __metadata:
   version: 15.6.1
   resolution: "@types/node@npm:15.6.1"
   checksum: 07b3855bc0a1ba2215455a3ef4ed5e88711321b3cdc0ba1ea0286f6facbdf61530970b9fa7eec79eb1d46231f986c21ef3b7c1f1e0c365cf1b887d76b0addb86
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:>=8.1.0":
+  version: 16.7.10
+  resolution: "@types/node@npm:16.7.10"
+  checksum: 50c83528a973746ba8fa67654c9fce33b57812ac9f67f445e56d8a11231587d866476323e7c1235894aca0b27321847915d058122b0f3f2e6e0acc20f54ba445
   languageName: node
   linkType: hard
 
@@ -16853,7 +16861,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"qs@npm:^6.7.0, qs@npm:^6.9.4":
+"qs@npm:^6.6.0, qs@npm:^6.7.0, qs@npm:^6.9.4":
   version: 6.10.1
   resolution: "qs@npm:6.10.1"
   dependencies:
@@ -19794,6 +19802,16 @@ resolve@^2.0.0-next.3:
   version: 2.0.1
   resolution: "strip-json-comments@npm:2.0.1"
   checksum: e60d99aa2849c27a04dce0620334f45822197df6b83664dd3746971e9a0a766d989dbb8d87f9cb7350725d2b5df401a2343222ad06e36a1ba7d62c6633267fcb
+  languageName: node
+  linkType: hard
+
+"stripe@npm:8.172.0":
+  version: 8.172.0
+  resolution: "stripe@npm:8.172.0"
+  dependencies:
+    "@types/node": ">=8.1.0"
+    qs: ^6.6.0
+  checksum: 4a578fa9e746d14990323bc5a93b3a95fe5af6f0a13d2efc682b038d41c2c7ca41073db78e68b6fe39d0dd8e6738edc420814cf042a2f509fb308c04c006d72f
   languageName: node
   linkType: hard
 

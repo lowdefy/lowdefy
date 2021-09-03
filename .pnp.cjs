@@ -4855,6 +4855,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["pg", "virtual:dddca670fd0b7758fb2e1b1a3e18ac7ebd1ecd06ecdd7acec2b78bccf1d35802cb22904bfbb233b16515a81f5cb819421786d20887823d98022b367036c1ad51#npm:8.6.0"],
             ["saslprep", "npm:1.0.3"],
             ["sqlite3", "virtual:dddca670fd0b7758fb2e1b1a3e18ac7ebd1ecd06ecdd7acec2b78bccf1d35802cb22904bfbb233b16515a81f5cb819421786d20887823d98022b367036c1ad51#npm:5.0.2"],
+            ["stripe", "npm:8.172.0"],
             ["webpack", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:5.38.1"],
             ["webpack-cli", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:4.7.0"]
           ],
@@ -6303,6 +6304,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-node-npm-15.6.1-1a0b9c8653-07b3855bc0.zip/node_modules/@types/node/",
           "packageDependencies": [
             ["@types/node", "npm:15.6.1"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:16.7.10", {
+          "packageLocation": "./.yarn/cache/@types-node-npm-16.7.10-4e2e60d5a6-50c83528a9.zip/node_modules/@types/node/",
+          "packageDependencies": [
+            ["@types/node", "npm:16.7.10"]
           ],
           "linkType": "HARD",
         }],
@@ -26334,6 +26342,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/strip-json-comments-npm-3.1.1-dcb2324823-f16719ce25.zip/node_modules/strip-json-comments/",
           "packageDependencies": [
             ["strip-json-comments", "npm:3.1.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["stripe", [
+        ["npm:8.172.0", {
+          "packageLocation": "./.yarn/cache/stripe-npm-8.172.0-f088f5e7d6-4a578fa9e7.zip/node_modules/stripe/",
+          "packageDependencies": [
+            ["stripe", "npm:8.172.0"],
+            ["@types/node", "npm:16.7.10"],
+            ["qs", "npm:6.10.1"]
           ],
           "linkType": "HARD",
         }]
