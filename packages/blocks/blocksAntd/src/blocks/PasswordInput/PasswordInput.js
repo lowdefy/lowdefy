@@ -19,7 +19,6 @@ import { Input } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 
 import Label from '../Label/Label';
-import Icon from '../Icon/Icon';
 import useRunAfterUpdate from '../../useRunAfterUpdate';
 
 const PasswordInput = ({
