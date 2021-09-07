@@ -240,6 +240,9 @@
         - id: ParagraphInput
           type: MenuLink
           pageId: ParagraphInput
+        - id: PasswordInput
+          type: MenuLink
+          pageId: PasswordInput
         - id: RadioSelector
           type: MenuLink
           pageId: RadioSelector
