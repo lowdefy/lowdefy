@@ -4,6 +4,14 @@ exports[`Mock render - default - value[0] - default 1`] = `Array []`;
 
 exports[`Mock render - properties.color_red - value[0] - default 1`] = `Array []`;
 
+exports[`Mock render - properties.direction column - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - properties.direction column-reverse - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - properties.direction row - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - properties.direction row-reverse - value[0] - default 1`] = `Array []`;
+
 exports[`Mock render - properties.disabled: true - value[0] - default 1`] = `Array []`;
 
 exports[`Mock render - properties.label.colon: false - value[0] - default 1`] = `Array []`;
