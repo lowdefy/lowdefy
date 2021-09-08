@@ -116,3 +116,103 @@
           background: red
       - label: two
         value: 2
+- id: 'properties.direction row'
+  type: CheckboxSelector
+  properties:
+    direction: row
+    options:
+      - label: one
+        value: 1
+        style:
+          background: red
+      - label: two
+        value: 2
+        style:
+          background: red
+      - label: three
+        value: 3
+        style:
+          background: red
+      - label: four
+        value: 4
+        style:
+          background: red
+      - label: five
+        value: 5
+        style:
+          background: red
+- id: 'properties.direction row-reverse'
+  type: CheckboxSelector
+  properties:
+    direction: row-reverse
+    options:
+      - label: one
+        value: 1
+        style:
+          background: red
+      - label: two
+        value: 2
+        style:
+          background: red
+      - label: three
+        value: 3
+        style:
+          background: red
+      - label: four
+        value: 4
+        style:
+          background: red
+      - label: five
+        value: 5
+        style:
+          background: red
+- id: 'properties.direction column'
+  type: CheckboxSelector
+  properties:
+    direction: column
+    options:
+      - label: one
+        value: 1
+        style:
+          background: red
+      - label: two
+        value: 2
+        style:
+          background: red
+      - label: three
+        value: 3
+        style:
+          background: red
+      - label: four
+        value: 4
+        style:
+          background: red
+      - label: five
+        value: 5
+        style:
+          background: red
+- id: 'properties.direction column-reverse'
+  type: CheckboxSelector
+  properties:
+    direction: column-reverse
+    options:
+      - label: one
+        value: 1
+        style:
+          background: red
+      - label: two
+        value: 2
+        style:
+          background: red
+      - label: three
+        value: 3
+        style:
+          background: red
+      - label: four
+        value: 4
+        style:
+          background: red
+      - label: five
+        value: 5
+        style:
+          background: red

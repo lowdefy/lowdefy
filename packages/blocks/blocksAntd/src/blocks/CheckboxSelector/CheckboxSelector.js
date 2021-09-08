@@ -53,6 +53,32 @@ const CheckboxSelector = ({
                   borderColor: `${properties.color} !important`,
                 },
               },
+              properties.direction && {
+                display: 'flex',
+                flexDirection: properties.direction,
+                flexWrap: properties.wrap ? properties.wrap : 'wrap',
+                overflow: properties.scroll ? 'auto' : 'visible',
+              },
+              properties.direction == 'row-reverse' && {
+                '& > :nth-child(1)': {
+                  marginLeft: 8,
+                  // antd adds a margin on all elements after the first one
+                  // using a margin left on the 1st element corrects this for the row-reverse direction
+                },
+                '& > :nth-last-child(1)': {
+                  marginLeft: 0,
+                  // antd adds a margin on all elements after the first one
+                  // using a margin left on the last element corrects this for the row-reverse direction
+                },
+                justifyContent: 'flex-end',
+              },
+              (properties.direction == 'column' || properties.direction == 'column-reverse') && {
+                '& > :nth-child(n)': {
+                  marginLeft: 0,
+                  // antd adds a margin on all elements after the first one
+                  // using a margin left on the elements removes this for the column direction
+                },
+              },
               properties.inputStyle,
             ])}
             disabled={properties.disabled}
