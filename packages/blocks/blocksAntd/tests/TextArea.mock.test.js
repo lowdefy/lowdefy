@@ -33,7 +33,7 @@ jest.mock('antd/lib/input', () => {
 const mocks = [
   {
     name: 'default',
-    fn: Input,
+    fn: Input.TextArea,
   },
 ];
 

@@ -26,13 +26,14 @@ import meta from '../src/blocks/PasswordInput/PasswordInput.json';
 
 jest.mock('antd/lib/input', () => {
   const comp = jest.fn(() => 'mocked');
+  comp.Password = jest.fn(() => 'mocked');
   return comp;
 });
 
 const mocks = [
   {
     name: 'default',
-    fn: Input,
+    fn: Input.Password,
   },
 ];
 
