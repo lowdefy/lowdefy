@@ -57,6 +57,15 @@ const RadioSelector = ({
                   },
                 },
               },
+              properties.direction && {
+                display: 'flex',
+                flexDirection: properties.direction,
+                flexWrap: properties.wrap ? properties.wrap : 'wrap',
+                overflow: properties.scroll ? 'auto' : 'visible',
+              },
+              properties.direction == 'row-reverse' && {
+                justifyContent: 'flex-end',
+              },
               properties.inputStyle,
             ])}
             disabled={properties.disabled}

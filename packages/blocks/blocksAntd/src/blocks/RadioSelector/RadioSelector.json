@@ -25,6 +25,20 @@
           "default": false,
           "description": "Disable the block if true."
         },
+        "direction": {
+          "type": "string",
+          "enum": ["row", "column", "row-reverse", "column-reverse"],
+          "description": "List content along a 'row' or down a 'column'. Applies the 'flex-direction' css property to the RadioSelector block."
+        },
+        "wrap": {
+          "type": "string",
+          "enum": ["wrap", "nowrap", "wrap-reverse"],
+          "description": "Specifies wrapping style to be applied to RadioSelector block as 'wrap', 'nowrap' or 'wrap-reverse'. Applies the 'flex-wrap' css property to the RadioSelector block - defaults to 'wrap', requires RadioSelector direction to be set."
+        },
+        "scroll": {
+          "type": "boolean",
+          "description": "Specifies whether scrolling should be applied to the RadioSelector, can be true or false. Applies the 'overflow' css property to the RadioSelector block - defaults to 'visible', requires RadioSelector direction to be set."
+        },
         "inputStyle": {
           "type": "object",
           "description": "Css style to applied to input.",
