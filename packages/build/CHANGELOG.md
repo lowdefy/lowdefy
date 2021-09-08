@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.22.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.2...v3.22.0-alpha.0) (2021-09-08)
+
+
+### Bug Fixes
+
+* **build:** Updated meta locations tests. ([9e20ace](https://github.com/lowdefy/lowdefy/commit/9e20acebaac9ae01fd3974469bddede0e651da19))
+
+
+### Features
+
+* **build:** Added PasswordInput meta location. ([66abcdd](https://github.com/lowdefy/lowdefy/commit/66abcddafc7d8b1950e96a137d0d336ccf3e145b))
+
+
+
+
+
 ## [3.21.2](https://github.com/lowdefy/lowdefy/compare/v3.21.2-alpha.0...v3.21.2) (2021-08-31)
 
 **Note:** Version bump only for package @lowdefy/build
