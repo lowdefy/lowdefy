@@ -16,6 +16,7 @@ Array [
       >
         content
       </div>,
+      "className": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
       "extra": <div
         style={
           Object {
@@ -29,6 +30,7 @@ Array [
       "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "hoverable": undefined,
       "id": "areas.extra:",
+      "onClick": [Function],
       "size": undefined,
       "title": <RenderHtml
         html="Card block"
@@ -48,6 +50,15 @@ Array [
                     "styleObjectOnly": true,
                   },
                 ],
+                Array [
+                  Array [
+                    Object {
+                      "cursor": undefined,
+                      "outline": "none",
+                    },
+                    undefined,
+                  ],
+                ],
               ],
               "results": Array [
                 Object {
@@ -57,6 +68,10 @@ Array [
                 Object {
                   "type": "return",
                   "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
                 },
               ],
             },
@@ -89,10 +104,12 @@ Array [
       >
         content
       </div>,
+      "className": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
       "extra": undefined,
       "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "hoverable": undefined,
       "id": "default",
+      "onClick": [Function],
       "size": undefined,
       "title": undefined,
       "type": null,
@@ -118,10 +135,12 @@ Array [
       >
         content
       </div>,
+      "className": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
       "extra": undefined,
       "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "hoverable": undefined,
       "id": "properties.bodyStyle: border: 5px solid blue",
+      "onClick": [Function],
       "size": undefined,
       "title": <RenderHtml
         html="Card block"
@@ -143,6 +162,15 @@ Array [
                     "styleObjectOnly": true,
                   },
                 ],
+                Array [
+                  Array [
+                    Object {
+                      "cursor": undefined,
+                      "outline": "none",
+                    },
+                    undefined,
+                  ],
+                ],
               ],
               "results": Array [
                 Object {
@@ -152,6 +180,10 @@ Array [
                 Object {
                   "type": "return",
                   "value": "{\\"style\\":{\\"border\\":\\"5px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
                 },
               ],
             },
@@ -184,10 +216,12 @@ Array [
       >
         content
       </div>,
+      "className": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
       "extra": undefined,
       "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "hoverable": undefined,
       "id": "properties.bordered: false",
+      "onClick": [Function],
       "size": undefined,
       "title": <RenderHtml
         html="Card block"
@@ -207,6 +241,15 @@ Array [
                     "styleObjectOnly": true,
                   },
                 ],
+                Array [
+                  Array [
+                    Object {
+                      "cursor": undefined,
+                      "outline": "none",
+                    },
+                    undefined,
+                  ],
+                ],
               ],
               "results": Array [
                 Object {
@@ -216,6 +259,10 @@ Array [
                 Object {
                   "type": "return",
                   "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
                 },
               ],
             },
@@ -248,10 +295,12 @@ Array [
       >
         content
       </div>,
+      "className": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
       "extra": undefined,
       "headStyle": "{\\"style\\":{\\"border\\":\\"5px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "hoverable": undefined,
       "id": "properties.headerStyle: border: 5px solid blue",
+      "onClick": [Function],
       "size": undefined,
       "title": <RenderHtml
         html="Card block"
@@ -273,6 +322,15 @@ Array [
                     "styleObjectOnly": true,
                   },
                 ],
+                Array [
+                  Array [
+                    Object {
+                      "cursor": undefined,
+                      "outline": "none",
+                    },
+                    undefined,
+                  ],
+                ],
               ],
               "results": Array [
                 Object {
@@ -282,6 +340,10 @@ Array [
                 Object {
                   "type": "return",
                   "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
                 },
               ],
             },
@@ -314,10 +376,12 @@ Array [
       >
         content
       </div>,
+      "className": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
       "extra": undefined,
       "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "hoverable": true,
       "id": "properties.hoverable: true",
+      "onClick": [Function],
       "size": undefined,
       "title": <RenderHtml
         html="Card block"
@@ -337,6 +401,15 @@ Array [
                     "styleObjectOnly": true,
                   },
                 ],
+                Array [
+                  Array [
+                    Object {
+                      "cursor": undefined,
+                      "outline": "none",
+                    },
+                    undefined,
+                  ],
+                ],
               ],
               "results": Array [
                 Object {
@@ -346,6 +419,10 @@ Array [
                 Object {
                   "type": "return",
                   "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
                 },
               ],
             },
@@ -378,10 +455,12 @@ Array [
       >
         content
       </div>,
+      "className": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
       "extra": undefined,
       "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "hoverable": undefined,
       "id": "properties.inner: true",
+      "onClick": [Function],
       "size": undefined,
       "title": <RenderHtml
         html="Card block"
@@ -401,6 +480,15 @@ Array [
                     "styleObjectOnly": true,
                   },
                 ],
+                Array [
+                  Array [
+                    Object {
+                      "cursor": undefined,
+                      "outline": "none",
+                    },
+                    undefined,
+                  ],
+                ],
               ],
               "results": Array [
                 Object {
@@ -410,6 +498,10 @@ Array [
                 Object {
                   "type": "return",
                   "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
                 },
               ],
             },
@@ -442,10 +534,12 @@ Array [
       >
         content
       </div>,
+      "className": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
       "extra": undefined,
       "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "hoverable": undefined,
       "id": "properties.size: small",
+      "onClick": [Function],
       "size": "small",
       "title": <RenderHtml
         html="Card block small"
@@ -465,6 +559,15 @@ Array [
                     "styleObjectOnly": true,
                   },
                 ],
+                Array [
+                  Array [
+                    Object {
+                      "cursor": undefined,
+                      "outline": "none",
+                    },
+                    undefined,
+                  ],
+                ],
               ],
               "results": Array [
                 Object {
@@ -474,6 +577,10 @@ Array [
                 Object {
                   "type": "return",
                   "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
                 },
               ],
             },
@@ -506,10 +613,12 @@ Array [
       >
         content
       </div>,
+      "className": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
       "extra": undefined,
       "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "hoverable": undefined,
       "id": "properties.title",
+      "onClick": [Function],
       "size": undefined,
       "title": <RenderHtml
         html="Card block"
@@ -529,6 +638,15 @@ Array [
                     "styleObjectOnly": true,
                   },
                 ],
+                Array [
+                  Array [
+                    Object {
+                      "cursor": undefined,
+                      "outline": "none",
+                    },
+                    undefined,
+                  ],
+                ],
               ],
               "results": Array [
                 Object {
@@ -538,6 +656,10 @@ Array [
                 Object {
                   "type": "return",
                   "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
                 },
               ],
             },
@@ -570,10 +692,12 @@ Array [
       >
         content
       </div>,
+      "className": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
       "extra": undefined,
       "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "hoverable": undefined,
       "id": "with html in title",
+      "onClick": [Function],
       "size": undefined,
       "title": <RenderHtml
         html=<div style="color:green">
@@ -595,6 +719,15 @@ Array [
                     "styleObjectOnly": true,
                   },
                 ],
+                Array [
+                  Array [
+                    Object {
+                      "cursor": undefined,
+                      "outline": "none",
+                    },
+                    undefined,
+                  ],
+                ],
               ],
               "results": Array [
                 Object {
@@ -604,6 +737,89 @@ Array [
                 Object {
                   "type": "return",
                   "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "type": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - with onClick event - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bordered": undefined,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "className": "{\\"style\\":[{\\"outline\\":\\"none\\",\\"cursor\\":\\"pointer\\"},null]}",
+      "extra": undefined,
+      "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "hoverable": undefined,
+      "id": "with onClick event",
+      "onClick": [Function],
+      "size": undefined,
+      "title": <RenderHtml
+        html="Card block"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "cursor": "pointer",
+                      "outline": "none",
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"outline\\":\\"none\\",\\"cursor\\":\\"pointer\\"},null]}",
                 },
               ],
             },
