@@ -198,6 +198,9 @@ test('metaLocations default URL', async () => {
     ParagraphInput: {
       url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/ParagraphInput.json`,
     },
+    PasswordInput: {
+      url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/PasswordInput.json`,
+    },
     Progress: {
       url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Progress.json`,
     },
@@ -451,6 +454,9 @@ test('metaLocations configured URL', async () => {
     },
     ParagraphInput: {
       url: 'https://blocks.server.com/blocks-antd/meta/ParagraphInput.json',
+    },
+    PasswordInput: {
+      url: 'https://blocks.server.com/blocks-antd/meta/PasswordInput.json',
     },
     Progress: {
       url: 'https://blocks.server.com/blocks-antd/meta/Progress.json',

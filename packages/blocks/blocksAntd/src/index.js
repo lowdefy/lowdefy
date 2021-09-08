@@ -58,6 +58,7 @@ import PageSiderMenu from './blocks/PageSiderMenu/PageSiderMenu';
 import Pagination from './blocks/Pagination/Pagination';
 import Paragraph from './blocks/Paragraph/Paragraph';
 import ParagraphInput from './blocks/ParagraphInput/ParagraphInput';
+import PasswordInput from './blocks/PasswordInput/PasswordInput';
 import Progress from './blocks/Progress/Progress';
 import RadioSelector from './blocks/RadioSelector/RadioSelector';
 import RatingSlider from './blocks/RatingSlider/RatingSlider';
@@ -123,6 +124,7 @@ export {
   Pagination,
   Paragraph,
   ParagraphInput,
+  PasswordInput,
   Progress,
   RadioSelector,
   RatingSlider,
@@ -188,6 +190,7 @@ export default {
   Pagination,
   Paragraph,
   ParagraphInput,
+  PasswordInput,
   Progress,
   RadioSelector,
   RatingSlider,

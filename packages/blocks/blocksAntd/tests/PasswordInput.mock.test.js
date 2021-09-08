@@ -20,20 +20,20 @@ import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { Input } from 'antd';
 
 Enzyme.configure({ adapter: new Adapter() });
-import Block from '../src/blocks/TextArea/TextArea';
-import examples from '../demo/examples/TextArea.yaml';
-import meta from '../src/blocks/TextArea/TextArea.json';
+import Block from '../src/blocks/PasswordInput/PasswordInput';
+import examples from '../demo/examples/PasswordInput.yaml';
+import meta from '../src/blocks/PasswordInput/PasswordInput.json';
 
 jest.mock('antd/lib/input', () => {
   const comp = jest.fn(() => 'mocked');
-  comp.TextArea = jest.fn(() => 'mocked');
+  comp.Password = jest.fn(() => 'mocked');
   return comp;
 });
 
 const mocks = [
   {
     name: 'default',
-    fn: Input.TextArea,
+    fn: Input.Password,
   },
 ];
 

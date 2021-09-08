@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/nunjucks",
-  "version": "3.21.2",
+  "version": "3.22.0-alpha.0",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -38,7 +38,7 @@
     "prepare": "yarn build"
   },
   "dependencies": {
-    "@lowdefy/helpers": "3.21.2",
+    "@lowdefy/helpers": "3.22.0-alpha.0",
     "moment": "2.29.1",
     "nunjucks": "3.2.3"
   },
