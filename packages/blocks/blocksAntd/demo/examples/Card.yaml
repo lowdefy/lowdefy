@@ -49,3 +49,13 @@
   type: Card
   properties:
     title: <div style="color:green">Card Title</div>
+- id: 'with onClick event'
+  type: Card
+  properties:
+    title: Card block
+  events:
+    onClick:
+      - id: message
+        type: message
+        params:
+          content: Success
