@@ -1,0 +1,771 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mock render - default - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "checked": false,
+      "children": <RenderHtml
+        html=""
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null,null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,null,null]}",
+      "disabled": undefined,
+      "id": "default_input",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.color_red - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "checked": false,
+      "children": <RenderHtml
+        html="Option 2"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "backgroundColor": "red !important",
+                      "borderColor": "red !important",
+                    },
+                    Object {
+                      "marginRight": "30px",
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"backgroundColor\\":\\"red !important\\",\\"borderColor\\":\\"red !important\\"},{\\"marginRight\\":\\"30px\\"},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[{\\"backgroundColor\\":\\"red !important\\",\\"borderColor\\":\\"red !important\\"},{\\"marginRight\\":\\"30px\\"},null]}",
+      "disabled": undefined,
+      "id": "properties.color_red_input",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.description: html - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "checked": false,
+      "children": <RenderHtml
+        html=<span style="color:blue">
+  I agree to the terms and conditions and privacy policy as found on the website blah blah blah....
+</span>
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    undefined,
+                    Object {
+                      "marginRight": "30px",
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+      "disabled": undefined,
+      "id": "properties.description: html_input",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.description: long text - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "checked": false,
+      "children": <RenderHtml
+        html="I agree to the terms and conditions and privacy policy as found on the website blah blah blah...."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    undefined,
+                    Object {
+                      "marginRight": "30px",
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+      "disabled": undefined,
+      "id": "properties.description: long text_input",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.description: long text label disabled - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "checked": false,
+      "children": <RenderHtml
+        html="I agree to the terms and conditions and privacy policy as found on the website blah blah blah.... Thoroughly I agree to the terms and conditions and privacy policy as found on the website blah blah blah...."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    undefined,
+                    Object {
+                      "marginRight": "30px",
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+      "disabled": undefined,
+      "id": "properties.description: long text label disabled_input",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.description-number - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "checked": false,
+      "children": <RenderHtml
+        html={20}
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    undefined,
+                    Object {
+                      "marginRight": "30px",
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+      "disabled": undefined,
+      "id": "properties.description-number_input",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.description-object - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "checked": false,
+      "children": <RenderHtml
+        html={
+          Object {
+            "two": "one",
+          }
+        }
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    undefined,
+                    Object {
+                      "marginRight": "30px",
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+      "disabled": undefined,
+      "id": "properties.description-object_input",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.description-string - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "checked": false,
+      "children": <RenderHtml
+        html="Option 2"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    undefined,
+                    Object {
+                      "marginRight": "30px",
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+      "disabled": undefined,
+      "id": "properties.description-string_input",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.disabled: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "checked": false,
+      "children": <RenderHtml
+        html="Option 2"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    undefined,
+                    Object {
+                      "marginRight": "30px",
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+      "disabled": true,
+      "id": "properties.disabled: true_input",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label.colon: false - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "checked": false,
+      "children": <RenderHtml
+        html="Option 2"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    undefined,
+                    Object {
+                      "marginRight": "30px",
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+      "disabled": undefined,
+      "id": "properties.label.colon: false_input",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label.disabled: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "checked": false,
+      "children": <RenderHtml
+        html="Option 2"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    undefined,
+                    Object {
+                      "marginRight": "30px",
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+      "disabled": undefined,
+      "id": "properties.label.disabled: true_input",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label.extra: showingextra - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "checked": false,
+      "children": <RenderHtml
+        html="Option 2"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    undefined,
+                    Object {
+                      "marginRight": "30px",
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+      "disabled": undefined,
+      "id": "properties.label.extra: showingextra_input",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label: align_right - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "checked": false,
+      "children": <RenderHtml
+        html="Option 2"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    undefined,
+                    Object {
+                      "marginRight": "30px",
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+      "disabled": undefined,
+      "id": "properties.label: align_right_input",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label: inline_true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "checked": false,
+      "children": <RenderHtml
+        html="Option 2"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    undefined,
+                    Object {
+                      "marginRight": "30px",
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+      "disabled": undefined,
+      "id": "properties.label: inline_true_input",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label: span_12 - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "checked": false,
+      "children": <RenderHtml
+        html="Option 2"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    undefined,
+                    Object {
+                      "marginRight": "30px",
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+      "disabled": undefined,
+      "id": "properties.label: span_12_input",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.option - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "checked": false,
+      "children": <RenderHtml
+        html="option"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    undefined,
+                    Object {
+                      "marginRight": "30px",
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+      "disabled": undefined,
+      "id": "properties.option_input",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.title - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "checked": false,
+      "children": <RenderHtml
+        html=""
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null,null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,null,null]}",
+      "disabled": undefined,
+      "id": "properties.title_input",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
