@@ -52,7 +52,7 @@ const DescriptionsBlock = ({ blockId, properties, methods }) => {
         return (
           <Descriptions.Item
             key={i}
-            label={<RenderHtml html={label} methods={methods} />}
+            label={<RenderHtml html={`${label}`} methods={methods} />}
             span={
               row.span ||
               (type.isFunction(itemOption.span) ? itemOption.span(row, i) : itemOption.span)
@@ -63,7 +63,7 @@ const DescriptionsBlock = ({ blockId, properties, methods }) => {
               row.style,
             ])}`}
           >
-            <RenderHtml html={value} methods={methods} />
+            <RenderHtml html={`${value}`} methods={methods} />
           </Descriptions.Item>
         );
       })}
