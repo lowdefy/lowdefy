@@ -17,6 +17,7 @@
 import blockDefaultProps from './blockDefaultProps';
 import BlockSchemaErrors from './BlockSchemaErrors';
 import ErrorBoundary from './ErrorBoundary';
+import HtmlComponent from './HtmlComponent';
 import IconSpinner from './Spinner/IconSpinner';
 import Loading from './Loading';
 import loadWebpackFederatedModule from './loadWebpackFederatedModule';
@@ -24,7 +25,6 @@ import makeCssClass from './makeCssClass.js';
 import mediaToCssObject from './mediaToCssObject.js';
 import mockBlock from './mockBlock';
 import runBlockSchemaTests from './runBlockSchemaTests';
-import RenderHtml from './RenderHtml';
 import runMockMethodTests from './runMockMethodTests';
 import runMockRenderTests from './runMockRenderTests';
 import runRenderTests from './runRenderTests';
@@ -42,13 +42,13 @@ export {
   blockDefaultProps,
   BlockSchemaErrors,
   ErrorBoundary,
+  HtmlComponent,
   IconSpinner,
   Loading,
   loadWebpackFederatedModule,
   makeCssClass,
   mediaToCssObject,
   mockBlock,
-  RenderHtml,
   runBlockSchemaTests,
   runMockMethodTests,
   runMockRenderTests,

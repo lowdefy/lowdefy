@@ -18,7 +18,7 @@ import React from 'react';
 import DOMPurify from 'dompurify';
 import { type } from '@lowdefy/helpers';
 
-class RenderHtml extends React.Component {
+class HtmlComponent extends React.Component {
   constructor(props) {
     super(props);
     this.div = {
@@ -67,4 +67,4 @@ class RenderHtml extends React.Component {
   }
 }
 
-export default RenderHtml;
+export default HtmlComponent;

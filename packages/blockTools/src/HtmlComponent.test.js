@@ -16,7 +16,7 @@
 
 import React from 'react';
 
-import { RenderHtml } from '../src';
+import { HtmlComponent } from '../src';
 
 import { configure, mount } from 'enzyme';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
@@ -33,7 +33,7 @@ beforeEach(() => {
 });
 
 test('Render default', async () => {
-  const wrapper = await mount(<RenderHtml methods={methods} />);
+  const wrapper = await mount(<HtmlComponent methods={methods} />);
   await wrapper.instance().componentDidMount();
   await wrapper.update();
   expect(wrapper.html()).toMatchInlineSnapshot(`"<span></span>"`);
@@ -43,7 +43,7 @@ test('Render default', async () => {
 });
 
 test('Render default and id', async () => {
-  const wrapper = await mount(<RenderHtml id="test-id" methods={methods} />);
+  const wrapper = await mount(<HtmlComponent id="test-id" methods={methods} />);
   await wrapper.instance().componentDidMount();
   await wrapper.update();
   expect(wrapper.html()).toMatchInlineSnapshot(
@@ -52,42 +52,42 @@ test('Render default and id', async () => {
 });
 
 test('Render string', async () => {
-  const wrapper = await mount(<RenderHtml html="A string value" methods={methods} />);
+  const wrapper = await mount(<HtmlComponent html="A string value" methods={methods} />);
   await wrapper.instance().componentDidMount();
   await wrapper.update();
   expect(wrapper.html()).toMatchInlineSnapshot(`"<span>A string value</span>"`);
 });
 
 test('Render number', async () => {
-  const wrapper = await mount(<RenderHtml html={123} methods={methods} />);
+  const wrapper = await mount(<HtmlComponent html={123} methods={methods} />);
   await wrapper.instance().componentDidMount();
   await wrapper.update();
   expect(wrapper.html()).toMatchInlineSnapshot(`"<span>123</span>"`);
 });
 
 test('Render number 0', async () => {
-  const wrapper = await mount(<RenderHtml html={0} methods={methods} />);
+  const wrapper = await mount(<HtmlComponent html={0} methods={methods} />);
   await wrapper.instance().componentDidMount();
   await wrapper.update();
   expect(wrapper.html()).toMatchInlineSnapshot(`"<span>0</span>"`);
 });
 
 test('Render boolean true', async () => {
-  const wrapper = await mount(<RenderHtml html={true} methods={methods} />);
+  const wrapper = await mount(<HtmlComponent html={true} methods={methods} />);
   await wrapper.instance().componentDidMount();
   await wrapper.update();
   expect(wrapper.html()).toMatchInlineSnapshot(`"<span>true</span>"`);
 });
 
 test('Render boolean false', async () => {
-  const wrapper = await mount(<RenderHtml html={false} methods={methods} />);
+  const wrapper = await mount(<HtmlComponent html={false} methods={methods} />);
   await wrapper.instance().componentDidMount();
   await wrapper.update();
   expect(wrapper.html()).toMatchInlineSnapshot(`"<span>false</span>"`);
 });
 
 test('Render null', async () => {
-  const wrapper = await mount(<RenderHtml html={null} methods={methods} />);
+  const wrapper = await mount(<HtmlComponent html={null} methods={methods} />);
   await wrapper.instance().componentDidMount();
   await wrapper.update();
   expect(wrapper.html()).toMatchInlineSnapshot(`"<span></span>"`);
@@ -95,7 +95,7 @@ test('Render null', async () => {
 
 test('Render html', async () => {
   const wrapper = await mount(
-    <RenderHtml
+    <HtmlComponent
       html={'<div style="background: green; padding: 10px;">Content green background</div>'}
       methods={methods}
     />
@@ -109,7 +109,7 @@ test('Render html', async () => {
 
 test('Render html div', async () => {
   const wrapper = await mount(
-    <RenderHtml
+    <HtmlComponent
       html={'<div style="background: green; padding: 10px;">Content green background</div>'}
       methods={methods}
       div={true}
@@ -124,7 +124,7 @@ test('Render html div', async () => {
 
 test('Render html and style', async () => {
   const wrapper = await mount(
-    <RenderHtml
+    <HtmlComponent
       html={'<div style="background: green; padding: 10px;">Content green background</div>'}
       methods={methods}
       style={{ color: 'red' }}
@@ -139,7 +139,7 @@ test('Render html and style', async () => {
 
 test('Render html iframe', async () => {
   const wrapper = await mount(
-    <RenderHtml
+    <HtmlComponent
       html={
         '<iframe width="560" height="315" src="https://www.youtube.com/embed/7N7GWdlQJlU" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
       }
@@ -153,7 +153,7 @@ test('Render html iframe', async () => {
 
 test('Render bad html', async () => {
   const wrapper = await mount(
-    <RenderHtml
+    <HtmlComponent
       html={`
       <h1>Link<h1>
       <a href="https://lowdefy.com">Lowdefy link</a>
