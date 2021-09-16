@@ -16,6 +16,7 @@
 
 import React from 'react';
 import DOMPurify from 'dompurify';
+import { type } from '@lowdefy/helpers';
 
 class RenderHtml extends React.Component {
   constructor(props) {
@@ -26,18 +27,17 @@ class RenderHtml extends React.Component {
   }
 
   componentDidMount() {
-    this.div.innerHTML = DOMPurify.sanitize(this.props.html);
+    const htmlString = type.isNone(this.props.html) ? '' : this.props.html.toString();
+    this.div.innerHTML = DOMPurify.sanitize(htmlString);
   }
 
   componentDidUpdate() {
-    this.div.innerHTML = DOMPurify.sanitize(this.props.html);
+    const htmlString = type.isNone(this.props.html) ? '' : this.props.html.toString();
+    this.div.innerHTML = DOMPurify.sanitize(htmlString);
   }
 
   render() {
-    const { div, html, id, methods, style } = this.props;
-    if (!html) {
-      return '';
-    }
+    const { div, id, methods, style } = this.props;
     if (div === true) {
       return (
         <div

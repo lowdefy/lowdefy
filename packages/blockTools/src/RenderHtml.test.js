@@ -36,17 +36,19 @@ test('Render default', async () => {
   const wrapper = await mount(<RenderHtml methods={methods} />);
   await wrapper.instance().componentDidMount();
   await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`""`);
+  expect(wrapper.html()).toMatchInlineSnapshot(`"<span></span>"`);
   await wrapper.instance().componentDidUpdate();
   await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`""`);
+  expect(wrapper.html()).toMatchInlineSnapshot(`"<span></span>"`);
 });
 
 test('Render default and id', async () => {
   const wrapper = await mount(<RenderHtml id="test-id" methods={methods} />);
   await wrapper.instance().componentDidMount();
   await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`""`);
+  expect(wrapper.html()).toMatchInlineSnapshot(
+    `"<span id=\\"test-id\\" data-testid=\\"test-id\\"></span>"`
+  );
 });
 
 test('Render string', async () => {
@@ -63,18 +65,32 @@ test('Render number', async () => {
   expect(wrapper.html()).toMatchInlineSnapshot(`"<span>123</span>"`);
 });
 
-test('Render boolean', async () => {
+test('Render number 0', async () => {
+  const wrapper = await mount(<RenderHtml html={0} methods={methods} />);
+  await wrapper.instance().componentDidMount();
+  await wrapper.update();
+  expect(wrapper.html()).toMatchInlineSnapshot(`"<span>0</span>"`);
+});
+
+test('Render boolean true', async () => {
+  const wrapper = await mount(<RenderHtml html={true} methods={methods} />);
+  await wrapper.instance().componentDidMount();
+  await wrapper.update();
+  expect(wrapper.html()).toMatchInlineSnapshot(`"<span>true</span>"`);
+});
+
+test('Render boolean false', async () => {
   const wrapper = await mount(<RenderHtml html={false} methods={methods} />);
   await wrapper.instance().componentDidMount();
   await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`""`);
+  expect(wrapper.html()).toMatchInlineSnapshot(`"<span>false</span>"`);
 });
 
 test('Render null', async () => {
   const wrapper = await mount(<RenderHtml html={null} methods={methods} />);
   await wrapper.instance().componentDidMount();
   await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`""`);
+  expect(wrapper.html()).toMatchInlineSnapshot(`"<span></span>"`);
 });
 
 test('Render html', async () => {
