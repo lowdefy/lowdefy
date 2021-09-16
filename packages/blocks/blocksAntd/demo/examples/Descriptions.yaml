@@ -160,8 +160,8 @@
         value: value one
       - label: label 2
         value: '<div style="width: 150px; color: red; background: #afa; text-align: center;">value 4</div>'
-      - label: label 3
-        value: 2
+      - label: false
+        value: 0
       - label: label 4
         value: <a>value three</a>
 # - id: 'properties.title html value'
