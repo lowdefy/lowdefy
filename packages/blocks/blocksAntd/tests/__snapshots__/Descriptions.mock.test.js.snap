@@ -238,7 +238,7 @@ Array [
           }
         >
           <RenderHtml
-            html={2}
+            html="2"
             methods={
               Object {
                 "makeCssClass": [MockFunction] {
@@ -658,7 +658,7 @@ Array [
           }
         >
           <RenderHtml
-            html={2}
+            html="2"
             methods={
               Object {
                 "makeCssClass": [MockFunction] {
@@ -1078,7 +1078,7 @@ Array [
           }
         >
           <RenderHtml
-            html={2}
+            html="2"
             methods={
               Object {
                 "makeCssClass": [MockFunction] {
@@ -1538,7 +1538,7 @@ Array [
           span={2}
         >
           <RenderHtml
-            html={2}
+            html="2"
             methods={
               Object {
                 "makeCssClass": [MockFunction] {
@@ -2197,7 +2197,7 @@ Array [
           }
         >
           <RenderHtml
-            html={2}
+            html="2"
             methods={
               Object {
                 "makeCssClass": [MockFunction] {
@@ -2938,7 +2938,7 @@ Array [
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
             <RenderHtml
-              html="label 3"
+              html="false"
               methods={
                 Object {
                   "makeCssClass": [MockFunction] {
@@ -3008,7 +3008,7 @@ Array [
           }
         >
           <RenderHtml
-            html={2}
+            html="0"
             methods={
               Object {
                 "makeCssClass": [MockFunction] {
@@ -4152,7 +4152,7 @@ Array [
           }
         >
           <RenderHtml
-            html={2}
+            html="2"
             methods={
               Object {
                 "makeCssClass": [MockFunction] {
@@ -4701,11 +4701,7 @@ Array [
           }
         >
           <RenderHtml
-            html={
-              Object {
-                "two": 3,
-              }
-            }
+            html="[object Object]"
             methods={
               Object {
                 "makeCssClass": [MockFunction] {
@@ -4821,11 +4817,7 @@ Array [
           }
         >
           <RenderHtml
-            html={
-              Object {
-                "five": "six",
-              }
-            }
+            html="[object Object]"
             methods={
               Object {
                 "makeCssClass": [MockFunction] {
@@ -4941,14 +4933,7 @@ Array [
           }
         >
           <RenderHtml
-            html={
-              Object {
-                "eight": Array [
-                  9,
-                  "ten",
-                ],
-              }
-            }
+            html="[object Object]"
             methods={
               Object {
                 "makeCssClass": [MockFunction] {
@@ -5253,7 +5238,7 @@ Array [
           }
         >
           <RenderHtml
-            html={2}
+            html="2"
             methods={
               Object {
                 "makeCssClass": [MockFunction] {
@@ -5673,7 +5658,7 @@ Array [
           }
         >
           <RenderHtml
-            html={2}
+            html="2"
             methods={
               Object {
                 "makeCssClass": [MockFunction] {
@@ -6093,7 +6078,7 @@ Array [
           }
         >
           <RenderHtml
-            html={2}
+            html="2"
             methods={
               Object {
                 "makeCssClass": [MockFunction] {
@@ -6630,7 +6615,7 @@ Array [
           }
         >
           <RenderHtml
-            html={2}
+            html="2"
             methods={
               Object {
                 "makeCssClass": [MockFunction] {
@@ -7212,7 +7197,7 @@ Array [
           }
         >
           <RenderHtml
-            html={5}
+            html="5"
             methods={
               Object {
                 "makeCssClass": [MockFunction] {
