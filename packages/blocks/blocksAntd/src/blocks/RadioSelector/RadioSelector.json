@@ -13,6 +13,12 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "align": {
+          "type": "string",
+          "enum": ["start", "end", "center", "baseline"],
+          "default": "start",
+          "description": "Align options."
+        },
         "color": {
           "type": "string",
           "description": "Selected radio color.",
@@ -27,17 +33,14 @@
         },
         "direction": {
           "type": "string",
-          "enum": ["row", "column", "row-reverse", "column-reverse"],
-          "description": "List content along a 'row' or down a 'column'. Applies the 'flex-direction' css property to the RadioSelector block."
+          "enum": ["horizontal", "vertical"],
+          "default": "horizontal",
+          "description": "List options horizontally or vertical."
         },
         "wrap": {
-          "type": "string",
-          "enum": ["wrap", "nowrap", "wrap-reverse"],
-          "description": "Specifies wrapping style to be applied to RadioSelector block as 'wrap', 'nowrap' or 'wrap-reverse'. Applies the 'flex-wrap' css property to the RadioSelector block - defaults to 'wrap', requires RadioSelector direction to be set."
-        },
-        "scroll": {
           "type": "boolean",
-          "description": "Specifies whether scrolling should be applied to the RadioSelector, can be true or false. Applies the 'overflow' css property to the RadioSelector block - defaults to 'visible', requires RadioSelector direction to be set."
+          "default": true,
+          "description": "Specifies wrapping of options. Applies when 'direction' is 'horizontal'."
         },
         "inputStyle": {
           "type": "object",

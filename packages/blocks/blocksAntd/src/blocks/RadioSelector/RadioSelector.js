@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { Radio } from 'antd';
+import { Radio, Space } from 'antd';
 import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
 import { type } from '@lowdefy/helpers';
 
@@ -57,15 +57,6 @@ const RadioSelector = ({
                   },
                 },
               },
-              properties.direction && {
-                display: 'flex',
-                flexDirection: properties.direction,
-                flexWrap: properties.wrap ? properties.wrap : 'wrap',
-                overflow: properties.scroll ? 'auto' : 'visible',
-              },
-              properties.direction == 'row-reverse' && {
-                justifyContent: 'flex-end',
-              },
               properties.inputStyle,
             ])}
             disabled={properties.disabled}
@@ -79,26 +70,32 @@ const RadioSelector = ({
             }}
             value={getValueIndex(value, uniqueValueOptions)}
           >
-            {uniqueValueOptions.map((opt, i) =>
-              type.isPrimitive(opt) ? (
-                <Radio id={`${blockId}_${opt}`} key={i} value={i}>
-                  <RenderHtml html={`${opt}`} methods={methods} />
-                </Radio>
-              ) : (
-                <Radio
-                  id={`${blockId}_${i}`}
-                  key={i}
-                  value={i}
-                  disabled={opt.disabled}
-                  className={methods.makeCssClass(opt.style)}
-                >
-                  <RenderHtml
-                    html={type.isNone(opt.label) ? `${opt.value}` : opt.label}
-                    methods={methods}
-                  />
-                </Radio>
-              )
-            )}
+            <Space
+              direction={properties.direction}
+              wrap={type.isNone(properties.wrap) ? true : properties.wrap}
+              align={type.isNone(properties.align) ? 'start' : properties.align}
+            >
+              {uniqueValueOptions.map((opt, i) =>
+                type.isPrimitive(opt) ? (
+                  <Radio id={`${blockId}_${opt}`} key={i} value={i}>
+                    <RenderHtml html={`${opt}`} methods={methods} />
+                  </Radio>
+                ) : (
+                  <Radio
+                    id={`${blockId}_${i}`}
+                    key={i}
+                    value={i}
+                    disabled={opt.disabled}
+                    className={methods.makeCssClass(opt.style)}
+                  >
+                    <RenderHtml
+                      html={type.isNone(opt.label) ? `${opt.value}` : opt.label}
+                      methods={methods}
+                    />
+                  </Radio>
+                )
+              )}
+            </Space>
           </RadioGroup>
         ),
       }}
