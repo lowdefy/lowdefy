@@ -13,6 +13,12 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "align": {
+          "type": "string",
+          "enum": ["start", "end", "center", "baseline"],
+          "default": "start",
+          "description": "Align options."
+        },
         "color": {
           "type": "string",
           "description": "Selected checkbox color.",
