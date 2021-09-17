@@ -38,7 +38,15 @@ _ref:
             npx lowdefy@version <command>
             ```
 
-            Alternative, you can install the CLI globally or to a npm project (with a `package.json` file) via npm. The CLI can then be used using `lowdefy` as the executable name:
+            Alternative, you can install the CLI globally or to a npm project (with a `package.json` file) via npm or yarn.
+
+            To install the CLI globally run:
+
+            ```
+            npm install lowdefy -g
+            ```
+
+            The CLI can then be run using `lowdefy` as the executable name:
 
             ```
             lowdefy <command>
