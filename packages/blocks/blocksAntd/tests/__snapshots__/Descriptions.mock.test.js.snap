@@ -11,16 +11,7 @@ Array [
       "id": "default",
       "layout": undefined,
       "size": undefined,
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
     },
     Object {},
   ],
@@ -38,7 +29,7 @@ Array [
       "id": "default title",
       "layout": undefined,
       "size": undefined,
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html="Descriptions title"
         methods={
           Object {
@@ -64,7 +55,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_one"
               methods={
                 Object {
@@ -121,7 +112,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="value one"
             methods={
               Object {
@@ -180,7 +171,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_two"
               methods={
                 Object {
@@ -237,7 +228,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html={2}
             methods={
               Object {
@@ -296,7 +287,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_three"
               methods={
                 Object {
@@ -353,7 +344,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="value three"
             methods={
               Object {
@@ -415,60 +406,7 @@ Array [
       "id": "properties.bordered: true",
       "layout": undefined,
       "size": undefined,
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
     },
     Object {},
   ],
@@ -484,7 +422,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_one"
               methods={
                 Object {
@@ -541,7 +479,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="value one"
             methods={
               Object {
@@ -600,7 +538,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_two"
               methods={
                 Object {
@@ -657,7 +595,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html={2}
             methods={
               Object {
@@ -716,7 +654,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_three"
               methods={
                 Object {
@@ -773,7 +711,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="value three"
             methods={
               Object {
@@ -835,60 +773,7 @@ Array [
       "id": "properties.colon: false",
       "layout": undefined,
       "size": undefined,
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
     },
     Object {},
   ],
@@ -904,7 +789,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_one"
               methods={
                 Object {
@@ -961,7 +846,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="value one"
             methods={
               Object {
@@ -1020,7 +905,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_two"
               methods={
                 Object {
@@ -1077,7 +962,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html={2}
             methods={
               Object {
@@ -1136,7 +1021,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_three"
               methods={
                 Object {
@@ -1193,7 +1078,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="value three"
             methods={
               Object {
@@ -1255,60 +1140,7 @@ Array [
       "id": "properties.column: 2",
       "layout": undefined,
       "size": undefined,
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
     },
     Object {},
   ],
@@ -1324,7 +1156,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_one"
               methods={
                 Object {
@@ -1394,7 +1226,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="value one"
             methods={
               Object {
@@ -1466,7 +1298,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_two"
               methods={
                 Object {
@@ -1537,7 +1369,7 @@ Array [
           }
           span={2}
         >
-          <RenderHtml
+          <HtmlComponent
             html={2}
             methods={
               Object {
@@ -1609,7 +1441,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_three"
               methods={
                 Object {
@@ -1679,7 +1511,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="value three"
             methods={
               Object {
@@ -1751,7 +1583,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_four"
               methods={
                 Object {
@@ -1821,7 +1653,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="value 4"
             methods={
               Object {
@@ -1896,73 +1728,7 @@ Array [
       "id": "properties.itemOptions.span",
       "layout": undefined,
       "size": undefined,
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
     },
     Object {},
   ],
@@ -1978,7 +1744,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_one"
               methods={
                 Object {
@@ -2050,7 +1816,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="value one"
             methods={
               Object {
@@ -2124,7 +1890,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},{\\"textAlign\\":\\"right\\"},null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_two"
               methods={
                 Object {
@@ -2196,7 +1962,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html={2}
             methods={
               Object {
@@ -2270,7 +2036,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_three"
               methods={
                 Object {
@@ -2342,7 +2108,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="value three"
             methods={
               Object {
@@ -2416,7 +2182,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_four"
               methods={
                 Object {
@@ -2488,7 +2254,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="value 4"
             methods={
               Object {
@@ -2565,75 +2331,7 @@ Array [
       "id": "properties.itemOptions.style",
       "layout": undefined,
       "size": undefined,
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    Object {
-                      "textAlign": "right",
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},{\\"textAlign\\":\\"right\\"},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
     },
     Object {},
   ],
@@ -2649,7 +2347,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html=<h3>
   Good morning
 </h3>
@@ -2721,7 +2419,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="value one"
             methods={
               Object {
@@ -2793,7 +2491,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="label 2"
               methods={
                 Object {
@@ -2863,7 +2561,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html=<div style="width: 150px; color: red; background: #afa; text-align: center;">
   value 4
 </div>
@@ -2937,7 +2635,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="label 3"
               methods={
                 Object {
@@ -3007,7 +2705,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html={2}
             methods={
               Object {
@@ -3079,7 +2777,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="label 4"
               methods={
                 Object {
@@ -3149,7 +2847,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html=<a>
   value three
 </a>
@@ -3226,11 +2924,1118 @@ Array [
       "id": "properties.items html values",
       "layout": undefined,
       "size": undefined,
-      "title": <RenderHtml
+      "title": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.items-falseish-values - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bordered": undefined,
+      "children": Array [
+        <mockConstructor
+          className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+          label={
+            <HtmlComponent
+              html="Null"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
+        />,
+        <mockConstructor
+          className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+          label={
+            <HtmlComponent
+              html="Zero"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
+        >
+          <HtmlComponent
+            html={0}
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+          label={
+            <HtmlComponent
+              html="One"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
+        >
+          <HtmlComponent
+            html={1}
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+          label={
+            <HtmlComponent
+              html="False"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
+        >
+          <HtmlComponent
+            html={false}
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+          label={
+            <HtmlComponent
+              html="True"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
+        >
+          <HtmlComponent
+            html={true}
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+          label={
+            <HtmlComponent
+              html="Empty"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
+        >
+          <HtmlComponent
+            html=""
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "colon": undefined,
+      "column": undefined,
+      "id": "properties.items-falseish-values",
+      "layout": undefined,
+      "size": undefined,
+      "title": <HtmlComponent
+        html="Title"
         methods={
           Object {
             "makeCssClass": [MockFunction] {
               "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "whiteSpace": "pre-wrap",
+                    },
+                    undefined,
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "whiteSpace": "pre-wrap",
+                    },
+                    undefined,
+                    undefined,
+                  ],
+                ],
                 Array [
                   Array [
                     Object {
@@ -3285,6 +4090,14 @@ Array [
                   "type": "return",
                   "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
                 },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                },
               ],
             },
             "registerEvent": [Function],
@@ -3308,7 +4121,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_one"
               methods={
                 Object {
@@ -3366,7 +4179,7 @@ Array [
           }
           span={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html="1"
             methods={
               Object {
@@ -3425,7 +4238,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_two"
               methods={
                 Object {
@@ -3483,7 +4296,7 @@ Array [
           }
           span={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html="2"
             methods={
               Object {
@@ -3542,7 +4355,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_three"
               methods={
                 Object {
@@ -3600,7 +4413,7 @@ Array [
           }
           span={2}
         >
-          <RenderHtml
+          <HtmlComponent
             html="3"
             methods={
               Object {
@@ -3662,7 +4475,7 @@ Array [
       "id": "properties.items-list",
       "layout": undefined,
       "size": undefined,
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html="Title"
         methods={
           Object {
@@ -3732,7 +4545,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_one"
               methods={
                 Object {
@@ -3777,7 +4590,7 @@ Array [
           }
           span={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html="description field with 
 new line 	 helps
  make better content."
@@ -3825,7 +4638,7 @@ new line 	 helps
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="one \\\\n two;"
               methods={
                 Object {
@@ -3870,7 +4683,7 @@ new line 	 helps
           }
           span={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html="description field with 
 new line 	 helps
  make better content."
@@ -3921,7 +4734,7 @@ new line 	 helps
       "id": "properties.items-list with new lines",
       "layout": undefined,
       "size": undefined,
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html="Title"
         methods={
           Object {
@@ -3978,7 +4791,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_one"
               methods={
                 Object {
@@ -4035,7 +4848,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="value one"
             methods={
               Object {
@@ -4094,7 +4907,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_two"
               methods={
                 Object {
@@ -4151,7 +4964,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html={2}
             methods={
               Object {
@@ -4210,7 +5023,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_three"
               methods={
                 Object {
@@ -4267,7 +5080,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="value three"
             methods={
               Object {
@@ -4329,7 +5142,7 @@ Array [
       "id": "properties.items-object",
       "layout": undefined,
       "size": undefined,
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html="Title"
         methods={
           Object {
@@ -4399,7 +5212,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_one"
               methods={
                 Object {
@@ -4443,7 +5256,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="description one field with 
  new line 	 helps
  make better content."
@@ -4491,7 +5304,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="one \\\\n two;"
               methods={
                 Object {
@@ -4535,7 +5348,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="description two field with 
  new line 	 helps
  make better content."
@@ -4586,7 +5399,7 @@ Array [
       "id": "properties.items-object with new lines",
       "layout": undefined,
       "size": undefined,
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html="Title"
         methods={
           Object {
@@ -4643,7 +5456,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="one"
               methods={
                 Object {
@@ -4700,7 +5513,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html={
               Object {
                 "two": 3,
@@ -4763,7 +5576,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="four"
               methods={
                 Object {
@@ -4820,7 +5633,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html={
               Object {
                 "five": "six",
@@ -4883,7 +5696,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="seven"
               methods={
                 Object {
@@ -4940,7 +5753,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html={
               Object {
                 "eight": Array [
@@ -5009,7 +5822,7 @@ Array [
       "id": "properties.items-object-object",
       "layout": undefined,
       "size": undefined,
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html="Title"
         methods={
           Object {
@@ -5079,7 +5892,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_one"
               methods={
                 Object {
@@ -5136,7 +5949,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="value one"
             methods={
               Object {
@@ -5195,7 +6008,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_two"
               methods={
                 Object {
@@ -5252,7 +6065,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html={2}
             methods={
               Object {
@@ -5311,7 +6124,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_three"
               methods={
                 Object {
@@ -5368,7 +6181,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="value three"
             methods={
               Object {
@@ -5430,60 +6243,7 @@ Array [
       "id": "properties.layout: vertical",
       "layout": "vertical",
       "size": undefined,
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
     },
     Object {},
   ],
@@ -5499,7 +6259,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_one"
               methods={
                 Object {
@@ -5556,7 +6316,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="value one"
             methods={
               Object {
@@ -5615,7 +6375,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_two"
               methods={
                 Object {
@@ -5672,7 +6432,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html={2}
             methods={
               Object {
@@ -5731,7 +6491,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_three"
               methods={
                 Object {
@@ -5788,7 +6548,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="value three"
             methods={
               Object {
@@ -5850,60 +6610,7 @@ Array [
       "id": "properties.size: default",
       "layout": undefined,
       "size": "default",
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
     },
     Object {},
   ],
@@ -5919,7 +6626,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_one"
               methods={
                 Object {
@@ -5976,7 +6683,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="value one"
             methods={
               Object {
@@ -6035,7 +6742,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_two"
               methods={
                 Object {
@@ -6092,7 +6799,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html={2}
             methods={
               Object {
@@ -6151,7 +6858,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_three"
               methods={
                 Object {
@@ -6208,7 +6915,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="value three"
             methods={
               Object {
@@ -6270,60 +6977,7 @@ Array [
       "id": "properties.size: small",
       "layout": undefined,
       "size": "small",
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
     },
     Object {},
   ],
@@ -6339,7 +6993,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_one"
               methods={
                 Object {
@@ -6435,7 +7089,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="value one"
             methods={
               Object {
@@ -6533,7 +7187,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_two"
               methods={
                 Object {
@@ -6629,7 +7283,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html={2}
             methods={
               Object {
@@ -6727,7 +7381,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_three"
               methods={
                 Object {
@@ -6823,7 +7477,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="value three"
             methods={
               Object {
@@ -6921,7 +7575,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_4"
               methods={
                 Object {
@@ -7017,7 +7671,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="value 4"
             methods={
               Object {
@@ -7115,7 +7769,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_5"
               methods={
                 Object {
@@ -7211,7 +7865,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html={5}
             methods={
               Object {
@@ -7309,7 +7963,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
           label={
-            <RenderHtml
+            <HtmlComponent
               html="field_6"
               methods={
                 Object {
@@ -7405,7 +8059,7 @@ Array [
             />
           }
         >
-          <RenderHtml
+          <HtmlComponent
             html="value 6"
             methods={
               Object {
@@ -7506,7 +8160,602 @@ Array [
       "id": "properties.size: small, properties.bordered: true",
       "layout": undefined,
       "size": "small",
-      "title": <RenderHtml
+      "title": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.title html value - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bordered": undefined,
+      "children": Array [
+        <mockConstructor
+          className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+          label={
+            <HtmlComponent
+              html="field_one"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
+        >
+          <HtmlComponent
+            html="value one"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+          label={
+            <HtmlComponent
+              html="field_two"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
+        >
+          <HtmlComponent
+            html={2}
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+          label={
+            <HtmlComponent
+              html="field_three"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
+        >
+          <HtmlComponent
+            html="value three"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          className="{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+          label={
+            <HtmlComponent
+              html="field_four"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "whiteSpace": "pre-wrap",
+                          },
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+            />
+          }
+        >
+          <HtmlComponent
+            html={
+              Array [
+                "value 4",
+                "value 5",
+              ]
+            }
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "whiteSpace": "pre-wrap",
+                        },
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "colon": undefined,
+      "column": undefined,
+      "id": "properties.title html value",
+      "layout": undefined,
+      "size": undefined,
+      "title": <HtmlComponent
+        html=<div style="color: blue;">
+  hello
+</div>
         methods={
           Object {
             "makeCssClass": [MockFunction] {
@@ -7547,34 +8796,8 @@ Array [
                     undefined,
                   ],
                 ],
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "whiteSpace": "pre-wrap",
-                    },
-                    undefined,
-                    undefined,
-                  ],
-                ],
               ],
               "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",
-                },
                 Object {
                   "type": "return",
                   "value": "{\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}",

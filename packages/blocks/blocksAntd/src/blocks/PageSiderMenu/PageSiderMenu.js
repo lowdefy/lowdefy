@@ -287,7 +287,7 @@ const PageSiderMenu = ({
                                         blockId={`${blockId}_toggle_sider`}
                                         events={events}
                                         properties={{
-                                          title: '',
+                                          hideTitle: true,
                                           type: 'link',
                                           block: true,
                                           icon: {
