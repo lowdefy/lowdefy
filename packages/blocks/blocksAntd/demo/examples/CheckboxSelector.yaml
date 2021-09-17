@@ -189,3 +189,35 @@
       - Option Eight C
       - Option Nine C
       - Option Ten C
+- id: 'properties.align: start'
+  type: CheckboxSelector
+  properties:
+    align: start
+    options:
+      - '<div>Some main text</div><div style="font-size: 6px;">Some small subtext</div>'
+      - '<div style="color: green;">Option green</div>'
+      - Option 3
+- id: 'properties.align: end'
+  type: CheckboxSelector
+  properties:
+    align: end
+    options:
+      - '<div>Some main text</div><div style="font-size: 6px;">Some small subtext</div>'
+      - '<div style="color: green;">Option green</div>'
+      - Option 3
+- id: 'properties.align: center'
+  type: CheckboxSelector
+  properties:
+    align: center
+    options:
+      - '<div>Some main text</div><div style="font-size: 6px;">Some small subtext</div>'
+      - '<div style="color: green;">Option green</div>'
+      - Option 3
+- id: 'properties.align: baseline'
+  type: CheckboxSelector
+  properties:
+    align: baseline
+    options:
+      - '<div>Some main text</div><div style="font-size: 6px;">Some small subtext</div>'
+      - '<div style="color: green;">Option green</div>'
+      - Option 3
