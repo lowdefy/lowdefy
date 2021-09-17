@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Select } from 'antd';
-import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 import { get, type } from '@lowdefy/helpers';
 import Label from '../Label/Label';
 import Icon from '../Icon/Icon';
@@ -102,7 +102,7 @@ const Selector = ({
                     key={i}
                     value={i}
                   >
-                    <RenderHtml html={`${opt}`} methods={methods} />
+                    {`${opt}`}
                   </Option>
                 ) : (
                   <Option
@@ -113,10 +113,9 @@ const Selector = ({
                     key={i}
                     value={i}
                   >
-                    <RenderHtml
-                      html={type.isNone(opt.label) ? `${opt.value}` : opt.label}
-                      methods={methods}
-                    />
+                    {type.isNone(opt.label)
+                      ? `${opt.value}`
+                      : renderHtml({ html: opt.label, methods })}
                   </Option>
                 )
               )}
