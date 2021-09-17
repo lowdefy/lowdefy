@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { Checkbox } from 'antd';
+import { Checkbox, Space } from 'antd';
 import { type } from '@lowdefy/helpers';
 import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
 
@@ -53,32 +53,6 @@ const CheckboxSelector = ({
                   borderColor: `${properties.color} !important`,
                 },
               },
-              properties.direction && {
-                display: 'flex',
-                flexDirection: properties.direction,
-                flexWrap: properties.wrap ? properties.wrap : 'wrap',
-                overflow: properties.scroll ? 'auto' : 'visible',
-              },
-              properties.direction == 'row-reverse' && {
-                '& > :nth-child(1)': {
-                  marginLeft: 8,
-                  // antd adds a margin on all elements after the first one
-                  // using a margin left on the 1st element corrects this for the row-reverse direction
-                },
-                '& > :nth-last-child(1)': {
-                  marginLeft: 0,
-                  // antd adds a margin on all elements after the first one
-                  // using a margin left on the last element corrects this for the row-reverse direction
-                },
-                justifyContent: 'flex-end',
-              },
-              (properties.direction == 'column' || properties.direction == 'column-reverse') && {
-                '& > :nth-child(n)': {
-                  marginLeft: 0,
-                  // antd adds a margin on all elements after the first one
-                  // using a margin left on the elements removes this for the column direction
-                },
-              },
               properties.inputStyle,
             ])}
             disabled={properties.disabled}
@@ -96,26 +70,32 @@ const CheckboxSelector = ({
             }}
             value={getValueIndex(value, uniqueValueOptions, true)}
           >
-            {uniqueValueOptions.map((opt, i) =>
-              type.isPrimitive(opt) ? (
-                <Checkbox id={`${blockId}_${i}`} key={i} value={i}>
-                  <RenderHtml html={`${opt}`} methods={methods} />
-                </Checkbox>
-              ) : (
-                <Checkbox
-                  id={`${blockId}_${i}`}
-                  key={i}
-                  value={i}
-                  disabled={opt.disabled}
-                  className={methods.makeCssClass(opt.style)}
-                >
-                  <RenderHtml
-                    html={type.isNone(opt.label) ? `${opt.value}` : opt.label}
-                    methods={methods}
-                  />
-                </Checkbox>
-              )
-            )}
+            <Space
+              direction={properties.direction}
+              wrap={type.isNone(properties.wrap) ? true : properties.wrap}
+              align={type.isNone(properties.align) ? 'start' : properties.align}
+            >
+              {uniqueValueOptions.map((opt, i) =>
+                type.isPrimitive(opt) ? (
+                  <Checkbox id={`${blockId}_${i}`} key={i} value={i}>
+                    <RenderHtml html={`${opt}`} methods={methods} />
+                  </Checkbox>
+                ) : (
+                  <Checkbox
+                    id={`${blockId}_${i}`}
+                    key={i}
+                    value={i}
+                    disabled={opt.disabled}
+                    className={methods.makeCssClass(opt.style)}
+                  >
+                    <RenderHtml
+                      html={type.isNone(opt.label) ? `${opt.value}` : opt.label}
+                      methods={methods}
+                    />
+                  </Checkbox>
+                )
+              )}
+            </Space>
           </Checkbox.Group>
         ),
       }}

@@ -11,8 +11,16 @@
   type: CheckboxSelector
   properties:
     options:
-      - Option 1
-      - Option 2
+      - Option One
+      - Option Two
+      - Option Three
+      - Option Four
+      - Option Five
+      - Option Six
+      - Option Seven
+      - Option Eight
+      - Option Nine
+      - Option Ten
 - id: 'properties.options-number'
   type: CheckboxSelector
   properties:
@@ -116,103 +124,68 @@
           background: red
       - label: two
         value: 2
-- id: 'properties.direction row'
+- id: 'properties.direction horizontal'
   type: CheckboxSelector
   properties:
-    direction: row
+    direction: horizontal
     options:
       - label: one
         value: 1
-        style:
-          background: red
       - label: two
         value: 2
-        style:
-          background: red
       - label: three
         value: 3
-        style:
-          background: red
       - label: four
         value: 4
-        style:
-          background: red
       - label: five
         value: 5
-        style:
-          background: red
-- id: 'properties.direction row-reverse'
+- id: 'properties.direction vertical'
   type: CheckboxSelector
   properties:
-    direction: row-reverse
+    direction: vertical
     options:
       - label: one
         value: 1
-        style:
-          background: red
       - label: two
         value: 2
-        style:
-          background: red
       - label: three
         value: 3
-        style:
-          background: red
       - label: four
         value: 4
-        style:
-          background: red
       - label: five
         value: 5
-        style:
-          background: red
-- id: 'properties.direction column'
+- id: 'properties.wrap false'
   type: CheckboxSelector
   properties:
-    direction: column
+    wrap: false
     options:
-      - label: one
-        value: 1
-        style:
-          background: red
-      - label: two
-        value: 2
-        style:
-          background: red
-      - label: three
-        value: 3
-        style:
-          background: red
-      - label: four
-        value: 4
-        style:
-          background: red
-      - label: five
-        value: 5
-        style:
-          background: red
-- id: 'properties.direction column-reverse'
-  type: CheckboxSelector
-  properties:
-    direction: column-reverse
-    options:
-      - label: one
-        value: 1
-        style:
-          background: red
-      - label: two
-        value: 2
-        style:
-          background: red
-      - label: three
-        value: 3
-        style:
-          background: red
-      - label: four
-        value: 4
-        style:
-          background: red
-      - label: five
-        value: 5
-        style:
-          background: red
+      - Option One A
+      - Option Two A
+      - Option Three A
+      - Option Four A
+      - Option Five A
+      - Option Six A
+      - Option Seven A
+      - Option Eight A
+      - Option Nine A
+      - Option Ten A
+      - Option One B
+      - Option Two B
+      - Option Three B
+      - Option Four B
+      - Option Five B
+      - Option Six B
+      - Option Seven B
+      - Option Eight B
+      - Option Nine B
+      - Option Ten B
+      - Option One C
+      - Option Two C
+      - Option Three C
+      - Option Four C
+      - Option Five C
+      - Option Six C
+      - Option Seven C
+      - Option Eight C
+      - Option Nine C
+      - Option Ten C
