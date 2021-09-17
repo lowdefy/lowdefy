@@ -18,7 +18,7 @@ import React from 'react';
 import { Card } from 'antd';
 import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
 
-const CardBlock = ({ blockId, content, properties, methods }) => (
+const CardBlock = ({ blockId, content, properties, methods, events }) => (
   <Card
     id={blockId}
     title={
@@ -35,6 +35,11 @@ const CardBlock = ({ blockId, content, properties, methods }) => (
     hoverable={properties.hoverable}
     size={properties.size}
     type={properties.inner ? 'inner' : null}
+    onClick={() => methods.triggerEvent({ name: 'onClick' })}
+    className={methods.makeCssClass([
+      { outline: 'none', cursor: events.onClick && 'pointer' },
+      properties.style,
+    ])}
   >
     {content.content && content.content()}
   </Card>

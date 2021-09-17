@@ -181,6 +181,9 @@ function defaultMetaLocations({ blocksServerUrl }) {
     ParagraphInput: {
       url: `${baseUrl}/blocks-antd/meta/ParagraphInput.json`,
     },
+    PasswordInput: {
+      url: `${baseUrl}/blocks-antd/meta/PasswordInput.json`,
+    },
     Progress: {
       url: `${baseUrl}/blocks-antd/meta/Progress.json`,
     },

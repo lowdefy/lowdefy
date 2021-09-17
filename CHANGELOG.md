@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.22.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.2...v3.22.0-alpha.0) (2021-09-08)
+
+
+### Bug Fixes
+
+* **blocksAntd:** Updated Password Input tests. ([7f32230](https://github.com/lowdefy/lowdefy/commit/7f322300b7888bc3de51d36483f06a1f68d5d74e))
+* **build:** Updated meta locations tests. ([9e20ace](https://github.com/lowdefy/lowdefy/commit/9e20acebaac9ae01fd3974469bddede0e651da19))
+
+
+### Features
+
+* **blocksAntd:** Card block now has an onClick event. ([4263f6b](https://github.com/lowdefy/lowdefy/commit/4263f6b8764bb147e301c3dbba0ac4986959aad8))
+* **blocksAntd:** Password Input block has been added. ([9d99ef8](https://github.com/lowdefy/lowdefy/commit/9d99ef82a930adb93b022c42ef765cf8a5022c70))
+* **build:** Added PasswordInput meta location. ([66abcdd](https://github.com/lowdefy/lowdefy/commit/66abcddafc7d8b1950e96a137d0d336ccf3e145b))
+* **docs:** Add Stripe documentation. ([ed963ec](https://github.com/lowdefy/lowdefy/commit/ed963ec823ef19e88ed8320d71b83a7eef2e6cfe))
+* **docs:** Added Password Input block docs. ([ee8bda4](https://github.com/lowdefy/lowdefy/commit/ee8bda4a5bd6248c03433a720652d72c3b9ddbae))
+* **graphql:** Add Stripe connection. ([e676258](https://github.com/lowdefy/lowdefy/commit/e676258688a61b93da7267272903d02cdbb3edcb))
+
+
+
+
+
 ## [3.21.2](https://github.com/lowdefy/lowdefy/compare/v3.21.2-alpha.0...v3.21.2) (2021-08-31)
 
 ## Changes
