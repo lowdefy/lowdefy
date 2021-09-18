@@ -16,15 +16,15 @@
 
 import React from 'react';
 import { Result } from 'antd';
-import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 
 import Icon from '../Icon/Icon';
 
 const ResultBlock = ({ blockId, events, content, methods, properties }) => (
   <Result
     id={blockId}
-    title={<RenderHtml html={properties.title} methods={methods} />}
-    subTitle={<RenderHtml html={properties.subTitle} methods={methods} />}
+    title={renderHtml({ html: properties.title, methods })}
+    subTitle={renderHtml({ html: properties.subTitle, methods })}
     status={properties.status}
     icon={
       properties.icon && (

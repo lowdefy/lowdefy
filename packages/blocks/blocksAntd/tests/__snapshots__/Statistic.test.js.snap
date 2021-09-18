@@ -5,11 +5,6 @@ exports[`Render default - value[0] 1`] = `
   className="ant-statistic {}"
 >
   <div
-    className="ant-statistic-title"
-  >
-    
-  </div>
-  <div
     className="ant-statistic-content"
   >
     
@@ -33,11 +28,6 @@ exports[`Render properties.decimalSeparator: ',' - value[0] 1`] = `
 <div
   className="ant-statistic {}"
 >
-  <div
-    className="ant-statistic-title"
-  >
-    
-  </div>
   <div
     className="ant-statistic-content"
   >
@@ -67,11 +57,6 @@ exports[`Render properties.groupSeparator: ',' - value[0] 1`] = `
   className="ant-statistic {}"
 >
   <div
-    className="ant-statistic-title"
-  >
-    
-  </div>
-  <div
     className="ant-statistic-content"
   >
     
@@ -100,11 +85,6 @@ exports[`Render properties.precision: 2 - value[0] 1`] = `
   className="ant-statistic {}"
 >
   <div
-    className="ant-statistic-title"
-  >
-    
-  </div>
-  <div
     className="ant-statistic-content"
   >
     
@@ -132,11 +112,6 @@ exports[`Render properties.prefix: R - value[0] 1`] = `
 <div
   className="ant-statistic {}"
 >
-  <div
-    className="ant-statistic-title"
-  >
-    
-  </div>
   <div
     className="ant-statistic-content"
   >
@@ -169,11 +144,6 @@ exports[`Render properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
 <div
   className="ant-statistic {}"
 >
-  <div
-    className="ant-statistic-title"
-  >
-    
-  </div>
   <div
     className="ant-statistic-content"
   >
@@ -228,11 +198,6 @@ exports[`Render properties.suffix: Rand - value[0] 1`] = `
   className="ant-statistic {}"
 >
   <div
-    className="ant-statistic-title"
-  >
-    
-  </div>
-  <div
     className="ant-statistic-content"
   >
     
@@ -264,11 +229,6 @@ exports[`Render properties.suffixIcon: AccountBookFilled - value[0] 1`] = `
 <div
   className="ant-statistic {}"
 >
-  <div
-    className="ant-statistic-title"
-  >
-    
-  </div>
   <div
     className="ant-statistic-content"
   >
@@ -389,11 +349,6 @@ exports[`Render properties.value: '3.45' as string - value[0] 1`] = `
   className="ant-statistic {}"
 >
   <div
-    className="ant-statistic-title"
-  >
-    
-  </div>
-  <div
     className="ant-statistic-content"
   >
     
@@ -421,11 +376,6 @@ exports[`Render properties.value: 3.45 as number - value[0] 1`] = `
 <div
   className="ant-statistic {}"
 >
-  <div
-    className="ant-statistic-title"
-  >
-    
-  </div>
   <div
     className="ant-statistic-content"
   >

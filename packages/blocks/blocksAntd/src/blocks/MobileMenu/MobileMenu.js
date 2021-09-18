@@ -40,7 +40,7 @@ const MobileMenu = ({ basePath, blockId, events, methods, menus, pageId, propert
         blockId={`${blockId}_button`}
         events={events}
         properties={{
-          title: '',
+          hideTitle: true,
           type: 'primary',
           icon: {
             name: openState ? 'MenuUnfoldOutlined' : 'MenuFoldOutlined',
