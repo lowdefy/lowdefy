@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { Checkbox } from 'antd';
+import { Checkbox, Space } from 'antd';
 import { type } from '@lowdefy/helpers';
 import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
 
@@ -62,10 +62,12 @@ const CheckboxSwitch = ({
               methods.triggerEvent({ name: 'onChange' });
             }}
           >
-            <RenderHtml
-              html={type.isNone(properties.description) ? '' : properties.description}
-              methods={methods}
-            />
+            <Space wrap={true}>
+              <RenderHtml
+                html={type.isNone(properties.description) ? '' : properties.description}
+                methods={methods}
+              />
+            </Space>
           </Checkbox>
         ),
       }}
