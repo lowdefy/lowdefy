@@ -57,8 +57,10 @@ Array [
                 Array [
                   Array [
                     Object {
-                      "backgroundColor": "red !important",
-                      "borderColor": "red !important",
+                      "& > span.ant-checkbox-checked:not(.ant-checkbox-disabled) > span": Object {
+                        "backgroundColor": "#ff0000 !important",
+                        "borderColor": "#ff0000 !important",
+                      },
                     },
                     Object {
                       "marginRight": "30px",
@@ -70,7 +72,7 @@ Array [
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"style\\":[{\\"backgroundColor\\":\\"red !important\\",\\"borderColor\\":\\"red !important\\"},{\\"marginRight\\":\\"30px\\"},null]}",
+                  "value": "{\\"style\\":[{\\"& > span.ant-checkbox-checked:not(.ant-checkbox-disabled) > span\\":{\\"backgroundColor\\":\\"#ff0000 !important\\",\\"borderColor\\":\\"#ff0000 !important\\"}},{\\"marginRight\\":\\"30px\\"},null]}",
                 },
               ],
             },
@@ -81,7 +83,7 @@ Array [
           }
         }
       />,
-      "className": "{\\"style\\":[{\\"backgroundColor\\":\\"red !important\\",\\"borderColor\\":\\"red !important\\"},{\\"marginRight\\":\\"30px\\"},null]}",
+      "className": "{\\"style\\":[{\\"& > span.ant-checkbox-checked:not(.ant-checkbox-disabled) > span\\":{\\"backgroundColor\\":\\"#ff0000 !important\\",\\"borderColor\\":\\"#ff0000 !important\\"}},{\\"marginRight\\":\\"30px\\"},null]}",
       "disabled": undefined,
       "id": "properties.color_red_input",
       "onChange": [Function],
@@ -412,6 +414,53 @@ Array [
 ]
 `;
 
+exports[`Mock render - properties.inputStyle - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "checked": false,
+      "children": <RenderHtml
+        html="Option"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    undefined,
+                    Object {
+                      "marginRight": "30px",
+                    },
+                    Object {
+                      "fontSize": 20,
+                    },
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},{\\"fontSize\\":20}]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},{\\"fontSize\\":20}]}",
+      "disabled": undefined,
+      "id": "properties.inputStyle_input",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
 exports[`Mock render - properties.label.colon: false - value[0] - default 1`] = `
 Array [
   Array [
@@ -547,6 +596,51 @@ Array [
 ]
 `;
 
+exports[`Mock render - properties.label.title - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "checked": false,
+      "children": <RenderHtml
+        html="option"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    undefined,
+                    Object {
+                      "marginRight": "30px",
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
+      "disabled": undefined,
+      "id": "properties.label.title_input",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
 exports[`Mock render - properties.label: align_right - value[0] - default 1`] = `
 Array [
   Array [
@@ -675,51 +769,6 @@ Array [
       "className": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
       "disabled": undefined,
       "id": "properties.label: span_12_input",
-      "onChange": [Function],
-    },
-    Object {},
-  ],
-]
-`;
-
-exports[`Mock render - properties.option - value[0] - default 1`] = `
-Array [
-  Array [
-    Object {
-      "checked": false,
-      "children": <RenderHtml
-        html="option"
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Array [
-                    undefined,
-                    Object {
-                      "marginRight": "30px",
-                    },
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "setValue": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
-      "className": "{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}",
-      "disabled": undefined,
-      "id": "properties.option_input",
       "onChange": [Function],
     },
     Object {},

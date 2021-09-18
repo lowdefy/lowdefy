@@ -94,7 +94,7 @@ exports[`Render properties.color_red - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[{\\"backgroundColor\\":\\"red !important\\",\\"borderColor\\":\\"red !important\\"},{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="{\\"style\\":[{\\"& > span.ant-checkbox-checked:not(.ant-checkbox-disabled) > span\\":{\\"backgroundColor\\":\\"#ff0000 !important\\",\\"borderColor\\":\\"#ff0000 !important\\"}},{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
         >
           <span
             className="ant-checkbox"
@@ -570,6 +570,71 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
 </div>
 `;
 
+exports[`Render properties.inputStyle - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.inputStyle"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.inputStyle_input"
+      title="properties.inputStyle"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <label
+          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},{\\"fontSize\\":20}]} ant-checkbox-wrapper"
+        >
+          <span
+            className="ant-checkbox"
+            style={Object {}}
+          >
+            <input
+              checked={false}
+              className="ant-checkbox-input"
+              id="properties.inputStyle_input"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyPress={[Function]}
+              onKeyUp={[Function]}
+              type="checkbox"
+            />
+            <span
+              className="ant-checkbox-inner"
+            />
+          </span>
+          <span>
+            <span
+              className="{}"
+            />
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render properties.label.colon: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
@@ -753,6 +818,71 @@ exports[`Render properties.label.extra: showingextra - value[0] 1`] = `
       <span
         className="{}"
       />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.label.title - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.label.title"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.label.title_input"
+      title="label"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <label
+          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+        >
+          <span
+            className="ant-checkbox"
+            style={Object {}}
+          >
+            <input
+              checked={false}
+              className="ant-checkbox-input"
+              id="properties.label.title_input"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyPress={[Function]}
+              onKeyUp={[Function]}
+              type="checkbox"
+            />
+            <span
+              className="ant-checkbox-inner"
+            />
+          </span>
+          <span>
+            <span
+              className="{}"
+            />
+          </span>
+        </label>
+      </div>
     </div>
   </div>
 </div>
@@ -961,71 +1091,6 @@ exports[`Render properties.label: span_12 - value[0] 1`] = `
 </div>
 `;
 
-exports[`Render properties.option - value[0] 1`] = `
-<div
-  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.option"
-  style={Object {}}
->
-  <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
-  >
-    <label
-      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.option_input"
-      title="label"
-    >
-      <span
-        className="{}"
-      />
-    </label>
-  </div>
-  <div
-    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
-  >
-    <div
-      className="ant-form-item-control-input"
-    >
-      <div
-        className="ant-form-item-control-input-content"
-      >
-        <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
-        >
-          <span
-            className="ant-checkbox"
-            style={Object {}}
-          >
-            <input
-              checked={false}
-              className="ant-checkbox-input"
-              id="properties.option_input"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyPress={[Function]}
-              onKeyUp={[Function]}
-              type="checkbox"
-            />
-            <span
-              className="ant-checkbox-inner"
-            />
-          </span>
-          <span>
-            <span
-              className="{}"
-            />
-          </span>
-        </label>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
 exports[`Render properties.title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
@@ -1183,7 +1248,7 @@ exports[`Render required = true properties.color_red - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[{\\"backgroundColor\\":\\"red !important\\",\\"borderColor\\":\\"red !important\\"},{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="{\\"style\\":[{\\"& > span.ant-checkbox-checked:not(.ant-checkbox-disabled) > span\\":{\\"backgroundColor\\":\\"#ff0000 !important\\",\\"borderColor\\":\\"#ff0000 !important\\"}},{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
         >
           <span
             className="ant-checkbox"
@@ -1659,6 +1724,71 @@ exports[`Render required = true properties.disabled: true - value[0] 1`] = `
 </div>
 `;
 
+exports[`Render required = true properties.inputStyle - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.inputStyle"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.inputStyle_input"
+      title="properties.inputStyle"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <label
+          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},{\\"fontSize\\":20}]} ant-checkbox-wrapper"
+        >
+          <span
+            className="ant-checkbox"
+            style={Object {}}
+          >
+            <input
+              checked={false}
+              className="ant-checkbox-input"
+              id="properties.inputStyle_input"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyPress={[Function]}
+              onKeyUp={[Function]}
+              type="checkbox"
+            />
+            <span
+              className="ant-checkbox-inner"
+            />
+          </span>
+          <span>
+            <span
+              className="{}"
+            />
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render required = true properties.label.colon: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
@@ -1847,6 +1977,71 @@ exports[`Render required = true properties.label.extra: showingextra - value[0] 
 </div>
 `;
 
+exports[`Render required = true properties.label.title - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.label.title"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.label.title_input"
+      title="label"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <label
+          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+        >
+          <span
+            className="ant-checkbox"
+            style={Object {}}
+          >
+            <input
+              checked={false}
+              className="ant-checkbox-input"
+              id="properties.label.title_input"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyPress={[Function]}
+              onKeyUp={[Function]}
+              type="checkbox"
+            />
+            <span
+              className="ant-checkbox-inner"
+            />
+          </span>
+          <span>
+            <span
+              className="{}"
+            />
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render required = true properties.label: align_right - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
@@ -2026,71 +2221,6 @@ exports[`Render required = true properties.label: span_12 - value[0] 1`] = `
               checked={false}
               className="ant-checkbox-input"
               id="properties.label: span_12_input"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyPress={[Function]}
-              onKeyUp={[Function]}
-              type="checkbox"
-            />
-            <span
-              className="ant-checkbox-inner"
-            />
-          </span>
-          <span>
-            <span
-              className="{}"
-            />
-          </span>
-        </label>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`Render required = true properties.option - value[0] 1`] = `
-<div
-  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.option"
-  style={Object {}}
->
-  <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
-  >
-    <label
-      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.option_input"
-      title="label"
-    >
-      <span
-        className="{}"
-      />
-    </label>
-  </div>
-  <div
-    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
-  >
-    <div
-      className="ant-form-item-control-input"
-    >
-      <div
-        className="ant-form-item-control-input-content"
-      >
-        <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
-        >
-          <span
-            className="ant-checkbox"
-            style={Object {}}
-          >
-            <input
-              checked={false}
-              className="ant-checkbox-input"
-              id="properties.option_input"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
@@ -2300,7 +2430,7 @@ exports[`Render validation.status = error properties.color_red - value[0] 1`] = 
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[{\\"backgroundColor\\":\\"red !important\\",\\"borderColor\\":\\"red !important\\"},{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="{\\"style\\":[{\\"& > span.ant-checkbox-checked:not(.ant-checkbox-disabled) > span\\":{\\"backgroundColor\\":\\"#ff0000 !important\\",\\"borderColor\\":\\"#ff0000 !important\\"}},{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
         >
           <span
             className="ant-checkbox"
@@ -3000,6 +3130,99 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
 </div>
 `;
 
+exports[`Render validation.status = error properties.inputStyle - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.inputStyle"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.inputStyle_input"
+      title="properties.inputStyle"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <label
+          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},{\\"fontSize\\":20}]} ant-checkbox-wrapper"
+        >
+          <span
+            className="ant-checkbox"
+            style={Object {}}
+          >
+            <input
+              checked={false}
+              className="ant-checkbox-input"
+              id="properties.inputStyle_input"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyPress={[Function]}
+              onKeyUp={[Function]}
+              type="checkbox"
+            />
+            <span
+              className="ant-checkbox-inner"
+            />
+          </span>
+          <span>
+            <span
+              className="{}"
+            />
+          </span>
+        </label>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="close-circle"
+          className="anticon anticon-close-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="close-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      validation error
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render validation.status = error properties.label.colon: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
@@ -3213,6 +3436,99 @@ exports[`Render validation.status = error properties.label.extra: showingextra -
               checked={false}
               className="ant-checkbox-input"
               id="properties.label.extra: showingextra_input"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyPress={[Function]}
+              onKeyUp={[Function]}
+              type="checkbox"
+            />
+            <span
+              className="ant-checkbox-inner"
+            />
+          </span>
+          <span>
+            <span
+              className="{}"
+            />
+          </span>
+        </label>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="close-circle"
+          className="anticon anticon-close-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="close-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      validation error
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = error properties.label.title - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.label.title"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.label.title_input"
+      title="label"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <label
+          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+        >
+          <span
+            className="ant-checkbox"
+            style={Object {}}
+          >
+            <input
+              checked={false}
+              className="ant-checkbox-input"
+              id="properties.label.title_input"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
@@ -3552,99 +3868,6 @@ exports[`Render validation.status = error properties.label: span_12 - value[0] 1
 </div>
 `;
 
-exports[`Render validation.status = error properties.option - value[0] 1`] = `
-<div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.option"
-  style={Object {}}
->
-  <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
-  >
-    <label
-      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.option_input"
-      title="label"
-    >
-      <span
-        className="{}"
-      />
-    </label>
-  </div>
-  <div
-    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
-  >
-    <div
-      className="ant-form-item-control-input"
-    >
-      <div
-        className="ant-form-item-control-input-content"
-      >
-        <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
-        >
-          <span
-            className="ant-checkbox"
-            style={Object {}}
-          >
-            <input
-              checked={false}
-              className="ant-checkbox-input"
-              id="properties.option_input"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyPress={[Function]}
-              onKeyUp={[Function]}
-              type="checkbox"
-            />
-            <span
-              className="ant-checkbox-inner"
-            />
-          </span>
-          <span>
-            <span
-              className="{}"
-            />
-          </span>
-        </label>
-      </div>
-      <span
-        className="ant-form-item-children-icon"
-      >
-        <span
-          aria-label="close-circle"
-          className="anticon anticon-close-circle"
-          role="img"
-        >
-          <svg
-            aria-hidden="true"
-            data-icon="close-circle"
-            fill="currentColor"
-            focusable="false"
-            height="1em"
-            viewBox="64 64 896 896"
-            width="1em"
-          >
-            <path
-              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-            />
-          </svg>
-        </span>
-      </span>
-    </div>
-    <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
-    >
-      validation error
-    </div>
-  </div>
-</div>
-`;
-
 exports[`Render validation.status = error properties.title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
@@ -3830,7 +4053,7 @@ exports[`Render validation.status = null properties.color_red - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[{\\"backgroundColor\\":\\"red !important\\",\\"borderColor\\":\\"red !important\\"},{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="{\\"style\\":[{\\"& > span.ant-checkbox-checked:not(.ant-checkbox-disabled) > span\\":{\\"backgroundColor\\":\\"#ff0000 !important\\",\\"borderColor\\":\\"#ff0000 !important\\"}},{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
         >
           <span
             className="ant-checkbox"
@@ -4306,6 +4529,71 @@ exports[`Render validation.status = null properties.disabled: true - value[0] 1`
 </div>
 `;
 
+exports[`Render validation.status = null properties.inputStyle - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.inputStyle"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.inputStyle_input"
+      title="properties.inputStyle"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <label
+          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},{\\"fontSize\\":20}]} ant-checkbox-wrapper"
+        >
+          <span
+            className="ant-checkbox"
+            style={Object {}}
+          >
+            <input
+              checked={false}
+              className="ant-checkbox-input"
+              id="properties.inputStyle_input"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyPress={[Function]}
+              onKeyUp={[Function]}
+              type="checkbox"
+            />
+            <span
+              className="ant-checkbox-inner"
+            />
+          </span>
+          <span>
+            <span
+              className="{}"
+            />
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render validation.status = null properties.label.colon: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
@@ -4489,6 +4777,71 @@ exports[`Render validation.status = null properties.label.extra: showingextra - 
       <span
         className="{}"
       />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = null properties.label.title - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.label.title"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.label.title_input"
+      title="label"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <label
+          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+        >
+          <span
+            className="ant-checkbox"
+            style={Object {}}
+          >
+            <input
+              checked={false}
+              className="ant-checkbox-input"
+              id="properties.label.title_input"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyPress={[Function]}
+              onKeyUp={[Function]}
+              type="checkbox"
+            />
+            <span
+              className="ant-checkbox-inner"
+            />
+          </span>
+          <span>
+            <span
+              className="{}"
+            />
+          </span>
+        </label>
+      </div>
     </div>
   </div>
 </div>
@@ -4697,71 +5050,6 @@ exports[`Render validation.status = null properties.label: span_12 - value[0] 1`
 </div>
 `;
 
-exports[`Render validation.status = null properties.option - value[0] 1`] = `
-<div
-  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.option"
-  style={Object {}}
->
-  <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
-  >
-    <label
-      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.option_input"
-      title="label"
-    >
-      <span
-        className="{}"
-      />
-    </label>
-  </div>
-  <div
-    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
-  >
-    <div
-      className="ant-form-item-control-input"
-    >
-      <div
-        className="ant-form-item-control-input-content"
-      >
-        <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
-        >
-          <span
-            className="ant-checkbox"
-            style={Object {}}
-          >
-            <input
-              checked={false}
-              className="ant-checkbox-input"
-              id="properties.option_input"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyPress={[Function]}
-              onKeyUp={[Function]}
-              type="checkbox"
-            />
-            <span
-              className="ant-checkbox-inner"
-            />
-          </span>
-          <span>
-            <span
-              className="{}"
-            />
-          </span>
-        </label>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
 exports[`Render validation.status = null properties.title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
@@ -4942,7 +5230,7 @@ exports[`Render validation.status = success properties.color_red - value[0] 1`] 
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[{\\"backgroundColor\\":\\"red !important\\",\\"borderColor\\":\\"red !important\\"},{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="{\\"style\\":[{\\"& > span.ant-checkbox-checked:not(.ant-checkbox-disabled) > span\\":{\\"backgroundColor\\":\\"#ff0000 !important\\",\\"borderColor\\":\\"#ff0000 !important\\"}},{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
         >
           <span
             className="ant-checkbox"
@@ -5602,6 +5890,94 @@ exports[`Render validation.status = success properties.disabled: true - value[0]
 </div>
 `;
 
+exports[`Render validation.status = success properties.inputStyle - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.inputStyle"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.inputStyle_input"
+      title="properties.inputStyle"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <label
+          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},{\\"fontSize\\":20}]} ant-checkbox-wrapper"
+        >
+          <span
+            className="ant-checkbox"
+            style={Object {}}
+          >
+            <input
+              checked={false}
+              className="ant-checkbox-input"
+              id="properties.inputStyle_input"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyPress={[Function]}
+              onKeyUp={[Function]}
+              type="checkbox"
+            />
+            <span
+              className="ant-checkbox-inner"
+            />
+          </span>
+          <span>
+            <span
+              className="{}"
+            />
+          </span>
+        </label>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="check-circle"
+          className="anticon anticon-check-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="check-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm193.5 301.7l-210.6 292a31.8 31.8 0 01-51.7 0L318.5 484.9c-3.8-5.3 0-12.7 6.5-12.7h46.9c10.2 0 19.9 4.9 25.9 13.3l71.2 98.8 157.2-218c6-8.3 15.6-13.3 25.9-13.3H699c6.5 0 10.3 7.4 6.5 12.7z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render validation.status = success properties.label.colon: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
@@ -5854,6 +6230,94 @@ exports[`Render validation.status = success properties.label.extra: showingextra
       <span
         className="{}"
       />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = success properties.label.title - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.label.title"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.label.title_input"
+      title="label"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <label
+          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+        >
+          <span
+            className="ant-checkbox"
+            style={Object {}}
+          >
+            <input
+              checked={false}
+              className="ant-checkbox-input"
+              id="properties.label.title_input"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyPress={[Function]}
+              onKeyUp={[Function]}
+              type="checkbox"
+            />
+            <span
+              className="ant-checkbox-inner"
+            />
+          </span>
+          <span>
+            <span
+              className="{}"
+            />
+          </span>
+        </label>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="check-circle"
+          className="anticon anticon-check-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="check-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm193.5 301.7l-210.6 292a31.8 31.8 0 01-51.7 0L318.5 484.9c-3.8-5.3 0-12.7 6.5-12.7h46.9c10.2 0 19.9 4.9 25.9 13.3l71.2 98.8 157.2-218c6-8.3 15.6-13.3 25.9-13.3H699c6.5 0 10.3 7.4 6.5 12.7z"
+            />
+          </svg>
+        </span>
+      </span>
     </div>
   </div>
 </div>
@@ -6131,94 +6595,6 @@ exports[`Render validation.status = success properties.label: span_12 - value[0]
 </div>
 `;
 
-exports[`Render validation.status = success properties.option - value[0] 1`] = `
-<div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.option"
-  style={Object {}}
->
-  <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
-  >
-    <label
-      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.option_input"
-      title="label"
-    >
-      <span
-        className="{}"
-      />
-    </label>
-  </div>
-  <div
-    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
-  >
-    <div
-      className="ant-form-item-control-input"
-    >
-      <div
-        className="ant-form-item-control-input-content"
-      >
-        <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
-        >
-          <span
-            className="ant-checkbox"
-            style={Object {}}
-          >
-            <input
-              checked={false}
-              className="ant-checkbox-input"
-              id="properties.option_input"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyPress={[Function]}
-              onKeyUp={[Function]}
-              type="checkbox"
-            />
-            <span
-              className="ant-checkbox-inner"
-            />
-          </span>
-          <span>
-            <span
-              className="{}"
-            />
-          </span>
-        </label>
-      </div>
-      <span
-        className="ant-form-item-children-icon"
-      >
-        <span
-          aria-label="check-circle"
-          className="anticon anticon-check-circle"
-          role="img"
-        >
-          <svg
-            aria-hidden="true"
-            data-icon="check-circle"
-            fill="currentColor"
-            focusable="false"
-            height="1em"
-            viewBox="64 64 896 896"
-            width="1em"
-          >
-            <path
-              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm193.5 301.7l-210.6 292a31.8 31.8 0 01-51.7 0L318.5 484.9c-3.8-5.3 0-12.7 6.5-12.7h46.9c10.2 0 19.9 4.9 25.9 13.3l71.2 98.8 157.2-218c6-8.3 15.6-13.3 25.9-13.3H699c6.5 0 10.3 7.4 6.5 12.7z"
-            />
-          </svg>
-        </span>
-      </span>
-    </div>
-  </div>
-</div>
-`;
-
 exports[`Render validation.status = success properties.title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
@@ -6427,7 +6803,7 @@ exports[`Render validation.status = warning properties.color_red - value[0] 1`] 
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[{\\"backgroundColor\\":\\"red !important\\",\\"borderColor\\":\\"red !important\\"},{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="{\\"style\\":[{\\"& > span.ant-checkbox-checked:not(.ant-checkbox-disabled) > span\\":{\\"backgroundColor\\":\\"#ff0000 !important\\",\\"borderColor\\":\\"#ff0000 !important\\"}},{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
         >
           <span
             className="ant-checkbox"
@@ -7127,6 +7503,99 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
 </div>
 `;
 
+exports[`Render validation.status = warning properties.inputStyle - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.inputStyle"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.inputStyle_input"
+      title="properties.inputStyle"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <label
+          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},{\\"fontSize\\":20}]} ant-checkbox-wrapper"
+        >
+          <span
+            className="ant-checkbox"
+            style={Object {}}
+          >
+            <input
+              checked={false}
+              className="ant-checkbox-input"
+              id="properties.inputStyle_input"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyPress={[Function]}
+              onKeyUp={[Function]}
+              type="checkbox"
+            />
+            <span
+              className="ant-checkbox-inner"
+            />
+          </span>
+          <span>
+            <span
+              className="{}"
+            />
+          </span>
+        </label>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="exclamation-circle"
+          className="anticon anticon-exclamation-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="exclamation-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 010-96 48.01 48.01 0 010 96z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      validation warning
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render validation.status = warning properties.label.colon: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
@@ -7340,6 +7809,99 @@ exports[`Render validation.status = warning properties.label.extra: showingextra
               checked={false}
               className="ant-checkbox-input"
               id="properties.label.extra: showingextra_input"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyPress={[Function]}
+              onKeyUp={[Function]}
+              type="checkbox"
+            />
+            <span
+              className="ant-checkbox-inner"
+            />
+          </span>
+          <span>
+            <span
+              className="{}"
+            />
+          </span>
+        </label>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="exclamation-circle"
+          className="anticon anticon-exclamation-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="exclamation-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 010-96 48.01 48.01 0 010 96z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      validation warning
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = warning properties.label.title - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.label.title"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.label.title_input"
+      title="label"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <label
+          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+        >
+          <span
+            className="ant-checkbox"
+            style={Object {}}
+          >
+            <input
+              checked={false}
+              className="ant-checkbox-input"
+              id="properties.label.title_input"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
@@ -7679,99 +8241,6 @@ exports[`Render validation.status = warning properties.label: span_12 - value[0]
 </div>
 `;
 
-exports[`Render validation.status = warning properties.option - value[0] 1`] = `
-<div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.option"
-  style={Object {}}
->
-  <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
-  >
-    <label
-      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.option_input"
-      title="label"
-    >
-      <span
-        className="{}"
-      />
-    </label>
-  </div>
-  <div
-    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
-  >
-    <div
-      className="ant-form-item-control-input"
-    >
-      <div
-        className="ant-form-item-control-input-content"
-      >
-        <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
-        >
-          <span
-            className="ant-checkbox"
-            style={Object {}}
-          >
-            <input
-              checked={false}
-              className="ant-checkbox-input"
-              id="properties.option_input"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyPress={[Function]}
-              onKeyUp={[Function]}
-              type="checkbox"
-            />
-            <span
-              className="ant-checkbox-inner"
-            />
-          </span>
-          <span>
-            <span
-              className="{}"
-            />
-          </span>
-        </label>
-      </div>
-      <span
-        className="ant-form-item-children-icon"
-      >
-        <span
-          aria-label="exclamation-circle"
-          className="anticon anticon-exclamation-circle"
-          role="img"
-        >
-          <svg
-            aria-hidden="true"
-            data-icon="exclamation-circle"
-            fill="currentColor"
-            focusable="false"
-            height="1em"
-            viewBox="64 64 896 896"
-            width="1em"
-          >
-            <path
-              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 010-96 48.01 48.01 0 010 96z"
-            />
-          </svg>
-        </span>
-      </span>
-    </div>
-    <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
-    >
-      validation warning
-    </div>
-  </div>
-</div>
-`;
-
 exports[`Render validation.status = warning properties.title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
@@ -7923,6 +8392,10 @@ exports[`Test Schema properties.disabled: true 1`] = `true`;
 
 exports[`Test Schema properties.disabled: true 2`] = `null`;
 
+exports[`Test Schema properties.inputStyle 1`] = `true`;
+
+exports[`Test Schema properties.inputStyle 2`] = `null`;
+
 exports[`Test Schema properties.label.colon: false 1`] = `true`;
 
 exports[`Test Schema properties.label.colon: false 2`] = `null`;
@@ -7935,6 +8408,10 @@ exports[`Test Schema properties.label.extra: showingextra 1`] = `true`;
 
 exports[`Test Schema properties.label.extra: showingextra 2`] = `null`;
 
+exports[`Test Schema properties.label.title 1`] = `true`;
+
+exports[`Test Schema properties.label.title 2`] = `null`;
+
 exports[`Test Schema properties.label: align_right 1`] = `true`;
 
 exports[`Test Schema properties.label: align_right 2`] = `null`;
@@ -7946,10 +8423,6 @@ exports[`Test Schema properties.label: inline_true 2`] = `null`;
 exports[`Test Schema properties.label: span_12 1`] = `true`;
 
 exports[`Test Schema properties.label: span_12 2`] = `null`;
-
-exports[`Test Schema properties.option 1`] = `true`;
-
-exports[`Test Schema properties.option 2`] = `null`;
 
 exports[`Test Schema properties.title 1`] = `true`;
 
