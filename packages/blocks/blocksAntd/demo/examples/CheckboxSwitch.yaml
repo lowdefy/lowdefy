@@ -8,15 +8,6 @@
   type: CheckboxSwitch
   properties:
     description: Option 2
-- id: 'properties.description-number'
-  type: CheckboxSwitch
-  properties:
-    description: 20
-- id: 'properties.description-object'
-  type: CheckboxSwitch
-  properties:
-    description:
-      two: one
 - id: 'properties.color_red'
   type: CheckboxSwitch
   properties:
