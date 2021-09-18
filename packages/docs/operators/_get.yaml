@@ -47,6 +47,21 @@ _ref:
       ```
       Returns: `"George"`.
 
+      ###### Use _get to as a switch statement to choose an Icon name:
+      ```yaml
+      _get:
+        key:
+          _state: status
+        from:
+          new: PlusCircleTwoTone
+          escalated: ExclamationCircleOutlined
+          investigation_started: ToolTwoTone
+          client_contacted: SoundTwoTone
+          awaiting_confirmation: LikeOutlined
+          closed: StopOutlined
+      ```
+      Returns: The icon corresponding to the status in state.
+
       ###### Get from an array (arrays are `0` indexed):
       ```yaml
       _get:
