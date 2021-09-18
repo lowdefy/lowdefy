@@ -35,7 +35,7 @@ exports[`Render default - value[0] 1`] = `
       <div
         style={
           Object {
-            "height": "1.5175em",
+            "marginBottom": -4,
           }
         }
       />
@@ -780,7 +780,15 @@ exports[`Render with description only - value[0] 1`] = `
   >
     <div
       className="ant-alert-message"
-    />
+    >
+      <div
+        style={
+          Object {
+            "marginBottom": -4,
+          }
+        }
+      />
+    </div>
     <div
       className="ant-alert-description"
     >
@@ -804,7 +812,15 @@ exports[`Render with description only and icon false - value[0] 1`] = `
   >
     <div
       className="ant-alert-message"
-    />
+    >
+      <div
+        style={
+          Object {
+            "marginBottom": -4,
+          }
+        }
+      />
+    </div>
     <div
       className="ant-alert-description"
     >
@@ -1650,7 +1666,15 @@ exports[`Render with description uses html - value[0] 1`] = `
   >
     <div
       className="ant-alert-message"
-    />
+    >
+      <div
+        style={
+          Object {
+            "marginBottom": -4,
+          }
+        }
+      />
+    </div>
     <div
       className="ant-alert-description"
     >

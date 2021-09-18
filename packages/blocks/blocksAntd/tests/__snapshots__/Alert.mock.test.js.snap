@@ -13,7 +13,7 @@ Array [
       "message": <div
         style={
           Object {
-            "height": "1.5175em",
+            "marginBottom": -4,
           }
         }
       />,
@@ -614,7 +614,13 @@ Array [
         }
       />,
       "id": "with description only",
-      "message": false,
+      "message": <div
+        style={
+          Object {
+            "marginBottom": -4,
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": undefined,
@@ -644,7 +650,13 @@ Array [
         }
       />,
       "id": "with description only and icon false",
-      "message": false,
+      "message": <div
+        style={
+          Object {
+            "marginBottom": -4,
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": false,
       "type": undefined,
@@ -1414,7 +1426,13 @@ Array [
         }
       />,
       "id": "with description uses html",
-      "message": false,
+      "message": <div
+        style={
+          Object {
+            "marginBottom": -4,
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": undefined,
