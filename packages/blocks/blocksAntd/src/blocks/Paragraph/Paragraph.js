@@ -31,11 +31,11 @@ const ParagraphBlock = ({ blockId, events, properties, methods }) => (
     copyable={
       type.isObject(properties.copyable)
         ? {
-            text: properties.copyable.text,
+            text: properties.copyable.text || properties.content,
             onCopy: () => {
               methods.triggerEvent({
                 name: 'onCopy',
-                event: { value: properties.copyable.text },
+                event: { value: properties.copyable.text || properties.content },
               });
             },
             icon:
@@ -64,7 +64,15 @@ const ParagraphBlock = ({ blockId, events, properties, methods }) => (
               )),
             tooltips: properties.copyable.tooltips,
           }
-        : properties.copyable
+        : properties.copyable && {
+            text: properties.content,
+            onCopy: () => {
+              methods.triggerEvent({
+                name: 'onCopy',
+                event: { value: properties.content },
+              });
+            },
+          }
     }
     delete={properties.delete}
     disabled={properties.disabled}
