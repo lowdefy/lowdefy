@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Typography } from 'antd';
-import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 import { type } from '@lowdefy/helpers';
 
 import Icon from '../Icon/Icon';
@@ -106,7 +106,7 @@ const TitleBlock = ({ blockId, events, properties, methods }) => {
       type={properties.type}
       underline={properties.underline}
     >
-      <RenderHtml html={properties.content} methods={methods} />
+      {renderHtml({ html: properties.content, methods })}
     </Title>
   );
 };

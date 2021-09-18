@@ -32,7 +32,7 @@ Array [
       "id": "areas.extra:",
       "onClick": [Function],
       "size": undefined,
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html="Card block"
         methods={
           Object {
@@ -142,7 +142,7 @@ Array [
       "id": "properties.bodyStyle: border: 5px solid blue",
       "onClick": [Function],
       "size": undefined,
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html="Card block"
         methods={
           Object {
@@ -223,7 +223,7 @@ Array [
       "id": "properties.bordered: false",
       "onClick": [Function],
       "size": undefined,
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html="Card block"
         methods={
           Object {
@@ -302,7 +302,7 @@ Array [
       "id": "properties.headerStyle: border: 5px solid blue",
       "onClick": [Function],
       "size": undefined,
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html="Card block"
         methods={
           Object {
@@ -383,7 +383,7 @@ Array [
       "id": "properties.hoverable: true",
       "onClick": [Function],
       "size": undefined,
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html="Card block"
         methods={
           Object {
@@ -462,7 +462,7 @@ Array [
       "id": "properties.inner: true",
       "onClick": [Function],
       "size": undefined,
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html="Card block"
         methods={
           Object {
@@ -541,7 +541,7 @@ Array [
       "id": "properties.size: small",
       "onClick": [Function],
       "size": "small",
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html="Card block small"
         methods={
           Object {
@@ -620,7 +620,7 @@ Array [
       "id": "properties.title",
       "onClick": [Function],
       "size": undefined,
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html="Card block"
         methods={
           Object {
@@ -699,7 +699,7 @@ Array [
       "id": "with html in title",
       "onClick": [Function],
       "size": undefined,
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html=<div style="color:green">
   Card Title
 </div>
@@ -780,7 +780,7 @@ Array [
       "id": "with onClick event",
       "onClick": [Function],
       "size": undefined,
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html="Card block"
         methods={
           Object {

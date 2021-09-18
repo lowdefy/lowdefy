@@ -30,48 +30,7 @@ Array [
       "okType": "primary",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
       "visible": false,
       "width": undefined,
       "wrapClassName": "{}",
@@ -112,7 +71,7 @@ Array [
       "okType": "primary",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html="Modal title"
         methods={
           Object {
@@ -195,50 +154,7 @@ Array [
       "okType": "primary",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "border": "10px solid blue",
-                  },
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"border\\":\\"10px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
       "visible": false,
       "width": undefined,
       "wrapClassName": "{}",
@@ -279,48 +195,7 @@ Array [
       "okType": "primary",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
       "visible": false,
       "width": undefined,
       "wrapClassName": "{}",
@@ -361,48 +236,7 @@ Array [
       "okType": "primary",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
       "visible": false,
       "width": undefined,
       "wrapClassName": "{}",
@@ -443,48 +277,7 @@ Array [
       "okType": "primary",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
       "visible": false,
       "width": undefined,
       "wrapClassName": "{}",
@@ -526,48 +319,7 @@ Array [
       "okType": "primary",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
       "visible": false,
       "width": undefined,
       "wrapClassName": "{}",
@@ -608,48 +360,7 @@ Array [
       "okType": "primary",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
       "visible": false,
       "width": undefined,
       "wrapClassName": "{}",
@@ -690,48 +401,7 @@ Array [
       "okType": "primary",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
       "visible": false,
       "width": undefined,
       "wrapClassName": "{}",
@@ -772,50 +442,7 @@ Array [
       "okType": "primary",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  Object {
-                    "border": "10px solid blue",
-                  },
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"border\\":\\"10px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
       "visible": false,
       "width": undefined,
       "wrapClassName": "{}",
@@ -856,48 +483,7 @@ Array [
       "okType": "primary",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
       "visible": false,
       "width": undefined,
       "wrapClassName": "{}",
@@ -938,48 +524,7 @@ Array [
       "okType": "primary",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
       "visible": false,
       "width": 350,
       "wrapClassName": "{}",
@@ -1020,50 +565,7 @@ Array [
       "okType": "primary",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  Object {
-                    "border": "10px solid blue",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"border\\":\\"10px solid blue\\"}}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
       "visible": false,
       "width": undefined,
       "wrapClassName": "{\\"style\\":{\\"border\\":\\"10px solid blue\\"}}",
@@ -1104,48 +606,7 @@ Array [
       "okType": "primary",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
       "visible": false,
       "width": undefined,
       "wrapClassName": "{}",
@@ -1186,7 +647,7 @@ Array [
       "okType": "primary",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html=<div style="color:green;">
   Modal Html Title
 </div>
