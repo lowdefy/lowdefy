@@ -21,7 +21,7 @@
   type: CheckboxSwitch
   properties:
     description: Option 2
-    color: red
+    color: '#ff0000'
 - id: 'properties.disabled: true'
   type: CheckboxSwitch
   properties:
@@ -63,7 +63,7 @@
     description: Option 2
     label:
       extra: showing extra
-- id: 'properties.option'
+- id: 'properties.label.title'
   type: CheckboxSwitch
   properties:
     description: option
@@ -83,3 +83,9 @@
   type: CheckboxSwitch
   properties:
     description: '<span style="color:blue">I agree to the terms and conditions and privacy policy as found on the website blah blah blah....</span>'
+- id: 'properties.inputStyle'
+  type: CheckboxSwitch
+  properties:
+    description: Option
+    inputStyle:
+      fontSize: 20

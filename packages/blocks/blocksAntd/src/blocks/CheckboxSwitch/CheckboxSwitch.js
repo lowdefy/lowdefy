@@ -47,8 +47,10 @@ const CheckboxSwitch = ({
             disabled={properties.disabled}
             className={methods.makeCssClass([
               properties.color && {
-                backgroundColor: `${properties.color} !important`,
-                borderColor: `${properties.color} !important`,
+                '& > span.ant-checkbox-checked:not(.ant-checkbox-disabled) > span': {
+                  backgroundColor: `${properties.color} !important`,
+                  borderColor: `${properties.color} !important`,
+                },
               },
               properties.description && {
                 marginRight: '30px', // stops the checkbox description from overlapping with the validation symbol
