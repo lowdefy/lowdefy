@@ -951,7 +951,7 @@ exports[`Render properties.options.label: html - value[0] 1`] = `
           id="properties.options.label: html_input"
         >
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -981,7 +981,7 @@ exports[`Render properties.options.label: html - value[0] 1`] = `
             </span>
           </label>
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -1011,7 +1011,7 @@ exports[`Render properties.options.label: html - value[0] 1`] = `
             </span>
           </label>
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -1401,7 +1401,7 @@ exports[`Render properties.options-object - value[0] 1`] = `
           id="properties.options-object_input"
         >
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -1431,7 +1431,7 @@ exports[`Render properties.options-object - value[0] 1`] = `
             </span>
           </label>
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -1599,7 +1599,7 @@ exports[`Render properties.options-style - value[0] 1`] = `
           id="properties.options-style_input"
         >
           <label
-            className="{\\"style\\":{\\"background\\":\\"red\\"}} ant-radio-wrapper"
+            className="ant-radio-wrapper {\\"style\\":{\\"background\\":\\"red\\"}}"
           >
             <span
               className="ant-radio"
@@ -1629,7 +1629,7 @@ exports[`Render properties.options-style - value[0] 1`] = `
             </span>
           </label>
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -2713,7 +2713,7 @@ exports[`Render required = true properties.options.label: html - value[0] 1`] = 
           id="properties.options.label: html_input"
         >
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -2743,7 +2743,7 @@ exports[`Render required = true properties.options.label: html - value[0] 1`] = 
             </span>
           </label>
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -2773,7 +2773,7 @@ exports[`Render required = true properties.options.label: html - value[0] 1`] = 
             </span>
           </label>
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -3163,7 +3163,7 @@ exports[`Render required = true properties.options-object - value[0] 1`] = `
           id="properties.options-object_input"
         >
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -3193,7 +3193,7 @@ exports[`Render required = true properties.options-object - value[0] 1`] = `
             </span>
           </label>
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -3361,7 +3361,7 @@ exports[`Render required = true properties.options-style - value[0] 1`] = `
           id="properties.options-style_input"
         >
           <label
-            className="{\\"style\\":{\\"background\\":\\"red\\"}} ant-radio-wrapper"
+            className="ant-radio-wrapper {\\"style\\":{\\"background\\":\\"red\\"}}"
           >
             <span
               className="ant-radio"
@@ -3391,7 +3391,7 @@ exports[`Render required = true properties.options-style - value[0] 1`] = `
             </span>
           </label>
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -4748,7 +4748,7 @@ exports[`Render validation.status = error properties.options.label: html - value
           id="properties.options.label: html_input"
         >
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -4778,7 +4778,7 @@ exports[`Render validation.status = error properties.options.label: html - value
             </span>
           </label>
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -4808,7 +4808,7 @@ exports[`Render validation.status = error properties.options.label: html - value
             </span>
           </label>
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -5310,7 +5310,7 @@ exports[`Render validation.status = error properties.options-object - value[0] 1
           id="properties.options-object_input"
         >
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -5340,7 +5340,7 @@ exports[`Render validation.status = error properties.options-object - value[0] 1
             </span>
           </label>
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -5564,7 +5564,7 @@ exports[`Render validation.status = error properties.options-style - value[0] 1`
           id="properties.options-style_input"
         >
           <label
-            className="{\\"style\\":{\\"background\\":\\"red\\"}} ant-radio-wrapper"
+            className="ant-radio-wrapper {\\"style\\":{\\"background\\":\\"red\\"}}"
           >
             <span
               className="ant-radio"
@@ -5594,7 +5594,7 @@ exports[`Render validation.status = error properties.options-style - value[0] 1`
             </span>
           </label>
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -6734,7 +6734,7 @@ exports[`Render validation.status = null properties.options.label: html - value[
           id="properties.options.label: html_input"
         >
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -6764,7 +6764,7 @@ exports[`Render validation.status = null properties.options.label: html - value[
             </span>
           </label>
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -6794,7 +6794,7 @@ exports[`Render validation.status = null properties.options.label: html - value[
             </span>
           </label>
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -7184,7 +7184,7 @@ exports[`Render validation.status = null properties.options-object - value[0] 1`
           id="properties.options-object_input"
         >
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -7214,7 +7214,7 @@ exports[`Render validation.status = null properties.options-object - value[0] 1`
             </span>
           </label>
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -7382,7 +7382,7 @@ exports[`Render validation.status = null properties.options-style - value[0] 1`]
           id="properties.options-style_input"
         >
           <label
-            className="{\\"style\\":{\\"background\\":\\"red\\"}} ant-radio-wrapper"
+            className="ant-radio-wrapper {\\"style\\":{\\"background\\":\\"red\\"}}"
           >
             <span
               className="ant-radio"
@@ -7412,7 +7412,7 @@ exports[`Render validation.status = null properties.options-style - value[0] 1`]
             </span>
           </label>
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -8726,7 +8726,7 @@ exports[`Render validation.status = success properties.options.label: html - val
           id="properties.options.label: html_input"
         >
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -8756,7 +8756,7 @@ exports[`Render validation.status = success properties.options.label: html - val
             </span>
           </label>
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -8786,7 +8786,7 @@ exports[`Render validation.status = success properties.options.label: html - val
             </span>
           </label>
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -9268,7 +9268,7 @@ exports[`Render validation.status = success properties.options-object - value[0]
           id="properties.options-object_input"
         >
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -9298,7 +9298,7 @@ exports[`Render validation.status = success properties.options-object - value[0]
             </span>
           </label>
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -9512,7 +9512,7 @@ exports[`Render validation.status = success properties.options-style - value[0] 
           id="properties.options-style_input"
         >
           <label
-            className="{\\"style\\":{\\"background\\":\\"red\\"}} ant-radio-wrapper"
+            className="ant-radio-wrapper {\\"style\\":{\\"background\\":\\"red\\"}}"
           >
             <span
               className="ant-radio"
@@ -9542,7 +9542,7 @@ exports[`Render validation.status = success properties.options-style - value[0] 
             </span>
           </label>
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -10945,7 +10945,7 @@ exports[`Render validation.status = warning properties.options.label: html - val
           id="properties.options.label: html_input"
         >
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -10975,7 +10975,7 @@ exports[`Render validation.status = warning properties.options.label: html - val
             </span>
           </label>
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -11005,7 +11005,7 @@ exports[`Render validation.status = warning properties.options.label: html - val
             </span>
           </label>
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -11507,7 +11507,7 @@ exports[`Render validation.status = warning properties.options-object - value[0]
           id="properties.options-object_input"
         >
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -11537,7 +11537,7 @@ exports[`Render validation.status = warning properties.options-object - value[0]
             </span>
           </label>
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"
@@ -11761,7 +11761,7 @@ exports[`Render validation.status = warning properties.options-style - value[0] 
           id="properties.options-style_input"
         >
           <label
-            className="{\\"style\\":{\\"background\\":\\"red\\"}} ant-radio-wrapper"
+            className="ant-radio-wrapper {\\"style\\":{\\"background\\":\\"red\\"}}"
           >
             <span
               className="ant-radio"
@@ -11791,7 +11791,7 @@ exports[`Render validation.status = warning properties.options-style - value[0] 
             </span>
           </label>
           <label
-            className="{} ant-radio-wrapper"
+            className="ant-radio-wrapper {}"
           >
             <span
               className="ant-radio"

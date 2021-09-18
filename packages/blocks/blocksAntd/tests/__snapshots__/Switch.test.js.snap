@@ -1010,7 +1010,7 @@ exports[`Render properties.size: small - value[0] 1`] = `
       >
         <button
           aria-checked={false}
-          className="ant-switch {\\"style\\":[null,null]} ant-switch-small"
+          className="ant-switch ant-switch-small {\\"style\\":[null,null]}"
           id="properties.size: small_input"
           onClick={[Function]}
           onKeyDown={[Function]}
@@ -2269,7 +2269,7 @@ exports[`Render required = true properties.size: small - value[0] 1`] = `
       >
         <button
           aria-checked={false}
-          className="ant-switch {\\"style\\":[null,null]} ant-switch-small"
+          className="ant-switch ant-switch-small {\\"style\\":[null,null]}"
           id="properties.size: small_input"
           onClick={[Function]}
           onKeyDown={[Function]}
@@ -3885,7 +3885,7 @@ exports[`Render validation.status = error properties.size: small - value[0] 1`] 
       >
         <button
           aria-checked={false}
-          className="ant-switch {\\"style\\":[null,null]} ant-switch-small"
+          className="ant-switch ant-switch-small {\\"style\\":[null,null]}"
           id="properties.size: small_input"
           onClick={[Function]}
           onKeyDown={[Function]}
@@ -5256,7 +5256,7 @@ exports[`Render validation.status = null properties.size: small - value[0] 1`] =
       >
         <button
           aria-checked={false}
-          className="ant-switch {\\"style\\":[null,null]} ant-switch-small"
+          className="ant-switch ant-switch-small {\\"style\\":[null,null]}"
           id="properties.size: small_input"
           onClick={[Function]}
           onKeyDown={[Function]}
@@ -6814,7 +6814,7 @@ exports[`Render validation.status = success properties.size: small - value[0] 1`
       >
         <button
           aria-checked={false}
-          className="ant-switch {\\"style\\":[null,null]} ant-switch-small"
+          className="ant-switch ant-switch-small {\\"style\\":[null,null]}"
           id="properties.size: small_input"
           onClick={[Function]}
           onKeyDown={[Function]}
@@ -8522,7 +8522,7 @@ exports[`Render validation.status = warning properties.size: small - value[0] 1`
       >
         <button
           aria-checked={false}
-          className="ant-switch {\\"style\\":[null,null]} ant-switch-small"
+          className="ant-switch ant-switch-small {\\"style\\":[null,null]}"
           id="properties.size: small_input"
           onClick={[Function]}
           onKeyDown={[Function]}

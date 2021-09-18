@@ -541,7 +541,7 @@ exports[`Render properties.prefix: Prefix to the text - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -598,7 +598,7 @@ exports[`Render properties.prefixIcon.size: 24 - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -676,7 +676,7 @@ exports[`Render properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -846,7 +846,7 @@ exports[`Render properties.suffix: Suffix to the text - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -903,7 +903,7 @@ exports[`Render properties.suffixIcon.size 24 - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -981,7 +981,7 @@ exports[`Render properties.suffixIcon: AlertFilled - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -1615,7 +1615,7 @@ exports[`Render required = true properties.prefix: Prefix to the text - value[0]
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -1672,7 +1672,7 @@ exports[`Render required = true properties.prefixIcon.size: 24 - value[0] 1`] = 
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -1750,7 +1750,7 @@ exports[`Render required = true properties.prefixIcon: AccountBookFilled - value
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -1920,7 +1920,7 @@ exports[`Render required = true properties.suffix: Suffix to the text - value[0]
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -1977,7 +1977,7 @@ exports[`Render required = true properties.suffixIcon.size 24 - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -2055,7 +2055,7 @@ exports[`Render required = true properties.suffixIcon: AlertFilled - value[0] 1`
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -2990,7 +2990,7 @@ exports[`Render validation.status = error properties.prefix: Prefix to the text 
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -3075,7 +3075,7 @@ exports[`Render validation.status = error properties.prefixIcon.size: 24 - value
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -3181,7 +3181,7 @@ exports[`Render validation.status = error properties.prefixIcon: AccountBookFill
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -3435,7 +3435,7 @@ exports[`Render validation.status = error properties.suffix: Suffix to the text 
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -3520,7 +3520,7 @@ exports[`Render validation.status = error properties.suffixIcon.size 24 - value[
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -3626,7 +3626,7 @@ exports[`Render validation.status = error properties.suffixIcon: AlertFilled - v
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -4316,7 +4316,7 @@ exports[`Render validation.status = null properties.prefix: Prefix to the text -
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -4373,7 +4373,7 @@ exports[`Render validation.status = null properties.prefixIcon.size: 24 - value[
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -4451,7 +4451,7 @@ exports[`Render validation.status = null properties.prefixIcon: AccountBookFille
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -4621,7 +4621,7 @@ exports[`Render validation.status = null properties.suffix: Suffix to the text -
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -4678,7 +4678,7 @@ exports[`Render validation.status = null properties.suffixIcon.size 24 - value[0
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -4756,7 +4756,7 @@ exports[`Render validation.status = null properties.suffixIcon: AlertFilled - va
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -5643,7 +5643,7 @@ exports[`Render validation.status = success properties.prefix: Prefix to the tex
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -5723,7 +5723,7 @@ exports[`Render validation.status = success properties.prefixIcon.size: 24 - val
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -5824,7 +5824,7 @@ exports[`Render validation.status = success properties.prefixIcon: AccountBookFi
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -6063,7 +6063,7 @@ exports[`Render validation.status = success properties.suffix: Suffix to the tex
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -6143,7 +6143,7 @@ exports[`Render validation.status = success properties.suffixIcon.size 24 - valu
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -6244,7 +6244,7 @@ exports[`Render validation.status = success properties.suffixIcon: AlertFilled -
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -7225,7 +7225,7 @@ exports[`Render validation.status = warning properties.prefix: Prefix to the tex
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -7310,7 +7310,7 @@ exports[`Render validation.status = warning properties.prefixIcon.size: 24 - val
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -7416,7 +7416,7 @@ exports[`Render validation.status = warning properties.prefixIcon: AccountBookFi
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -7670,7 +7670,7 @@ exports[`Render validation.status = warning properties.suffix: Suffix to the tex
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -7755,7 +7755,7 @@ exports[`Render validation.status = warning properties.suffixIcon.size 24 - valu
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -7861,7 +7861,7 @@ exports[`Render validation.status = warning properties.suffixIcon: AlertFilled -
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input

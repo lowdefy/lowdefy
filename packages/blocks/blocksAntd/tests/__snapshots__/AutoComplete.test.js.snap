@@ -31,7 +31,7 @@ exports[`Render default - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -117,7 +117,7 @@ exports[`Render properties.allowClear: false - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -203,7 +203,7 @@ exports[`Render properties.autoFocus: true - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -290,7 +290,7 @@ exports[`Render properties.backfill: true - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -376,7 +376,7 @@ exports[`Render properties.inputStyle: CSS style applied - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {\\"style\\":{\\"border\\":\\"1px solid red\\"}} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {\\"style\\":{\\"border\\":\\"1px solid red\\"}} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -462,7 +462,7 @@ exports[`Render properties.label.align_right - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -548,7 +548,7 @@ exports[`Render properties.label.colon_false - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -620,7 +620,7 @@ exports[`Render properties.label.disabled_true - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -706,7 +706,7 @@ exports[`Render properties.label.extra_showingextra - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -807,7 +807,7 @@ exports[`Render properties.label.inline_true - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -893,7 +893,7 @@ exports[`Render properties.label.span_12 - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -979,7 +979,7 @@ exports[`Render properties.options.label: html - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -1065,7 +1065,7 @@ exports[`Render properties.options.label: html and properties.options.filterStri
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -1151,7 +1151,7 @@ exports[`Render properties.options: html - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -1237,7 +1237,7 @@ exports[`Render properties.options-object - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -1323,7 +1323,7 @@ exports[`Render properties.options-string - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -1409,7 +1409,7 @@ exports[`Render properties.options-style - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -1495,7 +1495,7 @@ exports[`Render properties.optionsStyle: CSS style applied - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -1581,7 +1581,7 @@ exports[`Render properties.placeholder_Text_inside_block - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -1667,7 +1667,7 @@ exports[`Render properties.size: large - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-lg ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-lg ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -1753,7 +1753,7 @@ exports[`Render properties.size: small - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-sm ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-sm ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -1839,7 +1839,7 @@ exports[`Render properties.title - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -1925,7 +1925,7 @@ exports[`Render required = true default - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -2011,7 +2011,7 @@ exports[`Render required = true properties.allowClear: false - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -2097,7 +2097,7 @@ exports[`Render required = true properties.autoFocus: true - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -2184,7 +2184,7 @@ exports[`Render required = true properties.backfill: true - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -2270,7 +2270,7 @@ exports[`Render required = true properties.inputStyle: CSS style applied - value
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {\\"style\\":{\\"border\\":\\"1px solid red\\"}} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {\\"style\\":{\\"border\\":\\"1px solid red\\"}} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -2356,7 +2356,7 @@ exports[`Render required = true properties.label.align_right - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -2442,7 +2442,7 @@ exports[`Render required = true properties.label.colon_false - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -2514,7 +2514,7 @@ exports[`Render required = true properties.label.disabled_true - value[0] 1`] = 
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -2600,7 +2600,7 @@ exports[`Render required = true properties.label.extra_showingextra - value[0] 1
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -2701,7 +2701,7 @@ exports[`Render required = true properties.label.inline_true - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -2787,7 +2787,7 @@ exports[`Render required = true properties.label.span_12 - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -2873,7 +2873,7 @@ exports[`Render required = true properties.options.label: html - value[0] 1`] = 
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -2959,7 +2959,7 @@ exports[`Render required = true properties.options.label: html and properties.op
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -3045,7 +3045,7 @@ exports[`Render required = true properties.options: html - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -3131,7 +3131,7 @@ exports[`Render required = true properties.options-object - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -3217,7 +3217,7 @@ exports[`Render required = true properties.options-string - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -3303,7 +3303,7 @@ exports[`Render required = true properties.options-style - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -3389,7 +3389,7 @@ exports[`Render required = true properties.optionsStyle: CSS style applied - val
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -3475,7 +3475,7 @@ exports[`Render required = true properties.placeholder_Text_inside_block - value
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -3561,7 +3561,7 @@ exports[`Render required = true properties.size: large - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-lg ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-lg ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -3647,7 +3647,7 @@ exports[`Render required = true properties.size: small - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-sm ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-sm ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -3733,7 +3733,7 @@ exports[`Render required = true properties.title - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -3819,7 +3819,7 @@ exports[`Render validation.status = error default - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -3933,7 +3933,7 @@ exports[`Render validation.status = error properties.allowClear: false - value[0
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -4047,7 +4047,7 @@ exports[`Render validation.status = error properties.autoFocus: true - value[0] 
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -4162,7 +4162,7 @@ exports[`Render validation.status = error properties.backfill: true - value[0] 1
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -4276,7 +4276,7 @@ exports[`Render validation.status = error properties.inputStyle: CSS style appli
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {\\"style\\":{\\"border\\":\\"1px solid red\\"}} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {\\"style\\":{\\"border\\":\\"1px solid red\\"}} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -4390,7 +4390,7 @@ exports[`Render validation.status = error properties.label.align_right - value[0
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -4504,7 +4504,7 @@ exports[`Render validation.status = error properties.label.colon_false - value[0
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -4604,7 +4604,7 @@ exports[`Render validation.status = error properties.label.disabled_true - value
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -4718,7 +4718,7 @@ exports[`Render validation.status = error properties.label.extra_showingextra - 
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -4840,7 +4840,7 @@ exports[`Render validation.status = error properties.label.inline_true - value[0
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -4954,7 +4954,7 @@ exports[`Render validation.status = error properties.label.span_12 - value[0] 1`
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -5068,7 +5068,7 @@ exports[`Render validation.status = error properties.options.label: html - value
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -5182,7 +5182,7 @@ exports[`Render validation.status = error properties.options.label: html and pro
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -5296,7 +5296,7 @@ exports[`Render validation.status = error properties.options: html - value[0] 1`
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -5410,7 +5410,7 @@ exports[`Render validation.status = error properties.options-object - value[0] 1
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -5524,7 +5524,7 @@ exports[`Render validation.status = error properties.options-string - value[0] 1
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -5638,7 +5638,7 @@ exports[`Render validation.status = error properties.options-style - value[0] 1`
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -5752,7 +5752,7 @@ exports[`Render validation.status = error properties.optionsStyle: CSS style app
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -5866,7 +5866,7 @@ exports[`Render validation.status = error properties.placeholder_Text_inside_blo
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -5980,7 +5980,7 @@ exports[`Render validation.status = error properties.size: large - value[0] 1`] 
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-lg ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-lg ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -6094,7 +6094,7 @@ exports[`Render validation.status = error properties.size: small - value[0] 1`] 
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-sm ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-sm ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -6208,7 +6208,7 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -6322,7 +6322,7 @@ exports[`Render validation.status = null default - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -6408,7 +6408,7 @@ exports[`Render validation.status = null properties.allowClear: false - value[0]
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -6494,7 +6494,7 @@ exports[`Render validation.status = null properties.autoFocus: true - value[0] 1
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -6581,7 +6581,7 @@ exports[`Render validation.status = null properties.backfill: true - value[0] 1`
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -6667,7 +6667,7 @@ exports[`Render validation.status = null properties.inputStyle: CSS style applie
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {\\"style\\":{\\"border\\":\\"1px solid red\\"}} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {\\"style\\":{\\"border\\":\\"1px solid red\\"}} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -6753,7 +6753,7 @@ exports[`Render validation.status = null properties.label.align_right - value[0]
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -6839,7 +6839,7 @@ exports[`Render validation.status = null properties.label.colon_false - value[0]
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -6911,7 +6911,7 @@ exports[`Render validation.status = null properties.label.disabled_true - value[
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -6997,7 +6997,7 @@ exports[`Render validation.status = null properties.label.extra_showingextra - v
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -7098,7 +7098,7 @@ exports[`Render validation.status = null properties.label.inline_true - value[0]
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -7184,7 +7184,7 @@ exports[`Render validation.status = null properties.label.span_12 - value[0] 1`]
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -7270,7 +7270,7 @@ exports[`Render validation.status = null properties.options.label: html - value[
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -7356,7 +7356,7 @@ exports[`Render validation.status = null properties.options.label: html and prop
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -7442,7 +7442,7 @@ exports[`Render validation.status = null properties.options: html - value[0] 1`]
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -7528,7 +7528,7 @@ exports[`Render validation.status = null properties.options-object - value[0] 1`
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -7614,7 +7614,7 @@ exports[`Render validation.status = null properties.options-string - value[0] 1`
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -7700,7 +7700,7 @@ exports[`Render validation.status = null properties.options-style - value[0] 1`]
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -7786,7 +7786,7 @@ exports[`Render validation.status = null properties.optionsStyle: CSS style appl
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -7872,7 +7872,7 @@ exports[`Render validation.status = null properties.placeholder_Text_inside_bloc
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -7958,7 +7958,7 @@ exports[`Render validation.status = null properties.size: large - value[0] 1`] =
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-lg ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-lg ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -8044,7 +8044,7 @@ exports[`Render validation.status = null properties.size: small - value[0] 1`] =
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-sm ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-sm ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -8130,7 +8130,7 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -8216,7 +8216,7 @@ exports[`Render validation.status = success default - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -8325,7 +8325,7 @@ exports[`Render validation.status = success properties.allowClear: false - value
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -8434,7 +8434,7 @@ exports[`Render validation.status = success properties.autoFocus: true - value[0
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -8544,7 +8544,7 @@ exports[`Render validation.status = success properties.backfill: true - value[0]
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -8653,7 +8653,7 @@ exports[`Render validation.status = success properties.inputStyle: CSS style app
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {\\"style\\":{\\"border\\":\\"1px solid red\\"}} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {\\"style\\":{\\"border\\":\\"1px solid red\\"}} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -8762,7 +8762,7 @@ exports[`Render validation.status = success properties.label.align_right - value
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -8871,7 +8871,7 @@ exports[`Render validation.status = success properties.label.colon_false - value
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -8966,7 +8966,7 @@ exports[`Render validation.status = success properties.label.disabled_true - val
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -9075,7 +9075,7 @@ exports[`Render validation.status = success properties.label.extra_showingextra 
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -9199,7 +9199,7 @@ exports[`Render validation.status = success properties.label.inline_true - value
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -9308,7 +9308,7 @@ exports[`Render validation.status = success properties.label.span_12 - value[0] 
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -9417,7 +9417,7 @@ exports[`Render validation.status = success properties.options.label: html - val
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -9526,7 +9526,7 @@ exports[`Render validation.status = success properties.options.label: html and p
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -9635,7 +9635,7 @@ exports[`Render validation.status = success properties.options: html - value[0] 
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -9744,7 +9744,7 @@ exports[`Render validation.status = success properties.options-object - value[0]
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -9853,7 +9853,7 @@ exports[`Render validation.status = success properties.options-string - value[0]
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -9962,7 +9962,7 @@ exports[`Render validation.status = success properties.options-style - value[0] 
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -10071,7 +10071,7 @@ exports[`Render validation.status = success properties.optionsStyle: CSS style a
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -10180,7 +10180,7 @@ exports[`Render validation.status = success properties.placeholder_Text_inside_b
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -10289,7 +10289,7 @@ exports[`Render validation.status = success properties.size: large - value[0] 1`
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-lg ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-lg ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -10398,7 +10398,7 @@ exports[`Render validation.status = success properties.size: small - value[0] 1`
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-sm ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-sm ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -10507,7 +10507,7 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -10616,7 +10616,7 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -10730,7 +10730,7 @@ exports[`Render validation.status = warning properties.allowClear: false - value
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -10844,7 +10844,7 @@ exports[`Render validation.status = warning properties.autoFocus: true - value[0
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -10959,7 +10959,7 @@ exports[`Render validation.status = warning properties.backfill: true - value[0]
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -11073,7 +11073,7 @@ exports[`Render validation.status = warning properties.inputStyle: CSS style app
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {\\"style\\":{\\"border\\":\\"1px solid red\\"}} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {\\"style\\":{\\"border\\":\\"1px solid red\\"}} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -11187,7 +11187,7 @@ exports[`Render validation.status = warning properties.label.align_right - value
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -11301,7 +11301,7 @@ exports[`Render validation.status = warning properties.label.colon_false - value
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -11401,7 +11401,7 @@ exports[`Render validation.status = warning properties.label.disabled_true - val
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -11515,7 +11515,7 @@ exports[`Render validation.status = warning properties.label.extra_showingextra 
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -11637,7 +11637,7 @@ exports[`Render validation.status = warning properties.label.inline_true - value
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -11751,7 +11751,7 @@ exports[`Render validation.status = warning properties.label.span_12 - value[0] 
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -11865,7 +11865,7 @@ exports[`Render validation.status = warning properties.options.label: html - val
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -11979,7 +11979,7 @@ exports[`Render validation.status = warning properties.options.label: html and p
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -12093,7 +12093,7 @@ exports[`Render validation.status = warning properties.options: html - value[0] 
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -12207,7 +12207,7 @@ exports[`Render validation.status = warning properties.options-object - value[0]
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -12321,7 +12321,7 @@ exports[`Render validation.status = warning properties.options-string - value[0]
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -12435,7 +12435,7 @@ exports[`Render validation.status = warning properties.options-style - value[0] 
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -12549,7 +12549,7 @@ exports[`Render validation.status = warning properties.optionsStyle: CSS style a
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -12663,7 +12663,7 @@ exports[`Render validation.status = warning properties.placeholder_Text_inside_b
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -12777,7 +12777,7 @@ exports[`Render validation.status = warning properties.size: large - value[0] 1`
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-lg ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-lg ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -12891,7 +12891,7 @@ exports[`Render validation.status = warning properties.size: small - value[0] 1`
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-sm ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-sm ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -13005,7 +13005,7 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <div
-          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          className="ant-select ant-select-auto-complete {} ant-select-single ant-select-allow-clear ant-select-show-search"
           onBlur={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}

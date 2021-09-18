@@ -3134,7 +3134,7 @@ exports[`Render properties.size: large - value[0] 1`] = `
             id="properties.size: large_popup"
           />
           <div
-            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-lg ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            className="ant-select ant-select-lg {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
             onBlur={[Function]}
             onFocus={[Function]}
             onKeyDown={[Function]}
@@ -3259,7 +3259,7 @@ exports[`Render properties.size: small - value[0] 1`] = `
             id="properties.size: small_popup"
           />
           <div
-            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-sm ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            className="ant-select ant-select-sm {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
             onBlur={[Function]}
             onFocus={[Function]}
             onKeyDown={[Function]}
@@ -6734,7 +6734,7 @@ exports[`Render required = true properties.size: large - value[0] 1`] = `
             id="properties.size: large_popup"
           />
           <div
-            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-lg ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            className="ant-select ant-select-lg {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
             onBlur={[Function]}
             onFocus={[Function]}
             onKeyDown={[Function]}
@@ -6859,7 +6859,7 @@ exports[`Render required = true properties.size: small - value[0] 1`] = `
             id="properties.size: small_popup"
           />
           <div
-            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-sm ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            className="ant-select ant-select-sm {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
             onBlur={[Function]}
             onFocus={[Function]}
             onKeyDown={[Function]}
@@ -11027,7 +11027,7 @@ exports[`Render validation.status = error properties.size: large - value[0] 1`] 
             id="properties.size: large_popup"
           />
           <div
-            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-lg ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            className="ant-select ant-select-lg {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
             onBlur={[Function]}
             onFocus={[Function]}
             onKeyDown={[Function]}
@@ -11180,7 +11180,7 @@ exports[`Render validation.status = error properties.size: small - value[0] 1`] 
             id="properties.size: small_popup"
           />
           <div
-            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-sm ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            className="ant-select ant-select-sm {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
             onBlur={[Function]}
             onFocus={[Function]}
             onKeyDown={[Function]}
@@ -14739,7 +14739,7 @@ exports[`Render validation.status = null properties.size: large - value[0] 1`] =
             id="properties.size: large_popup"
           />
           <div
-            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-lg ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            className="ant-select ant-select-lg {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
             onBlur={[Function]}
             onFocus={[Function]}
             onKeyDown={[Function]}
@@ -14864,7 +14864,7 @@ exports[`Render validation.status = null properties.size: small - value[0] 1`] =
             id="properties.size: small_popup"
           />
           <div
-            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-sm ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            className="ant-select ant-select-sm {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
             onBlur={[Function]}
             onFocus={[Function]}
             onKeyDown={[Function]}
@@ -18914,7 +18914,7 @@ exports[`Render validation.status = success properties.size: large - value[0] 1`
             id="properties.size: large_popup"
           />
           <div
-            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-lg ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            className="ant-select ant-select-lg {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
             onBlur={[Function]}
             onFocus={[Function]}
             onKeyDown={[Function]}
@@ -19062,7 +19062,7 @@ exports[`Render validation.status = success properties.size: small - value[0] 1`
             id="properties.size: small_popup"
           />
           <div
-            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-sm ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            className="ant-select ant-select-sm {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
             onBlur={[Function]}
             onFocus={[Function]}
             onKeyDown={[Function]}
@@ -23299,7 +23299,7 @@ exports[`Render validation.status = warning properties.size: large - value[0] 1`
             id="properties.size: large_popup"
           />
           <div
-            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-lg ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            className="ant-select ant-select-lg {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
             onBlur={[Function]}
             onFocus={[Function]}
             onKeyDown={[Function]}
@@ -23452,7 +23452,7 @@ exports[`Render validation.status = warning properties.size: small - value[0] 1`
             id="properties.size: small_popup"
           />
           <div
-            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-sm ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
+            className="ant-select ant-select-sm {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow ant-select-show-search"
             onBlur={[Function]}
             onFocus={[Function]}
             onKeyDown={[Function]}

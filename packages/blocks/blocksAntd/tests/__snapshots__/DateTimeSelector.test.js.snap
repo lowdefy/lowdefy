@@ -1492,7 +1492,7 @@ exports[`Render properties.size: small - value[0] 1`] = `
             id="properties.size: small_popup"
           />
           <div
-            className="ant-picker {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-picker-small"
+            className="ant-picker ant-picker-small {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
             onMouseUp={[Function]}
           >
             <div
@@ -3237,7 +3237,7 @@ exports[`Render required = true properties.size: small - value[0] 1`] = `
             id="properties.size: small_popup"
           />
           <div
-            className="ant-picker {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-picker-small"
+            className="ant-picker ant-picker-small {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
             onMouseUp={[Function]}
           >
             <div
@@ -5591,7 +5591,7 @@ exports[`Render validation.status = error properties.size: small - value[0] 1`] 
             id="properties.size: small_popup"
           />
           <div
-            className="ant-picker {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-picker-small"
+            className="ant-picker ant-picker-small {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
             onMouseUp={[Function]}
           >
             <div
@@ -7448,7 +7448,7 @@ exports[`Render validation.status = null properties.size: small - value[0] 1`] =
             id="properties.size: small_popup"
           />
           <div
-            className="ant-picker {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-picker-small"
+            className="ant-picker ant-picker-small {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
             onMouseUp={[Function]}
           >
             <div
@@ -9699,7 +9699,7 @@ exports[`Render validation.status = success properties.size: small - value[0] 1`
             id="properties.size: small_popup"
           />
           <div
-            className="ant-picker {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-picker-small"
+            className="ant-picker ant-picker-small {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
             onMouseUp={[Function]}
           >
             <div
@@ -12145,7 +12145,7 @@ exports[`Render validation.status = warning properties.size: small - value[0] 1`
             id="properties.size: small_popup"
           />
           <div
-            className="ant-picker {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-picker-small"
+            className="ant-picker ant-picker-small {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
             onMouseUp={[Function]}
           >
             <div

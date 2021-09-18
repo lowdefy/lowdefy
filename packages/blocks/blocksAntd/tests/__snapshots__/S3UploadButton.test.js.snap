@@ -18,7 +18,6 @@ exports[`Render default - value[0] 1`] = `
     >
       <input
         accept=""
-        directory={null}
         id="default"
         multiple={true}
         onChange={[Function]}
@@ -29,10 +28,9 @@ exports[`Render default - value[0] 1`] = `
           }
         }
         type="file"
-        webkitdirectory={null}
       />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-default"
+        className="ant-btn ant-btn-default {\\"style\\":[{},null]}"
         id="default_button"
         onClick={[Function]}
         type="button"
@@ -89,7 +87,6 @@ exports[`Render properties.accept - value[0] 1`] = `
     >
       <input
         accept=".png,.jpg"
-        directory={null}
         id="properties.accept"
         multiple={true}
         onChange={[Function]}
@@ -100,10 +97,9 @@ exports[`Render properties.accept - value[0] 1`] = `
           }
         }
         type="file"
-        webkitdirectory={null}
       />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-default"
+        className="ant-btn ant-btn-default {\\"style\\":[{},null]}"
         id="properties.accept_button"
         onClick={[Function]}
         type="button"
@@ -160,7 +156,6 @@ exports[`Render properties.button - value[0] 1`] = `
     >
       <input
         accept=""
-        directory={null}
         id="properties.button"
         multiple={true}
         onChange={[Function]}
@@ -171,10 +166,9 @@ exports[`Render properties.button - value[0] 1`] = `
           }
         }
         type="file"
-        webkitdirectory={null}
       />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn ant-btn-primary {\\"style\\":[{},null]}"
         id="properties.button_button"
         onClick={[Function]}
         type="button"
@@ -226,7 +220,6 @@ exports[`Render properties.disabled - value[0] 1`] = `
     >
       <input
         accept=""
-        directory={null}
         multiple={true}
         onChange={[Function]}
         onClick={[Function]}
@@ -236,10 +229,9 @@ exports[`Render properties.disabled - value[0] 1`] = `
           }
         }
         type="file"
-        webkitdirectory={null}
       />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-default"
+        className="ant-btn ant-btn-default {\\"style\\":[{},null]}"
         disabled={true}
         id="properties.disabled_button"
         onClick={[Function]}
@@ -297,7 +289,6 @@ exports[`Render properties.showUploadList - value[0] 1`] = `
     >
       <input
         accept=""
-        directory={null}
         id="properties.showUploadList"
         multiple={true}
         onChange={[Function]}
@@ -308,10 +299,9 @@ exports[`Render properties.showUploadList - value[0] 1`] = `
           }
         }
         type="file"
-        webkitdirectory={null}
       />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-default"
+        className="ant-btn ant-btn-default {\\"style\\":[{},null]}"
         id="properties.showUploadList_button"
         onClick={[Function]}
         type="button"
@@ -368,7 +358,6 @@ exports[`Render properties.singleFile - value[0] 1`] = `
     >
       <input
         accept=""
-        directory={null}
         id="properties.singleFile"
         multiple={false}
         onChange={[Function]}
@@ -379,10 +368,9 @@ exports[`Render properties.singleFile - value[0] 1`] = `
           }
         }
         type="file"
-        webkitdirectory={null}
       />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-default"
+        className="ant-btn ant-btn-default {\\"style\\":[{},null]}"
         id="properties.singleFile_button"
         onClick={[Function]}
         type="button"
