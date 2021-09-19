@@ -75,13 +75,13 @@ The `dev` command starts a Lowdefy development server, running locally. It can b
 Run the dev server, watching a relative directory for file changes:
 
 ```txt
-npx lowdefy@3 dev --watch ../other-project
+npx lowdefy@latest dev --watch ../other-project
 ```
 
 Run the dev server, ignoring the public directory:
 
 ```txt
-npx lowdefy@3 dev --watch-ignore public/**
+npx lowdefy@latest dev --watch-ignore public/**
 ```
 
 # Configuration
