@@ -38,7 +38,7 @@ exports[`Mock render - properties.orientation: center - value[0] - default 1`] =
 Array [
   Array [
     Object {
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html="Divider title"
         methods={
           Object {
@@ -65,7 +65,7 @@ exports[`Mock render - properties.orientation: left - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html="Divider title"
         methods={
           Object {
@@ -92,7 +92,7 @@ exports[`Mock render - properties.orientation: right - value[0] - default 1`] = 
 Array [
   Array [
     Object {
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html="Divider title"
         methods={
           Object {
@@ -119,7 +119,7 @@ exports[`Mock render - properties.title - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html="Divider title"
         methods={
           Object {
@@ -146,7 +146,7 @@ exports[`Mock render - properties.type: horizontal - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html="Divider title"
         methods={
           Object {
@@ -173,7 +173,7 @@ exports[`Mock render - properties.type: true - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html="Divider title"
         methods={
           Object {
@@ -200,7 +200,7 @@ exports[`Mock render - properties.type: vertical - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html="Divider title"
         methods={
           Object {
@@ -227,7 +227,7 @@ exports[`Mock render - with html in title - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html=<div style="background-color:yellow">
   Html Title
 </div>

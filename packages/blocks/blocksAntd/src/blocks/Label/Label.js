@@ -19,7 +19,7 @@
 
 import React from 'react';
 import classNames from 'classnames';
-import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 import { Col, Row } from 'antd';
 import CSSMotion from 'rc-animate/lib/CSSMotion';
 import {
@@ -70,7 +70,7 @@ const Label = ({ blockId, content, methods, properties, required, validation }) 
       {label && (
         <Col {...labelCol} className={labelColClassName}>
           <label htmlFor={`${blockId}_input`} className={labelClassName} title={label}>
-            <RenderHtml html={label} methods={methods} />
+            {renderHtml({ html: label, methods })}
           </label>
         </Col>
       )}
@@ -91,9 +91,7 @@ const Label = ({ blockId, content, methods, properties, required, validation }) 
           )}
         </CSSMotion>
         {showExtra && (
-          <div className={extraClassName}>
-            <RenderHtml html={properties.extra} methods={methods} />
-          </div>
+          <div className={extraClassName}>{renderHtml({ html: properties.extra, methods })}</div>
         )}
       </Col>
     </Row>

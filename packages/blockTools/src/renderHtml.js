@@ -15,18 +15,13 @@
 */
 
 import React from 'react';
-import { blockDefaultProps, HtmlComponent } from '@lowdefy/block-tools';
+import { type } from '@lowdefy/helpers';
 
-const HtmlBlock = ({ blockId, properties, methods }) => (
-  <HtmlComponent
-    div={true}
-    html={properties.html}
-    id={blockId}
-    methods={methods}
-    style={properties.style}
-  />
-);
+import HtmlComponent from './HtmlComponent';
 
-HtmlBlock.defaultProps = blockDefaultProps;
+const renderHtml = ({ div, html, id, methods, style }) =>
+  type.isNone(html) ? undefined : (
+    <HtmlComponent div={div} html={html} id={id} methods={methods} style={style} />
+  );
 
-export default HtmlBlock;
+export default renderHtml;
