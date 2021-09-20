@@ -32,10 +32,10 @@ USER node
 COPY  --chown=node:node  . .
 
 # Build the Lowdefy config using the Lowdefy CLI
-RUN npx lowdefy@latest build
+RUN npx lowdefy@3.21.2 build
 
 # Use the correct Lowdefy base image
-FROM lowdefy/lowdefy:3.19.0
+FROM lowdefy/lowdefy:3.21.2
 
 # Copy build output from build stage
 COPY --from=build --chown=node:node /home/node/lowdefy/.lowdefy/build ./build

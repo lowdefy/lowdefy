@@ -164,12 +164,24 @@
         value: 2
       - label: label 4
         value: <a>value three</a>
-# - id: 'properties.title html value'
-#   type: Descriptions
-#   properties:
-#     title: '<div style="color: blue;">hello</div>'
-#     items:
-#       field_one: value one
-#       field_two: 2
-#       field_three: value three
-#       field_four: [value 4, value 5]
+- id: 'properties.title html value'
+  type: Descriptions
+  properties:
+    title: '<div style="color: blue;">hello</div>'
+    items:
+      field_one: value one
+      field_two: 2
+      field_three: value three
+      field_four: [value 4, value 5]
+
+- id: properties.items-falseish-values
+  type: Descriptions
+  properties:
+    title: Title
+    items:
+      'Null': null
+      Zero: 0
+      One: 1
+      'False': false
+      'True': true
+      Empty: ''
