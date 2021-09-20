@@ -53,9 +53,6 @@ exports[`Render default - value[0] 1`] = `
               className="ant-checkbox-inner"
             />
           </span>
-          <span>
-            
-          </span>
         </label>
       </div>
     </div>
@@ -1014,9 +1011,6 @@ exports[`Render properties.title - value[0] 1`] = `
               className="ant-checkbox-inner"
             />
           </span>
-          <span>
-            
-          </span>
         </label>
       </div>
     </div>
@@ -1076,9 +1070,6 @@ exports[`Render required = true default - value[0] 1`] = `
             <span
               className="ant-checkbox-inner"
             />
-          </span>
-          <span>
-            
           </span>
         </label>
       </div>
@@ -2038,9 +2029,6 @@ exports[`Render required = true properties.title - value[0] 1`] = `
               className="ant-checkbox-inner"
             />
           </span>
-          <span>
-            
-          </span>
         </label>
       </div>
     </div>
@@ -2100,9 +2088,6 @@ exports[`Render validation.status = error default - value[0] 1`] = `
             <span
               className="ant-checkbox-inner"
             />
-          </span>
-          <span>
-            
           </span>
         </label>
       </div>
@@ -3475,9 +3460,6 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
               className="ant-checkbox-inner"
             />
           </span>
-          <span>
-            
-          </span>
         </label>
       </div>
       <span
@@ -3565,9 +3547,6 @@ exports[`Render validation.status = null default - value[0] 1`] = `
             <span
               className="ant-checkbox-inner"
             />
-          </span>
-          <span>
-            
           </span>
         </label>
       </div>
@@ -4527,9 +4506,6 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
               className="ant-checkbox-inner"
             />
           </span>
-          <span>
-            
-          </span>
         </label>
       </div>
     </div>
@@ -4589,9 +4565,6 @@ exports[`Render validation.status = success default - value[0] 1`] = `
             <span
               className="ant-checkbox-inner"
             />
-          </span>
-          <span>
-            
           </span>
         </label>
       </div>
@@ -5896,9 +5869,6 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
               className="ant-checkbox-inner"
             />
           </span>
-          <span>
-            
-          </span>
         </label>
       </div>
       <span
@@ -5981,9 +5951,6 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
             <span
               className="ant-checkbox-inner"
             />
-          </span>
-          <span>
-            
           </span>
         </label>
       </div>
@@ -7355,9 +7322,6 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
             <span
               className="ant-checkbox-inner"
             />
-          </span>
-          <span>
-            
           </span>
         </label>
       </div>
