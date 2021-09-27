@@ -13,7 +13,7 @@
 # limitations under the License.
 
 name: '@lowdefy/docs'
-lowdefy: 3.22.0-alpha.1
+lowdefy: 3.22.0
 licence: Apache-2.0
 
 cli:

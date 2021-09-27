@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.22.0](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.1...v3.22.0) (2021-09-27)
+
+
+### Bug Fixes
+
+* **cli:** Use renderer served from blocks server url if configured. ([69d14b4](https://github.com/lowdefy/lowdefy/commit/69d14b4a862827beac955a5039df225af689f297)), closes [#840](https://github.com/lowdefy/lowdefy/issues/840)
+* **docs:** Fix AxiosHttp connection type spelling in docs. ([d9b53a0](https://github.com/lowdefy/lowdefy/commit/d9b53a034111bc65813d81c036376d05274ff6c7))
+
+
+### Features
+
+* Add `_array.reduce` examples. ([c9a6b50](https://github.com/lowdefy/lowdefy/commit/c9a6b50017c05774654388244b06076646449ce9))
+
+
+
+
+
 # [3.22.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.0...v3.22.0-alpha.1) (2021-09-20)
 
 
