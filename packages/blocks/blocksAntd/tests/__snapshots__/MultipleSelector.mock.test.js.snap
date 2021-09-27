@@ -40,7 +40,7 @@ Array [
           id="properties.allowClear: false_0"
           value={0}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 1"
             methods={
               Object {
@@ -98,7 +98,7 @@ Array [
           id="properties.allowClear: false_1"
           value={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 2"
             methods={
               Object {
@@ -185,7 +185,7 @@ Array [
           id="properties.autoFocus: true_0"
           value={0}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 1"
             methods={
               Object {
@@ -243,7 +243,7 @@ Array [
           id="properties.autoFocus: true_1"
           value={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 2"
             methods={
               Object {
@@ -330,7 +330,7 @@ Array [
           id="properties.clearIcon: ChromeFilled_0"
           value={0}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 1"
             methods={
               Object {
@@ -388,7 +388,7 @@ Array [
           id="properties.clearIcon: ChromeFilled_1"
           value={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 2"
             methods={
               Object {
@@ -500,7 +500,7 @@ Array [
           id="properties.clearIcon-object: ChromeFilled_0"
           value={0}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 1"
             methods={
               Object {
@@ -558,7 +558,7 @@ Array [
           id="properties.clearIcon-object: ChromeFilled_1"
           value={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 2"
             methods={
               Object {
@@ -927,7 +927,7 @@ Array [
           id="properties.options.label: html_0"
           value={0}
         >
-          <RenderHtml
+          <HtmlComponent
             html=<div>
   Some main text
 </div>
@@ -1006,7 +1006,7 @@ Array [
           id="properties.options.label: html_1"
           value={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html=<div style="color: green;">
   Option green
 </div>
@@ -1082,7 +1082,7 @@ Array [
           id="properties.options.label: html_2"
           value={2}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 3"
             methods={
               Object {
@@ -1186,7 +1186,7 @@ Array [
           id="properties.options.label: html and properties.options.filterString_0"
           value={0}
         >
-          <RenderHtml
+          <HtmlComponent
             html=<div>
   Some main text
 </div>
@@ -1266,7 +1266,7 @@ Array [
           id="properties.options.label: html and properties.options.filterString_1"
           value={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html=<div style="color: green;">
   Option green
 </div>
@@ -1342,7 +1342,7 @@ Array [
           id="properties.options.label: html and properties.options.filterString_2"
           value={2}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 3"
             methods={
               Object {
@@ -1445,7 +1445,7 @@ Array [
           id="properties.options: html_0"
           value={0}
         >
-          <RenderHtml
+          <HtmlComponent
             html=<div>
   Some main text
 </div>
@@ -1515,7 +1515,7 @@ Array [
           id="properties.options: html_1"
           value={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html=<div style="color: green;">
   Option green
 </div>
@@ -1582,7 +1582,7 @@ Array [
           id="properties.options: html_2"
           value={2}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 3"
             methods={
               Object {
@@ -1676,7 +1676,7 @@ Array [
           id="properties.options-boolean_0"
           value={0}
         >
-          <RenderHtml
+          <HtmlComponent
             html="true"
             methods={
               Object {
@@ -1734,7 +1734,7 @@ Array [
           id="properties.options-boolean_1"
           value={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html="false"
             methods={
               Object {
@@ -1821,7 +1821,7 @@ Array [
           id="properties.options-number_0"
           value={0}
         >
-          <RenderHtml
+          <HtmlComponent
             html="10"
             methods={
               Object {
@@ -1879,7 +1879,7 @@ Array [
           id="properties.options-number_1"
           value={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html="12"
             methods={
               Object {
@@ -1966,7 +1966,7 @@ Array [
           id="properties.options-object_0"
           value={0}
         >
-          <RenderHtml
+          <HtmlComponent
             html="one"
             methods={
               Object {
@@ -2030,7 +2030,7 @@ Array [
           id="properties.options-object_1"
           value={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html="two"
             methods={
               Object {
@@ -2123,7 +2123,7 @@ Array [
           id="properties.options-string_0"
           value={0}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 1"
             methods={
               Object {
@@ -2181,7 +2181,7 @@ Array [
           id="properties.options-string_1"
           value={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 2"
             methods={
               Object {
@@ -2268,7 +2268,7 @@ Array [
           id="properties.options-style_0"
           value={0}
         >
-          <RenderHtml
+          <HtmlComponent
             html="one"
             methods={
               Object {
@@ -2334,7 +2334,7 @@ Array [
           id="properties.options-style_1"
           value={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html="two"
             methods={
               Object {
@@ -2429,7 +2429,7 @@ Array [
           id="properties.optionsStyle: CSS style applied_0"
           value={0}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 1"
             methods={
               Object {
@@ -2491,7 +2491,7 @@ Array [
           id="properties.optionsStyle: CSS style applied_1"
           value={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 2"
             methods={
               Object {

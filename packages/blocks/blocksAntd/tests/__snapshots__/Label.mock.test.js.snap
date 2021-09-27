@@ -25,7 +25,7 @@ Array [
             htmlFor="default_input"
             title="default"
           >
-            <RenderHtml
+            <HtmlComponent
               html="default"
               methods={
                 Object {
@@ -167,7 +167,7 @@ Array [
             title="Lorem ipsum dolor sit amet
 "
           >
-            <RenderHtml
+            <HtmlComponent
               html="Lorem ipsum dolor sit amet
 "
               methods={
@@ -277,7 +277,7 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
               methods={
@@ -380,7 +380,7 @@ Array [
             title="Lorem ipsum dolor sit amet
 "
           >
-            <RenderHtml
+            <HtmlComponent
               html="Lorem ipsum dolor sit amet
 "
               methods={
@@ -490,7 +490,7 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
               methods={
@@ -593,7 +593,7 @@ Array [
             title="Lorem ipsum dolor sit amet
 "
           >
-            <RenderHtml
+            <HtmlComponent
               html="Lorem ipsum dolor sit amet
 "
               methods={
@@ -703,7 +703,7 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
               methods={
@@ -814,7 +814,7 @@ Array [
             htmlFor="properties.align: left_input"
             title="Label title"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Label title"
               methods={
                 Object {
@@ -964,7 +964,7 @@ Array [
             htmlFor="properties.align: right_input"
             title="Label title"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Label title"
               methods={
                 Object {
@@ -1114,7 +1114,7 @@ Array [
             htmlFor="properties.colon: false_input"
             title="Label title"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Label title"
               methods={
                 Object {
@@ -1264,7 +1264,7 @@ Array [
             htmlFor="properties.colon: true_input"
             title="Label title"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Label title"
               methods={
                 Object {
@@ -1471,7 +1471,7 @@ Array [
             htmlFor="properties.extra: Extra long_input"
             title="Label title"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Label title"
               methods={
                 Object {
@@ -1589,7 +1589,7 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
               methods={
@@ -1691,7 +1691,7 @@ Array [
             htmlFor="properties.extra: Extra long with inline = true_input"
             title="Label title"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Label title"
               methods={
                 Object {
@@ -1800,7 +1800,7 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
               methods={
@@ -1902,7 +1902,7 @@ Array [
             htmlFor="properties.extra: Extra long with inline = true, size = large_input"
             title="Label title"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Label title"
               methods={
                 Object {
@@ -2011,7 +2011,7 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
               methods={
@@ -2113,7 +2113,7 @@ Array [
             htmlFor="properties.extra: Extra long with inline = true, size = small_input"
             title="Label title"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Label title"
               methods={
                 Object {
@@ -2222,7 +2222,7 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
               methods={
@@ -2325,7 +2325,7 @@ Array [
             title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
           >
-            <RenderHtml
+            <HtmlComponent
               html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
               methods={
@@ -2467,7 +2467,7 @@ Array [
             htmlFor="properties.extra: Extra text_input"
             title="Label title"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Label title"
               methods={
                 Object {
@@ -2585,7 +2585,7 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Extra text"
               methods={
                 Object {
@@ -2695,7 +2695,7 @@ Array [
             htmlFor="properties.extra: html in extra_input"
             title="label title"
           >
-            <RenderHtml
+            <HtmlComponent
               html="label title"
               methods={
                 Object {
@@ -2813,7 +2813,7 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
-            <RenderHtml
+            <HtmlComponent
               html=<span style="background:yellow;">
   html in extra
 </span>
@@ -2925,7 +2925,7 @@ Array [
             htmlFor="properties.extraStyle: border 1px purple_input"
             title="Label title"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Label title"
               methods={
                 Object {
@@ -3045,7 +3045,7 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid purple\\"}]}"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Extra text"
               methods={
                 Object {
@@ -3157,7 +3157,7 @@ Array [
             htmlFor="properties.feedbackStyle: border 1px blue_input"
             title="Label title"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Label title"
               methods={
                 Object {
@@ -3277,7 +3277,7 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
-            <RenderHtml
+            <HtmlComponent
               html="The extra content"
               methods={
                 Object {
@@ -3380,7 +3380,7 @@ Array [
             htmlFor="properties.inline: true_input"
             title="Label title"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Label title"
               methods={
                 Object {
@@ -3526,7 +3526,7 @@ Array [
             htmlFor="properties.span: 2_input"
             title="This is the long label title wrapped by short span"
           >
-            <RenderHtml
+            <HtmlComponent
               html="This is the long label title wrapped by short span"
               methods={
                 Object {
@@ -3686,7 +3686,7 @@ Array [
             htmlFor="properties.span: 2 with long work title_input"
             title="Thisisthelonglabeltitlea"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Thisisthelonglabeltitlea"
               methods={
                 Object {
@@ -3841,7 +3841,7 @@ Array [
             htmlFor="properties.title_input"
             title="Label title"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Label title"
               methods={
                 Object {
@@ -3992,7 +3992,7 @@ Array [
             title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
           >
-            <RenderHtml
+            <HtmlComponent
               html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
               methods={
@@ -4145,7 +4145,7 @@ Array [
   html in title
 </span>
           >
-            <RenderHtml
+            <HtmlComponent
               html=<span style="background:yellow;">
   html in title
 </span>
@@ -4303,7 +4303,7 @@ Array [
             title="Lorem
 "
           >
-            <RenderHtml
+            <HtmlComponent
               html="Lorem
 "
               methods={
@@ -4427,7 +4427,7 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
               methods={
@@ -4544,7 +4544,7 @@ Array [
             title="Lorem
 "
           >
-            <RenderHtml
+            <HtmlComponent
               html="Lorem
 "
               methods={
@@ -4668,7 +4668,7 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
               methods={
@@ -4785,7 +4785,7 @@ Array [
             title="Lorem
 "
           >
-            <RenderHtml
+            <HtmlComponent
               html="Lorem
 "
               methods={
@@ -4909,7 +4909,7 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
               methods={
@@ -5026,7 +5026,7 @@ Array [
             title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
           >
-            <RenderHtml
+            <HtmlComponent
               html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
               methods={
@@ -5150,7 +5150,7 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
               methods={
@@ -5267,7 +5267,7 @@ Array [
             title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
           >
-            <RenderHtml
+            <HtmlComponent
               html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
               methods={
@@ -5391,7 +5391,7 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
               methods={
@@ -5508,7 +5508,7 @@ Array [
             title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
           >
-            <RenderHtml
+            <HtmlComponent
               html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
               methods={
@@ -5632,7 +5632,7 @@ Array [
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
           >
-            <RenderHtml
+            <HtmlComponent
               html="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
               methods={

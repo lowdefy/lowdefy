@@ -958,7 +958,6 @@ exports[`Render properties.panels - value[0] 1`] = `
           />
         </svg>
       </span>
-      
     </div>
     <div
       className="ant-collapse-content ant-collapse-content-active"
@@ -1010,7 +1009,6 @@ exports[`Render properties.panels - value[0] 1`] = `
           />
         </svg>
       </span>
-      
     </div>
   </div>
 </div>

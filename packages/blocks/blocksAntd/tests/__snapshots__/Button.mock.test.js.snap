@@ -5,7 +5,7 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html="default"
         methods={
           Object {
@@ -59,7 +59,7 @@ Array [
   Array [
     Object {
       "block": true,
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html="properties.block: true"
         methods={
           Object {
@@ -113,7 +113,7 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html="properties.color: #9c27b0"
         methods={
           Object {
@@ -173,7 +173,7 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html="properties.danger: true"
         methods={
           Object {
@@ -227,7 +227,7 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html="properties.disabled: true"
         methods={
           Object {
@@ -281,7 +281,7 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html="properties.ghost: true"
         methods={
           Object {
@@ -384,7 +384,7 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html="properties.href: www.lowdefy.com"
         methods={
           Object {
@@ -438,7 +438,7 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html="properties.icon object"
         methods={
           Object {
@@ -522,7 +522,7 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html="properties.icon string"
         methods={
           Object {
@@ -601,7 +601,7 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html="properties.shape: circle"
         methods={
           Object {
@@ -655,7 +655,7 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html="properties.shape: round"
         methods={
           Object {
@@ -709,7 +709,7 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html="properties.size: large"
         methods={
           Object {
@@ -763,7 +763,7 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html="properties.size: small"
         methods={
           Object {
@@ -817,7 +817,7 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html="Button title"
         methods={
           Object {
@@ -871,7 +871,7 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html="properties.type: danger"
         methods={
           Object {
@@ -925,7 +925,7 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html="properties.type: dashed"
         methods={
           Object {
@@ -979,7 +979,7 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html="properties.type: default"
         methods={
           Object {
@@ -1033,7 +1033,7 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html="properties.type: link"
         methods={
           Object {
@@ -1087,7 +1087,7 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html="properties.type: text"
         methods={
           Object {
@@ -1141,7 +1141,7 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html=<div style="color: orange;">
   Title
 </div>
@@ -1197,7 +1197,7 @@ Array [
   Array [
     Object {
       "block": undefined,
-      "children": <RenderHtml
+      "children": <HtmlComponent
         html=<div style="color: red;">
   Title
 </div>

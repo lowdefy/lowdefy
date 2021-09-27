@@ -17,6 +17,7 @@
 import React from 'react';
 import DOMPurify from 'dompurify';
 import { blockDefaultProps } from '@lowdefy/block-tools';
+import { type } from '@lowdefy/helpers';
 
 class DangerousHtml extends React.Component {
   constructor(props) {
@@ -29,13 +30,17 @@ class DangerousHtml extends React.Component {
   }
 
   componentDidMount() {
-    // this.div.innerHTML = this.props.properties.html;
-    this.div.innerHTML = DOMPurify.sanitize(this.props.properties.html, this.DOMPurifyOptions);
+    const htmlString = type.isNone(this.props.properties.html)
+      ? ''
+      : this.props.properties.html.toString();
+    this.div.innerHTML = DOMPurify.sanitize(htmlString, this.DOMPurifyOptions);
   }
 
   componentDidUpdate() {
-    // this.div.innerHTML = this.props.properties.html;
-    this.div.innerHTML = DOMPurify.sanitize(this.props.properties.html, this.DOMPurifyOptions);
+    const htmlString = type.isNone(this.props.properties.html)
+      ? ''
+      : this.props.properties.html.toString();
+    this.div.innerHTML = DOMPurify.sanitize(htmlString, this.DOMPurifyOptions);
   }
 
   render() {

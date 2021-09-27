@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.22.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.0...v3.22.0-alpha.1) (2021-09-20)
+
+
+### Bug Fixes
+
+* **blockTools:** Add renderHtml helper function. ([b0c35f7](https://github.com/lowdefy/lowdefy/commit/b0c35f7341630c6ab7fb2470d3a3ca1bce1b1f0c))
+* **blockTools:** Handle falsey values better in RenderHtml component ([4363803](https://github.com/lowdefy/lowdefy/commit/43638035d038e5b4993a2709cf657ae60d10e8be))
+
+
+
+
+
 # [3.22.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.2...v3.22.0-alpha.0) (2021-09-08)
 
 **Note:** Version bump only for package @lowdefy/block-tools

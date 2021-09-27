@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/operators",
-  "version": "3.22.0-alpha.0",
+  "version": "3.22.0-alpha.1",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -36,9 +36,9 @@
     "prepare": "yarn build"
   },
   "dependencies": {
-    "@lowdefy/format": "3.22.0-alpha.0",
-    "@lowdefy/helpers": "3.22.0-alpha.0",
-    "@lowdefy/nunjucks": "3.22.0-alpha.0",
+    "@lowdefy/format": "3.22.0-alpha.1",
+    "@lowdefy/helpers": "3.22.0-alpha.1",
+    "@lowdefy/nunjucks": "3.22.0-alpha.1",
     "change-case": "4.1.2",
     "deep-diff": "1.0.2",
     "js-yaml": "4.1.0",

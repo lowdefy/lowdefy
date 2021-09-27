@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.22.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.0...v3.22.0-alpha.1) (2021-09-20)
+
+
+### Bug Fixes
+
+* **blocksBasic:** Handle none type values in DangerousHtml block ([a765be4](https://github.com/lowdefy/lowdefy/commit/a765be4395c315f90b31680d3a914e8ac6f2a5ae))
+* **blocksBasic:** Use renamed HtmlComponent in Html block (was RenderHtml) ([cf85d6c](https://github.com/lowdefy/lowdefy/commit/cf85d6ce38ce1fd715d4ae42078b002cc5b5b82e))
+
+
+
+
+
 # [3.22.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.2...v3.22.0-alpha.0) (2021-09-08)
 
 **Note:** Version bump only for package @lowdefy/blocks-basic
