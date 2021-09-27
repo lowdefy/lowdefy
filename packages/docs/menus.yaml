@@ -730,6 +730,9 @@
         - id: _sum
           type: MenuLink
           pageId: _sum
+        - id: _switch
+          type: MenuLink
+          pageId: _switch
         - id: _type
           type: MenuLink
           pageId: _type
