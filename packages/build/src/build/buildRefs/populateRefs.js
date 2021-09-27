@@ -27,7 +27,11 @@ function refReviver(key, value) {
       }
       if (type.isObject(value._var) && type.isString(value._var.name)) {
         return JSON.parse(
-          JSON.stringify(get(this.vars, value._var.name, { default: value._var.default || null }))
+          JSON.stringify(
+            get(this.vars, value._var.name, {
+              default: type.isNone(value._var.default) ? null : value._var.default,
+            })
+          )
         );
       }
       throw new Error(

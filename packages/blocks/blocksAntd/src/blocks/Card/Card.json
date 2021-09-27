@@ -51,6 +51,16 @@
           "description": "Title to show in the title area - supports html. Overwritten by blocks in the title content area."
         }
       }
+    },
+    "events": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "onClick": {
+          "type": "array",
+          "description": "Trigger actions when the Card is clicked."
+        }
+      }
     }
   }
 }

@@ -25,6 +25,7 @@ import Button from './blocks/Button/Button';
 import ButtonSelector from './blocks/ButtonSelector/ButtonSelector';
 import Card from './blocks/Card/Card';
 import CheckboxSelector from './blocks/CheckboxSelector/CheckboxSelector';
+import CheckboxSwitch from './blocks/CheckboxSwitch/CheckboxSwitch';
 import Collapse from './blocks/Collapse/Collapse';
 import Comment from './blocks/Comment/Comment';
 import ConfirmModal from './blocks/ConfirmModal/ConfirmModal';
@@ -58,6 +59,7 @@ import PageSiderMenu from './blocks/PageSiderMenu/PageSiderMenu';
 import Pagination from './blocks/Pagination/Pagination';
 import Paragraph from './blocks/Paragraph/Paragraph';
 import ParagraphInput from './blocks/ParagraphInput/ParagraphInput';
+import PasswordInput from './blocks/PasswordInput/PasswordInput';
 import Progress from './blocks/Progress/Progress';
 import RadioSelector from './blocks/RadioSelector/RadioSelector';
 import RatingSlider from './blocks/RatingSlider/RatingSlider';
@@ -90,6 +92,7 @@ export {
   ButtonSelector,
   Card,
   CheckboxSelector,
+  CheckboxSwitch,
   Collapse,
   Comment,
   ConfirmModal,
@@ -123,6 +126,7 @@ export {
   Pagination,
   Paragraph,
   ParagraphInput,
+  PasswordInput,
   Progress,
   RadioSelector,
   RatingSlider,
@@ -155,6 +159,7 @@ export default {
   ButtonSelector,
   Card,
   CheckboxSelector,
+  CheckboxSwitch,
   Collapse,
   Comment,
   ConfirmModal,
@@ -188,6 +193,7 @@ export default {
   Pagination,
   Paragraph,
   ParagraphInput,
+  PasswordInput,
   Progress,
   RadioSelector,
   RatingSlider,

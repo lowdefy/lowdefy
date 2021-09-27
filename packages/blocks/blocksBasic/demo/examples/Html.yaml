@@ -50,3 +50,12 @@
       <script>
         alert('script tag');
       </script>
+
+- id: properties.html is number 0
+  type: Html
+  properties:
+    html: 0
+- id: properties.html is boolean false
+  type: Html
+  properties:
+    html: false

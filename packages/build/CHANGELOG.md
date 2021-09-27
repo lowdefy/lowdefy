@@ -3,6 +3,43 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.22.0](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.1...v3.22.0) (2021-09-27)
+
+**Note:** Version bump only for package @lowdefy/build
+
+
+
+
+
+# [3.22.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.0...v3.22.0-alpha.1) (2021-09-20)
+
+
+### Bug Fixes
+
+* **build:** Updated meta location tests to include CheckboxSwitch. ([905f47e](https://github.com/lowdefy/lowdefy/commit/905f47edd3ffa252c688d5959d69320a7a42c7bd))
+* **build:** Updated meta locations to include CheckboxSwitch block. ([cd2ab8c](https://github.com/lowdefy/lowdefy/commit/cd2ab8c3a87e76d0b61284c60f5f3cfcad98c24f))
+* **deps:** Update dependency axios to v0.21.4 ([81cd2b6](https://github.com/lowdefy/lowdefy/commit/81cd2b6e0ae3dc377b9cee6e3c801c47ddca2f08))
+
+
+
+
+
+# [3.22.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.2...v3.22.0-alpha.0) (2021-09-08)
+
+
+### Bug Fixes
+
+* **build:** Updated meta locations tests. ([9e20ace](https://github.com/lowdefy/lowdefy/commit/9e20acebaac9ae01fd3974469bddede0e651da19))
+
+
+### Features
+
+* **build:** Added PasswordInput meta location. ([66abcdd](https://github.com/lowdefy/lowdefy/commit/66abcddafc7d8b1950e96a137d0d336ccf3e145b))
+
+
+
+
+
 ## [3.21.2](https://github.com/lowdefy/lowdefy/compare/v3.21.2-alpha.0...v3.21.2) (2021-08-31)
 
 **Note:** Version bump only for package @lowdefy/build

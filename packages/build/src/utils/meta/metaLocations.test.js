@@ -57,6 +57,9 @@ test('metaLocations default URL', async () => {
     CheckboxSelector: {
       url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/CheckboxSelector.json`,
     },
+    CheckboxSwitch: {
+      url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/CheckboxSwitch.json`,
+    },
     ChromeColorSelector: {
       url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-color-selectors/meta/ChromeColorSelector.json`,
     },
@@ -198,6 +201,9 @@ test('metaLocations default URL', async () => {
     ParagraphInput: {
       url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/ParagraphInput.json`,
     },
+    PasswordInput: {
+      url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/PasswordInput.json`,
+    },
     Progress: {
       url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Progress.json`,
     },
@@ -310,6 +316,9 @@ test('metaLocations configured URL', async () => {
     },
     CheckboxSelector: {
       url: 'https://blocks.server.com/blocks-antd/meta/CheckboxSelector.json',
+    },
+    CheckboxSwitch: {
+      url: 'https://blocks.server.com/blocks-antd/meta/CheckboxSwitch.json',
     },
     ChromeColorSelector: {
       url: 'https://blocks.server.com/blocks-color-selectors/meta/ChromeColorSelector.json',
@@ -451,6 +460,9 @@ test('metaLocations configured URL', async () => {
     },
     ParagraphInput: {
       url: 'https://blocks.server.com/blocks-antd/meta/ParagraphInput.json',
+    },
+    PasswordInput: {
+      url: 'https://blocks.server.com/blocks-antd/meta/PasswordInput.json',
     },
     Progress: {
       url: 'https://blocks.server.com/blocks-antd/meta/Progress.json',

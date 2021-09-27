@@ -396,14 +396,18 @@ describe('vars', () => {
     _ref:
       path: file.yaml
       vars:
-        var2: value`,
+        var1: null`,
       },
       {
         path: 'file.yaml',
         content: `
-  key:
+  key1:
     _var:
       name: var1
+      default: default
+  key2:
+    _var:
+      name: var2
       default: default`,
       },
     ];
@@ -411,7 +415,55 @@ describe('vars', () => {
     const res = await buildRefs({ context });
     expect(res).toEqual({
       ref: {
-        key: 'default',
+        key1: null,
+        key2: 'default',
+      },
+    });
+  });
+
+  test("buildRefs var default value can be empty string, boolean false or 0, but not NaN nor Inf which aren't JSON serializable", async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+  ref:
+    _ref:
+      path: file.yaml`,
+      },
+      {
+        path: 'file.yaml',
+        content: `
+  key_empty_str:
+    _var:
+      name: var1
+      default: ''
+  key_false:
+    _var:
+      name: var2
+      default: false
+  key_NaN:
+    _var:
+      name: var3
+      default: .nan
+  key_Inf:
+    _var:
+      name: var4
+      default: .inf
+  key_zero:
+    _var:
+      name: var5
+      default: 0`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res).toEqual({
+      ref: {
+        key_empty_str: '',
+        key_false: false,
+        key_NaN: null,
+        key_Inf: null,
+        key_zero: 0,
       },
     });
   });

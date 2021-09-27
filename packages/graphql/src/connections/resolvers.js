@@ -21,6 +21,7 @@ import GoogleSheet from './GoogleSheet/GoogleSheet';
 import Knex from './Knex/Knex';
 import MongoDBCollection from './MongoDBCollection/MongoDBCollection';
 import SendGridMail from './SendGridMail/SendGridMail';
+import Stripe from './Stripe/Stripe';
 
 const resolvers = {
   AwsS3Bucket,
@@ -30,6 +31,7 @@ const resolvers = {
   Knex,
   MongoDBCollection,
   SendGridMail,
+  Stripe,
 };
 
 export default resolvers;

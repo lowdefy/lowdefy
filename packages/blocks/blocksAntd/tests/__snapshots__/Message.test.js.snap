@@ -11,7 +11,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Args message content"
         methods={
           Object {
@@ -63,7 +63,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Args message content"
         methods={
           Object {
@@ -115,7 +115,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Args message content"
         methods={
           Object {
@@ -167,7 +167,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Args message content"
         methods={
           Object {
@@ -238,7 +238,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Args message content"
         methods={
           Object {
@@ -292,7 +292,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Args message content"
         methods={
           Object {
@@ -346,7 +346,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Args message content"
         methods={
           Object {
@@ -402,7 +402,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Args message content"
         methods={
           Object {
@@ -452,7 +452,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Args message content"
         methods={
           Object {
@@ -504,7 +504,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="default"
         methods={
           Object {
@@ -556,7 +556,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
@@ -608,7 +608,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
@@ -660,7 +660,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
@@ -731,7 +731,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
@@ -785,7 +785,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
@@ -839,7 +839,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
@@ -895,7 +895,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
@@ -945,7 +945,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html=<div style="color:pink;">
   <strong>
     Message Content Html
@@ -1003,7 +1003,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="default"
         methods={
           Object {
@@ -1055,7 +1055,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
@@ -1107,7 +1107,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
@@ -1159,7 +1159,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
@@ -1236,7 +1236,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
@@ -1288,7 +1288,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
@@ -1340,7 +1340,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
@@ -1392,7 +1392,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
@@ -1444,7 +1444,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html=<div style="color:pink;">
   <strong>
     Message Content Html
@@ -1498,7 +1498,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="default"
         methods={
           Object {
@@ -1550,7 +1550,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
@@ -1602,7 +1602,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
@@ -1654,7 +1654,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
@@ -1725,7 +1725,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
@@ -1779,7 +1779,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
@@ -1833,7 +1833,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
@@ -1889,7 +1889,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
@@ -1939,7 +1939,7 @@ Array [
   Array [
     Object {
       "className": "{}",
-      "content": <RenderHtml
+      "content": <HtmlComponent
         html=<div style="color:pink;">
   <strong>
     Message Content Html

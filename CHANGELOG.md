@@ -3,6 +3,102 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.22.0](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.1...v3.22.0) (2021-09-27)
+
+## Changes
+
+### Blocks
+
+- Added new blocks `PasswordInput` and `CheckboxSwitch`.
+- Added an `onClick` event to the `Card` block.
+- Fixed the text copied to the clipboard when the Copy button is clicked in the `Paragraph` and `Title` blocks.
+- Falsy values like `0`, `false`, and `null` are now rendered correctly in blocks that render HTML.
+
+### Build
+
+- Fixed a bug where the `_var` operator did not work with falsy values for the `default` property.
+
+### CLI
+
+- The renderer served from blocks server url is now used if a blocks server url configured.
+
+### Connections
+
+- Added Stripe connection.
+
+### Documentation
+
+- Fixed AxiosHttp connection type spelling in docs
+- Added `\_get` operator switch example.
+- Added `_array.reduce` examples.
+- Updated CLI npm install docs.
+- Changed npx commands to use specific CLI versions for docker deployments.
+- Added readme to CLI package.
+- Fixed `MultipleSelector` block events documentation.
+- Fixed `Title` block `copyable` and `ellipsis` properties documentation.
+
+## Commits
+
+### Bug Fixes
+
+- **blocksAntd:** Fix selector option labels and filter function. ([38445a5](https://github.com/lowdefy/lowdefy/commit/38445a58b626287868ad838d3b9885dccb7c720d))
+- **cli:** Use renderer served from blocks server url if configured. ([69d14b4](https://github.com/lowdefy/lowdefy/commit/69d14b4a862827beac955a5039df225af689f297)), closes [#840](https://github.com/lowdefy/lowdefy/issues/840)
+- **docs:** Fix AxiosHttp connection type spelling in docs. ([d9b53a0](https://github.com/lowdefy/lowdefy/commit/d9b53a034111bc65813d81c036376d05274ff6c7))
+
+### Features
+
+- Add `_array.reduce` examples. ([c9a6b50](https://github.com/lowdefy/lowdefy/commit/c9a6b50017c05774654388244b06076646449ce9))
+
+# [3.22.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.0...v3.22.0-alpha.1) (2021-09-20)
+
+### Bug Fixes
+
+- **blocksAntd:** Add tests for CheckboxSwitch. ([089150e](https://github.com/lowdefy/lowdefy/commit/089150eacc67e4f27de5f763ad3656d52da40cad))
+- **blocksAntd:** Added CheckboxSwitch tests. ([db8c05b](https://github.com/lowdefy/lowdefy/commit/db8c05b0ef546c460f41ab6e7e52de13eb54ff4b))
+- **blocksAntd:** Fix CheckboxSwitch color property. ([d2ea3c6](https://github.com/lowdefy/lowdefy/commit/d2ea3c6a7f2d9f13e8a766c76e49a1b3a540d1d9))
+- **blocksAntd:** Fix MultipleSelector schema and docs. ([41d25a1](https://github.com/lowdefy/lowdefy/commit/41d25a1e60f403a30824a00626605da37fc5bd3a))
+- **blocksAntd:** Fix typo in Paragraph input copyable text property. ([b92621a](https://github.com/lowdefy/lowdefy/commit/b92621a8bae7be6e4d48165b8c54176d2403c592))
+- **blocksAntd:** Paragraph and Title blocks copyable error fixed. ([483013d](https://github.com/lowdefy/lowdefy/commit/483013d1715cb97d08ed2f9475606c5b074a6ad3))
+- **blocksAntd:** Updated CheckboxSwitch test snapshots. ([025a158](https://github.com/lowdefy/lowdefy/commit/025a1583e902b6edcb94c89ad272761eabd420fe))
+- **blocksAntd:** Use updated renderHtml helper function ([5e3de6f](https://github.com/lowdefy/lowdefy/commit/5e3de6f5caa74e549b7f518895708b01a9191ee6)), closes [#820](https://github.com/lowdefy/lowdefy/issues/820)
+- **blocksAntd:** Use updated renderHtml in selector blocks ([0da3bd1](https://github.com/lowdefy/lowdefy/commit/0da3bd19512cb0452ac7c559dce2e9ae499288de))
+- **blocksBasic:** Handle none type values in DangerousHtml block ([a765be4](https://github.com/lowdefy/lowdefy/commit/a765be4395c315f90b31680d3a914e8ac6f2a5ae))
+- **blocksBasic:** Use renamed HtmlComponent in Html block (was RenderHtml) ([cf85d6c](https://github.com/lowdefy/lowdefy/commit/cf85d6ce38ce1fd715d4ae42078b002cc5b5b82e))
+- **blockTools:** Add renderHtml helper function. ([b0c35f7](https://github.com/lowdefy/lowdefy/commit/b0c35f7341630c6ab7fb2470d3a3ca1bce1b1f0c))
+- **blockTools:** Handle falsey values better in RenderHtml component ([4363803](https://github.com/lowdefy/lowdefy/commit/43638035d038e5b4993a2709cf657ae60d10e8be))
+- **build:** Updated meta location tests to include CheckboxSwitch. ([905f47e](https://github.com/lowdefy/lowdefy/commit/905f47edd3ffa252c688d5959d69320a7a42c7bd))
+- **build:** Updated meta locations to include CheckboxSwitch block. ([cd2ab8c](https://github.com/lowdefy/lowdefy/commit/cd2ab8c3a87e76d0b61284c60f5f3cfcad98c24f))
+- **cli:** Add readme to CLI package. ([cf5c406](https://github.com/lowdefy/lowdefy/commit/cf5c406da6d0c1f53e23d0a1d2b802c89f29db44))
+- **deps:** Update dependency axios to v0.21.4 ([81cd2b6](https://github.com/lowdefy/lowdefy/commit/81cd2b6e0ae3dc377b9cee6e3c801c47ddca2f08))
+- **docs:** Added CheckboxSwitch examples and CheckboxSelector note. ([9cf56bf](https://github.com/lowdefy/lowdefy/commit/9cf56bfbaa5c7a75c55d24d2f965ec351c1672e0))
+- **docs:** Added copyable and ellipsis config to Title block. ([9f8632e](https://github.com/lowdefy/lowdefy/commit/9f8632ec577196ea45471470a9dd13d3dbc09446))
+- **docs:** Change npx commands to specific versions for deployments. ([f2c380b](https://github.com/lowdefy/lowdefy/commit/f2c380b07a78defff79281d5c07c61a718bfe750))
+- **docs:** Convert CLI commands to npx commands. ([c9cd643](https://github.com/lowdefy/lowdefy/commit/c9cd643f3809fdc0cde7ba47e17e392b3236c17b))
+- **docs:** Update CLI npm install docs. ([98a8b71](https://github.com/lowdefy/lowdefy/commit/98a8b71ff2ef961ccfcb8b94e115b4162881dd38))
+
+### Features
+
+- **blocksAntd:** Added CheckboxSwitch demo example. ([7187849](https://github.com/lowdefy/lowdefy/commit/718784920d6e5daa69d30601cd88e7fadd94c5d4))
+- **blocksAntd:** CheckboxSwitch block has been added. ([838f5ea](https://github.com/lowdefy/lowdefy/commit/838f5ea8852cff9f193e3e0a3dfb16b9c7f1da9e))
+- **docs:** Add \_get operator switch example. ([b727b9e](https://github.com/lowdefy/lowdefy/commit/b727b9edd0f37d3d10d5add32cbd9411fa4b6f98))
+- **docs:** Added CheckboxSwitch docs. ([81752aa](https://github.com/lowdefy/lowdefy/commit/81752aa927f1d6050a290440ca15a87c05f3ea51))
+
+# [3.22.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.2...v3.22.0-alpha.0) (2021-09-08)
+
+### Bug Fixes
+
+- **blocksAntd:** Updated Password Input tests. ([7f32230](https://github.com/lowdefy/lowdefy/commit/7f322300b7888bc3de51d36483f06a1f68d5d74e))
+- **build:** Updated meta locations tests. ([9e20ace](https://github.com/lowdefy/lowdefy/commit/9e20acebaac9ae01fd3974469bddede0e651da19))
+
+### Features
+
+- **blocksAntd:** Card block now has an onClick event. ([4263f6b](https://github.com/lowdefy/lowdefy/commit/4263f6b8764bb147e301c3dbba0ac4986959aad8))
+- **blocksAntd:** Password Input block has been added. ([9d99ef8](https://github.com/lowdefy/lowdefy/commit/9d99ef82a930adb93b022c42ef765cf8a5022c70))
+- **build:** Added PasswordInput meta location. ([66abcdd](https://github.com/lowdefy/lowdefy/commit/66abcddafc7d8b1950e96a137d0d336ccf3e145b))
+- **docs:** Add Stripe documentation. ([ed963ec](https://github.com/lowdefy/lowdefy/commit/ed963ec823ef19e88ed8320d71b83a7eef2e6cfe))
+- **docs:** Added Password Input block docs. ([ee8bda4](https://github.com/lowdefy/lowdefy/commit/ee8bda4a5bd6248c03433a720652d72c3b9ddbae))
+- **graphql:** Add Stripe connection. ([e676258](https://github.com/lowdefy/lowdefy/commit/e676258688a61b93da7267272903d02cdbb3edcb))
+
 ## [3.21.2](https://github.com/lowdefy/lowdefy/compare/v3.21.2-alpha.0...v3.21.2) (2021-08-31)
 
 ## Changes

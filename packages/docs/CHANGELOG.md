@@ -3,6 +3,56 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.22.0](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.1...v3.22.0) (2021-09-27)
+
+
+### Bug Fixes
+
+* **cli:** Use renderer served from blocks server url if configured. ([69d14b4](https://github.com/lowdefy/lowdefy/commit/69d14b4a862827beac955a5039df225af689f297)), closes [#840](https://github.com/lowdefy/lowdefy/issues/840)
+* **docs:** Fix AxiosHttp connection type spelling in docs. ([d9b53a0](https://github.com/lowdefy/lowdefy/commit/d9b53a034111bc65813d81c036376d05274ff6c7))
+
+
+### Features
+
+* Add `_array.reduce` examples. ([c9a6b50](https://github.com/lowdefy/lowdefy/commit/c9a6b50017c05774654388244b06076646449ce9))
+
+
+
+
+
+# [3.22.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.0...v3.22.0-alpha.1) (2021-09-20)
+
+
+### Bug Fixes
+
+* **docs:** Added CheckboxSwitch examples and CheckboxSelector note. ([9cf56bf](https://github.com/lowdefy/lowdefy/commit/9cf56bfbaa5c7a75c55d24d2f965ec351c1672e0))
+* **docs:** Added copyable and ellipsis config to Title block. ([9f8632e](https://github.com/lowdefy/lowdefy/commit/9f8632ec577196ea45471470a9dd13d3dbc09446))
+* **docs:** Change npx commands to specific versions for deployments. ([f2c380b](https://github.com/lowdefy/lowdefy/commit/f2c380b07a78defff79281d5c07c61a718bfe750))
+* **docs:** Convert CLI commands to npx commands. ([c9cd643](https://github.com/lowdefy/lowdefy/commit/c9cd643f3809fdc0cde7ba47e17e392b3236c17b))
+* **docs:** Update CLI npm install docs. ([98a8b71](https://github.com/lowdefy/lowdefy/commit/98a8b71ff2ef961ccfcb8b94e115b4162881dd38))
+
+
+### Features
+
+* **docs:** Add _get operator switch example. ([b727b9e](https://github.com/lowdefy/lowdefy/commit/b727b9edd0f37d3d10d5add32cbd9411fa4b6f98))
+* **docs:** Added CheckboxSwitch docs. ([81752aa](https://github.com/lowdefy/lowdefy/commit/81752aa927f1d6050a290440ca15a87c05f3ea51))
+
+
+
+
+
+# [3.22.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.2...v3.22.0-alpha.0) (2021-09-08)
+
+
+### Features
+
+* **docs:** Add Stripe documentation. ([ed963ec](https://github.com/lowdefy/lowdefy/commit/ed963ec823ef19e88ed8320d71b83a7eef2e6cfe))
+* **docs:** Added Password Input block docs. ([ee8bda4](https://github.com/lowdefy/lowdefy/commit/ee8bda4a5bd6248c03433a720652d72c3b9ddbae))
+
+
+
+
+
 ## [3.21.2](https://github.com/lowdefy/lowdefy/compare/v3.21.2-alpha.0...v3.21.2) (2021-08-31)
 
 **Note:** Version bump only for package @lowdefy/docs

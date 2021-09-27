@@ -25,49 +25,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -108,49 +66,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -191,49 +107,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -274,49 +148,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -383,49 +215,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -466,49 +256,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -549,49 +297,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -632,49 +338,7 @@ Array [
       "okText": "Ok text",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -715,49 +379,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -800,49 +422,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -885,49 +465,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -970,49 +508,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -1055,49 +551,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -1130,7 +584,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html="ConfirmModal block"
         methods={
           Object {
@@ -1214,7 +668,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html=<div style="color:purple">
   Html Title
 </div>
@@ -1300,49 +754,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": "550px",
       "zIndex": undefined,
     },
@@ -1383,49 +795,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": 1100,
     },
@@ -1466,49 +836,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -1549,49 +877,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -1632,49 +918,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -1715,49 +959,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -1824,49 +1026,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -1907,49 +1067,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -1990,49 +1108,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -2073,49 +1149,7 @@ Array [
       "okText": "Ok text",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -2156,49 +1190,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -2241,49 +1233,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -2326,49 +1276,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -2411,49 +1319,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -2496,49 +1362,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -2571,7 +1395,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html="ConfirmModal block"
         methods={
           Object {
@@ -2655,7 +1479,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html=<div style="color:purple">
   Html Title
 </div>
@@ -2741,49 +1565,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": "550px",
       "zIndex": undefined,
     },
@@ -2824,49 +1606,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": 1100,
     },
@@ -2907,49 +1647,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -2990,49 +1688,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -3073,49 +1729,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -3156,49 +1770,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -3265,49 +1837,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -3348,49 +1878,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -3431,49 +1919,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -3514,49 +1960,7 @@ Array [
       "okText": "Ok text",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -3597,49 +2001,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -3682,49 +2044,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -3767,49 +2087,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -3852,49 +2130,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -3937,49 +2173,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -4012,7 +2206,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html="ConfirmModal block"
         methods={
           Object {
@@ -4096,7 +2290,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html=<div style="color:purple">
   Html Title
 </div>
@@ -4182,49 +2376,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": "550px",
       "zIndex": undefined,
     },
@@ -4265,49 +2417,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": 1100,
     },
@@ -4356,49 +2466,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -4439,49 +2507,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -4522,49 +2548,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -4605,49 +2589,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -4714,49 +2656,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -4797,49 +2697,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -4880,49 +2738,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -4963,49 +2779,7 @@ Array [
       "okText": "Ok text",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -5046,49 +2820,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -5129,49 +2861,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -5212,49 +2902,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -5295,49 +2943,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -5378,49 +2984,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -5461,7 +3025,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html="ConfirmModal block"
         methods={
           Object {
@@ -5545,7 +3109,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html=<div style="color:purple">
   Html Title
 </div>
@@ -5631,49 +3195,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": "550px",
       "zIndex": undefined,
     },
@@ -5714,49 +3236,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": 1100,
     },
@@ -5789,49 +3269,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -5872,49 +3310,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -5955,49 +3351,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -6038,49 +3392,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -6147,49 +3459,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -6230,49 +3500,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -6313,49 +3541,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -6396,49 +3582,7 @@ Array [
       "okText": "Ok text",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -6479,49 +3623,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -6564,49 +3666,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -6649,49 +3709,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -6734,49 +3752,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -6819,49 +3795,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -6894,7 +3828,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html="ConfirmModal block"
         methods={
           Object {
@@ -6978,7 +3912,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html=<div style="color:purple">
   Html Title
 </div>
@@ -7064,49 +3998,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": "550px",
       "zIndex": undefined,
     },
@@ -7147,49 +4039,7 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
-          }
-        }
-      />,
+      "title": undefined,
       "width": undefined,
       "zIndex": 1100,
     },

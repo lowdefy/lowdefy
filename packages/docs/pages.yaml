@@ -41,6 +41,7 @@
 - _ref: blocks/input/AutoComplete.yaml
 - _ref: blocks/input/ButtonSelector.yaml
 - _ref: blocks/input/CheckboxSelector.yaml
+- _ref: blocks/input/CheckboxSwitch.yaml
 - _ref: blocks/input/ChromeColorSelector.yaml
 - _ref: blocks/input/CircleColorSelector.yaml
 - _ref: blocks/input/ColorSelector.yaml
@@ -54,6 +55,7 @@
 - _ref: blocks/input/NumberInput.yaml
 - _ref: blocks/input/Pagination.yaml
 - _ref: blocks/input/ParagraphInput.yaml
+- _ref: blocks/input/PasswordInput.yaml
 - _ref: blocks/input/RadioSelector.yaml
 - _ref: blocks/input/RatingSlider.yaml
 - _ref: blocks/input/S3UploadButton.yaml
@@ -134,6 +136,7 @@
 - _ref: connections/PostgreSQL.yaml
 - _ref: connections/SendGridMail.yaml
 - _ref: connections/SQLite.yaml
+- _ref: connections/Stripe.yaml
 
 - _ref: actions/CallMethod.yaml
 - _ref: actions/JsAction.yaml

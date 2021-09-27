@@ -201,6 +201,9 @@
         - id: CheckboxSelector
           type: MenuLink
           pageId: CheckboxSelector
+        - id: CheckboxSwitch
+          type: MenuLink
+          pageId: CheckboxSwitch
         - id: ChromeColorSelector
           type: MenuLink
           pageId: ChromeColorSelector
@@ -240,6 +243,9 @@
         - id: ParagraphInput
           type: MenuLink
           pageId: ParagraphInput
+        - id: PasswordInput
+          type: MenuLink
+          pageId: PasswordInput
         - id: RadioSelector
           type: MenuLink
           pageId: RadioSelector
@@ -510,6 +516,9 @@
         - id: SQLite
           type: MenuLink
           pageId: SQLite
+        - id: Stripe
+          type: MenuLink
+          pageId: Stripe
     - id: actions
       type: MenuGroup
       properties:
@@ -751,9 +760,14 @@
         title: Lowdefy Versions
         icon: BranchesOutlined
       links:
-        - id: v3.21.2
+        - id: v3.22.0
           type: MenuLink
           url: https://docs.lowdefy.com
+          properties:
+            title: v3.22.0
+        - id: v3.21.2
+          type: MenuLink
+          url: https://612e10d3dc02710008646251--lowdefy-docs.netlify.app/introduction
           properties:
             title: v3.21.2
         - id: v3.20.4

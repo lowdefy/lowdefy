@@ -82,6 +82,9 @@ function defaultMetaLocations({ blocksServerUrl }) {
     CheckboxSelector: {
       url: `${baseUrl}/blocks-antd/meta/CheckboxSelector.json`,
     },
+    CheckboxSwitch: {
+      url: `${baseUrl}/blocks-antd/meta/CheckboxSwitch.json`,
+    },
     Collapse: {
       url: `${baseUrl}/blocks-antd/meta/Collapse.json`,
     },
@@ -180,6 +183,9 @@ function defaultMetaLocations({ blocksServerUrl }) {
     },
     ParagraphInput: {
       url: `${baseUrl}/blocks-antd/meta/ParagraphInput.json`,
+    },
+    PasswordInput: {
+      url: `${baseUrl}/blocks-antd/meta/PasswordInput.json`,
     },
     Progress: {
       url: `${baseUrl}/blocks-antd/meta/Progress.json`,
