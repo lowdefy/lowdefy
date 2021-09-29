@@ -31,39 +31,44 @@ const CALL_REQUEST = gql`
 class Requests {
   constructor(context) {
     this.context = context;
-    this.requestList = this.context.rootBlock.requests || [];
-
     this.callRequests = this.callRequests.bind(this);
     this.callRequest = this.callRequest.bind(this);
     this.fetch = this.fetch.bind(this);
+
+    this.requestConfig = {};
+
+    (this.context.rootBlock.requests || []).forEach((request) => {
+      this.requestConfig[request.requestId] = request;
+    });
   }
 
-  callRequests({ requestIds, event, arrayIndices } = {}) {
+  callRequests({ actions, arrayIndices, event, requestIds } = {}) {
     if (!requestIds) {
       return Promise.all(
-        this.requestList.map((request) =>
-          this.callRequest({ requestId: request.requestId, event, arrayIndices })
+        Object.keys(this.requestConfig).map((requestId) =>
+          this.callRequest({ requestId, event, arrayIndices })
         )
       );
     }
     return Promise.all(
-      requestIds.map((requestId) => this.callRequest({ requestId, event, arrayIndices }))
+      requestIds.map((requestId) => this.callRequest({ actions, requestId, event, arrayIndices }))
     );
   }
 
-  callRequest({ requestId, event, arrayIndices }) {
+  callRequest({ actions, arrayIndices, event, requestId }) {
+    const request = this.requestConfig[requestId];
+    if (!request) {
+      this.context.requests[requestId] = {
+        loading: false,
+        response: null,
+        error: [new Error(`Configuration Error: Request ${requestId} not defined on context.`)],
+      };
+      return Promise.reject(
+        new Error(`Configuration Error: Request ${requestId} not defined on context.`)
+      );
+    }
+
     if (!this.context.requests[requestId]) {
-      const request = this.requestList.find((req) => req.requestId === requestId);
-      if (!request) {
-        this.context.requests[requestId] = {
-          loading: false,
-          response: null,
-          error: [new Error(`Configuration Error: Request ${requestId} not defined on context.`)],
-        };
-        return Promise.reject(
-          new Error(`Configuration Error: Request ${requestId} not defined on context.`)
-        );
-      }
       this.context.requests[requestId] = {
         loading: true,
         response: null,
@@ -71,10 +76,22 @@ class Requests {
       };
     }
 
-    return this.fetch({ requestId, event, arrayIndices });
+    const { output: payload, errors: parserErrors } = this.context.parser.parse({
+      actions,
+      event,
+      arrayIndices,
+      input: request.payload,
+      location: requestId,
+    });
+
+    if (parserErrors.length > 0) {
+      throw parserErrors[0];
+    }
+
+    return this.fetch({ requestId, payload, arrayIndices });
   }
 
-  async fetch({ requestId, event, arrayIndices }) {
+  async fetch({ requestId, payload }) {
     this.context.requests[requestId].loading = true;
     if (this.context.RootBlocks) {
       this.context.RootBlocks.setBlocksLoadingCache();
@@ -86,15 +103,10 @@ class Requests {
         fetchPolicy: 'network-only',
         variables: {
           input: {
-            arrayIndices,
             requestId,
             blockId: this.context.blockId,
-            event: serializer.serialize(event) || {},
-            input: serializer.serialize(this.context.lowdefy.inputs[this.context.id]),
-            lowdefyGlobal: serializer.serialize(this.context.lowdefy.lowdefyGlobal),
             pageId: this.context.pageId,
-            state: serializer.serialize(this.context.state),
-            urlQuery: serializer.serialize(this.context.lowdefy.urlQuery),
+            payload: serializer.serialize(payload),
           },
         },
       });

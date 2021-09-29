@@ -30,15 +30,10 @@ const typeDefs = gql`
   }
 
   input RequestInput {
-    arrayIndices: JSON!
     blockId: String!
-    event: JSON!
-    input: JSON!
-    lowdefyGlobal: JSON!
     pageId: String!
+    payload: JSON
     requestId: String!
-    state: JSON!
-    urlQuery: JSON!
   }
 
   type MenuResponse {
