@@ -24,16 +24,16 @@ function _switch({ location, params }) {
       )} at ${location}.`
     );
   }
-  for (let i = 0; i < params.branches.length; i++) {
-    if (!type.isBoolean(params.branches[i].if)) {
+  for (const branch of params.branches) {
+    if (!type.isBoolean(branch.if)) {
       throw new Error(
         `Operator Error: switch takes a boolean type for parameter test. Received: ${JSON.stringify(
           params
         )} at ${location}.`
       );
     }
-    if (params.branches[i].if === true) {
-      return params.branches[i].then;
+    if (branch.if === true) {
+      return branch.then;
     }
   }
   return params.default;
