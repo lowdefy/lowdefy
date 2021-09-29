@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.22.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.0...v3.22.0-alpha.1) (2021-09-20)
+
+
+### Bug Fixes
+
+* **blocksAntd:** Add tests for CheckboxSwitch. ([089150e](https://github.com/lowdefy/lowdefy/commit/089150eacc67e4f27de5f763ad3656d52da40cad))
+* **blocksAntd:** Added CheckboxSwitch tests. ([db8c05b](https://github.com/lowdefy/lowdefy/commit/db8c05b0ef546c460f41ab6e7e52de13eb54ff4b))
+* **blocksAntd:** Fix CheckboxSwitch color property. ([d2ea3c6](https://github.com/lowdefy/lowdefy/commit/d2ea3c6a7f2d9f13e8a766c76e49a1b3a540d1d9))
+* **blocksAntd:** Fix MultipleSelector schema and docs. ([41d25a1](https://github.com/lowdefy/lowdefy/commit/41d25a1e60f403a30824a00626605da37fc5bd3a))
+* **blocksAntd:** Fix typo in Paragraph input copyable text property. ([b92621a](https://github.com/lowdefy/lowdefy/commit/b92621a8bae7be6e4d48165b8c54176d2403c592))
+* **blocksAntd:** Paragraph and Title blocks copyable error fixed. ([483013d](https://github.com/lowdefy/lowdefy/commit/483013d1715cb97d08ed2f9475606c5b074a6ad3))
+* **blocksAntd:** Updated CheckboxSwitch test snapshots. ([025a158](https://github.com/lowdefy/lowdefy/commit/025a1583e902b6edcb94c89ad272761eabd420fe))
+* **blocksAntd:** Use updated renderHtml helper function ([5e3de6f](https://github.com/lowdefy/lowdefy/commit/5e3de6f5caa74e549b7f518895708b01a9191ee6)), closes [#820](https://github.com/lowdefy/lowdefy/issues/820)
+* **blocksAntd:** Use updated renderHtml in selector blocks ([0da3bd1](https://github.com/lowdefy/lowdefy/commit/0da3bd19512cb0452ac7c559dce2e9ae499288de))
+* **blocksBasic:** Handle none type values in DangerousHtml block ([a765be4](https://github.com/lowdefy/lowdefy/commit/a765be4395c315f90b31680d3a914e8ac6f2a5ae))
+* **blocksBasic:** Use renamed HtmlComponent in Html block (was RenderHtml) ([cf85d6c](https://github.com/lowdefy/lowdefy/commit/cf85d6ce38ce1fd715d4ae42078b002cc5b5b82e))
+* **blockTools:** Add renderHtml helper function. ([b0c35f7](https://github.com/lowdefy/lowdefy/commit/b0c35f7341630c6ab7fb2470d3a3ca1bce1b1f0c))
+* **blockTools:** Handle falsey values better in RenderHtml component ([4363803](https://github.com/lowdefy/lowdefy/commit/43638035d038e5b4993a2709cf657ae60d10e8be))
+* **build:** Updated meta location tests to include CheckboxSwitch. ([905f47e](https://github.com/lowdefy/lowdefy/commit/905f47edd3ffa252c688d5959d69320a7a42c7bd))
+* **build:** Updated meta locations to include CheckboxSwitch block. ([cd2ab8c](https://github.com/lowdefy/lowdefy/commit/cd2ab8c3a87e76d0b61284c60f5f3cfcad98c24f))
+* **cli:** Add readme to CLI package. ([cf5c406](https://github.com/lowdefy/lowdefy/commit/cf5c406da6d0c1f53e23d0a1d2b802c89f29db44))
+* **deps:** Update dependency axios to v0.21.4 ([81cd2b6](https://github.com/lowdefy/lowdefy/commit/81cd2b6e0ae3dc377b9cee6e3c801c47ddca2f08))
+* **docs:** Added CheckboxSwitch examples and CheckboxSelector note. ([9cf56bf](https://github.com/lowdefy/lowdefy/commit/9cf56bfbaa5c7a75c55d24d2f965ec351c1672e0))
+* **docs:** Added copyable and ellipsis config to Title block. ([9f8632e](https://github.com/lowdefy/lowdefy/commit/9f8632ec577196ea45471470a9dd13d3dbc09446))
+* **docs:** Change npx commands to specific versions for deployments. ([f2c380b](https://github.com/lowdefy/lowdefy/commit/f2c380b07a78defff79281d5c07c61a718bfe750))
+* **docs:** Convert CLI commands to npx commands. ([c9cd643](https://github.com/lowdefy/lowdefy/commit/c9cd643f3809fdc0cde7ba47e17e392b3236c17b))
+* **docs:** Update CLI npm install docs. ([98a8b71](https://github.com/lowdefy/lowdefy/commit/98a8b71ff2ef961ccfcb8b94e115b4162881dd38))
+
+
+### Features
+
+* **blocksAntd:** Added CheckboxSwitch demo example. ([7187849](https://github.com/lowdefy/lowdefy/commit/718784920d6e5daa69d30601cd88e7fadd94c5d4))
+* **blocksAntd:** CheckboxSwitch block has been added. ([838f5ea](https://github.com/lowdefy/lowdefy/commit/838f5ea8852cff9f193e3e0a3dfb16b9c7f1da9e))
+* **docs:** Add _get operator switch example. ([b727b9e](https://github.com/lowdefy/lowdefy/commit/b727b9edd0f37d3d10d5add32cbd9411fa4b6f98))
+* **docs:** Added CheckboxSwitch docs. ([81752aa](https://github.com/lowdefy/lowdefy/commit/81752aa927f1d6050a290440ca15a87c05f3ea51))
+
+
+
+
+
 # [3.22.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.2...v3.22.0-alpha.0) (2021-09-08)
 
 

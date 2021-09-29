@@ -25,6 +25,7 @@ import Button from './blocks/Button/Button';
 import ButtonSelector from './blocks/ButtonSelector/ButtonSelector';
 import Card from './blocks/Card/Card';
 import CheckboxSelector from './blocks/CheckboxSelector/CheckboxSelector';
+import CheckboxSwitch from './blocks/CheckboxSwitch/CheckboxSwitch';
 import Collapse from './blocks/Collapse/Collapse';
 import Comment from './blocks/Comment/Comment';
 import ConfirmModal from './blocks/ConfirmModal/ConfirmModal';
@@ -91,6 +92,7 @@ export {
   ButtonSelector,
   Card,
   CheckboxSelector,
+  CheckboxSwitch,
   Collapse,
   Comment,
   ConfirmModal,
@@ -157,6 +159,7 @@ export default {
   ButtonSelector,
   Card,
   CheckboxSelector,
+  CheckboxSwitch,
   Collapse,
   Comment,
   ConfirmModal,

@@ -55,7 +55,7 @@ _ref:
             COPY  --chown=node:node  . .
 
             # Build the Lowdefy config using the Lowdefy CLI
-            RUN npx lowdefy@latest build
+            RUN npx lowdefy@3.21.2 build
 
             # Use the correct Lowdefy base image
             FROM lowdefy/lowdefy-aws-lambda:3.21.2

@@ -29,14 +29,7 @@ exports[`Render areas.extra - value[0] 1`] = `
   </div>
   <div
     className="ant-result-title"
-  >
-    
-  </div>
-  <div
-    className="ant-result-subtitle"
-  >
-    
-  </div>
+  />
   <div
     className="ant-result-extra"
   >
@@ -97,14 +90,7 @@ exports[`Render default - value[0] 1`] = `
   </div>
   <div
     className="ant-result-title"
-  >
-    
-  </div>
-  <div
-    className="ant-result-subtitle"
-  >
-    
-  </div>
+  />
   <div
     className="ant-result-content"
   >
@@ -154,14 +140,7 @@ exports[`Render properties. icon: ApiFilled - value[0] 1`] = `
   </div>
   <div
     className="ant-result-title"
-  >
-    
-  </div>
-  <div
-    className="ant-result-subtitle"
-  >
-    
-  </div>
+  />
   <div
     className="ant-result-content"
   >
@@ -469,14 +448,7 @@ exports[`Render properties. status: 403 - value[0] 1`] = `
   </div>
   <div
     className="ant-result-title"
-  >
-    
-  </div>
-  <div
-    className="ant-result-subtitle"
-  >
-    
-  </div>
+  />
   <div
     className="ant-result-content"
   >
@@ -802,14 +774,7 @@ exports[`Render properties. status: 404 - value[0] 1`] = `
   </div>
   <div
     className="ant-result-title"
-  >
-    
-  </div>
-  <div
-    className="ant-result-subtitle"
-  >
-    
-  </div>
+  />
   <div
     className="ant-result-content"
   >
@@ -1182,14 +1147,7 @@ exports[`Render properties. status: 500 - value[0] 1`] = `
   </div>
   <div
     className="ant-result-title"
-  >
-    
-  </div>
-  <div
-    className="ant-result-subtitle"
-  >
-    
-  </div>
+  />
   <div
     className="ant-result-content"
   >
@@ -1236,14 +1194,7 @@ exports[`Render properties. status: error - value[0] 1`] = `
   </div>
   <div
     className="ant-result-title"
-  >
-    
-  </div>
-  <div
-    className="ant-result-subtitle"
-  >
-    
-  </div>
+  />
   <div
     className="ant-result-content"
   >
@@ -1290,14 +1241,7 @@ exports[`Render properties. status: info - value[0] 1`] = `
   </div>
   <div
     className="ant-result-title"
-  >
-    
-  </div>
-  <div
-    className="ant-result-subtitle"
-  >
-    
-  </div>
+  />
   <div
     className="ant-result-content"
   >
@@ -1344,14 +1288,7 @@ exports[`Render properties. status: success  default is info - value[0] 1`] = `
   </div>
   <div
     className="ant-result-title"
-  >
-    
-  </div>
-  <div
-    className="ant-result-subtitle"
-  >
-    
-  </div>
+  />
   <div
     className="ant-result-content"
   >
@@ -1398,14 +1335,7 @@ exports[`Render properties. status: warning - value[0] 1`] = `
   </div>
   <div
     className="ant-result-title"
-  >
-    
-  </div>
-  <div
-    className="ant-result-subtitle"
-  >
-    
-  </div>
+  />
   <div
     className="ant-result-content"
   >
@@ -1452,9 +1382,7 @@ exports[`Render properties.subTitle: subTitle text - value[0] 1`] = `
   </div>
   <div
     className="ant-result-title"
-  >
-    
-  </div>
+  />
   <div
     className="ant-result-subtitle"
   >
@@ -1514,11 +1442,6 @@ exports[`Render properties.title - value[0] 1`] = `
     />
   </div>
   <div
-    className="ant-result-subtitle"
-  >
-    
-  </div>
-  <div
     className="ant-result-content"
   >
     <div
@@ -1564,9 +1487,7 @@ exports[`Render with properties.subTitle in html - value[0] 1`] = `
   </div>
   <div
     className="ant-result-title"
-  >
-    
-  </div>
+  />
   <div
     className="ant-result-subtitle"
   >
@@ -1624,11 +1545,6 @@ exports[`Render with properties.title in html - value[0] 1`] = `
     <span
       className="{}"
     />
-  </div>
-  <div
-    className="ant-result-subtitle"
-  >
-    
   </div>
   <div
     className="ant-result-content"

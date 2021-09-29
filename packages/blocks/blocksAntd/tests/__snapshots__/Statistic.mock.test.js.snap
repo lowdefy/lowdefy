@@ -11,28 +11,7 @@ Array [
       "precision": undefined,
       "prefix": "",
       "suffix": "",
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
       "value": "",
       "valueStyle": undefined,
     },
@@ -52,28 +31,7 @@ Array [
       "precision": undefined,
       "prefix": "",
       "suffix": "",
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
       "value": 3.45,
       "valueStyle": undefined,
     },
@@ -93,28 +51,7 @@ Array [
       "precision": undefined,
       "prefix": "",
       "suffix": "",
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
       "value": 3565542.45,
       "valueStyle": undefined,
     },
@@ -134,28 +71,7 @@ Array [
       "precision": 2,
       "prefix": "",
       "suffix": "",
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
       "value": 3.456,
       "valueStyle": undefined,
     },
@@ -175,28 +91,7 @@ Array [
       "precision": undefined,
       "prefix": "R",
       "suffix": "",
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
       "value": 3.45,
       "valueStyle": undefined,
     },
@@ -241,28 +136,7 @@ Array [
         }
       />,
       "suffix": "",
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
       "value": 3.45,
       "valueStyle": undefined,
     },
@@ -282,28 +156,7 @@ Array [
       "precision": undefined,
       "prefix": "",
       "suffix": "Rand",
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
       "value": 3.45,
       "valueStyle": undefined,
     },
@@ -348,28 +201,7 @@ Array [
           }
         }
       />,
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
       "value": 3.45,
       "valueStyle": undefined,
     },
@@ -389,7 +221,7 @@ Array [
       "precision": undefined,
       "prefix": "",
       "suffix": "",
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html="Statistic title"
         methods={
           Object {
@@ -431,7 +263,7 @@ Array [
       "precision": undefined,
       "prefix": "",
       "suffix": "%",
-      "title": <RenderHtml
+      "title": <HtmlComponent
         html=<div style="color:blue;">
   Very Html
 </div>
@@ -475,28 +307,7 @@ Array [
       "precision": undefined,
       "prefix": "",
       "suffix": "",
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
       "value": "3.45",
       "valueStyle": undefined,
     },
@@ -516,28 +327,7 @@ Array [
       "precision": undefined,
       "prefix": "",
       "suffix": "",
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
       "value": 3.45,
       "valueStyle": undefined,
     },

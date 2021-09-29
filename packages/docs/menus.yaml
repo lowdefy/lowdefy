@@ -201,6 +201,9 @@
         - id: CheckboxSelector
           type: MenuLink
           pageId: CheckboxSelector
+        - id: CheckboxSwitch
+          type: MenuLink
+          pageId: CheckboxSwitch
         - id: ChromeColorSelector
           type: MenuLink
           pageId: ChromeColorSelector

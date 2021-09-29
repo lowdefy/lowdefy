@@ -36,7 +36,7 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.closable: true",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Message closable true"
         methods={
           Object {
@@ -66,7 +66,7 @@ Array [
       "closeText": "Close Text",
       "description": undefined,
       "id": "properties.closeText: Close Text",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Message closable true"
         methods={
           Object {
@@ -128,7 +128,7 @@ Array [
         }
       />,
       "id": "properties.icon object",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Message with Icon!"
         methods={
           Object {
@@ -184,7 +184,7 @@ Array [
         }
       />,
       "id": "properties.icon string",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Message with Icon!"
         methods={
           Object {
@@ -214,7 +214,7 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.message",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Alert message - Completed!"
         methods={
           Object {
@@ -244,7 +244,7 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.type: error",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Alert message - error!"
         methods={
           Object {
@@ -274,7 +274,7 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.type: error banner: true",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Alert message - error!"
         methods={
           Object {
@@ -304,7 +304,7 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.type: error showIcon: false",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Alert message - error!"
         methods={
           Object {
@@ -334,7 +334,7 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.type: info",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Alert message - info!"
         methods={
           Object {
@@ -364,7 +364,7 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.type: info banner: true",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Alert message - info!"
         methods={
           Object {
@@ -394,7 +394,7 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.type: info showIcon: false",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Alert message - info!"
         methods={
           Object {
@@ -424,7 +424,7 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.type: success",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Alert message - success!"
         methods={
           Object {
@@ -454,7 +454,7 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.type: success banner: true",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Alert message - success!"
         methods={
           Object {
@@ -484,7 +484,7 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.type: success showIcon: false",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Alert message - success!"
         methods={
           Object {
@@ -514,7 +514,7 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.type: warning",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Alert message - warning!"
         methods={
           Object {
@@ -544,7 +544,7 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.type: warning banner: true",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Alert message - warning!"
         methods={
           Object {
@@ -574,7 +574,7 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.type: warning showIcon: false",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Alert message - warning!"
         methods={
           Object {
@@ -602,7 +602,7 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": <RenderHtml
+      "description": <HtmlComponent
         html="This is a description for the block."
         methods={
           Object {
@@ -632,7 +632,7 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": <RenderHtml
+      "description": <HtmlComponent
         html="This is a description for the block."
         methods={
           Object {
@@ -662,7 +662,7 @@ Array [
       "banner": undefined,
       "closable": true,
       "closeText": undefined,
-      "description": <RenderHtml
+      "description": <HtmlComponent
         html="This is a description for the block."
         methods={
           Object {
@@ -674,7 +674,7 @@ Array [
         }
       />,
       "id": "with description properties.closable: true",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Message closable true"
         methods={
           Object {
@@ -702,7 +702,7 @@ Array [
       "banner": undefined,
       "closable": true,
       "closeText": "Close Text",
-      "description": <RenderHtml
+      "description": <HtmlComponent
         html="This is a description for the block."
         methods={
           Object {
@@ -714,7 +714,7 @@ Array [
         }
       />,
       "id": "with description properties.closeText: Close Text",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Message closable true"
         methods={
           Object {
@@ -742,7 +742,7 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": <RenderHtml
+      "description": <HtmlComponent
         html="This is a description for the block."
         methods={
           Object {
@@ -786,7 +786,7 @@ Array [
         }
       />,
       "id": "with description properties.icon object",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Message with Icon!"
         methods={
           Object {
@@ -814,7 +814,7 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": <RenderHtml
+      "description": <HtmlComponent
         html="This is a description for the block."
         methods={
           Object {
@@ -852,7 +852,7 @@ Array [
         }
       />,
       "id": "with description properties.icon string",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Message with Icon!"
         methods={
           Object {
@@ -880,7 +880,7 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": <RenderHtml
+      "description": <HtmlComponent
         html="This is a description for the block."
         methods={
           Object {
@@ -892,7 +892,7 @@ Array [
         }
       />,
       "id": "with description properties.message",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Alert message - Completed!"
         methods={
           Object {
@@ -920,7 +920,7 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": <RenderHtml
+      "description": <HtmlComponent
         html="This is a description for the block."
         methods={
           Object {
@@ -932,7 +932,7 @@ Array [
         }
       />,
       "id": "with description properties.type: error",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Alert message - error!"
         methods={
           Object {
@@ -960,7 +960,7 @@ Array [
       "banner": true,
       "closable": undefined,
       "closeText": undefined,
-      "description": <RenderHtml
+      "description": <HtmlComponent
         html="This is a description for the block."
         methods={
           Object {
@@ -972,7 +972,7 @@ Array [
         }
       />,
       "id": "with description properties.type: error banner: true",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Alert message - error!"
         methods={
           Object {
@@ -1000,7 +1000,7 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": <RenderHtml
+      "description": <HtmlComponent
         html="This is a description for the block."
         methods={
           Object {
@@ -1012,7 +1012,7 @@ Array [
         }
       />,
       "id": "with description properties.type: error showIcon: false",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Alert message - error!"
         methods={
           Object {
@@ -1040,7 +1040,7 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": <RenderHtml
+      "description": <HtmlComponent
         html="This is a description for the block."
         methods={
           Object {
@@ -1052,7 +1052,7 @@ Array [
         }
       />,
       "id": "with description properties.type: info",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Alert message - info!"
         methods={
           Object {
@@ -1080,7 +1080,7 @@ Array [
       "banner": true,
       "closable": undefined,
       "closeText": undefined,
-      "description": <RenderHtml
+      "description": <HtmlComponent
         html="This is a description for the block."
         methods={
           Object {
@@ -1092,7 +1092,7 @@ Array [
         }
       />,
       "id": "with description properties.type: info banner: true",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Alert message - info!"
         methods={
           Object {
@@ -1120,7 +1120,7 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": <RenderHtml
+      "description": <HtmlComponent
         html="This is a description for the block."
         methods={
           Object {
@@ -1132,7 +1132,7 @@ Array [
         }
       />,
       "id": "with description properties.type: info showIcon: false",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Alert message - info!"
         methods={
           Object {
@@ -1160,7 +1160,7 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": <RenderHtml
+      "description": <HtmlComponent
         html="This is a description for the block."
         methods={
           Object {
@@ -1172,7 +1172,7 @@ Array [
         }
       />,
       "id": "with description properties.type: success",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Alert message - success!"
         methods={
           Object {
@@ -1200,7 +1200,7 @@ Array [
       "banner": true,
       "closable": undefined,
       "closeText": undefined,
-      "description": <RenderHtml
+      "description": <HtmlComponent
         html="This is a description for the block."
         methods={
           Object {
@@ -1212,7 +1212,7 @@ Array [
         }
       />,
       "id": "with description properties.type: success banner: true",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Alert message - success!"
         methods={
           Object {
@@ -1240,7 +1240,7 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": <RenderHtml
+      "description": <HtmlComponent
         html="This is a description for the block."
         methods={
           Object {
@@ -1252,7 +1252,7 @@ Array [
         }
       />,
       "id": "with description properties.type: success showIcon: false",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Alert message - success!"
         methods={
           Object {
@@ -1280,7 +1280,7 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": <RenderHtml
+      "description": <HtmlComponent
         html="This is a description for the block."
         methods={
           Object {
@@ -1292,7 +1292,7 @@ Array [
         }
       />,
       "id": "with description properties.type: warning",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Alert message - warning!"
         methods={
           Object {
@@ -1320,7 +1320,7 @@ Array [
       "banner": true,
       "closable": undefined,
       "closeText": undefined,
-      "description": <RenderHtml
+      "description": <HtmlComponent
         html="This is a description for the block."
         methods={
           Object {
@@ -1332,7 +1332,7 @@ Array [
         }
       />,
       "id": "with description properties.type: warning banner: true",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Alert message - warning!"
         methods={
           Object {
@@ -1360,7 +1360,7 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": <RenderHtml
+      "description": <HtmlComponent
         html="This is a description for the block."
         methods={
           Object {
@@ -1372,7 +1372,7 @@ Array [
         }
       />,
       "id": "with description properties.type: warning showIcon: false",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html="Alert message - warning!"
         methods={
           Object {
@@ -1400,7 +1400,7 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": <RenderHtml
+      "description": <HtmlComponent
         html=<div style="background:red;">
   Alert Description
 </div>
@@ -1434,7 +1434,7 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "with message uses html",
-      "message": <RenderHtml
+      "message": <HtmlComponent
         html=<div style="background:green;">
   Alert Message
 </div>
