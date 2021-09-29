@@ -205,6 +205,7 @@
 - _ref: operators/_string.yaml
 - _ref: operators/_subtract.yaml
 - _ref: operators/_sum.yaml
+- _ref: operators/_switch.yaml
 - _ref: operators/_type.yaml
 - _ref: operators/_uri.yaml
 - _ref: operators/_url_query.yaml
