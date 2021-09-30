@@ -88,7 +88,7 @@ class Requests {
       throw parserErrors[0];
     }
 
-    return this.fetch({ requestId, payload, arrayIndices });
+    return this.fetch({ requestId, payload });
   }
 
   async fetch({ requestId, payload }) {

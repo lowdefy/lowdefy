@@ -59,6 +59,20 @@ const rootBlock = {
   requests: [
     {
       requestId: 'req_one',
+      payload: {
+        event: {
+          _event: true,
+        },
+        action: {
+          _actions: 'action1',
+        },
+        sum: {
+          _sum: [1, 1],
+        },
+        arrayIndices: {
+          _global: 'array.$',
+        },
+      },
     },
     {
       requestId: 'req_error',
@@ -74,10 +88,8 @@ const initState = { state: true };
 
 const lowdefy = {
   client,
-  lowdefyGlobal: { lowdefyGlobal: true },
-  inputs: { test: { input: true } },
+  lowdefyGlobal: { array: ['a', 'b', 'c'] },
   pageId,
-  urlQuery: { urlQuery: true },
 };
 
 // Comment out to use console
@@ -104,7 +116,7 @@ test('callRequest', async () => {
   });
 });
 
-test('callRequest, pass variables to qraphql', async () => {
+test('callRequest, payload operators are evaluated', async () => {
   const context = await testContext({
     lowdefy,
     rootBlock,
@@ -113,19 +125,20 @@ test('callRequest, pass variables to qraphql', async () => {
   await context.Requests.callRequest({
     requestId: 'req_one',
     event: { event: true },
+    actions: { action1: 'action1' },
     arrayIndices: [1],
   });
   expect(mockQuery.mock.calls[0][0].variables).toEqual({
     input: {
-      arrayIndices: [1],
       blockId: 'page1',
-      event: { event: true },
-      input: { input: true },
-      lowdefyGlobal: { lowdefyGlobal: true },
       pageId: 'page1',
       requestId: 'req_one',
-      state: { state: true },
-      urlQuery: { urlQuery: true },
+      payload: {
+        event: { event: true },
+        action: 'action1',
+        sum: 2,
+        arrayIndices: 'b',
+      },
     },
   });
 });
