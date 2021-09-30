@@ -28,7 +28,6 @@ export default {
   _gte: 'common/gte',
   _if_none: 'common/if_none',
   _if: 'common/if',
-  _index: 'common/_index',
   _json: 'common/json',
   _log: 'common/log',
   _lt: 'common/lt',
