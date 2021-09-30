@@ -35,7 +35,7 @@ function buildRequest(request, blockContext) {
   if (type.isUndefined(request.payload)) request.payload = {};
 
   if (!type.isObject(request.payload)) {
-    throw new Error(`Request "${request.id}"at page "${pageId}" payload should be an object.`);
+    throw new Error(`Request "${request.id}" at page "${pageId}" payload should be an object.`);
   }
 
   request.auth = auth;
