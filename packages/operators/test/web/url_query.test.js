@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import state from '../../src/common/state';
+import url_query from '../../src/web/url_query';
 import getFromObject from '../../src/getFromObject';
 
 jest.mock('../../src/getFromObject');
@@ -26,11 +26,12 @@ const input = {
   env: 'env',
   location: 'location',
   params: 'params',
-  state: { state: true },
+  secrets: { secrets: true },
+  urlQuery: { urlQuery: true },
 };
 
-test('state calls getFromObject', () => {
-  state(input);
+test('url_query calls getFromObject', () => {
+  url_query(input);
   expect(getFromObject.mock.calls).toEqual([
     [
       {
@@ -44,9 +45,9 @@ test('state calls getFromObject', () => {
         env: 'env',
         location: 'location',
         object: {
-          state: true,
+          urlQuery: true,
         },
-        operator: '_state',
+        operator: '_url_query',
         params: 'params',
       },
     ],

@@ -16,7 +16,7 @@
 
 import NodeParser from '../../src/nodeParser';
 
-const state = {
+const payload = {
   string: 'Some String',
   number: 42,
   arr: [{ a: 'a1' }, { a: 'a2' }],
@@ -24,9 +24,9 @@ const state = {
 
 console.error = () => {};
 
-test('_operator, _state', async () => {
-  const input = { a: { _operator: { name: '_state', params: 'string' } } };
-  const parser = new NodeParser({ state });
+test('_operator, _payload', async () => {
+  const input = { a: { _operator: { name: '_payload', params: 'string' } } };
+  const parser = new NodeParser({ payload });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({
@@ -37,7 +37,7 @@ test('_operator, _state', async () => {
 
 test('_operator.name invalid', async () => {
   const input = { a: { _operator: { name: '_a' } } };
-  const parser = new NodeParser({ state });
+  const parser = new NodeParser({ payload });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({ a: null });
@@ -50,7 +50,7 @@ test('_operator.name invalid', async () => {
 
 test('_operator.name not allowed to include "experimental"', async () => {
   const input = { a: { _operator: { name: '_experimental_op' } } };
-  const parser = new NodeParser({ state });
+  const parser = new NodeParser({ payload });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({ a: null });
@@ -63,7 +63,7 @@ test('_operator.name not allowed to include "experimental"', async () => {
 
 test('_operator.name not a string', async () => {
   const input = { a: { _operator: { name: 1 } } };
-  const parser = new NodeParser({ state });
+  const parser = new NodeParser({ payload });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({ a: null });
@@ -76,7 +76,7 @@ test('_operator.name not a string', async () => {
 
 test('_operator with value not a object', async () => {
   const input = { a: { _operator: 'a' } };
-  const parser = new NodeParser({ state });
+  const parser = new NodeParser({ payload });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({ a: null });
@@ -89,7 +89,7 @@ test('_operator with value not a object', async () => {
 
 test('_operator cannot be set to _operator', async () => {
   const input = { a: { _operator: { name: '_operator' } } };
-  const parser = new NodeParser({ state });
+  const parser = new NodeParser({ payload });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({ a: null });
@@ -102,7 +102,7 @@ test('_operator cannot be set to _operator', async () => {
 
 test('_operator, _not with no params', async () => {
   const input = { a: { _operator: { name: '_not' } } };
-  const parser = new NodeParser({ state });
+  const parser = new NodeParser({ payload });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({ a: true });
@@ -111,7 +111,7 @@ test('_operator, _not with no params', async () => {
 
 test('_operator, _json.parse with params', async () => {
   const input = { a: { _operator: { name: '_json.parse', params: '[{ "a": "a1"}]' } } };
-  const parser = new NodeParser({ state });
+  const parser = new NodeParser({ payload });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({
