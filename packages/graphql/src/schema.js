@@ -32,7 +32,7 @@ const typeDefs = gql`
   input RequestInput {
     blockId: String!
     pageId: String!
-    payload: JSON
+    payload: JSON!
     requestId: String!
   }
 
