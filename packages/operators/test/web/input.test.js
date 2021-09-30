@@ -14,33 +14,39 @@
   limitations under the License.
 */
 
-import event from '../../src/common/event';
+import input from '../../src/web/input';
 import getFromObject from '../../src/getFromObject';
 
 jest.mock('../../src/getFromObject');
 
-const input = {
+const inputParams = {
   arrayIndices: [0],
   context: { context: true },
   contexts: { contexts: true },
   env: 'env',
-  event: { event: true },
+  input: { input: true },
   location: 'location',
   params: 'params',
 };
 
-test('event calls getFromObject', () => {
-  event(input);
+test('input calls getFromObject', () => {
+  input(inputParams);
   expect(getFromObject.mock.calls).toEqual([
     [
       {
         arrayIndices: [0],
+        context: {
+          context: true,
+        },
+        contexts: {
+          contexts: true,
+        },
         env: 'env',
         location: 'location',
         object: {
-          event: true,
+          input: true,
         },
-        operator: '_event',
+        operator: '_input',
         params: 'params',
       },
     ],

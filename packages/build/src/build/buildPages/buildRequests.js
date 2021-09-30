@@ -27,7 +27,15 @@ function buildRequest(request, blockContext) {
     );
   }
   if (request.id.includes('.')) {
-    throw new Error(`Request id "${request.id}" should not include a period (".").`);
+    throw new Error(
+      `Request id "${request.id}" at page "${pageId}" should not include a period (".").`
+    );
+  }
+
+  if (type.isUndefined(request.payload)) request.payload = {};
+
+  if (!type.isObject(request.payload)) {
+    throw new Error(`Request "${request.id}" at page "${pageId}" payload should be an object.`);
   }
 
   request.auth = auth;

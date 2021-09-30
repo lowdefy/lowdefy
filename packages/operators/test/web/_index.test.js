@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import url_query from '../../src/common/url_query';
+import _index from '../../src/web/_index';
 import getFromObject from '../../src/getFromObject';
 
 jest.mock('../../src/getFromObject');
@@ -26,28 +26,18 @@ const input = {
   env: 'env',
   location: 'location',
   params: 'params',
-  secrets: { secrets: true },
-  urlQuery: { urlQuery: true },
 };
 
-test('url_query calls getFromObject', () => {
-  url_query(input);
+test('args calls getFromObject', () => {
+  _index(input);
   expect(getFromObject.mock.calls).toEqual([
     [
       {
         arrayIndices: [0],
-        context: {
-          context: true,
-        },
-        contexts: {
-          contexts: true,
-        },
         env: 'env',
         location: 'location',
-        object: {
-          urlQuery: true,
-        },
-        operator: '_url_query',
+        object: [0],
+        operator: '_index',
         params: 'params',
       },
     ],

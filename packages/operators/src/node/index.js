@@ -15,8 +15,9 @@
 */
 
 export default {
-  _diff: 'node/diff',
   _base64: 'node/base64',
-  _secret: 'node/secret',
+  _diff: 'node/diff',
   _hash: 'node/hash',
+  _payload: 'node/payload',
+  _secret: 'node/secret',
 };

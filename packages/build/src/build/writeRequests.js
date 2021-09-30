@@ -27,6 +27,9 @@ function getRequestsOnBlock({ block, requests, pageId }) {
     block.requests.forEach((request) => {
       requests.push(serializer.copy(request));
       delete request.properties;
+      delete request.type;
+      delete request.connectionId;
+      delete request.auth;
     });
   }
   if (type.isObject(block.areas)) {
