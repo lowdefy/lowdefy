@@ -162,6 +162,8 @@ _ref:
               - `@lowdefy/blocks-markdown` to be hosted at `{BLOCK_SERVER_URL}/blocks-markdown/`.
               - `@lowdefy/blocks-echarts` to be hosted at `{BLOCK_SERVER_URL}/blocks-echarts/`.
 
+            If you wish to run the CLI dev server, the `@lowdefy/renderer` package build artifacts (located in the `dist` directory) should also be served from `{BLOCK_SERVER_URL}/renderer/`.
+
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
