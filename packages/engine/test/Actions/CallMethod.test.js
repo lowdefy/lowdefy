@@ -40,7 +40,7 @@ test('CallMethod with no args, synchronous method', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -117,7 +117,7 @@ test('CallMethod method return a promise', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -186,7 +186,7 @@ test('CallMethod with args not an array', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -273,7 +273,7 @@ test('CallMethod with multiple positional args, synchronous method', async () =>
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -343,7 +343,7 @@ test('CallMethod of block in array by explicit id', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -415,7 +415,7 @@ test('CallMethod of block in array by block with same indices and id pattern', a
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -495,7 +495,7 @@ test('CallMethod with method does not exist', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {

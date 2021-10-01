@@ -42,7 +42,7 @@ test('Login', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {

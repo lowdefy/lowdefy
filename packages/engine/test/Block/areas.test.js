@@ -23,7 +23,7 @@ test('two areas in block', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       key1: {
@@ -73,7 +73,7 @@ test('parse values across areas', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       key1: {
@@ -157,7 +157,7 @@ test('areas inside list', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {

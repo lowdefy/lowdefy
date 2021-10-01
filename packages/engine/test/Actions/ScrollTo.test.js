@@ -56,7 +56,7 @@ test('ScrollTo with no params', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -89,7 +89,7 @@ test('ScrollTo with no blockId', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -129,7 +129,7 @@ test('ScrollTo with blockId', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -163,7 +163,7 @@ test('ScrollTo with blockId and options', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -210,7 +210,7 @@ test('ScrollTo with blockId, block not found', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {

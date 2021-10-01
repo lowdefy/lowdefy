@@ -59,38 +59,38 @@ const blockData = ({
   visible,
 });
 
-const getContext = async ({ block, contextId, lowdefy }) => {
-  if (lowdefy.contexts[contextId]) {
-    lowdefy.contexts[contextId].update();
-    return lowdefy.contexts[contextId];
+const getContext = async ({ page, lowdefy }) => {
+  if (!page) {
+    throw new Error('A page must be provided to get context.');
   }
-  if (!block) {
-    throw new Error('A block must be provided to get context.');
+  const { pageId } = page;
+  if (lowdefy.contexts[pageId]) {
+    lowdefy.contexts[pageId].update();
+    return lowdefy.contexts[pageId];
   }
-  // eslint-disable-next-line no-param-reassign
-  if (!lowdefy.inputs[contextId]) {
-    lowdefy.inputs[contextId] = {};
+
+  if (!lowdefy.inputs[pageId]) {
+    lowdefy.inputs[pageId] = {};
   }
-  const operatorsSet = new Set([...block.operators, '_not', '_type']);
-  lowdefy.contexts[contextId] = {
-    id: contextId,
-    blockId: block.blockId,
+  const operatorsSet = new Set([...page.operators, '_not', '_type']);
+  lowdefy.contexts[pageId] = {
+    id: pageId,
+    pageId: pageId,
     eventLog: [],
     requests: {},
     operators: [...operatorsSet],
     lowdefy,
-    pageId: lowdefy.pageId,
-    rootBlock: blockData(block), // filter block to prevent circular structure
+    rootBlock: blockData(page), // filter block to prevent circular structure
     state: {},
     update: () => {}, // Initialize update since Requests might call it during context creation
-    updateListeners: new Set(),
   };
-  const ctx = lowdefy.contexts[contextId];
-  ctx.parser = new WebParser({ context: ctx, contexts: lowdefy.contexts });
+  const ctx = lowdefy.contexts[pageId];
+  ctx.parser = new WebParser({ context: ctx });
   await ctx.parser.init();
   ctx.State = new State(ctx);
   ctx.Actions = new Actions(ctx);
   ctx.Requests = new Requests(ctx);
+  // TODO: Remove "areas: { root: { blocks: [ctx.rootBlock] } },"
   ctx.RootBlocks = new Blocks({
     areas: { root: { blocks: [ctx.rootBlock] } },
     context: ctx,
@@ -98,19 +98,13 @@ const getContext = async ({ block, contextId, lowdefy }) => {
   ctx.RootBlocks.init();
   ctx.update = () => {
     ctx.RootBlocks.update();
-    [...ctx.updateListeners].forEach((listenId) => {
-      // Will loop infinitely if update is called on self
-      if (!lowdefy.contexts[listenId] || listenId === contextId) {
-        ctx.updateListeners.delete(listenId);
-      } else {
-        lowdefy.contexts[listenId].update();
-      }
-    });
   };
-  await ctx.RootBlocks.map[ctx.blockId].triggerEvent({ name: 'onInit' });
+  // TODO: Can we do better here?
+  await ctx.RootBlocks.map[ctx.pageId].triggerEvent({ name: 'onInit' });
   ctx.update();
   ctx.State.freezeState();
-  ctx.RootBlocks.map[ctx.blockId].triggerEvent({ name: 'onInitAsync' });
+  // TODO: Can we do better here?
+  ctx.RootBlocks.map[ctx.pageId].triggerEvent({ name: 'onInitAsync' });
   return ctx;
 };
 
