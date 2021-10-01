@@ -15,13 +15,15 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: Context
-    category: context
-    schema: ../blocks/blocksBasic/src/blocks/Context/Context.json
-    filePath: blocks/context/Context.yaml
+    block_type: PageHCSF
+    category: container
+    schema: ../blocks/blocksAntd/src/blocks/PageHCSF/PageHCSF.json
+    filePath: blocks/container/PageHCSF.yaml
     description_content: |
-      The `Context` block creates a new context. It can be used at a page level to create the context for the page, or it can be used inside a page to create a separate context (for example to create a new context for a web form).
+      Page HCSF provides a minimal layout structure for a page container with a header, content, sider and footer arrangement.
 
     areas:
       - content
-
+      - footer
+      - header
+      - sider
