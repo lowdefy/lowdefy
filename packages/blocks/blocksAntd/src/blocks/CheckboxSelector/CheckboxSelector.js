@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { Checkbox } from 'antd';
+import { Checkbox, Space } from 'antd';
 import { type } from '@lowdefy/helpers';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 
@@ -70,25 +70,31 @@ const CheckboxSelector = ({
             }}
             value={getValueIndex(value, uniqueValueOptions, true)}
           >
-            {uniqueValueOptions.map((opt, i) =>
-              type.isPrimitive(opt) ? (
-                <Checkbox id={`${blockId}_${i}`} key={i} value={i}>
-                  {renderHtml({ html: `${opt}`, methods })}
-                </Checkbox>
-              ) : (
-                <Checkbox
-                  id={`${blockId}_${i}`}
-                  key={i}
-                  value={i}
-                  disabled={opt.disabled}
-                  className={methods.makeCssClass(opt.style)}
-                >
-                  {type.isNone(opt.label)
-                    ? renderHtml({ html: `${opt.value}`, methods })
-                    : renderHtml({ html: opt.label, methods })}
-                </Checkbox>
-              )
-            )}
+            <Space
+              direction={properties.direction}
+              wrap={type.isNone(properties.wrap) ? true : properties.wrap}
+              align={type.isNone(properties.align) ? 'start' : properties.align}
+            >
+              {uniqueValueOptions.map((opt, i) =>
+                type.isPrimitive(opt) ? (
+                  <Checkbox id={`${blockId}_${i}`} key={i} value={i}>
+                    {renderHtml({ html: `${opt}`, methods })}
+                  </Checkbox>
+                ) : (
+                  <Checkbox
+                    id={`${blockId}_${i}`}
+                    key={i}
+                    value={i}
+                    disabled={opt.disabled}
+                    className={methods.makeCssClass(opt.style)}
+                  >
+                    {type.isNone(opt.label)
+                      ? renderHtml({ html: `${opt.value}`, methods })
+                      : renderHtml({ html: opt.label, methods })}
+                  </Checkbox>
+                )
+              )}
+            </Space>
           </Checkbox.Group>
         ),
       }}
