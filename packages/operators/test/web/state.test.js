@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import _index from '../../src/common/_index';
+import state from '../../src/web/state';
 import getFromObject from '../../src/getFromObject';
 
 jest.mock('../../src/getFromObject');
@@ -26,18 +26,27 @@ const input = {
   env: 'env',
   location: 'location',
   params: 'params',
+  state: { state: true },
 };
 
-test('args calls getFromObject', () => {
-  _index(input);
+test('state calls getFromObject', () => {
+  state(input);
   expect(getFromObject.mock.calls).toEqual([
     [
       {
         arrayIndices: [0],
+        context: {
+          context: true,
+        },
+        contexts: {
+          contexts: true,
+        },
         env: 'env',
         location: 'location',
-        object: [0],
-        operator: '_index',
+        object: {
+          state: true,
+        },
+        operator: '_state',
         params: 'params',
       },
     ],

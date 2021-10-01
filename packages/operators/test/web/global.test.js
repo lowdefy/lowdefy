@@ -14,23 +14,23 @@
   limitations under the License.
 */
 
-import input from '../../src/common/input';
+import global from '../../src/web/global';
 import getFromObject from '../../src/getFromObject';
 
 jest.mock('../../src/getFromObject');
 
-const inputParams = {
+const input = {
   arrayIndices: [0],
   context: { context: true },
   contexts: { contexts: true },
   env: 'env',
-  input: { input: true },
   location: 'location',
+  lowdefyGlobal: { lowdefyGlobal: true },
   params: 'params',
 };
 
-test('input calls getFromObject', () => {
-  input(inputParams);
+test('global calls getFromObject', () => {
+  global(input);
   expect(getFromObject.mock.calls).toEqual([
     [
       {
@@ -44,9 +44,9 @@ test('input calls getFromObject', () => {
         env: 'env',
         location: 'location',
         object: {
-          input: true,
+          lowdefyGlobal: true,
         },
-        operator: '_input',
+        operator: '_global',
         params: 'params',
       },
     ],

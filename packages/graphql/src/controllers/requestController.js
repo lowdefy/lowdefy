@@ -31,7 +31,7 @@ class RequestController {
 
   async callRequest(requestInput) {
     // get variables needed to load request/connection from requestInput
-    const { arrayIndices, blockId, pageId, requestId } = requestInput;
+    const { blockId, pageId, requestId } = requestInput;
 
     const request = await this.loadRequest({
       pageId,
@@ -47,18 +47,13 @@ class RequestController {
     const connectionDefinition = this.getConnectionDefinition({ connection, request });
     const requestDefinition = this.getRequestDefinition({ connectionDefinition, request });
 
-    // Get parser variables from requestInput and deserialize
-    const { event, input, lowdefyGlobal, state, urlQuery } = this.deserializeInputs(requestInput);
+    // Deserialize payload
+    const payload = serializer.deserialize(requestInput.payload);
 
     const { connectionProperties, requestProperties } = await this.parseOperators({
-      event,
-      arrayIndices,
       connection,
-      input,
-      lowdefyGlobal,
+      payload,
       request,
-      state,
-      urlQuery,
     });
 
     this.checkConnectionRead({
@@ -139,33 +134,15 @@ class RequestController {
     return requestDefinition;
   }
 
-  deserializeInputs({ event, input, lowdefyGlobal, state, urlQuery }) {
-    return serializer.deserialize({ event, input, lowdefyGlobal, state, urlQuery });
-  }
-
-  async parseOperators({
-    event,
-    arrayIndices,
-    connection,
-    input,
-    lowdefyGlobal,
-    request,
-    state,
-    urlQuery,
-  }) {
+  async parseOperators({ connection, payload, request }) {
     const secrets = await this.getSecrets();
     const operatorsParser = new NodeParser({
-      arrayIndices,
-      input,
-      lowdefyGlobal,
+      payload,
       secrets,
-      state,
-      urlQuery,
       user: this.user,
     });
     await operatorsParser.init();
     const { output: connectionProperties, errors: connectionErrors } = operatorsParser.parse({
-      event,
       input: connection.properties || {},
       location: connection.connectionId,
     });
@@ -174,7 +151,6 @@ class RequestController {
     }
 
     const { output: requestProperties, errors: requestErrors } = operatorsParser.parse({
-      event,
       input: request.properties || {},
       location: request.requestId,
     });

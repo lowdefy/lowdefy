@@ -19,6 +19,7 @@ _ref:
     pageId: _event
     pageTitle: _event
     filePath: operators/_event.yaml
+    env: Client Only
     types: |
       ```
       (key: string): any
