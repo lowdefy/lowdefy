@@ -42,23 +42,24 @@ test('_regex with on, fail', async () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_regex with key, pass', async () => {
-  const input = { _regex: { pattern: '^Some String$', key: 'string' } };
-  const parser = new NodeParser({ state });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId' });
-  expect(res.output).toBe(true);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
+// NOTE: key not supported by NodeParser
+// test('_regex with key, pass', async () => {
+//   const input = { _regex: { pattern: '^Some String$', key: 'string' } };
+//   const parser = new NodeParser({ state });
+//   await parser.init();
+//   const res = parser.parse({ input, location: 'locationId' });
+//   expect(res.output).toBe(true);
+//   expect(res.errors).toMatchInlineSnapshot(`Array []`);
+// });
 
-test('_regex with key, fail', async () => {
-  const input = { _regex: { pattern: '^a$', key: 'string' } };
-  const parser = new NodeParser({ state });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId' });
-  expect(res.output).toBe(false);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
+// test('_regex with key, fail', async () => {
+//   const input = { _regex: { pattern: '^a$', key: 'string' } };
+//   const parser = new NodeParser({ state });
+//   await parser.init();
+//   const res = parser.parse({ input, location: 'locationId' });
+//   expect(res.output).toBe(false);
+//   expect(res.errors).toMatchInlineSnapshot(`Array []`);
+// });
 
 test('_regex with null on', async () => {
   const input = { _regex: { pattern: '^a$', on: null } };

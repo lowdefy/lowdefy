@@ -2,7 +2,7 @@
 
 exports[`Render default - value[0] 1`] = `
 <span
-  className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle"
+  className="ant-avatar ant-avatar-circle {\\"style\\":[{},null]}"
   id="default"
   onClick={[Function]}
   style={Object {}}
@@ -20,7 +20,7 @@ exports[`Render default - value[0] 1`] = `
 
 exports[`Render properties.alt - value[0] 1`] = `
 <span
-  className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle"
+  className="ant-avatar ant-avatar-circle {\\"style\\":[{},null]}"
   id="properties.alt"
   onClick={[Function]}
   style={Object {}}
@@ -38,7 +38,7 @@ exports[`Render properties.alt - value[0] 1`] = `
 
 exports[`Render properties.color - value[0] 1`] = `
 <span
-  className="ant-avatar {\\"style\\":[{\\"backgroundColor\\":\\"#f12345\\"},null]} ant-avatar-circle"
+  className="ant-avatar ant-avatar-circle {\\"style\\":[{\\"backgroundColor\\":\\"#f12345\\"},null]}"
   id="properties.color"
   onClick={[Function]}
   style={Object {}}
@@ -56,7 +56,7 @@ exports[`Render properties.color - value[0] 1`] = `
 
 exports[`Render properties.content - value[0] 1`] = `
 <span
-  className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle"
+  className="ant-avatar ant-avatar-circle {\\"style\\":[{},null]}"
   id="properties.content"
   onClick={[Function]}
   style={Object {}}
@@ -76,7 +76,7 @@ exports[`Render properties.content - value[0] 1`] = `
 
 exports[`Render properties.content - value[0] 2`] = `
 <span
-  className="ant-avatar {\\"style\\":[{},{\\"border\\":\\"1px solid red\\"}]} ant-avatar-circle"
+  className="ant-avatar ant-avatar-circle {\\"style\\":[{},{\\"border\\":\\"1px solid red\\"}]}"
   id="properties.content"
   onClick={[Function]}
   style={Object {}}
@@ -96,7 +96,7 @@ exports[`Render properties.content - value[0] 2`] = `
 
 exports[`Render properties.gap - value[0] 1`] = `
 <span
-  className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle"
+  className="ant-avatar ant-avatar-circle {\\"style\\":[{},null]}"
   id="properties.gap"
   onClick={[Function]}
   style={Object {}}
@@ -116,7 +116,7 @@ exports[`Render properties.gap - value[0] 1`] = `
 
 exports[`Render properties.icon object - value[0] 1`] = `
 <span
-  className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle ant-avatar-icon"
+  className="ant-avatar ant-avatar-circle ant-avatar-icon {\\"style\\":[{},null]}"
   id="properties.icon object"
   onClick={[Function]}
   style={Object {}}
@@ -148,7 +148,7 @@ exports[`Render properties.icon object - value[0] 1`] = `
 
 exports[`Render properties.icon string - value[0] 1`] = `
 <span
-  className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle ant-avatar-icon"
+  className="ant-avatar ant-avatar-circle ant-avatar-icon {\\"style\\":[{},null]}"
   id="properties.icon string"
   onClick={[Function]}
   style={Object {}}
@@ -180,7 +180,7 @@ exports[`Render properties.icon string - value[0] 1`] = `
 
 exports[`Render properties.icon string properties.shape square - value[0] 1`] = `
 <span
-  className="ant-avatar {\\"style\\":[{},null]} ant-avatar-square ant-avatar-icon"
+  className="ant-avatar ant-avatar-square ant-avatar-icon {\\"style\\":[{},null]}"
   id="properties.icon string properties.shape square"
   onClick={[Function]}
   style={Object {}}
@@ -212,7 +212,7 @@ exports[`Render properties.icon string properties.shape square - value[0] 1`] = 
 
 exports[`Render properties.shape - value[0] 1`] = `
 <span
-  className="ant-avatar {\\"style\\":[{},null]} ant-avatar-square"
+  className="ant-avatar ant-avatar-square {\\"style\\":[{},null]}"
   id="properties.shape"
   onClick={[Function]}
   style={Object {}}
@@ -230,7 +230,7 @@ exports[`Render properties.shape - value[0] 1`] = `
 
 exports[`Render properties.size large - value[0] 1`] = `
 <span
-  className="ant-avatar {\\"style\\":[{},null]} ant-avatar-lg ant-avatar-circle"
+  className="ant-avatar ant-avatar-lg ant-avatar-circle {\\"style\\":[{},null]}"
   id="properties.size large"
   onClick={[Function]}
   style={Object {}}
@@ -248,7 +248,7 @@ exports[`Render properties.size large - value[0] 1`] = `
 
 exports[`Render properties.size small - value[0] 1`] = `
 <span
-  className="ant-avatar {\\"style\\":[{},null]} ant-avatar-sm ant-avatar-circle"
+  className="ant-avatar ant-avatar-sm ant-avatar-circle {\\"style\\":[{},null]}"
   id="properties.size small"
   onClick={[Function]}
   style={Object {}}
@@ -266,7 +266,7 @@ exports[`Render properties.size small - value[0] 1`] = `
 
 exports[`Render properties.src - value[0] 1`] = `
 <span
-  className="ant-avatar {\\"style\\":[{\\"backgroundColor\\":false},null]} ant-avatar-circle ant-avatar-image"
+  className="ant-avatar ant-avatar-circle ant-avatar-image {\\"style\\":[{\\"backgroundColor\\":false},null]}"
   id="properties.src"
   onClick={[Function]}
   style={Object {}}

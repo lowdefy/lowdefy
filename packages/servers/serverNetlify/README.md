@@ -22,7 +22,7 @@ Link your Github project to Netlify.
 
 Configure your Netlify deployment.
 
-- Set your build command to `npx lowdefy@latest build-netlify`.
+- Set your build command to `npx lowdefy@3 build-netlify`.
 - Set your publish directory to `.lowdefy/publish`.
 - Review the other settings, and deploy your site.
 

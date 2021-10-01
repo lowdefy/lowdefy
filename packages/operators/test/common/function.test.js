@@ -23,6 +23,12 @@ const state = {
   number: 42,
   arr: [{ a: 'a1' }, { a: 'a2' }],
 };
+
+const payload = {
+  string: 'Some String',
+  number: 42,
+  arr: [{ a: 'a1' }, { a: 'a2' }],
+};
 const location = 'location';
 
 const context = {
@@ -35,10 +41,10 @@ const contexts = { context };
 
 console.error = () => {};
 
-test('NodeParser, _function that gets from state', async () => {
-  const parser = new NodeParser({ state });
+test('NodeParser, _function that gets from payload', async () => {
+  const parser = new NodeParser({ payload });
   await parser.init();
-  const params = { __state: 'string' };
+  const params = { __payload: 'string' };
   const fn = _function({ location, params, parser });
   expect(fn).toBeInstanceOf(Function);
   expect(fn()).toEqual('Some String');
@@ -46,7 +52,7 @@ test('NodeParser, _function that gets from state', async () => {
 });
 
 test('NodeParser, _function gives args as an array', async () => {
-  const parser = new NodeParser({ state });
+  const parser = new NodeParser({ payload });
   await parser.init();
   const params = { __args: true };
   const fn = _function({ location, params, parser });
@@ -55,12 +61,12 @@ test('NodeParser, _function gives args as an array', async () => {
 });
 
 test('NodeParser, _function throws on parser errors', async () => {
-  const parser = new NodeParser({ state });
+  const parser = new NodeParser({ payload });
   await parser.init();
-  const params = { __state: [] };
+  const params = { __payload: [] };
   const fn = _function({ location, params, parser });
   expect(fn).toThrow(
-    'Error: Operator Error: _state params must be of type string, integer, boolean or object. Received: [] at location.'
+    'Error: Operator Error: _payload params must be of type string, integer, boolean or object. Received: [] at location.'
   );
 });
 

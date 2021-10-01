@@ -57,9 +57,16 @@ async function getExpress({ context, gqlServer }) {
   // serve webpack files
   app.use(express.static(path.resolve(__dirname, 'shell')));
 
-  // serve version for renderer module federation
-  app.use('/api/dev/version', (req, res) => {
-    res.json(context.lowdefyVersion);
+  // Serve rendererRemoteEntryUrl for renderer module federation
+  app.use('/api/dev/rendererRemoteEntryUrl', (req, res) => {
+    let rendererRemoteEntryUrl;
+
+    if (context.options.blocksServerUrl) {
+      rendererRemoteEntryUrl = `${context.options.blocksServerUrl}/renderer/remoteEntry.js`;
+    } else {
+      rendererRemoteEntryUrl = `https://blocks-cdn.lowdefy.com/v${context.lowdefyVersion}/renderer/remoteEntry.js`;
+    }
+    res.json(rendererRemoteEntryUrl);
   });
 
   // Redirect all 404 to index.html with status 200

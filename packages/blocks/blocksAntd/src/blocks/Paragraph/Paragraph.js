@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Typography } from 'antd';
-import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 import { type } from '@lowdefy/helpers';
 
 import Icon from '../Icon/Icon';
@@ -31,11 +31,11 @@ const ParagraphBlock = ({ blockId, events, properties, methods }) => (
     copyable={
       type.isObject(properties.copyable)
         ? {
-            text: properties.copyable.text,
+            text: properties.copyable.text || properties.content,
             onCopy: () => {
               methods.triggerEvent({
                 name: 'onCopy',
-                event: { value: properties.copyable.text },
+                event: { value: properties.copyable.text || properties.content },
               });
             },
             icon:
@@ -64,7 +64,15 @@ const ParagraphBlock = ({ blockId, events, properties, methods }) => (
               )),
             tooltips: properties.copyable.tooltips,
           }
-        : properties.copyable
+        : properties.copyable && {
+            text: properties.content,
+            onCopy: () => {
+              methods.triggerEvent({
+                name: 'onCopy',
+                event: { value: properties.content },
+              });
+            },
+          }
     }
     delete={properties.delete}
     disabled={properties.disabled}
@@ -94,7 +102,7 @@ const ParagraphBlock = ({ blockId, events, properties, methods }) => (
     type={properties.type}
     underline={properties.underline}
   >
-    <RenderHtml html={properties.content} methods={methods} />
+    {renderHtml({ html: properties.content, methods })}
   </Paragraph>
 );
 

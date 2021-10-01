@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { AutoComplete } from 'antd';
-import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 import { type } from '@lowdefy/helpers';
 
 import Label from '../Label/Label';
@@ -70,6 +70,9 @@ const AutoCompleteInput = ({
               methods.setValue(val);
               methods.triggerEvent({ name: 'onChange' });
             }}
+            onSearch={(newVal) => {
+              methods.triggerEvent({ name: 'onChange', event: { value: newVal } });
+            }}
             value={type.isNone(value) ? undefined : value}
           >
             {(properties.options || []).map((opt, i) =>
@@ -80,7 +83,7 @@ const AutoCompleteInput = ({
                   key={i}
                   value={i}
                 >
-                  <RenderHtml html={`${opt}`} methods={methods} />
+                  {renderHtml({ html: `${opt}`, methods })}
                 </Option>
               ) : (
                 <Option
@@ -91,10 +94,9 @@ const AutoCompleteInput = ({
                   key={i}
                   value={i}
                 >
-                  <RenderHtml
-                    html={type.isNone(opt.label) ? `${opt.value}` : opt.label}
-                    methods={methods}
-                  />
+                  {type.isNone(opt.label)
+                    ? renderHtml({ html: `${opt.value}`, methods })
+                    : renderHtml({ html: opt.label, methods })}
                 </Option>
               )
             )}

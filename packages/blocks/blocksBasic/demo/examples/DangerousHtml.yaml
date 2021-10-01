@@ -8,7 +8,7 @@
 - id: properties.style
   type: DangerousHtml
   properties:
-    style: 
+    style:
       background: yellow
       padding: 10
     html: |
@@ -16,7 +16,7 @@
 - id: properties.html-styled
   type: DangerousHtml
   properties:
-    style: 
+    style:
       background: yellow
       padding: 10
     html: |
@@ -30,8 +30,8 @@
 - id: properties.html-DOMPurifyOptions.ADD_TAGS-iframe
   type: DangerousHtml
   properties:
-    DOMPurifyOptions: 
-      ADD_TAGS: 
+    DOMPurifyOptions:
+      ADD_TAGS:
         - iframe
     html: |
       With iframe ADD_TAGS:
@@ -59,3 +59,11 @@
       <script>
         alert('script tag');
       </script>
+- id: properties.html is number 0
+  type: DangerousHtml
+  properties:
+    html: 0
+- id: properties.html is boolean false
+  type: DangerousHtml
+  properties:
+    html: false

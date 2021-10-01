@@ -1088,7 +1088,7 @@ exports[`Render properties.options.label: html - value[0] 1`] = `
           id="properties.options.label: html_input"
         >
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -1118,7 +1118,7 @@ exports[`Render properties.options.label: html - value[0] 1`] = `
             </span>
           </label>
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -1148,7 +1148,7 @@ exports[`Render properties.options.label: html - value[0] 1`] = `
             </span>
           </label>
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -1552,7 +1552,7 @@ exports[`Render properties.options-object - value[0] 1`] = `
           id="properties.options-object_input"
         >
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -1582,7 +1582,7 @@ exports[`Render properties.options-object - value[0] 1`] = `
             </span>
           </label>
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -1754,7 +1754,7 @@ exports[`Render properties.options-style - value[0] 1`] = `
           id="properties.options-style_input"
         >
           <label
-            className="{\\"style\\":{\\"background\\":\\"red\\"}} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {\\"style\\":{\\"background\\":\\"red\\"}}"
           >
             <span
               className="ant-radio-button"
@@ -1784,7 +1784,7 @@ exports[`Render properties.options-style - value[0] 1`] = `
             </span>
           </label>
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -3211,7 +3211,7 @@ exports[`Render required = true properties.options.label: html - value[0] 1`] = 
           id="properties.options.label: html_input"
         >
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -3241,7 +3241,7 @@ exports[`Render required = true properties.options.label: html - value[0] 1`] = 
             </span>
           </label>
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -3271,7 +3271,7 @@ exports[`Render required = true properties.options.label: html - value[0] 1`] = 
             </span>
           </label>
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -3675,7 +3675,7 @@ exports[`Render required = true properties.options-object - value[0] 1`] = `
           id="properties.options-object_input"
         >
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -3705,7 +3705,7 @@ exports[`Render required = true properties.options-object - value[0] 1`] = `
             </span>
           </label>
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -3877,7 +3877,7 @@ exports[`Render required = true properties.options-style - value[0] 1`] = `
           id="properties.options-style_input"
         >
           <label
-            className="{\\"style\\":{\\"background\\":\\"red\\"}} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {\\"style\\":{\\"background\\":\\"red\\"}}"
           >
             <span
               className="ant-radio-button"
@@ -3907,7 +3907,7 @@ exports[`Render required = true properties.options-style - value[0] 1`] = `
             </span>
           </label>
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -4306,7 +4306,7 @@ exports[`Render validation.status = error default - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -4435,7 +4435,7 @@ exports[`Render validation.status = error properties.buttonStyle: outline - valu
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -4564,7 +4564,7 @@ exports[`Render validation.status = error properties.color_red - value[0] 1`] = 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -4693,7 +4693,7 @@ exports[`Render validation.status = error properties.color_yellow - value[0] 1`]
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -4824,7 +4824,7 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -4953,7 +4953,7 @@ exports[`Render validation.status = error properties.label.colon: false - value[
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -5068,7 +5068,7 @@ exports[`Render validation.status = error properties.label.disabled: true - valu
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -5197,7 +5197,7 @@ exports[`Render validation.status = error properties.label.extra: showingextra -
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -5326,7 +5326,7 @@ exports[`Render validation.status = error properties.label: align_right - value[
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -5463,7 +5463,7 @@ exports[`Render validation.status = error properties.label: inline_true - value[
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -5592,7 +5592,7 @@ exports[`Render validation.status = error properties.label: span_12 - value[0] 1
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -5635,7 +5635,7 @@ exports[`Render validation.status = error properties.options.label: html - value
           id="properties.options.label: html_input"
         >
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -5665,7 +5665,7 @@ exports[`Render validation.status = error properties.options.label: html - value
             </span>
           </label>
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -5695,7 +5695,7 @@ exports[`Render validation.status = error properties.options.label: html - value
             </span>
           </label>
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -5751,7 +5751,7 @@ exports[`Render validation.status = error properties.options.label: html - value
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -5910,7 +5910,7 @@ exports[`Render validation.status = error properties.options: html - value[0] 1`
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -6039,7 +6039,7 @@ exports[`Render validation.status = error properties.options-boolean - value[0] 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -6168,7 +6168,7 @@ exports[`Render validation.status = error properties.options-number - value[0] 1
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -6211,7 +6211,7 @@ exports[`Render validation.status = error properties.options-object - value[0] 1
           id="properties.options-object_input"
         >
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -6241,7 +6241,7 @@ exports[`Render validation.status = error properties.options-object - value[0] 1
             </span>
           </label>
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -6297,7 +6297,7 @@ exports[`Render validation.status = error properties.options-object - value[0] 1
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -6426,7 +6426,7 @@ exports[`Render validation.status = error properties.options-string - value[0] 1
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -6469,7 +6469,7 @@ exports[`Render validation.status = error properties.options-style - value[0] 1`
           id="properties.options-style_input"
         >
           <label
-            className="{\\"style\\":{\\"background\\":\\"red\\"}} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {\\"style\\":{\\"background\\":\\"red\\"}}"
           >
             <span
               className="ant-radio-button"
@@ -6499,7 +6499,7 @@ exports[`Render validation.status = error properties.options-style - value[0] 1`
             </span>
           </label>
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -6555,7 +6555,7 @@ exports[`Render validation.status = error properties.options-style - value[0] 1`
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -6684,7 +6684,7 @@ exports[`Render validation.status = error properties.size: small - value[0] 1`] 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
       validation error
     </div>
@@ -6813,7 +6813,7 @@ exports[`Render validation.status = error properties.size_large - value[0] 1`] =
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -6942,7 +6942,7 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -8038,7 +8038,7 @@ exports[`Render validation.status = null properties.options.label: html - value[
           id="properties.options.label: html_input"
         >
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -8068,7 +8068,7 @@ exports[`Render validation.status = null properties.options.label: html - value[
             </span>
           </label>
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -8098,7 +8098,7 @@ exports[`Render validation.status = null properties.options.label: html - value[
             </span>
           </label>
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -8502,7 +8502,7 @@ exports[`Render validation.status = null properties.options-object - value[0] 1`
           id="properties.options-object_input"
         >
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -8532,7 +8532,7 @@ exports[`Render validation.status = null properties.options-object - value[0] 1`
             </span>
           </label>
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -8704,7 +8704,7 @@ exports[`Render validation.status = null properties.options-style - value[0] 1`]
           id="properties.options-style_input"
         >
           <label
-            className="{\\"style\\":{\\"background\\":\\"red\\"}} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {\\"style\\":{\\"background\\":\\"red\\"}}"
           >
             <span
               className="ant-radio-button"
@@ -8734,7 +8734,7 @@ exports[`Render validation.status = null properties.options-style - value[0] 1`]
             </span>
           </label>
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -10414,7 +10414,7 @@ exports[`Render validation.status = success properties.options.label: html - val
           id="properties.options.label: html_input"
         >
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -10444,7 +10444,7 @@ exports[`Render validation.status = success properties.options.label: html - val
             </span>
           </label>
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -10474,7 +10474,7 @@ exports[`Render validation.status = success properties.options.label: html - val
             </span>
           </label>
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -10970,7 +10970,7 @@ exports[`Render validation.status = success properties.options-object - value[0]
           id="properties.options-object_input"
         >
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -11000,7 +11000,7 @@ exports[`Render validation.status = success properties.options-object - value[0]
             </span>
           </label>
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -11218,7 +11218,7 @@ exports[`Render validation.status = success properties.options-style - value[0] 
           id="properties.options-style_input"
         >
           <label
-            className="{\\"style\\":{\\"background\\":\\"red\\"}} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {\\"style\\":{\\"background\\":\\"red\\"}}"
           >
             <span
               className="ant-radio-button"
@@ -11248,7 +11248,7 @@ exports[`Render validation.status = success properties.options-style - value[0] 
             </span>
           </label>
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -11739,7 +11739,7 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -11868,7 +11868,7 @@ exports[`Render validation.status = warning properties.buttonStyle: outline - va
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -11997,7 +11997,7 @@ exports[`Render validation.status = warning properties.color_red - value[0] 1`] 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -12126,7 +12126,7 @@ exports[`Render validation.status = warning properties.color_yellow - value[0] 1
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -12257,7 +12257,7 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -12386,7 +12386,7 @@ exports[`Render validation.status = warning properties.label.colon: false - valu
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -12501,7 +12501,7 @@ exports[`Render validation.status = warning properties.label.disabled: true - va
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -12630,7 +12630,7 @@ exports[`Render validation.status = warning properties.label.extra: showingextra
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -12759,7 +12759,7 @@ exports[`Render validation.status = warning properties.label: align_right - valu
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -12896,7 +12896,7 @@ exports[`Render validation.status = warning properties.label: inline_true - valu
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -13025,7 +13025,7 @@ exports[`Render validation.status = warning properties.label: span_12 - value[0]
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -13068,7 +13068,7 @@ exports[`Render validation.status = warning properties.options.label: html - val
           id="properties.options.label: html_input"
         >
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -13098,7 +13098,7 @@ exports[`Render validation.status = warning properties.options.label: html - val
             </span>
           </label>
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -13128,7 +13128,7 @@ exports[`Render validation.status = warning properties.options.label: html - val
             </span>
           </label>
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -13184,7 +13184,7 @@ exports[`Render validation.status = warning properties.options.label: html - val
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -13343,7 +13343,7 @@ exports[`Render validation.status = warning properties.options: html - value[0] 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -13472,7 +13472,7 @@ exports[`Render validation.status = warning properties.options-boolean - value[0
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -13601,7 +13601,7 @@ exports[`Render validation.status = warning properties.options-number - value[0]
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -13644,7 +13644,7 @@ exports[`Render validation.status = warning properties.options-object - value[0]
           id="properties.options-object_input"
         >
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -13674,7 +13674,7 @@ exports[`Render validation.status = warning properties.options-object - value[0]
             </span>
           </label>
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -13730,7 +13730,7 @@ exports[`Render validation.status = warning properties.options-object - value[0]
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -13859,7 +13859,7 @@ exports[`Render validation.status = warning properties.options-string - value[0]
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -13902,7 +13902,7 @@ exports[`Render validation.status = warning properties.options-style - value[0] 
           id="properties.options-style_input"
         >
           <label
-            className="{\\"style\\":{\\"background\\":\\"red\\"}} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {\\"style\\":{\\"background\\":\\"red\\"}}"
           >
             <span
               className="ant-radio-button"
@@ -13932,7 +13932,7 @@ exports[`Render validation.status = warning properties.options-style - value[0] 
             </span>
           </label>
           <label
-            className="{} ant-radio-button-wrapper"
+            className="ant-radio-button-wrapper {}"
           >
             <span
               className="ant-radio-button"
@@ -13988,7 +13988,7 @@ exports[`Render validation.status = warning properties.options-style - value[0] 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -14117,7 +14117,7 @@ exports[`Render validation.status = warning properties.size: small - value[0] 1`
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
       validation warning
     </div>
@@ -14246,7 +14246,7 @@ exports[`Render validation.status = warning properties.size_large - value[0] 1`]
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -14375,7 +14375,7 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>

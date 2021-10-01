@@ -246,9 +246,9 @@ exports[`Render default - value[0] 1`] = `
         </span>
         <span
           className="ant-select-selection-item"
-          title="10"
+          title="10 / page"
         >
-          10
+          10 / page
         </span>
       </div>
       <span
@@ -536,9 +536,9 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
         </span>
         <span
           className="ant-select-selection-item"
-          title="10"
+          title="10 / page"
         >
-          10
+          10 / page
         </span>
       </div>
       <span
@@ -826,9 +826,9 @@ exports[`Render properties.hideOnSinglePage: true, total: 100 - value[0] 1`] = `
         </span>
         <span
           className="ant-select-selection-item"
-          title="10"
+          title="10 / page"
         >
-          10
+          10 / page
         </span>
       </div>
       <span
@@ -1114,9 +1114,9 @@ exports[`Render properties.pageSizeOptions: [100, 200, 500] - value[0] 1`] = `
         </span>
         <span
           className="ant-select-selection-item"
-          title="100"
+          title="100 / page"
         >
-          100
+          100 / page
         </span>
       </div>
       <span
@@ -1402,9 +1402,9 @@ exports[`Render properties.showQuickJumper: true - value[0] 1`] = `
         </span>
         <span
           className="ant-select-selection-item"
-          title="10"
+          title="10 / page"
         >
-          10
+          10 / page
         </span>
       </div>
       <span
@@ -1905,9 +1905,9 @@ exports[`Render properties.showTotal: 'This is the total' - value[0] 1`] = `
         </span>
         <span
           className="ant-select-selection-item"
-          title="10"
+          title="10 / page"
         >
-          10
+          10 / page
         </span>
       </div>
       <span
@@ -2193,9 +2193,9 @@ exports[`Render properties.showTotal: true - value[0] 1`] = `
         </span>
         <span
           className="ant-select-selection-item"
-          title="10"
+          title="10 / page"
         >
-          10
+          10 / page
         </span>
       </div>
       <span
@@ -2578,9 +2578,9 @@ exports[`Render properties.size: default - value[0] 1`] = `
         </span>
         <span
           className="ant-select-selection-item"
-          title="10"
+          title="10 / page"
         >
-          10
+          10 / page
         </span>
       </div>
       <span
@@ -2823,7 +2823,7 @@ exports[`Render properties.size: small - value[0] 1`] = `
     className="ant-pagination-options"
   >
     <div
-      className="ant-select ant-pagination-options-size-changer ant-select-sm ant-select-single ant-select-show-arrow"
+      className="ant-select ant-select-sm ant-pagination-options-size-changer ant-select-single ant-select-show-arrow"
       onBlur={[Function]}
       onFocus={[Function]}
       onKeyDown={[Function]}
@@ -2866,9 +2866,9 @@ exports[`Render properties.size: small - value[0] 1`] = `
         </span>
         <span
           className="ant-select-selection-item"
-          title="10"
+          title="10 / page"
         >
-          10
+          10 / page
         </span>
       </div>
       <span
@@ -3154,9 +3154,9 @@ exports[`Render properties.total - value[0] 1`] = `
         </span>
         <span
           className="ant-select-selection-item"
-          title="10"
+          title="10 / page"
         >
-          10
+          10 / page
         </span>
       </div>
       <span

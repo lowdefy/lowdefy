@@ -14,6 +14,7 @@ Array [
       "filterOption": [Function],
       "id": "default_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -36,7 +37,7 @@ Array [
           id="properties.allowClear: false_0"
           value={0}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 1"
             methods={
               Object {
@@ -80,7 +81,7 @@ Array [
           id="properties.allowClear: false_1"
           value={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 2"
             methods={
               Object {
@@ -126,6 +127,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.allowClear: false_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -148,7 +150,7 @@ Array [
           id="properties.autoFocus: true_0"
           value={0}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 1"
             methods={
               Object {
@@ -192,7 +194,7 @@ Array [
           id="properties.autoFocus: true_1"
           value={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 2"
             methods={
               Object {
@@ -238,6 +240,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.autoFocus: true_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -260,7 +263,7 @@ Array [
           id="properties.backfill: true_0"
           value={0}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 1"
             methods={
               Object {
@@ -304,7 +307,7 @@ Array [
           id="properties.backfill: true_1"
           value={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 2"
             methods={
               Object {
@@ -350,6 +353,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.backfill: true_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -372,7 +376,7 @@ Array [
           id="properties.inputStyle: CSS style applied_0"
           value={0}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 1"
             methods={
               Object {
@@ -418,7 +422,7 @@ Array [
           id="properties.inputStyle: CSS style applied_1"
           value={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 2"
             methods={
               Object {
@@ -466,6 +470,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.inputStyle: CSS style applied_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -489,6 +494,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.label.align_right_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -512,6 +518,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.label.colon_false_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -535,6 +542,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.label.disabled_true_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -558,6 +566,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.label.extra_showingextra_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -581,6 +590,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.label.inline_true_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -604,6 +614,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.label.span_12_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -626,7 +637,7 @@ Array [
           id="properties.options.label: html_0"
           value={0}
         >
-          <RenderHtml
+          <HtmlComponent
             html=<div>
   Some main text
 </div>
@@ -691,7 +702,7 @@ Array [
           id="properties.options.label: html_1"
           value={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html=<div style="color: green;">
   Option green
 </div>
@@ -753,7 +764,7 @@ Array [
           id="properties.options.label: html_2"
           value={2}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 3"
             methods={
               Object {
@@ -815,6 +826,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.options.label: html_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -838,7 +850,7 @@ Array [
           id="properties.options.label: html and properties.options.filterString_0"
           value={0}
         >
-          <RenderHtml
+          <HtmlComponent
             html=<div>
   Some main text
 </div>
@@ -904,7 +916,7 @@ Array [
           id="properties.options.label: html and properties.options.filterString_1"
           value={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html=<div style="color: green;">
   Option green
 </div>
@@ -966,7 +978,7 @@ Array [
           id="properties.options.label: html and properties.options.filterString_2"
           value={2}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 3"
             methods={
               Object {
@@ -1028,6 +1040,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.options.label: html and properties.options.filterString_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -1050,7 +1063,7 @@ Array [
           id="properties.options: html_0"
           value={0}
         >
-          <RenderHtml
+          <HtmlComponent
             html=<div>
   Some main text
 </div>
@@ -1106,7 +1119,7 @@ Array [
           id="properties.options: html_1"
           value={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html=<div style="color: green;">
   Option green
 </div>
@@ -1159,7 +1172,7 @@ Array [
           id="properties.options: html_2"
           value={2}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 3"
             methods={
               Object {
@@ -1212,6 +1225,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.options: html_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -1234,7 +1248,7 @@ Array [
           id="properties.options-object_0"
           value={0}
         >
-          <RenderHtml
+          <HtmlComponent
             html="one"
             methods={
               Object {
@@ -1284,7 +1298,7 @@ Array [
           id="properties.options-object_1"
           value={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html="two"
             methods={
               Object {
@@ -1336,6 +1350,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.options-object_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -1358,7 +1373,7 @@ Array [
           id="properties.options-string_0"
           value={0}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 1"
             methods={
               Object {
@@ -1402,7 +1417,7 @@ Array [
           id="properties.options-string_1"
           value={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 2"
             methods={
               Object {
@@ -1448,6 +1463,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.options-string_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -1470,7 +1486,7 @@ Array [
           id="properties.options-style_0"
           value={0}
         >
-          <RenderHtml
+          <HtmlComponent
             html="one"
             methods={
               Object {
@@ -1522,7 +1538,7 @@ Array [
           id="properties.options-style_1"
           value={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html="two"
             methods={
               Object {
@@ -1576,6 +1592,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.options-style_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -1598,7 +1615,7 @@ Array [
           id="properties.optionsStyle: CSS style applied_0"
           value={0}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 1"
             methods={
               Object {
@@ -1646,7 +1663,7 @@ Array [
           id="properties.optionsStyle: CSS style applied_1"
           value={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 2"
             methods={
               Object {
@@ -1696,6 +1713,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.optionsStyle: CSS style applied_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -1719,6 +1737,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.placeholder_Text_inside_block_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Text inside block",
       "size": undefined,
       "value": undefined,
@@ -1741,7 +1760,7 @@ Array [
           id="properties.size: large_0"
           value={0}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 1"
             methods={
               Object {
@@ -1785,7 +1804,7 @@ Array [
           id="properties.size: large_1"
           value={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 2"
             methods={
               Object {
@@ -1831,6 +1850,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.size: large_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": "large",
       "value": undefined,
@@ -1853,7 +1873,7 @@ Array [
           id="properties.size: small_0"
           value={0}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 1"
             methods={
               Object {
@@ -1897,7 +1917,7 @@ Array [
           id="properties.size: small_1"
           value={1}
         >
-          <RenderHtml
+          <HtmlComponent
             html="Option 2"
             methods={
               Object {
@@ -1943,6 +1963,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.size: small_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": "small",
       "value": undefined,
@@ -1966,6 +1987,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.title_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,

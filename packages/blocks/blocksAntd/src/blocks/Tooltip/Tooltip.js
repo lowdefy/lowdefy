@@ -16,12 +16,12 @@
 
 import React from 'react';
 import { Tooltip } from 'antd';
-import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 
 const TooltipBlock = ({ blockId, content, properties, methods }) => (
   <Tooltip
     id={blockId}
-    title={properties.title && <RenderHtml html={properties.title} methods={methods} />}
+    title={renderHtml({ html: properties.title, methods })}
     overlayStyle={methods.makeCssClass(properties.overlayStyle, { styleObjectOnly: true })}
     arrowPointAtCenter={properties.arrowPointAtCenter}
     autoAdjustOverflow={properties.autoAdjustOverflow}
