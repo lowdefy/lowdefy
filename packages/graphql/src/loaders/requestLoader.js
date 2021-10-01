@@ -18,15 +18,15 @@ import path from 'path';
 import Dataloader from 'dataloader';
 import readJsonFile from './readJsonFile';
 
-function cacheKeyFn({ pageId, contextId, requestId }) {
-  return `${pageId}:${contextId}:${requestId}`;
+function cacheKeyFn({ pageId, requestId }) {
+  return `${pageId}:${requestId}`;
 }
 
 function createRequestBatchLoader({ CONFIGURATION_BASE_PATH }) {
-  async function readRequest({ pageId, contextId, requestId }) {
+  async function readRequest({ pageId, requestId }) {
     const filePath = path.resolve(
       CONFIGURATION_BASE_PATH,
-      `pages/${pageId}/requests/${contextId}/${requestId}.json`
+      `pages/${pageId}/requests/${requestId}.json`
     );
     return readJsonFile({ filePath });
   }
