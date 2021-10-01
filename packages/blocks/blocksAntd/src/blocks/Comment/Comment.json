@@ -32,7 +32,7 @@
           "description": "Comment content. Overrides the \"content\" content area."
         },
         "datetime": {
-          "type": "object",
+          "type": ["object", "string"],
           "description": "Comment date and time.",
           "docs": {
             "displayType": "string"
