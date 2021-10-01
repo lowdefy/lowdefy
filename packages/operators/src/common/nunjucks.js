@@ -17,7 +17,7 @@
 import { type } from '@lowdefy/helpers';
 import { nunjucksFunction } from '@lowdefy/nunjucks';
 
-function _nunjucks({ location, params, state }) {
+function _nunjucks({ location, params, state, payload, env }) {
   let templateString;
   let on;
   if (type.isObject(params) && type.isString(params.template)) {
@@ -26,7 +26,7 @@ function _nunjucks({ location, params, state }) {
   }
   if (type.isString(params)) {
     templateString = params;
-    on = state;
+    on = env === 'web' ? state : payload;
   }
   if (templateString) {
     try {

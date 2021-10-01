@@ -183,6 +183,10 @@
         "onChange": {
           "type": "array",
           "description": "Trigger actions when selection is changed."
+        },
+        "onSearch": {
+          "type": "array",
+          "description": "Called when searching items."
         }
       }
     }

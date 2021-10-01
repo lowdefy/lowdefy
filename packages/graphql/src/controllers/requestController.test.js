@@ -19,6 +19,8 @@ import { testBootstrapContext } from '../test/testContext';
 import resolvers from '../connections/resolvers';
 import { ConfigurationError, RequestError } from '../context/errors';
 
+console.error = () => {};
+
 jest.mock('../connections/resolvers', () => {
   const mockTestRequestResolver = jest.fn();
   return {
@@ -79,15 +81,10 @@ const loaders = {
 const context = testBootstrapContext({ loaders, getSecrets });
 
 const defaultInput = {
-  arrayIndices: [],
   blockId: 'contextId',
-  event: {},
-  input: {},
-  lowdefyGlobal: {},
   pageId: 'pageId',
+  payload: {},
   requestId: 'requestId',
-  state: {},
-  urlQuery: {},
 };
 
 const defaultLoadConnectionImp = (id) => {
@@ -319,16 +316,8 @@ test('deserialize inputs', async () => {
         connectionId: 'testConnection',
         auth: { public: true },
         properties: {
-          event: { _event: true },
-          input: { _input: true },
-          global: { _global: true },
-          state: { _state: true },
-          urlQuery: { _url_query: true },
-          eventDate: { _event: 'date' },
-          inputDate: { _input: 'date' },
-          globalDate: { _global: 'date' },
-          stateDate: { _state: 'date' },
-          urlQueryDate: { _url_query: 'date' },
+          payload: { _payload: true },
+          payloadDate: { _payload: 'date' },
         },
       };
     }
@@ -337,25 +326,12 @@ test('deserialize inputs', async () => {
   resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
   const controller = createRequestController(context);
   await controller.callRequest({
-    arrayIndices: [],
     blockId: 'contextId',
-    event: {
-      date: { _date: 0 },
-    },
-    input: {
-      date: { _date: 0 },
-    },
-    lowdefyGlobal: {
+    payload: {
       date: { _date: 0 },
     },
     pageId: 'pageId',
     requestId: 'requestId',
-    state: {
-      date: { _date: 0 },
-    },
-    urlQuery: {
-      date: { _date: 0 },
-    },
   });
   expect(resolvers.TestConnection.requests.TestRequest.resolver.mock.calls).toEqual([
     [
@@ -364,16 +340,8 @@ test('deserialize inputs', async () => {
           connectionProperty: 'connectionProperty',
         },
         request: {
-          event: { date: new Date(0) },
-          input: { date: new Date(0) },
-          global: { date: new Date(0) },
-          state: { date: new Date(0) },
-          urlQuery: { date: new Date(0) },
-          eventDate: new Date(0),
-          inputDate: new Date(0),
-          globalDate: new Date(0),
-          stateDate: new Date(0),
-          urlQueryDate: new Date(0),
+          payload: { date: new Date(0) },
+          payloadDate: new Date(0),
         },
       },
     ],
@@ -391,12 +359,7 @@ test('parse request properties for operators', async () => {
         connectionId: 'testConnection',
         auth: { public: true },
         properties: {
-          input: { _input: 'value' },
-          event: { _event: 'value' },
-          global: { _global: 'value' },
-          state: { _state: 'value' },
-          urlQuery: { _url_query: 'value' },
-          arrayIndices: { _state: 'array.$' },
+          payload: { _payload: 'value' },
           user: { _user: 'sub' },
         },
       };
@@ -408,26 +371,12 @@ test('parse request properties for operators', async () => {
     testBootstrapContext({ loaders, getSecrets, user: { sub: 'sub' } })
   );
   const res = await controller.callRequest({
-    arrayIndices: [1],
     blockId: 'contextId',
-    input: {
-      value: 'inputValue',
-    },
-    event: {
-      value: 'eventValue',
-    },
-    lowdefyGlobal: {
-      value: 'globalValue',
+    payload: {
+      value: 'payloadValue',
     },
     pageId: 'pageId',
     requestId: 'requestId',
-    state: {
-      value: 'stateValue',
-      array: ['zero', 'one', 'two'],
-    },
-    urlQuery: {
-      value: 'urlValue',
-    },
   });
   expect(res).toEqual({
     id: 'request:pageId:contextId:requestId',
@@ -436,12 +385,7 @@ test('parse request properties for operators', async () => {
         connectionProperty: 'connectionProperty',
       },
       request: {
-        event: 'eventValue',
-        input: 'inputValue',
-        global: 'globalValue',
-        state: 'stateValue',
-        urlQuery: 'urlValue',
-        arrayIndices: 'one',
+        payload: 'payloadValue',
         user: 'sub',
       },
     },
@@ -458,12 +402,7 @@ test('parse connection properties for operators', async () => {
         type: 'TestConnection',
         connectionId: 'testConnection',
         properties: {
-          event: { _event: 'value' },
-          input: { _input: 'value' },
-          global: { _global: 'value' },
-          state: { _state: 'value' },
-          urlQuery: { _url_query: 'value' },
-          arrayIndices: { _state: 'array.$' },
+          payload: { _payload: 'value' },
           user: { _user: 'sub' },
         },
       };
@@ -476,37 +415,18 @@ test('parse connection properties for operators', async () => {
     testBootstrapContext({ loaders, getSecrets, user: { sub: 'sub' } })
   );
   const res = await controller.callRequest({
-    arrayIndices: [1],
     blockId: 'contextId',
-    event: {
-      value: 'eventValue',
-    },
-    input: {
-      value: 'inputValue',
-    },
-    lowdefyGlobal: {
-      value: 'globalValue',
+    payload: {
+      value: 'payloadValue',
     },
     pageId: 'pageId',
     requestId: 'requestId',
-    state: {
-      value: 'stateValue',
-      array: ['zero', 'one', 'two'],
-    },
-    urlQuery: {
-      value: 'urlValue',
-    },
   });
   expect(res).toEqual({
     id: 'request:pageId:contextId:requestId',
     response: {
       connection: {
-        event: 'eventValue',
-        input: 'inputValue',
-        global: 'globalValue',
-        state: 'stateValue',
-        urlQuery: 'urlValue',
-        arrayIndices: 'one',
+        payload: 'payloadValue',
         user: 'sub',
       },
       request: {
@@ -634,7 +554,7 @@ test('request properties operator error', async () => {
         connectionId: 'testConnection',
         auth: { public: true },
         properties: {
-          willError: { _state: [] },
+          willError: { _get: null },
         },
       };
     }
@@ -644,7 +564,7 @@ test('request properties operator error', async () => {
   const controller = createRequestController(context);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(RequestError);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(
-    'Error: Operator Error: _state params must be of type string, integer, boolean or object. Received: [] at requestId.'
+    'Error: Operator Error: _get takes an object as params. Received: null at requestId.'
   );
 });
 
@@ -657,7 +577,7 @@ test('connection properties operator error', async () => {
         connectionId: 'testConnection',
         auth: { public: true },
         properties: {
-          willError: { _state: [] },
+          willError: { _get: null },
         },
       };
     }
@@ -668,7 +588,7 @@ test('connection properties operator error', async () => {
   const controller = createRequestController(context);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(RequestError);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(
-    'Error: Operator Error: _state params must be of type string, integer, boolean or object. Received: [] at testConnection.'
+    'Error: Operator Error: _get takes an object as params. Received: null at testConnection.'
   );
 });
 

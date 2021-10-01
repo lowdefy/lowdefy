@@ -20,13 +20,9 @@ import commonOperators from './common';
 import nodeOperators from './node';
 
 class NodeParser {
-  constructor({ arrayIndices, input, lowdefyGlobal, secrets, state, urlQuery, user } = {}) {
-    this.arrayIndices = arrayIndices;
-    this.input = input;
-    this.lowdefyGlobal = lowdefyGlobal;
+  constructor({ payload, secrets, user } = {}) {
+    this.payload = payload;
     this.secrets = secrets;
-    this.state = state;
-    this.urlQuery = urlQuery;
     this.user = user;
     this.parse = this.parse.bind(this);
     this.operators = {
@@ -48,12 +44,9 @@ class NodeParser {
     );
   }
 
-  parse({ actions, args, event, input, location }) {
+  parse({ args, input, location }) {
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
-    }
-    if (event && !type.isObject(event)) {
-      throw new Error('Operator parser event must be a object.');
     }
     if (args && !type.isArray(args)) {
       throw new Error('Operator parser args must be an array.');
@@ -69,20 +62,15 @@ class NodeParser {
         try {
           if (!type.isUndefined(this.operations[op])) {
             const res = this.operations[op]({
-              actions,
               args,
-              arrayIndices: this.arrayIndices,
+              arrayIndices: [],
               env: 'node',
-              event,
-              input: this.input,
               location,
-              lowdefyGlobal: this.lowdefyGlobal,
               methodName,
               operations: this.operations,
               params: value[key],
               secrets: this.secrets,
-              state: this.state,
-              urlQuery: this.urlQuery,
+              payload: this.payload,
               user: this.user,
               parser: this,
             });

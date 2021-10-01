@@ -12,7 +12,7 @@ exports[`Render areas.actions - value[0] 1`] = `
       className="ant-comment-avatar"
     >
       <span
-        className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle"
+        className="ant-avatar ant-avatar-circle {\\"style\\":[{},null]}"
         id="undefined_id"
         onClick={[Function]}
         style={Object {}}
@@ -84,7 +84,7 @@ exports[`Render default - value[0] 1`] = `
       className="ant-comment-avatar"
     >
       <span
-        className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle"
+        className="ant-avatar ant-avatar-circle {\\"style\\":[{},null]}"
         id="undefined_id"
         onClick={[Function]}
         style={Object {}}
@@ -138,7 +138,7 @@ exports[`Render properties.author - value[0] 1`] = `
       className="ant-comment-avatar"
     >
       <span
-        className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle"
+        className="ant-avatar ant-avatar-circle {\\"style\\":[{},null]}"
         id="undefined_id"
         onClick={[Function]}
         style={Object {}}
@@ -203,7 +203,7 @@ exports[`Render properties.content - value[0] 1`] = `
       className="ant-comment-avatar"
     >
       <span
-        className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle"
+        className="ant-avatar ant-avatar-circle {\\"style\\":[{},null]}"
         id="undefined_id"
         onClick={[Function]}
         style={Object {}}
@@ -259,7 +259,7 @@ exports[`Render properties.datetime - value[0] 1`] = `
       className="ant-comment-avatar"
     >
       <span
-        className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle"
+        className="ant-avatar ant-avatar-circle {\\"style\\":[{},null]}"
         id="undefined_id"
         onClick={[Function]}
         style={Object {}}
@@ -308,21 +308,9 @@ exports[`Render properties.datetime - value[0] 1`] = `
 </div>
 `;
 
-exports[`Test Schema areas.actions 1`] = `false`;
+exports[`Test Schema areas.actions 1`] = `true`;
 
-exports[`Test Schema areas.actions 2`] = `
-Array [
-  Object {
-    "dataPath": "/properties/datetime",
-    "keyword": "type",
-    "message": "should be object",
-    "params": Object {
-      "type": "object",
-    },
-    "schemaPath": "#/properties/properties/properties/datetime/type",
-  },
-]
-`;
+exports[`Test Schema areas.actions 2`] = `null`;
 
 exports[`Test Schema default 1`] = `true`;
 
@@ -336,18 +324,6 @@ exports[`Test Schema properties.content 1`] = `true`;
 
 exports[`Test Schema properties.content 2`] = `null`;
 
-exports[`Test Schema properties.datetime 1`] = `false`;
+exports[`Test Schema properties.datetime 1`] = `true`;
 
-exports[`Test Schema properties.datetime 2`] = `
-Array [
-  Object {
-    "dataPath": "/properties/datetime",
-    "keyword": "type",
-    "message": "should be object",
-    "params": Object {
-      "type": "object",
-    },
-    "schemaPath": "#/properties/properties/properties/datetime/type",
-  },
-]
-`;
+exports[`Test Schema properties.datetime 2`] = `null`;

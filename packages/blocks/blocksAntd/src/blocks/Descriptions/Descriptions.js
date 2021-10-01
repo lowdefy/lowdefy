@@ -16,7 +16,7 @@
 
 import React from 'react';
 
-import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 import { Descriptions } from 'antd';
 import { type } from '@lowdefy/helpers';
 
@@ -29,7 +29,7 @@ const DescriptionsBlock = ({ blockId, properties, methods }) => {
   return (
     <Descriptions
       id={blockId}
-      title={<RenderHtml html={properties.title} methods={methods} />}
+      title={renderHtml({ html: properties.title, methods })}
       bordered={properties.bordered}
       column={properties.column}
       size={properties.size}
@@ -52,7 +52,7 @@ const DescriptionsBlock = ({ blockId, properties, methods }) => {
         return (
           <Descriptions.Item
             key={i}
-            label={<RenderHtml html={label} methods={methods} />}
+            label={renderHtml({ html: label, methods })}
             span={
               row.span ||
               (type.isFunction(itemOption.span) ? itemOption.span(row, i) : itemOption.span)
@@ -63,7 +63,7 @@ const DescriptionsBlock = ({ blockId, properties, methods }) => {
               row.style,
             ])}`}
           >
-            <RenderHtml html={value} methods={methods} />
+            {renderHtml({ html: value, methods })}
           </Descriptions.Item>
         );
       })}

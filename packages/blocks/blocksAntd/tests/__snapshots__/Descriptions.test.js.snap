@@ -5,11 +5,6 @@ exports[`Render default - value[0] 1`] = `
   className="ant-descriptions"
 >
   <div
-    className="ant-descriptions-title"
-  >
-    
-  </div>
-  <div
     className="ant-descriptions-view"
   >
     <table>
@@ -24,11 +19,15 @@ exports[`Render default title - value[0] 1`] = `
   className="ant-descriptions"
 >
   <div
-    className="ant-descriptions-title"
+    className="ant-descriptions-header"
   >
-    <span
-      className="{}"
-    />
+    <div
+      className="ant-descriptions-title"
+    >
+      <span
+        className="{}"
+      />
+    </div>
   </div>
   <div
     className="ant-descriptions-view"
@@ -45,11 +44,6 @@ exports[`Render properties.bordered: true - value[0] 1`] = `
   className="ant-descriptions ant-descriptions-bordered"
 >
   <div
-    className="ant-descriptions-title"
-  >
-    
-  </div>
-  <div
     className="ant-descriptions-view"
   >
     <table>
@@ -60,50 +54,68 @@ exports[`Render properties.bordered: true - value[0] 1`] = `
           <th
             className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
+            style={Object {}}
           >
-            <span
-              className="{}"
-            />
+            <span>
+              <span
+                className="{}"
+              />
+            </span>
           </th>
           <td
             className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
+            style={Object {}}
           >
-            <span
-              className="{}"
-            />
+            <span>
+              <span
+                className="{}"
+              />
+            </span>
           </td>
           <th
             className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
+            style={Object {}}
           >
-            <span
-              className="{}"
-            />
+            <span>
+              <span
+                className="{}"
+              />
+            </span>
           </th>
           <td
             className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
+            style={Object {}}
           >
-            <span
-              className="{}"
-            />
+            <span>
+              <span
+                className="{}"
+              />
+            </span>
           </td>
           <th
             className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
+            style={Object {}}
           >
-            <span
-              className="{}"
-            />
+            <span>
+              <span
+                className="{}"
+              />
+            </span>
           </th>
           <td
             className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
+            style={Object {}}
           >
-            <span
-              className="{}"
-            />
+            <span>
+              <span
+                className="{}"
+              />
+            </span>
           </td>
         </tr>
       </tbody>
@@ -117,11 +129,6 @@ exports[`Render properties.colon: false - value[0] 1`] = `
   className="ant-descriptions"
 >
   <div
-    className="ant-descriptions-title"
-  >
-    
-  </div>
-  <div
     className="ant-descriptions-view"
   >
     <table>
@@ -133,58 +140,76 @@ exports[`Render properties.colon: false - value[0] 1`] = `
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label ant-descriptions-item-no-colon"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label ant-descriptions-item-no-colon"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
           <td
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label ant-descriptions-item-no-colon"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label ant-descriptions-item-no-colon"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
           <td
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label ant-descriptions-item-no-colon"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label ant-descriptions-item-no-colon"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -198,11 +223,6 @@ exports[`Render properties.column: 2 - value[0] 1`] = `
   className="ant-descriptions"
 >
   <div
-    className="ant-descriptions-title"
-  >
-    
-  </div>
-  <div
     className="ant-descriptions-view"
   >
     <table>
@@ -214,39 +234,51 @@ exports[`Render properties.column: 2 - value[0] 1`] = `
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
           <td
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
         </tr>
         <tr
@@ -256,20 +288,26 @@ exports[`Render properties.column: 2 - value[0] 1`] = `
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={2}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -283,11 +321,6 @@ exports[`Render properties.itemOptions.span - value[0] 1`] = `
   className="ant-descriptions"
 >
   <div
-    className="ant-descriptions-title"
-  >
-    
-  </div>
-  <div
     className="ant-descriptions-view"
   >
     <table>
@@ -299,39 +332,51 @@ exports[`Render properties.itemOptions.span - value[0] 1`] = `
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
           <td
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={2}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
         </tr>
         <tr
@@ -341,39 +386,51 @@ exports[`Render properties.itemOptions.span - value[0] 1`] = `
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
           <td
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={2}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -387,11 +444,6 @@ exports[`Render properties.itemOptions.style - value[0] 1`] = `
   className="ant-descriptions"
 >
   <div
-    className="ant-descriptions-title"
-  >
-    
-  </div>
-  <div
     className="ant-descriptions-view"
   >
     <table>
@@ -403,58 +455,76 @@ exports[`Render properties.itemOptions.style - value[0] 1`] = `
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
           <td
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},{\\"textAlign\\":\\"right\\"},null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
           <td
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
         </tr>
         <tr
@@ -464,20 +534,26 @@ exports[`Render properties.itemOptions.style - value[0] 1`] = `
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={3}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -491,9 +567,138 @@ exports[`Render properties.items html values - value[0] 1`] = `
   className="ant-descriptions"
 >
   <div
-    className="ant-descriptions-title"
+    className="ant-descriptions-view"
   >
-    
+    <table>
+      <tbody>
+        <tr
+          className="ant-descriptions-row"
+        >
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <div
+              className="ant-descriptions-item-container"
+            >
+              <span
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+              <span
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
+          </td>
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <div
+              className="ant-descriptions-item-container"
+            >
+              <span
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+              <span
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
+          </td>
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <div
+              className="ant-descriptions-item-container"
+            >
+              <span
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+              <span
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
+          </td>
+        </tr>
+        <tr
+          className="ant-descriptions-row"
+        >
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={3}
+          >
+            <div
+              className="ant-descriptions-item-container"
+            >
+              <span
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+              <span
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;
+
+exports[`Render properties.items-falseish-values - value[0] 1`] = `
+<div
+  className="ant-descriptions"
+>
+  <div
+    className="ant-descriptions-header"
+  >
+    <div
+      className="ant-descriptions-title"
+    >
+      <span
+        className="{}"
+      />
+    </div>
   </div>
   <div
     className="ant-descriptions-view"
@@ -507,58 +712,68 @@ exports[`Render properties.items html values - value[0] 1`] = `
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
-              <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
           <td
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
           <td
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
         </tr>
         <tr
@@ -566,22 +781,78 @@ exports[`Render properties.items html values - value[0] 1`] = `
         >
           <td
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
-            colSpan={3}
+            colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+              <span
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
+          </td>
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+              <span
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
+          </td>
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <div
+              className="ant-descriptions-item-container"
+            >
+              <span
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+              <span
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -595,11 +866,15 @@ exports[`Render properties.items-list - value[0] 1`] = `
   className="ant-descriptions"
 >
   <div
-    className="ant-descriptions-title"
+    className="ant-descriptions-header"
   >
-    <span
-      className="{}"
-    />
+    <div
+      className="ant-descriptions-title"
+    >
+      <span
+        className="{}"
+      />
+    </div>
   </div>
   <div
     className="ant-descriptions-view"
@@ -613,39 +888,51 @@ exports[`Render properties.items-list - value[0] 1`] = `
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
           <td
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
         </tr>
         <tr
@@ -655,20 +942,26 @@ exports[`Render properties.items-list - value[0] 1`] = `
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={2}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -682,11 +975,15 @@ exports[`Render properties.items-list with new lines - value[0] 1`] = `
   className="ant-descriptions"
 >
   <div
-    className="ant-descriptions-title"
+    className="ant-descriptions-header"
   >
-    <span
-      className="{}"
-    />
+    <div
+      className="ant-descriptions-title"
+    >
+      <span
+        className="{}"
+      />
+    </div>
   </div>
   <div
     className="ant-descriptions-view"
@@ -700,39 +997,51 @@ exports[`Render properties.items-list with new lines - value[0] 1`] = `
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
           <td
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -746,11 +1055,15 @@ exports[`Render properties.items-object - value[0] 1`] = `
   className="ant-descriptions"
 >
   <div
-    className="ant-descriptions-title"
+    className="ant-descriptions-header"
   >
-    <span
-      className="{}"
-    />
+    <div
+      className="ant-descriptions-title"
+    >
+      <span
+        className="{}"
+      />
+    </div>
   </div>
   <div
     className="ant-descriptions-view"
@@ -764,58 +1077,76 @@ exports[`Render properties.items-object - value[0] 1`] = `
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
           <td
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
           <td
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -829,11 +1160,15 @@ exports[`Render properties.items-object with new lines - value[0] 1`] = `
   className="ant-descriptions"
 >
   <div
-    className="ant-descriptions-title"
+    className="ant-descriptions-header"
   >
-    <span
-      className="{}"
-    />
+    <div
+      className="ant-descriptions-title"
+    >
+      <span
+        className="{}"
+      />
+    </div>
   </div>
   <div
     className="ant-descriptions-view"
@@ -847,39 +1182,51 @@ exports[`Render properties.items-object with new lines - value[0] 1`] = `
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
           <td
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -893,11 +1240,15 @@ exports[`Render properties.items-object-object - value[0] 1`] = `
   className="ant-descriptions"
 >
   <div
-    className="ant-descriptions-title"
+    className="ant-descriptions-header"
   >
-    <span
-      className="{}"
-    />
+    <div
+      className="ant-descriptions-title"
+    >
+      <span
+        className="{}"
+      />
+    </div>
   </div>
   <div
     className="ant-descriptions-view"
@@ -911,58 +1262,76 @@ exports[`Render properties.items-object-object - value[0] 1`] = `
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
           <td
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
           <td
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -976,11 +1345,6 @@ exports[`Render properties.layout: vertical - value[0] 1`] = `
   className="ant-descriptions"
 >
   <div
-    className="ant-descriptions-title"
-  >
-    
-  </div>
-  <div
     className="ant-descriptions-view"
   >
     <table>
@@ -992,37 +1356,52 @@ exports[`Render properties.layout: vertical - value[0] 1`] = `
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </th>
           <th
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </th>
           <th
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </th>
         </tr>
         <tr
@@ -1032,37 +1411,52 @@ exports[`Render properties.layout: vertical - value[0] 1`] = `
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-content"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
           <td
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-content"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
           <td
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-content"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -1076,11 +1470,6 @@ exports[`Render properties.size: default - value[0] 1`] = `
   className="ant-descriptions"
 >
   <div
-    className="ant-descriptions-title"
-  >
-    
-  </div>
-  <div
     className="ant-descriptions-view"
   >
     <table>
@@ -1092,58 +1481,76 @@ exports[`Render properties.size: default - value[0] 1`] = `
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
           <td
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
           <td
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -1157,11 +1564,6 @@ exports[`Render properties.size: small - value[0] 1`] = `
   className="ant-descriptions ant-descriptions-small"
 >
   <div
-    className="ant-descriptions-title"
-  >
-    
-  </div>
-  <div
     className="ant-descriptions-view"
   >
     <table>
@@ -1173,58 +1575,76 @@ exports[`Render properties.size: small - value[0] 1`] = `
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
           <td
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
           <td
             className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            <span
-              className="ant-descriptions-item-label"
+            <div
+              className="ant-descriptions-item-container"
             >
               <span
-                className="{}"
-              />
-            </span>
-            <span
-              className="ant-descriptions-item-content"
-            >
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
               <span
-                className="{}"
-              />
-            </span>
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -1238,11 +1658,6 @@ exports[`Render properties.size: small, properties.bordered: true - value[0] 1`]
   className="ant-descriptions ant-descriptions-small ant-descriptions-bordered"
 >
   <div
-    className="ant-descriptions-title"
-  >
-    
-  </div>
-  <div
     className="ant-descriptions-view"
   >
     <table>
@@ -1253,50 +1668,68 @@ exports[`Render properties.size: small, properties.bordered: true - value[0] 1`]
           <th
             className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
+            style={Object {}}
           >
-            <span
-              className="{}"
-            />
+            <span>
+              <span
+                className="{}"
+              />
+            </span>
           </th>
           <td
             className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
+            style={Object {}}
           >
-            <span
-              className="{}"
-            />
+            <span>
+              <span
+                className="{}"
+              />
+            </span>
           </td>
           <th
             className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
+            style={Object {}}
           >
-            <span
-              className="{}"
-            />
+            <span>
+              <span
+                className="{}"
+              />
+            </span>
           </th>
           <td
             className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
+            style={Object {}}
           >
-            <span
-              className="{}"
-            />
+            <span>
+              <span
+                className="{}"
+              />
+            </span>
           </td>
           <th
             className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
+            style={Object {}}
           >
-            <span
-              className="{}"
-            />
+            <span>
+              <span
+                className="{}"
+              />
+            </span>
           </th>
           <td
             className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
+            style={Object {}}
           >
-            <span
-              className="{}"
-            />
+            <span>
+              <span
+                className="{}"
+              />
+            </span>
           </td>
         </tr>
         <tr
@@ -1305,50 +1738,202 @@ exports[`Render properties.size: small, properties.bordered: true - value[0] 1`]
           <th
             className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
+            style={Object {}}
           >
-            <span
-              className="{}"
-            />
+            <span>
+              <span
+                className="{}"
+              />
+            </span>
           </th>
           <td
             className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
+            style={Object {}}
           >
-            <span
-              className="{}"
-            />
+            <span>
+              <span
+                className="{}"
+              />
+            </span>
           </td>
           <th
             className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
+            style={Object {}}
           >
-            <span
-              className="{}"
-            />
+            <span>
+              <span
+                className="{}"
+              />
+            </span>
           </th>
           <td
             className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
+            style={Object {}}
           >
-            <span
-              className="{}"
-            />
+            <span>
+              <span
+                className="{}"
+              />
+            </span>
           </td>
           <th
             className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
+            style={Object {}}
           >
-            <span
-              className="{}"
-            />
+            <span>
+              <span
+                className="{}"
+              />
+            </span>
           </th>
           <td
             className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
+            style={Object {}}
           >
-            <span
-              className="{}"
-            />
+            <span>
+              <span
+                className="{}"
+              />
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;
+
+exports[`Render properties.title html value - value[0] 1`] = `
+<div
+  className="ant-descriptions"
+>
+  <div
+    className="ant-descriptions-header"
+  >
+    <div
+      className="ant-descriptions-title"
+    >
+      <span
+        className="{}"
+      />
+    </div>
+  </div>
+  <div
+    className="ant-descriptions-view"
+  >
+    <table>
+      <tbody>
+        <tr
+          className="ant-descriptions-row"
+        >
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <div
+              className="ant-descriptions-item-container"
+            >
+              <span
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+              <span
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
+          </td>
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <div
+              className="ant-descriptions-item-container"
+            >
+              <span
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+              <span
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
+          </td>
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <div
+              className="ant-descriptions-item-container"
+            >
+              <span
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+              <span
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
+          </td>
+        </tr>
+        <tr
+          className="ant-descriptions-row"
+        >
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={3}
+          >
+            <div
+              className="ant-descriptions-item-container"
+            >
+              <span
+                className="ant-descriptions-item-label"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+              <span
+                className="ant-descriptions-item-content"
+                style={Object {}}
+              >
+                <span
+                  className="{}"
+                />
+              </span>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -1389,6 +1974,10 @@ exports[`Test Schema properties.items html values 1`] = `true`;
 
 exports[`Test Schema properties.items html values 2`] = `null`;
 
+exports[`Test Schema properties.items-falseish-values 1`] = `true`;
+
+exports[`Test Schema properties.items-falseish-values 2`] = `null`;
+
 exports[`Test Schema properties.items-list 1`] = `true`;
 
 exports[`Test Schema properties.items-list 2`] = `null`;
@@ -1424,3 +2013,7 @@ exports[`Test Schema properties.size: small 2`] = `null`;
 exports[`Test Schema properties.size: small, properties.bordered: true 1`] = `true`;
 
 exports[`Test Schema properties.size: small, properties.bordered: true 2`] = `null`;
+
+exports[`Test Schema properties.title html value 1`] = `true`;
+
+exports[`Test Schema properties.title html value 2`] = `null`;

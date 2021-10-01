@@ -64,10 +64,10 @@ exports[`Render properties.gapDegree: 60 - value[0] 1`] = `
         strokeWidth={6}
         style={
           Object {
-            "stroke": null,
+            "stroke": undefined,
             "strokeDasharray": "235.30970943744057px 295.3097094374406px",
             "strokeDashoffset": "-30px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s",
+            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
           }
         }
       />
@@ -83,10 +83,29 @@ exports[`Render properties.gapDegree: 60 - value[0] 1`] = `
         strokeWidth={6}
         style={
           Object {
-            "stroke": null,
+            "stroke": undefined,
             "strokeDasharray": "70.59291283123217px 295.3097094374406px",
             "strokeDashoffset": "-30px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s",
+            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
+          }
+        }
+      />
+      <path
+        className="ant-progress-circle-path"
+        d="M 50,50 m 0,-47
+   a 47,47 0 1 1 0,94
+   a 47,47 0 1 1 0,-94"
+        fillOpacity="0"
+        opacity={0}
+        stroke=""
+        strokeLinecap="round"
+        strokeWidth={6}
+        style={
+          Object {
+            "stroke": "#52C41A",
+            "strokeDasharray": "0px 295.3097094374406px",
+            "strokeDashoffset": "-30px",
+            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
           }
         }
       />
@@ -132,10 +151,10 @@ exports[`Render properties.gapPosition: bottom - value[0] 1`] = `
         strokeWidth={6}
         style={
           Object {
-            "stroke": null,
+            "stroke": undefined,
             "strokeDasharray": "235.30970943744057px 295.3097094374406px",
             "strokeDashoffset": "-30px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s",
+            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
           }
         }
       />
@@ -151,10 +170,29 @@ exports[`Render properties.gapPosition: bottom - value[0] 1`] = `
         strokeWidth={6}
         style={
           Object {
-            "stroke": null,
+            "stroke": undefined,
             "strokeDasharray": "70.59291283123217px 295.3097094374406px",
             "strokeDashoffset": "-30px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s",
+            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
+          }
+        }
+      />
+      <path
+        className="ant-progress-circle-path"
+        d="M 50,50 m 0,47
+   a 47,47 0 1 1 0,-94
+   a 47,47 0 1 1 0,94"
+        fillOpacity="0"
+        opacity={0}
+        stroke=""
+        strokeLinecap="round"
+        strokeWidth={6}
+        style={
+          Object {
+            "stroke": "#52C41A",
+            "strokeDasharray": "0px 295.3097094374406px",
+            "strokeDashoffset": "-30px",
+            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
           }
         }
       />
@@ -200,10 +238,10 @@ exports[`Render properties.gapPosition: left - value[0] 1`] = `
         strokeWidth={6}
         style={
           Object {
-            "stroke": null,
+            "stroke": undefined,
             "strokeDasharray": "235.30970943744057px 295.3097094374406px",
             "strokeDashoffset": "-30px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s",
+            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
           }
         }
       />
@@ -219,10 +257,29 @@ exports[`Render properties.gapPosition: left - value[0] 1`] = `
         strokeWidth={6}
         style={
           Object {
-            "stroke": null,
+            "stroke": undefined,
             "strokeDasharray": "70.59291283123217px 295.3097094374406px",
             "strokeDashoffset": "-30px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s",
+            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
+          }
+        }
+      />
+      <path
+        className="ant-progress-circle-path"
+        d="M 50,50 m -47,0
+   a 47,47 0 1 1 94,0
+   a 47,47 0 1 1 -94,0"
+        fillOpacity="0"
+        opacity={0}
+        stroke=""
+        strokeLinecap="round"
+        strokeWidth={6}
+        style={
+          Object {
+            "stroke": "#52C41A",
+            "strokeDasharray": "0px 295.3097094374406px",
+            "strokeDashoffset": "-30px",
+            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
           }
         }
       />
@@ -268,10 +325,10 @@ exports[`Render properties.gapPosition: right - value[0] 1`] = `
         strokeWidth={6}
         style={
           Object {
-            "stroke": null,
+            "stroke": undefined,
             "strokeDasharray": "235.30970943744057px 295.3097094374406px",
             "strokeDashoffset": "-30px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s",
+            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
           }
         }
       />
@@ -287,10 +344,29 @@ exports[`Render properties.gapPosition: right - value[0] 1`] = `
         strokeWidth={6}
         style={
           Object {
-            "stroke": null,
+            "stroke": undefined,
             "strokeDasharray": "70.59291283123217px 295.3097094374406px",
             "strokeDashoffset": "-30px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s",
+            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
+          }
+        }
+      />
+      <path
+        className="ant-progress-circle-path"
+        d="M 50,50 m 47,0
+   a 47,47 0 1 1 -94,0
+   a 47,47 0 1 1 94,0"
+        fillOpacity="0"
+        opacity={0}
+        stroke=""
+        strokeLinecap="round"
+        strokeWidth={6}
+        style={
+          Object {
+            "stroke": "#52C41A",
+            "strokeDasharray": "0px 295.3097094374406px",
+            "strokeDashoffset": "-30px",
+            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
           }
         }
       />
@@ -737,10 +813,10 @@ exports[`Render properties.type: circle - value[0] 1`] = `
         strokeWidth={6}
         style={
           Object {
-            "stroke": null,
+            "stroke": undefined,
             "strokeDasharray": "295.3097094374406px 295.3097094374406px",
             "strokeDashoffset": "-0px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s",
+            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
           }
         }
       />
@@ -756,10 +832,29 @@ exports[`Render properties.type: circle - value[0] 1`] = `
         strokeWidth={6}
         style={
           Object {
-            "stroke": null,
+            "stroke": undefined,
             "strokeDasharray": "88.59291283123217px 295.3097094374406px",
             "strokeDashoffset": "-0px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s",
+            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
+          }
+        }
+      />
+      <path
+        className="ant-progress-circle-path"
+        d="M 50,50 m 0,-47
+   a 47,47 0 1 1 0,94
+   a 47,47 0 1 1 0,-94"
+        fillOpacity="0"
+        opacity={0}
+        stroke=""
+        strokeLinecap="round"
+        strokeWidth={6}
+        style={
+          Object {
+            "stroke": "#52C41A",
+            "strokeDasharray": "0px 295.3097094374406px",
+            "strokeDashoffset": "-0px",
+            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
           }
         }
       />
@@ -805,10 +900,10 @@ exports[`Render properties.type: dashboard - value[0] 1`] = `
         strokeWidth={6}
         style={
           Object {
-            "stroke": null,
+            "stroke": undefined,
             "strokeDasharray": "220.30970943744057px 295.3097094374406px",
             "strokeDashoffset": "-37.5px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s",
+            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
           }
         }
       />
@@ -824,10 +919,29 @@ exports[`Render properties.type: dashboard - value[0] 1`] = `
         strokeWidth={6}
         style={
           Object {
-            "stroke": null,
+            "stroke": undefined,
             "strokeDasharray": "66.09291283123217px 295.3097094374406px",
             "strokeDashoffset": "-37.5px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s",
+            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
+          }
+        }
+      />
+      <path
+        className="ant-progress-circle-path"
+        d="M 50,50 m 0,47
+   a 47,47 0 1 1 0,-94
+   a 47,47 0 1 1 0,94"
+        fillOpacity="0"
+        opacity={0}
+        stroke=""
+        strokeLinecap="round"
+        strokeWidth={6}
+        style={
+          Object {
+            "stroke": "#52C41A",
+            "strokeDasharray": "0px 295.3097094374406px",
+            "strokeDashoffset": "-37.5px",
+            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
           }
         }
       />
@@ -873,10 +987,10 @@ exports[`Render properties.width: 180 - value[0] 1`] = `
         strokeWidth={6}
         style={
           Object {
-            "stroke": null,
+            "stroke": undefined,
             "strokeDasharray": "295.3097094374406px 295.3097094374406px",
             "strokeDashoffset": "-0px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s",
+            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
           }
         }
       />
@@ -892,10 +1006,29 @@ exports[`Render properties.width: 180 - value[0] 1`] = `
         strokeWidth={6}
         style={
           Object {
-            "stroke": null,
+            "stroke": undefined,
             "strokeDasharray": "88.59291283123217px 295.3097094374406px",
             "strokeDashoffset": "-0px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s",
+            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
+          }
+        }
+      />
+      <path
+        className="ant-progress-circle-path"
+        d="M 50,50 m 0,-47
+   a 47,47 0 1 1 0,94
+   a 47,47 0 1 1 0,-94"
+        fillOpacity="0"
+        opacity={0}
+        stroke=""
+        strokeLinecap="round"
+        strokeWidth={6}
+        style={
+          Object {
+            "stroke": "#52C41A",
+            "strokeDasharray": "0px 295.3097094374406px",
+            "strokeDashoffset": "-0px",
+            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
           }
         }
       />

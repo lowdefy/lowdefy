@@ -15,9 +15,8 @@
 */
 
 import React from 'react';
-import { Checkbox, Space } from 'antd';
-import { type } from '@lowdefy/helpers';
-import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
+import { Checkbox } from 'antd';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 
 import Label from '../Label/Label';
 
@@ -63,10 +62,7 @@ const CheckboxSwitch = ({
             }}
           >
             <Space wrap={true}>
-              <RenderHtml
-                html={type.isNone(properties.description) ? '' : properties.description}
-                methods={methods}
-              />
+              {renderHtml({ html: properties.description, methods })}
             </Space>
           </Checkbox>
         ),

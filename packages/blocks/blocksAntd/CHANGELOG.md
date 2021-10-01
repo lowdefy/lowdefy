@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.22.0](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.1...v3.22.0) (2021-09-27)
+
+
+### Bug Fixes
+
+* **blocksAntd:** Fix selector option labels and filter function. ([38445a5](https://github.com/lowdefy/lowdefy/commit/38445a58b626287868ad838d3b9885dccb7c720d))
+
+
+
+
+
+# [3.22.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.0...v3.22.0-alpha.1) (2021-09-20)
+
+
+### Bug Fixes
+
+* **blocksAntd:** Add tests for CheckboxSwitch. ([089150e](https://github.com/lowdefy/lowdefy/commit/089150eacc67e4f27de5f763ad3656d52da40cad))
+* **blocksAntd:** Added CheckboxSwitch tests. ([db8c05b](https://github.com/lowdefy/lowdefy/commit/db8c05b0ef546c460f41ab6e7e52de13eb54ff4b))
+* **blocksAntd:** Fix CheckboxSwitch color property. ([d2ea3c6](https://github.com/lowdefy/lowdefy/commit/d2ea3c6a7f2d9f13e8a766c76e49a1b3a540d1d9))
+* **blocksAntd:** Fix MultipleSelector schema and docs. ([41d25a1](https://github.com/lowdefy/lowdefy/commit/41d25a1e60f403a30824a00626605da37fc5bd3a))
+* **blocksAntd:** Fix typo in Paragraph input copyable text property. ([b92621a](https://github.com/lowdefy/lowdefy/commit/b92621a8bae7be6e4d48165b8c54176d2403c592))
+* **blocksAntd:** Paragraph and Title blocks copyable error fixed. ([483013d](https://github.com/lowdefy/lowdefy/commit/483013d1715cb97d08ed2f9475606c5b074a6ad3))
+* **blocksAntd:** Updated CheckboxSwitch test snapshots. ([025a158](https://github.com/lowdefy/lowdefy/commit/025a1583e902b6edcb94c89ad272761eabd420fe))
+* **blocksAntd:** Use updated renderHtml helper function ([5e3de6f](https://github.com/lowdefy/lowdefy/commit/5e3de6f5caa74e549b7f518895708b01a9191ee6)), closes [#820](https://github.com/lowdefy/lowdefy/issues/820)
+* **blocksAntd:** Use updated renderHtml in selector blocks ([0da3bd1](https://github.com/lowdefy/lowdefy/commit/0da3bd19512cb0452ac7c559dce2e9ae499288de))
+
+
+### Features
+
+* **blocksAntd:** Added CheckboxSwitch demo example. ([7187849](https://github.com/lowdefy/lowdefy/commit/718784920d6e5daa69d30601cd88e7fadd94c5d4))
+* **blocksAntd:** CheckboxSwitch block has been added. ([838f5ea](https://github.com/lowdefy/lowdefy/commit/838f5ea8852cff9f193e3e0a3dfb16b9c7f1da9e))
+
+
+
+
+
 # [3.22.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.2...v3.22.0-alpha.0) (2021-09-08)
 
 

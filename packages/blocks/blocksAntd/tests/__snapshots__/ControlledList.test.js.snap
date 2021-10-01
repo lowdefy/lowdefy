@@ -26,7 +26,7 @@ exports[`Render default - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="default_add_button"
         onClick={[Function]}
         type="button"
@@ -88,7 +88,7 @@ exports[`Render properties.addItemButton: title: Add new Item - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.addItemButton: title: Add new Item_add_button"
         onClick={[Function]}
         type="button"
@@ -137,7 +137,7 @@ exports[`Render properties.addToFront: true - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-default"
+        className="ant-btn ant-btn-default {\\"style\\":[{},null]}"
         id="properties.addToFront: true_add_button"
         onClick={[Function]}
         type="button"
@@ -233,7 +233,7 @@ exports[`Render properties.noDataTitle: No title display - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.noDataTitle: No title display_add_button"
         onClick={[Function]}
         type="button"
@@ -295,7 +295,7 @@ exports[`Render properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.removeItemIcon: DeleteOutlined_add_button"
         onClick={[Function]}
         type="button"
@@ -357,7 +357,7 @@ exports[`Render properties.removeItemIcon: name: DeleteOutlined - value[0] 1`] =
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.removeItemIcon: name: DeleteOutlined_add_button"
         onClick={[Function]}
         type="button"
@@ -419,7 +419,7 @@ exports[`Render properties.size: large - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed ant-btn-lg"
+        className="ant-btn ant-btn-dashed ant-btn-lg {\\"style\\":[{},null]}"
         id="properties.size: large_add_button"
         onClick={[Function]}
         type="button"
@@ -481,7 +481,7 @@ exports[`Render properties.size: small - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed ant-btn-sm"
+        className="ant-btn ant-btn-dashed ant-btn-sm {\\"style\\":[{},null]}"
         id="properties.size: small_add_button"
         onClick={[Function]}
         type="button"
@@ -532,7 +532,7 @@ exports[`Render properties.title - value[0] 1`] = `
         className="ant-typography"
         style={
           Object {
-            "WebkitLineClamp": null,
+            "WebkitLineClamp": undefined,
           }
         }
       >
@@ -563,7 +563,7 @@ exports[`Render properties.title - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.title_add_button"
         onClick={[Function]}
         type="button"
@@ -625,7 +625,7 @@ exports[`Render required = true default - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="default_add_button"
         onClick={[Function]}
         type="button"
@@ -687,7 +687,7 @@ exports[`Render required = true properties.addItemButton: title: Add new Item - 
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.addItemButton: title: Add new Item_add_button"
         onClick={[Function]}
         type="button"
@@ -736,7 +736,7 @@ exports[`Render required = true properties.addToFront: true - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-default"
+        className="ant-btn ant-btn-default {\\"style\\":[{},null]}"
         id="properties.addToFront: true_add_button"
         onClick={[Function]}
         type="button"
@@ -832,7 +832,7 @@ exports[`Render required = true properties.noDataTitle: No title display - value
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.noDataTitle: No title display_add_button"
         onClick={[Function]}
         type="button"
@@ -894,7 +894,7 @@ exports[`Render required = true properties.removeItemIcon: DeleteOutlined - valu
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.removeItemIcon: DeleteOutlined_add_button"
         onClick={[Function]}
         type="button"
@@ -956,7 +956,7 @@ exports[`Render required = true properties.removeItemIcon: name: DeleteOutlined 
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.removeItemIcon: name: DeleteOutlined_add_button"
         onClick={[Function]}
         type="button"
@@ -1018,7 +1018,7 @@ exports[`Render required = true properties.size: large - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed ant-btn-lg"
+        className="ant-btn ant-btn-dashed ant-btn-lg {\\"style\\":[{},null]}"
         id="properties.size: large_add_button"
         onClick={[Function]}
         type="button"
@@ -1080,7 +1080,7 @@ exports[`Render required = true properties.size: small - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed ant-btn-sm"
+        className="ant-btn ant-btn-dashed ant-btn-sm {\\"style\\":[{},null]}"
         id="properties.size: small_add_button"
         onClick={[Function]}
         type="button"
@@ -1131,7 +1131,7 @@ exports[`Render required = true properties.title - value[0] 1`] = `
         className="ant-typography"
         style={
           Object {
-            "WebkitLineClamp": null,
+            "WebkitLineClamp": undefined,
           }
         }
       >
@@ -1162,7 +1162,7 @@ exports[`Render required = true properties.title - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.title_add_button"
         onClick={[Function]}
         type="button"
@@ -1224,7 +1224,7 @@ exports[`Render validation.status = error default - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="default_add_button"
         onClick={[Function]}
         type="button"
@@ -1286,7 +1286,7 @@ exports[`Render validation.status = error properties.addItemButton: title: Add n
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.addItemButton: title: Add new Item_add_button"
         onClick={[Function]}
         type="button"
@@ -1335,7 +1335,7 @@ exports[`Render validation.status = error properties.addToFront: true - value[0]
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-default"
+        className="ant-btn ant-btn-default {\\"style\\":[{},null]}"
         id="properties.addToFront: true_add_button"
         onClick={[Function]}
         type="button"
@@ -1431,7 +1431,7 @@ exports[`Render validation.status = error properties.noDataTitle: No title displ
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.noDataTitle: No title display_add_button"
         onClick={[Function]}
         type="button"
@@ -1493,7 +1493,7 @@ exports[`Render validation.status = error properties.removeItemIcon: DeleteOutli
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.removeItemIcon: DeleteOutlined_add_button"
         onClick={[Function]}
         type="button"
@@ -1555,7 +1555,7 @@ exports[`Render validation.status = error properties.removeItemIcon: name: Delet
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.removeItemIcon: name: DeleteOutlined_add_button"
         onClick={[Function]}
         type="button"
@@ -1617,7 +1617,7 @@ exports[`Render validation.status = error properties.size: large - value[0] 1`] 
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed ant-btn-lg"
+        className="ant-btn ant-btn-dashed ant-btn-lg {\\"style\\":[{},null]}"
         id="properties.size: large_add_button"
         onClick={[Function]}
         type="button"
@@ -1679,7 +1679,7 @@ exports[`Render validation.status = error properties.size: small - value[0] 1`] 
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed ant-btn-sm"
+        className="ant-btn ant-btn-dashed ant-btn-sm {\\"style\\":[{},null]}"
         id="properties.size: small_add_button"
         onClick={[Function]}
         type="button"
@@ -1730,7 +1730,7 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
         className="ant-typography"
         style={
           Object {
-            "WebkitLineClamp": null,
+            "WebkitLineClamp": undefined,
           }
         }
       >
@@ -1761,7 +1761,7 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.title_add_button"
         onClick={[Function]}
         type="button"
@@ -1823,7 +1823,7 @@ exports[`Render validation.status = null default - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="default_add_button"
         onClick={[Function]}
         type="button"
@@ -1885,7 +1885,7 @@ exports[`Render validation.status = null properties.addItemButton: title: Add ne
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.addItemButton: title: Add new Item_add_button"
         onClick={[Function]}
         type="button"
@@ -1934,7 +1934,7 @@ exports[`Render validation.status = null properties.addToFront: true - value[0] 
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-default"
+        className="ant-btn ant-btn-default {\\"style\\":[{},null]}"
         id="properties.addToFront: true_add_button"
         onClick={[Function]}
         type="button"
@@ -2030,7 +2030,7 @@ exports[`Render validation.status = null properties.noDataTitle: No title displa
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.noDataTitle: No title display_add_button"
         onClick={[Function]}
         type="button"
@@ -2092,7 +2092,7 @@ exports[`Render validation.status = null properties.removeItemIcon: DeleteOutlin
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.removeItemIcon: DeleteOutlined_add_button"
         onClick={[Function]}
         type="button"
@@ -2154,7 +2154,7 @@ exports[`Render validation.status = null properties.removeItemIcon: name: Delete
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.removeItemIcon: name: DeleteOutlined_add_button"
         onClick={[Function]}
         type="button"
@@ -2216,7 +2216,7 @@ exports[`Render validation.status = null properties.size: large - value[0] 1`] =
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed ant-btn-lg"
+        className="ant-btn ant-btn-dashed ant-btn-lg {\\"style\\":[{},null]}"
         id="properties.size: large_add_button"
         onClick={[Function]}
         type="button"
@@ -2278,7 +2278,7 @@ exports[`Render validation.status = null properties.size: small - value[0] 1`] =
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed ant-btn-sm"
+        className="ant-btn ant-btn-dashed ant-btn-sm {\\"style\\":[{},null]}"
         id="properties.size: small_add_button"
         onClick={[Function]}
         type="button"
@@ -2329,7 +2329,7 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
         className="ant-typography"
         style={
           Object {
-            "WebkitLineClamp": null,
+            "WebkitLineClamp": undefined,
           }
         }
       >
@@ -2360,7 +2360,7 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.title_add_button"
         onClick={[Function]}
         type="button"
@@ -2422,7 +2422,7 @@ exports[`Render validation.status = success default - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="default_add_button"
         onClick={[Function]}
         type="button"
@@ -2484,7 +2484,7 @@ exports[`Render validation.status = success properties.addItemButton: title: Add
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.addItemButton: title: Add new Item_add_button"
         onClick={[Function]}
         type="button"
@@ -2533,7 +2533,7 @@ exports[`Render validation.status = success properties.addToFront: true - value[
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-default"
+        className="ant-btn ant-btn-default {\\"style\\":[{},null]}"
         id="properties.addToFront: true_add_button"
         onClick={[Function]}
         type="button"
@@ -2629,7 +2629,7 @@ exports[`Render validation.status = success properties.noDataTitle: No title dis
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.noDataTitle: No title display_add_button"
         onClick={[Function]}
         type="button"
@@ -2691,7 +2691,7 @@ exports[`Render validation.status = success properties.removeItemIcon: DeleteOut
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.removeItemIcon: DeleteOutlined_add_button"
         onClick={[Function]}
         type="button"
@@ -2753,7 +2753,7 @@ exports[`Render validation.status = success properties.removeItemIcon: name: Del
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.removeItemIcon: name: DeleteOutlined_add_button"
         onClick={[Function]}
         type="button"
@@ -2815,7 +2815,7 @@ exports[`Render validation.status = success properties.size: large - value[0] 1`
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed ant-btn-lg"
+        className="ant-btn ant-btn-dashed ant-btn-lg {\\"style\\":[{},null]}"
         id="properties.size: large_add_button"
         onClick={[Function]}
         type="button"
@@ -2877,7 +2877,7 @@ exports[`Render validation.status = success properties.size: small - value[0] 1`
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed ant-btn-sm"
+        className="ant-btn ant-btn-dashed ant-btn-sm {\\"style\\":[{},null]}"
         id="properties.size: small_add_button"
         onClick={[Function]}
         type="button"
@@ -2928,7 +2928,7 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
         className="ant-typography"
         style={
           Object {
-            "WebkitLineClamp": null,
+            "WebkitLineClamp": undefined,
           }
         }
       >
@@ -2959,7 +2959,7 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.title_add_button"
         onClick={[Function]}
         type="button"
@@ -3021,7 +3021,7 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="default_add_button"
         onClick={[Function]}
         type="button"
@@ -3083,7 +3083,7 @@ exports[`Render validation.status = warning properties.addItemButton: title: Add
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.addItemButton: title: Add new Item_add_button"
         onClick={[Function]}
         type="button"
@@ -3132,7 +3132,7 @@ exports[`Render validation.status = warning properties.addToFront: true - value[
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-default"
+        className="ant-btn ant-btn-default {\\"style\\":[{},null]}"
         id="properties.addToFront: true_add_button"
         onClick={[Function]}
         type="button"
@@ -3228,7 +3228,7 @@ exports[`Render validation.status = warning properties.noDataTitle: No title dis
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.noDataTitle: No title display_add_button"
         onClick={[Function]}
         type="button"
@@ -3290,7 +3290,7 @@ exports[`Render validation.status = warning properties.removeItemIcon: DeleteOut
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.removeItemIcon: DeleteOutlined_add_button"
         onClick={[Function]}
         type="button"
@@ -3352,7 +3352,7 @@ exports[`Render validation.status = warning properties.removeItemIcon: name: Del
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.removeItemIcon: name: DeleteOutlined_add_button"
         onClick={[Function]}
         type="button"
@@ -3414,7 +3414,7 @@ exports[`Render validation.status = warning properties.size: large - value[0] 1`
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed ant-btn-lg"
+        className="ant-btn ant-btn-dashed ant-btn-lg {\\"style\\":[{},null]}"
         id="properties.size: large_add_button"
         onClick={[Function]}
         type="button"
@@ -3476,7 +3476,7 @@ exports[`Render validation.status = warning properties.size: small - value[0] 1`
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed ant-btn-sm"
+        className="ant-btn ant-btn-dashed ant-btn-sm {\\"style\\":[{},null]}"
         id="properties.size: small_add_button"
         onClick={[Function]}
         type="button"
@@ -3527,7 +3527,7 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
         className="ant-typography"
         style={
           Object {
-            "WebkitLineClamp": null,
+            "WebkitLineClamp": undefined,
           }
         }
       >
@@ -3558,7 +3558,7 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
         id="properties.title_add_button"
         onClick={[Function]}
         type="button"

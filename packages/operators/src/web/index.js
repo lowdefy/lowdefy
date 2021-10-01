@@ -16,14 +16,20 @@
 
 export default {
   _actions: 'web/actions',
-  _event_log: 'web/event_log',
   _base64: 'web/base64',
+  _event_log: 'web/event_log',
+  _event: 'web/event',
   _format: 'web/format',
+  _global: 'web/global',
+  _index: 'web/_index',
+  _input: 'web/input',
+  _js: 'web/js',
   _list_contexts: 'web/list_contexts',
   _location: 'web/location',
-  _js: 'web/js',
   _media: 'web/media',
   _menu: 'web/menu',
   _request_details: 'web/request_details',
   _request: 'web/request',
+  _state: 'web/state',
+  _url_query: 'web/url_query',
 };
