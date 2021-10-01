@@ -522,6 +522,12 @@
             "type": "Request \"connectionId\" should be a string."
           }
         },
+        "payload": {
+          "type": "object",
+          "errorMessage": {
+            "type": "Request \"payload\" should be an object."
+          }
+        },
         "properties": {
           "type": "object",
           "errorMessage": {

@@ -23,7 +23,7 @@ function getContextOperators(block) {
     }
     return value;
   };
-  // eslint-disable-next-line no-unused-vars
+
   const { requests, ...webBlock } = block;
   webBlock.areas = JSON.parse(JSON.stringify(webBlock.areas || {}), stripContext);
   const operators = new Set();
@@ -39,6 +39,9 @@ function getContextOperators(block) {
     return value;
   };
   JSON.parse(JSON.stringify(webBlock), pushOperators);
+  requests.forEach((request) => {
+    JSON.parse(JSON.stringify(request.payload), pushOperators);
+  });
   return [...operators];
 }
 

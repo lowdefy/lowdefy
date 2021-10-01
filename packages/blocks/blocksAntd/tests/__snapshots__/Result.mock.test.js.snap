@@ -27,26 +27,8 @@ Array [
       "icon": undefined,
       "id": "areas.extra",
       "status": undefined,
-      "subTitle": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "subTitle": undefined,
+      "title": undefined,
     },
     Object {},
   ],
@@ -71,26 +53,8 @@ Array [
       "icon": undefined,
       "id": "default",
       "status": undefined,
-      "subTitle": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "subTitle": undefined,
+      "title": undefined,
     },
     Object {},
   ],
@@ -140,26 +104,8 @@ Array [
       />,
       "id": "properties. icon: ApiFilled",
       "status": undefined,
-      "subTitle": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "subTitle": undefined,
+      "title": undefined,
     },
     Object {},
   ],
@@ -184,26 +130,8 @@ Array [
       "icon": undefined,
       "id": "properties. status: 403",
       "status": "403",
-      "subTitle": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "subTitle": undefined,
+      "title": undefined,
     },
     Object {},
   ],
@@ -228,26 +156,8 @@ Array [
       "icon": undefined,
       "id": "properties. status: 404",
       "status": "404",
-      "subTitle": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "subTitle": undefined,
+      "title": undefined,
     },
     Object {},
   ],
@@ -272,26 +182,8 @@ Array [
       "icon": undefined,
       "id": "properties. status: 500",
       "status": "500",
-      "subTitle": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "subTitle": undefined,
+      "title": undefined,
     },
     Object {},
   ],
@@ -316,26 +208,8 @@ Array [
       "icon": undefined,
       "id": "properties. status: error",
       "status": "error",
-      "subTitle": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "subTitle": undefined,
+      "title": undefined,
     },
     Object {},
   ],
@@ -360,26 +234,8 @@ Array [
       "icon": undefined,
       "id": "properties. status: info",
       "status": "info",
-      "subTitle": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "subTitle": undefined,
+      "title": undefined,
     },
     Object {},
   ],
@@ -404,26 +260,8 @@ Array [
       "icon": undefined,
       "id": "properties. status: success  default is info",
       "status": "success",
-      "subTitle": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "subTitle": undefined,
+      "title": undefined,
     },
     Object {},
   ],
@@ -448,26 +286,8 @@ Array [
       "icon": undefined,
       "id": "properties. status: warning",
       "status": "warning",
-      "subTitle": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "subTitle": undefined,
+      "title": undefined,
     },
     Object {},
   ],
@@ -492,7 +312,7 @@ Array [
       "icon": undefined,
       "id": "properties.subTitle: subTitle text",
       "status": undefined,
-      "subTitle": <RenderHtml
+      "subTitle": <HtmlComponent
         html="subTitle text"
         methods={
           Object {
@@ -503,16 +323,7 @@ Array [
           }
         }
       />,
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
     },
     Object {},
   ],
@@ -537,17 +348,8 @@ Array [
       "icon": undefined,
       "id": "properties.title",
       "status": undefined,
-      "subTitle": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
-      "title": <RenderHtml
+      "subTitle": undefined,
+      "title": <HtmlComponent
         html="Result title"
         methods={
           Object {
@@ -582,7 +384,7 @@ Array [
       "icon": undefined,
       "id": "with properties.subTitle in html",
       "status": undefined,
-      "subTitle": <RenderHtml
+      "subTitle": <HtmlComponent
         html=<div style="color:green;">
   Html Subtitle
 </div>
@@ -595,16 +397,7 @@ Array [
           }
         }
       />,
-      "title": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
+      "title": undefined,
     },
     Object {},
   ],
@@ -629,17 +422,8 @@ Array [
       "icon": undefined,
       "id": "with properties.title in html",
       "status": undefined,
-      "subTitle": <RenderHtml
-        methods={
-          Object {
-            "makeCssClass": [MockFunction],
-            "registerEvent": [Function],
-            "registerMethod": [Function],
-            "triggerEvent": [Function],
-          }
-        }
-      />,
-      "title": <RenderHtml
+      "subTitle": undefined,
+      "title": <HtmlComponent
         html=<div style="color:red;">
   Html Title
 </div>

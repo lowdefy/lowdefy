@@ -202,7 +202,10 @@ test('writeRequests deletes request properties', async () => {
           {
             id: 'request:page1:page1:request1',
             requestId: 'request1',
+            type: 'RequestType',
             connectionId: 'connection1',
+            payload: { payload: true },
+            auth: { public: true },
             properties: { key: 'value' },
           },
         ],
@@ -216,7 +219,10 @@ test('writeRequests deletes request properties', async () => {
                   {
                     id: 'request:request2',
                     requestId: 'request1',
+                    type: 'RequestType',
                     connectionId: 'connection1',
+                    payload: { payload: true },
+                    auth: { public: true },
                     properties: { key: 'value' },
                   },
                 ],
@@ -237,7 +243,7 @@ test('writeRequests deletes request properties', async () => {
           {
             id: 'request:page1:page1:request1',
             requestId: 'request1',
-            connectionId: 'connection1',
+            payload: { payload: true },
           },
         ],
         areas: {
@@ -250,7 +256,7 @@ test('writeRequests deletes request properties', async () => {
                   {
                     id: 'request:request2',
                     requestId: 'request1',
-                    connectionId: 'connection1',
+                    payload: { payload: true },
                   },
                 ],
               },

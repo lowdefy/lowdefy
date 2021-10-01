@@ -19,6 +19,7 @@ _ref:
     pageId: _url_query
     pageTitle: _url_query
     filePath: operators/_url_query.yaml
+    env: Client Only
     types: |
       ```
       (key: string): any

@@ -43,23 +43,24 @@ test('_type with on, fail', async () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_type with key, pass', async () => {
-  const input = { _type: { type: 'string', key: 'string' } };
-  const parser = new NodeParser({ state });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId' });
-  expect(res.output).toBe(true);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
+// NOTE: key not supported by NodeParser
+// test('_type with key, pass', async () => {
+//   const input = { _type: { type: 'string', key: 'string' } };
+//   const parser = new NodeParser({ state });
+//   await parser.init();
+//   const res = parser.parse({ input, location: 'locationId' });
+//   expect(res.output).toBe(true);
+//   expect(res.errors).toMatchInlineSnapshot(`Array []`);
+// });
 
-test('_type with key, fail', async () => {
-  const input = { _type: { type: 'number', key: 'string' } };
-  const parser = new NodeParser({ state });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId' });
-  expect(res.output).toBe(false);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
+// test('_type with key, fail', async () => {
+//   const input = { _type: { type: 'number', key: 'string' } };
+//   const parser = new NodeParser({ state });
+//   await parser.init();
+//   const res = parser.parse({ input, location: 'locationId' });
+//   expect(res.output).toBe(false);
+//   expect(res.errors).toMatchInlineSnapshot(`Array []`);
+// });
 
 test('_type with null on pass', async () => {
   const input = { _type: { type: 'null', on: null } };

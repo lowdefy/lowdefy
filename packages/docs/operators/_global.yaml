@@ -19,6 +19,7 @@ _ref:
     pageId: _global
     pageTitle: _global
     filePath: operators/_global.yaml
+    env: Client Only
     types: |
       ```
       (key: string): any

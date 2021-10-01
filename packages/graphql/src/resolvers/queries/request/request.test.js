@@ -18,34 +18,17 @@
 // import runTestQuery from '../../../test/runTestQuery';
 import request from './request';
 
-const mockCallRequest = jest.fn(
-  ({
-    args,
-    arrayIndices,
-    contextId,
-    input,
-    lowdefyGlobal,
+const mockCallRequest = jest.fn(({ blockId, pageId, payload, requestId }) => ({
+  id: 'requestId',
+  success: true,
+  type: 'RequestType',
+  response: {
+    blockId,
     pageId,
+    payload,
     requestId,
-    state,
-    urlQuery,
-  }) => ({
-    id: 'requestId',
-    success: true,
-    type: 'RequestType',
-    response: {
-      args,
-      arrayIndices,
-      contextId,
-      input,
-      lowdefyGlobal,
-      pageId,
-      requestId,
-      state,
-      urlQuery,
-    },
-  })
-);
+  },
+}));
 
 const getController = jest.fn(() => ({
   callRequest: mockCallRequest,
@@ -117,15 +100,10 @@ test('request resolver', async () => {
     null,
     {
       input: {
-        args: 'args',
-        arrayIndices: 'arrayIndices',
-        contextId: 'contextId',
-        input: 'input',
-        lowdefyGlobal: 'lowdefyGlobal',
+        blockId: 'blockId',
         pageId: 'pageId',
+        payload: 'payload',
         requestId: 'requestId',
-        state: 'state',
-        urlQuery: 'urlQuery',
       },
     },
     { getController }
@@ -133,15 +111,10 @@ test('request resolver', async () => {
   expect(res).toEqual({
     id: 'requestId',
     response: {
-      args: 'args',
-      arrayIndices: 'arrayIndices',
-      contextId: 'contextId',
-      input: 'input',
-      lowdefyGlobal: 'lowdefyGlobal',
+      blockId: 'blockId',
       pageId: 'pageId',
+      payload: 'payload',
       requestId: 'requestId',
-      state: 'state',
-      urlQuery: 'urlQuery',
     },
     success: true,
     type: 'RequestType',

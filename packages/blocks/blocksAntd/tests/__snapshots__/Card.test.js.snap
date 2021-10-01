@@ -2,7 +2,7 @@
 
 exports[`Render areas.extra: - value[0] 1`] = `
 <div
-  className="ant-card {\\"style\\":[{\\"outline\\":\\"none\\"},null]} ant-card-bordered"
+  className="ant-card ant-card-bordered {\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
   id="areas.extra:"
   onClick={[Function]}
 >
@@ -56,7 +56,7 @@ exports[`Render areas.extra: - value[0] 1`] = `
 
 exports[`Render default - value[0] 1`] = `
 <div
-  className="ant-card {\\"style\\":[{\\"outline\\":\\"none\\"},null]} ant-card-bordered"
+  className="ant-card ant-card-bordered {\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
   id="default"
   onClick={[Function]}
 >
@@ -80,7 +80,7 @@ exports[`Render default - value[0] 1`] = `
 
 exports[`Render properties.bodyStyle: border: 5px solid blue - value[0] 1`] = `
 <div
-  className="ant-card {\\"style\\":[{\\"outline\\":\\"none\\"},null]} ant-card-bordered"
+  className="ant-card ant-card-bordered {\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
   id="properties.bodyStyle: border: 5px solid blue"
   onClick={[Function]}
 >
@@ -160,7 +160,7 @@ exports[`Render properties.bordered: false - value[0] 1`] = `
 
 exports[`Render properties.headerStyle: border: 5px solid blue - value[0] 1`] = `
 <div
-  className="ant-card {\\"style\\":[{\\"outline\\":\\"none\\"},null]} ant-card-bordered"
+  className="ant-card ant-card-bordered {\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
   id="properties.headerStyle: border: 5px solid blue"
   onClick={[Function]}
 >
@@ -200,7 +200,7 @@ exports[`Render properties.headerStyle: border: 5px solid blue - value[0] 1`] = 
 
 exports[`Render properties.hoverable: true - value[0] 1`] = `
 <div
-  className="ant-card {\\"style\\":[{\\"outline\\":\\"none\\"},null]} ant-card-bordered ant-card-hoverable"
+  className="ant-card ant-card-bordered ant-card-hoverable {\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
   id="properties.hoverable: true"
   onClick={[Function]}
 >
@@ -240,7 +240,7 @@ exports[`Render properties.hoverable: true - value[0] 1`] = `
 
 exports[`Render properties.inner: true - value[0] 1`] = `
 <div
-  className="ant-card {\\"style\\":[{\\"outline\\":\\"none\\"},null]} ant-card-bordered ant-card-type-inner"
+  className="ant-card ant-card-bordered ant-card-type-inner {\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
   id="properties.inner: true"
   onClick={[Function]}
 >
@@ -280,7 +280,7 @@ exports[`Render properties.inner: true - value[0] 1`] = `
 
 exports[`Render properties.size: small - value[0] 1`] = `
 <div
-  className="ant-card {\\"style\\":[{\\"outline\\":\\"none\\"},null]} ant-card-bordered ant-card-small"
+  className="ant-card ant-card-bordered ant-card-small {\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
   id="properties.size: small"
   onClick={[Function]}
 >
@@ -320,7 +320,7 @@ exports[`Render properties.size: small - value[0] 1`] = `
 
 exports[`Render properties.title - value[0] 1`] = `
 <div
-  className="ant-card {\\"style\\":[{\\"outline\\":\\"none\\"},null]} ant-card-bordered"
+  className="ant-card ant-card-bordered {\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
   id="properties.title"
   onClick={[Function]}
 >
@@ -360,7 +360,7 @@ exports[`Render properties.title - value[0] 1`] = `
 
 exports[`Render with html in title - value[0] 1`] = `
 <div
-  className="ant-card {\\"style\\":[{\\"outline\\":\\"none\\"},null]} ant-card-bordered"
+  className="ant-card ant-card-bordered {\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
   id="with html in title"
   onClick={[Function]}
 >
@@ -400,7 +400,7 @@ exports[`Render with html in title - value[0] 1`] = `
 
 exports[`Render with onClick event - value[0] 1`] = `
 <div
-  className="ant-card {\\"style\\":[{\\"outline\\":\\"none\\",\\"cursor\\":\\"pointer\\"},null]} ant-card-bordered"
+  className="ant-card ant-card-bordered {\\"style\\":[{\\"outline\\":\\"none\\",\\"cursor\\":\\"pointer\\"},null]}"
   id="with onClick event"
   onClick={[Function]}
 >

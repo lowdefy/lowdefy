@@ -15,7 +15,7 @@
 */
 
 import React, { useState, useEffect } from 'react';
-import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 import { get } from '@lowdefy/helpers';
 import { Modal } from 'antd';
 
@@ -50,7 +50,7 @@ const ModalBlock = ({ blockId, content, properties, events, methods }) => {
     <div id={blockId}>
       <Modal
         id={`${blockId}_modal`}
-        title={<RenderHtml html={properties.title} methods={methods} />}
+        title={renderHtml({ html: properties.title, methods })}
         bodyStyle={methods.makeCssClass(properties.bodyStyle, { styleObjectOnly: true })}
         visible={openState}
         onOk={async () => {

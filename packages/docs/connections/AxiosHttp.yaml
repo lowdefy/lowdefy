@@ -24,7 +24,7 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            The `AxiosHTTP` connection is used to connect to APIs and web servers using HTTP or HTTPS.
+            The `AxiosHttp` connection is used to connect to APIs and web servers using HTTP or HTTPS.
 
             It uses the [axios](https://github.com/axios/axios) library.
 
@@ -35,14 +35,14 @@ _ref:
             ## Connections
 
             Connection types:
-              - AxiosHTTP
+              - AxiosHttp
 
             ## Requests
 
             Request types:
-              - AxiosHTTP
+              - AxiosHttp
 
-            ### AxiosHTTP
+            ### AxiosHttp
 
             #### Properties
 
@@ -88,7 +88,7 @@ _ref:
             ###### A basic full example requesting data from https://jsonplaceholder.typicode.com
 
             ```yaml
-            lowdefy: 3.21.2
+            lowdefy: 3.22.0
             name: Lowdefy starter
             connections:
               - id: my_api

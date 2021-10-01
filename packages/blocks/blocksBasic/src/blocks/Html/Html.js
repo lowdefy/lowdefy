@@ -15,10 +15,10 @@
 */
 
 import React from 'react';
-import { blockDefaultProps, RenderHtml } from '@lowdefy/block-tools';
+import { blockDefaultProps, HtmlComponent } from '@lowdefy/block-tools';
 
 const HtmlBlock = ({ blockId, properties, methods }) => (
-  <RenderHtml
+  <HtmlComponent
     div={true}
     html={properties.html}
     id={blockId}
