@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign */
-
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -16,14 +14,20 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-import buildPage from './buildPage';
+import { set, type } from '@lowdefy/helpers';
 
-async function buildPages({ components, context }) {
-  const pages = type.isArray(components.pages) ? components.pages : [];
-  const pageBuildPromises = pages.map((page, index) => buildPage({ page, index, context }));
-  await Promise.all(pageBuildPromises);
-  return components;
+function moveSubBlocksToArea(block, pageContext) {
+  if (!type.isNone(block.blocks)) {
+    if (!type.isArray(block.blocks)) {
+      throw new Error(
+        `Blocks at ${block.blockId} on page ${
+          pageContext.pageId
+        } is not an array. Received ${JSON.stringify(block.blocks)}`
+      );
+    }
+    set(block, 'areas.content.blocks', block.blocks);
+    delete block.blocks;
+  }
 }
 
-export default buildPages;
+export default moveSubBlocksToArea;

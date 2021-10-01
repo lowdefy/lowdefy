@@ -25,21 +25,6 @@ const logger = {
 };
 
 const blockMetas = {
-  Context: {
-    category: 'context',
-    loading: {
-      type: 'Spinner',
-    },
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Context',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    schema: {
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      $id: 'https://example.com/Container.json',
-    },
-  },
   Container: {
     category: 'container',
     loading: {
@@ -104,17 +89,6 @@ const blockMetas = {
 };
 
 const outputMetas = {
-  Context: {
-    category: 'context',
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Context',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    loading: {
-      type: 'Spinner',
-    },
-  },
   Container: {
     category: 'container',
     moduleFederation: {
@@ -188,13 +162,13 @@ test('requests not an array', async () => {
       {
         id: 'page_1',
         auth,
-        type: 'Context',
+        type: 'Container',
         requests: 'requests',
       },
     ],
   };
   await expect(buildPages({ components, context })).rejects.toThrow(
-    'Requests is not an array at page_1 on page page_1. Received "requests"'
+    'Requests is not an array at "page_1" on page "page_1". Received "requests"'
   );
 });
 
@@ -204,7 +178,7 @@ test('request id missing', async () => {
       {
         id: 'page_1',
         auth,
-        type: 'Context',
+        type: 'Container',
         requests: [{ type: 'Request' }],
       },
     ],
@@ -220,7 +194,7 @@ test('request id not a string', async () => {
       {
         id: 'page_1',
         auth,
-        type: 'Context',
+        type: 'Container',
         requests: [{ id: true, type: 'Request' }],
       },
     ],
@@ -236,7 +210,7 @@ test('request id contains a "."', async () => {
       {
         id: 'page_1',
         auth,
-        type: 'Context',
+        type: 'Container',
         requests: [{ id: 'my.request', type: 'Request' }],
       },
     ],
@@ -252,7 +226,7 @@ test('request payload not an object', async () => {
       {
         id: 'page_1',
         auth,
-        type: 'Context',
+        type: 'Container',
         requests: [{ id: 'my_request', type: 'Request', payload: 'payload' }],
       },
     ],
@@ -267,7 +241,7 @@ test('give request an id', async () => {
     pages: [
       {
         id: 'page_1',
-        type: 'Context',
+        type: 'Container',
         auth,
         requests: [
           {
@@ -286,14 +260,14 @@ test('give request an id', async () => {
         operators: [],
         pageId: 'page_1',
         blockId: 'page_1',
-        type: 'Context',
-        meta: outputMetas.Context,
+        type: 'Container',
+        meta: outputMetas.Container,
         requests: [
           {
-            id: 'request:page_1:page_1:request_1',
+            id: 'request:page_1:request_1',
             auth: { public: true },
             requestId: 'request_1',
-            contextId: 'page_1',
+            pageId: 'page_1',
             payload: {},
           },
         ],
@@ -302,72 +276,12 @@ test('give request an id', async () => {
   });
 });
 
-test('request on a context block not at root', async () => {
+test('request on a sub-block', async () => {
   const components = {
     pages: [
       {
         id: 'page_1',
-        type: 'Context',
-        auth,
-        blocks: [
-          {
-            id: 'context',
-            type: 'Context',
-            requests: [
-              {
-                id: 'request_1',
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  };
-  const res = await buildPages({ components, context });
-  expect(res).toEqual({
-    pages: [
-      {
-        id: 'page:page_1',
-        auth: { public: true },
-        operators: [],
-        pageId: 'page_1',
-        blockId: 'page_1',
-        type: 'Context',
-        meta: outputMetas.Context,
-        requests: [],
-        areas: {
-          content: {
-            blocks: [
-              {
-                id: 'block:page_1:context',
-                blockId: 'context',
-                type: 'Context',
-                operators: [],
-                meta: outputMetas.Context,
-                requests: [
-                  {
-                    id: 'request:page_1:context:request_1',
-                    auth: { public: true },
-                    requestId: 'request_1',
-                    contextId: 'context',
-                    payload: {},
-                  },
-                ],
-              },
-            ],
-          },
-        },
-      },
-    ],
-  });
-});
-
-test('request on a non-context block', async () => {
-  const components = {
-    pages: [
-      {
-        id: 'page_1',
-        type: 'Context',
+        type: 'Container',
         auth,
         blocks: [
           {
@@ -392,14 +306,14 @@ test('request on a non-context block', async () => {
         blockId: 'page_1',
         operators: [],
         pageId: 'page_1',
-        type: 'Context',
-        meta: outputMetas.Context,
+        type: 'Container',
+        meta: outputMetas.Container,
         requests: [
           {
-            id: 'request:page_1:page_1:request_1',
+            id: 'request:page_1:request_1',
             auth: { public: true },
             requestId: 'request_1',
-            contextId: 'page_1',
+            pageId: 'page_1',
             payload: {},
           },
         ],
@@ -420,212 +334,12 @@ test('request on a non-context block', async () => {
   });
 });
 
-test('request on a non-context block below a context block not at root', async () => {
-  const components = {
-    pages: [
-      {
-        id: 'page_1',
-        type: 'Context',
-        auth,
-        blocks: [
-          {
-            id: 'context',
-            type: 'Context',
-            blocks: [
-              {
-                id: 'box',
-                type: 'Container',
-                requests: [
-                  {
-                    id: 'request_1',
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  };
-  const res = await buildPages({ components, context });
-  expect(res).toEqual({
-    pages: [
-      {
-        id: 'page:page_1',
-        auth: { public: true },
-        operators: [],
-        pageId: 'page_1',
-        blockId: 'page_1',
-        type: 'Context',
-        meta: outputMetas.Context,
-        requests: [],
-        areas: {
-          content: {
-            blocks: [
-              {
-                id: 'block:page_1:context',
-                blockId: 'context',
-                type: 'Context',
-                operators: [],
-                meta: outputMetas.Context,
-                requests: [
-                  {
-                    id: 'request:page_1:context:request_1',
-                    auth: { public: true },
-                    requestId: 'request_1',
-                    contextId: 'context',
-                    payload: {},
-                  },
-                ],
-                areas: {
-                  content: {
-                    blocks: [
-                      {
-                        id: 'block:page_1:box',
-                        blockId: 'box',
-                        meta: outputMetas.Container,
-                        type: 'Container',
-                      },
-                    ],
-                  },
-                },
-              },
-            ],
-          },
-        },
-      },
-    ],
-  });
-});
-
-test('request on a non-context block below a context block and at root', async () => {
-  const components = {
-    pages: [
-      {
-        id: 'page_1',
-        type: 'Context',
-        auth,
-        blocks: [
-          {
-            id: 'context',
-            type: 'Context',
-            blocks: [
-              {
-                id: 'box-inner',
-                type: 'Container',
-              },
-            ],
-          },
-          {
-            id: 'box',
-            type: 'Container',
-            requests: [
-              {
-                id: 'request_1',
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  };
-  const res = await buildPages({ components, context });
-  expect(res).toEqual({
-    pages: [
-      {
-        id: 'page:page_1',
-        auth: { public: true },
-        blockId: 'page_1',
-        type: 'Context',
-        meta: {
-          category: 'context',
-          loading: { type: 'Spinner' },
-          moduleFederation: {
-            module: 'Context',
-            scope: 'blocks',
-            url: 'https://example.com/remoteEntry.js',
-          },
-        },
-        operators: [],
-        pageId: 'page_1',
-        requests: [
-          {
-            id: 'request:page_1:page_1:request_1',
-            auth: { public: true },
-            contextId: 'page_1',
-            requestId: 'request_1',
-            payload: {},
-          },
-        ],
-        areas: {
-          content: {
-            blocks: [
-              {
-                id: 'block:page_1:context',
-                blockId: 'context',
-                operators: [],
-                type: 'Context',
-                requests: [],
-                areas: {
-                  content: {
-                    blocks: [
-                      {
-                        blockId: 'box-inner',
-                        id: 'block:page_1:box-inner',
-                        meta: {
-                          category: 'container',
-                          loading: {
-                            type: 'Spinner',
-                          },
-                          moduleFederation: {
-                            module: 'Container',
-                            scope: 'blocks',
-                            url: 'https://example.com/remoteEntry.js',
-                          },
-                        },
-                        type: 'Container',
-                      },
-                    ],
-                  },
-                },
-                meta: {
-                  category: 'context',
-                  loading: { type: 'Spinner' },
-                  moduleFederation: {
-                    module: 'Context',
-                    scope: 'blocks',
-                    url: 'https://example.com/remoteEntry.js',
-                  },
-                },
-              },
-              {
-                id: 'block:page_1:box',
-                blockId: 'box',
-                type: 'Container',
-                meta: {
-                  category: 'container',
-                  loading: { type: 'Spinner' },
-                  moduleFederation: {
-                    module: 'Container',
-                    scope: 'blocks',
-                    url: 'https://example.com/remoteEntry.js',
-                  },
-                },
-              },
-            ],
-          },
-        },
-      },
-    ],
-  });
-});
-
 test('multiple requests', async () => {
   const components = {
     pages: [
       {
         id: 'page_1',
-        type: 'Context',
+        type: 'Container',
         auth,
         requests: [
           {
@@ -647,21 +361,21 @@ test('multiple requests', async () => {
         operators: [],
         pageId: 'page_1',
         blockId: 'page_1',
-        type: 'Context',
-        meta: outputMetas.Context,
+        type: 'Container',
+        meta: outputMetas.Container,
         requests: [
           {
-            id: 'request:page_1:page_1:request_1',
+            id: 'request:page_1:request_1',
             auth: { public: true },
             requestId: 'request_1',
-            contextId: 'page_1',
+            pageId: 'page_1',
             payload: {},
           },
           {
-            id: 'request:page_1:page_1:request_2',
+            id: 'request:page_1:request_2',
             auth: { public: true },
             requestId: 'request_2',
-            contextId: 'page_1',
+            pageId: 'page_1',
             payload: {},
           },
         ],
@@ -676,7 +390,7 @@ test('set auth to request', async () => {
       {
         id: 'page_1',
         auth: { public: true },
-        type: 'Context',
+        type: 'Container',
         requests: [
           {
             id: 'request_1',
@@ -685,7 +399,7 @@ test('set auth to request', async () => {
       },
       {
         id: 'page_2',
-        type: 'Context',
+        type: 'Container',
         auth: { public: false },
         requests: [
           {
@@ -704,14 +418,14 @@ test('set auth to request', async () => {
         operators: [],
         pageId: 'page_1',
         blockId: 'page_1',
-        type: 'Context',
-        meta: outputMetas.Context,
+        type: 'Container',
+        meta: outputMetas.Container,
         requests: [
           {
-            id: 'request:page_1:page_1:request_1',
+            id: 'request:page_1:request_1',
             auth: { public: true },
             requestId: 'request_1',
-            contextId: 'page_1',
+            pageId: 'page_1',
             payload: {},
           },
         ],
@@ -722,14 +436,14 @@ test('set auth to request', async () => {
         operators: [],
         pageId: 'page_2',
         blockId: 'page_2',
-        type: 'Context',
-        meta: outputMetas.Context,
+        type: 'Container',
+        meta: outputMetas.Container,
         requests: [
           {
-            id: 'request:page_2:page_2:request_2',
+            id: 'request:page_2:request_2',
             auth: { public: false },
             requestId: 'request_2',
-            contextId: 'page_2',
+            pageId: 'page_2',
             payload: {},
           },
         ],

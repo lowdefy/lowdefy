@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign */
-
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -16,14 +14,9 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-import buildPage from './buildPage';
-
-async function buildPages({ components, context }) {
-  const pages = type.isArray(components.pages) ? components.pages : [];
-  const pageBuildPromises = pages.map((page, index) => buildPage({ page, index, context }));
-  await Promise.all(pageBuildPromises);
-  return components;
+function setBlockId(block, { pageId }) {
+  block.blockId = block.id;
+  block.id = `block:${pageId}:${block.id}`;
 }
 
-export default buildPages;
+export default setBlockId;
