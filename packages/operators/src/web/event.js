@@ -16,10 +16,9 @@
 
 import getFromObject from '../getFromObject';
 
-function _event({ arrayIndices, env, event, location, params }) {
+function _event({ arrayIndices, event, location, params }) {
   return getFromObject({
     arrayIndices,
-    env,
     location,
     object: event,
     operator: '_event',

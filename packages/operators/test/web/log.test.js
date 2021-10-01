@@ -16,7 +16,7 @@
 
 /* eslint-disable max-classes-per-file */
 import WebParser from '../../src/webParser';
-import { context, contexts } from '../testContext';
+import { context } from '../testContext';
 
 const logger = console.log;
 const mockLogger = jest.fn();
@@ -32,7 +32,7 @@ const arrayIndices = [1];
 
 test('_log a string', async () => {
   const input = { a: { _log: 'value' } };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
@@ -43,7 +43,7 @@ test('_log a string', async () => {
 
 test('_log a number', async () => {
   const input = { a: { _log: 1 } };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
@@ -54,7 +54,7 @@ test('_log a number', async () => {
 
 test('_log a null', async () => {
   const input = { a: { _log: null } };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
@@ -66,7 +66,7 @@ test('_log a null', async () => {
 // TODO: Confirm if this is expected behaviour??
 test('_log a undefined', async () => {
   const input = { a: { _log: undefined } };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
@@ -77,7 +77,7 @@ test('_log a undefined', async () => {
 
 test('_log a 0', async () => {
   const input = { a: { _log: 0 } };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
@@ -88,7 +88,7 @@ test('_log a 0', async () => {
 
 test('_log a false', async () => {
   const input = { a: { _log: false } };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
@@ -99,7 +99,7 @@ test('_log a false', async () => {
 
 test('_log a object', async () => {
   const input = { a: { _log: { b: 1 } } };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
@@ -110,7 +110,7 @@ test('_log a object', async () => {
 
 test('_log a array', async () => {
   const input = { a: { _log: [{ b: 1 }] } };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({

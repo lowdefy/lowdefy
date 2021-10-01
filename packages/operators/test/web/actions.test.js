@@ -26,9 +26,6 @@ const input = {
     },
   },
   arrayIndices: [0],
-  context: { context: true },
-  contexts: { contexts: true },
-  env: 'env',
   location: 'location',
   params: 'params',
 };
@@ -39,7 +36,6 @@ test('actions calls getFromObject', () => {
     [
       {
         arrayIndices: [0],
-        env: 'env',
         location: 'location',
         object: {
           action_id: {

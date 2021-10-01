@@ -15,7 +15,7 @@
 */
 
 import WebParser from '../../src/webParser';
-import { context, contexts } from '../testContext';
+import { context } from '../testContext';
 
 const arrayIndices = [1];
 
@@ -23,7 +23,7 @@ console.error = () => {};
 
 test('_event_log in array', async () => {
   const input = { a: { _event_log: '1.blockId' } };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
@@ -34,7 +34,7 @@ test('_event_log in array', async () => {
 
 test('_event_log full state', async () => {
   const input = { _event_log: true };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual([
@@ -57,7 +57,7 @@ test('_event_log full state', async () => {
 
 test('_event_log null', async () => {
   const input = { _event_log: null };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
@@ -74,7 +74,7 @@ test('_event_log param object key', async () => {
       key: '0.actionName',
     },
   };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('name_a');
@@ -87,7 +87,7 @@ test('_event_log param object all', async () => {
       all: true,
     },
   };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual([
@@ -115,7 +115,7 @@ test('_event_log param object all and key', async () => {
       key: 'string',
     },
   };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual([
@@ -142,7 +142,7 @@ test('_event_log param object invalid', async () => {
       other: true,
     },
   };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);
@@ -157,7 +157,7 @@ test('_event_log param array', async () => {
   const input = {
     _event_log: ['string'],
   };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);
@@ -175,7 +175,7 @@ test('_event_log param object with string default', async () => {
       default: 'defaultValue',
     },
   };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('defaultValue');
@@ -189,7 +189,7 @@ test('_event_log param object with zero default', async () => {
       default: 0,
     },
   };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(0);
@@ -203,7 +203,7 @@ test('_event_log param object with false default', async () => {
       default: false,
     },
   };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(false);
@@ -216,7 +216,7 @@ test('_event_log param object with no default', async () => {
       key: 'notFound',
     },
   };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);

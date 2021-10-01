@@ -15,7 +15,7 @@
 */
 
 import WebParser from '../../src/webParser';
-import { context, contexts } from '../testContext';
+import { context } from '../testContext';
 
 const arrayIndices = [1];
 
@@ -32,7 +32,7 @@ const False = false;
 console.error = () => {};
 
 test('_not', async () => {
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   let res = parser.parse({ input: { _not: arr0 }, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(false);
@@ -64,7 +64,7 @@ test('_not', async () => {
 });
 
 test('_and', async () => {
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   let res = parser.parse({ input: { _and: arr0 }, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(false);
@@ -112,7 +112,7 @@ test('_and', async () => {
 });
 
 test('_or', async () => {
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   let res = parser.parse({ input: { _or: arr0 }, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(false);
@@ -160,7 +160,7 @@ test('_or', async () => {
 });
 
 test('_eq', async () => {
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   let res = parser.parse({ input: { _eq: [1, 1] }, location: 'locationId', arrayIndices });
   expect(res.output).toBe(true);
@@ -198,7 +198,7 @@ test('_eq', async () => {
 });
 
 test('_if', async () => {
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   let res = parser.parse({
     input: {

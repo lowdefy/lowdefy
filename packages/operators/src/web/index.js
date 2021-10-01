@@ -24,7 +24,6 @@ export default {
   _index: 'web/_index',
   _input: 'web/input',
   _js: 'web/js',
-  _list_contexts: 'web/list_contexts',
   _location: 'web/location',
   _media: 'web/media',
   _menu: 'web/menu',

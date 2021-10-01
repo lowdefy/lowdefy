@@ -20,9 +20,8 @@ import commonOperators from './common';
 import webOperators from './web';
 
 class WebParser {
-  constructor({ context, contexts }) {
+  constructor({ context }) {
     this.context = context;
-    this.contexts = contexts;
     this.init = this.init.bind(this);
     this.parse = this.parse.bind(this);
     this.operators = {
@@ -79,7 +78,6 @@ class WebParser {
               args,
               arrayIndices,
               context: this.context,
-              contexts: this.contexts,
               env: 'web',
               event,
               input: inputs ? inputs[this.context.id] : {},

@@ -21,9 +21,6 @@ jest.mock('../../src/getFromObject');
 
 const input = {
   arrayIndices: [0],
-  context: { context: true },
-  contexts: { contexts: true },
-  env: 'env',
   event: { event: true },
   location: 'location',
   params: 'params',
@@ -35,7 +32,6 @@ test('event calls getFromObject', () => {
     [
       {
         arrayIndices: [0],
-        env: 'env',
         location: 'location',
         object: {
           event: true,

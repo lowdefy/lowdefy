@@ -20,7 +20,6 @@ import getFromObject from '../../src/getFromObject';
 jest.mock('../../src/getFromObject');
 
 const input = {
-  env: 'env',
   location: 'location',
   params: 'params',
   payload: { payload: true },
@@ -31,7 +30,6 @@ test('payload calls getFromObject', () => {
   expect(getFromObject.mock.calls).toEqual([
     [
       {
-        env: 'env',
         location: 'location',
         object: {
           payload: true,

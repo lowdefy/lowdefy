@@ -37,8 +37,6 @@ const context = {
   operators,
 };
 
-const contexts = { context };
-
 console.error = () => {};
 
 test('NodeParser, _function that gets from payload', async () => {
@@ -71,7 +69,7 @@ test('NodeParser, _function throws on parser errors', async () => {
 });
 
 test('WebParser, _function that gets from state', async () => {
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const params = { __state: 'string' };
   const fn = _function({ location, params, parser });
@@ -81,7 +79,7 @@ test('WebParser, _function that gets from state', async () => {
 });
 
 test('WebParser, _function gives args as an array', async () => {
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const params = { __args: true };
   const fn = _function({ location, params, parser });
@@ -90,7 +88,7 @@ test('WebParser, _function gives args as an array', async () => {
 });
 
 test('WebParser, _function throws on parser errors', async () => {
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const params = { __state: [] };
   const fn = _function({ location, params, parser });

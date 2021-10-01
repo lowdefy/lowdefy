@@ -22,7 +22,6 @@ jest.mock('../../src/getFromObject');
 test('_get calls getFromObject', () => {
   const input = {
     arrayIndices: [0],
-    env: 'env',
     location: 'location',
     params: {
       from: { a: 1 },
@@ -34,7 +33,6 @@ test('_get calls getFromObject', () => {
     [
       {
         arrayIndices: [0],
-        env: 'env',
         location: 'location',
         object: { a: 1 },
         operator: '_get',
@@ -50,7 +48,6 @@ test('_get calls getFromObject', () => {
 test('_get returns null if from is null', () => {
   const input = {
     arrayIndices: [0],
-    env: 'env',
     location: 'location',
     params: {
       from: null,
@@ -64,7 +61,6 @@ test('_get returns null if from is null', () => {
 test('_get returns default value if from is null', () => {
   const input = {
     arrayIndices: [0],
-    env: 'env',
     location: 'location',
     params: {
       from: null,
@@ -79,7 +75,6 @@ test('_get returns default value if from is null', () => {
 test('_get throws if params is not a object', () => {
   const input = {
     arrayIndices: [0],
-    env: 'env',
     location: 'location',
     params: 'params',
   };
@@ -91,7 +86,6 @@ test('_get throws if params is not a object', () => {
 test('_get throws if from is not a object, array or null', () => {
   const input = {
     arrayIndices: [0],
-    env: 'env',
     location: 'location',
     params: {
       from: 1,

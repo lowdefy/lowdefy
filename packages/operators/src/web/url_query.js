@@ -16,12 +16,9 @@
 
 import getFromObject from '../getFromObject';
 
-function _url_query({ arrayIndices, context, contexts, env, location, params, urlQuery }) {
+function _url_query({ arrayIndices, location, params, urlQuery }) {
   return getFromObject({
     arrayIndices,
-    context,
-    contexts,
-    env,
     location,
     object: urlQuery,
     operator: '_url_query',

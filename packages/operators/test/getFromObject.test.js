@@ -16,15 +16,10 @@
 
 import getFromObject from '../src/getFromObject';
 // eslint-disable-next-line no-unused-vars
-import getFromOtherContext from '../src/getFromOtherContext';
-
-jest.mock('../src/getFromOtherContext');
 
 const location = 'location';
 const operator = '_operator';
 const defaultArrayIndices = [];
-const contexts = {};
-const context = {};
 const defaultObject = { string: 'string', obj: { key: 'value' } };
 
 test('get a field from an object, shorthand', () => {
@@ -32,12 +27,9 @@ test('get a field from an object, shorthand', () => {
   const res = getFromObject({
     params,
     object: defaultObject,
-    context,
-    contexts,
     arrayIndices: defaultArrayIndices,
     operator,
     location,
-    env: 'node',
   });
   expect(res).toEqual('string');
 });
@@ -47,12 +39,9 @@ test('get a field from an object, key as param', () => {
   const res = getFromObject({
     params,
     object: defaultObject,
-    context,
-    contexts,
     arrayIndices: defaultArrayIndices,
     operator,
     location,
-    env: 'node',
   });
   expect(res).toEqual('string');
 });
@@ -62,12 +51,9 @@ test('get a field from an array, integer index, shorthand', () => {
   const res = getFromObject({
     params,
     object: [1, 2, 3],
-    context,
-    contexts,
     arrayIndices: defaultArrayIndices,
     operator,
     location,
-    env: 'node',
   });
   expect(res).toEqual(2);
 });
@@ -77,12 +63,9 @@ test('get a field from an array, integer index', () => {
   const res = getFromObject({
     params,
     object: [1, 2, 3],
-    context,
-    contexts,
     arrayIndices: defaultArrayIndices,
     operator,
     location,
-    env: 'node',
   });
   expect(res).toEqual(2);
 });
@@ -92,12 +75,9 @@ test('get a field from an object, shorthand, not found returns null', () => {
   const res = getFromObject({
     params,
     object: defaultObject,
-    context,
-    contexts,
     arrayIndices: defaultArrayIndices,
     operator,
     location,
-    env: 'node',
   });
   expect(res).toEqual(null);
 });
@@ -107,12 +87,9 @@ test('get a field from an object, key as param, not found returns null', () => {
   const res = getFromObject({
     params,
     object: defaultObject,
-    context,
-    contexts,
     arrayIndices: defaultArrayIndices,
     operator,
     location,
-    env: 'node',
   });
   expect(res).toEqual(null);
 });
@@ -122,12 +99,9 @@ test('If key is null, null is returned', () => {
   const res = getFromObject({
     params,
     object: defaultObject,
-    context,
-    contexts,
     arrayIndices: defaultArrayIndices,
     operator,
     location,
-    env: 'node',
   });
   expect(res).toEqual(null);
 });
@@ -137,12 +111,9 @@ test('If key is null with default, default is returned', () => {
   const res = getFromObject({
     params,
     object: defaultObject,
-    context,
-    contexts,
     arrayIndices: defaultArrayIndices,
     operator,
     location,
-    env: 'node',
   });
   expect(res).toEqual('default');
 });
@@ -152,12 +123,9 @@ test('get an entire object, shorthand', () => {
   const res = getFromObject({
     params,
     object: defaultObject,
-    context,
-    contexts,
     arrayIndices: defaultArrayIndices,
     operator,
     location,
-    env: 'node',
   });
   expect(res).toEqual(defaultObject);
 });
@@ -167,12 +135,9 @@ test('get an entire object, params all', () => {
   const res = getFromObject({
     params,
     object: defaultObject,
-    context,
-    contexts,
     arrayIndices: defaultArrayIndices,
     operator,
     location,
-    env: 'node',
   });
   expect(res).toEqual(defaultObject);
 });
@@ -182,12 +147,9 @@ test('copy results', () => {
   let res = getFromObject({
     params,
     object: defaultObject,
-    context,
-    contexts,
     arrayIndices: defaultArrayIndices,
     operator,
     location,
-    env: 'node',
   });
   expect(res).toEqual(defaultObject.obj);
   expect(res).not.toBe(defaultObject.obj);
@@ -195,12 +157,9 @@ test('copy results', () => {
   res = getFromObject({
     params,
     object: defaultObject,
-    context,
-    contexts,
     arrayIndices: defaultArrayIndices,
     operator,
     location,
-    env: 'node',
   });
   expect(res).toEqual(defaultObject.obj);
   expect(res).not.toBe(defaultObject.obj);
@@ -209,12 +168,9 @@ test('copy results', () => {
   res = getFromObject({
     params,
     object: defaultObject,
-    context,
-    contexts,
     arrayIndices: defaultArrayIndices,
     operator,
     location,
-    env: 'node',
   });
   expect(res).toEqual(defaultObject);
   expect(res).not.toBe(defaultObject);
@@ -223,47 +179,12 @@ test('copy results', () => {
   res = getFromObject({
     params,
     object: defaultObject,
-    context,
-    contexts,
     arrayIndices: defaultArrayIndices,
     operator,
     location,
-    env: 'node',
   });
   expect(res).toEqual(defaultObject);
   expect(res).not.toBe(defaultObject);
-});
-
-test('get from another context, web', () => {
-  const params = { key: 'string', contextId: 'contextId' };
-  getFromObject({
-    params,
-    object: defaultObject,
-    context,
-    contexts,
-    arrayIndices: defaultArrayIndices,
-    operator,
-    location,
-    env: 'web',
-  });
-  expect(getFromOtherContext).toHaveBeenCalled();
-});
-
-test('get from another context, node', () => {
-  expect(() =>
-    getFromObject({
-      params: { key: 'string', contextId: 'contextId' },
-      object: defaultObject,
-      context,
-      contexts,
-      arrayIndices: defaultArrayIndices,
-      operator,
-      location,
-      env: 'node',
-    })
-  ).toThrow(
-    'Operator Error: Accessing a context using contextId is only available in a client environment.'
-  );
 });
 
 test('params not correct type', () => {
@@ -271,12 +192,9 @@ test('params not correct type', () => {
     getFromObject({
       params: [],
       object: defaultObject,
-      context,
-      contexts,
       arrayIndices: defaultArrayIndices,
       operator,
       location,
-      env: 'node',
     })
   ).toThrow('Operator Error: _operator params must be of type string, integer, boolean or object.');
 });
@@ -286,12 +204,9 @@ test('params key not a string', () => {
     getFromObject({
       params: { key: {} },
       object: defaultObject,
-      context,
-      contexts,
       arrayIndices: defaultArrayIndices,
       operator,
       location,
-      env: 'node',
     })
   ).toThrow('Operator Error: _operator.key must be of type string or integer.');
 });
@@ -310,12 +225,9 @@ test('replace arrayIndices', () => {
         },
       ],
     },
-    context,
-    contexts,
     arrayIndices: [1, 0],
     operator,
     location,
-    env: 'node',
   });
   expect(res).toEqual(3);
   params = { key: 'array.$.subArray.$' };
@@ -331,12 +243,9 @@ test('replace arrayIndices', () => {
         },
       ],
     },
-    context,
-    contexts,
     arrayIndices: [1, 0],
     operator,
     location,
-    env: 'node',
   });
   expect(res).toEqual(3);
 
@@ -353,12 +262,9 @@ test('replace arrayIndices', () => {
         },
       ],
     },
-    context,
-    contexts,
     arrayIndices: [1, 0],
     operator,
     location,
-    env: 'node',
   });
   expect(res).toEqual([3, 4]);
 });
@@ -368,12 +274,9 @@ test('get a field from an object, default value', () => {
   let res = getFromObject({
     params,
     object: defaultObject,
-    context,
-    contexts,
     arrayIndices: defaultArrayIndices,
     operator,
     location,
-    env: 'node',
   });
   expect(res).toEqual('default');
 
@@ -381,12 +284,9 @@ test('get a field from an object, default value', () => {
   res = getFromObject({
     params,
     object: defaultObject,
-    context,
-    contexts,
     arrayIndices: defaultArrayIndices,
     operator,
     location,
-    env: 'node',
   });
   expect(res).toEqual(false);
 
@@ -394,12 +294,9 @@ test('get a field from an object, default value', () => {
   res = getFromObject({
     params,
     object: defaultObject,
-    context,
-    contexts,
     arrayIndices: defaultArrayIndices,
     operator,
     location,
-    env: 'node',
   });
   expect(res).toEqual(0);
 });

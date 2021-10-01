@@ -18,7 +18,7 @@ import getFromObject from '../getFromObject';
 
 export const breakpoints = [576, 768, 992, 1200, 1600];
 
-function _media({ arrayIndices, context, contexts, env, location, params }) {
+function _media({ arrayIndices, location, params }) {
   if (!window || !window.innerWidth) {
     throw new Error(
       `Operator Error: device window width not available for _media. Received: ${JSON.stringify(
@@ -54,9 +54,6 @@ function _media({ arrayIndices, context, contexts, env, location, params }) {
   };
   return getFromObject({
     arrayIndices,
-    context,
-    contexts,
-    env,
     location,
     object: media,
     operator: '_media',
