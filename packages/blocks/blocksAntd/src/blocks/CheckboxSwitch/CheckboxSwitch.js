@@ -61,7 +61,9 @@ const CheckboxSwitch = ({
               methods.triggerEvent({ name: 'onChange' });
             }}
           >
-            {renderHtml({ html: properties.description, methods })}
+            <Space wrap={true}>
+              {renderHtml({ html: properties.description, methods })}
+            </Space>
           </Checkbox>
         ),
       }}
