@@ -83,7 +83,7 @@ const AutoCompleteInput = ({
                   key={i}
                   value={i}
                 >
-                  {`${opt}`}
+                  {renderHtml({ html: `${opt}`, methods })}
                 </Option>
               ) : (
                 <Option
@@ -95,7 +95,7 @@ const AutoCompleteInput = ({
                   value={i}
                 >
                   {type.isNone(opt.label)
-                    ? `${opt.value}`
+                    ? renderHtml({ html: `${opt.value}`, methods })
                     : renderHtml({ html: opt.label, methods })}
                 </Option>
               )

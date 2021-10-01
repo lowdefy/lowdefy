@@ -99,7 +99,9 @@ exports[`Render properties.color_red - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -127,7 +129,9 @@ exports[`Render properties.color_red - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -197,7 +201,9 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -226,7 +232,9 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -295,7 +303,9 @@ exports[`Render properties.label.colon: false - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -323,7 +333,9 @@ exports[`Render properties.label.colon: false - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -378,7 +390,9 @@ exports[`Render properties.label.disabled: true - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -406,7 +420,9 @@ exports[`Render properties.label.disabled: true - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -475,7 +491,9 @@ exports[`Render properties.label.extra: showingextra - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -503,7 +521,9 @@ exports[`Render properties.label.extra: showingextra - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -579,7 +599,9 @@ exports[`Render properties.label: align_right - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -607,7 +629,9 @@ exports[`Render properties.label: align_right - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -684,7 +708,9 @@ exports[`Render properties.label: inline_true - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -712,7 +738,9 @@ exports[`Render properties.label: inline_true - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -781,7 +809,9 @@ exports[`Render properties.label: span_12 - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -809,7 +839,9 @@ exports[`Render properties.label: span_12 - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -1009,7 +1041,9 @@ exports[`Render properties.options: html - value[0] 1`] = `
               />
             </span>
             <span>
-              &lt;div&gt;Some main text&lt;/div&gt;&lt;div style="font-size: 6px;"&gt;Some small subtext&lt;/div&gt;
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -1037,7 +1071,9 @@ exports[`Render properties.options: html - value[0] 1`] = `
               />
             </span>
             <span>
-              &lt;div style="color: green;"&gt;Option green&lt;/div&gt;
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -1065,7 +1101,9 @@ exports[`Render properties.options: html - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 3
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -1134,7 +1172,9 @@ exports[`Render properties.options-number - value[0] 1`] = `
               />
             </span>
             <span>
-              15
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -1162,7 +1202,9 @@ exports[`Render properties.options-number - value[0] 1`] = `
               />
             </span>
             <span>
-              20
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -1332,7 +1374,9 @@ exports[`Render properties.options-string - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -1360,7 +1404,9 @@ exports[`Render properties.options-string - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -1530,7 +1576,9 @@ exports[`Render properties.title - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -1558,7 +1606,9 @@ exports[`Render properties.title - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -1667,7 +1717,9 @@ exports[`Render required = true properties.color_red - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -1695,7 +1747,9 @@ exports[`Render required = true properties.color_red - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -1765,7 +1819,9 @@ exports[`Render required = true properties.disabled: true - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -1794,7 +1850,9 @@ exports[`Render required = true properties.disabled: true - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -1863,7 +1921,9 @@ exports[`Render required = true properties.label.colon: false - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -1891,7 +1951,9 @@ exports[`Render required = true properties.label.colon: false - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -1946,7 +2008,9 @@ exports[`Render required = true properties.label.disabled: true - value[0] 1`] =
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -1974,7 +2038,9 @@ exports[`Render required = true properties.label.disabled: true - value[0] 1`] =
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -2043,7 +2109,9 @@ exports[`Render required = true properties.label.extra: showingextra - value[0] 
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -2071,7 +2139,9 @@ exports[`Render required = true properties.label.extra: showingextra - value[0] 
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -2147,7 +2217,9 @@ exports[`Render required = true properties.label: align_right - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -2175,7 +2247,9 @@ exports[`Render required = true properties.label: align_right - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -2252,7 +2326,9 @@ exports[`Render required = true properties.label: inline_true - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -2280,7 +2356,9 @@ exports[`Render required = true properties.label: inline_true - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -2349,7 +2427,9 @@ exports[`Render required = true properties.label: span_12 - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -2377,7 +2457,9 @@ exports[`Render required = true properties.label: span_12 - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -2577,7 +2659,9 @@ exports[`Render required = true properties.options: html - value[0] 1`] = `
               />
             </span>
             <span>
-              &lt;div&gt;Some main text&lt;/div&gt;&lt;div style="font-size: 6px;"&gt;Some small subtext&lt;/div&gt;
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -2605,7 +2689,9 @@ exports[`Render required = true properties.options: html - value[0] 1`] = `
               />
             </span>
             <span>
-              &lt;div style="color: green;"&gt;Option green&lt;/div&gt;
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -2633,7 +2719,9 @@ exports[`Render required = true properties.options: html - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 3
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -2702,7 +2790,9 @@ exports[`Render required = true properties.options-number - value[0] 1`] = `
               />
             </span>
             <span>
-              15
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -2730,7 +2820,9 @@ exports[`Render required = true properties.options-number - value[0] 1`] = `
               />
             </span>
             <span>
-              20
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -2900,7 +2992,9 @@ exports[`Render required = true properties.options-string - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -2928,7 +3022,9 @@ exports[`Render required = true properties.options-string - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -3098,7 +3194,9 @@ exports[`Render required = true properties.title - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -3126,7 +3224,9 @@ exports[`Render required = true properties.title - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -3263,7 +3363,9 @@ exports[`Render validation.status = error properties.color_red - value[0] 1`] = 
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -3291,7 +3393,9 @@ exports[`Render validation.status = error properties.color_red - value[0] 1`] = 
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -3389,7 +3493,9 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -3418,7 +3524,9 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -3515,7 +3623,9 @@ exports[`Render validation.status = error properties.label.colon: false - value[
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -3543,7 +3653,9 @@ exports[`Render validation.status = error properties.label.colon: false - value[
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -3626,7 +3738,9 @@ exports[`Render validation.status = error properties.label.disabled: true - valu
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -3654,7 +3768,9 @@ exports[`Render validation.status = error properties.label.disabled: true - valu
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -3751,7 +3867,9 @@ exports[`Render validation.status = error properties.label.extra: showingextra -
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -3779,7 +3897,9 @@ exports[`Render validation.status = error properties.label.extra: showingextra -
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -3876,7 +3996,9 @@ exports[`Render validation.status = error properties.label: align_right - value[
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -3904,7 +4026,9 @@ exports[`Render validation.status = error properties.label: align_right - value[
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -4009,7 +4133,9 @@ exports[`Render validation.status = error properties.label: inline_true - value[
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -4037,7 +4163,9 @@ exports[`Render validation.status = error properties.label: inline_true - value[
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -4134,7 +4262,9 @@ exports[`Render validation.status = error properties.label: span_12 - value[0] 1
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -4162,7 +4292,9 @@ exports[`Render validation.status = error properties.label: span_12 - value[0] 1
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -4418,7 +4550,9 @@ exports[`Render validation.status = error properties.options: html - value[0] 1`
               />
             </span>
             <span>
-              &lt;div&gt;Some main text&lt;/div&gt;&lt;div style="font-size: 6px;"&gt;Some small subtext&lt;/div&gt;
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -4446,7 +4580,9 @@ exports[`Render validation.status = error properties.options: html - value[0] 1`
               />
             </span>
             <span>
-              &lt;div style="color: green;"&gt;Option green&lt;/div&gt;
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -4474,7 +4610,9 @@ exports[`Render validation.status = error properties.options: html - value[0] 1`
               />
             </span>
             <span>
-              Option 3
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -4571,7 +4709,9 @@ exports[`Render validation.status = error properties.options-number - value[0] 1
               />
             </span>
             <span>
-              15
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -4599,7 +4739,9 @@ exports[`Render validation.status = error properties.options-number - value[0] 1
               />
             </span>
             <span>
-              20
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -4825,7 +4967,9 @@ exports[`Render validation.status = error properties.options-string - value[0] 1
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -4853,7 +4997,9 @@ exports[`Render validation.status = error properties.options-string - value[0] 1
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -5079,7 +5225,9 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -5107,7 +5255,9 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -5244,7 +5394,9 @@ exports[`Render validation.status = null properties.color_red - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -5272,7 +5424,9 @@ exports[`Render validation.status = null properties.color_red - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -5342,7 +5496,9 @@ exports[`Render validation.status = null properties.disabled: true - value[0] 1`
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -5371,7 +5527,9 @@ exports[`Render validation.status = null properties.disabled: true - value[0] 1`
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -5440,7 +5598,9 @@ exports[`Render validation.status = null properties.label.colon: false - value[0
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -5468,7 +5628,9 @@ exports[`Render validation.status = null properties.label.colon: false - value[0
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -5523,7 +5685,9 @@ exports[`Render validation.status = null properties.label.disabled: true - value
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -5551,7 +5715,9 @@ exports[`Render validation.status = null properties.label.disabled: true - value
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -5620,7 +5786,9 @@ exports[`Render validation.status = null properties.label.extra: showingextra - 
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -5648,7 +5816,9 @@ exports[`Render validation.status = null properties.label.extra: showingextra - 
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -5724,7 +5894,9 @@ exports[`Render validation.status = null properties.label: align_right - value[0
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -5752,7 +5924,9 @@ exports[`Render validation.status = null properties.label: align_right - value[0
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -5829,7 +6003,9 @@ exports[`Render validation.status = null properties.label: inline_true - value[0
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -5857,7 +6033,9 @@ exports[`Render validation.status = null properties.label: inline_true - value[0
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -5926,7 +6104,9 @@ exports[`Render validation.status = null properties.label: span_12 - value[0] 1`
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -5954,7 +6134,9 @@ exports[`Render validation.status = null properties.label: span_12 - value[0] 1`
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -6154,7 +6336,9 @@ exports[`Render validation.status = null properties.options: html - value[0] 1`]
               />
             </span>
             <span>
-              &lt;div&gt;Some main text&lt;/div&gt;&lt;div style="font-size: 6px;"&gt;Some small subtext&lt;/div&gt;
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -6182,7 +6366,9 @@ exports[`Render validation.status = null properties.options: html - value[0] 1`]
               />
             </span>
             <span>
-              &lt;div style="color: green;"&gt;Option green&lt;/div&gt;
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -6210,7 +6396,9 @@ exports[`Render validation.status = null properties.options: html - value[0] 1`]
               />
             </span>
             <span>
-              Option 3
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -6279,7 +6467,9 @@ exports[`Render validation.status = null properties.options-number - value[0] 1`
               />
             </span>
             <span>
-              15
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -6307,7 +6497,9 @@ exports[`Render validation.status = null properties.options-number - value[0] 1`
               />
             </span>
             <span>
-              20
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -6477,7 +6669,9 @@ exports[`Render validation.status = null properties.options-string - value[0] 1`
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -6505,7 +6699,9 @@ exports[`Render validation.status = null properties.options-string - value[0] 1`
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -6675,7 +6871,9 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -6703,7 +6901,9 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -6835,7 +7035,9 @@ exports[`Render validation.status = success properties.color_red - value[0] 1`] 
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -6863,7 +7065,9 @@ exports[`Render validation.status = success properties.color_red - value[0] 1`] 
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -6956,7 +7160,9 @@ exports[`Render validation.status = success properties.disabled: true - value[0]
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -6985,7 +7191,9 @@ exports[`Render validation.status = success properties.disabled: true - value[0]
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -7077,7 +7285,9 @@ exports[`Render validation.status = success properties.label.colon: false - valu
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -7105,7 +7315,9 @@ exports[`Render validation.status = success properties.label.colon: false - valu
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -7183,7 +7395,9 @@ exports[`Render validation.status = success properties.label.disabled: true - va
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -7211,7 +7425,9 @@ exports[`Render validation.status = success properties.label.disabled: true - va
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -7303,7 +7519,9 @@ exports[`Render validation.status = success properties.label.extra: showingextra
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -7331,7 +7549,9 @@ exports[`Render validation.status = success properties.label.extra: showingextra
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -7430,7 +7650,9 @@ exports[`Render validation.status = success properties.label: align_right - valu
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -7458,7 +7680,9 @@ exports[`Render validation.status = success properties.label: align_right - valu
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -7558,7 +7782,9 @@ exports[`Render validation.status = success properties.label: inline_true - valu
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -7586,7 +7812,9 @@ exports[`Render validation.status = success properties.label: inline_true - valu
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -7678,7 +7906,9 @@ exports[`Render validation.status = success properties.label: span_12 - value[0]
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -7706,7 +7936,9 @@ exports[`Render validation.status = success properties.label: span_12 - value[0]
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -7952,7 +8184,9 @@ exports[`Render validation.status = success properties.options: html - value[0] 
               />
             </span>
             <span>
-              &lt;div&gt;Some main text&lt;/div&gt;&lt;div style="font-size: 6px;"&gt;Some small subtext&lt;/div&gt;
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -7980,7 +8214,9 @@ exports[`Render validation.status = success properties.options: html - value[0] 
               />
             </span>
             <span>
-              &lt;div style="color: green;"&gt;Option green&lt;/div&gt;
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -8008,7 +8244,9 @@ exports[`Render validation.status = success properties.options: html - value[0] 
               />
             </span>
             <span>
-              Option 3
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -8100,7 +8338,9 @@ exports[`Render validation.status = success properties.options-number - value[0]
               />
             </span>
             <span>
-              15
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -8128,7 +8368,9 @@ exports[`Render validation.status = success properties.options-number - value[0]
               />
             </span>
             <span>
-              20
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -8344,7 +8586,9 @@ exports[`Render validation.status = success properties.options-string - value[0]
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -8372,7 +8616,9 @@ exports[`Render validation.status = success properties.options-string - value[0]
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -8588,7 +8834,9 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -8616,7 +8864,9 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -8776,7 +9026,9 @@ exports[`Render validation.status = warning properties.color_red - value[0] 1`] 
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -8804,7 +9056,9 @@ exports[`Render validation.status = warning properties.color_red - value[0] 1`] 
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -8902,7 +9156,9 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -8931,7 +9187,9 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -9028,7 +9286,9 @@ exports[`Render validation.status = warning properties.label.colon: false - valu
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -9056,7 +9316,9 @@ exports[`Render validation.status = warning properties.label.colon: false - valu
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -9139,7 +9401,9 @@ exports[`Render validation.status = warning properties.label.disabled: true - va
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -9167,7 +9431,9 @@ exports[`Render validation.status = warning properties.label.disabled: true - va
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -9264,7 +9530,9 @@ exports[`Render validation.status = warning properties.label.extra: showingextra
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -9292,7 +9560,9 @@ exports[`Render validation.status = warning properties.label.extra: showingextra
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -9389,7 +9659,9 @@ exports[`Render validation.status = warning properties.label: align_right - valu
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -9417,7 +9689,9 @@ exports[`Render validation.status = warning properties.label: align_right - valu
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -9522,7 +9796,9 @@ exports[`Render validation.status = warning properties.label: inline_true - valu
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -9550,7 +9826,9 @@ exports[`Render validation.status = warning properties.label: inline_true - valu
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -9647,7 +9925,9 @@ exports[`Render validation.status = warning properties.label: span_12 - value[0]
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -9675,7 +9955,9 @@ exports[`Render validation.status = warning properties.label: span_12 - value[0]
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -9931,7 +10213,9 @@ exports[`Render validation.status = warning properties.options: html - value[0] 
               />
             </span>
             <span>
-              &lt;div&gt;Some main text&lt;/div&gt;&lt;div style="font-size: 6px;"&gt;Some small subtext&lt;/div&gt;
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -9959,7 +10243,9 @@ exports[`Render validation.status = warning properties.options: html - value[0] 
               />
             </span>
             <span>
-              &lt;div style="color: green;"&gt;Option green&lt;/div&gt;
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -9987,7 +10273,9 @@ exports[`Render validation.status = warning properties.options: html - value[0] 
               />
             </span>
             <span>
-              Option 3
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -10084,7 +10372,9 @@ exports[`Render validation.status = warning properties.options-number - value[0]
               />
             </span>
             <span>
-              15
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -10112,7 +10402,9 @@ exports[`Render validation.status = warning properties.options-number - value[0]
               />
             </span>
             <span>
-              20
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -10338,7 +10630,9 @@ exports[`Render validation.status = warning properties.options-string - value[0]
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -10366,7 +10660,9 @@ exports[`Render validation.status = warning properties.options-string - value[0]
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>
@@ -10592,7 +10888,9 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 1
+              <span
+                className="{}"
+              />
             </span>
           </label>
           <label
@@ -10620,7 +10918,9 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
               />
             </span>
             <span>
-              Option 2
+              <span
+                className="{}"
+              />
             </span>
           </label>
         </div>

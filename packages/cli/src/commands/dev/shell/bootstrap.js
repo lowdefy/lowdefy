@@ -18,9 +18,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Loading, loadWebpackFederatedModule, useDynamicScript } from '@lowdefy/block-tools';
 
-function Shell({ version }) {
+function Shell({ rendererRemoteEntryUrl }) {
   const { ready, failed } = useDynamicScript({
-    src: `https://blocks-cdn.lowdefy.com/v${version}/renderer/remoteEntry.js`,
+    src: rendererRemoteEntryUrl,
   });
 
   if (!ready) {
@@ -40,10 +40,13 @@ function Shell({ version }) {
   );
 }
 
-const getVersion = async () => {
-  return (await fetch(`/api/dev/version`)).json();
+const getRendererRemoteEntryUrl = async () => {
+  return (await fetch(`/api/dev/rendererRemoteEntryUrl`)).json();
 };
 
-getVersion().then((version) => {
-  ReactDOM.render(<Shell version={version} />, document.getElementById('root'));
+getRendererRemoteEntryUrl().then((rendererRemoteEntryUrl) => {
+  ReactDOM.render(
+    <Shell rendererRemoteEntryUrl={rendererRemoteEntryUrl} />,
+    document.getElementById('root')
+  );
 });
