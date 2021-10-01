@@ -47,6 +47,7 @@ export default {
   _string: 'common/string',
   _subtract: 'common/subtract',
   _sum: 'common/sum',
+  _switch: 'common/switch',
   _type: 'common/type',
   _uri: 'common/uri',
   _user: 'common/user',

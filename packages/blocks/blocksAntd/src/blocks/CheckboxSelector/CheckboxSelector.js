@@ -73,7 +73,7 @@ const CheckboxSelector = ({
             {uniqueValueOptions.map((opt, i) =>
               type.isPrimitive(opt) ? (
                 <Checkbox id={`${blockId}_${i}`} key={i} value={i}>
-                  {`${opt}`}
+                  {renderHtml({ html: `${opt}`, methods })}
                 </Checkbox>
               ) : (
                 <Checkbox
@@ -84,7 +84,7 @@ const CheckboxSelector = ({
                   className={methods.makeCssClass(opt.style)}
                 >
                   {type.isNone(opt.label)
-                    ? `${opt.value}`
+                    ? renderHtml({ html: `${opt.value}`, methods })
                     : renderHtml({ html: opt.label, methods })}
                 </Checkbox>
               )
