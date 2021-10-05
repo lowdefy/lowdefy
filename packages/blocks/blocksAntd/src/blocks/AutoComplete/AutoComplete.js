@@ -71,7 +71,7 @@ const AutoCompleteInput = ({
               methods.triggerEvent({ name: 'onChange' });
             }}
             onSearch={(newVal) => {
-              methods.triggerEvent({ name: 'onChange', event: { value: newVal } });
+              methods.triggerEvent({ name: 'onSearch', event: { value: newVal } });
             }}
             value={type.isNone(value) ? undefined : value}
           >
