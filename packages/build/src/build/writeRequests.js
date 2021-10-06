@@ -37,6 +37,4 @@ async function writeRequests({ components, context }) {
   return Promise.all(writePromises);
 }
 
-// export { getRequestsOnBlock };
-
 export default writeRequests;

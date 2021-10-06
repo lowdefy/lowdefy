@@ -99,11 +99,9 @@ const getContext = async ({ page, lowdefy }) => {
   ctx.update = () => {
     ctx.RootBlocks.update();
   };
-  // TODO: Can we do better here?
   await ctx.RootBlocks.map[ctx.pageId].triggerEvent({ name: 'onInit' });
   ctx.update();
   ctx.State.freezeState();
-  // TODO: Can we do better here?
   ctx.RootBlocks.map[ctx.pageId].triggerEvent({ name: 'onInitAsync' });
   return ctx;
 };
