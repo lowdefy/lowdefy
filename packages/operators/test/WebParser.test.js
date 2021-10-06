@@ -576,7 +576,7 @@ describe('parse operators', () => {
         default: 'C',
       },
     };
-    const parser = new WebParser({ context, contexts });
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual('A');

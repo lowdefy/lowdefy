@@ -471,7 +471,7 @@ describe('parse operators', () => {
         default: 'C',
       },
     };
-    const parser = new NodeParser({ state });
+    const parser = new NodeParser({ payload });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual('A');
