@@ -3,6 +3,515 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.22.0](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.1...v3.22.0) (2021-09-27)
+
+## Changes
+
+### Blocks
+
+- Added new blocks `PasswordInput` and `CheckboxSwitch`.
+- Added an `onClick` event to the `Card` block.
+- Fixed the text copied to the clipboard when the Copy button is clicked in the `Paragraph` and `Title` blocks.
+- Falsy values like `0`, `false`, and `null` are now rendered correctly in blocks that render HTML.
+
+### Build
+
+- Fixed a bug where the `_var` operator did not work with falsy values for the `default` property.
+
+### CLI
+
+- The renderer served from blocks server url is now used if a blocks server url configured.
+
+### Connections
+
+- Added Stripe connection.
+
+### Documentation
+
+- Fixed AxiosHttp connection type spelling in docs
+- Added `\_get` operator switch example.
+- Added `_array.reduce` examples.
+- Updated CLI npm install docs.
+- Changed npx commands to use specific CLI versions for docker deployments.
+- Added readme to CLI package.
+- Fixed `MultipleSelector` block events documentation.
+- Fixed `Title` block `copyable` and `ellipsis` properties documentation.
+
+## Commits
+
+### Bug Fixes
+
+- **blocksAntd:** Fix selector option labels and filter function. ([38445a5](https://github.com/lowdefy/lowdefy/commit/38445a58b626287868ad838d3b9885dccb7c720d))
+- **cli:** Use renderer served from blocks server url if configured. ([69d14b4](https://github.com/lowdefy/lowdefy/commit/69d14b4a862827beac955a5039df225af689f297)), closes [#840](https://github.com/lowdefy/lowdefy/issues/840)
+- **docs:** Fix AxiosHttp connection type spelling in docs. ([d9b53a0](https://github.com/lowdefy/lowdefy/commit/d9b53a034111bc65813d81c036376d05274ff6c7))
+
+### Features
+
+- Add `_array.reduce` examples. ([c9a6b50](https://github.com/lowdefy/lowdefy/commit/c9a6b50017c05774654388244b06076646449ce9))
+
+# [3.22.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.0...v3.22.0-alpha.1) (2021-09-20)
+
+### Bug Fixes
+
+- **blocksAntd:** Add tests for CheckboxSwitch. ([089150e](https://github.com/lowdefy/lowdefy/commit/089150eacc67e4f27de5f763ad3656d52da40cad))
+- **blocksAntd:** Added CheckboxSwitch tests. ([db8c05b](https://github.com/lowdefy/lowdefy/commit/db8c05b0ef546c460f41ab6e7e52de13eb54ff4b))
+- **blocksAntd:** Fix CheckboxSwitch color property. ([d2ea3c6](https://github.com/lowdefy/lowdefy/commit/d2ea3c6a7f2d9f13e8a766c76e49a1b3a540d1d9))
+- **blocksAntd:** Fix MultipleSelector schema and docs. ([41d25a1](https://github.com/lowdefy/lowdefy/commit/41d25a1e60f403a30824a00626605da37fc5bd3a))
+- **blocksAntd:** Fix typo in Paragraph input copyable text property. ([b92621a](https://github.com/lowdefy/lowdefy/commit/b92621a8bae7be6e4d48165b8c54176d2403c592))
+- **blocksAntd:** Paragraph and Title blocks copyable error fixed. ([483013d](https://github.com/lowdefy/lowdefy/commit/483013d1715cb97d08ed2f9475606c5b074a6ad3))
+- **blocksAntd:** Updated CheckboxSwitch test snapshots. ([025a158](https://github.com/lowdefy/lowdefy/commit/025a1583e902b6edcb94c89ad272761eabd420fe))
+- **blocksAntd:** Use updated renderHtml helper function ([5e3de6f](https://github.com/lowdefy/lowdefy/commit/5e3de6f5caa74e549b7f518895708b01a9191ee6)), closes [#820](https://github.com/lowdefy/lowdefy/issues/820)
+- **blocksAntd:** Use updated renderHtml in selector blocks ([0da3bd1](https://github.com/lowdefy/lowdefy/commit/0da3bd19512cb0452ac7c559dce2e9ae499288de))
+- **blocksBasic:** Handle none type values in DangerousHtml block ([a765be4](https://github.com/lowdefy/lowdefy/commit/a765be4395c315f90b31680d3a914e8ac6f2a5ae))
+- **blocksBasic:** Use renamed HtmlComponent in Html block (was RenderHtml) ([cf85d6c](https://github.com/lowdefy/lowdefy/commit/cf85d6ce38ce1fd715d4ae42078b002cc5b5b82e))
+- **blockTools:** Add renderHtml helper function. ([b0c35f7](https://github.com/lowdefy/lowdefy/commit/b0c35f7341630c6ab7fb2470d3a3ca1bce1b1f0c))
+- **blockTools:** Handle falsey values better in RenderHtml component ([4363803](https://github.com/lowdefy/lowdefy/commit/43638035d038e5b4993a2709cf657ae60d10e8be))
+- **build:** Updated meta location tests to include CheckboxSwitch. ([905f47e](https://github.com/lowdefy/lowdefy/commit/905f47edd3ffa252c688d5959d69320a7a42c7bd))
+- **build:** Updated meta locations to include CheckboxSwitch block. ([cd2ab8c](https://github.com/lowdefy/lowdefy/commit/cd2ab8c3a87e76d0b61284c60f5f3cfcad98c24f))
+- **cli:** Add readme to CLI package. ([cf5c406](https://github.com/lowdefy/lowdefy/commit/cf5c406da6d0c1f53e23d0a1d2b802c89f29db44))
+- **deps:** Update dependency axios to v0.21.4 ([81cd2b6](https://github.com/lowdefy/lowdefy/commit/81cd2b6e0ae3dc377b9cee6e3c801c47ddca2f08))
+- **docs:** Added CheckboxSwitch examples and CheckboxSelector note. ([9cf56bf](https://github.com/lowdefy/lowdefy/commit/9cf56bfbaa5c7a75c55d24d2f965ec351c1672e0))
+- **docs:** Added copyable and ellipsis config to Title block. ([9f8632e](https://github.com/lowdefy/lowdefy/commit/9f8632ec577196ea45471470a9dd13d3dbc09446))
+- **docs:** Change npx commands to specific versions for deployments. ([f2c380b](https://github.com/lowdefy/lowdefy/commit/f2c380b07a78defff79281d5c07c61a718bfe750))
+- **docs:** Convert CLI commands to npx commands. ([c9cd643](https://github.com/lowdefy/lowdefy/commit/c9cd643f3809fdc0cde7ba47e17e392b3236c17b))
+- **docs:** Update CLI npm install docs. ([98a8b71](https://github.com/lowdefy/lowdefy/commit/98a8b71ff2ef961ccfcb8b94e115b4162881dd38))
+
+### Features
+
+- **blocksAntd:** Added CheckboxSwitch demo example. ([7187849](https://github.com/lowdefy/lowdefy/commit/718784920d6e5daa69d30601cd88e7fadd94c5d4))
+- **blocksAntd:** CheckboxSwitch block has been added. ([838f5ea](https://github.com/lowdefy/lowdefy/commit/838f5ea8852cff9f193e3e0a3dfb16b9c7f1da9e))
+- **docs:** Add \_get operator switch example. ([b727b9e](https://github.com/lowdefy/lowdefy/commit/b727b9edd0f37d3d10d5add32cbd9411fa4b6f98))
+- **docs:** Added CheckboxSwitch docs. ([81752aa](https://github.com/lowdefy/lowdefy/commit/81752aa927f1d6050a290440ca15a87c05f3ea51))
+
+# [3.22.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.2...v3.22.0-alpha.0) (2021-09-08)
+
+### Bug Fixes
+
+- **blocksAntd:** Updated Password Input tests. ([7f32230](https://github.com/lowdefy/lowdefy/commit/7f322300b7888bc3de51d36483f06a1f68d5d74e))
+- **build:** Updated meta locations tests. ([9e20ace](https://github.com/lowdefy/lowdefy/commit/9e20acebaac9ae01fd3974469bddede0e651da19))
+
+### Features
+
+- **blocksAntd:** Card block now has an onClick event. ([4263f6b](https://github.com/lowdefy/lowdefy/commit/4263f6b8764bb147e301c3dbba0ac4986959aad8))
+- **blocksAntd:** Password Input block has been added. ([9d99ef8](https://github.com/lowdefy/lowdefy/commit/9d99ef82a930adb93b022c42ef765cf8a5022c70))
+- **build:** Added PasswordInput meta location. ([66abcdd](https://github.com/lowdefy/lowdefy/commit/66abcddafc7d8b1950e96a137d0d336ccf3e145b))
+- **docs:** Add Stripe documentation. ([ed963ec](https://github.com/lowdefy/lowdefy/commit/ed963ec823ef19e88ed8320d71b83a7eef2e6cfe))
+- **docs:** Added Password Input block docs. ([ee8bda4](https://github.com/lowdefy/lowdefy/commit/ee8bda4a5bd6248c03433a720652d72c3b9ddbae))
+- **graphql:** Add Stripe connection. ([e676258](https://github.com/lowdefy/lowdefy/commit/e676258688a61b93da7267272903d02cdbb3edcb))
+
+## [3.21.2](https://github.com/lowdefy/lowdefy/compare/v3.21.2-alpha.0...v3.21.2) (2021-08-31)
+
+## Changes
+
+#### Blocks
+
+- Fix undefined Tooltip title showing empty tooltip.
+
+#### Build
+
+- Add async option to actions schema
+
+#### Connections
+
+- Fix MongoDB in AWS Lambda by downgrading to the LTS version (3.6.12) of the mongodb driver. MongoDB connections were throwing a `right-hand side of instanceof is not an object` error.
+
+## Commits
+
+### Bug Fixes
+
+- Downgrade mongodb driver to LTS version 3.6.12. ([24f94f6](https://github.com/lowdefy/lowdefy/commit/24f94f644256cfc4f1b09c3122f2525c58f1502c))
+- **blocksAntd:** Fix blocks tooltip tests. ([b869fb0](https://github.com/lowdefy/lowdefy/commit/b869fb0f3c352ca6111b2974c719de9de76e8d71))
+- **blocksAntd:** Fix undefined Tooltip title showing empty tooltip. ([358e423](https://github.com/lowdefy/lowdefy/commit/358e423bf10d35fab904267225c336749bfd4232))
+- **build:** Add async to actions schema. ([1276422](https://github.com/lowdefy/lowdefy/commit/127642294ac962ac215303612e16455e395860d4))
+- **deps:** Update dependency mongodb to v4.1.1. ([96aa9a6](https://github.com/lowdefy/lowdefy/commit/96aa9a65cd7a567eef493e52d17684005e34b2a1))
+
+## [3.21.2-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.1...v3.21.2-alpha.0) (2021-08-31)
+
+### Bug Fixes
+
+- Downgrade mongodb driver to LTS version 3.6.12. ([24f94f6](https://github.com/lowdefy/lowdefy/commit/24f94f644256cfc4f1b09c3122f2525c58f1502c))
+- **blocksAntd:** Fix blocks tooltip tests. ([b869fb0](https://github.com/lowdefy/lowdefy/commit/b869fb0f3c352ca6111b2974c719de9de76e8d71))
+- **blocksAntd:** Fix undefined Tooltip title showing empty tooltip. ([358e423](https://github.com/lowdefy/lowdefy/commit/358e423bf10d35fab904267225c336749bfd4232))
+- **build:** Add async to actions schema. ([1276422](https://github.com/lowdefy/lowdefy/commit/127642294ac962ac215303612e16455e395860d4))
+- **deps:** Update dependency mongodb to v4.1.1. ([96aa9a6](https://github.com/lowdefy/lowdefy/commit/96aa9a65cd7a567eef493e52d17684005e34b2a1))
+
+## [3.21.1](https://github.com/lowdefy/lowdefy/compare/v3.21.0...v3.21.1) (2021-08-26)
+
+### Bug Fixes
+
+- **blocksAntd:** Fix Alert padding. ([9fb9686](https://github.com/lowdefy/lowdefy/commit/9fb9686cd2bfc9ed5028a44a24146d8c587a8ca2))
+- **docs:** Add missing hash docs. ([2520555](https://github.com/lowdefy/lowdefy/commit/2520555212b699bf58d9a01b5db996cb2f5b44cb))
+- **docs:** Add responsive layout docs and video. ([5c31dac](https://github.com/lowdefy/lowdefy/commit/5c31dacda32ec8688dcf6605756c6a1262867adf))
+- **docs:** Update node server docs. ([bb64d3e](https://github.com/lowdefy/lowdefy/commit/bb64d3e850b0c60a5129babbb5b144a577d8635d))
+- **renderer:** Fix loading skeletons, closes [#798](https://github.com/lowdefy/lowdefy/issues/798) ([e4dd10e](https://github.com/lowdefy/lowdefy/commit/e4dd10e4b35e6fc957abe955d4c1a5b6767ecc66))
+- **docs:** Added responsive setup to Layout Concepts. ([0635433](https://github.com/lowdefy/lowdefy/commit/0635433df47ff1fd1fe067231ea0a9ff4b3f652e))
+
+# [3.21.0](https://github.com/lowdefy/lowdefy/compare/v3.20.4...v3.21.0) (2021-08-25)
+
+## Changes
+
+#### Actions
+
+- Add onMount and onMountAsync actions for all blocks.
+- Add debounce to the build schema.
+
+#### Blocks
+
+- Divider not to render empty title.
+- RenderHtml to return span by default.
+
+#### Renderer
+
+- Refactor renderer to work with `props.children` instead of a render function.
+
+#### Connections
+
+- Add https agent options to AxiosHttp connection.
+
+#### Docs
+
+- Add basic full example for AxiosHttp.
+
+#### Operators
+
+- Add `_hash` operator.
+- Add \_uuid v1, v3, v4, and v5 options.
+
+#### Servers
+
+- Fix replaceAll not a function.
+
+## Commits
+
+### Bug Fixes
+
+- **blocksAntd:** Divider not to render empty title, closes [#790](https://github.com/lowdefy/lowdefy/issues/790) ([790fb89](https://github.com/lowdefy/lowdefy/commit/790fb89522538baccb8617d929dc7e3bcbe2e7fb))
+- **blocksBasic:** Html test change to new RenderHtml. ([e43617a](https://github.com/lowdefy/lowdefy/commit/e43617a47a04b1e7d9297379207d6455bf66a453))
+- **blocksBasic:** Test change to new RenderHtml. ([ee9e3f0](https://github.com/lowdefy/lowdefy/commit/ee9e3f0d6150fdcd5ea42d0cfc1c0b6be8cc43a9))
+- **blocksColorSelectors:** Update tests. ([dcbbf0b](https://github.com/lowdefy/lowdefy/commit/dcbbf0b25db1a88d19f4f7785a60d5e56d7355d8))
+- **blockTools:** RenderHtml to only update ref after render. ([9351255](https://github.com/lowdefy/lowdefy/commit/9351255d3a05d3cbfb0f1241b714feb8960878df))
+- **blockTools:** RenderHtml to return span by default, closes [#775](https://github.com/lowdefy/lowdefy/issues/775) [#777](https://github.com/lowdefy/lowdefy/issues/777) ([abbd823](https://github.com/lowdefy/lowdefy/commit/abbd8237174ba3565d5af149c846ca99ada9d06b))
+- **build:** Add debounce to the build schema. ([2ea31b1](https://github.com/lowdefy/lowdefy/commit/2ea31b1f3e770a1edbcdefa790908f9df7c04997))
+- **docs:** Add basic full example for AxiosHttp. ([1e689d2](https://github.com/lowdefy/lowdefy/commit/1e689d2cf27d9d94c1202bd4f716369b7aea8313))
+- **docs:** Reformat v3 and v5 uuid argument definitions. ([98cd626](https://github.com/lowdefy/lowdefy/commit/98cd626550734313fb0cd3ab1206a13d258064ca))
+- **docs:** Update \_uuid docs. ([07178f1](https://github.com/lowdefy/lowdefy/commit/07178f1bd59d5fb52f94bcfd08f860026aaeb83d))
+- **docs:** Updated docs to remove legacy v1, v4 uuid operators. ([8544dc9](https://github.com/lowdefy/lowdefy/commit/8544dc9e69bce7345099508bfec3042b5e8997bd))
+- **docs:** Updated documented v3, v5 uuid function definitions. ([bd0e777](https://github.com/lowdefy/lowdefy/commit/bd0e777c9744e668d7bf25e5aeb2b293e6337464))
+- **operators:** Remove array param type from v3, v5 uuid operator. ([5141fdf](https://github.com/lowdefy/lowdefy/commit/5141fdff7f1d60ded07e89a659762d881e7fc4f7))
+- **operators:** Updated tests to remove legacy v1, v4 uuid operators. ([f43a054](https://github.com/lowdefy/lowdefy/commit/f43a054d2c7dcff219936cebfe8ad69810dc362a))
+- **renderer:** Add crypto build fallback. ([1f74ca7](https://github.com/lowdefy/lowdefy/commit/1f74ca7674f48241060ebcb4030378f279431376))
+- **server:** replaceAll not a function, closes [#789](https://github.com/lowdefy/lowdefy/issues/789) ([055a2ac](https://github.com/lowdefy/lowdefy/commit/055a2ac4bad52402ebb200ebff02dea183af56e2))
+- Add array and object param types to v3 and v5 uuid methods. ([0a551e9](https://github.com/lowdefy/lowdefy/commit/0a551e9d9303c9f4e7a15e82b439ec6291c49187))
+
+### Features
+
+- **docs:** Add onMount and onMountAsync docs. ([a3c698d](https://github.com/lowdefy/lowdefy/commit/a3c698dde629b475a8d1858613f85a67c4ec13f6))
+- **graphql:** Add https agent options to AxiosHttp connection. ([df94e01](https://github.com/lowdefy/lowdefy/commit/df94e0191bf5dfbc539a3703d2090331ef810c24)), closes [#794](https://github.com/lowdefy/lowdefy/issues/794)
+- **operators:** Add \_hash operator. ([0d3244a](https://github.com/lowdefy/lowdefy/commit/0d3244af5b13633c640bc471ed72cb7df035b415))
+- **operators:** Add \_uuid v1, v2, v3, v4, and v5 options. ([3f2fc75](https://github.com/lowdefy/lowdefy/commit/3f2fc757224ec4a766b138d45ebcc68d47c56463))
+- **operators:** Add array param type from v3, v5 uuid operator. ([764051b](https://github.com/lowdefy/lowdefy/commit/764051b950864dbe59de50930383caede966e1be))
+- **renderer:** Refactoring renderer and implementing onMount and onMountAsyc, closes [#778](https://github.com/lowdefy/lowdefy/issues/778) ([101d23a](https://github.com/lowdefy/lowdefy/commit/101d23a3f9f495549553ddecbd5420867e9023db))
+- Add support for v1, v3, v4 and v5 to the \_uuid operator. ([c9ef4b9](https://github.com/lowdefy/lowdefy/commit/c9ef4b93fadf3dfa9b01ffb43fbd0375706bcb25))
+- **operators:** Add RIPEMD-160 algorithm. ([3e07218](https://github.com/lowdefy/lowdefy/commit/3e07218df07737fce28de4525f8d1fc69702e729))
+- **operators:** Add uuid to client, closes [#783](https://github.com/lowdefy/lowdefy/issues/783) ([6dc8d28](https://github.com/lowdefy/lowdefy/commit/6dc8d28608f18317986f21613af59a513d84cef8))
+
+## [3.20.4](https://github.com/lowdefy/lowdefy/compare/v3.20.3...v3.20.4) (2021-08-21)
+
+### Bug Fixes
+
+- **blocksAntd:** Fix Card block title area. ([475aef6](https://github.com/lowdefy/lowdefy/commit/475aef6a817068ee6734cba32b8b684c459e2a7c))
+- **blocksAntd:** Fix Card title if no title is specified. ([60074f9](https://github.com/lowdefy/lowdefy/commit/60074f991d5893929cbf21fabe4b428e7eb4dc43))
+- **blocksAntd:** Update Card block snapshot tests. ([4c67f41](https://github.com/lowdefy/lowdefy/commit/4c67f41f4299c107257efa1f7a34bc163f78c88f))
+- **blocksAntd:** Update schema for Descriptions. ([50bf48c](https://github.com/lowdefy/lowdefy/commit/50bf48c6606ad327c989b34d58f0404406cbf2a3))
+- **build:** Fix user specified type locations. ([0456b00](https://github.com/lowdefy/lowdefy/commit/0456b0073dc13d743ba962d81488088c3794d3da))
+
+## [3.20.3](https://github.com/lowdefy/lowdefy/compare/v3.20.1...v3.20.3) (2021-08-20)
+
+### Bug Fixes
+
+- **server-netlify:** Initialise basePath in Netlify server. ([8085b4a](https://github.com/lowdefy/lowdefy/commit/8085b4abef3a3f5a9a93cb37a5270d2ca0969ac0))
+
+## [3.20.2](https://github.com/lowdefy/lowdefy/compare/v3.20.1...v3.20.2) (2021-08-20)
+
+### Bug Fixes
+
+- **build:** Cache readFile and getMeta promises. ([d1fd3da](https://github.com/lowdefy/lowdefy/commit/d1fd3daa90716e98e3a06022e743df9a3fdd58d0))
+- **cli:** Initialise basePath in CLI dev server. ([3c2093a](https://github.com/lowdefy/lowdefy/commit/3c2093a6bd85e969c0f3cccfc213c9ebccdd7144))
+- **docs:** Remove console log. ([41bc269](https://github.com/lowdefy/lowdefy/commit/41bc269d67c1d7d258ef5705fe845921068d3de1))
+
+## [3.20.1](https://github.com/lowdefy/lowdefy/compare/v3.20.0...v3.20.1) (2021-08-20)
+
+### Bug Fixes
+
+- **build:** Fix unevaluated being passed to \_ref transformer. ([537a776](https://github.com/lowdefy/lowdefy/commit/537a77651220d7ffab117572c40ff790e296af56))
+
+# [3.20.0](https://github.com/lowdefy/lowdefy/compare/v3.19.0...v3.20.0) (2021-08-20)
+
+## Changes
+
+#### Actions
+
+- A `debounce` option has been added to events.
+- An `async` option has been added to actions so that they are not awaited in the action chain.
+- A new `ResetValidation` action has been added.
+- A new `Throw` action has been added.
+- A `back` option has been added to the `Link` action.
+- The Lowdefy action functions can now be used inside the `JsAction` action.
+- The `Validate` action can now take a list of regular expressions to match blocks to validate.
+- Only blocks that have been validated now show the validation result.
+
+#### Blocks
+
+- The `List` block now has `direction`, `wrap`, and `scroll` properties.
+
+- HTML is now supported in block properties that used to only take strings. The following blocks now have support for HTML properties:
+
+  - `Alert`
+  - `AutoComplete`
+  - `Button`
+  - `ButtonSelector`
+  - `Card`
+  - `CheckboxSelector`
+  - `CircleColorSelector`
+  - `Collapse`
+  - `ColorSelector`
+  - `CompactColorSelector`
+  - `ConfirmModal`
+  - `Descriptions`
+  - `Divider`
+  - `GithubColorSelector`
+  - `Label`
+  - `Message`
+  - `Modal`
+  - `MultipleSelector`
+  - `Notification`
+  - `Paragraph`
+  - `RadioSelector`
+  - `Result`
+  - `Selector`
+  - `SliderColorSelector`
+  - `Statistic`
+  - `SwatchesColorSelector`
+  - `Title`
+  - `Tooltip`
+  - `TwitterColorSelector`
+
+- The `showTotal` property in the `Pagination` block can now be a string or function.
+- If the `onClose` event fails in the `ConfirmModal`, `Drawer`, and `Modal` blocks, the block no longer closes.
+- The `ParagraphInput` and `TitleInput` blocks now render non-truthy values.
+
+#### CLI and build
+
+- The `_ref` operator can now specify a resolver function that overrides the default reading of configuration files from the file system.
+- A default `_ref` resolver function can be specified for an app.
+- The CLI can now be configured from the `lowdefy.yaml` file.
+- The `dev` command now has `watch` and `watchIgnore` options to control which files are watched for rebuilds.
+- The blocks server URL is now configurable.
+- The `dev` server no longer exits if the initial build fails.
+
+#### Connections
+
+- The following Elasticsearch requests have been added:
+  - `ElasticsearchDelete`
+  - `ElasticsearchDeleteByQuery`
+  - `ElasticsearchIndex`
+  - `ElasticsearchUpdate`
+  - `ElasticsearchUpdateByQuery`
+- Read and write checking for Elasticsearch has been added.
+- The `mongodb` driver has been updated to 4.1.0, and now supports different options.
+- Connection options are now passed to the `MongoDBCollection` connection.
+
+#### Docs
+
+- The `AxiosHttp` examples have been fixed.
+- The Netlify deployment steps have been updated.
+
+#### Operators
+
+- The `_location` operator now returns the `basePath`, `homePageId`, and `pageId`.
+- The `_number` operator has been added.
+
+#### Servers
+
+- The server `basePath` is now configurable.
+- A Node.js production server has been added.
+
+## Commits
+
+### Bug Fixes
+
+- **blocks-antd:** Fix Descriptions block items schema ([525e8eb](https://github.com/lowdefy/lowdefy/commit/525e8eb8e3927e21e7b886cde0712ccb6d4c5b03))
+- **blocks-antd:** Update snapshot tests for basePath ([5add1a7](https://github.com/lowdefy/lowdefy/commit/5add1a72a3bc341761be7aee0626b9e29a5ded67))
+- **blocksAntd:** Add additional properties to Descriptions and use RenderHtml. ([dfc468d](https://github.com/lowdefy/lowdefy/commit/dfc468d1fef7b9aebb611c82ff19285260bc5d7e))
+- **blocksAntd:** Add blocks display type to Descriptions schema. ([bd78efc](https://github.com/lowdefy/lowdefy/commit/bd78efc0deb0702fb91bafd154f4aa64662d4f85))
+- **blocksAntd:** Add option to define `showTotal` as a string or function. ([9ac3fc9](https://github.com/lowdefy/lowdefy/commit/9ac3fc9711df889a1d58d83a68ed2e6baf8f0946))
+- **blocksAntd:** Added string output for ParagraphInput and TitleInput. ([5735bbf](https://github.com/lowdefy/lowdefy/commit/5735bbf1a51f9ea263797e62e69958cb9cfd5b3c))
+- **blocksAntd:** Do not close modals and drawer if event is bounced. ([33814b0](https://github.com/lowdefy/lowdefy/commit/33814b04fd70bad08cdca50f40ee8b05f13de9e6))
+- **blocksAntd:** Use relative paths with Link. ([f43762f](https://github.com/lowdefy/lowdefy/commit/f43762fc9eccd1876b0f240f3ea1ac64373238a3))
+- **blocksBasic:** Add row-reverse, column-reverse options to List direction. ([5926be6](https://github.com/lowdefy/lowdefy/commit/5926be6da45aff20a1743d8871b8c1dd1ff5d4e9))
+- **blocksBasic:** Refactor to use RenderHtml. ([8e8ff8d](https://github.com/lowdefy/lowdefy/commit/8e8ff8daea67cff2637a4b83d7c0582fc3fc77d6))
+- **blocksBasic:** Updated List schema and snapshots. ([7319fe7](https://github.com/lowdefy/lowdefy/commit/7319fe793b65a681971d63f9dfc2214180d5621a))
+- **blocksBasic:** Updated List schema. ([006b3b7](https://github.com/lowdefy/lowdefy/commit/006b3b75d89517297c53ca2408c88eb46fe352bb))
+- **blockTools:** Add RenderHtml to blockTools. ([7662de1](https://github.com/lowdefy/lowdefy/commit/7662de1d1bf19b781cefcb2425e6b66f14e146ef))
+- **blockTools:** RenderHtml should default to display-inline block. ([dcaf615](https://github.com/lowdefy/lowdefy/commit/dcaf61575c09a9f253f1197826ff4ea60bdcd685))
+- **build:** Add tests for readConfigFile. ([809f09a](https://github.com/lowdefy/lowdefy/commit/809f09a51fb46d94c54a35042cd0fb6c58f11fbd))
+- **build:** Add writeBuildArtifact test. ([350f25f](https://github.com/lowdefy/lowdefy/commit/350f25faf8171c3ed42a738b39333d289cb1dee8))
+- **build:** Fix getMeta memoisation ([7f824b0](https://github.com/lowdefy/lowdefy/commit/7f824b0553358c695c64ffe0fcbf38ca04a075c3))
+- **build:** Fix getMeta memoised return. ([a939bd5](https://github.com/lowdefy/lowdefy/commit/a939bd5b3fd68c557e38848993551dff19b5622e))
+- **build:** Fix getMeta return value after dataloader has been removed. ([993d398](https://github.com/lowdefy/lowdefy/commit/993d3988be32e46e93619ed2edc5a6380f726510))
+- **build:** Refactor build refs. ([dbb7c88](https://github.com/lowdefy/lowdefy/commit/dbb7c88f44719277b2583c3b11a2cd150be841d1))
+- **build:** refactor buildRefs function. ([b66cc5a](https://github.com/lowdefy/lowdefy/commit/b66cc5a38db08666a8edc0312045c2b8ea20f66e))
+- **build:** Refactor buildRefs. ([8d43e00](https://github.com/lowdefy/lowdefy/commit/8d43e004e52384c143524645f36544d4795affe9))
+- **build:** Refactor reading of config files. ([d1591a2](https://github.com/lowdefy/lowdefy/commit/d1591a2a0578a4bda230e35e86fcbd1d4e5dcffa))
+- **build:** Refactor writing of build artifact files. ([7162760](https://github.com/lowdefy/lowdefy/commit/7162760b18b62c9b5f25ea1ff024c1c1724132df))
+- **build:** Remove dataloader dependency ([4c64bd7](https://github.com/lowdefy/lowdefy/commit/4c64bd7ce290ba7881d6deda3097d0b9fb765203))
+- **build:** remove metaloader to remove dataloader dependency ([f6f35a9](https://github.com/lowdefy/lowdefy/commit/f6f35a91342a771a644a350378ef52ab9d80c05d))
+- **build:** Remove unsupported eval property on \_ref. ([808f619](https://github.com/lowdefy/lowdefy/commit/808f619d19c6b450133861913ee56e69f783fbc0))
+- **build:** Remove unused tests. ([f2db270](https://github.com/lowdefy/lowdefy/commit/f2db270a223e290a58fcd4e2225365692d83e097))
+- **build:** Standarise buildPages function signatures. ([65c7e8b](https://github.com/lowdefy/lowdefy/commit/65c7e8ba9b39609c992878d84968a2cbc60b4a16))
+- **build:** Test memoisation in getMeta. ([c1f887e](https://github.com/lowdefy/lowdefy/commit/c1f887e4ff3da0122d3d7b5566a1f64f7a6dc0e1))
+- **cli:** Do not exit dev server if the initial build fails ([41653f8](https://github.com/lowdefy/lowdefy/commit/41653f827ad25d56a1cd189dcb551f7ca4db6ef9)), closes [#711](https://github.com/lowdefy/lowdefy/issues/711)
+- **cli:** Fix print tests in CI. ([6be137d](https://github.com/lowdefy/lowdefy/commit/6be137d45a6bfaf9a6c3a3254a7b5917893c4f6a))
+- **docs:** Add more examples to Throw. ([8ef4bb3](https://github.com/lowdefy/lowdefy/commit/8ef4bb3349e2edf3d95ab5c7bb70fa34f70c318e))
+- **docs:** Docs typo fixes. ([df5770d](https://github.com/lowdefy/lowdefy/commit/df5770d13b9ae539df7af09bf1f28a00dcd8b834))
+- **docs:** Fix AxiosHttp examples, closes [#686](https://github.com/lowdefy/lowdefy/issues/686) ([1fc3329](https://github.com/lowdefy/lowdefy/commit/1fc33295f07a215f12b229557468cb49159addcc))
+- **docs:** Fix custom blocks basePath typo. ([eaee5aa](https://github.com/lowdefy/lowdefy/commit/eaee5aa4bf6c745de08892ac99ecccec3137f66e))
+- **docs:** Fix mongodb examples in docs. ([cde85b7](https://github.com/lowdefy/lowdefy/commit/cde85b7fb81b4a02e631ca4381c8212e581b7fd9))
+- **docs:** Fix sentences on Validation docs. ([d5a5b7f](https://github.com/lowdefy/lowdefy/commit/d5a5b7f8e5ad818c19ecb75c6d40eb2d714042cc))
+- **docs:** Remove documentation for eval option on \_ref. ([baf1090](https://github.com/lowdefy/lowdefy/commit/baf1090be7774d427be476411cca9167d28382c7))
+- **docs:** Remove local types. ([282380a](https://github.com/lowdefy/lowdefy/commit/282380a75d83eb66464ebd0fb4fda44c53b7d2bd))
+- **docs:** Sort endpoints alphabetically ([26ca2b7](https://github.com/lowdefy/lowdefy/commit/26ca2b7b2b107bdcb7c6fd1c5859e1bf89cbd3fe))
+- **docs:** Update Netlify deployment steps ([071d402](https://github.com/lowdefy/lowdefy/commit/071d402dfbd06c6cf28b4d58388e2910adae43a4))
+- **engine:** Add tests for Blocks.validate. ([0a0a66a](https://github.com/lowdefy/lowdefy/commit/0a0a66aa7639db6fcded6aa5a4937c2b96e6e7c8))
+- **engine:** Catch CallMethod method not defined error and add tests for CallMethod. ([96f9cb1](https://github.com/lowdefy/lowdefy/commit/96f9cb1d65c80727a27703497a9c25cf694de11d))
+- **engine:** Fixes to event debouncing and tests. ([89266f2](https://github.com/lowdefy/lowdefy/commit/89266f2dbdf860434c94811613a07a385afdc78d))
+- **engine:** Refactor Validate to work with getBlockMatcher. ([8c9de14](https://github.com/lowdefy/lowdefy/commit/8c9de14c3f26a64adf2a5dbb93b86105978c62d4))
+- **engine:** Remove showValidationErrors from context. ([24e0bbc](https://github.com/lowdefy/lowdefy/commit/24e0bbc3a849a8d3cc2b4b3313a3530dd0369b03))
+- **engine:** Update action tests to include debounce. ([b21c440](https://github.com/lowdefy/lowdefy/commit/b21c440eb0144bb5d53a2d3320bc8637de300c90))
+- **engine:** Update events test for undefined event. ([05bc928](https://github.com/lowdefy/lowdefy/commit/05bc928e45d07fba5b6a27e505cd3c1128b4216b))
+- **operators:** Fix homePageId typo and update tests. ([6bfa83a](https://github.com/lowdefy/lowdefy/commit/6bfa83a68c355858ab8ade2d3a2e8a8df45bb6dc))
+- Add \_number operator. ([1ca3966](https://github.com/lowdefy/lowdefy/commit/1ca3966495f96da9a66fa912a70703748c10d197))
+- Enable read/write checking for Elasticsearch ([9d13c32](https://github.com/lowdefy/lowdefy/commit/9d13c326eeb8e90d4880aa472a16c72bc71001fb))
+- Fix \_number operator tests. ([3b36a53](https://github.com/lowdefy/lowdefy/commit/3b36a53e42f0996c7ba6d5e2e19436c438a08ffe))
+- Fix Docker server docs ([5171320](https://github.com/lowdefy/lowdefy/commit/517132043f18dce96729252c2aaac90e204df5d7))
+- Fixes for configurable basePath. ([63955bb](https://github.com/lowdefy/lowdefy/commit/63955bbd1131da3b27b537d4e0d72dc943119287))
+
+### Features
+
+- **blocksAntd:** Add support for html on all input Label title and extra. ([59979c7](https://github.com/lowdefy/lowdefy/commit/59979c7ed2afd9ffadb97f06d59fca323a1ac589))
+- **blocksAntd:** Add support for html to Descriptions and refactor. ([6261355](https://github.com/lowdefy/lowdefy/commit/6261355f313a4d240407373c34c80608b4c1efd3))
+- **blocksAntd:** Added onclose action chain error detection to ConfirmModal, Drawer, Modal. ([66e0692](https://github.com/lowdefy/lowdefy/commit/66e0692d9c9dc8a25be9115d2522e4cb77075c50))
+- **blocksAntd:** options labels to support html. ([3533a96](https://github.com/lowdefy/lowdefy/commit/3533a96cb2031ba83932135a2d72fb554d9b9c12))
+- **blocksAntd:** Selector option.label can be html. ([9200e34](https://github.com/lowdefy/lowdefy/commit/9200e3461ccb719f40578e9f2c15de12fe3c7053))
+- **blocksBasic:** Added list direction, wrapping and scrolling. ([aba280a](https://github.com/lowdefy/lowdefy/commit/aba280a4f3768c462bff65c8726939a8e6b9cec9))
+- **build:** Add support for app default ref resolver function. ([b23e8c9](https://github.com/lowdefy/lowdefy/commit/b23e8c967ec1c48664a9aef954a0b53497af28d2))
+- **build:** Add support for resolver functions in \_ref operator. ([aa7fddc](https://github.com/lowdefy/lowdefy/commit/aa7fddcfc20b3689400bd69d9b865f9306e6991f))
+- **cli:** Add option to configure cli from the lowdefy.yaml file ([e4f62d0](https://github.com/lowdefy/lowdefy/commit/e4f62d0cf4784ec1ffb872f876469fc6beea0efd))
+- **cli:** Add watch and watchIgnore options to dev command ([9eaf3e8](https://github.com/lowdefy/lowdefy/commit/9eaf3e8adb39eca7e7c7a9c8fe131776960002c8))
+- **docs:** Add event debounce. ([e4c5db4](https://github.com/lowdefy/lowdefy/commit/e4c5db4abdf63fc27719bf72890393f33004ef43))
+- **docs:** Add ResetValidation docs. ([289c762](https://github.com/lowdefy/lowdefy/commit/289c762696cdf35f28a53d8d7ce1c340f8ca3b9f))
+- **docs:** Document \_ref resolver functions. ([446b383](https://github.com/lowdefy/lowdefy/commit/446b3833a9c3c861db609319ed11e1b14222327e))
+- **docs:** Document basePath setting. ([aa9601c](https://github.com/lowdefy/lowdefy/commit/aa9601c84935c60ec36c9bf752e94fe75a8b8505))
+- **docs:** Update docs for new Validation. ([a91a7c7](https://github.com/lowdefy/lowdefy/commit/a91a7c77e93f6ab20fd520b9aa9bd75ecbf9650d))
+- **engine:** Add async option to actions ([81036db](https://github.com/lowdefy/lowdefy/commit/81036db446ae64cd023fe198360fa9506e818ca0))
+- **engine:** Add async tests and update docs. ([fd967b9](https://github.com/lowdefy/lowdefy/commit/fd967b929b4ab57a787b1e052c74334dfc54e87b))
+- **engine:** Add debounce option to events. ([003cb0b](https://github.com/lowdefy/lowdefy/commit/003cb0b1ec13a246aa4848f2c5020a937b97ac3d))
+- **engine:** Add ResetValidation action. ([01237e3](https://github.com/lowdefy/lowdefy/commit/01237e3340b3547ae88cc7248eed7daa1ac5e4c5))
+- **engine:** Add tests for events debounce. ([2ff29cb](https://github.com/lowdefy/lowdefy/commit/2ff29cb772bc940bb59dc976c31d473771c8da97))
+- **engine:** Add Throw action. ([d2a23f0](https://github.com/lowdefy/lowdefy/commit/d2a23f0022aca6d9f0e330ef3652ad2a8f8364b7))
+- **engine:** Document Lowdefy action functions in JsAction. ([7634145](https://github.com/lowdefy/lowdefy/commit/7634145286cdb8483bbcd151343bbcb6d5a0a65f))
+- **engine:** showValidation on block level and params.regex for Validate. ([6824b07](https://github.com/lowdefy/lowdefy/commit/6824b07127f86ed19d0239ba903f88ddb4287932))
+- **graphql:** Updated mongo client to include connection options and documented command options. ([57127ee](https://github.com/lowdefy/lowdefy/commit/57127ee9240ae1e20fae109e4928048e232b9935))
+- **graphql:** Updated mongodb to 4.1.0 and documented MongoDBAggregation options. ([3fefe99](https://github.com/lowdefy/lowdefy/commit/3fefe9974362485d752a9de1c940d5e3f44932ea))
+- **operators:** Add basePath to \_location. ([eb95c8a](https://github.com/lowdefy/lowdefy/commit/eb95c8a64b2b7698f006750cd3639ee71dbbf4a9))
+- **operators:** Add pageId and homePageId to \_location. ([00842d4](https://github.com/lowdefy/lowdefy/commit/00842d48153fc2b49ac6bd6cd88d73c3cce0c178))
+- Ability to use html in ConfirmModal, Divider, Message, Modal. ([ec69fb7](https://github.com/lowdefy/lowdefy/commit/ec69fb7ed8759c2d84302da87b25ece52c2988e2))
+- Add back option to link. ([b6cf705](https://github.com/lowdefy/lowdefy/commit/b6cf705d5c7e0b54a3c22d7a33116fc30dc9e191)), closes [#728](https://github.com/lowdefy/lowdefy/issues/728)
+- add ElasticsearchDelete request. ([9f1fc34](https://github.com/lowdefy/lowdefy/commit/9f1fc347d60b5f2877d7331007359ff5746c735b))
+- Add ElasticsearchDeleteByQuery request. ([a370e9e](https://github.com/lowdefy/lowdefy/commit/a370e9e7c615bac4341f26f7bafb2abd5dc707a7))
+- add ElasticsearchIndex request. ([08de720](https://github.com/lowdefy/lowdefy/commit/08de720351c62d5211d94d145105e76e5dd55f5c))
+- Add ElasticsearchUpdate request. ([a23a7be](https://github.com/lowdefy/lowdefy/commit/a23a7be1632f60beef162dc726168b51f185508e))
+- Add ElasticsearchUpdateByQuery request. ([3cc30ca](https://github.com/lowdefy/lowdefy/commit/3cc30ca4a893e486c487fc6c1c3ca18042ce68d7))
+- Add Lowdefy actions to JsAction ([7af4442](https://github.com/lowdefy/lowdefy/commit/7af4442c6f2314ffbf927a413c15649425a93b59))
+- Added ability to use html in Alert, Descriptions and Notification. ([efa61bd](https://github.com/lowdefy/lowdefy/commit/efa61bd7a08172938a56025b68ca15f08195a088))
+- Added ability to use html in Button, Card and Collapse. ([6d4d696](https://github.com/lowdefy/lowdefy/commit/6d4d696ce35c327c22e014929e363aa8cc5c5954))
+- Added ability to use html in Paragraph, Result and Statistic. ([483eee6](https://github.com/lowdefy/lowdefy/commit/483eee6eecacffe90f76221e5cb62ddaa07e2649))
+- Added ability to use html in Title and Tooltip. ([9329d24](https://github.com/lowdefy/lowdefy/commit/9329d2487edda363a633eb4081914dd8fb7a1c9c))
+- Document node server. ([20dfb7d](https://github.com/lowdefy/lowdefy/commit/20dfb7db70868a0b2006f4f004736562acc480dc))
+- Initialise @lowdefy/server-node package ([17c27f7](https://github.com/lowdefy/lowdefy/commit/17c27f7f49ca8df85e609760c0c2c3fea73f4a62))
+- Make blocks server URL configurable. ([65c9fe7](https://github.com/lowdefy/lowdefy/commit/65c9fe79b254bf5a20b87e0a2ec4fdcd1ecd5427)), closes [#670](https://github.com/lowdefy/lowdefy/issues/670)
+- Make server basepath configurable ([3981f8c](https://github.com/lowdefy/lowdefy/commit/3981f8c60b9a2e6f5429a5fba499c65c16ccf30f))
+- Update Elasticsearch docs ([8feb78b](https://github.com/lowdefy/lowdefy/commit/8feb78b3cc168da818b156349d389c66ae8ddef3))
+- Updated antd blocks fields .json that support html. ([c9ae5e7](https://github.com/lowdefy/lowdefy/commit/c9ae5e745fe2010337228a6d6f75ca5903f0c0b0))
+
+# [3.19.0](https://github.com/lowdefy/lowdefy/compare/v3.18.1...v3.19.0) (2021-07-26)
+
+## Changes
+
+### Features
+
+- Adds support for Elasticsearch.
+- Adds the `_change_case` operator.
+
+### Fixes
+
+- Increases the server bodyParserConfig limit to 5mb. This is to mitigate errors where the payload is too large if their is a lot of data in state or global. This issue will be resolved in the next major version by [#641](https://github.com/lowdefy/lowdefy/issues/641).
+- Changes the default value of the `Selector` `showSearch` property to true.
+- The default value returned by the `_request` operator if values are not found is now `null`, like other getter operators.
+
+### Contributions
+
+- Thanks [Moritz Friedrich (Radiergummi)](https://github.com/Radiergummi) for contributing the Elasticsearch connection.
+
+## Commits
+
+### Bug Fixes
+
+- **blocksAntd:** Update Selector test snapshots. ([417e802](https://github.com/lowdefy/lowdefy/commit/417e802a89a9311578dad467c4580c502ec2c7c4))
+- **docs:** Comment fixes on \_change_case operator ([b2a30e7](https://github.com/lowdefy/lowdefy/commit/b2a30e713661d687705bb5e02289e8b35402a0b9))
+- **operators:** Fix regex in \_change_case operator. ([e4d577f](https://github.com/lowdefy/lowdefy/commit/e4d577f856e2bc96598ffc715170417855c8ad25))
+- Increase bodyParserConfig limit to 5mb. ([fc688a2](https://github.com/lowdefy/lowdefy/commit/fc688a237f27eb52f94425bf59bce0be7af92be1))
+- **graphql:** Throw correct request configuration error messge. ([5443154](https://github.com/lowdefy/lowdefy/commit/5443154e201b06e8034c374dfc58ea254f19c871))
+- **operators:** \_request getter default value should be null. ([755527f](https://github.com/lowdefy/lowdefy/commit/755527fe88cf45a00ab8ade8353f507c8c7918d8))
+- **operators:** Comments fixes and catch nested objects ([deb8fd5](https://github.com/lowdefy/lowdefy/commit/deb8fd51d6b69ab4f22999a8639c4c3c94620f93))
+- **operators:** Update tests with comments fixes and catch nested objects ([b6d63bb](https://github.com/lowdefy/lowdefy/commit/b6d63bb80dca1c1c8eb516b809d573c713734835))
+
+### Features
+
+- Update Elasticsearch docs. ([7b883e1](https://github.com/lowdefy/lowdefy/commit/7b883e123e9f8ebc6423ceafe8e2ad03ee20a761))
+- **blocks-antd:** Make Selector showSearch default true. ([6bf511a](https://github.com/lowdefy/lowdefy/commit/6bf511ab53ffc33676038a24f900aa0a5f30a0b6))
+- **docs:** Add \_change_case operator docs. ([f57d7eb](https://github.com/lowdefy/lowdefy/commit/f57d7ebc8040ba42f4e85977e9a82ef50a28effb))
+- **graphql:** Change ElasticsearchSearch request and response schema. ([efd70a3](https://github.com/lowdefy/lowdefy/commit/efd70a3804925ed024dea0ae3f33625fef37309e))
+- **operators:** Add \_change_case operator ([e617c31](https://github.com/lowdefy/lowdefy/commit/e617c31228f9538b0c5df8e0fd9f1fbc09c4697f))
+- **operators:** Add \_change_case tests ([87bf687](https://github.com/lowdefy/lowdefy/commit/87bf68757285d87c4d57a42e25929bfbb206134f))
+
+# [3.18.1](https://github.com/lowdefy/lowdefy/compare/v3.18.0...v3.18.1) (2021-06-30)
+
+## Changes
+
+### Fixes
+
+- Fix S3UploadButton block.
+- Evaluate actions with error messages #663.
+- Replace 'Action unsuccessful' error message with message provided by Error.
+- Serializer to maintain Errors #664.
+- Fix \_location.
+
+## Commits
+
+### Bug Fixes
+
+- **blocksAntd:** Fix S3UploadButton block to new responses schema. ([37a15bf](https://github.com/lowdefy/lowdefy/commit/37a15bf6c56519565ef1b62e38dc021eeea71262))
+- **blocksAntd:** Update snapshots. ([43b23f4](https://github.com/lowdefy/lowdefy/commit/43b23f484fd6a00a3029fa9fe6389f6a7f796097))
+- **docs:** Fix typo in mql example. ([22ca375](https://github.com/lowdefy/lowdefy/commit/22ca375a8eaa54f193f06614ddbdc049989a1d2c))
+- **engine:** Evaluate action error messages after error. closes [#663](https://github.com/lowdefy/lowdefy/issues/663) ([514fd14](https://github.com/lowdefy/lowdefy/commit/514fd14ce234d19bf2661a55be328e992102b546))
+- **engine:** Remove error.lowdefyMessage. ([9f8590f](https://github.com/lowdefy/lowdefy/commit/9f8590f0d7a18a77a49235c0bc24798120062c66))
+- **engine:** Responses for actions and tests using \_actions in messages. ([38cf7ef](https://github.com/lowdefy/lowdefy/commit/38cf7ef35843ad8494fa2a9829b9ddbed33f0ca6))
+- **engine:** Up test covarage in Wait. ([a40ad4f](https://github.com/lowdefy/lowdefy/commit/a40ad4f7246c7ed0584fd3747f7a21e31832af96))
+- **helpers:** Serializer to maintain error. closes [#664](https://github.com/lowdefy/lowdefy/issues/664) ([bfbdf58](https://github.com/lowdefy/lowdefy/commit/bfbdf585ab65ec108fa90750242a39eaf0c4be63))
+- **operators:** Do not copy window.location in \_location. ([61f6215](https://github.com/lowdefy/lowdefy/commit/61f6215ee31a99ac5bbaf81c4ff7120ba5f51eda))
+- **shell:** Add dev build option to serve renderer from localhost. ([3f3840d](https://github.com/lowdefy/lowdefy/commit/3f3840d70a1d8276a4b31f99d79f7502429b9be7))
+
 # [3.18.0](https://github.com/lowdefy/lowdefy/compare/v3.17.2...v3.18.0) (2021-06-17)
 
 ## Changes

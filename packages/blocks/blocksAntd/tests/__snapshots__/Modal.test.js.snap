@@ -107,7 +107,98 @@ Array [
       "okType": "primary",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": "Modal title",
+      "title": <HtmlComponent
+        html="Modal title"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setOpen": [Function],
+            "setValue": [MockFunction],
+            "toggleOpen": [Function],
+            "triggerEvent": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "name": "onOpen",
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "visible": false,
       "width": undefined,
       "wrapClassName": "{}",
@@ -143,7 +234,98 @@ Array [
       "okType": "primary",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": "Modal title",
+      "title": <HtmlComponent
+        html="Modal title"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setOpen": [Function],
+            "setValue": [MockFunction],
+            "toggleOpen": [Function],
+            "triggerEvent": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "name": "onOpen",
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "visible": true,
       "width": undefined,
       "wrapClassName": "{}",
@@ -1080,6 +1262,269 @@ Array [
 ]
 `;
 
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - with html in title - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "afterClose": [Function],
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "closable": true,
+      "confirmLoading": undefined,
+      "id": "with html in title_modal",
+      "mask": true,
+      "maskClosable": true,
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "okType": "primary",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": <HtmlComponent
+        html=<div style="color:green;">
+  Modal Html Title
+</div>
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setOpen": [Function],
+            "setValue": [MockFunction],
+            "toggleOpen": [Function],
+            "triggerEvent": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "name": "onOpen",
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
+      "visible": false,
+      "width": undefined,
+      "wrapClassName": "{}",
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+  Array [
+    Object {
+      "afterClose": [Function],
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "closable": true,
+      "confirmLoading": undefined,
+      "id": "with html in title_modal",
+      "mask": true,
+      "maskClosable": true,
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "okType": "primary",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": <HtmlComponent
+        html=<div style="color:green;">
+  Modal Html Title
+</div>
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setOpen": [Function],
+            "setValue": [MockFunction],
+            "toggleOpen": [Function],
+            "triggerEvent": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "name": "onOpen",
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
+      "visible": true,
+      "width": undefined,
+      "wrapClassName": "{}",
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
 exports[`Mock for method: {"name":"toggleOpen","args":{}} - default - value[0] - default 1`] = `
 Array [
   Array [
@@ -1187,7 +1632,98 @@ Array [
       "okType": "primary",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": "Modal title",
+      "title": <HtmlComponent
+        html="Modal title"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setOpen": [Function],
+            "setValue": [MockFunction],
+            "toggleOpen": [Function],
+            "triggerEvent": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "name": "onOpen",
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "visible": false,
       "width": undefined,
       "wrapClassName": "{}",
@@ -1223,7 +1759,98 @@ Array [
       "okType": "primary",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": "Modal title",
+      "title": <HtmlComponent
+        html="Modal title"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setOpen": [Function],
+            "setValue": [MockFunction],
+            "toggleOpen": [Function],
+            "triggerEvent": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "name": "onOpen",
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "visible": true,
       "width": undefined,
       "wrapClassName": "{}",
@@ -2160,6 +2787,269 @@ Array [
 ]
 `;
 
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - with html in title - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "afterClose": [Function],
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "closable": true,
+      "confirmLoading": undefined,
+      "id": "with html in title_modal",
+      "mask": true,
+      "maskClosable": true,
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "okType": "primary",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": <HtmlComponent
+        html=<div style="color:green;">
+  Modal Html Title
+</div>
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setOpen": [Function],
+            "setValue": [MockFunction],
+            "toggleOpen": [Function],
+            "triggerEvent": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "name": "onOpen",
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
+      "visible": false,
+      "width": undefined,
+      "wrapClassName": "{}",
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+  Array [
+    Object {
+      "afterClose": [Function],
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "closable": true,
+      "confirmLoading": undefined,
+      "id": "with html in title_modal",
+      "mask": true,
+      "maskClosable": true,
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "okType": "primary",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": <HtmlComponent
+        html=<div style="color:green;">
+  Modal Html Title
+</div>
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setOpen": [Function],
+            "setValue": [MockFunction],
+            "toggleOpen": [Function],
+            "triggerEvent": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "name": "onOpen",
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
+      "visible": true,
+      "width": undefined,
+      "wrapClassName": "{}",
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
 exports[`Test Schema default 1`] = `true`;
 
 exports[`Test Schema default 2`] = `null`;
@@ -2215,3 +3105,7 @@ exports[`Test Schema properties: wrapperStyle: border: 10px solid blue 2`] = `nu
 exports[`Test Schema properties: zIndex: 1200 - 1000 is the default 1`] = `true`;
 
 exports[`Test Schema properties: zIndex: 1200 - 1000 is the default 2`] = `null`;
+
+exports[`Test Schema with html in title 1`] = `true`;
+
+exports[`Test Schema with html in title 2`] = `null`;

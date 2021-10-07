@@ -6,7 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { ModuleFederationPlugin } = require('webpack').container;
 const packageJson = require('./package.json');
 
-module.exports = {
+module.exports = (env) => ({
   entry: './src/shell/index',
   mode: 'production',
   output: {
@@ -45,7 +45,7 @@ module.exports = {
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       minify: false,
-      publicPath: '/shell',
+      publicPath: '__LOWDEFY_SERVER_BASE_PATH__/shell',
       template: './src/shell/index.html',
     }),
     new webpack.DefinePlugin({
@@ -67,7 +67,10 @@ module.exports = {
         },
       },
       remotes: {
-        lowdefy_renderer: `lowdefy_renderer@https://blocks-cdn.lowdefy.com/v${packageJson.version}/renderer/remoteEntry.js`,
+        lowdefy_renderer:
+          process.env.NODE_ENV === 'development'
+            ? `lowdefy_renderer@http://localhost:3001/remoteEntry.js`
+            : `lowdefy_renderer@https://blocks-cdn.lowdefy.com/v${packageJson.version}/renderer/remoteEntry.js`,
       },
     }),
     new CopyPlugin({
@@ -79,4 +82,4 @@ module.exports = {
       ],
     }),
   ],
-};
+});

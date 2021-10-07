@@ -15,7 +15,9 @@ exports[`Render default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -59,7 +61,9 @@ exports[`Render properties.allowClear: false - value[0] 1`] = `
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
-      properties.allowClear: false
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -103,7 +107,9 @@ exports[`Render properties.autoFocus: true - value[0] 1`] = `
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
-      properties.autoFocus: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -148,7 +154,9 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      properties.disabled: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -193,7 +201,9 @@ exports[`Render properties.label align: right - value[0] 1`] = `
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
-      properties.label align: right
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -237,7 +247,9 @@ exports[`Render properties.label colon: false - value[0] 1`] = `
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
-      properties.label colon: false
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -313,7 +325,9 @@ exports[`Render properties.label extra: showing extra - value[0] 1`] = `
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
-      properties.label extra: showing extra
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -341,7 +355,9 @@ exports[`Render properties.label extra: showing extra - value[0] 1`] = `
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      showing extra
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -366,7 +382,9 @@ exports[`Render properties.label inline: true - value[0] 1`] = `
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
-      properties.label inline: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -414,7 +432,9 @@ exports[`Render properties.label span: 12 - value[0] 1`] = `
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
-      properties.label span: 12
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -458,7 +478,9 @@ exports[`Render properties.placeholder: Type your text here - value[0] 1`] = `
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
-      properties.placeholder: Type your text here
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -503,7 +525,9 @@ exports[`Render properties.prefix: Prefix to the text - value[0] 1`] = `
       htmlFor="properties.prefix: Prefix to the text_input"
       title="properties.prefix: Prefix to the text"
     >
-      properties.prefix: Prefix to the text
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -558,7 +582,9 @@ exports[`Render properties.prefixIcon.size: 24 - value[0] 1`] = `
       htmlFor="properties.prefixIcon.size: 24_input"
       title="properties.prefixIcon.size: 24"
     >
-      properties.prefixIcon.size: 24
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -580,6 +606,7 @@ exports[`Render properties.prefixIcon.size: 24 - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
               required={false}
@@ -633,7 +660,9 @@ exports[`Render properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
       htmlFor="properties.prefixIcon: AccountBookFilled_input"
       title="properties.prefixIcon: AccountBookFilled"
     >
-      properties.prefixIcon: AccountBookFilled
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -655,6 +684,7 @@ exports[`Render properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
               required={false}
@@ -708,7 +738,9 @@ exports[`Render properties.size: large - value[0] 1`] = `
       htmlFor="properties.size: large_input"
       title="properties.size: large"
     >
-      properties.size: large
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -752,7 +784,9 @@ exports[`Render properties.size: small - value[0] 1`] = `
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
-      properties.size: small
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -796,7 +830,9 @@ exports[`Render properties.suffix: Suffix to the text - value[0] 1`] = `
       htmlFor="properties.suffix: Suffix to the text_input"
       title="properties.suffix: Suffix to the text"
     >
-      properties.suffix: Suffix to the text
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -851,7 +887,9 @@ exports[`Render properties.suffixIcon.size 24 - value[0] 1`] = `
       htmlFor="properties.suffixIcon.size 24_input"
       title="properties.suffixIcon.size 24"
     >
-      properties.suffixIcon.size 24
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -884,6 +922,7 @@ exports[`Render properties.suffixIcon.size 24 - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
               required={false}
@@ -926,7 +965,9 @@ exports[`Render properties.suffixIcon: AlertFilled - value[0] 1`] = `
       htmlFor="properties.suffixIcon: AlertFilled_input"
       title="properties.suffixIcon: AlertFilled"
     >
-      properties.suffixIcon: AlertFilled
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -959,6 +1000,7 @@ exports[`Render properties.suffixIcon: AlertFilled - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
               required={false}
@@ -1001,7 +1043,9 @@ exports[`Render properties.title: My TextInput Title - value[0] 1`] = `
       htmlFor="properties.title: My TextInput Title_input"
       title="My TextInput Title"
     >
-      My TextInput Title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1045,7 +1089,9 @@ exports[`Render required = true default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1089,7 +1135,9 @@ exports[`Render required = true properties.allowClear: false - value[0] 1`] = `
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
-      properties.allowClear: false
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1133,7 +1181,9 @@ exports[`Render required = true properties.autoFocus: true - value[0] 1`] = `
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
-      properties.autoFocus: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1178,7 +1228,9 @@ exports[`Render required = true properties.disabled: true - value[0] 1`] = `
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      properties.disabled: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1223,7 +1275,9 @@ exports[`Render required = true properties.label align: right - value[0] 1`] = `
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
-      properties.label align: right
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1267,7 +1321,9 @@ exports[`Render required = true properties.label colon: false - value[0] 1`] = `
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
-      properties.label colon: false
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1343,7 +1399,9 @@ exports[`Render required = true properties.label extra: showing extra - value[0]
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
-      properties.label extra: showing extra
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1371,7 +1429,9 @@ exports[`Render required = true properties.label extra: showing extra - value[0]
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      showing extra
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -1396,7 +1456,9 @@ exports[`Render required = true properties.label inline: true - value[0] 1`] = `
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
-      properties.label inline: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1444,7 +1506,9 @@ exports[`Render required = true properties.label span: 12 - value[0] 1`] = `
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
-      properties.label span: 12
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1488,7 +1552,9 @@ exports[`Render required = true properties.placeholder: Type your text here - va
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
-      properties.placeholder: Type your text here
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1533,7 +1599,9 @@ exports[`Render required = true properties.prefix: Prefix to the text - value[0]
       htmlFor="properties.prefix: Prefix to the text_input"
       title="properties.prefix: Prefix to the text"
     >
-      properties.prefix: Prefix to the text
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1588,7 +1656,9 @@ exports[`Render required = true properties.prefixIcon.size: 24 - value[0] 1`] = 
       htmlFor="properties.prefixIcon.size: 24_input"
       title="properties.prefixIcon.size: 24"
     >
-      properties.prefixIcon.size: 24
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1610,6 +1680,7 @@ exports[`Render required = true properties.prefixIcon.size: 24 - value[0] 1`] = 
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
               required={false}
@@ -1663,7 +1734,9 @@ exports[`Render required = true properties.prefixIcon: AccountBookFilled - value
       htmlFor="properties.prefixIcon: AccountBookFilled_input"
       title="properties.prefixIcon: AccountBookFilled"
     >
-      properties.prefixIcon: AccountBookFilled
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1685,6 +1758,7 @@ exports[`Render required = true properties.prefixIcon: AccountBookFilled - value
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
               required={false}
@@ -1738,7 +1812,9 @@ exports[`Render required = true properties.size: large - value[0] 1`] = `
       htmlFor="properties.size: large_input"
       title="properties.size: large"
     >
-      properties.size: large
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1782,7 +1858,9 @@ exports[`Render required = true properties.size: small - value[0] 1`] = `
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
-      properties.size: small
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1826,7 +1904,9 @@ exports[`Render required = true properties.suffix: Suffix to the text - value[0]
       htmlFor="properties.suffix: Suffix to the text_input"
       title="properties.suffix: Suffix to the text"
     >
-      properties.suffix: Suffix to the text
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1881,7 +1961,9 @@ exports[`Render required = true properties.suffixIcon.size 24 - value[0] 1`] = `
       htmlFor="properties.suffixIcon.size 24_input"
       title="properties.suffixIcon.size 24"
     >
-      properties.suffixIcon.size 24
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1914,6 +1996,7 @@ exports[`Render required = true properties.suffixIcon.size 24 - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
               required={false}
@@ -1956,7 +2039,9 @@ exports[`Render required = true properties.suffixIcon: AlertFilled - value[0] 1`
       htmlFor="properties.suffixIcon: AlertFilled_input"
       title="properties.suffixIcon: AlertFilled"
     >
-      properties.suffixIcon: AlertFilled
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1989,6 +2074,7 @@ exports[`Render required = true properties.suffixIcon: AlertFilled - value[0] 1`
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
               required={false}
@@ -2031,7 +2117,9 @@ exports[`Render required = true properties.title: My TextInput Title - value[0] 
       htmlFor="properties.title: My TextInput Title_input"
       title="My TextInput Title"
     >
-      My TextInput Title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2075,7 +2163,9 @@ exports[`Render validation.status = error default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2147,7 +2237,9 @@ exports[`Render validation.status = error properties.allowClear: false - value[0
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
-      properties.allowClear: false
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2219,7 +2311,9 @@ exports[`Render validation.status = error properties.autoFocus: true - value[0] 
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
-      properties.autoFocus: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2292,7 +2386,9 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      properties.disabled: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2365,7 +2461,9 @@ exports[`Render validation.status = error properties.label align: right - value[
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
-      properties.label align: right
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2437,7 +2535,9 @@ exports[`Render validation.status = error properties.label colon: false - value[
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
-      properties.label colon: false
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2569,7 +2669,9 @@ exports[`Render validation.status = error properties.label extra: showing extra 
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
-      properties.label extra: showing extra
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2645,7 +2747,9 @@ exports[`Render validation.status = error properties.label inline: true - value[
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
-      properties.label inline: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2721,7 +2825,9 @@ exports[`Render validation.status = error properties.label span: 12 - value[0] 1
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
-      properties.label span: 12
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2793,7 +2899,9 @@ exports[`Render validation.status = error properties.placeholder: Type your text
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
-      properties.placeholder: Type your text here
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2866,7 +2974,9 @@ exports[`Render validation.status = error properties.prefix: Prefix to the text 
       htmlFor="properties.prefix: Prefix to the text_input"
       title="properties.prefix: Prefix to the text"
     >
-      properties.prefix: Prefix to the text
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2949,7 +3059,9 @@ exports[`Render validation.status = error properties.prefixIcon.size: 24 - value
       htmlFor="properties.prefixIcon.size: 24_input"
       title="properties.prefixIcon.size: 24"
     >
-      properties.prefixIcon.size: 24
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2971,6 +3083,7 @@ exports[`Render validation.status = error properties.prefixIcon.size: 24 - value
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
               required={false}
@@ -3052,7 +3165,9 @@ exports[`Render validation.status = error properties.prefixIcon: AccountBookFill
       htmlFor="properties.prefixIcon: AccountBookFilled_input"
       title="properties.prefixIcon: AccountBookFilled"
     >
-      properties.prefixIcon: AccountBookFilled
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3074,6 +3189,7 @@ exports[`Render validation.status = error properties.prefixIcon: AccountBookFill
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
               required={false}
@@ -3155,7 +3271,9 @@ exports[`Render validation.status = error properties.size: large - value[0] 1`] 
       htmlFor="properties.size: large_input"
       title="properties.size: large"
     >
-      properties.size: large
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3227,7 +3345,9 @@ exports[`Render validation.status = error properties.size: small - value[0] 1`] 
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
-      properties.size: small
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3299,7 +3419,9 @@ exports[`Render validation.status = error properties.suffix: Suffix to the text 
       htmlFor="properties.suffix: Suffix to the text_input"
       title="properties.suffix: Suffix to the text"
     >
-      properties.suffix: Suffix to the text
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3382,7 +3504,9 @@ exports[`Render validation.status = error properties.suffixIcon.size 24 - value[
       htmlFor="properties.suffixIcon.size 24_input"
       title="properties.suffixIcon.size 24"
     >
-      properties.suffixIcon.size 24
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3415,6 +3539,7 @@ exports[`Render validation.status = error properties.suffixIcon.size 24 - value[
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
               required={false}
@@ -3485,7 +3610,9 @@ exports[`Render validation.status = error properties.suffixIcon: AlertFilled - v
       htmlFor="properties.suffixIcon: AlertFilled_input"
       title="properties.suffixIcon: AlertFilled"
     >
-      properties.suffixIcon: AlertFilled
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3518,6 +3645,7 @@ exports[`Render validation.status = error properties.suffixIcon: AlertFilled - v
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
               required={false}
@@ -3588,7 +3716,9 @@ exports[`Render validation.status = error properties.title: My TextInput Title -
       htmlFor="properties.title: My TextInput Title_input"
       title="My TextInput Title"
     >
-      My TextInput Title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3660,7 +3790,9 @@ exports[`Render validation.status = null default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3704,7 +3836,9 @@ exports[`Render validation.status = null properties.allowClear: false - value[0]
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
-      properties.allowClear: false
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3748,7 +3882,9 @@ exports[`Render validation.status = null properties.autoFocus: true - value[0] 1
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
-      properties.autoFocus: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3793,7 +3929,9 @@ exports[`Render validation.status = null properties.disabled: true - value[0] 1`
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      properties.disabled: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3838,7 +3976,9 @@ exports[`Render validation.status = null properties.label align: right - value[0
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
-      properties.label align: right
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3882,7 +4022,9 @@ exports[`Render validation.status = null properties.label colon: false - value[0
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
-      properties.label colon: false
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3958,7 +4100,9 @@ exports[`Render validation.status = null properties.label extra: showing extra -
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
-      properties.label extra: showing extra
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3986,7 +4130,9 @@ exports[`Render validation.status = null properties.label extra: showing extra -
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      showing extra
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -4011,7 +4157,9 @@ exports[`Render validation.status = null properties.label inline: true - value[0
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
-      properties.label inline: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4059,7 +4207,9 @@ exports[`Render validation.status = null properties.label span: 12 - value[0] 1`
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
-      properties.label span: 12
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4103,7 +4253,9 @@ exports[`Render validation.status = null properties.placeholder: Type your text 
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
-      properties.placeholder: Type your text here
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4148,7 +4300,9 @@ exports[`Render validation.status = null properties.prefix: Prefix to the text -
       htmlFor="properties.prefix: Prefix to the text_input"
       title="properties.prefix: Prefix to the text"
     >
-      properties.prefix: Prefix to the text
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4203,7 +4357,9 @@ exports[`Render validation.status = null properties.prefixIcon.size: 24 - value[
       htmlFor="properties.prefixIcon.size: 24_input"
       title="properties.prefixIcon.size: 24"
     >
-      properties.prefixIcon.size: 24
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4225,6 +4381,7 @@ exports[`Render validation.status = null properties.prefixIcon.size: 24 - value[
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
               required={false}
@@ -4278,7 +4435,9 @@ exports[`Render validation.status = null properties.prefixIcon: AccountBookFille
       htmlFor="properties.prefixIcon: AccountBookFilled_input"
       title="properties.prefixIcon: AccountBookFilled"
     >
-      properties.prefixIcon: AccountBookFilled
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4300,6 +4459,7 @@ exports[`Render validation.status = null properties.prefixIcon: AccountBookFille
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
               required={false}
@@ -4353,7 +4513,9 @@ exports[`Render validation.status = null properties.size: large - value[0] 1`] =
       htmlFor="properties.size: large_input"
       title="properties.size: large"
     >
-      properties.size: large
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4397,7 +4559,9 @@ exports[`Render validation.status = null properties.size: small - value[0] 1`] =
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
-      properties.size: small
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4441,7 +4605,9 @@ exports[`Render validation.status = null properties.suffix: Suffix to the text -
       htmlFor="properties.suffix: Suffix to the text_input"
       title="properties.suffix: Suffix to the text"
     >
-      properties.suffix: Suffix to the text
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4496,7 +4662,9 @@ exports[`Render validation.status = null properties.suffixIcon.size 24 - value[0
       htmlFor="properties.suffixIcon.size 24_input"
       title="properties.suffixIcon.size 24"
     >
-      properties.suffixIcon.size 24
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4529,6 +4697,7 @@ exports[`Render validation.status = null properties.suffixIcon.size 24 - value[0
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
               required={false}
@@ -4571,7 +4740,9 @@ exports[`Render validation.status = null properties.suffixIcon: AlertFilled - va
       htmlFor="properties.suffixIcon: AlertFilled_input"
       title="properties.suffixIcon: AlertFilled"
     >
-      properties.suffixIcon: AlertFilled
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4604,6 +4775,7 @@ exports[`Render validation.status = null properties.suffixIcon: AlertFilled - va
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
               required={false}
@@ -4646,7 +4818,9 @@ exports[`Render validation.status = null properties.title: My TextInput Title - 
       htmlFor="properties.title: My TextInput Title_input"
       title="My TextInput Title"
     >
-      My TextInput Title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4690,7 +4864,9 @@ exports[`Render validation.status = success default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4757,7 +4933,9 @@ exports[`Render validation.status = success properties.allowClear: false - value
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
-      properties.allowClear: false
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4824,7 +5002,9 @@ exports[`Render validation.status = success properties.autoFocus: true - value[0
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
-      properties.autoFocus: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4892,7 +5072,9 @@ exports[`Render validation.status = success properties.disabled: true - value[0]
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      properties.disabled: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4960,7 +5142,9 @@ exports[`Render validation.status = success properties.label align: right - valu
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
-      properties.label align: right
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5027,7 +5211,9 @@ exports[`Render validation.status = success properties.label colon: false - valu
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
-      properties.label colon: false
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5149,7 +5335,9 @@ exports[`Render validation.status = success properties.label extra: showing extr
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
-      properties.label extra: showing extra
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5200,7 +5388,9 @@ exports[`Render validation.status = success properties.label extra: showing extr
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      showing extra
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -5225,7 +5415,9 @@ exports[`Render validation.status = success properties.label inline: true - valu
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
-      properties.label inline: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5296,7 +5488,9 @@ exports[`Render validation.status = success properties.label span: 12 - value[0]
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
-      properties.label span: 12
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5363,7 +5557,9 @@ exports[`Render validation.status = success properties.placeholder: Type your te
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
-      properties.placeholder: Type your text here
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5431,7 +5627,9 @@ exports[`Render validation.status = success properties.prefix: Prefix to the tex
       htmlFor="properties.prefix: Prefix to the text_input"
       title="properties.prefix: Prefix to the text"
     >
-      properties.prefix: Prefix to the text
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5509,7 +5707,9 @@ exports[`Render validation.status = success properties.prefixIcon.size: 24 - val
       htmlFor="properties.prefixIcon.size: 24_input"
       title="properties.prefixIcon.size: 24"
     >
-      properties.prefixIcon.size: 24
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5531,6 +5731,7 @@ exports[`Render validation.status = success properties.prefixIcon.size: 24 - val
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
               required={false}
@@ -5607,7 +5808,9 @@ exports[`Render validation.status = success properties.prefixIcon: AccountBookFi
       htmlFor="properties.prefixIcon: AccountBookFilled_input"
       title="properties.prefixIcon: AccountBookFilled"
     >
-      properties.prefixIcon: AccountBookFilled
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5629,6 +5832,7 @@ exports[`Render validation.status = success properties.prefixIcon: AccountBookFi
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
               required={false}
@@ -5705,7 +5909,9 @@ exports[`Render validation.status = success properties.size: large - value[0] 1`
       htmlFor="properties.size: large_input"
       title="properties.size: large"
     >
-      properties.size: large
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5772,7 +5978,9 @@ exports[`Render validation.status = success properties.size: small - value[0] 1`
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
-      properties.size: small
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5839,7 +6047,9 @@ exports[`Render validation.status = success properties.suffix: Suffix to the tex
       htmlFor="properties.suffix: Suffix to the text_input"
       title="properties.suffix: Suffix to the text"
     >
-      properties.suffix: Suffix to the text
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5917,7 +6127,9 @@ exports[`Render validation.status = success properties.suffixIcon.size 24 - valu
       htmlFor="properties.suffixIcon.size 24_input"
       title="properties.suffixIcon.size 24"
     >
-      properties.suffixIcon.size 24
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5950,6 +6162,7 @@ exports[`Render validation.status = success properties.suffixIcon.size 24 - valu
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
               required={false}
@@ -6015,7 +6228,9 @@ exports[`Render validation.status = success properties.suffixIcon: AlertFilled -
       htmlFor="properties.suffixIcon: AlertFilled_input"
       title="properties.suffixIcon: AlertFilled"
     >
-      properties.suffixIcon: AlertFilled
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6048,6 +6263,7 @@ exports[`Render validation.status = success properties.suffixIcon: AlertFilled -
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
               required={false}
@@ -6113,7 +6329,9 @@ exports[`Render validation.status = success properties.title: My TextInput Title
       htmlFor="properties.title: My TextInput Title_input"
       title="My TextInput Title"
     >
-      My TextInput Title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6180,7 +6398,9 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6252,7 +6472,9 @@ exports[`Render validation.status = warning properties.allowClear: false - value
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
-      properties.allowClear: false
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6324,7 +6546,9 @@ exports[`Render validation.status = warning properties.autoFocus: true - value[0
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
-      properties.autoFocus: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6397,7 +6621,9 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      properties.disabled: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6470,7 +6696,9 @@ exports[`Render validation.status = warning properties.label align: right - valu
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
-      properties.label align: right
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6542,7 +6770,9 @@ exports[`Render validation.status = warning properties.label colon: false - valu
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
-      properties.label colon: false
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6674,7 +6904,9 @@ exports[`Render validation.status = warning properties.label extra: showing extr
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
-      properties.label extra: showing extra
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6750,7 +6982,9 @@ exports[`Render validation.status = warning properties.label inline: true - valu
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
-      properties.label inline: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6826,7 +7060,9 @@ exports[`Render validation.status = warning properties.label span: 12 - value[0]
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
-      properties.label span: 12
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6898,7 +7134,9 @@ exports[`Render validation.status = warning properties.placeholder: Type your te
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
-      properties.placeholder: Type your text here
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6971,7 +7209,9 @@ exports[`Render validation.status = warning properties.prefix: Prefix to the tex
       htmlFor="properties.prefix: Prefix to the text_input"
       title="properties.prefix: Prefix to the text"
     >
-      properties.prefix: Prefix to the text
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -7054,7 +7294,9 @@ exports[`Render validation.status = warning properties.prefixIcon.size: 24 - val
       htmlFor="properties.prefixIcon.size: 24_input"
       title="properties.prefixIcon.size: 24"
     >
-      properties.prefixIcon.size: 24
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -7076,6 +7318,7 @@ exports[`Render validation.status = warning properties.prefixIcon.size: 24 - val
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
               required={false}
@@ -7157,7 +7400,9 @@ exports[`Render validation.status = warning properties.prefixIcon: AccountBookFi
       htmlFor="properties.prefixIcon: AccountBookFilled_input"
       title="properties.prefixIcon: AccountBookFilled"
     >
-      properties.prefixIcon: AccountBookFilled
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -7179,6 +7424,7 @@ exports[`Render validation.status = warning properties.prefixIcon: AccountBookFi
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
               required={false}
@@ -7260,7 +7506,9 @@ exports[`Render validation.status = warning properties.size: large - value[0] 1`
       htmlFor="properties.size: large_input"
       title="properties.size: large"
     >
-      properties.size: large
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -7332,7 +7580,9 @@ exports[`Render validation.status = warning properties.size: small - value[0] 1`
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
-      properties.size: small
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -7404,7 +7654,9 @@ exports[`Render validation.status = warning properties.suffix: Suffix to the tex
       htmlFor="properties.suffix: Suffix to the text_input"
       title="properties.suffix: Suffix to the text"
     >
-      properties.suffix: Suffix to the text
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -7487,7 +7739,9 @@ exports[`Render validation.status = warning properties.suffixIcon.size 24 - valu
       htmlFor="properties.suffixIcon.size 24_input"
       title="properties.suffixIcon.size 24"
     >
-      properties.suffixIcon.size 24
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -7520,6 +7774,7 @@ exports[`Render validation.status = warning properties.suffixIcon.size 24 - valu
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
               required={false}
@@ -7590,7 +7845,9 @@ exports[`Render validation.status = warning properties.suffixIcon: AlertFilled -
       htmlFor="properties.suffixIcon: AlertFilled_input"
       title="properties.suffixIcon: AlertFilled"
     >
-      properties.suffixIcon: AlertFilled
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -7623,6 +7880,7 @@ exports[`Render validation.status = warning properties.suffixIcon: AlertFilled -
           >
             <span
               aria-label="loading-3-quarters"
+              basePath=""
               className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
               required={false}
@@ -7693,7 +7951,9 @@ exports[`Render validation.status = warning properties.title: My TextInput Title
       htmlFor="properties.title: My TextInput Title_input"
       title="My TextInput Title"
     >
-      My TextInput Title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div

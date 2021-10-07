@@ -3,6 +3,148 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.22.0](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.1...v3.22.0) (2021-09-27)
+
+**Note:** Version bump only for package @lowdefy/engine
+
+
+
+
+
+# [3.22.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.0...v3.22.0-alpha.1) (2021-09-20)
+
+**Note:** Version bump only for package @lowdefy/engine
+
+
+
+
+
+# [3.22.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.2...v3.22.0-alpha.0) (2021-09-08)
+
+**Note:** Version bump only for package @lowdefy/engine
+
+
+
+
+
+## [3.21.2](https://github.com/lowdefy/lowdefy/compare/v3.21.2-alpha.0...v3.21.2) (2021-08-31)
+
+**Note:** Version bump only for package @lowdefy/engine
+
+
+
+
+
+## [3.21.2-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.1...v3.21.2-alpha.0) (2021-08-31)
+
+**Note:** Version bump only for package @lowdefy/engine
+
+
+
+
+
+## [3.21.1](https://github.com/lowdefy/lowdefy/compare/v3.21.0...v3.21.1) (2021-08-26)
+
+**Note:** Version bump only for package @lowdefy/engine
+
+
+
+
+
+# [3.21.0](https://github.com/lowdefy/lowdefy/compare/v3.20.4...v3.21.0) (2021-08-25)
+
+**Note:** Version bump only for package @lowdefy/engine
+
+
+
+
+
+## [3.20.4](https://github.com/lowdefy/lowdefy/compare/v3.20.3...v3.20.4) (2021-08-21)
+
+**Note:** Version bump only for package @lowdefy/engine
+
+
+
+
+
+## [3.20.3](https://github.com/lowdefy/lowdefy/compare/v3.20.1...v3.20.3) (2021-08-20)
+
+**Note:** Version bump only for package @lowdefy/engine
+
+
+
+
+
+## [3.20.2](https://github.com/lowdefy/lowdefy/compare/v3.20.1...v3.20.2) (2021-08-20)
+
+**Note:** Version bump only for package @lowdefy/engine
+
+
+
+
+
+## [3.20.1](https://github.com/lowdefy/lowdefy/compare/v3.20.0...v3.20.1) (2021-08-20)
+
+**Note:** Version bump only for package @lowdefy/engine
+
+
+
+
+
+# [3.20.0](https://github.com/lowdefy/lowdefy/compare/v3.19.0...v3.20.0) (2021-08-20)
+
+
+### Bug Fixes
+
+* **engine:** Add tests for Blocks.validate. ([0a0a66a](https://github.com/lowdefy/lowdefy/commit/0a0a66aa7639db6fcded6aa5a4937c2b96e6e7c8))
+* **engine:** Catch CallMethod method not defined error and add tests for CallMethod. ([96f9cb1](https://github.com/lowdefy/lowdefy/commit/96f9cb1d65c80727a27703497a9c25cf694de11d))
+* **engine:** Fixes to event debouncing and tests. ([89266f2](https://github.com/lowdefy/lowdefy/commit/89266f2dbdf860434c94811613a07a385afdc78d))
+* **engine:** Refactor Validate to work with getBlockMatcher. ([8c9de14](https://github.com/lowdefy/lowdefy/commit/8c9de14c3f26a64adf2a5dbb93b86105978c62d4))
+* **engine:** Remove showValidationErrors from context. ([24e0bbc](https://github.com/lowdefy/lowdefy/commit/24e0bbc3a849a8d3cc2b4b3313a3530dd0369b03))
+* **engine:** Update action tests to include debounce. ([b21c440](https://github.com/lowdefy/lowdefy/commit/b21c440eb0144bb5d53a2d3320bc8637de300c90))
+* **engine:** Update events test for undefined event. ([05bc928](https://github.com/lowdefy/lowdefy/commit/05bc928e45d07fba5b6a27e505cd3c1128b4216b))
+
+
+### Features
+
+* **blocksAntd:** Added onclose action chain error detection to ConfirmModal, Drawer, Modal. ([66e0692](https://github.com/lowdefy/lowdefy/commit/66e0692d9c9dc8a25be9115d2522e4cb77075c50))
+* **engine:** Add async option to actions ([81036db](https://github.com/lowdefy/lowdefy/commit/81036db446ae64cd023fe198360fa9506e818ca0))
+* **engine:** Add async tests and update docs. ([fd967b9](https://github.com/lowdefy/lowdefy/commit/fd967b929b4ab57a787b1e052c74334dfc54e87b))
+* **engine:** Add debounce option to events. ([003cb0b](https://github.com/lowdefy/lowdefy/commit/003cb0b1ec13a246aa4848f2c5020a937b97ac3d))
+* **engine:** Add ResetValidation action. ([01237e3](https://github.com/lowdefy/lowdefy/commit/01237e3340b3547ae88cc7248eed7daa1ac5e4c5))
+* **engine:** Add tests for events debounce. ([2ff29cb](https://github.com/lowdefy/lowdefy/commit/2ff29cb772bc940bb59dc976c31d473771c8da97))
+* **engine:** Add Throw action. ([d2a23f0](https://github.com/lowdefy/lowdefy/commit/d2a23f0022aca6d9f0e330ef3652ad2a8f8364b7))
+* **engine:** Document Lowdefy action functions in JsAction. ([7634145](https://github.com/lowdefy/lowdefy/commit/7634145286cdb8483bbcd151343bbcb6d5a0a65f))
+* **engine:** showValidation on block level and params.regex for Validate. ([6824b07](https://github.com/lowdefy/lowdefy/commit/6824b07127f86ed19d0239ba903f88ddb4287932))
+* Add back option to link. ([b6cf705](https://github.com/lowdefy/lowdefy/commit/b6cf705d5c7e0b54a3c22d7a33116fc30dc9e191)), closes [#728](https://github.com/lowdefy/lowdefy/issues/728)
+* Add Lowdefy actions to JsAction ([7af4442](https://github.com/lowdefy/lowdefy/commit/7af4442c6f2314ffbf927a413c15649425a93b59))
+
+
+
+
+
+# [3.19.0](https://github.com/lowdefy/lowdefy/compare/v3.18.1...v3.19.0) (2021-07-26)
+
+**Note:** Version bump only for package @lowdefy/engine
+
+
+
+
+
+## [3.18.1](https://github.com/lowdefy/lowdefy/compare/v3.18.0...v3.18.1) (2021-06-30)
+
+
+### Bug Fixes
+
+* **engine:** Evaluate action error messages after error. closes [#663](https://github.com/lowdefy/lowdefy/issues/663) ([514fd14](https://github.com/lowdefy/lowdefy/commit/514fd14ce234d19bf2661a55be328e992102b546))
+* **engine:** Remove error.lowdefyMessage. ([9f8590f](https://github.com/lowdefy/lowdefy/commit/9f8590f0d7a18a77a49235c0bc24798120062c66))
+* **engine:** Responses for actions and tests using _actions in messages. ([38cf7ef](https://github.com/lowdefy/lowdefy/commit/38cf7ef35843ad8494fa2a9829b9ddbed33f0ca6))
+* **engine:** Up test covarage in Wait. ([a40ad4f](https://github.com/lowdefy/lowdefy/commit/a40ad4f7246c7ed0584fd3747f7a21e31832af96))
+
+
+
+
+
 # [3.18.0](https://github.com/lowdefy/lowdefy/compare/v3.17.2...v3.18.0) (2021-06-17)
 
 

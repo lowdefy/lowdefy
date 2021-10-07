@@ -18,7 +18,7 @@ Array [
       "onChange": [Function],
       "placeholder": "Select item",
       "showArrow": undefined,
-      "showSearch": undefined,
+      "showSearch": true,
       "size": undefined,
       "suffixIcon": undefined,
       "value": undefined,
@@ -40,14 +40,116 @@ Array [
           id="properties.allowClear: false_0"
           value={0}
         >
-          Option 1
+          <HtmlComponent
+            html="Option 1"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
         </mockConstructor>,
         <mockConstructor
           className="{}"
           id="properties.allowClear: false_1"
           value={1}
         >
-          Option 2
+          <HtmlComponent
+            html="Option 2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
@@ -61,7 +163,7 @@ Array [
       "onChange": [Function],
       "placeholder": "Select item",
       "showArrow": undefined,
-      "showSearch": undefined,
+      "showSearch": true,
       "size": undefined,
       "suffixIcon": undefined,
       "value": undefined,
@@ -83,14 +185,116 @@ Array [
           id="properties.autoFocus: true_0"
           value={0}
         >
-          Option 1
+          <HtmlComponent
+            html="Option 1"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
         </mockConstructor>,
         <mockConstructor
           className="{}"
           id="properties.autoFocus: true_1"
           value={1}
         >
-          Option 2
+          <HtmlComponent
+            html="Option 2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
@@ -104,7 +308,7 @@ Array [
       "onChange": [Function],
       "placeholder": "Select item",
       "showArrow": undefined,
-      "showSearch": undefined,
+      "showSearch": true,
       "size": undefined,
       "suffixIcon": undefined,
       "value": undefined,
@@ -126,18 +330,121 @@ Array [
           id="properties.clearIcon: ChromeFilled_0"
           value={0}
         >
-          Option 1
+          <HtmlComponent
+            html="Option 1"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
         </mockConstructor>,
         <mockConstructor
           className="{}"
           id="properties.clearIcon: ChromeFilled_1"
           value={1}
         >
-          Option 2
+          <HtmlComponent
+            html="Option 2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": <IconBlock
+        basePath=""
         blockId="properties.clearIcon: ChromeFilled_clearIcon"
         content={Object {}}
         events={Object {}}
@@ -171,7 +478,7 @@ Array [
       "onChange": [Function],
       "placeholder": "Select item",
       "showArrow": undefined,
-      "showSearch": undefined,
+      "showSearch": true,
       "size": undefined,
       "suffixIcon": undefined,
       "value": undefined,
@@ -193,18 +500,121 @@ Array [
           id="properties.clearIcon-object: ChromeFilled_0"
           value={0}
         >
-          Option 1
+          <HtmlComponent
+            html="Option 1"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
         </mockConstructor>,
         <mockConstructor
           className="{}"
           id="properties.clearIcon-object: ChromeFilled_1"
           value={1}
         >
-          Option 2
+          <HtmlComponent
+            html="Option 2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": <IconBlock
+        basePath=""
         blockId="properties.clearIcon-object: ChromeFilled_clearIcon"
         content={Object {}}
         events={Object {}}
@@ -243,7 +653,7 @@ Array [
       "onChange": [Function],
       "placeholder": "Select item",
       "showArrow": undefined,
-      "showSearch": undefined,
+      "showSearch": true,
       "size": undefined,
       "suffixIcon": undefined,
       "value": undefined,
@@ -271,7 +681,7 @@ Array [
       "onChange": [Function],
       "placeholder": "Select item",
       "showArrow": undefined,
-      "showSearch": undefined,
+      "showSearch": true,
       "size": undefined,
       "suffixIcon": undefined,
       "value": undefined,
@@ -299,7 +709,7 @@ Array [
       "onChange": [Function],
       "placeholder": "Select item",
       "showArrow": undefined,
-      "showSearch": undefined,
+      "showSearch": true,
       "size": undefined,
       "suffixIcon": undefined,
       "value": undefined,
@@ -327,7 +737,7 @@ Array [
       "onChange": [Function],
       "placeholder": "Select item",
       "showArrow": undefined,
-      "showSearch": undefined,
+      "showSearch": true,
       "size": undefined,
       "suffixIcon": undefined,
       "value": undefined,
@@ -355,7 +765,7 @@ Array [
       "onChange": [Function],
       "placeholder": "Select item",
       "showArrow": undefined,
-      "showSearch": undefined,
+      "showSearch": true,
       "size": undefined,
       "suffixIcon": undefined,
       "value": undefined,
@@ -383,7 +793,7 @@ Array [
       "onChange": [Function],
       "placeholder": "Select item",
       "showArrow": undefined,
-      "showSearch": undefined,
+      "showSearch": true,
       "size": undefined,
       "suffixIcon": undefined,
       "value": undefined,
@@ -411,7 +821,7 @@ Array [
       "onChange": [Function],
       "placeholder": "Select item",
       "showArrow": undefined,
-      "showSearch": undefined,
+      "showSearch": true,
       "size": undefined,
       "suffixIcon": undefined,
       "value": undefined,
@@ -439,7 +849,7 @@ Array [
       "onChange": [Function],
       "placeholder": "Select item",
       "showArrow": undefined,
-      "showSearch": undefined,
+      "showSearch": true,
       "size": undefined,
       "suffixIcon": undefined,
       "value": undefined,
@@ -467,7 +877,756 @@ Array [
       "onChange": [Function],
       "placeholder": "Select item",
       "showArrow": undefined,
-      "showSearch": undefined,
+      "showSearch": true,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.options.label: html - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [
+        <mockConstructor
+          className="{\\"style\\":[null,null]}"
+          id="properties.options.label: html_0"
+          value={0}
+        >
+          <HtmlComponent
+            html=<div>
+  Some main text
+</div>
+<div style="font-size: 6px;">
+  Some small subtext
+</div>
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          className="{\\"style\\":[null,null]}"
+          id="properties.options.label: html_1"
+          value={1}
+        >
+          <HtmlComponent
+            html=<div style="color: green;">
+  Option green
+</div>
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          className="{\\"style\\":[null,null]}"
+          id="properties.options.label: html_2"
+          value={2}
+        >
+          <HtmlComponent
+            html="Option 3"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.options.label: html_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": true,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.options.label: html and properties.options.filterString - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [
+        <mockConstructor
+          className="{\\"style\\":[null,null]}"
+          filterstring="Some main text"
+          id="properties.options.label: html and properties.options.filterString_0"
+          value={0}
+        >
+          <HtmlComponent
+            html=<div>
+  Some main text
+</div>
+<div style="font-size: 6px;">
+  Some small subtext
+</div>
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          className="{\\"style\\":[null,null]}"
+          filterstring="Option green"
+          id="properties.options.label: html and properties.options.filterString_1"
+          value={1}
+        >
+          <HtmlComponent
+            html=<div style="color: green;">
+  Option green
+</div>
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          className="{\\"style\\":[null,null]}"
+          id="properties.options.label: html and properties.options.filterString_2"
+          value={2}
+        >
+          <HtmlComponent
+            html="Option 3"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.options.label: html and properties.options.filterString_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": true,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.options: html - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [
+        <mockConstructor
+          className="{}"
+          id="properties.options: html_0"
+          value={0}
+        >
+          <HtmlComponent
+            html=<div>
+  Some main text
+</div>
+<div style="font-size: 6px;">
+  Some small subtext
+</div>
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          className="{}"
+          id="properties.options: html_1"
+          value={1}
+        >
+          <HtmlComponent
+            html=<div style="color: green;">
+  Option green
+</div>
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          className="{}"
+          id="properties.options: html_2"
+          value={2}
+        >
+          <HtmlComponent
+            html="Option 3"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.options: html_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": true,
       "size": undefined,
       "suffixIcon": undefined,
       "value": undefined,
@@ -489,14 +1648,116 @@ Array [
           id="properties.options-number_0"
           value={0}
         >
-          10
+          <HtmlComponent
+            html="10"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
         </mockConstructor>,
         <mockConstructor
           className="{}"
           id="properties.options-number_1"
           value={1}
         >
-          12
+          <HtmlComponent
+            html="12"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
@@ -510,7 +1771,7 @@ Array [
       "onChange": [Function],
       "placeholder": "Select item",
       "showArrow": undefined,
-      "showSearch": undefined,
+      "showSearch": true,
       "size": undefined,
       "suffixIcon": undefined,
       "value": undefined,
@@ -528,18 +1789,132 @@ Array [
       "autoFocus": undefined,
       "children": Array [
         <mockConstructor
-          className="{}"
+          className="{\\"style\\":[null,null]}"
           id="properties.options-object_0"
           value={0}
         >
-          one
+          <HtmlComponent
+            html="one"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
         </mockConstructor>,
         <mockConstructor
-          className="{}"
+          className="{\\"style\\":[null,null]}"
           id="properties.options-object_1"
           value={1}
         >
-          two
+          <HtmlComponent
+            html="two"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
@@ -553,7 +1928,7 @@ Array [
       "onChange": [Function],
       "placeholder": "Select item",
       "showArrow": undefined,
-      "showSearch": undefined,
+      "showSearch": true,
       "size": undefined,
       "suffixIcon": undefined,
       "value": undefined,
@@ -575,14 +1950,116 @@ Array [
           id="properties.options-string_0"
           value={0}
         >
-          Option 1
+          <HtmlComponent
+            html="Option 1"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
         </mockConstructor>,
         <mockConstructor
           className="{}"
           id="properties.options-string_1"
           value={1}
         >
-          Option 2
+          <HtmlComponent
+            html="Option 2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
@@ -596,7 +2073,168 @@ Array [
       "onChange": [Function],
       "placeholder": "Select item",
       "showArrow": undefined,
-      "showSearch": undefined,
+      "showSearch": true,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.options-style - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [
+        <mockConstructor
+          className="{\\"style\\":[null,{\\"color\\":\\"red\\"}]}"
+          id="properties.options-style_0"
+          value={0}
+        >
+          <HtmlComponent
+            html="one"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        Object {
+                          "color": "red",
+                        },
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,{\\"color\\":\\"red\\"}]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          className="{\\"style\\":[null,null]}"
+          id="properties.options-style_1"
+          value={1}
+        >
+          <HtmlComponent
+            html="two"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        Object {
+                          "color": "red",
+                        },
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,{\\"color\\":\\"red\\"}]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.options-style_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": true,
       "size": undefined,
       "suffixIcon": undefined,
       "value": undefined,
@@ -624,7 +2262,7 @@ Array [
       "onChange": [Function],
       "placeholder": "Find item in list",
       "showArrow": undefined,
-      "showSearch": undefined,
+      "showSearch": true,
       "size": undefined,
       "suffixIcon": undefined,
       "value": undefined,
@@ -652,7 +2290,152 @@ Array [
       "onChange": [Function],
       "placeholder": "Select item",
       "showArrow": false,
-      "showSearch": undefined,
+      "showSearch": true,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.showSearch: false - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [
+        <mockConstructor
+          className="{}"
+          id="properties.showSearch: false_0"
+          value={0}
+        >
+          <HtmlComponent
+            html="Option 1"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          className="{}"
+          id="properties.showSearch: false_1"
+          value={1}
+        >
+          <HtmlComponent
+            html="Option 2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.showSearch: false_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": false,
       "size": undefined,
       "suffixIcon": undefined,
       "value": undefined,
@@ -674,14 +2457,116 @@ Array [
           id="properties.showSearch: true_0"
           value={0}
         >
-          Option 1
+          <HtmlComponent
+            html="Option 1"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
         </mockConstructor>,
         <mockConstructor
           className="{}"
           id="properties.showSearch: true_1"
           value={1}
         >
-          Option 2
+          <HtmlComponent
+            html="Option 2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "width": "100%",
+                      },
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "width": "100%",
+                        },
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
@@ -723,7 +2608,7 @@ Array [
       "onChange": [Function],
       "placeholder": "Select item",
       "showArrow": undefined,
-      "showSearch": undefined,
+      "showSearch": true,
       "size": "default",
       "suffixIcon": undefined,
       "value": undefined,
@@ -751,7 +2636,7 @@ Array [
       "onChange": [Function],
       "placeholder": "Select item",
       "showArrow": undefined,
-      "showSearch": undefined,
+      "showSearch": true,
       "size": "large",
       "suffixIcon": undefined,
       "value": undefined,
@@ -779,7 +2664,7 @@ Array [
       "onChange": [Function],
       "placeholder": "Select item",
       "showArrow": undefined,
-      "showSearch": undefined,
+      "showSearch": true,
       "size": "small",
       "suffixIcon": undefined,
       "value": undefined,
@@ -807,9 +2692,10 @@ Array [
       "onChange": [Function],
       "placeholder": "Select item",
       "showArrow": undefined,
-      "showSearch": undefined,
+      "showSearch": true,
       "size": undefined,
       "suffixIcon": <IconBlock
+        basePath=""
         blockId="properties.suffixIcon: DoubleLeftOutlined_suffixIcon"
         content={Object {}}
         events={Object {}}
@@ -859,7 +2745,7 @@ Array [
       "onChange": [Function],
       "placeholder": "Select item",
       "showArrow": undefined,
-      "showSearch": undefined,
+      "showSearch": true,
       "size": undefined,
       "suffixIcon": undefined,
       "value": undefined,

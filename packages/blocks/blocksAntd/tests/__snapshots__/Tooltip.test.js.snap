@@ -48,6 +48,10 @@ exports[`Test Schema properties.title 1`] = `true`;
 
 exports[`Test Schema properties.title 2`] = `null`;
 
+exports[`Test Schema properties.title with html 1`] = `true`;
+
+exports[`Test Schema properties.title with html 2`] = `null`;
+
 exports[`Test Schema properties.trigger: click 1`] = `true`;
 
 exports[`Test Schema properties.trigger: click 2`] = `null`;

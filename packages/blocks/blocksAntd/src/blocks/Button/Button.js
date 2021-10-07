@@ -18,7 +18,7 @@ import React from 'react';
 import { Button } from 'antd';
 import color from '@lowdefy/color';
 import { get, type } from '@lowdefy/helpers';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 import Icon from '../Icon/Icon';
 
 const ButtonBlock = ({ blockId, events, loading, methods, onClick, properties, rename }) => {
@@ -57,7 +57,11 @@ const ButtonBlock = ({ blockId, events, loading, methods, onClick, properties, r
       }
       onClick={onClick || (() => methods.triggerEvent({ name: onClickActionName }))}
     >
-      {properties.hideTitle ? '' : type.isNone(properties.title) ? blockId : properties.title}
+      {!properties.hideTitle &&
+        renderHtml({
+          html: type.isNone(properties.title) ? blockId : properties.title,
+          methods,
+        })}
     </Button>
   );
 };

@@ -30,7 +30,7 @@
         },
         "extra": {
           "type": "string",
-          "description": "Extra text to display beneath the content."
+          "description": "Extra text to display beneath the content - supports html."
         },
         "size": {
           "type": "string",
@@ -40,7 +40,7 @@
         },
         "title": {
           "type": "string",
-          "description": "Label title."
+          "description": "Label title - supports html."
         },
         "extraStyle": {
           "type": "object",

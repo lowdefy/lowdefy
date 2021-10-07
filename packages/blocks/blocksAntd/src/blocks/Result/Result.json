@@ -26,11 +26,11 @@
         },
         "subTitle": {
           "type": "string",
-          "description": "Result subtitle or secondary text."
+          "description": "Result subtitle or secondary text - supports html."
         },
         "title": {
           "type": "string",
-          "description": "Result title or primary text."
+          "description": "Result title or primary text - supports html."
         }
       }
     }

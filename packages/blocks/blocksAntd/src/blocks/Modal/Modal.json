@@ -39,7 +39,7 @@
         },
         "title": {
           "type": "string",
-          "description": "The modal dialog's title."
+          "description": "The modal dialog's title - supports html."
         },
         "footer": {
           "type": "boolean",

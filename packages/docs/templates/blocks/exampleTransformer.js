@@ -29,7 +29,7 @@ const transformer = (_, obj) => {
       type: 'Markdown',
       properties: {
         content: `#####  ${example.title}
- 
+
 ${example.description || ''}
 `,
       },
@@ -55,7 +55,7 @@ ${example.description || ''}
           properties: {
             content: {
               _nunjucks: {
-                template: ` 
+                template: `
 \`\`\`yaml
 {{ block }}
 \`\`\`

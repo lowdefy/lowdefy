@@ -40,6 +40,17 @@ const createChangeHandler =
   };
 
 const PaginationBlock = ({ blockId, methods, properties, value }) => {
+  const showTotal = type.isFunction(properties.showTotal)
+    ? properties.showTotal
+    : (total, range) => {
+        if (type.isString(properties.showTotal)) {
+          return properties.showTotal;
+        }
+        if (total === 0) {
+          return 'No items';
+        }
+        return `${range[0]}-${range[1]} of ${total} items`;
+      };
   return (
     <Pagination
       id={blockId}
@@ -48,9 +59,7 @@ const PaginationBlock = ({ blockId, methods, properties, value }) => {
       total={properties.total !== undefined ? properties.total : 100}
       size={properties.size}
       simple={!!properties.simple}
-      showTotal={
-        properties.showTotal && ((total, range) => `${range[0]}-${range[1]} of ${total} items`)
-      }
+      showTotal={showTotal}
       showSizeChanger={properties.showSizeChanger}
       showQuickJumper={properties.showQuickJumper}
       pageSizeOptions={properties.pageSizeOptions || [10, 20, 30, 40]}

@@ -18,7 +18,9 @@ import { type } from '@lowdefy/helpers';
 
 class Events {
   constructor({ arrayIndices, block, context }) {
+    this.defaultDebounceMs = 300;
     this.events = {};
+    this.timeouts = {};
     this.arrayIndices = arrayIndices;
     this.block = block;
     this.context = context;
@@ -35,6 +37,7 @@ class Events {
     return {
       actions: (type.isObject(actions) ? actions.try : actions) || [],
       catchActions: (type.isObject(actions) ? actions.catch : []) || [],
+      debounce: type.isObject(actions) ? actions.debounce : null,
       history: [],
       loading: false,
     };
@@ -52,29 +55,82 @@ class Events {
 
   async triggerEvent({ name, event }) {
     const eventDescription = this.events[name];
+    let result = {
+      blockId: this.block.blockId,
+      event,
+      eventName: name,
+      responses: {},
+      endTimestamp: new Date(),
+      startTimestamp: new Date(),
+      success: true,
+      bounced: false,
+    };
+    // no event
     if (type.isUndefined(eventDescription)) {
-      return Promise.resolve();
+      return result;
     }
     eventDescription.loading = true;
     this.block.update = true;
     this.context.update();
 
-    const result = await this.context.Actions.callActions({
-      actions: eventDescription.actions,
-      arrayIndices: this.arrayIndices,
-      block: this.block,
-      catchActions: eventDescription.catchActions,
-      event,
-      eventName: name,
+    const actionHandle = async () => {
+      const res = await this.context.Actions.callActions({
+        actions: eventDescription.actions,
+        arrayIndices: this.arrayIndices,
+        block: this.block,
+        catchActions: eventDescription.catchActions,
+        event,
+        eventName: name,
+      });
+      eventDescription.history.unshift(res);
+      this.context.eventLog.unshift(res);
+      eventDescription.loading = false;
+      this.block.update = true;
+      this.context.update();
+      return res;
+    };
+
+    // no debounce
+    if (type.isNone(eventDescription.debounce)) {
+      return actionHandle();
+    }
+    const delay = !type.isNone(eventDescription.debounce.ms)
+      ? eventDescription.debounce.ms
+      : this.defaultDebounceMs;
+    // leading edge: bounce
+    if (this.timeouts[name] && eventDescription.debounce.immediate === true) {
+      result.bounced = true;
+      eventDescription.history.unshift(result);
+      this.context.eventLog.unshift(result);
+      return result;
+    }
+    // leading edge: trigger
+    if (eventDescription.debounce.immediate === true) {
+      this.timeouts[name] = setTimeout(() => {
+        this.timeouts[name] = null;
+      }, delay);
+      return actionHandle();
+    }
+
+    // trailing edge
+    if (eventDescription.bouncer) {
+      eventDescription.bouncer();
+    }
+    return new Promise((resolve) => {
+      const timeout = setTimeout(async () => {
+        eventDescription.bouncer = null;
+        const res = await actionHandle();
+        resolve(res);
+      }, delay);
+
+      eventDescription.bouncer = () => {
+        clearTimeout(timeout);
+        result.bounced = true;
+        eventDescription.history.unshift(result);
+        this.context.eventLog.unshift(result);
+        resolve(result);
+      };
     });
-
-    eventDescription.history.unshift(result);
-    this.context.eventLog.unshift(result);
-    eventDescription.loading = false;
-    this.block.update = true;
-    this.context.update();
-
-    return result;
   }
 }
 

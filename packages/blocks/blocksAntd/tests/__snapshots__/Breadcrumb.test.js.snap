@@ -21,6 +21,7 @@ exports[`Render properties.list.icon - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},{\\"paddingRight\\":8}]}"
           id="properties.list.icon_0_icon"
           required={false}
@@ -58,6 +59,7 @@ exports[`Render properties.list.icon - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},{\\"paddingRight\\":8}]}"
           id="properties.list.icon_1_icon"
           required={false}
@@ -104,6 +106,7 @@ exports[`Render properties.list.icon with onClick - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},{\\"paddingRight\\":8}]}"
           id="properties.list.icon with onClick_0_icon"
           required={false}
@@ -142,6 +145,7 @@ exports[`Render properties.list.icon with onClick - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},{\\"paddingRight\\":8}]}"
           id="properties.list.icon with onClick_1_icon"
           required={false}

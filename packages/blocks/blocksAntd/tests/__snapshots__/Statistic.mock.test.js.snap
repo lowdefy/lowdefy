@@ -110,6 +110,7 @@ Array [
       "id": "properties.prefixIcon: AccountBookFilled",
       "precision": undefined,
       "prefix": <IconBlock
+        basePath=""
         blockId="properties.prefixIcon: AccountBookFilled_prefixIcon"
         content={Object {}}
         events={Object {}}
@@ -175,6 +176,7 @@ Array [
       "precision": undefined,
       "prefix": "",
       "suffix": <IconBlock
+        basePath=""
         blockId="properties.suffixIcon: AccountBookFilled_suffixIcon"
         content={Object {}}
         events={Object {}}
@@ -219,8 +221,74 @@ Array [
       "precision": undefined,
       "prefix": "",
       "suffix": "",
-      "title": "Statistic title",
+      "title": <HtmlComponent
+        html="Statistic title"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "value": "",
+      "valueStyle": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.title with html - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "className": "{}",
+      "decimalSeparator": undefined,
+      "groupSeparator": undefined,
+      "id": "properties.title with html",
+      "precision": undefined,
+      "prefix": "",
+      "suffix": "%",
+      "title": <HtmlComponent
+        html=<div style="color:blue;">
+  Very Html
+</div>
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "value": 100,
       "valueStyle": undefined,
     },
     Object {},

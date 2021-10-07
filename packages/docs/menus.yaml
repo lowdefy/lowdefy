@@ -155,6 +155,11 @@
           pageId: netlify
           properties:
             title: Netlify
+        - id: node-server
+          type: MenuLink
+          pageId: node-server
+          properties:
+            title: Node.js
     - id: users_group
       type: MenuGroup
       properties:
@@ -207,6 +212,9 @@
         - id: CheckboxSelector
           type: MenuLink
           pageId: CheckboxSelector
+        - id: CheckboxSwitch
+          type: MenuLink
+          pageId: CheckboxSwitch
         - id: ChromeColorSelector
           type: MenuLink
           pageId: ChromeColorSelector
@@ -246,6 +254,9 @@
         - id: ParagraphInput
           type: MenuLink
           pageId: ParagraphInput
+        - id: PasswordInput
+          type: MenuLink
+          pageId: PasswordInput
         - id: RadioSelector
           type: MenuLink
           pageId: RadioSelector
@@ -473,6 +484,11 @@
           pageId: AxiosHttp
           properties:
             title: Axios HTTP
+        - id: Elasticsearch
+          type: MenuLink
+          pageId: Elasticsearch
+          properties:
+            title: Elasticsearch
         - id: GoogleSheet
           type: MenuLink
           pageId: GoogleSheet
@@ -511,6 +527,9 @@
         - id: SQLite
           type: MenuLink
           pageId: SQLite
+        - id: Stripe
+          type: MenuLink
+          pageId: Stripe
     - id: actions
       type: MenuGroup
       properties:
@@ -548,6 +567,9 @@
         - id: Reset
           type: MenuLink
           pageId: Reset
+        - id: ResetValidation
+          type: MenuLink
+          pageId: ResetValidation
         - id: ScrollTo
           type: MenuLink
           pageId: ScrollTo
@@ -557,6 +579,9 @@
         - id: SetState
           type: MenuLink
           pageId: SetState
+        - id: Throw
+          type: MenuLink
+          pageId: Throw
         - id: Validate
           type: MenuLink
           pageId: Validate
@@ -584,6 +609,9 @@
         - id: _base64
           type: MenuLink
           pageId: _base64
+        - id: _change_case
+          type: MenuLink
+          pageId: _change_case
         - id: _date
           type: MenuLink
           pageId: _date
@@ -617,6 +645,9 @@
         - id: _gte
           type: MenuLink
           pageId: _gte
+        - id: _hash
+          type: MenuLink
+          pageId: _hash
         - id: _if
           type: MenuLink
           pageId: _if
@@ -668,6 +699,9 @@
         - id: _not
           type: MenuLink
           pageId: _not
+        - id: _number
+          type: MenuLink
+          pageId: _number
         - id: _nunjucks
           type: MenuLink
           pageId: _nunjucks
@@ -710,6 +744,9 @@
         - id: _sum
           type: MenuLink
           pageId: _sum
+        - id: _switch
+          type: MenuLink
+          pageId: _switch
         - id: _type
           type: MenuLink
           pageId: _type
@@ -737,11 +774,31 @@
         title: Lowdefy Versions
         icon: BranchesOutlined
       links:
-        - id: v3.18.0
+        - id: v3.22.0
           type: MenuLink
           url: https://docs.lowdefy.com
           properties:
-            title: v3.18.0
+            title: v3.22.0
+        - id: v3.21.2
+          type: MenuLink
+          url: https://612e10d3dc02710008646251--lowdefy-docs.netlify.app/introduction
+          properties:
+            title: v3.21.2
+        - id: v3.20.4
+          type: MenuLink
+          url: https://6121f02416ea332ef213ab7d--lowdefy-docs.netlify.app
+          properties:
+            title: v3.20.4
+        - id: v3.19.0
+          type: MenuLink
+          url: https://60feb65b4a8d320008674f72--lowdefy-docs.netlify.app/introduction
+          properties:
+            title: v3.19.0
+        - id: v3.18.1
+          type: MenuLink
+          url: https://60dc31741e179f0008eca44c--lowdefy-docs.netlify.app
+          properties:
+            title: v3.18.1
         - id: v3.17.2
           type: MenuLink
           url: https://60c74a306748be0007f7454a--lowdefy-docs.netlify.app

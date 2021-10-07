@@ -55,6 +55,47 @@
             }
           ]
         },
+        "itemOptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["key"],
+            "properties": {
+              "key": {
+                "type": "string",
+                "description": "Item key to which these settings should apply."
+              },
+              "span": {
+                "type": ["number", "object"],
+                "description": "Item span for this key. Can also be a function that receives item and index.",
+                "docs": {
+                  "displayType": "number"
+                }
+              },
+              "style": {
+                "type": "object",
+                "description": "Item css style for this key. Can also be a function that receives item and index.",
+                "docs": {
+                  "displayType": "yaml"
+                }
+              },
+              "transformLabel": {
+                "type": "object",
+                "description": "Function to transform item key or label. Function receives arguments label, item and index.",
+                "docs": {
+                  "displayType": "yaml"
+                }
+              },
+              "transformValue": {
+                "type": "object",
+                "description": "Function to transform item value. Function receives arguments value, item and index.",
+                "docs": {
+                  "displayType": "yaml"
+                }
+              }
+            }
+          }
+        },
         "items": {
           "oneOf": [
             {
@@ -66,11 +107,19 @@
                 "properties": {
                   "label": {
                     "type": "string",
-                    "description": "Item label."
+                    "description": "Item label - supports html."
                   },
                   "value": {
-                    "type": "string",
-                    "description": "Value of item."
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "description": "Value of item - supports html."
+                      },
+                      {
+                        "type": "number",
+                        "description": "Value of item - supports html."
+                      }
+                    ]
                   },
                   "span": {
                     "type": "integer",
@@ -109,7 +158,7 @@
         },
         "title": {
           "type": "string",
-          "description": "The title of the description block, placed at the top."
+          "description": "The title of the description block, placed at the top - supports html."
         }
       }
     }

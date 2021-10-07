@@ -72,7 +72,7 @@
         },
         "title": {
           "type": "string",
-          "description": "Title text on the button."
+          "description": "Title text on the button - supports html."
         },
         "type": {
           "type": "string",

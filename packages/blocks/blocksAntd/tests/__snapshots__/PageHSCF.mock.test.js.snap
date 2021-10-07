@@ -6,6 +6,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <LayoutBlock
+          basePath=""
           blockId="areas.content_layout"
           content={
             Object {
@@ -49,6 +50,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <LayoutBlock
+          basePath=""
           blockId="areas.footer_layout"
           content={
             Object {
@@ -78,6 +80,7 @@ Array [
           }
         />
         <FooterBlock
+          basePath=""
           blockId="areas.footer_footer"
           content={
             Object {
@@ -121,6 +124,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="areas.header_header"
           content={
             Object {
@@ -150,6 +154,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="areas.header_layout"
           content={
             Object {
@@ -193,6 +198,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <LayoutBlock
+          basePath=""
           blockId="areas.sider_layout"
           content={
             Object {
@@ -236,6 +242,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <LayoutBlock
+          basePath=""
           blockId="default_layout"
           content={
             Object {
@@ -279,6 +286,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.content.style: border: 5px solid blue_header"
           content={
             Object {
@@ -308,6 +316,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.content.style: border: 5px solid blue_layout"
           content={
             Object {
@@ -337,6 +346,7 @@ Array [
           }
         />
         <FooterBlock
+          basePath=""
           blockId="properties.content.style: border: 5px solid blue_footer"
           content={
             Object {
@@ -380,6 +390,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.footer.style: border: 5px solid blue_header"
           content={
             Object {
@@ -409,6 +420,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.footer.style: border: 5px solid blue_layout"
           content={
             Object {
@@ -438,6 +450,7 @@ Array [
           }
         />
         <FooterBlock
+          basePath=""
           blockId="properties.footer.style: border: 5px solid blue_footer"
           content={
             Object {
@@ -487,6 +500,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.header.color: #4432a8 _header"
           content={
             Object {
@@ -520,6 +534,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.header.color: #4432a8 _layout"
           content={
             Object {
@@ -549,6 +564,7 @@ Array [
           }
         />
         <FooterBlock
+          basePath=""
           blockId="properties.header.color: #4432a8 _footer"
           content={
             Object {
@@ -592,6 +608,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.header.style: border: 5px solid blue_header"
           content={
             Object {
@@ -627,6 +644,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.header.style: border: 5px solid blue_layout"
           content={
             Object {
@@ -656,6 +674,7 @@ Array [
           }
         />
         <FooterBlock
+          basePath=""
           blockId="properties.header.style: border: 5px solid blue_footer"
           content={
             Object {
@@ -699,6 +718,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.header.theme: light - dark is default_header"
           content={
             Object {
@@ -732,6 +752,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.header.theme: light - dark is default_layout"
           content={
             Object {
@@ -761,6 +782,7 @@ Array [
           }
         />
         <FooterBlock
+          basePath=""
           blockId="properties.header.theme: light - dark is default_footer"
           content={
             Object {
@@ -804,6 +826,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.main.style: border: 5px solid blue_header"
           content={
             Object {
@@ -833,6 +856,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.main.style: border: 5px solid blue_layout"
           content={
             Object {
@@ -868,6 +892,7 @@ Array [
           }
         />
         <FooterBlock
+          basePath=""
           blockId="properties.main.style: border: 5px solid blue_footer"
           content={
             Object {
@@ -911,6 +936,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.sider.style: border: 5px solid blue_header"
           content={
             Object {
@@ -940,6 +966,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.sider.style: border: 5px solid blue_layout"
           content={
             Object {
@@ -969,6 +996,7 @@ Array [
           }
         />
         <FooterBlock
+          basePath=""
           blockId="properties.sider.style: border: 5px solid blue_footer"
           content={
             Object {
@@ -1012,6 +1040,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.sider.theme: light - dark is default_header"
           content={
             Object {
@@ -1041,6 +1070,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.sider.theme: light - dark is default_layout"
           content={
             Object {
@@ -1070,6 +1100,7 @@ Array [
           }
         />
         <FooterBlock
+          basePath=""
           blockId="properties.sider.theme: light - dark is default_footer"
           content={
             Object {
@@ -1113,6 +1144,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.style: border: 5px solid blue_header"
           content={
             Object {
@@ -1142,6 +1174,7 @@ Array [
           }
         />
         <LayoutBlock
+          basePath=""
           blockId="properties.style: border: 5px solid blue_layout"
           content={
             Object {
@@ -1171,6 +1204,7 @@ Array [
           }
         />
         <FooterBlock
+          basePath=""
           blockId="properties.style: border: 5px solid blue_footer"
           content={
             Object {

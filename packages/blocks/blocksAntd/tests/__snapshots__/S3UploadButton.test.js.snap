@@ -39,6 +39,7 @@ exports[`Render default - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="default_button_icon"
           required={false}
@@ -58,9 +59,9 @@ exports[`Render default - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Upload
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </span>
   </div>
@@ -109,6 +110,7 @@ exports[`Render properties.accept - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.accept_button_icon"
           required={false}
@@ -128,9 +130,9 @@ exports[`Render properties.accept - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Upload
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </span>
   </div>
@@ -179,6 +181,7 @@ exports[`Render properties.button - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.button_button_icon"
           required={false}
@@ -198,9 +201,9 @@ exports[`Render properties.button - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Upload
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </span>
   </div>
@@ -244,6 +247,7 @@ exports[`Render properties.disabled - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.disabled_button_icon"
           required={false}
@@ -263,9 +267,9 @@ exports[`Render properties.disabled - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Upload
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </span>
   </div>
@@ -314,6 +318,7 @@ exports[`Render properties.showUploadList - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.showUploadList_button_icon"
           required={false}
@@ -333,9 +338,9 @@ exports[`Render properties.showUploadList - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Upload
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </span>
   </div>
@@ -384,6 +389,7 @@ exports[`Render properties.singleFile - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.singleFile_button_icon"
           required={false}
@@ -403,9 +409,9 @@ exports[`Render properties.singleFile - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Upload
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </span>
   </div>

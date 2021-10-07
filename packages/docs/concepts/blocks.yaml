@@ -32,8 +32,11 @@ _ref:
               - Lowdefy has built in default block types, however this can be overwritten or extended with custom blocks by defining `types` on the Lowdefy config root.
               - `input` blocks maintain a value in `state` matching the block `id` key. _Dot notation_ applies to specify nested fields.
               ##### Block validation
-              - Field level input validation can be achieved marking a `input` block as `required` or by specifying a list of `validate` tests.
-              - Validation is invoked using the [`Validate`](/Validate) action, and applies to all `input` fields in the [`context`](/context-and-state).
+              - Field level input validation can be achieved by marking a `input` block as `required` or by specifying a list of `validate` tests.
+              - Validation is invoked using the [`Validate`](/Validate) action.
+              ##### Block events
+              - All blocks have`onMount` and `onMountAsync` events.
+              - Each block implements it's own additional events such as `onClick` etc.
               ##### Block loading
               - By default all blocks render a loading skeleton when the block's source code is fetched or while the block is waiting on data from a request.
               - A block's default loading can be overwritten by defining custom `loading` settings on a block.
@@ -111,10 +114,10 @@ _ref:
 
             Client side field validation can be applied setting the `required` and / or `validate` block fields. The following schema applies to `required` and `validate`.
 
-            Field validation is first evaluated when the [`Validate`](/Validate) action is invoked on a page [`context`](/context-and-state).
+            Field validation is first evaluated when the [`Validate`](/Validate) action is invoked on a page.
 
             ##### `required` schema:
-            `requried` can be a `boolean` or `string` type. When `required: true` the field label will indicate this with a red dot for user feedback, and a value will have to be supplied in to the field in order to pass validation. If `required` is set to a `string`, this string will be used as the feedback message when the validation fails.
+            `required` can be a `boolean` or `string` type. When `required: true` the field label will indicate this with a red dot for user feedback, and a value will have to be supplied in to the field in order to pass validation. If `required` is set to a `string`, this string will be used as the feedback message when the validation fails.
 
             ```yaml
             - id: name
@@ -150,6 +153,14 @@ _ref:
                 properties:
                   title: Email
             ```
+
+            # Block events
+
+            By default all blocks implements `onMount` and `onMountAsync` events. Both the `onMount` and `onMountAsync` events are triggered when the block is mounted. For the `onMount` event, the block only mounts when the event action chain is completed, however, for the `onMountAsync` event, the block will mount as soon as possible while the event actions completes execution.
+
+            Apart from the `onMount` and `onMountAsync` events, most blocks also implements their own block specific events such as `onOpen` for [Modal](/Modal) or `onClick` for [Button](/Button). See the events tab on each block's documentation for more details.
+
+            See [the events and actions page](/events-and-actions) for more details.
 
             # Block loading
 

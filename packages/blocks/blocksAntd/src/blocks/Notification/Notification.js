@@ -16,7 +16,7 @@
 
 import React, { useEffect } from 'react';
 import { notification } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 import { type } from '@lowdefy/helpers';
 import Button from '../Button/Button';
 import Icon from '../Icon/Icon';
@@ -36,7 +36,7 @@ const NotificationBlock = ({ blockId, events, properties, methods }) => {
           />
         ),
         className: methods.makeCssClass(properties.notificationStyle),
-        description: args.description || properties.description,
+        description: renderHtml({ html: args.description || properties.description, methods }),
         duration: type.isNone(args.duration) ? properties.duration : args.duration,
         icon: properties.icon && (
           <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
@@ -48,7 +48,7 @@ const NotificationBlock = ({ blockId, events, properties, methods }) => {
             properties={properties.closeIcon}
           />
         ),
-        message: args.message || properties.message || blockId,
+        message: renderHtml({ html: args.message || properties.message || blockId, methods }),
         onClose: () => methods.triggerEvent({ name: 'onClose' }),
         onClick: () => methods.triggerEvent({ name: 'onClick' }),
         placement: properties.placement,

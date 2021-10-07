@@ -3,6 +3,138 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.22.0](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.1...v3.22.0) (2021-09-27)
+
+**Note:** Version bump only for package @lowdefy/renderer
+
+
+
+
+
+# [3.22.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.0...v3.22.0-alpha.1) (2021-09-20)
+
+**Note:** Version bump only for package @lowdefy/renderer
+
+
+
+
+
+# [3.22.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.2...v3.22.0-alpha.0) (2021-09-08)
+
+**Note:** Version bump only for package @lowdefy/renderer
+
+
+
+
+
+## [3.21.2](https://github.com/lowdefy/lowdefy/compare/v3.21.2-alpha.0...v3.21.2) (2021-08-31)
+
+**Note:** Version bump only for package @lowdefy/renderer
+
+
+
+
+
+## [3.21.2-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.1...v3.21.2-alpha.0) (2021-08-31)
+
+**Note:** Version bump only for package @lowdefy/renderer
+
+
+
+
+
+## [3.21.1](https://github.com/lowdefy/lowdefy/compare/v3.21.0...v3.21.1) (2021-08-26)
+
+
+### Bug Fixes
+
+* **renderer:** Fix loading skeletons, closes [#798](https://github.com/lowdefy/lowdefy/issues/798) ([e4dd10e](https://github.com/lowdefy/lowdefy/commit/e4dd10e4b35e6fc957abe955d4c1a5b6767ecc66))
+
+
+
+
+
+# [3.21.0](https://github.com/lowdefy/lowdefy/compare/v3.20.4...v3.21.0) (2021-08-25)
+
+
+### Bug Fixes
+
+* **renderer:** Add crypto build fallback. ([1f74ca7](https://github.com/lowdefy/lowdefy/commit/1f74ca7674f48241060ebcb4030378f279431376))
+
+
+### Features
+
+* **renderer:** Refactoring renderer and implementing onMount and onMountAsyc, closes [#778](https://github.com/lowdefy/lowdefy/issues/778) ([101d23a](https://github.com/lowdefy/lowdefy/commit/101d23a3f9f495549553ddecbd5420867e9023db))
+
+
+
+
+
+## [3.20.4](https://github.com/lowdefy/lowdefy/compare/v3.20.3...v3.20.4) (2021-08-21)
+
+**Note:** Version bump only for package @lowdefy/renderer
+
+
+
+
+
+## [3.20.3](https://github.com/lowdefy/lowdefy/compare/v3.20.1...v3.20.3) (2021-08-20)
+
+**Note:** Version bump only for package @lowdefy/renderer
+
+
+
+
+
+## [3.20.2](https://github.com/lowdefy/lowdefy/compare/v3.20.1...v3.20.2) (2021-08-20)
+
+**Note:** Version bump only for package @lowdefy/renderer
+
+
+
+
+
+## [3.20.1](https://github.com/lowdefy/lowdefy/compare/v3.20.0...v3.20.1) (2021-08-20)
+
+**Note:** Version bump only for package @lowdefy/renderer
+
+
+
+
+
+# [3.20.0](https://github.com/lowdefy/lowdefy/compare/v3.19.0...v3.20.0) (2021-08-20)
+
+
+### Bug Fixes
+
+* Fixes for configurable basePath. ([63955bb](https://github.com/lowdefy/lowdefy/commit/63955bbd1131da3b27b537d4e0d72dc943119287))
+
+
+### Features
+
+* Add back option to link. ([b6cf705](https://github.com/lowdefy/lowdefy/commit/b6cf705d5c7e0b54a3c22d7a33116fc30dc9e191)), closes [#728](https://github.com/lowdefy/lowdefy/issues/728)
+* Make server basepath configurable ([3981f8c](https://github.com/lowdefy/lowdefy/commit/3981f8c60b9a2e6f5429a5fba499c65c16ccf30f))
+
+
+
+
+
+# [3.19.0](https://github.com/lowdefy/lowdefy/compare/v3.18.1...v3.19.0) (2021-07-26)
+
+**Note:** Version bump only for package @lowdefy/renderer
+
+
+
+
+
+## [3.18.1](https://github.com/lowdefy/lowdefy/compare/v3.18.0...v3.18.1) (2021-06-30)
+
+**Note:** Version bump only for package @lowdefy/renderer
+
+
+
+
+
 # [3.18.0](https://github.com/lowdefy/lowdefy/compare/v3.17.2...v3.18.0) (2021-06-17)
 
 **Note:** Version bump only for package @lowdefy/renderer

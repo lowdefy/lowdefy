@@ -38,3 +38,7 @@
   properties:
     title: Divider title
     plain: true
+- id: 'with html in title'
+  type: Divider
+  properties:
+    title: '<div style="background-color:yellow">Html Title</div>'

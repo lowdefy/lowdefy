@@ -26,10 +26,12 @@ async function getBuild({ context }) {
   async function build() {
     context.print.log('Building configuration.');
     await buildScript({
-      logger: context.print,
+      blocksServerUrl: context.options.blocksServerUrl,
       cacheDirectory: context.cacheDirectory,
       configDirectory: context.baseDirectory,
+      logger: context.print,
       outputDirectory: context.outputDirectory,
+      refResolver: context.options.refResolver,
     });
     context.print.succeed('Built successfully.');
   }

@@ -18,6 +18,8 @@ import createGetMeta from './getMeta';
 import createFetchMetaCache from './fetchMetaCache';
 import createWriteMetaCache from './writeMetaCache';
 import fetchMetaUrl from './fetchMetaUrl';
+// eslint-disable-next-line no-unused-vars
+import metaLocations from './metaLocations';
 
 jest.mock('./fetchMetaCache', () => {
   const mockFetchMetaCache = jest.fn();
@@ -30,6 +32,15 @@ jest.mock('./writeMetaCache', () => {
 jest.mock('./fetchMetaUrl', () => {
   const mockFetchMetaUrl = jest.fn();
   return mockFetchMetaUrl;
+});
+
+jest.mock('./metaLocations', () => {
+  const mockMetaLocations = jest.fn(() => ({
+    DefaultType: {
+      url: 'defaultTypeUrl',
+    },
+  }));
+  return mockMetaLocations;
 });
 
 const mockFetchMetaCache = createFetchMetaCache();
@@ -58,7 +69,8 @@ const defaultMeta = {
   },
 };
 
-const getMeta = createGetMeta({ types, cacheDirectory: 'cacheDirectory' });
+const components = { types };
+const context = { cacheDirectory: 'cacheDirectory' };
 
 beforeEach(() => {
   mockFetchMetaCache.mockReset();
@@ -67,6 +79,7 @@ beforeEach(() => {
 });
 
 test('getMeta cache returns from cache', async () => {
+  const getMeta = createGetMeta({ components, context });
   mockFetchMetaCache.mockImplementation((location) => {
     if (location && location.url === 'type1Url') {
       return defaultMeta;
@@ -74,13 +87,11 @@ test('getMeta cache returns from cache', async () => {
     return null;
   });
   const res = await getMeta('Type1');
-  expect(res).toEqual({
-    type: 'Type1',
-    meta: defaultMeta,
-  });
+  expect(res).toEqual(defaultMeta);
 });
 
 test('getMeta fetches from url and writes to cache', async () => {
+  const getMeta = createGetMeta({ components, context });
   mockFetchMetaUrl.mockImplementation(({ location }) => {
     if (location && location.url === 'type1Url') {
       return defaultMeta;
@@ -88,10 +99,7 @@ test('getMeta fetches from url and writes to cache', async () => {
     return null;
   });
   const res = await getMeta('Type1');
-  expect(res).toEqual({
-    type: 'Type1',
-    meta: defaultMeta,
-  });
+  expect(res).toEqual(defaultMeta);
   expect(mockWriteMetaCache.mock.calls).toEqual([
     [
       {
@@ -104,32 +112,49 @@ test('getMeta fetches from url and writes to cache', async () => {
   ]);
 });
 
+test('getMeta uses locations from metaLocations', async () => {
+  const getMeta = createGetMeta({ components, context });
+  mockFetchMetaCache.mockImplementation((location) => {
+    if (location && location.url === 'defaultTypeUrl') {
+      return defaultMeta;
+    }
+    return null;
+  });
+  const res = await getMeta('DefaultType');
+  expect(res).toEqual(defaultMeta);
+});
+
 test('getMeta type not in types', async () => {
+  const getMeta = createGetMeta({ components, context });
   await expect(getMeta('Undefined')).rejects.toThrow(
     'Block type "Undefined" is not defined. Specify type url in types array.'
   );
 });
 
 test('getMeta undefined type', async () => {
+  const getMeta = createGetMeta({ components, context });
   await expect(getMeta()).rejects.toThrow(
     'Block type undefined is not defined. Specify type url in types array.'
   );
 });
 
 test('getMeta meta not found in cache or url', async () => {
+  const getMeta = createGetMeta({ components, context });
   await expect(getMeta('Type2')).rejects.toThrow(
     'Block type "Type2" has invalid block meta at {"url":"type2Url"}.'
   );
 });
 
 test('getMeta invalid meta', async () => {
+  const getMeta = createGetMeta({ components, context });
   mockFetchMetaUrl.mockImplementation(() => ({ invalidMeta: true }));
   await expect(getMeta('Type2')).rejects.toThrow(
     'Block type "Type2" has invalid block meta at {"url":"type2Url"}.'
   );
 });
 
-test('getMeta fetches from url and writes to cache', async () => {
+test('getMeta fetches from url and does not write to cache if location is localhost', async () => {
+  const getMeta = createGetMeta({ components, context });
   mockFetchMetaUrl.mockImplementation(({ location }) => {
     if (location && location.url === 'http://localhost:3003/meta/Block.json') {
       return defaultMeta;
@@ -137,10 +162,69 @@ test('getMeta fetches from url and writes to cache', async () => {
     return null;
   });
   const res = await getMeta('Localhost');
-  expect(res).toEqual({
-    type: 'Localhost',
-    meta: defaultMeta,
-  });
+  expect(res).toEqual(defaultMeta);
   expect(mockFetchMetaCache.mock.calls).toEqual([]);
   expect(mockWriteMetaCache.mock.calls).toEqual([]);
+});
+
+test('getMeta meta is memoised when returned from cache', async () => {
+  const getMeta = createGetMeta({ components, context });
+  mockFetchMetaCache.mockImplementation((location) => {
+    if (location && location.url === 'defaultTypeUrl') {
+      return defaultMeta;
+    }
+    return null;
+  });
+  await getMeta('DefaultType');
+  await getMeta('DefaultType');
+  expect(mockFetchMetaCache.mock.calls).toEqual([
+    [
+      {
+        url: 'defaultTypeUrl',
+      },
+    ],
+  ]);
+});
+
+test('getMeta meta is memoised when returned from cache', async () => {
+  const getMeta = createGetMeta({ components, context });
+  mockFetchMetaUrl.mockImplementation(({ location }) => {
+    if (location && location.url === 'defaultTypeUrl') {
+      return defaultMeta;
+    }
+    return null;
+  });
+  await getMeta('DefaultType');
+  await getMeta('DefaultType');
+  expect(mockFetchMetaCache.mock.calls).toEqual([
+    [
+      {
+        url: 'defaultTypeUrl',
+      },
+    ],
+  ]);
+  expect(mockFetchMetaUrl.mock.calls).toEqual([
+    [
+      {
+        location: {
+          url: 'defaultTypeUrl',
+        },
+        type: 'DefaultType',
+      },
+    ],
+  ]);
+});
+
+test('blocksServerUrl is passed to metaLoactions', async () => {
+  createGetMeta({
+    components,
+    context: { blocksServerUrl: 'blocksServerUrl', cacheDirectory: 'cacheDirectory' },
+  });
+  expect(metaLocations.mock.calls).toEqual([
+    [
+      {
+        blocksServerUrl: 'blocksServerUrl',
+      },
+    ],
+  ]);
 });

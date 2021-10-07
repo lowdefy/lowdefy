@@ -125,3 +125,41 @@ test('other error', async () => {
     'The "url" argument must be of type string. Received type boolean (true)'
   );
 });
+
+test('https Agent options in request', async () => {
+  const request = {
+    url: 'https://postman-echo.com/get',
+    httpsAgentOptions: { keepAlive: true },
+  };
+  const connection = {};
+  const res = await resolver({ request, connection });
+  expect(res.headers.connection).toEqual('keep-alive');
+});
+
+test('https Agent options in connection', async () => {
+  const request = {
+    url: 'https://postman-echo.com/get',
+  };
+  const connection = { httpsAgentOptions: { keepAlive: true } };
+  const res = await resolver({ request, connection });
+  expect(res.headers.connection).toEqual('keep-alive');
+});
+
+test('http Agent options in request', async () => {
+  const request = {
+    url: 'http://postman-echo.com/get',
+    httpAgentOptions: { keepAlive: true },
+  };
+  const connection = {};
+  const res = await resolver({ request, connection });
+  expect(res.headers.connection).toEqual('keep-alive');
+});
+
+test('http Agent options in connection', async () => {
+  const request = {
+    url: 'http://postman-echo.com/get',
+  };
+  const connection = { httpAgentOptions: { keepAlive: true } };
+  const res = await resolver({ request, connection });
+  expect(res.headers.connection).toEqual('keep-alive');
+});

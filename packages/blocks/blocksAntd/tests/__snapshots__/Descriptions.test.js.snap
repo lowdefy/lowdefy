@@ -21,7 +21,9 @@ exports[`Render default title - value[0] 1`] = `
   <div
     className="ant-descriptions-title"
   >
-    Descriptions title
+    <span
+      className="{}"
+    />
   </div>
   <div
     className="ant-descriptions-view"
@@ -46,40 +48,52 @@ exports[`Render properties.bordered: true - value[0] 1`] = `
           className="ant-descriptions-row"
         >
           <th
-            className="ant-descriptions-item-label {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            field_one
+            <span
+              className="{}"
+            />
           </th>
           <td
-            className="ant-descriptions-item-content {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            value one
+            <span
+              className="{}"
+            />
           </td>
           <th
-            className="ant-descriptions-item-label {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            field_two
+            <span
+              className="{}"
+            />
           </th>
           <td
-            className="ant-descriptions-item-content {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            2
+            <span
+              className="{}"
+            />
           </td>
           <th
-            className="ant-descriptions-item-label {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            field_three
+            <span
+              className="{}"
+            />
           </th>
           <td
-            className="ant-descriptions-item-content {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            value three
+            <span
+              className="{}"
+            />
           </td>
         </tr>
       </tbody>
@@ -101,48 +115,60 @@ exports[`Render properties.colon: false - value[0] 1`] = `
           className="ant-descriptions-row"
         >
           <td
-            className="ant-descriptions-item {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-label ant-descriptions-item-no-colon"
             >
-              field_one
+              <span
+                className="{}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
-              value one
+              <span
+                className="{}"
+              />
             </span>
           </td>
           <td
-            className="ant-descriptions-item {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-label ant-descriptions-item-no-colon"
             >
-              field_two
+              <span
+                className="{}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
-              2
+              <span
+                className="{}"
+              />
             </span>
           </td>
           <td
-            className="ant-descriptions-item {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-label ant-descriptions-item-no-colon"
             >
-              field_three
+              <span
+                className="{}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
-              value three
+              <span
+                className="{}"
+              />
             </span>
           </td>
         </tr>
@@ -165,33 +191,41 @@ exports[`Render properties.column: 2 - value[0] 1`] = `
           className="ant-descriptions-row"
         >
           <td
-            className="ant-descriptions-item {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-label"
             >
-              field_one
+              <span
+                className="{}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
-              value one
+              <span
+                className="{}"
+              />
             </span>
           </td>
           <td
-            className="ant-descriptions-item {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-label"
             >
-              field_two
+              <span
+                className="{}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
-              2
+              <span
+                className="{}"
+              />
             </span>
           </td>
         </tr>
@@ -199,18 +233,456 @@ exports[`Render properties.column: 2 - value[0] 1`] = `
           className="ant-descriptions-row"
         >
           <td
-            className="ant-descriptions-item {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={2}
           >
             <span
               className="ant-descriptions-item-label"
             >
-              field_three
+              <span
+                className="{}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
-              value three
+              <span
+                className="{}"
+              />
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;
+
+exports[`Render properties.itemOptions.span - value[0] 1`] = `
+<div
+  className="ant-descriptions"
+>
+  <div
+    className="ant-descriptions-view"
+  >
+    <table>
+      <tbody>
+        <tr
+          className="ant-descriptions-row"
+        >
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+          </td>
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={2}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+          </td>
+        </tr>
+        <tr
+          className="ant-descriptions-row"
+        >
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+          </td>
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={2}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;
+
+exports[`Render properties.itemOptions.style - value[0] 1`] = `
+<div
+  className="ant-descriptions"
+>
+  <div
+    className="ant-descriptions-view"
+  >
+    <table>
+      <tbody>
+        <tr
+          className="ant-descriptions-row"
+        >
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+          </td>
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},{\\"textAlign\\":\\"right\\"},null]}"
+            colSpan={1}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+          </td>
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+          </td>
+        </tr>
+        <tr
+          className="ant-descriptions-row"
+        >
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={3}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;
+
+exports[`Render properties.items html values - value[0] 1`] = `
+<div
+  className="ant-descriptions"
+>
+  <div
+    className="ant-descriptions-view"
+  >
+    <table>
+      <tbody>
+        <tr
+          className="ant-descriptions-row"
+        >
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+          </td>
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+          </td>
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+          </td>
+        </tr>
+        <tr
+          className="ant-descriptions-row"
+        >
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={3}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;
+
+exports[`Render properties.items-falseish-values - value[0] 1`] = `
+<div
+  className="ant-descriptions"
+>
+  <div
+    className="ant-descriptions-title"
+  >
+    <span
+      className="{}"
+    />
+  </div>
+  <div
+    className="ant-descriptions-view"
+  >
+    <table>
+      <tbody>
+        <tr
+          className="ant-descriptions-row"
+        >
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+          </td>
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+          </td>
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+          </td>
+        </tr>
+        <tr
+          className="ant-descriptions-row"
+        >
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+          </td>
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+          </td>
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <span
+                className="{}"
+              />
             </span>
           </td>
         </tr>
@@ -227,7 +699,9 @@ exports[`Render properties.items-list - value[0] 1`] = `
   <div
     className="ant-descriptions-title"
   >
-    Title
+    <span
+      className="{}"
+    />
   </div>
   <div
     className="ant-descriptions-view"
@@ -238,33 +712,41 @@ exports[`Render properties.items-list - value[0] 1`] = `
           className="ant-descriptions-row"
         >
           <td
-            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null]}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-label"
             >
-              field_one
+              <span
+                className="{}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
-              1
+              <span
+                className="{}"
+              />
             </span>
           </td>
           <td
-            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null]}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-label"
             >
-              field_two
+              <span
+                className="{}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
-              2
+              <span
+                className="{}"
+              />
             </span>
           </td>
         </tr>
@@ -272,18 +754,22 @@ exports[`Render properties.items-list - value[0] 1`] = `
           className="ant-descriptions-row"
         >
           <td
-            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null]}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={2}
           >
             <span
               className="ant-descriptions-item-label"
             >
-              field_three
+              <span
+                className="{}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
-              3
+              <span
+                className="{}"
+              />
             </span>
           </td>
         </tr>
@@ -300,7 +786,9 @@ exports[`Render properties.items-list with new lines - value[0] 1`] = `
   <div
     className="ant-descriptions-title"
   >
-    Title
+    <span
+      className="{}"
+    />
   </div>
   <div
     className="ant-descriptions-view"
@@ -311,37 +799,41 @@ exports[`Render properties.items-list with new lines - value[0] 1`] = `
           className="ant-descriptions-row"
         >
           <td
-            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null]}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-label"
             >
-              field_one
+              <span
+                className="{}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
-              description field with 
-new line 	 helps
- make better content.
+              <span
+                className="{}"
+              />
             </span>
           </td>
           <td
-            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null]}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-label"
             >
-              one \\n two;
+              <span
+                className="{}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
-              description field with 
-new line 	 helps
- make better content.
+              <span
+                className="{}"
+              />
             </span>
           </td>
         </tr>
@@ -358,7 +850,9 @@ exports[`Render properties.items-object - value[0] 1`] = `
   <div
     className="ant-descriptions-title"
   >
-    Title
+    <span
+      className="{}"
+    />
   </div>
   <div
     className="ant-descriptions-view"
@@ -369,48 +863,60 @@ exports[`Render properties.items-object - value[0] 1`] = `
           className="ant-descriptions-row"
         >
           <td
-            className="ant-descriptions-item {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-label"
             >
-              field_one
+              <span
+                className="{}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
-              value one
+              <span
+                className="{}"
+              />
             </span>
           </td>
           <td
-            className="ant-descriptions-item {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-label"
             >
-              field_two
+              <span
+                className="{}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
-              2
+              <span
+                className="{}"
+              />
             </span>
           </td>
           <td
-            className="ant-descriptions-item {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-label"
             >
-              field_three
+              <span
+                className="{}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
-              value three
+              <span
+                className="{}"
+              />
             </span>
           </td>
         </tr>
@@ -427,7 +933,9 @@ exports[`Render properties.items-object with new lines - value[0] 1`] = `
   <div
     className="ant-descriptions-title"
   >
-    Title
+    <span
+      className="{}"
+    />
   </div>
   <div
     className="ant-descriptions-view"
@@ -438,37 +946,41 @@ exports[`Render properties.items-object with new lines - value[0] 1`] = `
           className="ant-descriptions-row"
         >
           <td
-            className="ant-descriptions-item {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-label"
             >
-              field_one
+              <span
+                className="{}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
-              description one field with 
- new line 	 helps
- make better content.
+              <span
+                className="{}"
+              />
             </span>
           </td>
           <td
-            className="ant-descriptions-item {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-label"
             >
-              one \\n two;
+              <span
+                className="{}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
-              description two field with 
- new line 	 helps
- make better content.
+              <span
+                className="{}"
+              />
             </span>
           </td>
         </tr>
@@ -485,7 +997,9 @@ exports[`Render properties.items-object-object - value[0] 1`] = `
   <div
     className="ant-descriptions-title"
   >
-    Title
+    <span
+      className="{}"
+    />
   </div>
   <div
     className="ant-descriptions-view"
@@ -496,48 +1010,60 @@ exports[`Render properties.items-object-object - value[0] 1`] = `
           className="ant-descriptions-row"
         >
           <td
-            className="ant-descriptions-item {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-label"
             >
-              one
+              <span
+                className="{}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
-              {"two":3}
+              <span
+                className="{}"
+              />
             </span>
           </td>
           <td
-            className="ant-descriptions-item {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-label"
             >
-              four
+              <span
+                className="{}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
-              {"five":"six"}
+              <span
+                className="{}"
+              />
             </span>
           </td>
           <td
-            className="ant-descriptions-item {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-label"
             >
-              seven
+              <span
+                className="{}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
-              {"eight":[9,"ten"]}
+              <span
+                className="{}"
+              />
             </span>
           </td>
         </tr>
@@ -560,33 +1086,39 @@ exports[`Render properties.layout: vertical - value[0] 1`] = `
           className="ant-descriptions-row"
         >
           <th
-            className="ant-descriptions-item {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-label"
             >
-              field_one
+              <span
+                className="{}"
+              />
             </span>
           </th>
           <th
-            className="ant-descriptions-item {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-label"
             >
-              field_two
+              <span
+                className="{}"
+              />
             </span>
           </th>
           <th
-            className="ant-descriptions-item {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-label"
             >
-              field_three
+              <span
+                className="{}"
+              />
             </span>
           </th>
         </tr>
@@ -594,33 +1126,39 @@ exports[`Render properties.layout: vertical - value[0] 1`] = `
           className="ant-descriptions-row"
         >
           <td
-            className="ant-descriptions-item {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-content"
             >
-              value one
+              <span
+                className="{}"
+              />
             </span>
           </td>
           <td
-            className="ant-descriptions-item {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-content"
             >
-              2
+              <span
+                className="{}"
+              />
             </span>
           </td>
           <td
-            className="ant-descriptions-item {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-content"
             >
-              value three
+              <span
+                className="{}"
+              />
             </span>
           </td>
         </tr>
@@ -643,48 +1181,60 @@ exports[`Render properties.size: default - value[0] 1`] = `
           className="ant-descriptions-row"
         >
           <td
-            className="ant-descriptions-item {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-label"
             >
-              field_one
+              <span
+                className="{}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
-              value one
+              <span
+                className="{}"
+              />
             </span>
           </td>
           <td
-            className="ant-descriptions-item {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-label"
             >
-              field_two
+              <span
+                className="{}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
-              2
+              <span
+                className="{}"
+              />
             </span>
           </td>
           <td
-            className="ant-descriptions-item {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-label"
             >
-              field_three
+              <span
+                className="{}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
-              value three
+              <span
+                className="{}"
+              />
             </span>
           </td>
         </tr>
@@ -707,48 +1257,60 @@ exports[`Render properties.size: small - value[0] 1`] = `
           className="ant-descriptions-row"
         >
           <td
-            className="ant-descriptions-item {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-label"
             >
-              field_one
+              <span
+                className="{}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
-              value one
+              <span
+                className="{}"
+              />
             </span>
           </td>
           <td
-            className="ant-descriptions-item {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-label"
             >
-              field_two
+              <span
+                className="{}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
-              2
+              <span
+                className="{}"
+              />
             </span>
           </td>
           <td
-            className="ant-descriptions-item {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
             <span
               className="ant-descriptions-item-label"
             >
-              field_three
+              <span
+                className="{}"
+              />
             </span>
             <span
               className="ant-descriptions-item-content"
             >
-              value three
+              <span
+                className="{}"
+              />
             </span>
           </td>
         </tr>
@@ -771,80 +1333,210 @@ exports[`Render properties.size: small, properties.bordered: true - value[0] 1`]
           className="ant-descriptions-row"
         >
           <th
-            className="ant-descriptions-item-label {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            field_one
+            <span
+              className="{}"
+            />
           </th>
           <td
-            className="ant-descriptions-item-content {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            value one
+            <span
+              className="{}"
+            />
           </td>
           <th
-            className="ant-descriptions-item-label {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            field_two
+            <span
+              className="{}"
+            />
           </th>
           <td
-            className="ant-descriptions-item-content {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            2
+            <span
+              className="{}"
+            />
           </td>
           <th
-            className="ant-descriptions-item-label {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            field_three
+            <span
+              className="{}"
+            />
           </th>
           <td
-            className="ant-descriptions-item-content {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            value three
+            <span
+              className="{}"
+            />
           </td>
         </tr>
         <tr
           className="ant-descriptions-row"
         >
           <th
-            className="ant-descriptions-item-label {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            field_4
+            <span
+              className="{}"
+            />
           </th>
           <td
-            className="ant-descriptions-item-content {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            value 4
+            <span
+              className="{}"
+            />
           </td>
           <th
-            className="ant-descriptions-item-label {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            field_5
+            <span
+              className="{}"
+            />
           </th>
           <td
-            className="ant-descriptions-item-content {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            5
+            <span
+              className="{}"
+            />
           </td>
           <th
-            className="ant-descriptions-item-label {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item-label {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            field_6
+            <span
+              className="{}"
+            />
           </th>
           <td
-            className="ant-descriptions-item-content {\\"style\\":{\\"whiteSpace\\":\\"pre-wrap\\"}}"
+            className="ant-descriptions-item-content {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
             colSpan={1}
           >
-            value 6
+            <span
+              className="{}"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;
+
+exports[`Render properties.title html value - value[0] 1`] = `
+<div
+  className="ant-descriptions"
+>
+  <div
+    className="ant-descriptions-title"
+  >
+    <span
+      className="{}"
+    />
+  </div>
+  <div
+    className="ant-descriptions-view"
+  >
+    <table>
+      <tbody>
+        <tr
+          className="ant-descriptions-row"
+        >
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+          </td>
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+          </td>
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={1}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+          </td>
+        </tr>
+        <tr
+          className="ant-descriptions-row"
+        >
+          <td
+            className="ant-descriptions-item {\\"style\\":[{\\"whiteSpace\\":\\"pre-wrap\\"},null,null]}"
+            colSpan={3}
+          >
+            <span
+              className="ant-descriptions-item-label"
+            >
+              <span
+                className="{}"
+              />
+            </span>
+            <span
+              className="ant-descriptions-item-content"
+            >
+              <span
+                className="{}"
+              />
+            </span>
           </td>
         </tr>
       </tbody>
@@ -872,6 +1564,22 @@ exports[`Test Schema properties.colon: false 2`] = `null`;
 exports[`Test Schema properties.column: 2 1`] = `true`;
 
 exports[`Test Schema properties.column: 2 2`] = `null`;
+
+exports[`Test Schema properties.itemOptions.span 1`] = `true`;
+
+exports[`Test Schema properties.itemOptions.span 2`] = `null`;
+
+exports[`Test Schema properties.itemOptions.style 1`] = `true`;
+
+exports[`Test Schema properties.itemOptions.style 2`] = `null`;
+
+exports[`Test Schema properties.items html values 1`] = `true`;
+
+exports[`Test Schema properties.items html values 2`] = `null`;
+
+exports[`Test Schema properties.items-falseish-values 1`] = `true`;
+
+exports[`Test Schema properties.items-falseish-values 2`] = `null`;
 
 exports[`Test Schema properties.items-list 1`] = `true`;
 
@@ -908,3 +1616,7 @@ exports[`Test Schema properties.size: small 2`] = `null`;
 exports[`Test Schema properties.size: small, properties.bordered: true 1`] = `true`;
 
 exports[`Test Schema properties.size: small, properties.bordered: true 2`] = `null`;
+
+exports[`Test Schema properties.title html value 1`] = `true`;
+
+exports[`Test Schema properties.title html value 2`] = `null`;

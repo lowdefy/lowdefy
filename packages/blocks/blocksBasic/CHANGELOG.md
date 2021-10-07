@@ -3,6 +3,136 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.22.0](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.1...v3.22.0) (2021-09-27)
+
+**Note:** Version bump only for package @lowdefy/blocks-basic
+
+
+
+
+
+# [3.22.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.0...v3.22.0-alpha.1) (2021-09-20)
+
+
+### Bug Fixes
+
+* **blocksBasic:** Handle none type values in DangerousHtml block ([a765be4](https://github.com/lowdefy/lowdefy/commit/a765be4395c315f90b31680d3a914e8ac6f2a5ae))
+* **blocksBasic:** Use renamed HtmlComponent in Html block (was RenderHtml) ([cf85d6c](https://github.com/lowdefy/lowdefy/commit/cf85d6ce38ce1fd715d4ae42078b002cc5b5b82e))
+
+
+
+
+
+# [3.22.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.2...v3.22.0-alpha.0) (2021-09-08)
+
+**Note:** Version bump only for package @lowdefy/blocks-basic
+
+
+
+
+
+## [3.21.2](https://github.com/lowdefy/lowdefy/compare/v3.21.2-alpha.0...v3.21.2) (2021-08-31)
+
+**Note:** Version bump only for package @lowdefy/blocks-basic
+
+
+
+
+
+## [3.21.2-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.1...v3.21.2-alpha.0) (2021-08-31)
+
+**Note:** Version bump only for package @lowdefy/blocks-basic
+
+
+
+
+
+## [3.21.1](https://github.com/lowdefy/lowdefy/compare/v3.21.0...v3.21.1) (2021-08-26)
+
+**Note:** Version bump only for package @lowdefy/blocks-basic
+
+
+
+
+
+# [3.21.0](https://github.com/lowdefy/lowdefy/compare/v3.20.4...v3.21.0) (2021-08-25)
+
+
+### Bug Fixes
+
+* **blocksBasic:** Html test change to new RenderHtml. ([e43617a](https://github.com/lowdefy/lowdefy/commit/e43617a47a04b1e7d9297379207d6455bf66a453))
+
+
+
+
+
+## [3.20.4](https://github.com/lowdefy/lowdefy/compare/v3.20.3...v3.20.4) (2021-08-21)
+
+**Note:** Version bump only for package @lowdefy/blocks-basic
+
+
+
+
+
+## [3.20.3](https://github.com/lowdefy/lowdefy/compare/v3.20.1...v3.20.3) (2021-08-20)
+
+**Note:** Version bump only for package @lowdefy/blocks-basic
+
+
+
+
+
+## [3.20.2](https://github.com/lowdefy/lowdefy/compare/v3.20.1...v3.20.2) (2021-08-20)
+
+**Note:** Version bump only for package @lowdefy/blocks-basic
+
+
+
+
+
+## [3.20.1](https://github.com/lowdefy/lowdefy/compare/v3.20.0...v3.20.1) (2021-08-20)
+
+**Note:** Version bump only for package @lowdefy/blocks-basic
+
+
+
+
+
+# [3.20.0](https://github.com/lowdefy/lowdefy/compare/v3.19.0...v3.20.0) (2021-08-20)
+
+
+### Bug Fixes
+
+* **blocksBasic:** Add  row-reverse, column-reverse options to List direction. ([5926be6](https://github.com/lowdefy/lowdefy/commit/5926be6da45aff20a1743d8871b8c1dd1ff5d4e9))
+* **blocksBasic:** Refactor to use RenderHtml. ([8e8ff8d](https://github.com/lowdefy/lowdefy/commit/8e8ff8daea67cff2637a4b83d7c0582fc3fc77d6))
+* **blocksBasic:** Updated List schema and snapshots. ([7319fe7](https://github.com/lowdefy/lowdefy/commit/7319fe793b65a681971d63f9dfc2214180d5621a))
+* **blocksBasic:** Updated List schema. ([006b3b7](https://github.com/lowdefy/lowdefy/commit/006b3b75d89517297c53ca2408c88eb46fe352bb))
+
+
+### Features
+
+* **blocksBasic:** Added list direction, wrapping and scrolling. ([aba280a](https://github.com/lowdefy/lowdefy/commit/aba280a4f3768c462bff65c8726939a8e6b9cec9))
+
+
+
+
+
+# [3.19.0](https://github.com/lowdefy/lowdefy/compare/v3.18.1...v3.19.0) (2021-07-26)
+
+**Note:** Version bump only for package @lowdefy/blocks-basic
+
+
+
+
+
+## [3.18.1](https://github.com/lowdefy/lowdefy/compare/v3.18.0...v3.18.1) (2021-06-30)
+
+**Note:** Version bump only for package @lowdefy/blocks-basic
+
+
+
+
+
 # [3.18.0](https://github.com/lowdefy/lowdefy/compare/v3.17.2...v3.18.0) (2021-06-17)
 
 **Note:** Version bump only for package @lowdefy/blocks-basic

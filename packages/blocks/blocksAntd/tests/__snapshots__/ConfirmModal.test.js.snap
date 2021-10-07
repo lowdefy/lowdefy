@@ -183,6 +183,7 @@ Array [
         content
       </div>,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon: AndroidFilled_icon"
         content={Object {}}
         events={Object {}}
@@ -583,7 +584,50 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": "ConfirmModal block",
+      "title": <HtmlComponent
+        html="ConfirmModal block"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "name": "onOpen",
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -598,6 +642,92 @@ exports[`Mock for method: {"name":"open","args":{"description":"Args description
 exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.title - value[0] - success 1`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.title - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.title is html - value[0] - confirm 1`] = `
+Array [
+  Array [
+    Object {
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "className": "{}",
+      "content": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "id": "properties.title is html_confirm_modal",
+      "mask": true,
+      "maskClosable": false,
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": <HtmlComponent
+        html=<div style="color:purple">
+  Html Title
+</div>
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "name": "onOpen",
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
+      "width": undefined,
+      "zIndex": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.title is html - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.title is html - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.title is html - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.title is html - value[0] - warning 1`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.width: 550px - value[0] - confirm 1`] = `
 Array [
@@ -864,6 +994,7 @@ Array [
         content
       </div>,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon: AndroidFilled_icon"
         content={Object {}}
         events={Object {}}
@@ -1264,7 +1395,50 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": "ConfirmModal block",
+      "title": <HtmlComponent
+        html="ConfirmModal block"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "name": "onOpen",
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -1279,6 +1453,92 @@ exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.tit
 exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.title - value[0] - success 1`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.title - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.title is html - value[0] - confirm 1`] = `
+Array [
+  Array [
+    Object {
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "className": "{}",
+      "content": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "id": "properties.title is html_confirm_modal",
+      "mask": true,
+      "maskClosable": false,
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": <HtmlComponent
+        html=<div style="color:purple">
+  Html Title
+</div>
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "name": "onOpen",
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
+      "width": undefined,
+      "zIndex": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.title is html - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.title is html - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.title is html - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.title is html - value[0] - warning 1`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.width: 550px - value[0] - confirm 1`] = `
 Array [
@@ -1545,6 +1805,7 @@ Array [
         content
       </div>,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon: AndroidFilled_icon"
         content={Object {}}
         events={Object {}}
@@ -1945,7 +2206,50 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": "ConfirmModal block",
+      "title": <HtmlComponent
+        html="ConfirmModal block"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "name": "onOpen",
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -1960,6 +2264,92 @@ exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - pr
 exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.title - value[0] - success 1`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.title - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.title is html - value[0] - confirm 1`] = `
+Array [
+  Array [
+    Object {
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "className": "{}",
+      "content": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "id": "properties.title is html_confirm_modal",
+      "mask": true,
+      "maskClosable": false,
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": <HtmlComponent
+        html=<div style="color:purple">
+  Html Title
+</div>
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "name": "onOpen",
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
+      "width": undefined,
+      "zIndex": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.title is html - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.title is html - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.title is html - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.title is html - value[0] - warning 1`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.width: 550px - value[0] - confirm 1`] = `
 Array [
@@ -2234,6 +2624,7 @@ Array [
         content
       </div>,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon: AndroidFilled_icon"
         content={Object {}}
         events={Object {}}
@@ -2634,7 +3025,136 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": "ConfirmModal block",
+      "title": <HtmlComponent
+        html="ConfirmModal block"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "name": "onOpen",
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
+      "width": undefined,
+      "zIndex": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.title is html - value[0] - confirm 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.title is html - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.title is html - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.title is html - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.title is html - value[0] - warning 1`] = `
+Array [
+  Array [
+    Object {
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "className": "{}",
+      "content": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "id": "properties.title is html_confirm_modal",
+      "mask": true,
+      "maskClosable": false,
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": <HtmlComponent
+        html=<div style="color:purple">
+  Html Title
+</div>
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "name": "onOpen",
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -2907,6 +3427,7 @@ Array [
         content
       </div>,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon: AndroidFilled_icon"
         content={Object {}}
         events={Object {}}
@@ -3307,7 +3828,50 @@ Array [
       "okText": "Ok",
       "onCancel": [Function],
       "onOk": [Function],
-      "title": "ConfirmModal block",
+      "title": <HtmlComponent
+        html="ConfirmModal block"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "name": "onOpen",
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "width": undefined,
       "zIndex": undefined,
     },
@@ -3322,6 +3886,92 @@ exports[`Mock for method: {"name":"open","args":{}} - properties.title - value[0
 exports[`Mock for method: {"name":"open","args":{}} - properties.title - value[0] - success 1`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{}} - properties.title - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.title is html - value[0] - confirm 1`] = `
+Array [
+  Array [
+    Object {
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "className": "{}",
+      "content": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "id": "properties.title is html_confirm_modal",
+      "mask": true,
+      "maskClosable": false,
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": <HtmlComponent
+        html=<div style="color:purple">
+  Html Title
+</div>
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "name": "onOpen",
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
+      "width": undefined,
+      "zIndex": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.title is html - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.title is html - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.title is html - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.title is html - value[0] - warning 1`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{}} - properties.width: 550px - value[0] - confirm 1`] = `
 Array [
@@ -3460,6 +4110,10 @@ exports[`Test Schema properties.status: warning 2`] = `null`;
 exports[`Test Schema properties.title 1`] = `true`;
 
 exports[`Test Schema properties.title 2`] = `null`;
+
+exports[`Test Schema properties.title is html 1`] = `true`;
+
+exports[`Test Schema properties.title is html 2`] = `null`;
 
 exports[`Test Schema properties.width: 550px 1`] = `true`;
 

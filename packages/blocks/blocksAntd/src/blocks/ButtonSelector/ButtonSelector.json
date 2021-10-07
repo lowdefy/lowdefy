@@ -43,7 +43,7 @@
           "oneOf": [
             {
               "type": "array",
-              "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+              "description": "Options can either be an array of primitive values, on an array of label, value pairs - supports html.",
               "items": {
                 "type": "string"
               }
@@ -71,7 +71,7 @@
                 "properties": {
                   "label": {
                     "type": "string",
-                    "description": "Value label shown to user."
+                    "description": "Value label shown to user - supports html."
                   },
                   "value": {
                     "description": "Value selected. Can be of any type.",
@@ -100,6 +100,13 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Disable the option if true."
+                  },
+                  "style": {
+                    "type": "object",
+                    "description": "Css style to applied to option.",
+                    "docs": {
+                      "displayType": "yaml"
+                    }
                   }
                 }
               }
@@ -130,11 +137,11 @@
             },
             "extra": {
               "type": "string",
-              "description": "Extra text to display beneath the content."
+              "description": "Extra text to display beneath the content - supports html."
             },
             "title": {
               "type": "string",
-              "description": "Label title."
+              "description": "Label title - supports html."
             },
             "span": {
               "type": "number",
@@ -173,7 +180,7 @@
         },
         "title": {
           "type": "string",
-          "description": "Title to describe the input component, if no title is specified the block id is displayed."
+          "description": "Title to describe the input component, if no title is specified the block id is displayed - supports html."
         }
       }
     },

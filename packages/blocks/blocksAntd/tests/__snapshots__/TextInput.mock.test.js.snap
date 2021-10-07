@@ -277,6 +277,7 @@ Array [
       "onPressEnter": [Function],
       "placeholder": undefined,
       "prefix": <IconBlock
+        basePath=""
         blockId="properties.prefixIcon.size: 24_prefixIcon"
         content={Object {}}
         events={Object {}}
@@ -328,6 +329,7 @@ Array [
       "onPressEnter": [Function],
       "placeholder": undefined,
       "prefix": <IconBlock
+        basePath=""
         blockId="properties.prefixIcon: AccountBookFilled_prefixIcon"
         content={Object {}}
         events={Object {}}
@@ -442,6 +444,7 @@ Array [
       "prefix": undefined,
       "size": undefined,
       "suffix": <IconBlock
+        basePath=""
         blockId="properties.suffixIcon.size 24_suffixIcon"
         content={Object {}}
         events={Object {}}
@@ -493,6 +496,7 @@ Array [
       "prefix": undefined,
       "size": undefined,
       "suffix": <IconBlock
+        basePath=""
         blockId="properties.suffixIcon: AlertFilled_suffixIcon"
         content={Object {}}
         events={Object {}}

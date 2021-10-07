@@ -49,7 +49,7 @@
         },
         "title": {
           "type": "string",
-          "description": "Title to describe the input component, if no title is specified the block id is displayed."
+          "description": "Title to describe the component - supports html."
         },
         "value": {
           "oneOf": [

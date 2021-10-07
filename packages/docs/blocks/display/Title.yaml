@@ -20,11 +20,13 @@ _ref:
     schema: ../blocks/blocksAntd/src/blocks/Title/Title.json
     filePath: blocks/display/Title.yaml
     init_state_values:
+      __type_block.properties.copyable: boolean
+      __type_block.properties.ellipsis: boolean
+      __boolean_block.properties.copyable: false
+      __boolean_block.properties.ellipsis: false
       __type_block.properties.value: number
       __number_block.properties.value: 33.3
     init_property_values:
       content: A title block.
     description_content: |
       A title component. Corresponds to html h1, h2, h3 and h4 elements.
-
-      

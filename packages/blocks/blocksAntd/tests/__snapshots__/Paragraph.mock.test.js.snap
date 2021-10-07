@@ -41,3 +41,5 @@ exports[`Mock render - properties.type: secondary - value[0] - default 1`] = `Ar
 exports[`Mock render - properties.type: warning - value[0] - default 1`] = `Array []`;
 
 exports[`Mock render - properties.underline: true - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - with html content - value[0] - default 1`] = `Array []`;

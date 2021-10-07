@@ -29,6 +29,10 @@ const RealDate = Date;
 const mockDate = jest.fn(() => ({ date: 0 }));
 mockDate.now = jest.fn(() => 0);
 
+// Comment out to use console
+console.log = () => {};
+console.error = () => {};
+
 beforeEach(() => {
   global.Date = mockDate;
   lowdefy.auth.login.mockReset();
@@ -88,4 +92,66 @@ test('Wait', async () => {
   expect(resolved).toBe(false);
   await timeout(150);
   expect(resolved).toBe(true);
+});
+
+test('Wait ms not a integer', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [
+                {
+                  id: 'a',
+                  type: 'Wait',
+                  params: { ms: 1.1 },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+  });
+  const { button } = context.RootBlocks.map;
+  const res = await button.triggerEvent({ name: 'onClick' });
+  expect(res).toEqual({
+    blockId: 'button',
+    bounced: false,
+    endTimestamp: { date: 0 },
+    error: {
+      action: { id: 'a', params: { ms: 1.1 }, type: 'Wait' },
+      error: {
+        error: new Error('Wait action "ms" param should be an integer.'),
+        index: 0,
+        type: 'Wait',
+      },
+    },
+    event: undefined,
+    eventName: 'onClick',
+    responses: {
+      a: {
+        error: new Error('Wait action "ms" param should be an integer.'),
+        index: 0,
+        type: 'Wait',
+      },
+    },
+    startTimestamp: { date: 0 },
+    success: false,
+  });
 });

@@ -49,7 +49,8 @@ const CategorySwitch = ({ block, Blocks, Component, context, isRoot, lowdefy }) 
             blockId: block.blockId,
           })}
           lowdefy={lowdefy}
-          render={(context) => (
+        >
+          {(context) => (
             <Container
               block={context.RootBlocks.areas.root.blocks[0]}
               Blocks={context.RootBlocks}
@@ -58,7 +59,7 @@ const CategorySwitch = ({ block, Blocks, Component, context, isRoot, lowdefy }) 
               lowdefy={lowdefy}
             />
           )}
-        />
+        </Context>
       );
     case 'list':
       return (
@@ -97,6 +98,7 @@ const CategorySwitch = ({ block, Blocks, Component, context, isRoot, lowdefy }) 
               setValue: block.setValue,
               triggerEvent: block.triggerEvent,
             })}
+            basePath={lowdefy.basePath}
             blockId={block.blockId}
             events={block.eval.events}
             homePageId={lowdefy.homePageId}
@@ -128,8 +130,9 @@ const CategorySwitch = ({ block, Blocks, Component, context, isRoot, lowdefy }) 
               registerMethod: block.registerMethod,
               triggerEvent: block.triggerEvent,
             })}
-            events={block.eval.events}
+            basePath={lowdefy.basePath}
             blockId={block.blockId}
+            events={block.eval.events}
             homePageId={lowdefy.homePageId}
             key={block.blockId}
             loading={block.loading}

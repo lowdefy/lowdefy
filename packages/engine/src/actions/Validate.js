@@ -14,26 +14,16 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import getBlockMatcher from '../getBlockMatcher';
 
 async function Validate({ context, params }) {
-  if (!type.isNone(params) && !type.isString(params) && !type.isArray(params)) {
-    throw new Error('Invalid validate params.');
-  }
-  context.showValidationErrors = true;
-  let validationErrors = context.RootBlocks.validate();
-  if (params) {
-    const blockIds = type.isString(params) ? [params] : params;
-    validationErrors = validationErrors.filter((block) => {
-      return blockIds.includes(block.blockId);
-    });
-  }
+  const validationErrors = context.RootBlocks.validate(getBlockMatcher(params));
   if (validationErrors.length > 0) {
-    const message = `Your input has ${validationErrors.length} validation error${
-      validationErrors.length !== 1 ? 's' : ''
-    }.`;
-    const error = new Error(message);
-    error.lowdefyMessage = message;
+    const error = new Error(
+      `Your input has ${validationErrors.length} validation error${
+        validationErrors.length !== 1 ? 's' : ''
+      }.`
+    );
     throw error;
   }
 }

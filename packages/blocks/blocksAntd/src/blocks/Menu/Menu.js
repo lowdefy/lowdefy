@@ -32,9 +32,9 @@ const getDefaultMenu = (menus, menuId = 'default', links) => {
 const getTitle = (id, properties, defaultTitle) =>
   (properties && properties.title) || defaultTitle || id;
 
-const MenuTitle = ({ id, makeCssClass, pageId, properties, url, linkStyle }) =>
+const MenuTitle = ({ id, basePath, makeCssClass, pageId, properties, url, linkStyle }) =>
   type.isString(pageId) ? (
-    <Link to={`/${pageId}`} className={makeCssClass([linkStyle])}>
+    <Link to={`${basePath}/${pageId}`} className={makeCssClass([linkStyle])}>
       {getTitle(id, properties, pageId)}
     </Link>
   ) : type.isString(url) ? (
@@ -64,7 +64,7 @@ const getNestedColors = (menuColor, background) => {
   };
 };
 
-const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename }) => {
+const MenuComp = ({ basePath, blockId, events, methods, menus, pageId, properties, rename }) => {
   const styles = {
     lineHeight: '64px',
     display: properties.mode === 'horizontal' && 'inline-block',
@@ -188,6 +188,7 @@ const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename 
                 key={link.pageId || link.id}
                 title={
                   <MenuTitle
+                    basePath={basePath}
                     linkStyle={link.style}
                     id={link.id}
                     makeCssClass={methods.makeCssClass}
@@ -213,6 +214,7 @@ const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename 
                           key={subLink.pageId || subLink.id}
                           title={
                             <MenuTitle
+                              basePath={basePath}
                               linkStyle={subLink.style}
                               id={subLink.id}
                               makeCssClass={methods.makeCssClass}
@@ -236,6 +238,7 @@ const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename 
                               }
                             >
                               <MenuTitle
+                                basePath={basePath}
                                 linkStyle={subLinkGroup.style}
                                 id={subLinkGroup.id}
                                 makeCssClass={methods.makeCssClass}
@@ -265,6 +268,7 @@ const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename 
                           }
                         >
                           <MenuTitle
+                            basePath={basePath}
                             linkStyle={subLink.style}
                             id={subLink.id}
                             makeCssClass={methods.makeCssClass}
@@ -296,6 +300,7 @@ const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename 
                 }
               >
                 <MenuTitle
+                  basePath={basePath}
                   linkStyle={link.style}
                   id={link.id}
                   makeCssClass={methods.makeCssClass}

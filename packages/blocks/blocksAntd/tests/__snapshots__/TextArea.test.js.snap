@@ -15,7 +15,9 @@ exports[`Render default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -57,7 +59,9 @@ exports[`Render properties.allowClear: false - value[0] 1`] = `
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
-      properties.allowClear: false
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -99,7 +103,9 @@ exports[`Render properties.autoFocus: true - value[0] 1`] = `
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
-      properties.autoFocus: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -142,7 +148,9 @@ exports[`Render properties.autoSize: true - value[0] 1`] = `
       htmlFor="properties.autoSize: true_input"
       title="properties.autoSize: true"
     >
-      properties.autoSize: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -184,7 +192,9 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      properties.disabled: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -227,7 +237,9 @@ exports[`Render properties.label align: right - value[0] 1`] = `
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
-      properties.label align: right
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -269,7 +281,9 @@ exports[`Render properties.label colon: false - value[0] 1`] = `
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
-      properties.label colon: false
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -341,7 +355,9 @@ exports[`Render properties.label extra: showing extra - value[0] 1`] = `
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
-      properties.label extra: showing extra
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -367,7 +383,9 @@ exports[`Render properties.label extra: showing extra - value[0] 1`] = `
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      showing extra
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -392,7 +410,9 @@ exports[`Render properties.label inline: true - value[0] 1`] = `
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
-      properties.label inline: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -438,7 +458,9 @@ exports[`Render properties.label span: 12 - value[0] 1`] = `
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
-      properties.label span: 12
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -480,7 +502,9 @@ exports[`Render properties.minRows: 2  maxRows: 6 - value[0] 1`] = `
       htmlFor="properties.minRows: 2  maxRows: 6_input"
       title="properties.minRows: 2  maxRows: 6"
     >
-      properties.minRows: 2  maxRows: 6
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -522,7 +546,9 @@ exports[`Render properties.placeholder: Type your text here - value[0] 1`] = `
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
-      properties.placeholder: Type your text here
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -565,7 +591,9 @@ exports[`Render properties.rows: 5 - value[0] 1`] = `
       htmlFor="properties.rows: 5_input"
       title="properties.rows: 5"
     >
-      properties.rows: 5
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -607,7 +635,9 @@ exports[`Render properties.title: My TextArea Title - value[0] 1`] = `
       htmlFor="properties.title: My TextArea Title_input"
       title="My TextArea Title"
     >
-      My TextArea Title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -649,7 +679,9 @@ exports[`Render required = true default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -691,7 +723,9 @@ exports[`Render required = true properties.allowClear: false - value[0] 1`] = `
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
-      properties.allowClear: false
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -733,7 +767,9 @@ exports[`Render required = true properties.autoFocus: true - value[0] 1`] = `
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
-      properties.autoFocus: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -776,7 +812,9 @@ exports[`Render required = true properties.autoSize: true - value[0] 1`] = `
       htmlFor="properties.autoSize: true_input"
       title="properties.autoSize: true"
     >
-      properties.autoSize: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -818,7 +856,9 @@ exports[`Render required = true properties.disabled: true - value[0] 1`] = `
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      properties.disabled: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -861,7 +901,9 @@ exports[`Render required = true properties.label align: right - value[0] 1`] = `
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
-      properties.label align: right
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -903,7 +945,9 @@ exports[`Render required = true properties.label colon: false - value[0] 1`] = `
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
-      properties.label colon: false
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -975,7 +1019,9 @@ exports[`Render required = true properties.label extra: showing extra - value[0]
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
-      properties.label extra: showing extra
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1001,7 +1047,9 @@ exports[`Render required = true properties.label extra: showing extra - value[0]
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      showing extra
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -1026,7 +1074,9 @@ exports[`Render required = true properties.label inline: true - value[0] 1`] = `
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
-      properties.label inline: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1072,7 +1122,9 @@ exports[`Render required = true properties.label span: 12 - value[0] 1`] = `
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
-      properties.label span: 12
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1114,7 +1166,9 @@ exports[`Render required = true properties.minRows: 2  maxRows: 6 - value[0] 1`]
       htmlFor="properties.minRows: 2  maxRows: 6_input"
       title="properties.minRows: 2  maxRows: 6"
     >
-      properties.minRows: 2  maxRows: 6
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1156,7 +1210,9 @@ exports[`Render required = true properties.placeholder: Type your text here - va
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
-      properties.placeholder: Type your text here
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1199,7 +1255,9 @@ exports[`Render required = true properties.rows: 5 - value[0] 1`] = `
       htmlFor="properties.rows: 5_input"
       title="properties.rows: 5"
     >
-      properties.rows: 5
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1241,7 +1299,9 @@ exports[`Render required = true properties.title: My TextArea Title - value[0] 1
       htmlFor="properties.title: My TextArea Title_input"
       title="My TextArea Title"
     >
-      My TextArea Title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1283,7 +1343,9 @@ exports[`Render validation.status = error default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1353,7 +1415,9 @@ exports[`Render validation.status = error properties.allowClear: false - value[0
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
-      properties.allowClear: false
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1423,7 +1487,9 @@ exports[`Render validation.status = error properties.autoFocus: true - value[0] 
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
-      properties.autoFocus: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1494,7 +1560,9 @@ exports[`Render validation.status = error properties.autoSize: true - value[0] 1
       htmlFor="properties.autoSize: true_input"
       title="properties.autoSize: true"
     >
-      properties.autoSize: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1564,7 +1632,9 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      properties.disabled: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1635,7 +1705,9 @@ exports[`Render validation.status = error properties.label align: right - value[
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
-      properties.label align: right
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1705,7 +1777,9 @@ exports[`Render validation.status = error properties.label colon: false - value[
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
-      properties.label colon: false
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1833,7 +1907,9 @@ exports[`Render validation.status = error properties.label extra: showing extra 
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
-      properties.label extra: showing extra
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1907,7 +1983,9 @@ exports[`Render validation.status = error properties.label inline: true - value[
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
-      properties.label inline: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1981,7 +2059,9 @@ exports[`Render validation.status = error properties.label span: 12 - value[0] 1
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
-      properties.label span: 12
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2051,7 +2131,9 @@ exports[`Render validation.status = error properties.minRows: 2  maxRows: 6 - va
       htmlFor="properties.minRows: 2  maxRows: 6_input"
       title="properties.minRows: 2  maxRows: 6"
     >
-      properties.minRows: 2  maxRows: 6
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2121,7 +2203,9 @@ exports[`Render validation.status = error properties.placeholder: Type your text
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
-      properties.placeholder: Type your text here
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2192,7 +2276,9 @@ exports[`Render validation.status = error properties.rows: 5 - value[0] 1`] = `
       htmlFor="properties.rows: 5_input"
       title="properties.rows: 5"
     >
-      properties.rows: 5
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2262,7 +2348,9 @@ exports[`Render validation.status = error properties.title: My TextArea Title - 
       htmlFor="properties.title: My TextArea Title_input"
       title="My TextArea Title"
     >
-      My TextArea Title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2332,7 +2420,9 @@ exports[`Render validation.status = null default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2374,7 +2464,9 @@ exports[`Render validation.status = null properties.allowClear: false - value[0]
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
-      properties.allowClear: false
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2416,7 +2508,9 @@ exports[`Render validation.status = null properties.autoFocus: true - value[0] 1
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
-      properties.autoFocus: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2459,7 +2553,9 @@ exports[`Render validation.status = null properties.autoSize: true - value[0] 1`
       htmlFor="properties.autoSize: true_input"
       title="properties.autoSize: true"
     >
-      properties.autoSize: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2501,7 +2597,9 @@ exports[`Render validation.status = null properties.disabled: true - value[0] 1`
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      properties.disabled: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2544,7 +2642,9 @@ exports[`Render validation.status = null properties.label align: right - value[0
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
-      properties.label align: right
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2586,7 +2686,9 @@ exports[`Render validation.status = null properties.label colon: false - value[0
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
-      properties.label colon: false
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2658,7 +2760,9 @@ exports[`Render validation.status = null properties.label extra: showing extra -
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
-      properties.label extra: showing extra
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2684,7 +2788,9 @@ exports[`Render validation.status = null properties.label extra: showing extra -
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      showing extra
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -2709,7 +2815,9 @@ exports[`Render validation.status = null properties.label inline: true - value[0
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
-      properties.label inline: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2755,7 +2863,9 @@ exports[`Render validation.status = null properties.label span: 12 - value[0] 1`
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
-      properties.label span: 12
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2797,7 +2907,9 @@ exports[`Render validation.status = null properties.minRows: 2  maxRows: 6 - val
       htmlFor="properties.minRows: 2  maxRows: 6_input"
       title="properties.minRows: 2  maxRows: 6"
     >
-      properties.minRows: 2  maxRows: 6
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2839,7 +2951,9 @@ exports[`Render validation.status = null properties.placeholder: Type your text 
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
-      properties.placeholder: Type your text here
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2882,7 +2996,9 @@ exports[`Render validation.status = null properties.rows: 5 - value[0] 1`] = `
       htmlFor="properties.rows: 5_input"
       title="properties.rows: 5"
     >
-      properties.rows: 5
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2924,7 +3040,9 @@ exports[`Render validation.status = null properties.title: My TextArea Title - v
       htmlFor="properties.title: My TextArea Title_input"
       title="My TextArea Title"
     >
-      My TextArea Title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2966,7 +3084,9 @@ exports[`Render validation.status = success default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3031,7 +3151,9 @@ exports[`Render validation.status = success properties.allowClear: false - value
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
-      properties.allowClear: false
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3096,7 +3218,9 @@ exports[`Render validation.status = success properties.autoFocus: true - value[0
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
-      properties.autoFocus: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3162,7 +3286,9 @@ exports[`Render validation.status = success properties.autoSize: true - value[0]
       htmlFor="properties.autoSize: true_input"
       title="properties.autoSize: true"
     >
-      properties.autoSize: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3227,7 +3353,9 @@ exports[`Render validation.status = success properties.disabled: true - value[0]
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      properties.disabled: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3293,7 +3421,9 @@ exports[`Render validation.status = success properties.label align: right - valu
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
-      properties.label align: right
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3358,7 +3488,9 @@ exports[`Render validation.status = success properties.label colon: false - valu
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
-      properties.label colon: false
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3476,7 +3608,9 @@ exports[`Render validation.status = success properties.label extra: showing extr
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
-      properties.label extra: showing extra
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3525,7 +3659,9 @@ exports[`Render validation.status = success properties.label extra: showing extr
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      showing extra
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -3550,7 +3686,9 @@ exports[`Render validation.status = success properties.label inline: true - valu
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
-      properties.label inline: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3619,7 +3757,9 @@ exports[`Render validation.status = success properties.label span: 12 - value[0]
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
-      properties.label span: 12
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3684,7 +3824,9 @@ exports[`Render validation.status = success properties.minRows: 2  maxRows: 6 - 
       htmlFor="properties.minRows: 2  maxRows: 6_input"
       title="properties.minRows: 2  maxRows: 6"
     >
-      properties.minRows: 2  maxRows: 6
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3749,7 +3891,9 @@ exports[`Render validation.status = success properties.placeholder: Type your te
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
-      properties.placeholder: Type your text here
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3815,7 +3959,9 @@ exports[`Render validation.status = success properties.rows: 5 - value[0] 1`] = 
       htmlFor="properties.rows: 5_input"
       title="properties.rows: 5"
     >
-      properties.rows: 5
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3880,7 +4026,9 @@ exports[`Render validation.status = success properties.title: My TextArea Title 
       htmlFor="properties.title: My TextArea Title_input"
       title="My TextArea Title"
     >
-      My TextArea Title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3945,7 +4093,9 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4015,7 +4165,9 @@ exports[`Render validation.status = warning properties.allowClear: false - value
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
-      properties.allowClear: false
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4085,7 +4237,9 @@ exports[`Render validation.status = warning properties.autoFocus: true - value[0
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
-      properties.autoFocus: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4156,7 +4310,9 @@ exports[`Render validation.status = warning properties.autoSize: true - value[0]
       htmlFor="properties.autoSize: true_input"
       title="properties.autoSize: true"
     >
-      properties.autoSize: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4226,7 +4382,9 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
-      properties.disabled: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4297,7 +4455,9 @@ exports[`Render validation.status = warning properties.label align: right - valu
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
-      properties.label align: right
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4367,7 +4527,9 @@ exports[`Render validation.status = warning properties.label colon: false - valu
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
-      properties.label colon: false
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4495,7 +4657,9 @@ exports[`Render validation.status = warning properties.label extra: showing extr
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
-      properties.label extra: showing extra
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4569,7 +4733,9 @@ exports[`Render validation.status = warning properties.label inline: true - valu
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
-      properties.label inline: true
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4643,7 +4809,9 @@ exports[`Render validation.status = warning properties.label span: 12 - value[0]
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
-      properties.label span: 12
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4713,7 +4881,9 @@ exports[`Render validation.status = warning properties.minRows: 2  maxRows: 6 - 
       htmlFor="properties.minRows: 2  maxRows: 6_input"
       title="properties.minRows: 2  maxRows: 6"
     >
-      properties.minRows: 2  maxRows: 6
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4783,7 +4953,9 @@ exports[`Render validation.status = warning properties.placeholder: Type your te
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
-      properties.placeholder: Type your text here
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4854,7 +5026,9 @@ exports[`Render validation.status = warning properties.rows: 5 - value[0] 1`] = 
       htmlFor="properties.rows: 5_input"
       title="properties.rows: 5"
     >
-      properties.rows: 5
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4924,7 +5098,9 @@ exports[`Render validation.status = warning properties.title: My TextArea Title 
       htmlFor="properties.title: My TextArea Title_input"
       title="My TextArea Title"
     >
-      My TextArea Title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div

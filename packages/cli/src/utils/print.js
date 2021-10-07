@@ -58,9 +58,9 @@ function createBasicPrint() {
 // Memoise print so that error handler can get the same spinner object
 let print;
 
-function createPrint({ basic } = {}) {
+function createPrint() {
   if (print) return print;
-  if (basic) {
+  if (process.env.CI === 'true') {
     print = createBasicPrint();
     return print;
   }

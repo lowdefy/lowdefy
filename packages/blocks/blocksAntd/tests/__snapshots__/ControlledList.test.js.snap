@@ -33,6 +33,7 @@ exports[`Render default - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="default_add_button_icon"
           required={false}
@@ -52,9 +53,9 @@ exports[`Render default - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -94,6 +95,7 @@ exports[`Render properties.addItemButton: title: Add new Item - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.addItemButton: title: Add new Item_add_button_icon"
           required={false}
@@ -113,9 +115,9 @@ exports[`Render properties.addItemButton: title: Add new Item - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add new Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -142,6 +144,7 @@ exports[`Render properties.addToFront: true - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.addToFront: true_add_button_icon"
           required={false}
@@ -161,9 +164,9 @@ exports[`Render properties.addToFront: true - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -237,6 +240,7 @@ exports[`Render properties.noDataTitle: No title display - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.noDataTitle: No title display_add_button_icon"
           required={false}
@@ -256,9 +260,9 @@ exports[`Render properties.noDataTitle: No title display - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -298,6 +302,7 @@ exports[`Render properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.removeItemIcon: DeleteOutlined_add_button_icon"
           required={false}
@@ -317,9 +322,9 @@ exports[`Render properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -359,6 +364,7 @@ exports[`Render properties.removeItemIcon: name: DeleteOutlined - value[0] 1`] =
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.removeItemIcon: name: DeleteOutlined_add_button_icon"
           required={false}
@@ -378,9 +384,9 @@ exports[`Render properties.removeItemIcon: name: DeleteOutlined - value[0] 1`] =
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -420,6 +426,7 @@ exports[`Render properties.size: large - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.size: large_add_button_icon"
           required={false}
@@ -439,9 +446,9 @@ exports[`Render properties.size: large - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -481,6 +488,7 @@ exports[`Render properties.size: small - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.size: small_add_button_icon"
           required={false}
@@ -500,9 +508,9 @@ exports[`Render properties.size: small - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -562,6 +570,7 @@ exports[`Render properties.title - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.title_add_button_icon"
           required={false}
@@ -581,9 +590,9 @@ exports[`Render properties.title - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -623,6 +632,7 @@ exports[`Render required = true default - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="default_add_button_icon"
           required={false}
@@ -642,9 +652,9 @@ exports[`Render required = true default - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -684,6 +694,7 @@ exports[`Render required = true properties.addItemButton: title: Add new Item - 
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.addItemButton: title: Add new Item_add_button_icon"
           required={false}
@@ -703,9 +714,9 @@ exports[`Render required = true properties.addItemButton: title: Add new Item - 
             />
           </svg>
         </span>
-        <span>
-          Add new Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -732,6 +743,7 @@ exports[`Render required = true properties.addToFront: true - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.addToFront: true_add_button_icon"
           required={false}
@@ -751,9 +763,9 @@ exports[`Render required = true properties.addToFront: true - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -827,6 +839,7 @@ exports[`Render required = true properties.noDataTitle: No title display - value
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.noDataTitle: No title display_add_button_icon"
           required={false}
@@ -846,9 +859,9 @@ exports[`Render required = true properties.noDataTitle: No title display - value
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -888,6 +901,7 @@ exports[`Render required = true properties.removeItemIcon: DeleteOutlined - valu
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.removeItemIcon: DeleteOutlined_add_button_icon"
           required={false}
@@ -907,9 +921,9 @@ exports[`Render required = true properties.removeItemIcon: DeleteOutlined - valu
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -949,6 +963,7 @@ exports[`Render required = true properties.removeItemIcon: name: DeleteOutlined 
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.removeItemIcon: name: DeleteOutlined_add_button_icon"
           required={false}
@@ -968,9 +983,9 @@ exports[`Render required = true properties.removeItemIcon: name: DeleteOutlined 
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -1010,6 +1025,7 @@ exports[`Render required = true properties.size: large - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.size: large_add_button_icon"
           required={false}
@@ -1029,9 +1045,9 @@ exports[`Render required = true properties.size: large - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -1071,6 +1087,7 @@ exports[`Render required = true properties.size: small - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.size: small_add_button_icon"
           required={false}
@@ -1090,9 +1107,9 @@ exports[`Render required = true properties.size: small - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -1152,6 +1169,7 @@ exports[`Render required = true properties.title - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.title_add_button_icon"
           required={false}
@@ -1171,9 +1189,9 @@ exports[`Render required = true properties.title - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -1213,6 +1231,7 @@ exports[`Render validation.status = error default - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="default_add_button_icon"
           required={false}
@@ -1232,9 +1251,9 @@ exports[`Render validation.status = error default - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -1274,6 +1293,7 @@ exports[`Render validation.status = error properties.addItemButton: title: Add n
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.addItemButton: title: Add new Item_add_button_icon"
           required={false}
@@ -1293,9 +1313,9 @@ exports[`Render validation.status = error properties.addItemButton: title: Add n
             />
           </svg>
         </span>
-        <span>
-          Add new Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -1322,6 +1342,7 @@ exports[`Render validation.status = error properties.addToFront: true - value[0]
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.addToFront: true_add_button_icon"
           required={false}
@@ -1341,9 +1362,9 @@ exports[`Render validation.status = error properties.addToFront: true - value[0]
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -1417,6 +1438,7 @@ exports[`Render validation.status = error properties.noDataTitle: No title displ
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.noDataTitle: No title display_add_button_icon"
           required={false}
@@ -1436,9 +1458,9 @@ exports[`Render validation.status = error properties.noDataTitle: No title displ
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -1478,6 +1500,7 @@ exports[`Render validation.status = error properties.removeItemIcon: DeleteOutli
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.removeItemIcon: DeleteOutlined_add_button_icon"
           required={false}
@@ -1497,9 +1520,9 @@ exports[`Render validation.status = error properties.removeItemIcon: DeleteOutli
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -1539,6 +1562,7 @@ exports[`Render validation.status = error properties.removeItemIcon: name: Delet
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.removeItemIcon: name: DeleteOutlined_add_button_icon"
           required={false}
@@ -1558,9 +1582,9 @@ exports[`Render validation.status = error properties.removeItemIcon: name: Delet
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -1600,6 +1624,7 @@ exports[`Render validation.status = error properties.size: large - value[0] 1`] 
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.size: large_add_button_icon"
           required={false}
@@ -1619,9 +1644,9 @@ exports[`Render validation.status = error properties.size: large - value[0] 1`] 
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -1661,6 +1686,7 @@ exports[`Render validation.status = error properties.size: small - value[0] 1`] 
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.size: small_add_button_icon"
           required={false}
@@ -1680,9 +1706,9 @@ exports[`Render validation.status = error properties.size: small - value[0] 1`] 
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -1742,6 +1768,7 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.title_add_button_icon"
           required={false}
@@ -1761,9 +1788,9 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -1803,6 +1830,7 @@ exports[`Render validation.status = null default - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="default_add_button_icon"
           required={false}
@@ -1822,9 +1850,9 @@ exports[`Render validation.status = null default - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -1864,6 +1892,7 @@ exports[`Render validation.status = null properties.addItemButton: title: Add ne
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.addItemButton: title: Add new Item_add_button_icon"
           required={false}
@@ -1883,9 +1912,9 @@ exports[`Render validation.status = null properties.addItemButton: title: Add ne
             />
           </svg>
         </span>
-        <span>
-          Add new Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -1912,6 +1941,7 @@ exports[`Render validation.status = null properties.addToFront: true - value[0] 
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.addToFront: true_add_button_icon"
           required={false}
@@ -1931,9 +1961,9 @@ exports[`Render validation.status = null properties.addToFront: true - value[0] 
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -2007,6 +2037,7 @@ exports[`Render validation.status = null properties.noDataTitle: No title displa
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.noDataTitle: No title display_add_button_icon"
           required={false}
@@ -2026,9 +2057,9 @@ exports[`Render validation.status = null properties.noDataTitle: No title displa
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -2068,6 +2099,7 @@ exports[`Render validation.status = null properties.removeItemIcon: DeleteOutlin
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.removeItemIcon: DeleteOutlined_add_button_icon"
           required={false}
@@ -2087,9 +2119,9 @@ exports[`Render validation.status = null properties.removeItemIcon: DeleteOutlin
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -2129,6 +2161,7 @@ exports[`Render validation.status = null properties.removeItemIcon: name: Delete
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.removeItemIcon: name: DeleteOutlined_add_button_icon"
           required={false}
@@ -2148,9 +2181,9 @@ exports[`Render validation.status = null properties.removeItemIcon: name: Delete
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -2190,6 +2223,7 @@ exports[`Render validation.status = null properties.size: large - value[0] 1`] =
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.size: large_add_button_icon"
           required={false}
@@ -2209,9 +2243,9 @@ exports[`Render validation.status = null properties.size: large - value[0] 1`] =
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -2251,6 +2285,7 @@ exports[`Render validation.status = null properties.size: small - value[0] 1`] =
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.size: small_add_button_icon"
           required={false}
@@ -2270,9 +2305,9 @@ exports[`Render validation.status = null properties.size: small - value[0] 1`] =
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -2332,6 +2367,7 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.title_add_button_icon"
           required={false}
@@ -2351,9 +2387,9 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -2393,6 +2429,7 @@ exports[`Render validation.status = success default - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="default_add_button_icon"
           required={false}
@@ -2412,9 +2449,9 @@ exports[`Render validation.status = success default - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -2454,6 +2491,7 @@ exports[`Render validation.status = success properties.addItemButton: title: Add
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.addItemButton: title: Add new Item_add_button_icon"
           required={false}
@@ -2473,9 +2511,9 @@ exports[`Render validation.status = success properties.addItemButton: title: Add
             />
           </svg>
         </span>
-        <span>
-          Add new Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -2502,6 +2540,7 @@ exports[`Render validation.status = success properties.addToFront: true - value[
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.addToFront: true_add_button_icon"
           required={false}
@@ -2521,9 +2560,9 @@ exports[`Render validation.status = success properties.addToFront: true - value[
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -2597,6 +2636,7 @@ exports[`Render validation.status = success properties.noDataTitle: No title dis
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.noDataTitle: No title display_add_button_icon"
           required={false}
@@ -2616,9 +2656,9 @@ exports[`Render validation.status = success properties.noDataTitle: No title dis
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -2658,6 +2698,7 @@ exports[`Render validation.status = success properties.removeItemIcon: DeleteOut
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.removeItemIcon: DeleteOutlined_add_button_icon"
           required={false}
@@ -2677,9 +2718,9 @@ exports[`Render validation.status = success properties.removeItemIcon: DeleteOut
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -2719,6 +2760,7 @@ exports[`Render validation.status = success properties.removeItemIcon: name: Del
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.removeItemIcon: name: DeleteOutlined_add_button_icon"
           required={false}
@@ -2738,9 +2780,9 @@ exports[`Render validation.status = success properties.removeItemIcon: name: Del
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -2780,6 +2822,7 @@ exports[`Render validation.status = success properties.size: large - value[0] 1`
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.size: large_add_button_icon"
           required={false}
@@ -2799,9 +2842,9 @@ exports[`Render validation.status = success properties.size: large - value[0] 1`
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -2841,6 +2884,7 @@ exports[`Render validation.status = success properties.size: small - value[0] 1`
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.size: small_add_button_icon"
           required={false}
@@ -2860,9 +2904,9 @@ exports[`Render validation.status = success properties.size: small - value[0] 1`
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -2922,6 +2966,7 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.title_add_button_icon"
           required={false}
@@ -2941,9 +2986,9 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -2983,6 +3028,7 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="default_add_button_icon"
           required={false}
@@ -3002,9 +3048,9 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -3044,6 +3090,7 @@ exports[`Render validation.status = warning properties.addItemButton: title: Add
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.addItemButton: title: Add new Item_add_button_icon"
           required={false}
@@ -3063,9 +3110,9 @@ exports[`Render validation.status = warning properties.addItemButton: title: Add
             />
           </svg>
         </span>
-        <span>
-          Add new Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -3092,6 +3139,7 @@ exports[`Render validation.status = warning properties.addToFront: true - value[
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.addToFront: true_add_button_icon"
           required={false}
@@ -3111,9 +3159,9 @@ exports[`Render validation.status = warning properties.addToFront: true - value[
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -3187,6 +3235,7 @@ exports[`Render validation.status = warning properties.noDataTitle: No title dis
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.noDataTitle: No title display_add_button_icon"
           required={false}
@@ -3206,9 +3255,9 @@ exports[`Render validation.status = warning properties.noDataTitle: No title dis
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -3248,6 +3297,7 @@ exports[`Render validation.status = warning properties.removeItemIcon: DeleteOut
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.removeItemIcon: DeleteOutlined_add_button_icon"
           required={false}
@@ -3267,9 +3317,9 @@ exports[`Render validation.status = warning properties.removeItemIcon: DeleteOut
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -3309,6 +3359,7 @@ exports[`Render validation.status = warning properties.removeItemIcon: name: Del
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.removeItemIcon: name: DeleteOutlined_add_button_icon"
           required={false}
@@ -3328,9 +3379,9 @@ exports[`Render validation.status = warning properties.removeItemIcon: name: Del
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -3370,6 +3421,7 @@ exports[`Render validation.status = warning properties.size: large - value[0] 1`
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.size: large_add_button_icon"
           required={false}
@@ -3389,9 +3441,9 @@ exports[`Render validation.status = warning properties.size: large - value[0] 1`
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -3431,6 +3483,7 @@ exports[`Render validation.status = warning properties.size: small - value[0] 1`
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.size: small_add_button_icon"
           required={false}
@@ -3450,9 +3503,9 @@ exports[`Render validation.status = warning properties.size: small - value[0] 1`
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>
@@ -3512,6 +3565,7 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
       >
         <span
           aria-label="loading-3-quarters"
+          basePath=""
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
           id="properties.title_add_button_icon"
           required={false}
@@ -3531,9 +3585,9 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
             />
           </svg>
         </span>
-        <span>
-          Add Item
-        </span>
+        <span
+          className="{}"
+        />
       </button>
     </div>
   </div>

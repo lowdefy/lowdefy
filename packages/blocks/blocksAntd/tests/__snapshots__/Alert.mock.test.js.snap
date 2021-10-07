@@ -36,7 +36,17 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.closable: true",
-      "message": "Message closable true",
+      "message": <HtmlComponent
+        html="Message closable true"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": undefined,
@@ -56,7 +66,17 @@ Array [
       "closeText": "Close Text",
       "description": undefined,
       "id": "properties.closeText: Close Text",
-      "message": "Message closable true",
+      "message": <HtmlComponent
+        html="Message closable true"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": undefined,
@@ -76,6 +96,7 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon object_icon"
         content={Object {}}
         events={Object {}}
@@ -107,7 +128,17 @@ Array [
         }
       />,
       "id": "properties.icon object",
-      "message": "Message with Icon!",
+      "message": <HtmlComponent
+        html="Message with Icon!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": undefined,
@@ -127,6 +158,7 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon string_icon"
         content={Object {}}
         events={Object {}}
@@ -152,7 +184,17 @@ Array [
         }
       />,
       "id": "properties.icon string",
-      "message": "Message with Icon!",
+      "message": <HtmlComponent
+        html="Message with Icon!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": undefined,
@@ -172,7 +214,17 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.message",
-      "message": "Alert message - Completed!",
+      "message": <HtmlComponent
+        html="Alert message - Completed!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": undefined,
@@ -192,7 +244,17 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.type: error",
-      "message": "Alert message - error!",
+      "message": <HtmlComponent
+        html="Alert message - error!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": "error",
@@ -212,7 +274,17 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.type: error banner: true",
-      "message": "Alert message - error!",
+      "message": <HtmlComponent
+        html="Alert message - error!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": "error",
@@ -232,7 +304,17 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.type: error showIcon: false",
-      "message": "Alert message - error!",
+      "message": <HtmlComponent
+        html="Alert message - error!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": false,
       "type": "error",
@@ -252,7 +334,17 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.type: info",
-      "message": "Alert message - info!",
+      "message": <HtmlComponent
+        html="Alert message - info!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": "info",
@@ -272,7 +364,17 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.type: info banner: true",
-      "message": "Alert message - info!",
+      "message": <HtmlComponent
+        html="Alert message - info!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": "info",
@@ -292,7 +394,17 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.type: info showIcon: false",
-      "message": "Alert message - info!",
+      "message": <HtmlComponent
+        html="Alert message - info!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": false,
       "type": "info",
@@ -312,7 +424,17 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.type: success",
-      "message": "Alert message - success!",
+      "message": <HtmlComponent
+        html="Alert message - success!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": "success",
@@ -332,7 +454,17 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.type: success banner: true",
-      "message": "Alert message - success!",
+      "message": <HtmlComponent
+        html="Alert message - success!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": "success",
@@ -352,7 +484,17 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.type: success showIcon: false",
-      "message": "Alert message - success!",
+      "message": <HtmlComponent
+        html="Alert message - success!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": false,
       "type": "success",
@@ -372,7 +514,17 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.type: warning",
-      "message": "Alert message - warning!",
+      "message": <HtmlComponent
+        html="Alert message - warning!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": "warning",
@@ -392,7 +544,17 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.type: warning banner: true",
-      "message": "Alert message - warning!",
+      "message": <HtmlComponent
+        html="Alert message - warning!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": "warning",
@@ -412,7 +574,17 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "id": "properties.type: warning showIcon: false",
-      "message": "Alert message - warning!",
+      "message": <HtmlComponent
+        html="Alert message - warning!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": false,
       "type": "warning",
@@ -430,7 +602,17 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": "This is a description for the block.",
+      "description": <HtmlComponent
+        html="This is a description for the block."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "id": "with description only",
       "message": false,
       "onClose": [Function],
@@ -450,7 +632,17 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": "This is a description for the block.",
+      "description": <HtmlComponent
+        html="This is a description for the block."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "id": "with description only and icon false",
       "message": false,
       "onClose": [Function],
@@ -470,9 +662,29 @@ Array [
       "banner": undefined,
       "closable": true,
       "closeText": undefined,
-      "description": "This is a description for the block.",
+      "description": <HtmlComponent
+        html="This is a description for the block."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "id": "with description properties.closable: true",
-      "message": "Message closable true",
+      "message": <HtmlComponent
+        html="Message closable true"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": undefined,
@@ -490,9 +702,29 @@ Array [
       "banner": undefined,
       "closable": true,
       "closeText": "Close Text",
-      "description": "This is a description for the block.",
+      "description": <HtmlComponent
+        html="This is a description for the block."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "id": "with description properties.closeText: Close Text",
-      "message": "Message closable true",
+      "message": <HtmlComponent
+        html="Message closable true"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": undefined,
@@ -510,8 +742,19 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": "This is a description for the block.",
+      "description": <HtmlComponent
+        html="This is a description for the block."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "icon": <IconBlock
+        basePath=""
         blockId="with description properties.icon object_icon"
         content={Object {}}
         events={Object {}}
@@ -543,7 +786,17 @@ Array [
         }
       />,
       "id": "with description properties.icon object",
-      "message": "Message with Icon!",
+      "message": <HtmlComponent
+        html="Message with Icon!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": undefined,
@@ -561,8 +814,19 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": "This is a description for the block.",
+      "description": <HtmlComponent
+        html="This is a description for the block."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "icon": <IconBlock
+        basePath=""
         blockId="with description properties.icon string_icon"
         content={Object {}}
         events={Object {}}
@@ -588,7 +852,17 @@ Array [
         }
       />,
       "id": "with description properties.icon string",
-      "message": "Message with Icon!",
+      "message": <HtmlComponent
+        html="Message with Icon!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": undefined,
@@ -606,9 +880,29 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": "This is a description for the block.",
+      "description": <HtmlComponent
+        html="This is a description for the block."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "id": "with description properties.message",
-      "message": "Alert message - Completed!",
+      "message": <HtmlComponent
+        html="Alert message - Completed!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": undefined,
@@ -626,9 +920,29 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": "This is a description for the block.",
+      "description": <HtmlComponent
+        html="This is a description for the block."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "id": "with description properties.type: error",
-      "message": "Alert message - error!",
+      "message": <HtmlComponent
+        html="Alert message - error!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": "error",
@@ -646,9 +960,29 @@ Array [
       "banner": true,
       "closable": undefined,
       "closeText": undefined,
-      "description": "This is a description for the block.",
+      "description": <HtmlComponent
+        html="This is a description for the block."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "id": "with description properties.type: error banner: true",
-      "message": "Alert message - error!",
+      "message": <HtmlComponent
+        html="Alert message - error!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": "error",
@@ -666,9 +1000,29 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": "This is a description for the block.",
+      "description": <HtmlComponent
+        html="This is a description for the block."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "id": "with description properties.type: error showIcon: false",
-      "message": "Alert message - error!",
+      "message": <HtmlComponent
+        html="Alert message - error!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": false,
       "type": "error",
@@ -686,9 +1040,29 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": "This is a description for the block.",
+      "description": <HtmlComponent
+        html="This is a description for the block."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "id": "with description properties.type: info",
-      "message": "Alert message - info!",
+      "message": <HtmlComponent
+        html="Alert message - info!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": "info",
@@ -706,9 +1080,29 @@ Array [
       "banner": true,
       "closable": undefined,
       "closeText": undefined,
-      "description": "This is a description for the block.",
+      "description": <HtmlComponent
+        html="This is a description for the block."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "id": "with description properties.type: info banner: true",
-      "message": "Alert message - info!",
+      "message": <HtmlComponent
+        html="Alert message - info!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": "info",
@@ -726,9 +1120,29 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": "This is a description for the block.",
+      "description": <HtmlComponent
+        html="This is a description for the block."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "id": "with description properties.type: info showIcon: false",
-      "message": "Alert message - info!",
+      "message": <HtmlComponent
+        html="Alert message - info!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": false,
       "type": "info",
@@ -746,9 +1160,29 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": "This is a description for the block.",
+      "description": <HtmlComponent
+        html="This is a description for the block."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "id": "with description properties.type: success",
-      "message": "Alert message - success!",
+      "message": <HtmlComponent
+        html="Alert message - success!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": "success",
@@ -766,9 +1200,29 @@ Array [
       "banner": true,
       "closable": undefined,
       "closeText": undefined,
-      "description": "This is a description for the block.",
+      "description": <HtmlComponent
+        html="This is a description for the block."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "id": "with description properties.type: success banner: true",
-      "message": "Alert message - success!",
+      "message": <HtmlComponent
+        html="Alert message - success!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": "success",
@@ -786,9 +1240,29 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": "This is a description for the block.",
+      "description": <HtmlComponent
+        html="This is a description for the block."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "id": "with description properties.type: success showIcon: false",
-      "message": "Alert message - success!",
+      "message": <HtmlComponent
+        html="Alert message - success!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": false,
       "type": "success",
@@ -806,9 +1280,29 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": "This is a description for the block.",
+      "description": <HtmlComponent
+        html="This is a description for the block."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "id": "with description properties.type: warning",
-      "message": "Alert message - warning!",
+      "message": <HtmlComponent
+        html="Alert message - warning!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": "warning",
@@ -826,9 +1320,29 @@ Array [
       "banner": true,
       "closable": undefined,
       "closeText": undefined,
-      "description": "This is a description for the block.",
+      "description": <HtmlComponent
+        html="This is a description for the block."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "id": "with description properties.type: warning banner: true",
-      "message": "Alert message - warning!",
+      "message": <HtmlComponent
+        html="Alert message - warning!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": "warning",
@@ -846,12 +1360,96 @@ Array [
       "banner": undefined,
       "closable": undefined,
       "closeText": undefined,
-      "description": "This is a description for the block.",
+      "description": <HtmlComponent
+        html="This is a description for the block."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "id": "with description properties.type: warning showIcon: false",
-      "message": "Alert message - warning!",
+      "message": <HtmlComponent
+        html="Alert message - warning!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": false,
       "type": "warning",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - with description uses html - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "afterClose": [Function],
+      "banner": undefined,
+      "closable": undefined,
+      "closeText": undefined,
+      "description": <HtmlComponent
+        html=<div style="background:red;">
+  Alert Description
+</div>
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "id": "with description uses html",
+      "message": false,
+      "onClose": [Function],
+      "showIcon": true,
+      "type": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - with message uses html - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "afterClose": [Function],
+      "banner": undefined,
+      "closable": undefined,
+      "closeText": undefined,
+      "description": undefined,
+      "id": "with message uses html",
+      "message": <HtmlComponent
+        html=<div style="background:green;">
+  Alert Message
+</div>
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "onClose": [Function],
+      "showIcon": true,
+      "type": undefined,
     },
     Object {},
   ],

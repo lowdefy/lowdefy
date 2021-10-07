@@ -17,7 +17,7 @@
 import React from 'react';
 import { Statistic } from 'antd';
 import { type } from '@lowdefy/helpers';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 
 import Icon from '../Icon/Icon';
 
@@ -28,7 +28,7 @@ const StatisticBlock = ({ blockId, events, properties, methods }) => (
     groupSeparator={properties.groupSeparator}
     id={blockId}
     precision={properties.precision}
-    title={properties.title}
+    title={renderHtml({ html: properties.title, methods })}
     value={type.isNone(properties.value) ? '' : properties.value}
     valueStyle={properties.valueStyle}
     prefix={

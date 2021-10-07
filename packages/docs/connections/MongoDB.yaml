@@ -64,6 +64,7 @@ _ref:
             - `collection: string`: __Required__ -  The name of the MongoDB collection.
             - `read: boolean`: Default: `true` - Allow read operations like find on the collection.
             - `write: boolean`: Default: `false` - Allow write operations like update on the collection.
+            - `options: object`: See the [driver docs](https://mongodb.github.io/node-mongodb-native/4.0/interfaces/mongoclientoptions.html) for more information.
 
             #### Examples
 
@@ -158,6 +159,7 @@ _ref:
             requests:
               - id: delete_old_documents
                 type:  MongoDBDeleteMany
+                connectionId: my_mongodb_collection_id
                 properties:
                   filter:
                     created_date:
@@ -187,6 +189,7 @@ _ref:
             requests:
               - id: delete_selected_document
                 type:  MongoDBUpdateMany
+                connectionId: my_mongodb_collection_id
                 properties:
                   filter:
                     _id:
@@ -219,6 +222,7 @@ _ref:
             requests:
               - id: scores_top_ten_scores_above_90
                 type:  MongoDBFind
+                connectionId: my_mongodb_collection_id
                 properties:
                   query:
                     score:
@@ -259,6 +263,7 @@ _ref:
             requests:
               - id: find_by_id
                 type:  MongoDBFindOne
+                connectionId: my_mongodb_collection_id
                 properties:
                   query:
                     _id:
@@ -288,6 +293,7 @@ _ref:
             requests:
               - id: insert_documents
                 type:  MongoDBInsertMany
+                connectionId: my_mongodb_collection_id
                 properties:
                   docs:
                     - _id: 1
@@ -321,6 +327,7 @@ _ref:
             requests:
               - id: insert_new_comment
                 type:  MongoDBInsertOne
+                connectionId: my_mongodb_collection_id
                 properties:
                   doc:
                     comment:
@@ -358,6 +365,7 @@ _ref:
             requests:
               - id: set_resolved
                 type:  MongoDBUpdateMany
+                connectionId: my_mongodb_collection_id
                 properties:
                   # Select all documents where the _id is in selected_issues_list in state
                   filter:
@@ -374,6 +382,7 @@ _ref:
             requests:
               - id: set_resolved
                 type:  MongoDBUpdateMany
+                connectionId: my_mongodb_collection_id
                 properties:
                   filter:
                     score:
@@ -411,6 +420,7 @@ _ref:
             requests:
               - id: update
                 type:  MongoDBUpdateOne
+                connectionId: my_mongodb_collection_id
                 properties:
                   filter:
                     _id:
@@ -425,6 +435,7 @@ _ref:
             requests:
               - id: like_comment
                 type:  MongoDBUpdateOne
+                connectionId: my_mongodb_collection_id
                 properties:
                   filter:
                     _id:

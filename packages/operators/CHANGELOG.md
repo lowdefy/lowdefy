@@ -3,6 +3,160 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.22.0](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.1...v3.22.0) (2021-09-27)
+
+**Note:** Version bump only for package @lowdefy/operators
+
+
+
+
+
+# [3.22.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.0...v3.22.0-alpha.1) (2021-09-20)
+
+**Note:** Version bump only for package @lowdefy/operators
+
+
+
+
+
+# [3.22.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.2...v3.22.0-alpha.0) (2021-09-08)
+
+**Note:** Version bump only for package @lowdefy/operators
+
+
+
+
+
+## [3.21.2](https://github.com/lowdefy/lowdefy/compare/v3.21.2-alpha.0...v3.21.2) (2021-08-31)
+
+**Note:** Version bump only for package @lowdefy/operators
+
+
+
+
+
+## [3.21.2-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.1...v3.21.2-alpha.0) (2021-08-31)
+
+**Note:** Version bump only for package @lowdefy/operators
+
+
+
+
+
+## [3.21.1](https://github.com/lowdefy/lowdefy/compare/v3.21.0...v3.21.1) (2021-08-26)
+
+**Note:** Version bump only for package @lowdefy/operators
+
+
+
+
+
+# [3.21.0](https://github.com/lowdefy/lowdefy/compare/v3.20.4...v3.21.0) (2021-08-25)
+
+
+### Bug Fixes
+
+* **operators:**  Remove array param type from v3, v5 uuid operator. ([5141fdf](https://github.com/lowdefy/lowdefy/commit/5141fdff7f1d60ded07e89a659762d881e7fc4f7))
+* **operators:** Updated tests to remove legacy v1, v4 uuid operators. ([f43a054](https://github.com/lowdefy/lowdefy/commit/f43a054d2c7dcff219936cebfe8ad69810dc362a))
+* Add array and object param types to v3 and v5 uuid methods. ([0a551e9](https://github.com/lowdefy/lowdefy/commit/0a551e9d9303c9f4e7a15e82b439ec6291c49187))
+
+
+### Features
+
+* **operators:** Add array param type from v3, v5 uuid operator. ([764051b](https://github.com/lowdefy/lowdefy/commit/764051b950864dbe59de50930383caede966e1be))
+* Add support for v1, v3, v4 and v5 to the _uuid operator. ([c9ef4b9](https://github.com/lowdefy/lowdefy/commit/c9ef4b93fadf3dfa9b01ffb43fbd0375706bcb25))
+* **operators:** Add _hash operator. ([0d3244a](https://github.com/lowdefy/lowdefy/commit/0d3244af5b13633c640bc471ed72cb7df035b415))
+* **operators:** Add _uuid v1, v2, v3, v4, and v5 options. ([3f2fc75](https://github.com/lowdefy/lowdefy/commit/3f2fc757224ec4a766b138d45ebcc68d47c56463))
+* **operators:** Add RIPEMD-160 algorithm. ([3e07218](https://github.com/lowdefy/lowdefy/commit/3e07218df07737fce28de4525f8d1fc69702e729))
+* **operators:** Add uuid to client, closes [#783](https://github.com/lowdefy/lowdefy/issues/783) ([6dc8d28](https://github.com/lowdefy/lowdefy/commit/6dc8d28608f18317986f21613af59a513d84cef8))
+
+
+
+
+
+## [3.20.4](https://github.com/lowdefy/lowdefy/compare/v3.20.3...v3.20.4) (2021-08-21)
+
+**Note:** Version bump only for package @lowdefy/operators
+
+
+
+
+
+## [3.20.3](https://github.com/lowdefy/lowdefy/compare/v3.20.1...v3.20.3) (2021-08-20)
+
+**Note:** Version bump only for package @lowdefy/operators
+
+
+
+
+
+## [3.20.2](https://github.com/lowdefy/lowdefy/compare/v3.20.1...v3.20.2) (2021-08-20)
+
+**Note:** Version bump only for package @lowdefy/operators
+
+
+
+
+
+## [3.20.1](https://github.com/lowdefy/lowdefy/compare/v3.20.0...v3.20.1) (2021-08-20)
+
+**Note:** Version bump only for package @lowdefy/operators
+
+
+
+
+
+# [3.20.0](https://github.com/lowdefy/lowdefy/compare/v3.19.0...v3.20.0) (2021-08-20)
+
+
+### Bug Fixes
+
+* **operators:** Fix homePageId typo and update tests. ([6bfa83a](https://github.com/lowdefy/lowdefy/commit/6bfa83a68c355858ab8ade2d3a2e8a8df45bb6dc))
+* Add _number operator. ([1ca3966](https://github.com/lowdefy/lowdefy/commit/1ca3966495f96da9a66fa912a70703748c10d197))
+* Fix _number operator tests. ([3b36a53](https://github.com/lowdefy/lowdefy/commit/3b36a53e42f0996c7ba6d5e2e19436c438a08ffe))
+* Fixes for configurable basePath. ([63955bb](https://github.com/lowdefy/lowdefy/commit/63955bbd1131da3b27b537d4e0d72dc943119287))
+
+
+### Features
+
+* **operators:** Add basePath to _location. ([eb95c8a](https://github.com/lowdefy/lowdefy/commit/eb95c8a64b2b7698f006750cd3639ee71dbbf4a9))
+* **operators:** Add pageId and homePageId to _location. ([00842d4](https://github.com/lowdefy/lowdefy/commit/00842d48153fc2b49ac6bd6cd88d73c3cce0c178))
+
+
+
+
+
+# [3.19.0](https://github.com/lowdefy/lowdefy/compare/v3.18.1...v3.19.0) (2021-07-26)
+
+
+### Bug Fixes
+
+* **operators:** _request getter default value should be null. ([755527f](https://github.com/lowdefy/lowdefy/commit/755527fe88cf45a00ab8ade8353f507c8c7918d8))
+* **operators:** Comments fixes and catch nested objects ([deb8fd5](https://github.com/lowdefy/lowdefy/commit/deb8fd51d6b69ab4f22999a8639c4c3c94620f93))
+* **operators:** Fix regex in _change_case operator. ([e4d577f](https://github.com/lowdefy/lowdefy/commit/e4d577f856e2bc96598ffc715170417855c8ad25))
+* **operators:** Update tests with comments fixes and catch nested objects ([b6d63bb](https://github.com/lowdefy/lowdefy/commit/b6d63bb80dca1c1c8eb516b809d573c713734835))
+
+
+### Features
+
+* **operators:** Add _change_case operator ([e617c31](https://github.com/lowdefy/lowdefy/commit/e617c31228f9538b0c5df8e0fd9f1fbc09c4697f))
+* **operators:** Add _change_case tests ([87bf687](https://github.com/lowdefy/lowdefy/commit/87bf68757285d87c4d57a42e25929bfbb206134f))
+
+
+
+
+
+## [3.18.1](https://github.com/lowdefy/lowdefy/compare/v3.18.0...v3.18.1) (2021-06-30)
+
+
+### Bug Fixes
+
+* **operators:** Do not copy window.location in _location. ([61f6215](https://github.com/lowdefy/lowdefy/commit/61f6215ee31a99ac5bbaf81c4ff7120ba5f51eda))
+
+
+
+
+
 # [3.18.0](https://github.com/lowdefy/lowdefy/compare/v3.17.2...v3.18.0) (2021-06-17)
 
 

@@ -9,21 +9,27 @@
       "additionalProperties": false,
       "required": ["id", "type"],
       "properties": {
+        "async": {
+          "type": "boolean",
+          "errorMessage": {
+            "type": "Action \"async\" should be a boolean."
+          }
+        },
         "id": {
           "type": "string",
           "errorMessage": {
             "type": "Action \"id\" should be a string."
           }
         },
+        "messages": {},
+        "params": {},
+        "skip": {},
         "type": {
           "type": "string",
           "errorMessage": {
             "type": "Action \"type\" should be a string."
           }
-        },
-        "messages": {},
-        "skip": {},
-        "params": {}
+        }
       },
       "errorMessage": {
         "type": "Action should be an object.",
@@ -269,6 +275,24 @@
                       "type": "array",
                       "items": {
                         "$ref": "#/definitions/action"
+                      }
+                    },
+                    "debounce": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "immediate": {
+                          "type": "boolean",
+                          "errorMessage": {
+                            "type": "Event \"debounce.immediate\" should be an boolean."
+                          }
+                        },
+                        "ms": {
+                          "type": "number",
+                          "errorMessage": {
+                            "type": "Event \"debounce.ms\" should be a number."
+                          }
+                        }
                       }
                     }
                   }

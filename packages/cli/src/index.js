@@ -36,8 +36,17 @@ program
     'Change base directory. Default is the current working directory.'
   )
   .option(
+    '--blocks-server-url <blocks-server-url>',
+    'The URL from where Lowdefy blocks will be served.'
+  )
+  .option('--disable-telemetry', 'Disable telemetry.')
+  .option(
     '--output-directory <output-directory>',
     'Change the directory to which build artifacts are saved. Default is "<base-directory>/.lowdefy/build".'
+  )
+  .option(
+    '--ref-resolver <ref-resolver-function-path>',
+    'Path to a JavaScript file containing a _ref resolver function to be used as the app default _ref resolver.'
   )
   .action(runCommand(build));
 
@@ -49,6 +58,15 @@ program
     '--base-directory <base-directory>',
     'Change base directory. Default is the current working directory.'
   )
+  .option(
+    '--blocks-server-url <blocks-server-url>',
+    'The URL from where Lowdefy blocks will be served.'
+  )
+  .option('--disable-telemetry', 'Disable telemetry.')
+  .option(
+    '--ref-resolver <ref-resolver-function-path>',
+    'Path to a JavaScript file containing a _ref resolver function to be used as the app default _ref resolver.'
+  )
   .action(runCommand(buildNetlify));
 
 program
@@ -59,6 +77,7 @@ program
     '--base-directory <base-directory>',
     'Change base directory. Default is the current working directory.'
   )
+  .option('--disable-telemetry', 'Disable telemetry.')
   .action(runCommand(cleanCache));
 
 program
@@ -69,7 +88,24 @@ program
     '--base-directory <base-directory>',
     'Change base directory. Default is the current working directory.'
   )
+  .option(
+    '--blocks-server-url <blocks-server-url>',
+    'The URL from where Lowdefy blocks will be served.'
+  )
+  .option('--disable-telemetry', 'Disable telemetry.')
   .option('--port <port>', 'Change the port the server is hosted at. Default is 3000.')
+  .option(
+    '--ref-resolver <ref-resolver-function-path>',
+    'Path to a JavaScript file containing a _ref resolver function to be used as the app default _ref resolver.'
+  )
+  .option(
+    '--watch <paths...>',
+    'A list of paths to files or directories that should be watched for changes.'
+  )
+  .option(
+    '--watch-ignore <paths...>',
+    'A list of paths to files or directories that should be ignored by the file watcher. Globs are supported.'
+  )
   .action(runCommand(dev));
 
 program

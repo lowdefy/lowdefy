@@ -1,0 +1,347 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
+  vars:
+    pageId: _change_case
+    pageTitle: _change_case
+    filePath: operators/_change_case.yaml
+    description: |
+      The `_change_case` operator uses the [`change-case`](https://www.npmjs.com/package/change-case) package to transform an input between camelCase, PascalCase, Capital Case, snake_case, param-case, CONSTANT_CASE and others.
+    arguments: |
+      The `_change_case` operator takes `on` and `options` as arguments.
+      The `on` argument is the input to be transformed and can be a `string`,  `array` or `object`.
+      The `options` argument is an object with the following properties:
+        - `splitRegexp`: The regular expression used to split `on` into word segments. Can be a `string` or an `object` with `pattern` and `flags`.
+        - `stripRegexp`: The regular expression used to remove extraneous characters (default: `/[^A-Z0-9]/gi`). Can be a `string` or an `object` with `pattern` and `flags`.
+        - `delimiter`: Value used between words (e.g. " ").
+        - `convertValues`: Only used when `on` is an object. Toggles whether the object values are converted to the new case (`true`) or left as-is (`false`). Default `true`.
+        - `convertKeys`: Only used when `on` is an object. Toggles whether the object keys are converted to the new case (`true`) or left as-is (`false`). Default `false`.
+
+      The `on` argument behaves as follows:
+      ###### string
+      Transforms the case of the string.
+
+      ###### array
+      Transform the case of each string in the array.
+
+      ###### object
+      Transforms the case of the values (when `options.convertValues: true`) and keys (when `options.convertKeys: true`) of the object.
+
+      > Note that the `key` and `value` pairs must be strings.
+    examples: |
+      ###### String with no options:
+      ```yaml
+      _change_case.capitalCase:
+        on: 'foo bar'
+      ```
+      Returns: `"Foo Bar"`
+
+      ###### Array with no options:
+      ```yaml
+      _change_case.capitalCase:
+        on:
+          - 'foo'
+          - 'bar'
+      ```
+      Returns: `["Foo", "Bar"]`
+
+      ###### Object with no options:
+      ```yaml
+      _change_case.capitalCase:
+        on:
+          foo: 'bar'
+      ```
+      Returns: `{ "foo": "Bar" }`
+
+      ###### Object with options.convertKeys: true:
+      ```yaml
+      _change_case.capitalCase:
+        on:
+          foo: 'bar'
+          options:
+            convertKeys: true
+      ```
+      Returns: `{ "Foo": "Bar" }`
+
+      ###### Object with options.convertValues: false:
+      ```yaml
+      _change_case.capitalCase:
+        on:
+          foo: 'bar'
+          options:
+            convertValues: false
+      ```
+      Returns: `{ "foo": "bar" }`
+
+      ###### String with options.splitRegexp string:
+      ```yaml
+      _change_case.sentenceCase:
+        on: 'foo8ar'
+        options:
+          splitRegexp: '([a-z])([A-Z0-9])'
+      ```
+      Returns: `"Foo 8ar"`
+
+      ###### String with options.stripRegexp string:
+      ```yaml
+      _change_case.sentenceCase:
+        on: 'FOO8AR'
+        options:
+          stripRegexp: '[^A-Z]'
+      ```
+      Returns: `"Foo ar"`
+
+      ###### String with options.splitRegexp object:
+      ```yaml
+      _change_case.sentenceCase:
+        on: 'foo8ar'
+        options:
+          splitRegexp:
+            pattern: '([a-z])([A-Z0-9])'
+            flags: 'gi'
+      ```
+      Returns: `"F oo 8a r"`
+
+      ###### String with options.stripRegexp object:
+      ```yaml
+      _change_case.sentenceCase:
+        on: 'foo8ar'
+        options:
+          stripRegexp:
+            pattern: '[^A-Z]'
+            flags: gi
+      ```
+      Returns: `"Foo ar"`
+
+    methods:
+      - name: camelCase
+        types: |
+          ```
+          ({on: string, options: object}): string
+          ([on: string, options: object]): string
+          ({on: object, options: object}): object
+          ([on: object, options: object]): object
+          ({on: array, options: object}): array
+          ([on: array, options: object]): array
+          ```
+        description: |
+          The `_change_case.camelCase` method transforms `on` into a string with the separator denoted by the next word capitalized.
+        examples: |
+          ###### Transform snake_case variable to camelCase:
+          ```yaml
+          _change_case.camelCase:
+            on: 'my_variable'
+          ```
+          Returns: `"myVariable"`
+      - name: capitalCase
+        types: |
+          ```
+          ({on: string, options: object}): string
+          ([on: string, options: object]): string
+          ({on: object, options: object}): object
+          ([on: object, options: object]): object
+          ({on: array, options: object}): array
+          ([on: array, options: object]): array
+          ```
+        description: |
+          The `_change_case.capitalCase` method transforms `on` into a space separated string with each word capitalized.
+        examples: |
+          ###### Transform snake_case variable to capitalCase:
+          ```yaml
+          _change_case.capitalCase:
+            on: 'my_variable'
+          ```
+          Returns:  `"My Variable"`
+      - name: constantCase
+        types: |
+          ```
+          ({on: string, options: object}): string
+          ([on: string, options: object]): string
+          ({on: object, options: object}): object
+          ([on: object, options: object]): object
+          ({on: array, options: object}): array
+          ([on: array, options: object]): array
+          ```
+        description: |
+          The `_change_case.constantCase` method transforms `on` into upper case string with an underscore between words.
+        examples: |
+          ###### Transform camelCase variable to constantCase:
+          ```yaml
+          _change_case.constantCase:
+            on: 'myVariable'
+          ```
+          Returns: `"MY_VARIABLE"`
+
+      - name: dotCase
+        types: |
+          ```
+          ({on: string, options: object}): string
+          ([on: string, options: object]): string
+          ({on: object, options: object}): object
+          ([on: object, options: object]): object
+          ({on: array, options: object}): array
+          ([on: array, options: object]): array
+          ```
+        description: |
+          The `_change_case.dotCase` method transforms `on` into a lower case string with a period between words.
+        examples: |
+          ###### Transform camelCase variable to dotCase:
+          ```yaml
+          _change_case.dotCase:
+            on: 'myVariable'
+          ```
+          Returns: `"my.variable"`
+
+      - name: headerCase
+        types: |
+          ```
+          ({on: string, options: object}): string
+          ([on: string, options: object]): string
+          ({on: object, options: object}): object
+          ([on: object, options: object]): object
+          ({on: array, options: object}): array
+          ([on: array, options: object]): array
+          ```
+        description: |
+          The `_change_case.headerCase` method transforms `on` into a dash separated string of capitalized words.
+        examples: |
+          ###### Transform snake_case variable to headerCase:
+          ```yaml
+          _change_case.headerCase:
+            on: 'my_variable'
+          ```
+          Returns: `"My-Variable"`
+
+      - name: noCase
+        types: |
+          ```
+          ({on: string, options: object}): string
+          ([on: string, options: object]): string
+          ({on: object, options: object}): object
+          ([on: object, options: object]): object
+          ({on: array, options: object}): array
+          ([on: array, options: object]): array
+          ```
+        description: |
+          The `_change_case.noCase` method transforms `on` into a lower cased string with spaces between words.
+        examples: |
+          ###### Transform camelCase variable to noCase:
+          ```yaml
+          _change_case.noCase:
+            on: 'myVariable'
+          ```
+          Returns: `"my variable"`
+
+      - name: paramCase
+        types: |
+          ```
+          ({on: string, options: object}): string
+          ([on: string, options: object]): string
+          ({on: object, options: object}): object
+          ([on: object, options: object]): object
+          ({on: array, options: object}): array
+          ([on: array, options: object]): array
+          ```
+        description: |
+          The `_change_case.paramCase` method transforms `on` into a lower cased string with dashes between words.
+        examples: |
+          ###### Transform snake_case variable to paramCase:
+          ```yaml
+          _change_case.paramCase:
+            on: 'my_variable'
+          ```
+          Returns: `"my-variable"`
+
+      - name: pascalCase
+        types: |
+          ```
+          ({on: string, options: object}): string
+          ([on: string, options: object]): string
+          ({on: object, options: object}): object
+          ([on: object, options: object]): object
+          ({on: array, options: object}): array
+          ([on: array, options: object]): array
+          ```
+        description: |
+          The `_change_case.pascalCase` method transforms `on` into a string of capitalized words without separators.
+        examples: |
+          ###### Transform snake_case variable to pascalCase:
+          ```yaml
+          _change_case.pascalCase:
+            on: 'my_variable'
+          ```
+          Returns: `"MyVariable"`
+
+      - name: pathCase
+        types: |
+          ```
+          ({on: string, options: object}): string
+          ([on: string, options: object]): string
+          ({on: object, options: object}): object
+          ([on: object, options: object]): object
+          ({on: array, options: object}): array
+          ([on: array, options: object]): array
+          ```
+        description: |
+          The `_change_case.pathCase` method transforms `on` into a lower case string with slashes between words.
+        examples: |
+          ###### Transform snake_case variable to pathCase:
+          ```yaml
+          _change_case.pathCase:
+            on: 'my_variable'
+          ```
+          Returns:
+
+      - name: sentenceCase
+        types: |
+          ```
+          ({on: string, options: object}): string
+          ([on: string, options: object]): string
+          ({on: object, options: object}): object
+          ([on: object, options: object]): object
+          ({on: array, options: object}): array
+          ([on: array, options: object]): array
+          ```
+        description: |
+          The `_change_case.sentenceCase` method transforms `on` into a lower case with spaces between words, then capitalize the first word.
+        examples: |
+          ###### Transform snake_case variable to sentenceCase:
+          ```yaml
+          _change_case.sentenceCase:
+            on: 'my_variable'
+          ```
+          Returns: `"My variable"`
+
+      - name: snakeCase
+        types: |
+          ```
+          ({on: string, options: object}): string
+          ([on: string, options: object]): string
+          ({on: object, options: object}): object
+          ([on: object, options: object]): object
+          ({on: array, options: object}): array
+          ([on: array, options: object]): array
+          ```
+        description: |
+          The `_change_case.snakeCase` method transforms `on` into a lower case string with underscores between words.
+        examples: |
+          ###### Transform sentence case variable to snakeCase:
+          ```yaml
+          _change_case.snakeCase:
+            on: 'My variable'
+          ```
+          Returns: `"my_variable"`

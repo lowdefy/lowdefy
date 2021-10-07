@@ -485,6 +485,15 @@ describe('parse operators', () => {
     expect(res.errors).toMatchInlineSnapshot(`Array []`);
   });
 
+  test('parse _uuid operator', async () => {
+    const input = { a: { _uuid: true } };
+    const parser = new WebParser({ context, contexts });
+    await parser.init();
+    const res = parser.parse({ input, location: 'locationId' });
+    expect(res.output.a.length).toEqual(36);
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
+
   test('parse _get operator', async () => {
     const input = { _get: { key: 'key', from: { key: 'value' } } };
     const parser = new WebParser({ context, contexts });
@@ -536,6 +545,41 @@ describe('parse operators', () => {
     await parser.init();
     const res = parser.parse({ input, location: 'locationId', arrayIndices: [3, 2] });
     expect(res.output).toEqual(3);
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
+
+  test('parse _change_case operator', async () => {
+    const input = { '_change_case.camelCase': { on: 'test string' } };
+    const parser = new WebParser({ context, contexts });
+    await parser.init();
+    const res = parser.parse({ input, location: 'locationId' });
+    expect(res.output).toEqual('testString');
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
+
+  test('parse _number operator', async () => {
+    const input = { '_number.toFixed': { on: 12.33666, digits: 2 } };
+    const parser = new WebParser({ context, contexts });
+    await parser.init();
+    const res = parser.parse({ input, location: 'locationId' });
+    expect(res.output).toEqual('12.34');
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
+
+  test('parse _switch operator', async () => {
+    const input = {
+      _switch: {
+        branches: [
+          { if: true, then: 'A' },
+          { if: false, then: 'B' },
+        ],
+        default: 'C',
+      },
+    };
+    const parser = new WebParser({ context, contexts });
+    await parser.init();
+    const res = parser.parse({ input, location: 'locationId' });
+    expect(res.output).toEqual('A');
     expect(res.errors).toMatchInlineSnapshot(`Array []`);
   });
 });

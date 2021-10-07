@@ -17,10 +17,10 @@
 import React, { useEffect, useState } from 'react';
 import getContext from '@lowdefy/engine';
 
-import OnEnter from './OnEnter';
+import MountEvents from './MountEvents';
 import LoadingBlock from './LoadingBlock';
 
-const Context = ({ block, contextId, render, lowdefy }) => {
+const Context = ({ block, children, contextId, lowdefy }) => {
   const [context, setContext] = useState({});
   const [error, setError] = useState(null);
 
@@ -45,12 +45,23 @@ const Context = ({ block, contextId, render, lowdefy }) => {
       mounted = false;
     };
   }, [block, lowdefy, contextId]);
-  if (context.id !== contextId)
-    return <LoadingBlock block={block} highlightBorders={lowdefy.lowdefyGlobal.highlightBorders} />;
+
+  if (context.id !== contextId) return <LoadingBlock block={block} lowdefy={lowdefy} />;
 
   if (error) throw error;
 
-  return <OnEnter block={block} context={context} render={render} lowdefy={lowdefy} />;
+  return (
+    <MountEvents
+      asyncEventName="onEnterAsync"
+      context={context}
+      eventName="onEnter"
+      triggerEvent={({ name, context }) =>
+        context.RootBlocks.areas.root.blocks[0].triggerEvent({ name })
+      }
+    >
+      {(loaded) => (!loaded ? <LoadingBlock block={block} lowdefy={lowdefy} /> : children(context))}
+    </MountEvents>
+  );
 };
 
 export default Context;

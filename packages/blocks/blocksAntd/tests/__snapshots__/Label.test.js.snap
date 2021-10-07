@@ -15,7 +15,9 @@ exports[`Render default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -64,8 +66,9 @@ exports[`Render inline and long extra default size - value[0] 1`] = `
       title="Lorem ipsum dolor sit amet
 "
     >
-      Lorem ipsum dolor sit amet
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -97,8 +100,9 @@ exports[`Render inline and long extra default size - value[0] 1`] = `
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -124,8 +128,9 @@ exports[`Render inline and long extra large size - value[0] 1`] = `
       title="Lorem ipsum dolor sit amet
 "
     >
-      Lorem ipsum dolor sit amet
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -157,8 +162,9 @@ exports[`Render inline and long extra large size - value[0] 1`] = `
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -184,8 +190,9 @@ exports[`Render inline and long extra small size - value[0] 1`] = `
       title="Lorem ipsum dolor sit amet
 "
     >
-      Lorem ipsum dolor sit amet
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -217,8 +224,9 @@ exports[`Render inline and long extra small size - value[0] 1`] = `
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -239,7 +247,9 @@ exports[`Render properties.align: left - value[0] 1`] = `
       htmlFor="properties.align: left_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -283,7 +293,9 @@ exports[`Render properties.align: right - value[0] 1`] = `
       htmlFor="properties.align: right_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -327,7 +339,9 @@ exports[`Render properties.colon: false - value[0] 1`] = `
       htmlFor="properties.colon: false_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -371,7 +385,9 @@ exports[`Render properties.colon: true - value[0] 1`] = `
       htmlFor="properties.colon: true_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -447,7 +463,9 @@ exports[`Render properties.extra: Extra long - value[0] 1`] = `
       htmlFor="properties.extra: Extra long_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -475,8 +493,9 @@ exports[`Render properties.extra: Extra long - value[0] 1`] = `
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -501,7 +520,9 @@ exports[`Render properties.extra: Extra long with inline = true - value[0] 1`] =
       htmlFor="properties.extra: Extra long with inline = true_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -533,8 +554,9 @@ exports[`Render properties.extra: Extra long with inline = true - value[0] 1`] =
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -559,7 +581,9 @@ exports[`Render properties.extra: Extra long with inline = true, size = large - 
       htmlFor="properties.extra: Extra long with inline = true, size = large_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -591,8 +615,9 @@ exports[`Render properties.extra: Extra long with inline = true, size = large - 
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -617,7 +642,9 @@ exports[`Render properties.extra: Extra long with inline = true, size = small - 
       htmlFor="properties.extra: Extra long with inline = true, size = small_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -649,8 +676,9 @@ exports[`Render properties.extra: Extra long with inline = true, size = small - 
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -676,8 +704,9 @@ exports[`Render properties.extra: Extra long with inline true - value[0] 1`] = `
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -725,7 +754,9 @@ exports[`Render properties.extra: Extra text - value[0] 1`] = `
       htmlFor="properties.extra: Extra text_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -753,7 +784,62 @@ exports[`Render properties.extra: Extra text - value[0] 1`] = `
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Extra text
+      <span
+        className="{}"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.extra: html in extra - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.extra: html in extra"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.extra: html in extra_input"
+      title="label title"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -774,7 +860,9 @@ exports[`Render properties.extraStyle: border 1px purple - value[0] 1`] = `
       htmlFor="properties.extraStyle: border 1px purple_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -802,7 +890,9 @@ exports[`Render properties.extraStyle: border 1px purple - value[0] 1`] = `
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid purple\\"}]}"
     >
-      Extra text
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -823,7 +913,9 @@ exports[`Render properties.feedbackStyle: border 1px blue - value[0] 1`] = `
       htmlFor="properties.feedbackStyle: border 1px blue_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -851,7 +943,9 @@ exports[`Render properties.feedbackStyle: border 1px blue - value[0] 1`] = `
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      The extra content
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -876,7 +970,9 @@ exports[`Render properties.inline: true - value[0] 1`] = `
       htmlFor="properties.inline: true_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -924,7 +1020,9 @@ exports[`Render properties.span: 2 - value[0] 1`] = `
       htmlFor="properties.span: 2_input"
       title="This is the long label title wrapped by short span"
     >
-      This is the long label title wrapped by short span
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -968,7 +1066,9 @@ exports[`Render properties.span: 2 with long work title - value[0] 1`] = `
       htmlFor="properties.span: 2 with long work title_input"
       title="Thisisthelonglabeltitlea"
     >
-      Thisisthelonglabeltitlea
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1012,7 +1112,9 @@ exports[`Render properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1057,8 +1159,57 @@ exports[`Render properties.title long - value[0] 1`] = `
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
 
+exports[`Render properties.title: html in title - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.title: html in title"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.title: html in title_input"
+      title=<span style="background:yellow;">
+  html in title
+</span>
+    >
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1102,7 +1253,9 @@ exports[`Render required = true default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1151,8 +1304,9 @@ exports[`Render required = true inline and long extra default size - value[0] 1`
       title="Lorem ipsum dolor sit amet
 "
     >
-      Lorem ipsum dolor sit amet
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1184,8 +1338,9 @@ exports[`Render required = true inline and long extra default size - value[0] 1`
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -1211,8 +1366,9 @@ exports[`Render required = true inline and long extra large size - value[0] 1`] 
       title="Lorem ipsum dolor sit amet
 "
     >
-      Lorem ipsum dolor sit amet
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1244,8 +1400,9 @@ exports[`Render required = true inline and long extra large size - value[0] 1`] 
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -1271,8 +1428,9 @@ exports[`Render required = true inline and long extra small size - value[0] 1`] 
       title="Lorem ipsum dolor sit amet
 "
     >
-      Lorem ipsum dolor sit amet
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1304,8 +1462,9 @@ exports[`Render required = true inline and long extra small size - value[0] 1`] 
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -1326,7 +1485,9 @@ exports[`Render required = true properties.align: left - value[0] 1`] = `
       htmlFor="properties.align: left_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1370,7 +1531,9 @@ exports[`Render required = true properties.align: right - value[0] 1`] = `
       htmlFor="properties.align: right_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1414,7 +1577,9 @@ exports[`Render required = true properties.colon: false - value[0] 1`] = `
       htmlFor="properties.colon: false_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1458,7 +1623,9 @@ exports[`Render required = true properties.colon: true - value[0] 1`] = `
       htmlFor="properties.colon: true_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1534,7 +1701,9 @@ exports[`Render required = true properties.extra: Extra long - value[0] 1`] = `
       htmlFor="properties.extra: Extra long_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1562,8 +1731,9 @@ exports[`Render required = true properties.extra: Extra long - value[0] 1`] = `
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -1588,7 +1758,9 @@ exports[`Render required = true properties.extra: Extra long with inline = true 
       htmlFor="properties.extra: Extra long with inline = true_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1620,8 +1792,9 @@ exports[`Render required = true properties.extra: Extra long with inline = true 
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -1646,7 +1819,9 @@ exports[`Render required = true properties.extra: Extra long with inline = true,
       htmlFor="properties.extra: Extra long with inline = true, size = large_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1678,8 +1853,9 @@ exports[`Render required = true properties.extra: Extra long with inline = true,
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -1704,7 +1880,9 @@ exports[`Render required = true properties.extra: Extra long with inline = true,
       htmlFor="properties.extra: Extra long with inline = true, size = small_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1736,8 +1914,9 @@ exports[`Render required = true properties.extra: Extra long with inline = true,
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -1763,8 +1942,9 @@ exports[`Render required = true properties.extra: Extra long with inline true - 
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1812,7 +1992,9 @@ exports[`Render required = true properties.extra: Extra text - value[0] 1`] = `
       htmlFor="properties.extra: Extra text_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1840,7 +2022,62 @@ exports[`Render required = true properties.extra: Extra text - value[0] 1`] = `
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Extra text
+      <span
+        className="{}"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.extra: html in extra - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.extra: html in extra"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.extra: html in extra_input"
+      title="label title"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -1861,7 +2098,9 @@ exports[`Render required = true properties.extraStyle: border 1px purple - value
       htmlFor="properties.extraStyle: border 1px purple_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1889,7 +2128,9 @@ exports[`Render required = true properties.extraStyle: border 1px purple - value
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid purple\\"}]}"
     >
-      Extra text
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -1910,7 +2151,9 @@ exports[`Render required = true properties.feedbackStyle: border 1px blue - valu
       htmlFor="properties.feedbackStyle: border 1px blue_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1938,7 +2181,9 @@ exports[`Render required = true properties.feedbackStyle: border 1px blue - valu
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      The extra content
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -1963,7 +2208,9 @@ exports[`Render required = true properties.inline: true - value[0] 1`] = `
       htmlFor="properties.inline: true_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2011,7 +2258,9 @@ exports[`Render required = true properties.span: 2 - value[0] 1`] = `
       htmlFor="properties.span: 2_input"
       title="This is the long label title wrapped by short span"
     >
-      This is the long label title wrapped by short span
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2055,7 +2304,9 @@ exports[`Render required = true properties.span: 2 with long work title - value[
       htmlFor="properties.span: 2 with long work title_input"
       title="Thisisthelonglabeltitlea"
     >
-      Thisisthelonglabeltitlea
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2099,7 +2350,9 @@ exports[`Render required = true properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2144,8 +2397,57 @@ exports[`Render required = true properties.title long - value[0] 1`] = `
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
 
+exports[`Render required = true properties.title: html in title - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.title: html in title"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.title: html in title_input"
+      title=<span style="background:yellow;">
+  html in title
+</span>
+    >
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2190,8 +2492,9 @@ exports[`Render required = true span, align right and long extra for default siz
       title="Lorem
 "
     >
-      Lorem
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2219,8 +2522,9 @@ exports[`Render required = true span, align right and long extra for default siz
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -2242,8 +2546,9 @@ exports[`Render required = true span, align right and long extra for large size 
       title="Lorem
 "
     >
-      Lorem
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2271,8 +2576,9 @@ exports[`Render required = true span, align right and long extra for large size 
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -2294,8 +2600,9 @@ exports[`Render required = true span, align right and long extra for small size 
       title="Lorem
 "
     >
-      Lorem
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2323,8 +2630,9 @@ exports[`Render required = true span, align right and long extra for small size 
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -2346,8 +2654,9 @@ exports[`Render required = true span, align right, long title and long extra for
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2375,8 +2684,9 @@ exports[`Render required = true span, align right, long title and long extra for
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -2398,8 +2708,9 @@ exports[`Render required = true span, align right, long title and long extra for
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2427,8 +2738,9 @@ exports[`Render required = true span, align right, long title and long extra for
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -2450,8 +2762,9 @@ exports[`Render required = true span, align right, long title and long extra for
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2479,8 +2792,9 @@ exports[`Render required = true span, align right, long title and long extra for
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -2502,8 +2816,9 @@ exports[`Render span, align right and long extra for default size - value[0] 1`]
       title="Lorem
 "
     >
-      Lorem
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2531,8 +2846,9 @@ exports[`Render span, align right and long extra for default size - value[0] 1`]
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -2554,8 +2870,9 @@ exports[`Render span, align right and long extra for large size - value[0] 1`] =
       title="Lorem
 "
     >
-      Lorem
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2583,8 +2900,9 @@ exports[`Render span, align right and long extra for large size - value[0] 1`] =
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -2606,8 +2924,9 @@ exports[`Render span, align right and long extra for small size - value[0] 1`] =
       title="Lorem
 "
     >
-      Lorem
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2635,8 +2954,9 @@ exports[`Render span, align right and long extra for small size - value[0] 1`] =
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -2658,8 +2978,9 @@ exports[`Render span, align right, long title and long extra for default size - 
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2687,8 +3008,9 @@ exports[`Render span, align right, long title and long extra for default size - 
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -2710,8 +3032,9 @@ exports[`Render span, align right, long title and long extra for large size - va
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2739,8 +3062,9 @@ exports[`Render span, align right, long title and long extra for large size - va
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -2762,8 +3086,9 @@ exports[`Render span, align right, long title and long extra for small size - va
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2791,8 +3116,9 @@ exports[`Render span, align right, long title and long extra for small size - va
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -2813,7 +3139,9 @@ exports[`Render validation.status = error default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2890,8 +3218,9 @@ exports[`Render validation.status = error inline and long extra default size - v
       title="Lorem ipsum dolor sit amet
 "
     >
-      Lorem ipsum dolor sit amet
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2972,8 +3301,9 @@ exports[`Render validation.status = error inline and long extra large size - val
       title="Lorem ipsum dolor sit amet
 "
     >
-      Lorem ipsum dolor sit amet
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3054,8 +3384,9 @@ exports[`Render validation.status = error inline and long extra small size - val
       title="Lorem ipsum dolor sit amet
 "
     >
-      Lorem ipsum dolor sit amet
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3131,7 +3462,9 @@ exports[`Render validation.status = error properties.align: left - value[0] 1`] 
       htmlFor="properties.align: left_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3203,7 +3536,9 @@ exports[`Render validation.status = error properties.align: right - value[0] 1`]
       htmlFor="properties.align: right_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3275,7 +3610,9 @@ exports[`Render validation.status = error properties.colon: false - value[0] 1`]
       htmlFor="properties.colon: false_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3347,7 +3684,9 @@ exports[`Render validation.status = error properties.colon: true - value[0] 1`] 
       htmlFor="properties.colon: true_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3479,7 +3818,9 @@ exports[`Render validation.status = error properties.extra: Extra long - value[0
       htmlFor="properties.extra: Extra long_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3555,7 +3896,9 @@ exports[`Render validation.status = error properties.extra: Extra long with inli
       htmlFor="properties.extra: Extra long with inline = true_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3635,7 +3978,9 @@ exports[`Render validation.status = error properties.extra: Extra long with inli
       htmlFor="properties.extra: Extra long with inline = true, size = large_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3715,7 +4060,9 @@ exports[`Render validation.status = error properties.extra: Extra long with inli
       htmlFor="properties.extra: Extra long with inline = true, size = small_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3796,8 +4143,9 @@ exports[`Render validation.status = error properties.extra: Extra long with inli
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3873,7 +4221,83 @@ exports[`Render validation.status = error properties.extra: Extra text - value[0
       htmlFor="properties.extra: Extra text_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="close-circle"
+          className="anticon anticon-close-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="close-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      validation error
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = error properties.extra: html in extra - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.extra: html in extra"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.extra: html in extra_input"
+      title="label title"
+    >
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3945,7 +4369,9 @@ exports[`Render validation.status = error properties.extraStyle: border 1px purp
       htmlFor="properties.extraStyle: border 1px purple_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4017,7 +4443,9 @@ exports[`Render validation.status = error properties.feedbackStyle: border 1px b
       htmlFor="properties.feedbackStyle: border 1px blue_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4093,7 +4521,9 @@ exports[`Render validation.status = error properties.inline: true - value[0] 1`]
       htmlFor="properties.inline: true_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4169,7 +4599,9 @@ exports[`Render validation.status = error properties.span: 2 - value[0] 1`] = `
       htmlFor="properties.span: 2_input"
       title="This is the long label title wrapped by short span"
     >
-      This is the long label title wrapped by short span
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4241,7 +4673,9 @@ exports[`Render validation.status = error properties.span: 2 with long work titl
       htmlFor="properties.span: 2 with long work title_input"
       title="Thisisthelonglabeltitlea"
     >
-      Thisisthelonglabeltitlea
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4313,7 +4747,9 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4386,8 +4822,85 @@ exports[`Render validation.status = error properties.title long - value[0] 1`] =
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="close-circle"
+          className="anticon anticon-close-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="close-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      validation error
+    </div>
+  </div>
+</div>
+`;
 
+exports[`Render validation.status = error properties.title: html in title - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.title: html in title"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.title: html in title_input"
+      title=<span style="background:yellow;">
+  html in title
+</span>
+    >
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4460,8 +4973,9 @@ exports[`Render validation.status = error span, align right and long extra for d
       title="Lorem
 "
     >
-      Lorem
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4534,8 +5048,9 @@ exports[`Render validation.status = error span, align right and long extra for l
       title="Lorem
 "
     >
-      Lorem
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4608,8 +5123,9 @@ exports[`Render validation.status = error span, align right and long extra for s
       title="Lorem
 "
     >
-      Lorem
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4682,8 +5198,9 @@ exports[`Render validation.status = error span, align right, long title and long
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4756,8 +5273,9 @@ exports[`Render validation.status = error span, align right, long title and long
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4830,8 +5348,9 @@ exports[`Render validation.status = error span, align right, long title and long
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4903,7 +5422,9 @@ exports[`Render validation.status = null default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4952,8 +5473,9 @@ exports[`Render validation.status = null inline and long extra default size - va
       title="Lorem ipsum dolor sit amet
 "
     >
-      Lorem ipsum dolor sit amet
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4985,8 +5507,9 @@ exports[`Render validation.status = null inline and long extra default size - va
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -5012,8 +5535,9 @@ exports[`Render validation.status = null inline and long extra large size - valu
       title="Lorem ipsum dolor sit amet
 "
     >
-      Lorem ipsum dolor sit amet
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5045,8 +5569,9 @@ exports[`Render validation.status = null inline and long extra large size - valu
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -5072,8 +5597,9 @@ exports[`Render validation.status = null inline and long extra small size - valu
       title="Lorem ipsum dolor sit amet
 "
     >
-      Lorem ipsum dolor sit amet
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5105,8 +5631,9 @@ exports[`Render validation.status = null inline and long extra small size - valu
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -5127,7 +5654,9 @@ exports[`Render validation.status = null properties.align: left - value[0] 1`] =
       htmlFor="properties.align: left_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5171,7 +5700,9 @@ exports[`Render validation.status = null properties.align: right - value[0] 1`] 
       htmlFor="properties.align: right_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5215,7 +5746,9 @@ exports[`Render validation.status = null properties.colon: false - value[0] 1`] 
       htmlFor="properties.colon: false_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5259,7 +5792,9 @@ exports[`Render validation.status = null properties.colon: true - value[0] 1`] =
       htmlFor="properties.colon: true_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5335,7 +5870,9 @@ exports[`Render validation.status = null properties.extra: Extra long - value[0]
       htmlFor="properties.extra: Extra long_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5363,8 +5900,9 @@ exports[`Render validation.status = null properties.extra: Extra long - value[0]
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -5389,7 +5927,9 @@ exports[`Render validation.status = null properties.extra: Extra long with inlin
       htmlFor="properties.extra: Extra long with inline = true_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5421,8 +5961,9 @@ exports[`Render validation.status = null properties.extra: Extra long with inlin
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -5447,7 +5988,9 @@ exports[`Render validation.status = null properties.extra: Extra long with inlin
       htmlFor="properties.extra: Extra long with inline = true, size = large_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5479,8 +6022,9 @@ exports[`Render validation.status = null properties.extra: Extra long with inlin
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -5505,7 +6049,9 @@ exports[`Render validation.status = null properties.extra: Extra long with inlin
       htmlFor="properties.extra: Extra long with inline = true, size = small_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5537,8 +6083,9 @@ exports[`Render validation.status = null properties.extra: Extra long with inlin
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -5564,8 +6111,9 @@ exports[`Render validation.status = null properties.extra: Extra long with inlin
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5613,7 +6161,9 @@ exports[`Render validation.status = null properties.extra: Extra text - value[0]
       htmlFor="properties.extra: Extra text_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5641,7 +6191,62 @@ exports[`Render validation.status = null properties.extra: Extra text - value[0]
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Extra text
+      <span
+        className="{}"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = null properties.extra: html in extra - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.extra: html in extra"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.extra: html in extra_input"
+      title="label title"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -5662,7 +6267,9 @@ exports[`Render validation.status = null properties.extraStyle: border 1px purpl
       htmlFor="properties.extraStyle: border 1px purple_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5690,7 +6297,9 @@ exports[`Render validation.status = null properties.extraStyle: border 1px purpl
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid purple\\"}]}"
     >
-      Extra text
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -5711,7 +6320,9 @@ exports[`Render validation.status = null properties.feedbackStyle: border 1px bl
       htmlFor="properties.feedbackStyle: border 1px blue_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5739,7 +6350,9 @@ exports[`Render validation.status = null properties.feedbackStyle: border 1px bl
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      The extra content
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -5764,7 +6377,9 @@ exports[`Render validation.status = null properties.inline: true - value[0] 1`] 
       htmlFor="properties.inline: true_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5812,7 +6427,9 @@ exports[`Render validation.status = null properties.span: 2 - value[0] 1`] = `
       htmlFor="properties.span: 2_input"
       title="This is the long label title wrapped by short span"
     >
-      This is the long label title wrapped by short span
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5856,7 +6473,9 @@ exports[`Render validation.status = null properties.span: 2 with long work title
       htmlFor="properties.span: 2 with long work title_input"
       title="Thisisthelonglabeltitlea"
     >
-      Thisisthelonglabeltitlea
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5900,7 +6519,9 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5945,8 +6566,57 @@ exports[`Render validation.status = null properties.title long - value[0] 1`] = 
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
 
+exports[`Render validation.status = null properties.title: html in title - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.title: html in title"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.title: html in title_input"
+      title=<span style="background:yellow;">
+  html in title
+</span>
+    >
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -5991,8 +6661,9 @@ exports[`Render validation.status = null span, align right and long extra for de
       title="Lorem
 "
     >
-      Lorem
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6020,8 +6691,9 @@ exports[`Render validation.status = null span, align right and long extra for de
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -6043,8 +6715,9 @@ exports[`Render validation.status = null span, align right and long extra for la
       title="Lorem
 "
     >
-      Lorem
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6072,8 +6745,9 @@ exports[`Render validation.status = null span, align right and long extra for la
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -6095,8 +6769,9 @@ exports[`Render validation.status = null span, align right and long extra for sm
       title="Lorem
 "
     >
-      Lorem
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6124,8 +6799,9 @@ exports[`Render validation.status = null span, align right and long extra for sm
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -6147,8 +6823,9 @@ exports[`Render validation.status = null span, align right, long title and long 
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6176,8 +6853,9 @@ exports[`Render validation.status = null span, align right, long title and long 
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -6199,8 +6877,9 @@ exports[`Render validation.status = null span, align right, long title and long 
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6228,8 +6907,9 @@ exports[`Render validation.status = null span, align right, long title and long 
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -6251,8 +6931,9 @@ exports[`Render validation.status = null span, align right, long title and long 
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6280,8 +6961,9 @@ exports[`Render validation.status = null span, align right, long title and long 
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -6302,7 +6984,9 @@ exports[`Render validation.status = success default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6374,8 +7058,9 @@ exports[`Render validation.status = success inline and long extra default size -
       title="Lorem ipsum dolor sit amet
 "
     >
-      Lorem ipsum dolor sit amet
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6430,8 +7115,9 @@ exports[`Render validation.status = success inline and long extra default size -
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -6457,8 +7143,9 @@ exports[`Render validation.status = success inline and long extra large size - v
       title="Lorem ipsum dolor sit amet
 "
     >
-      Lorem ipsum dolor sit amet
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6513,8 +7200,9 @@ exports[`Render validation.status = success inline and long extra large size - v
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -6540,8 +7228,9 @@ exports[`Render validation.status = success inline and long extra small size - v
       title="Lorem ipsum dolor sit amet
 "
     >
-      Lorem ipsum dolor sit amet
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6596,8 +7285,9 @@ exports[`Render validation.status = success inline and long extra small size - v
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -6618,7 +7308,9 @@ exports[`Render validation.status = success properties.align: left - value[0] 1`
       htmlFor="properties.align: left_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6685,7 +7377,9 @@ exports[`Render validation.status = success properties.align: right - value[0] 1
       htmlFor="properties.align: right_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6752,7 +7446,9 @@ exports[`Render validation.status = success properties.colon: false - value[0] 1
       htmlFor="properties.colon: false_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6819,7 +7515,9 @@ exports[`Render validation.status = success properties.colon: true - value[0] 1`
       htmlFor="properties.colon: true_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6941,7 +7639,9 @@ exports[`Render validation.status = success properties.extra: Extra long - value
       htmlFor="properties.extra: Extra long_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -6992,8 +7692,9 @@ exports[`Render validation.status = success properties.extra: Extra long - value
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -7018,7 +7719,9 @@ exports[`Render validation.status = success properties.extra: Extra long with in
       htmlFor="properties.extra: Extra long with inline = true_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -7073,8 +7776,9 @@ exports[`Render validation.status = success properties.extra: Extra long with in
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -7099,7 +7803,9 @@ exports[`Render validation.status = success properties.extra: Extra long with in
       htmlFor="properties.extra: Extra long with inline = true, size = large_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -7154,8 +7860,9 @@ exports[`Render validation.status = success properties.extra: Extra long with in
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -7180,7 +7887,9 @@ exports[`Render validation.status = success properties.extra: Extra long with in
       htmlFor="properties.extra: Extra long with inline = true, size = small_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -7235,8 +7944,9 @@ exports[`Render validation.status = success properties.extra: Extra long with in
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -7262,8 +7972,9 @@ exports[`Render validation.status = success properties.extra: Extra long with in
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -7334,7 +8045,9 @@ exports[`Render validation.status = success properties.extra: Extra text - value
       htmlFor="properties.extra: Extra text_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -7385,7 +8098,85 @@ exports[`Render validation.status = success properties.extra: Extra text - value
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Extra text
+      <span
+        className="{}"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = success properties.extra: html in extra - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.extra: html in extra"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.extra: html in extra_input"
+      title="label title"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="check-circle"
+          className="anticon anticon-check-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="check-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm193.5 301.7l-210.6 292a31.8 31.8 0 01-51.7 0L318.5 484.9c-3.8-5.3 0-12.7 6.5-12.7h46.9c10.2 0 19.9 4.9 25.9 13.3l71.2 98.8 157.2-218c6-8.3 15.6-13.3 25.9-13.3H699c6.5 0 10.3 7.4 6.5 12.7z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -7406,7 +8197,9 @@ exports[`Render validation.status = success properties.extraStyle: border 1px pu
       htmlFor="properties.extraStyle: border 1px purple_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -7457,7 +8250,9 @@ exports[`Render validation.status = success properties.extraStyle: border 1px pu
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid purple\\"}]}"
     >
-      Extra text
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -7478,7 +8273,9 @@ exports[`Render validation.status = success properties.feedbackStyle: border 1px
       htmlFor="properties.feedbackStyle: border 1px blue_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -7529,7 +8326,9 @@ exports[`Render validation.status = success properties.feedbackStyle: border 1px
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      The extra content
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -7554,7 +8353,9 @@ exports[`Render validation.status = success properties.inline: true - value[0] 1
       htmlFor="properties.inline: true_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -7625,7 +8426,9 @@ exports[`Render validation.status = success properties.span: 2 - value[0] 1`] = 
       htmlFor="properties.span: 2_input"
       title="This is the long label title wrapped by short span"
     >
-      This is the long label title wrapped by short span
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -7692,7 +8495,9 @@ exports[`Render validation.status = success properties.span: 2 with long work ti
       htmlFor="properties.span: 2 with long work title_input"
       title="Thisisthelonglabeltitlea"
     >
-      Thisisthelonglabeltitlea
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -7759,7 +8564,9 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -7827,8 +8634,80 @@ exports[`Render validation.status = success properties.title long - value[0] 1`]
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="check-circle"
+          className="anticon anticon-check-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="check-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm193.5 301.7l-210.6 292a31.8 31.8 0 01-51.7 0L318.5 484.9c-3.8-5.3 0-12.7 6.5-12.7h46.9c10.2 0 19.9 4.9 25.9 13.3l71.2 98.8 157.2-218c6-8.3 15.6-13.3 25.9-13.3H699c6.5 0 10.3 7.4 6.5 12.7z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+  </div>
+</div>
+`;
 
+exports[`Render validation.status = success properties.title: html in title - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.title: html in title"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.title: html in title_input"
+      title=<span style="background:yellow;">
+  html in title
+</span>
+    >
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -7896,8 +8775,9 @@ exports[`Render validation.status = success span, align right and long extra for
       title="Lorem
 "
     >
-      Lorem
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -7948,8 +8828,9 @@ exports[`Render validation.status = success span, align right and long extra for
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -7971,8 +8852,9 @@ exports[`Render validation.status = success span, align right and long extra for
       title="Lorem
 "
     >
-      Lorem
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -8023,8 +8905,9 @@ exports[`Render validation.status = success span, align right and long extra for
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -8046,8 +8929,9 @@ exports[`Render validation.status = success span, align right and long extra for
       title="Lorem
 "
     >
-      Lorem
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -8098,8 +8982,9 @@ exports[`Render validation.status = success span, align right and long extra for
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -8121,8 +9006,9 @@ exports[`Render validation.status = success span, align right, long title and lo
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -8173,8 +9059,9 @@ exports[`Render validation.status = success span, align right, long title and lo
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -8196,8 +9083,9 @@ exports[`Render validation.status = success span, align right, long title and lo
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -8248,8 +9136,9 @@ exports[`Render validation.status = success span, align right, long title and lo
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -8271,8 +9160,9 @@ exports[`Render validation.status = success span, align right, long title and lo
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -8323,8 +9213,9 @@ exports[`Render validation.status = success span, align right, long title and lo
     <div
       className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </div>
   </div>
 </div>
@@ -8345,7 +9236,9 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -8422,8 +9315,9 @@ exports[`Render validation.status = warning inline and long extra default size -
       title="Lorem ipsum dolor sit amet
 "
     >
-      Lorem ipsum dolor sit amet
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -8504,8 +9398,9 @@ exports[`Render validation.status = warning inline and long extra large size - v
       title="Lorem ipsum dolor sit amet
 "
     >
-      Lorem ipsum dolor sit amet
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -8586,8 +9481,9 @@ exports[`Render validation.status = warning inline and long extra small size - v
       title="Lorem ipsum dolor sit amet
 "
     >
-      Lorem ipsum dolor sit amet
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -8663,7 +9559,9 @@ exports[`Render validation.status = warning properties.align: left - value[0] 1`
       htmlFor="properties.align: left_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -8735,7 +9633,9 @@ exports[`Render validation.status = warning properties.align: right - value[0] 1
       htmlFor="properties.align: right_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -8807,7 +9707,9 @@ exports[`Render validation.status = warning properties.colon: false - value[0] 1
       htmlFor="properties.colon: false_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -8879,7 +9781,9 @@ exports[`Render validation.status = warning properties.colon: true - value[0] 1`
       htmlFor="properties.colon: true_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -9011,7 +9915,9 @@ exports[`Render validation.status = warning properties.extra: Extra long - value
       htmlFor="properties.extra: Extra long_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -9087,7 +9993,9 @@ exports[`Render validation.status = warning properties.extra: Extra long with in
       htmlFor="properties.extra: Extra long with inline = true_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -9167,7 +10075,9 @@ exports[`Render validation.status = warning properties.extra: Extra long with in
       htmlFor="properties.extra: Extra long with inline = true, size = large_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -9247,7 +10157,9 @@ exports[`Render validation.status = warning properties.extra: Extra long with in
       htmlFor="properties.extra: Extra long with inline = true, size = small_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -9328,8 +10240,9 @@ exports[`Render validation.status = warning properties.extra: Extra long with in
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -9405,7 +10318,83 @@ exports[`Render validation.status = warning properties.extra: Extra text - value
       htmlFor="properties.extra: Extra text_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="exclamation-circle"
+          className="anticon anticon-exclamation-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="exclamation-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 010-96 48.01 48.01 0 010 96z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      validation warning
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = warning properties.extra: html in extra - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.extra: html in extra"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.extra: html in extra_input"
+      title="label title"
+    >
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -9477,7 +10466,9 @@ exports[`Render validation.status = warning properties.extraStyle: border 1px pu
       htmlFor="properties.extraStyle: border 1px purple_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -9549,7 +10540,9 @@ exports[`Render validation.status = warning properties.feedbackStyle: border 1px
       htmlFor="properties.feedbackStyle: border 1px blue_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -9625,7 +10618,9 @@ exports[`Render validation.status = warning properties.inline: true - value[0] 1
       htmlFor="properties.inline: true_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -9701,7 +10696,9 @@ exports[`Render validation.status = warning properties.span: 2 - value[0] 1`] = 
       htmlFor="properties.span: 2_input"
       title="This is the long label title wrapped by short span"
     >
-      This is the long label title wrapped by short span
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -9773,7 +10770,9 @@ exports[`Render validation.status = warning properties.span: 2 with long work ti
       htmlFor="properties.span: 2 with long work title_input"
       title="Thisisthelonglabeltitlea"
     >
-      Thisisthelonglabeltitlea
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -9845,7 +10844,9 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
       htmlFor="properties.title_input"
       title="Label title"
     >
-      Label title
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -9918,8 +10919,85 @@ exports[`Render validation.status = warning properties.title long - value[0] 1`]
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="exclamation-circle"
+          className="anticon anticon-exclamation-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="exclamation-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 010-96 48.01 48.01 0 010 96z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      validation warning
+    </div>
+  </div>
+</div>
+`;
 
+exports[`Render validation.status = warning properties.title: html in title - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.title: html in title"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.title: html in title_input"
+      title=<span style="background:yellow;">
+  html in title
+</span>
+    >
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -9992,8 +11070,9 @@ exports[`Render validation.status = warning span, align right and long extra for
       title="Lorem
 "
     >
-      Lorem
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -10066,8 +11145,9 @@ exports[`Render validation.status = warning span, align right and long extra for
       title="Lorem
 "
     >
-      Lorem
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -10140,8 +11220,9 @@ exports[`Render validation.status = warning span, align right and long extra for
       title="Lorem
 "
     >
-      Lorem
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -10214,8 +11295,9 @@ exports[`Render validation.status = warning span, align right, long title and lo
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -10288,8 +11370,9 @@ exports[`Render validation.status = warning span, align right, long title and lo
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -10362,8 +11445,9 @@ exports[`Render validation.status = warning span, align right, long title and lo
       title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
-
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -10480,6 +11564,10 @@ exports[`Test Schema properties.extra: Extra text 1`] = `true`;
 
 exports[`Test Schema properties.extra: Extra text 2`] = `null`;
 
+exports[`Test Schema properties.extra: html in extra 1`] = `true`;
+
+exports[`Test Schema properties.extra: html in extra 2`] = `null`;
+
 exports[`Test Schema properties.extraStyle: border 1px purple 1`] = `true`;
 
 exports[`Test Schema properties.extraStyle: border 1px purple 2`] = `null`;
@@ -10507,6 +11595,10 @@ exports[`Test Schema properties.title 2`] = `null`;
 exports[`Test Schema properties.title long 1`] = `true`;
 
 exports[`Test Schema properties.title long 2`] = `null`;
+
+exports[`Test Schema properties.title: html in title 1`] = `true`;
+
+exports[`Test Schema properties.title: html in title 2`] = `null`;
 
 exports[`Test Schema span, align right and long extra for default size 1`] = `true`;
 

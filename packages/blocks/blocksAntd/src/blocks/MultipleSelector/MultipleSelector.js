@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Select } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 import { get, type } from '@lowdefy/helpers';
 import Label from '../Label/Label';
 import Icon from '../Icon/Icon';
@@ -86,7 +86,9 @@ const MultipleSelector = ({
               allowClear={properties.allowClear !== false}
               size={properties.size}
               filterOption={(input, option) =>
-                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                (option.filterstring || option.children.props.html || '')
+                  .toLowerCase()
+                  .indexOf(input.toLowerCase()) >= 0
               }
               notFoundContent="Not found"
               onChange={(newVal) => {
@@ -106,22 +108,25 @@ const MultipleSelector = ({
               {uniqueValueOptions.map((opt, i) =>
                 type.isPrimitive(opt) ? (
                   <Option
+                    className={methods.makeCssClass(properties.optionsStyle)}
                     id={`${blockId}_${i}`}
                     key={i}
                     value={i}
-                    className={methods.makeCssClass(properties.optionsStyle)}
                   >
-                    {`${opt}`}
+                    {renderHtml({ html: `${opt}`, methods })}
                   </Option>
                 ) : (
                   <Option
+                    className={methods.makeCssClass([properties.optionsStyle, opt.style])}
+                    disabled={opt.disabled}
+                    filterstring={opt.filterString}
                     id={`${blockId}_${i}`}
                     key={i}
                     value={i}
-                    disabled={opt.disabled}
-                    className={methods.makeCssClass(properties.optionsStyle)}
                   >
-                    {type.isNone(opt.label) ? `${opt.value}` : opt.label}
+                    {type.isNone(opt.label)
+                      ? renderHtml({ html: `${opt.value}`, methods })
+                      : renderHtml({ html: opt.label, methods })}
                   </Option>
                 )
               )}

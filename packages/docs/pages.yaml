@@ -35,6 +35,7 @@
 - _ref: deployment/aws-lambda.yaml
 - _ref: deployment/docker.yaml
 - _ref: deployment/netlify.yaml
+- _ref: deployment/node-server.yaml
 
 - _ref: users/users-introduction.yaml
 - _ref: users/openid-connect.yaml
@@ -46,6 +47,7 @@
 - _ref: blocks/input/AutoComplete.yaml
 - _ref: blocks/input/ButtonSelector.yaml
 - _ref: blocks/input/CheckboxSelector.yaml
+- _ref: blocks/input/CheckboxSwitch.yaml
 - _ref: blocks/input/ChromeColorSelector.yaml
 - _ref: blocks/input/CircleColorSelector.yaml
 - _ref: blocks/input/ColorSelector.yaml
@@ -59,6 +61,7 @@
 - _ref: blocks/input/NumberInput.yaml
 - _ref: blocks/input/Pagination.yaml
 - _ref: blocks/input/ParagraphInput.yaml
+- _ref: blocks/input/PasswordInput.yaml
 - _ref: blocks/input/RadioSelector.yaml
 - _ref: blocks/input/RatingSlider.yaml
 - _ref: blocks/input/S3UploadButton.yaml
@@ -128,6 +131,7 @@
 - _ref: connections/AmazonRedshift.yaml
 - _ref: connections/AWSS3.yaml
 - _ref: connections/AxiosHttp.yaml
+- _ref: connections/Elasticsearch.yaml
 - _ref: connections/GoogleSheet.yaml
 - _ref: connections/Knex.yaml
 - _ref: connections/MariaDB.yaml
@@ -138,6 +142,7 @@
 - _ref: connections/PostgreSQL.yaml
 - _ref: connections/SendGridMail.yaml
 - _ref: connections/SQLite.yaml
+- _ref: connections/Stripe.yaml
 
 - _ref: actions/CallMethod.yaml
 - _ref: actions/JsAction.yaml
@@ -148,9 +153,11 @@
 - _ref: actions/Notification.yaml
 - _ref: actions/Request.yaml
 - _ref: actions/Reset.yaml
+- _ref: actions/ResetValidation.yaml
 - _ref: actions/ScrollTo.yaml
 - _ref: actions/SetGlobal.yaml
 - _ref: actions/SetState.yaml
+- _ref: actions/Throw.yaml
 - _ref: actions/Validate.yaml
 - _ref: actions/Wait.yaml
 
@@ -159,6 +166,7 @@
 - _ref: operators/_args.yaml
 - _ref: operators/_array.yaml
 - _ref: operators/_base64.yaml
+- _ref: operators/_change_case.yaml
 - _ref: operators/_date.yaml
 - _ref: operators/_diff.yaml
 - _ref: operators/_divide.yaml
@@ -170,6 +178,7 @@
 - _ref: operators/_global.yaml
 - _ref: operators/_gt.yaml
 - _ref: operators/_gte.yaml
+- _ref: operators/_hash.yaml
 - _ref: operators/_if.yaml
 - _ref: operators/_if_none.yaml
 - _ref: operators/_index.yaml
@@ -187,6 +196,7 @@
 - _ref: operators/_mql.yaml
 - _ref: operators/_ne.yaml
 - _ref: operators/_not.yaml
+- _ref: operators/_number.yaml
 - _ref: operators/_nunjucks.yaml
 - _ref: operators/_object.yaml
 - _ref: operators/_operator.yaml
@@ -201,6 +211,7 @@
 - _ref: operators/_string.yaml
 - _ref: operators/_subtract.yaml
 - _ref: operators/_sum.yaml
+- _ref: operators/_switch.yaml
 - _ref: operators/_type.yaml
 - _ref: operators/_uri.yaml
 - _ref: operators/_url_query.yaml

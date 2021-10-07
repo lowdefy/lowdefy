@@ -24,9 +24,9 @@ import { Loading } from '@lowdefy/block-tools';
 import { get, urlQuery } from '@lowdefy/helpers';
 import { makeContextId } from '@lowdefy/engine';
 
-import Helmet from './Helmet';
 import Block from './block/Block';
 import Context from './block/Context';
+import Helmet from './Helmet';
 import setupLink from '../utils/setupLink';
 
 const GET_PAGE = gql`
@@ -64,33 +64,31 @@ const PageContext = ({ lowdefy }) => {
       variables: { id: fetchPageId },
     })
   );
-
   return (
-    <>
-      <div id={pageId}>
-        <Context
-          block={data.page}
-          contextId={makeContextId({
-            blockId: pageId,
-            pageId,
-            urlQuery: lowdefy.urlQuery,
-          })}
-          lowdefy={lowdefy}
-          render={(context) => (
-            <>
-              <Helmet properties={context.RootBlocks.map[pageId].eval.properties} />
-              <Block
-                block={context.RootBlocks.map[pageId]}
-                Blocks={context.RootBlocks}
-                context={context}
-                isRoot={true}
-                lowdefy={lowdefy}
-              />
-            </>
-          )}
-        />
-      </div>
-    </>
+    <div id={pageId}>
+      <Context
+        block={data.page}
+        contextId={makeContextId({
+          blockId: pageId,
+          pageId,
+          urlQuery: lowdefy.urlQuery,
+        })}
+        lowdefy={lowdefy}
+      >
+        {(context) => (
+          <>
+            <Helmet properties={context.RootBlocks.map[pageId].eval.properties} />
+            <Block
+              block={context.RootBlocks.map[pageId]}
+              Blocks={context.RootBlocks}
+              context={context}
+              isRoot={true}
+              lowdefy={lowdefy}
+            />
+          </>
+        )}
+      </Context>
+    </div>
   );
 };
 

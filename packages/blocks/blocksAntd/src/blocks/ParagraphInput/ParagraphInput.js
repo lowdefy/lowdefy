@@ -46,11 +46,11 @@ const ParagraphInput = ({ blockId, events, properties, methods, value }) => {
       copyable={
         type.isObject(properties.copyable)
           ? {
-              text: properties.copyable.test || value,
+              text: properties.copyable.text || value,
               onCopy: () => {
                 methods.triggerEvent({
                   name: 'onCopy',
-                  event: { value: properties.copyable.test || value },
+                  event: { value: properties.copyable.text || value },
                 });
               },
               icon:
@@ -127,7 +127,7 @@ const ParagraphInput = ({ blockId, events, properties, methods, value }) => {
       type={properties.type}
       underline={properties.underline}
     >
-      {value || ''}
+      {!type.isNone(value) ? value.toString() : ''}
     </Paragraph>
   );
 };

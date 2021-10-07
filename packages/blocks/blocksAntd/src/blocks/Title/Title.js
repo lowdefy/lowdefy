@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Typography } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 import { type } from '@lowdefy/helpers';
 
 import Icon from '../Icon/Icon';
@@ -35,11 +35,11 @@ const TitleBlock = ({ blockId, events, properties, methods }) => {
       copyable={
         type.isObject(properties.copyable)
           ? {
-              text: properties.copyable.text,
+              text: properties.copyable.text || properties.content,
               onCopy: () => {
                 methods.triggerEvent({
                   name: 'onCopy',
-                  event: { value: properties.copyable.text },
+                  event: { value: properties.copyable.text || properties.content },
                 });
               },
               icon:
@@ -68,7 +68,15 @@ const TitleBlock = ({ blockId, events, properties, methods }) => {
                 )),
               tooltips: properties.copyable.tooltips,
             }
-          : properties.copyable
+          : properties.copyable && {
+              text: properties.content,
+              onCopy: () => {
+                methods.triggerEvent({
+                  name: 'onCopy',
+                  event: { value: properties.content },
+                });
+              },
+            }
       }
       delete={properties.delete}
       disabled={properties.disabled}
@@ -98,7 +106,7 @@ const TitleBlock = ({ blockId, events, properties, methods }) => {
       type={properties.type}
       underline={properties.underline}
     >
-      {properties.content}
+      {renderHtml({ html: properties.content, methods })}
     </Title>
   );
 };

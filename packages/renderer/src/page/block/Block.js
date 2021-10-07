@@ -18,34 +18,43 @@ import React, { Suspense, useState } from 'react';
 
 import { ErrorBoundary } from '@lowdefy/block-tools';
 
+import CategorySwitch from './CategorySwitch';
 import LoadBlock from './LoadBlock';
 import LoadingBlock from './LoadingBlock';
-import CategorySwitch from './CategorySwitch';
+import MountEvents from './MountEvents';
 
 const Block = ({ block, Blocks, context, isRoot, lowdefy }) => {
   const [updates, setUpdate] = useState(0);
   lowdefy.updaters[block.id] = () => setUpdate(updates + 1);
-  const Loading = (
-    <LoadingBlock block={block} highlightBorders={lowdefy.lowdefyGlobal.highlightBorders} />
-  );
   return (
     <ErrorBoundary>
-      <Suspense fallback={Loading}>
-        <LoadBlock
-          meta={block.meta}
-          Loading={Loading}
-          render={(Comp) => (
-            <CategorySwitch
-              block={block}
-              Blocks={Blocks}
-              Component={Comp}
+      <Suspense fallback={<LoadingBlock block={block} lowdefy={lowdefy} />}>
+        <LoadBlock meta={block.meta}>
+          {(Comp) => (
+            <MountEvents
+              asyncEventName="onMountAsync"
               context={context}
-              isRoot={isRoot}
-              lowdefy={lowdefy}
-              updates={updates}
-            />
+              eventName="onMount"
+              triggerEvent={block.triggerEvent}
+            >
+              {(loaded) =>
+                !Comp || !loaded ? (
+                  <LoadingBlock block={block} lowdefy={lowdefy} />
+                ) : (
+                  <CategorySwitch
+                    block={block}
+                    Blocks={Blocks}
+                    Component={Comp}
+                    context={context}
+                    isRoot={isRoot}
+                    lowdefy={lowdefy}
+                    updates={updates}
+                  />
+                )
+              }
+            </MountEvents>
           )}
-        />
+        </LoadBlock>
       </Suspense>
     </ErrorBoundary>
   );

@@ -12,11 +12,69 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": undefined,
-      "description": "Args description",
+      "description": <HtmlComponent
+        html="Args description"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "duration": undefined,
       "icon": undefined,
       "id": "default_notification",
-      "message": "default",
+      "message": <HtmlComponent
+        html="default"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -40,11 +98,69 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": undefined,
-      "description": "Args description",
+      "description": <HtmlComponent
+        html="Args description"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "duration": undefined,
       "icon": undefined,
       "id": "properties.bottom: 250 placement: bottomLeft_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": "bottomLeft",
@@ -66,6 +182,7 @@ Array [
     Object {
       "bottom": undefined,
       "btn": <ButtonBlock
+        basePath=""
         blockId="properties.button: icon_button"
         content={Object {}}
         events={Object {}}
@@ -98,11 +215,69 @@ Array [
       />,
       "className": "{}",
       "closeIcon": undefined,
-      "description": "Args description",
+      "description": <HtmlComponent
+        html="Args description"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "duration": undefined,
       "icon": undefined,
       "id": "properties.button: icon_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -126,6 +301,7 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": <IconBlock
+        basePath=""
         blockId="properties.closeIcon: AlertOutlined_closeIcon"
         content={Object {}}
         events={Object {}}
@@ -150,11 +326,69 @@ Array [
           }
         }
       />,
-      "description": "Args description",
+      "description": <HtmlComponent
+        html="Args description"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "duration": undefined,
       "icon": undefined,
       "id": "properties.closeIcon: AlertOutlined_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -178,11 +412,69 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": undefined,
-      "description": "Args description",
+      "description": <HtmlComponent
+        html="Args description"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "duration": undefined,
       "icon": undefined,
       "id": "properties.description:_notification",
-      "message": "properties.description:",
+      "message": <HtmlComponent
+        html="properties.description:"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -206,11 +498,69 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": undefined,
-      "description": "Args description",
+      "description": <HtmlComponent
+        html="Args description"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "duration": 6,
       "icon": undefined,
       "id": "properties.duration: 6_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -234,9 +584,39 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": undefined,
-      "description": "Args description",
+      "description": <HtmlComponent
+        html="Args description"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "duration": undefined,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon_icon"
         content={Object {}}
         events={Object {}}
@@ -262,7 +642,36 @@ Array [
         }
       />,
       "id": "properties.icon_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -286,11 +695,69 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": undefined,
-      "description": "Args description",
+      "description": <HtmlComponent
+        html="Args description"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "duration": undefined,
       "icon": undefined,
       "id": "properties.message_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -314,11 +781,69 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": undefined,
-      "description": "Args description",
+      "description": <HtmlComponent
+        html="Args description"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "duration": undefined,
       "icon": undefined,
       "id": "properties.placement: bottomLeft_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": "bottomLeft",
@@ -342,11 +867,69 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": undefined,
-      "description": "Args description",
+      "description": <HtmlComponent
+        html="Args description"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "duration": undefined,
       "icon": undefined,
       "id": "properties.placement: bottomRight_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": "bottomRight",
@@ -370,11 +953,69 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": undefined,
-      "description": "Args description",
+      "description": <HtmlComponent
+        html="Args description"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "duration": undefined,
       "icon": undefined,
       "id": "properties.placement: topLeft_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": "topLeft",
@@ -394,11 +1035,69 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": undefined,
-      "description": "Args description",
+      "description": <HtmlComponent
+        html="Args description"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "duration": undefined,
       "icon": undefined,
       "id": "properties.status: error_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -424,11 +1123,69 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": undefined,
-      "description": "Args description",
+      "description": <HtmlComponent
+        html="Args description"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "duration": undefined,
       "icon": undefined,
       "id": "properties.status: info_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -456,11 +1213,69 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": undefined,
-      "description": "Args description",
+      "description": <HtmlComponent
+        html="Args description"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "duration": undefined,
       "icon": undefined,
       "id": "properties.status: warning_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -482,11 +1297,69 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": undefined,
-      "description": "Args description",
+      "description": <HtmlComponent
+        html="Args description"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "duration": undefined,
       "icon": undefined,
       "id": "properties.top: 250 placement: topLeft_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": "topLeft",
@@ -497,6 +1370,180 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.top: 250 placement: topLeft - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - with description uses html - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - with description uses html - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - with description uses html - value[0] - success 1`] = `
+Array [
+  Array [
+    Object {
+      "bottom": undefined,
+      "btn": undefined,
+      "className": "{}",
+      "closeIcon": undefined,
+      "description": <HtmlComponent
+        html="Args description"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
+      "duration": undefined,
+      "icon": undefined,
+      "id": "with description uses html_notification",
+      "message": <HtmlComponent
+        html="with description uses html"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
+      "onClick": [Function],
+      "onClose": [Function],
+      "placement": undefined,
+      "top": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - with description uses html - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - with message uses html - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - with message uses html - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - with message uses html - value[0] - success 1`] = `
+Array [
+  Array [
+    Object {
+      "bottom": undefined,
+      "btn": undefined,
+      "className": "{}",
+      "closeIcon": undefined,
+      "description": <HtmlComponent
+        html="Args description"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
+      "duration": undefined,
+      "icon": undefined,
+      "id": "with message uses html_notification",
+      "message": <HtmlComponent
+        html=<div style="background:red;">
+  Notification Message
+</div>
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
+      "onClick": [Function],
+      "onClose": [Function],
+      "placement": undefined,
+      "top": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - with message uses html - value[0] - warning 1`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - value[0] - error 1`] = `Array []`;
 
@@ -514,7 +1561,36 @@ Array [
       "duration": 1,
       "icon": undefined,
       "id": "default_notification",
-      "message": "default",
+      "message": <HtmlComponent
+        html="default"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -542,7 +1618,36 @@ Array [
       "duration": 1,
       "icon": undefined,
       "id": "properties.bottom: 250 placement: bottomLeft_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": "bottomLeft",
@@ -564,6 +1669,7 @@ Array [
     Object {
       "bottom": undefined,
       "btn": <ButtonBlock
+        basePath=""
         blockId="properties.button: icon_button"
         content={Object {}}
         events={Object {}}
@@ -600,7 +1706,36 @@ Array [
       "duration": 1,
       "icon": undefined,
       "id": "properties.button: icon_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -624,6 +1759,7 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": <IconBlock
+        basePath=""
         blockId="properties.closeIcon: AlertOutlined_closeIcon"
         content={Object {}}
         events={Object {}}
@@ -652,7 +1788,36 @@ Array [
       "duration": 1,
       "icon": undefined,
       "id": "properties.closeIcon: AlertOutlined_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -676,11 +1841,69 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": undefined,
-      "description": "Notification status type.",
+      "description": <HtmlComponent
+        html="Notification status type."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "duration": 1,
       "icon": undefined,
       "id": "properties.description:_notification",
-      "message": "properties.description:",
+      "message": <HtmlComponent
+        html="properties.description:"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -708,7 +1931,36 @@ Array [
       "duration": 1,
       "icon": undefined,
       "id": "properties.duration: 6_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -735,6 +1987,7 @@ Array [
       "description": undefined,
       "duration": 1,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon_icon"
         content={Object {}}
         events={Object {}}
@@ -760,7 +2013,36 @@ Array [
         }
       />,
       "id": "properties.icon_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -788,7 +2070,36 @@ Array [
       "duration": 1,
       "icon": undefined,
       "id": "properties.message_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -816,7 +2127,36 @@ Array [
       "duration": 1,
       "icon": undefined,
       "id": "properties.placement: bottomLeft_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": "bottomLeft",
@@ -844,7 +2184,36 @@ Array [
       "duration": 1,
       "icon": undefined,
       "id": "properties.placement: bottomRight_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": "bottomRight",
@@ -872,7 +2241,36 @@ Array [
       "duration": 1,
       "icon": undefined,
       "id": "properties.placement: topLeft_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": "topLeft",
@@ -896,7 +2294,36 @@ Array [
       "duration": 1,
       "icon": undefined,
       "id": "properties.status: error_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -926,7 +2353,36 @@ Array [
       "duration": 1,
       "icon": undefined,
       "id": "properties.status: info_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -954,11 +2410,69 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": undefined,
-      "description": "Notification status type.",
+      "description": <HtmlComponent
+        html="Notification status type."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "duration": 1,
       "icon": undefined,
       "id": "properties.status: warning_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -984,7 +2498,36 @@ Array [
       "duration": 1,
       "icon": undefined,
       "id": "properties.top: 250 placement: topLeft_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": "topLeft",
@@ -995,6 +2538,153 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.top: 250 placement: topLeft - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - with description uses html - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - with description uses html - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - with description uses html - value[0] - success 1`] = `
+Array [
+  Array [
+    Object {
+      "bottom": undefined,
+      "btn": undefined,
+      "className": "{}",
+      "closeIcon": undefined,
+      "description": <HtmlComponent
+        html=<div style="background:green;">
+  Notification Description
+</div>
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
+      "duration": 1,
+      "icon": undefined,
+      "id": "with description uses html_notification",
+      "message": <HtmlComponent
+        html="with description uses html"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
+      "onClick": [Function],
+      "onClose": [Function],
+      "placement": undefined,
+      "top": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - with description uses html - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - with message uses html - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - with message uses html - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - with message uses html - value[0] - success 1`] = `
+Array [
+  Array [
+    Object {
+      "bottom": undefined,
+      "btn": undefined,
+      "className": "{}",
+      "closeIcon": undefined,
+      "description": undefined,
+      "duration": 1,
+      "icon": undefined,
+      "id": "with message uses html_notification",
+      "message": <HtmlComponent
+        html=<div style="background:red;">
+  Notification Message
+</div>
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
+      "onClick": [Function],
+      "onClose": [Function],
+      "placement": undefined,
+      "top": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - with message uses html - value[0] - warning 1`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - default - value[0] - error 1`] = `Array []`;
 
@@ -1012,7 +2702,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "default_notification",
-      "message": "Args message",
+      "message": <HtmlComponent
+        html="Args message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -1040,7 +2759,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.bottom: 250 placement: bottomLeft_notification",
-      "message": "Args message",
+      "message": <HtmlComponent
+        html="Args message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": "bottomLeft",
@@ -1062,6 +2810,7 @@ Array [
     Object {
       "bottom": undefined,
       "btn": <ButtonBlock
+        basePath=""
         blockId="properties.button: icon_button"
         content={Object {}}
         events={Object {}}
@@ -1098,7 +2847,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.button: icon_notification",
-      "message": "Args message",
+      "message": <HtmlComponent
+        html="Args message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -1122,6 +2900,7 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": <IconBlock
+        basePath=""
         blockId="properties.closeIcon: AlertOutlined_closeIcon"
         content={Object {}}
         events={Object {}}
@@ -1150,7 +2929,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.closeIcon: AlertOutlined_notification",
-      "message": "Args message",
+      "message": <HtmlComponent
+        html="Args message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -1174,11 +2982,69 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": undefined,
-      "description": "Notification status type.",
+      "description": <HtmlComponent
+        html="Notification status type."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "duration": undefined,
       "icon": undefined,
       "id": "properties.description:_notification",
-      "message": "Args message",
+      "message": <HtmlComponent
+        html="Args message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -1206,7 +3072,36 @@ Array [
       "duration": 6,
       "icon": undefined,
       "id": "properties.duration: 6_notification",
-      "message": "Args message",
+      "message": <HtmlComponent
+        html="Args message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -1233,6 +3128,7 @@ Array [
       "description": undefined,
       "duration": undefined,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon_icon"
         content={Object {}}
         events={Object {}}
@@ -1258,7 +3154,36 @@ Array [
         }
       />,
       "id": "properties.icon_notification",
-      "message": "Args message",
+      "message": <HtmlComponent
+        html="Args message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -1286,7 +3211,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.message_notification",
-      "message": "Args message",
+      "message": <HtmlComponent
+        html="Args message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -1314,7 +3268,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.placement: bottomLeft_notification",
-      "message": "Args message",
+      "message": <HtmlComponent
+        html="Args message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": "bottomLeft",
@@ -1342,7 +3325,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.placement: bottomRight_notification",
-      "message": "Args message",
+      "message": <HtmlComponent
+        html="Args message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": "bottomRight",
@@ -1370,7 +3382,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.placement: topLeft_notification",
-      "message": "Args message",
+      "message": <HtmlComponent
+        html="Args message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": "topLeft",
@@ -1394,7 +3435,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.status: error_notification",
-      "message": "Args message",
+      "message": <HtmlComponent
+        html="Args message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -1424,7 +3494,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.status: info_notification",
-      "message": "Args message",
+      "message": <HtmlComponent
+        html="Args message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -1452,11 +3551,69 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": undefined,
-      "description": "Notification status type.",
+      "description": <HtmlComponent
+        html="Notification status type."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "duration": undefined,
       "icon": undefined,
       "id": "properties.status: warning_notification",
-      "message": "Args message",
+      "message": <HtmlComponent
+        html="Args message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -1482,7 +3639,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.top: 250 placement: topLeft_notification",
-      "message": "Args message",
+      "message": <HtmlComponent
+        html="Args message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": "topLeft",
@@ -1493,6 +3679,151 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.top: 250 placement: topLeft - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - with description uses html - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - with description uses html - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - with description uses html - value[0] - success 1`] = `
+Array [
+  Array [
+    Object {
+      "bottom": undefined,
+      "btn": undefined,
+      "className": "{}",
+      "closeIcon": undefined,
+      "description": <HtmlComponent
+        html=<div style="background:green;">
+  Notification Description
+</div>
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
+      "duration": undefined,
+      "icon": undefined,
+      "id": "with description uses html_notification",
+      "message": <HtmlComponent
+        html="Args message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
+      "onClick": [Function],
+      "onClose": [Function],
+      "placement": undefined,
+      "top": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - with description uses html - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - with message uses html - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - with message uses html - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - with message uses html - value[0] - success 1`] = `
+Array [
+  Array [
+    Object {
+      "bottom": undefined,
+      "btn": undefined,
+      "className": "{}",
+      "closeIcon": undefined,
+      "description": undefined,
+      "duration": undefined,
+      "icon": undefined,
+      "id": "with message uses html_notification",
+      "message": <HtmlComponent
+        html="Args message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
+      "onClick": [Function],
+      "onClose": [Function],
+      "placement": undefined,
+      "top": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - with message uses html - value[0] - warning 1`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - error 1`] = `Array []`;
 
@@ -1512,7 +3843,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "default_notification",
-      "message": "default",
+      "message": <HtmlComponent
+        html="default"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -1540,7 +3900,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.bottom: 250 placement: bottomLeft_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": "bottomLeft",
@@ -1562,6 +3951,7 @@ Array [
     Object {
       "bottom": undefined,
       "btn": <ButtonBlock
+        basePath=""
         blockId="properties.button: icon_button"
         content={Object {}}
         events={Object {}}
@@ -1598,7 +3988,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.button: icon_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -1622,6 +4041,7 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": <IconBlock
+        basePath=""
         blockId="properties.closeIcon: AlertOutlined_closeIcon"
         content={Object {}}
         events={Object {}}
@@ -1650,7 +4070,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.closeIcon: AlertOutlined_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -1674,11 +4123,69 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": undefined,
-      "description": "Notification status type.",
+      "description": <HtmlComponent
+        html="Notification status type."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "duration": undefined,
       "icon": undefined,
       "id": "properties.description:_notification",
-      "message": "properties.description:",
+      "message": <HtmlComponent
+        html="properties.description:"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -1706,7 +4213,36 @@ Array [
       "duration": 6,
       "icon": undefined,
       "id": "properties.duration: 6_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -1733,6 +4269,7 @@ Array [
       "description": undefined,
       "duration": undefined,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon_icon"
         content={Object {}}
         events={Object {}}
@@ -1758,7 +4295,36 @@ Array [
         }
       />,
       "id": "properties.icon_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -1786,7 +4352,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.message_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -1814,7 +4409,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.placement: bottomLeft_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": "bottomLeft",
@@ -1842,7 +4466,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.placement: bottomRight_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": "bottomRight",
@@ -1870,7 +4523,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.placement: topLeft_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": "topLeft",
@@ -1898,7 +4580,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.status: error_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -1926,7 +4637,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.status: info_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -1950,11 +4690,69 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": undefined,
-      "description": "Notification status type.",
+      "description": <HtmlComponent
+        html="Notification status type."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "duration": undefined,
       "icon": undefined,
       "id": "properties.status: warning_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -1982,11 +4780,187 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.top: 250 placement: topLeft_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": "topLeft",
       "top": 250,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - with description uses html - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - with description uses html - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - with description uses html - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - with description uses html - value[0] - warning 1`] = `
+Array [
+  Array [
+    Object {
+      "bottom": undefined,
+      "btn": undefined,
+      "className": "{}",
+      "closeIcon": undefined,
+      "description": <HtmlComponent
+        html=<div style="background:green;">
+  Notification Description
+</div>
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
+      "duration": undefined,
+      "icon": undefined,
+      "id": "with description uses html_notification",
+      "message": <HtmlComponent
+        html="with description uses html"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
+      "onClick": [Function],
+      "onClose": [Function],
+      "placement": undefined,
+      "top": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - with message uses html - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - with message uses html - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - with message uses html - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - with message uses html - value[0] - warning 1`] = `
+Array [
+  Array [
+    Object {
+      "bottom": undefined,
+      "btn": undefined,
+      "className": "{}",
+      "closeIcon": undefined,
+      "description": undefined,
+      "duration": undefined,
+      "icon": undefined,
+      "id": "with message uses html_notification",
+      "message": <HtmlComponent
+        html=<div style="background:red;">
+  Notification Message
+</div>
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
+      "onClick": [Function],
+      "onClose": [Function],
+      "placement": undefined,
+      "top": undefined,
     },
   ],
 ]
@@ -2008,7 +4982,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "default_notification",
-      "message": "default",
+      "message": <HtmlComponent
+        html="default"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -2036,7 +5039,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.bottom: 250 placement: bottomLeft_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": "bottomLeft",
@@ -2058,6 +5090,7 @@ Array [
     Object {
       "bottom": undefined,
       "btn": <ButtonBlock
+        basePath=""
         blockId="properties.button: icon_button"
         content={Object {}}
         events={Object {}}
@@ -2094,7 +5127,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.button: icon_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -2118,6 +5180,7 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": <IconBlock
+        basePath=""
         blockId="properties.closeIcon: AlertOutlined_closeIcon"
         content={Object {}}
         events={Object {}}
@@ -2146,7 +5209,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.closeIcon: AlertOutlined_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -2170,11 +5262,69 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": undefined,
-      "description": "Notification status type.",
+      "description": <HtmlComponent
+        html="Notification status type."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "duration": undefined,
       "icon": undefined,
       "id": "properties.description:_notification",
-      "message": "properties.description:",
+      "message": <HtmlComponent
+        html="properties.description:"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -2202,7 +5352,36 @@ Array [
       "duration": 6,
       "icon": undefined,
       "id": "properties.duration: 6_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -2229,6 +5408,7 @@ Array [
       "description": undefined,
       "duration": undefined,
       "icon": <IconBlock
+        basePath=""
         blockId="properties.icon_icon"
         content={Object {}}
         events={Object {}}
@@ -2254,7 +5434,36 @@ Array [
         }
       />,
       "id": "properties.icon_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -2282,7 +5491,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.message_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -2310,7 +5548,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.placement: bottomLeft_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": "bottomLeft",
@@ -2338,7 +5605,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.placement: bottomRight_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": "bottomRight",
@@ -2366,7 +5662,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.placement: topLeft_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": "topLeft",
@@ -2390,7 +5715,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.status: error_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -2420,7 +5774,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.status: info_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -2448,11 +5831,69 @@ Array [
       "btn": undefined,
       "className": "{}",
       "closeIcon": undefined,
-      "description": "Notification status type.",
+      "description": <HtmlComponent
+        html="Notification status type."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "duration": undefined,
       "icon": undefined,
       "id": "properties.status: warning_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": undefined,
@@ -2478,7 +5919,36 @@ Array [
       "duration": undefined,
       "icon": undefined,
       "id": "properties.top: 250 placement: topLeft_notification",
-      "message": "Notification message",
+      "message": <HtmlComponent
+        html="Notification message"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
       "onClick": [Function],
       "onClose": [Function],
       "placement": "topLeft",
@@ -2489,6 +5959,153 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"open","args":{}} - properties.top: 250 placement: topLeft - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - with description uses html - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - with description uses html - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - with description uses html - value[0] - success 1`] = `
+Array [
+  Array [
+    Object {
+      "bottom": undefined,
+      "btn": undefined,
+      "className": "{}",
+      "closeIcon": undefined,
+      "description": <HtmlComponent
+        html=<div style="background:green;">
+  Notification Description
+</div>
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
+      "duration": undefined,
+      "icon": undefined,
+      "id": "with description uses html_notification",
+      "message": <HtmlComponent
+        html="with description uses html"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
+      "onClick": [Function],
+      "onClose": [Function],
+      "placement": undefined,
+      "top": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - with description uses html - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - with message uses html - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - with message uses html - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - with message uses html - value[0] - success 1`] = `
+Array [
+  Array [
+    Object {
+      "bottom": undefined,
+      "btn": undefined,
+      "className": "{}",
+      "closeIcon": undefined,
+      "description": undefined,
+      "duration": undefined,
+      "icon": undefined,
+      "id": "with message uses html_notification",
+      "message": <HtmlComponent
+        html=<div style="background:red;">
+  Notification Message
+</div>
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "open": [Function],
+            "pushItem": [MockFunction],
+            "registerEvent": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+      />,
+      "onClick": [Function],
+      "onClose": [Function],
+      "placement": undefined,
+      "top": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - with message uses html - value[0] - warning 1`] = `Array []`;
 
 exports[`Test Schema default 1`] = `true`;
 
@@ -2549,3 +6166,11 @@ exports[`Test Schema properties.status: warning 2`] = `null`;
 exports[`Test Schema properties.top: 250 placement: topLeft 1`] = `true`;
 
 exports[`Test Schema properties.top: 250 placement: topLeft 2`] = `null`;
+
+exports[`Test Schema with description uses html 1`] = `true`;
+
+exports[`Test Schema with description uses html 2`] = `null`;
+
+exports[`Test Schema with message uses html 1`] = `true`;
+
+exports[`Test Schema with message uses html 2`] = `null`;

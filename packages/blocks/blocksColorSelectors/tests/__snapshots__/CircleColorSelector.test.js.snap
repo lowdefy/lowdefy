@@ -15,7 +15,9 @@ exports[`Render circleSize - value[0] 1`] = `
       htmlFor="circleSize_input"
       title="circleSize"
     >
-      circleSize
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -1182,7 +1184,9 @@ exports[`Render circleSpacing - value[0] 1`] = `
       htmlFor="circleSpacing_input"
       title="circleSpacing"
     >
-      circleSpacing
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2349,7 +2353,9 @@ exports[`Render colors - value[0] 1`] = `
       htmlFor="colors_input"
       title="colors"
     >
-      colors
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -2524,7 +2530,9 @@ exports[`Render default - value[0] 1`] = `
       htmlFor="default_input"
       title="default"
     >
-      default
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -3691,7 +3699,9 @@ exports[`Render defaultColor - value[0] 1`] = `
       htmlFor="defaultColor_input"
       title="defaultColor"
     >
-      defaultColor
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -4858,7 +4868,9 @@ exports[`Render inputStyle - value[0] 1`] = `
       htmlFor="inputStyle_input"
       title="inputStyle"
     >
-      inputStyle
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -7180,7 +7192,9 @@ exports[`Render showValue - value[0] 1`] = `
       htmlFor="showValue_input"
       title="showValue"
     >
-      showValue
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -8352,7 +8366,9 @@ exports[`Render showValue, value - value[0] 1`] = `
       htmlFor="showValue, value_input"
       title="showValue, value"
     >
-      showValue, value
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -9524,7 +9540,9 @@ exports[`Render showValue, value - value[1] 1`] = `
       htmlFor="showValue, value_input"
       title="showValue, value"
     >
-      showValue, value
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -10696,7 +10714,9 @@ exports[`Render title - value[0] 1`] = `
       htmlFor="title_input"
       title="The color selector"
     >
-      The color selector
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -11863,7 +11883,9 @@ exports[`Render valueStyle - value[0] 1`] = `
       htmlFor="valueStyle_input"
       title="valueStyle"
     >
-      valueStyle
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div
@@ -13035,7 +13057,9 @@ exports[`Render width - value[0] 1`] = `
       htmlFor="width_input"
       title="width"
     >
-      width
+      <span
+        className="{}"
+      />
     </label>
   </div>
   <div

@@ -68,11 +68,11 @@
             },
             "extra": {
               "type": "string",
-              "description": "Extra text to display beneath the content."
+              "description": "Extra text to display beneath the content - supports html."
             },
             "title": {
               "type": "string",
-              "description": "Label title."
+              "description": "Label title - supports html."
             },
             "span": {
               "type": "number",
@@ -114,7 +114,7 @@
           "oneOf": [
             {
               "type": "array",
-              "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+              "description": "Options can either be an array of primitive values, on an array of label, value pairs - supports html.",
               "items": {
                 "type": "string"
               }
@@ -142,7 +142,7 @@
                 "properties": {
                   "label": {
                     "type": "string",
-                    "description": "Value label shown to user."
+                    "description": "Value label shown to user - supports html."
                   },
                   "value": {
                     "description": "Value selected. Can be of any type.",
@@ -171,6 +171,17 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Disable the option if true."
+                  },
+                  "filterString": {
+                    "type": "string",
+                    "description": "String to match against when filtering selector options during. If no filterString is provided the filter method matches against options.label."
+                  },
+                  "style": {
+                    "type": "object",
+                    "description": "Css style to applied to option.",
+                    "docs": {
+                      "displayType": "yaml"
+                    }
                   }
                 }
               }
@@ -211,11 +222,11 @@
         },
         "title": {
           "type": "string",
-          "description": "Multiple selector label title."
+          "description": "Multiple selector label title - supports html."
         }
       }
     },
-    "actions": {
+    "events": {
       "type": "object",
       "additionalProperties": false,
       "properties": {

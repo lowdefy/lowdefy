@@ -25,7 +25,9 @@ exports[`Render properties. code: true - value[0] 1`] = `
   }
 >
   <code>
-    Lorem ipsum dolor sit amet
+    <span
+      className="{}"
+    />
   </code>
 </h1>
 `;
@@ -40,7 +42,25 @@ exports[`Render properties.color:  - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet
+  <span
+    className="{}"
+  />
+</h1>
+`;
+
+exports[`Render properties.content with html - value[0] 1`] = `
+<h1
+  className="ant-typography {\\"style\\":[null,null]}"
+  id="properties.content with html"
+  style={
+    Object {
+      "WebkitLineClamp": null,
+    }
+  }
+>
+  <span
+    className="{}"
+  />
 </h1>
 `;
 
@@ -54,7 +74,9 @@ exports[`Render properties.copyable: icon - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet
+  <span
+    className="{}"
+  />
   <div
     aria-label="Copy"
     className="ant-typography-copy"
@@ -77,6 +99,7 @@ exports[`Render properties.copyable: icon - value[0] 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
+      basePath=""
       className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.copyable: icon_copyable_icon"
       required={false}
@@ -110,7 +133,9 @@ exports[`Render properties.copyable: icon: [] - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet
+  <span
+    className="{}"
+  />
   <div
     aria-label="Copy"
     className="ant-typography-copy"
@@ -133,6 +158,7 @@ exports[`Render properties.copyable: icon: [] - value[0] 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
+      basePath=""
       className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_before_icon"
       required={false}
@@ -154,6 +180,7 @@ exports[`Render properties.copyable: icon: [] - value[0] 1`] = `
     </span>
     <span
       aria-label="loading-3-quarters"
+      basePath=""
       className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_after_icon"
       required={false}
@@ -187,7 +214,9 @@ exports[`Render properties.copyable: text: one - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet
+  <span
+    className="{}"
+  />
   <div
     aria-label="Copy"
     className="ant-typography-copy"
@@ -241,7 +270,9 @@ exports[`Render properties.copyable: tooltips: [] - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet
+  <span
+    className="{}"
+  />
   <div
     aria-label="Click to copy"
     className="ant-typography-copy"
@@ -295,7 +326,9 @@ exports[`Render properties.copyable: true - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet
+  <span
+    className="{}"
+  />
   <div
     aria-label="Copy"
     className="ant-typography-copy"
@@ -350,7 +383,9 @@ exports[`Render properties.delete: true  - value[0] 1`] = `
   }
 >
   <del>
-    Lorem ipsum dolor sit amet
+    <span
+      className="{}"
+    />
   </del>
 </h1>
 `;
@@ -365,7 +400,9 @@ exports[`Render properties.disabled: true  - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet
+  <span
+    className="{}"
+  />
 </h1>
 `;
 
@@ -379,8 +416,9 @@ exports[`Render properties.ellipsis: expandable, rows - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+  <span
+    className="{}"
+  />
 </h1>
 `;
 
@@ -394,8 +432,9 @@ exports[`Render properties.ellipsis: rows - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+  <span
+    className="{}"
+  />
 </h1>
 `;
 
@@ -409,8 +448,9 @@ exports[`Render properties.ellipsis: rows, suffix - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+  <span
+    className="{}"
+  />
   and other
 </h1>
 `;
@@ -425,8 +465,9 @@ exports[`Render properties.ellipsis: true - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+  <span
+    className="{}"
+  />
 </h1>
 `;
 
@@ -440,7 +481,9 @@ exports[`Render properties.level: 2  - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet
+  <span
+    className="{}"
+  />
 </h2>
 `;
 
@@ -454,7 +497,9 @@ exports[`Render properties.level: 3  - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet
+  <span
+    className="{}"
+  />
 </h3>
 `;
 
@@ -468,7 +513,9 @@ exports[`Render properties.level: 4  - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet
+  <span
+    className="{}"
+  />
 </h4>
 `;
 
@@ -483,7 +530,9 @@ exports[`Render properties.mark: true  - value[0] 1`] = `
   }
 >
   <mark>
-    Lorem ipsum dolor sit amet
+    <span
+      className="{}"
+    />
   </mark>
 </h1>
 `;
@@ -498,7 +547,9 @@ exports[`Render properties.title - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet
+  <span
+    className="{}"
+  />
 </h1>
 `;
 
@@ -512,7 +563,9 @@ exports[`Render properties.type: danger  - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet
+  <span
+    className="{}"
+  />
 </h1>
 `;
 
@@ -526,7 +579,9 @@ exports[`Render properties.type: secondary  - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet
+  <span
+    className="{}"
+  />
 </h1>
 `;
 
@@ -540,7 +595,9 @@ exports[`Render properties.type: warning  - value[0] 1`] = `
     }
   }
 >
-  Lorem ipsum dolor sit amet
+  <span
+    className="{}"
+  />
 </h1>
 `;
 
@@ -555,7 +612,9 @@ exports[`Render properties.underline: true  - value[0] 1`] = `
   }
 >
   <u>
-    Lorem ipsum dolor sit amet
+    <span
+      className="{}"
+    />
   </u>
 </h1>
 `;
@@ -571,6 +630,10 @@ exports[`Test Schema properties. code: true 2`] = `null`;
 exports[`Test Schema properties.color:  1`] = `true`;
 
 exports[`Test Schema properties.color:  2`] = `null`;
+
+exports[`Test Schema properties.content with html 1`] = `true`;
+
+exports[`Test Schema properties.content with html 2`] = `null`;
 
 exports[`Test Schema properties.copyable: icon 1`] = `true`;
 

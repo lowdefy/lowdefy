@@ -22,9 +22,11 @@ import Logout from './Logout';
 import Message from './Message';
 import Request from './Request';
 import Reset from './Reset';
+import ResetValidation from './ResetValidation';
 import ScrollTo from './ScrollTo';
 import SetGlobal from './SetGlobal';
 import SetState from './SetState';
+import Throw from './Throw';
 import Validate from './Validate';
 import Wait from './Wait';
 
@@ -37,9 +39,11 @@ export default {
   Message,
   Request,
   Reset,
+  ResetValidation,
   ScrollTo,
   SetGlobal,
   SetState,
+  Throw,
   Validate,
   Wait,
 };

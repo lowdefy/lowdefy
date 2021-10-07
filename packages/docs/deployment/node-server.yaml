@@ -1,0 +1,111 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: node-server
+    pageTitle: Deploy with Node.js
+    section: Deployment
+    filePath: deployment/node-server.yaml
+    content:
+      - id: md1
+        type: Markdown
+        properties:
+          content: |
+            A production Lowdefy server that runs using Node.js is published on npm as [@lowdefy/server-node](https://www.npmjs.com/package/@lowdefy/server-node).
+
+            ## Running the server
+
+            ### Step 1 - Create a `package.json` file
+
+            To run the server in a Lowdefy project, first initialise a Node.js project by creating a `package.json` file in the root of your project. To do this, you can run
+
+            ```
+            npm init
+            ```
+
+            ### Step 2 - Add the `@lowdefy/server-node` package to your project as a dependency
+
+            To add the server as a dependency, run
+
+            ```
+            npm install @lowdefy/server-node --save --save-exact
+            ```
+
+            ### Step 3 - Add the Lowdefy CLI to you project as a dev dependency.
+
+            To add the server as a dependency, run:
+
+            ```
+            npm install lowdefy --save-dev --save-exact
+            ```
+
+            ### Step 4 - Add the `build` and `start` scripts.
+
+            Add the following to the `scripts` section in your `package.json` file:
+
+            ```json
+            "scripts": {
+              "init": "lowdefy init",
+              "build": "lowdefy build",
+              "start": "lowdefy-server"
+            },
+            ```
+
+            ### Step 5 - Init a Lowdefy project
+
+            Run:
+
+            ```
+            npm run init
+            ```
+
+            ### Step 6 - Add the public files:
+
+            Create a folder called `public` in your project directory and add the Lowdefy public files found [here](https://github.com/lowdefy/lowdefy/tree/main/packages/shell/src/public) (or add your own logos and files).
+
+            ### Step 7 - Build the Lowdefy project
+
+            Build the Lowdefy configuration files in the project by running:
+
+            ```
+            npm run build
+            ```
+
+            ### Step 8 - Start the server
+
+            To start the server, run:
+
+            ```
+            npm run start
+            ```
+
+            ## Configuration
+
+            The Lowdefy server can be configured using command-line arguments or environment variables. The command-line arguments take precedence over the environment variables.
+
+            The following command-line arguments can be specified:
+
+            - `--build-directory`: The directory of the built Lowdefy configuration (The output of `lowdefy build`, usually found at `./.lowdefy/build` in your project repository). The default is `./.lowdefy/build`.
+            - `--port`: The port at which to run the server. The default is `3000`.
+            - `--public-directory`: The directory of the public assets to be served. The default is `./public`.
+
+
+            The following environment variables can be specified:
+
+            - `LOWDEFY_SERVER_BASE_PATH`: Set the base path to serve the Lowdefy application from. This will serve the application under `https://example.com/<base-path>`instead of `https://example.com`,  and all pages under `https://example.com/<base-path>/<page-id>` instead of the default `https://example.com/<page-id>`.
+            - `LOWDEFY_SERVER_BUILD_DIRECTORY`: The directory of the built Lowdefy configuration (The output of `lowdefy build`, usually found at `./.lowdefy/build` in your project repository). The default is `./.lowdefy/build`.
+            - `LOWDEFY_SERVER_PORT`: The port at which to run the server. The default is `3000`.
+            - `LOWDEFY_SERVER_PUBLIC_DIRECTORY`: The directory of the public assets to be served. The default is `./public`.

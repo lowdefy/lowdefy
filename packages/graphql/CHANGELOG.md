@@ -3,6 +3,153 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.22.0](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.1...v3.22.0) (2021-09-27)
+
+**Note:** Version bump only for package @lowdefy/graphql
+
+
+
+
+
+# [3.22.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.0...v3.22.0-alpha.1) (2021-09-20)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency axios to v0.21.4 ([81cd2b6](https://github.com/lowdefy/lowdefy/commit/81cd2b6e0ae3dc377b9cee6e3c801c47ddca2f08))
+
+
+
+
+
+# [3.22.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.2...v3.22.0-alpha.0) (2021-09-08)
+
+
+### Features
+
+* **graphql:** Add Stripe connection. ([e676258](https://github.com/lowdefy/lowdefy/commit/e676258688a61b93da7267272903d02cdbb3edcb))
+
+
+
+
+
+## [3.21.2](https://github.com/lowdefy/lowdefy/compare/v3.21.2-alpha.0...v3.21.2) (2021-08-31)
+
+**Note:** Version bump only for package @lowdefy/graphql
+
+
+
+
+
+## [3.21.2-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.1...v3.21.2-alpha.0) (2021-08-31)
+
+
+### Bug Fixes
+
+* Downgrade mongodb driver to LTS version 3.6.12. ([24f94f6](https://github.com/lowdefy/lowdefy/commit/24f94f644256cfc4f1b09c3122f2525c58f1502c))
+* **deps:** Update dependency mongodb to v4.1.1. ([96aa9a6](https://github.com/lowdefy/lowdefy/commit/96aa9a65cd7a567eef493e52d17684005e34b2a1))
+
+
+
+
+
+## [3.21.1](https://github.com/lowdefy/lowdefy/compare/v3.21.0...v3.21.1) (2021-08-26)
+
+**Note:** Version bump only for package @lowdefy/graphql
+
+
+
+
+
+# [3.21.0](https://github.com/lowdefy/lowdefy/compare/v3.20.4...v3.21.0) (2021-08-25)
+
+
+### Features
+
+* **graphql:** Add https agent options to AxiosHttp connection. ([df94e01](https://github.com/lowdefy/lowdefy/commit/df94e0191bf5dfbc539a3703d2090331ef810c24)), closes [#794](https://github.com/lowdefy/lowdefy/issues/794)
+
+
+
+
+
+## [3.20.4](https://github.com/lowdefy/lowdefy/compare/v3.20.3...v3.20.4) (2021-08-21)
+
+**Note:** Version bump only for package @lowdefy/graphql
+
+
+
+
+
+## [3.20.3](https://github.com/lowdefy/lowdefy/compare/v3.20.1...v3.20.3) (2021-08-20)
+
+**Note:** Version bump only for package @lowdefy/graphql
+
+
+
+
+
+## [3.20.2](https://github.com/lowdefy/lowdefy/compare/v3.20.1...v3.20.2) (2021-08-20)
+
+**Note:** Version bump only for package @lowdefy/graphql
+
+
+
+
+
+## [3.20.1](https://github.com/lowdefy/lowdefy/compare/v3.20.0...v3.20.1) (2021-08-20)
+
+**Note:** Version bump only for package @lowdefy/graphql
+
+
+
+
+
+# [3.20.0](https://github.com/lowdefy/lowdefy/compare/v3.19.0...v3.20.0) (2021-08-20)
+
+
+### Bug Fixes
+
+* Enable read/write checking for Elasticsearch ([9d13c32](https://github.com/lowdefy/lowdefy/commit/9d13c326eeb8e90d4880aa472a16c72bc71001fb))
+
+
+### Features
+
+* **graphql:** Updated mongo client to include connection options and documented command options. ([57127ee](https://github.com/lowdefy/lowdefy/commit/57127ee9240ae1e20fae109e4928048e232b9935))
+* **graphql:** Updated mongodb to 4.1.0 and documented MongoDBAggregation options. ([3fefe99](https://github.com/lowdefy/lowdefy/commit/3fefe9974362485d752a9de1c940d5e3f44932ea))
+* add ElasticsearchDelete request. ([9f1fc34](https://github.com/lowdefy/lowdefy/commit/9f1fc347d60b5f2877d7331007359ff5746c735b))
+* Add ElasticsearchDeleteByQuery request. ([a370e9e](https://github.com/lowdefy/lowdefy/commit/a370e9e7c615bac4341f26f7bafb2abd5dc707a7))
+* add ElasticsearchIndex request. ([08de720](https://github.com/lowdefy/lowdefy/commit/08de720351c62d5211d94d145105e76e5dd55f5c))
+* Add ElasticsearchUpdate request. ([a23a7be](https://github.com/lowdefy/lowdefy/commit/a23a7be1632f60beef162dc726168b51f185508e))
+* Add ElasticsearchUpdateByQuery request. ([3cc30ca](https://github.com/lowdefy/lowdefy/commit/3cc30ca4a893e486c487fc6c1c3ca18042ce68d7))
+
+
+
+
+
+# [3.19.0](https://github.com/lowdefy/lowdefy/compare/v3.18.1...v3.19.0) (2021-07-26)
+
+
+### Bug Fixes
+
+* **graphql:** Throw correct request configuration error messge. ([5443154](https://github.com/lowdefy/lowdefy/commit/5443154e201b06e8034c374dfc58ea254f19c871))
+
+
+### Features
+
+* **graphql:** Change ElasticsearchSearch request and response schema. ([efd70a3](https://github.com/lowdefy/lowdefy/commit/efd70a3804925ed024dea0ae3f33625fef37309e))
+
+
+
+
+
+## [3.18.1](https://github.com/lowdefy/lowdefy/compare/v3.18.0...v3.18.1) (2021-06-30)
+
+**Note:** Version bump only for package @lowdefy/graphql
+
+
+
+
+
 # [3.18.0](https://github.com/lowdefy/lowdefy/compare/v3.17.2...v3.18.0) (2021-06-17)
 
 **Note:** Version bump only for package @lowdefy/graphql

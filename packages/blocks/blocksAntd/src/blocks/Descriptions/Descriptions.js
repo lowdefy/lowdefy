@@ -15,51 +15,61 @@
 */
 
 import React from 'react';
-import { type } from '@lowdefy/helpers';
-import { blockDefaultProps } from '@lowdefy/block-tools';
-import { Descriptions } from 'antd';
 
-const DescriptionsBlock = ({ blockId, properties, methods }) => (
-  <Descriptions
-    id={blockId}
-    title={properties.title}
-    bordered={properties.bordered}
-    column={properties.column}
-    size={properties.size}
-    layout={properties.layout}
-    colon={properties.colon}
-  >
-    {type.isArray(properties.items)
-      ? properties.items.map((item, i) =>
-          type.isPrimitive(item) ? (
-            <Descriptions.Item key={i} label={item} span={item}>
-              {item}
-            </Descriptions.Item>
-          ) : (
-            <Descriptions.Item
-              key={i}
-              label={item.label}
-              span={item.span}
-              className={`${methods.makeCssClass([{ whiteSpace: 'pre-wrap' }, item.style])}`}
-            >
-              {item.value}
-            </Descriptions.Item>
-          )
-        )
-      : type.isObject(properties.items) &&
-        Object.keys(properties.items).map((key, i) => (
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
+import { Descriptions } from 'antd';
+import { type } from '@lowdefy/helpers';
+
+const DescriptionsBlock = ({ blockId, properties, methods }) => {
+  let dataItem = properties.items || [];
+  if (type.isObject(dataItem)) {
+    dataItem = Object.keys(dataItem).map((key) => ({ value: dataItem[key], key }));
+  }
+  const { makeCssClass } = methods;
+  return (
+    <Descriptions
+      id={blockId}
+      title={renderHtml({ html: properties.title, methods })}
+      bordered={properties.bordered}
+      column={properties.column}
+      size={properties.size}
+      layout={properties.layout}
+      colon={properties.colon}
+    >
+      {dataItem.map((item, i) => {
+        let row = item;
+        if (type.isPrimitive(item)) {
+          row = { value: item, key: item.toString() };
+        }
+        const itemOption =
+          (properties.itemOptions || []).find((item) => row.key === item.key) || {};
+        const value = type.isFunction(itemOption.transformValue)
+          ? itemOption.transformValue(row.value, row, i)
+          : row.value;
+        const label = type.isFunction(itemOption.transformLabel)
+          ? itemOption.transformLabel(row.key || row.label, row, i)
+          : row.key || row.label;
+        return (
           <Descriptions.Item
             key={i}
-            label={key}
-            className={`${methods.makeCssClass({ whiteSpace: 'pre-wrap' })}`}
+            label={renderHtml({ html: label, methods })}
+            span={
+              row.span ||
+              (type.isFunction(itemOption.span) ? itemOption.span(row, i) : itemOption.span)
+            }
+            className={`${makeCssClass([
+              { whiteSpace: 'pre-wrap' },
+              type.isFunction(itemOption.style) ? itemOption.style(row, i) : itemOption.style,
+              row.style,
+            ])}`}
           >
-            {type.isPrimitive(properties.items[key])
-              ? properties.items[key]
-              : JSON.stringify(properties.items[key])}
+            {renderHtml({ html: value, methods })}
           </Descriptions.Item>
-        ))}
-  </Descriptions>
-);
+        );
+      })}
+    </Descriptions>
+  );
+};
 
 DescriptionsBlock.defaultProps = blockDefaultProps;
 

@@ -28,6 +28,8 @@ exports[`Mock render - properties.status: warning - value[0] - default 1`] = `Ar
 
 exports[`Mock render - properties.title - value[0] - default 1`] = `Array []`;
 
+exports[`Mock render - properties.title is html - value[0] - default 1`] = `Array []`;
+
 exports[`Mock render - properties.width: 550px - value[0] - default 1`] = `Array []`;
 
 exports[`Mock render - properties.zIndex: 1100 - value[0] - default 1`] = `Array []`;

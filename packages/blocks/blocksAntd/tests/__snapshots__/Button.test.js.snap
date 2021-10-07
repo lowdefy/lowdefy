@@ -7,9 +7,9 @@ exports[`Render default - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    default
-  </span>
+  <span
+    className="{}"
+  />
 </button>
 `;
 
@@ -20,9 +20,9 @@ exports[`Render properties.block: true - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.block: true
-  </span>
+  <span
+    className="{}"
+  />
 </button>
 `;
 
@@ -33,9 +33,9 @@ exports[`Render properties.color: #9c27b0 - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.color: #9c27b0
-  </span>
+  <span
+    className="{}"
+  />
 </button>
 `;
 
@@ -46,9 +46,9 @@ exports[`Render properties.danger: true - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.danger: true
-  </span>
+  <span
+    className="{}"
+  />
 </button>
 `;
 
@@ -60,9 +60,9 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.disabled: true
-  </span>
+  <span
+    className="{}"
+  />
 </button>
 `;
 
@@ -73,9 +73,9 @@ exports[`Render properties.ghost: true - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.ghost: true
-  </span>
+  <span
+    className="{}"
+  />
 </button>
 `;
 
@@ -88,6 +88,7 @@ exports[`Render properties.hideTitle: true - value[0] 1`] = `
 >
   <span
     aria-label="loading-3-quarters"
+    basePath=""
     className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
     id="properties.hideTitle: true_icon"
     required={false}
@@ -117,9 +118,9 @@ exports[`Render properties.href: www.lowdefy.com - value[0] 1`] = `
   id="properties.href: www.lowdefy.com"
   onClick={[Function]}
 >
-  <span>
-    properties.href: www.lowdefy.com
-  </span>
+  <span
+    className="{}"
+  />
 </a>
 `;
 
@@ -132,6 +133,7 @@ exports[`Render properties.icon object - value[0] 1`] = `
 >
   <span
     aria-label="loading-3-quarters"
+    basePath=""
     className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"red\\"},null]}"
     id="properties.icon object_icon"
     required={false}
@@ -151,9 +153,9 @@ exports[`Render properties.icon object - value[0] 1`] = `
       />
     </svg>
   </span>
-  <span>
-    properties.icon object
-  </span>
+  <span
+    className="{}"
+  />
 </button>
 `;
 
@@ -166,6 +168,7 @@ exports[`Render properties.icon string - value[0] 1`] = `
 >
   <span
     aria-label="loading-3-quarters"
+    basePath=""
     className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
     id="properties.icon string_icon"
     required={false}
@@ -185,9 +188,9 @@ exports[`Render properties.icon string - value[0] 1`] = `
       />
     </svg>
   </span>
-  <span>
-    properties.icon string
-  </span>
+  <span
+    className="{}"
+  />
 </button>
 `;
 
@@ -198,9 +201,9 @@ exports[`Render properties.shape: circle - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.shape: circle
-  </span>
+  <span
+    className="{}"
+  />
 </button>
 `;
 
@@ -211,9 +214,9 @@ exports[`Render properties.shape: round - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.shape: round
-  </span>
+  <span
+    className="{}"
+  />
 </button>
 `;
 
@@ -224,9 +227,9 @@ exports[`Render properties.size: large - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.size: large
-  </span>
+  <span
+    className="{}"
+  />
 </button>
 `;
 
@@ -237,9 +240,9 @@ exports[`Render properties.size: small - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.size: small
-  </span>
+  <span
+    className="{}"
+  />
 </button>
 `;
 
@@ -250,9 +253,9 @@ exports[`Render properties.title - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    Button title
-  </span>
+  <span
+    className="{}"
+  />
 </button>
 `;
 
@@ -263,9 +266,9 @@ exports[`Render properties.type: danger - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.type: danger
-  </span>
+  <span
+    className="{}"
+  />
 </button>
 `;
 
@@ -276,9 +279,9 @@ exports[`Render properties.type: dashed - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.type: dashed
-  </span>
+  <span
+    className="{}"
+  />
 </button>
 `;
 
@@ -289,9 +292,9 @@ exports[`Render properties.type: default - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.type: default
-  </span>
+  <span
+    className="{}"
+  />
 </button>
 `;
 
@@ -302,9 +305,9 @@ exports[`Render properties.type: link - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.type: link
-  </span>
+  <span
+    className="{}"
+  />
 </button>
 `;
 
@@ -315,9 +318,57 @@ exports[`Render properties.type: text - value[0] 1`] = `
   onClick={[Function]}
   type="button"
 >
-  <span>
-    properties.type: text
+  <span
+    className="{}"
+  />
+</button>
+`;
+
+exports[`Render with html in title - value[0] 1`] = `
+<button
+  className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+  id="with html in title"
+  onClick={[Function]}
+  type="button"
+>
+  <span
+    className="{}"
+  />
+</button>
+`;
+
+exports[`Render with html in title - value[0] 2`] = `
+<button
+  className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+  id="with html in title"
+  onClick={[Function]}
+  type="button"
+>
+  <span
+    aria-label="loading-3-quarters"
+    basePath=""
+    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+    id="with html in title_icon"
+    required={false}
+    role="img"
+  >
+    <svg
+      aria-hidden="true"
+      data-icon="loading-3-quarters"
+      fill="currentColor"
+      focusable="false"
+      height="1em"
+      viewBox="0 0 1024 1024"
+      width="1em"
+    >
+      <path
+        d="M512 1024c-69.1 0-136.2-13.5-199.3-40.2C251.7 958 197 921 150 874c-47-47-84-101.7-109.8-162.7C13.5 648.2 0 581.1 0 512c0-19.9 16.1-36 36-36s36 16.1 36 36c0 59.4 11.6 117 34.6 171.3 22.2 52.4 53.9 99.5 94.3 139.9 40.4 40.4 87.5 72.2 139.9 94.3C395 940.4 452.6 952 512 952c59.4 0 117-11.6 171.3-34.6 52.4-22.2 99.5-53.9 139.9-94.3 40.4-40.4 72.2-87.5 94.3-139.9C940.4 629 952 571.4 952 512c0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.2C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3s-13.5 136.2-40.2 199.3C958 772.3 921 827 874 874c-47 47-101.8 83.9-162.7 109.7-63.1 26.8-130.2 40.3-199.3 40.3z"
+      />
+    </svg>
   </span>
+  <span
+    className="{}"
+  />
 </button>
 `;
 
@@ -400,3 +451,11 @@ exports[`Test Schema properties.type: link 2`] = `null`;
 exports[`Test Schema properties.type: text 1`] = `true`;
 
 exports[`Test Schema properties.type: text 2`] = `null`;
+
+exports[`Test Schema with html in title 1`] = `true`;
+
+exports[`Test Schema with html in title 2`] = `null`;
+
+exports[`Test Schema with html in title 3`] = `true`;
+
+exports[`Test Schema with html in title 4`] = `null`;

@@ -28,7 +28,32 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": "Tooltip block",
+      "title": <HtmlComponent
+        html="Tooltip block"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "trigger": "hover",
       "zIndex": undefined,
     },
@@ -102,7 +127,32 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": "topLeft",
-      "title": "arrowPointAtCenter true",
+      "title": <HtmlComponent
+        html="arrowPointAtCenter true"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "trigger": "hover",
       "zIndex": undefined,
     },
@@ -139,7 +189,32 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": "right",
-      "title": "autoAdjustOverflow false",
+      "title": <HtmlComponent
+        html="autoAdjustOverflow false"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "trigger": "hover",
       "zIndex": undefined,
     },
@@ -176,7 +251,32 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": "right",
-      "title": "autoAdjustOverflow true",
+      "title": <HtmlComponent
+        html="autoAdjustOverflow true"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "trigger": "hover",
       "zIndex": undefined,
     },
@@ -213,7 +313,32 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": "color blue",
+      "title": <HtmlComponent
+        html="color blue"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "trigger": "hover",
       "zIndex": undefined,
     },
@@ -250,7 +375,32 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": "defaultVisible true",
+      "title": <HtmlComponent
+        html="defaultVisible true"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "trigger": "hover",
       "zIndex": undefined,
     },
@@ -287,7 +437,32 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": "mouseEnterDelay 1",
+      "title": <HtmlComponent
+        html="mouseEnterDelay 1"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "trigger": "hover",
       "zIndex": undefined,
     },
@@ -324,7 +499,32 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": "mouseLeaveDelay 1",
+      "title": <HtmlComponent
+        html="mouseLeaveDelay 1"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "trigger": "hover",
       "zIndex": undefined,
     },
@@ -361,7 +561,34 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"style\\":{\\"border\\":\\"5px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": "Tooltip block",
+      "title": <HtmlComponent
+        html="Tooltip block"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "border": "5px solid blue",
+                  },
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"border\\":\\"5px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "trigger": "hover",
       "zIndex": undefined,
     },
@@ -398,7 +625,32 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": "topLeft",
-      "title": "placement topLeft",
+      "title": <HtmlComponent
+        html="placement topLeft"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "trigger": "hover",
       "zIndex": undefined,
     },
@@ -435,7 +687,96 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": "Tooltip block",
+      "title": <HtmlComponent
+        html="Tooltip block"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "trigger": "hover",
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.title with html - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "arrowPointAtCenter": undefined,
+      "autoAdjustOverflow": undefined,
+      "children": Array [
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>,
+        "",
+      ],
+      "color": undefined,
+      "defaultVisible": undefined,
+      "destroyTooltipOnHide": undefined,
+      "id": "properties.title with html",
+      "mouseEnterDelay": undefined,
+      "mouseLeaveDelay": undefined,
+      "onVisibleChange": [Function],
+      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "placement": undefined,
+      "title": <HtmlComponent
+        html=<div style="background-color:orange;">
+  Tooltip Html
+</div>
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "trigger": "hover",
       "zIndex": undefined,
     },
@@ -472,7 +813,32 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": "trigger click",
+      "title": <HtmlComponent
+        html="trigger click"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "trigger": "click",
       "zIndex": undefined,
     },
@@ -509,7 +875,32 @@ Array [
       "onVisibleChange": [Function],
       "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "placement": undefined,
-      "title": "zIndex 1000",
+      "title": <HtmlComponent
+        html="zIndex 1000"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
       "trigger": "hover",
       "zIndex": 1000,
     },

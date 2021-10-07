@@ -6,6 +6,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="default_header"
           content={
             Object {
@@ -52,6 +53,7 @@ Array [
           }
         />
         <ContentBlock
+          basePath=""
           blockId="default_content"
           content={
             Object {
@@ -110,6 +112,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.breadcrumb.list_header"
           content={
             Object {
@@ -156,6 +159,7 @@ Array [
           }
         />
         <ContentBlock
+          basePath=""
           blockId="properties.breadcrumb.list_content"
           content={
             Object {
@@ -214,6 +218,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.content.style_header"
           content={
             Object {
@@ -260,6 +265,7 @@ Array [
           }
         />
         <ContentBlock
+          basePath=""
           blockId="properties.content.style_content"
           content={
             Object {
@@ -319,6 +325,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.footer.style_header"
           content={
             Object {
@@ -365,6 +372,7 @@ Array [
           }
         />
         <ContentBlock
+          basePath=""
           blockId="properties.footer.style_content"
           content={
             Object {
@@ -409,6 +417,7 @@ Array [
           }
         />
         <FooterBlock
+          basePath=""
           blockId="properties.footer.style_footer"
           content={
             Object {
@@ -458,6 +467,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.header.color_header"
           content={
             Object {
@@ -505,6 +515,7 @@ Array [
           }
         />
         <ContentBlock
+          basePath=""
           blockId="properties.header.color_content"
           content={
             Object {
@@ -563,6 +574,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.header.style_header"
           content={
             Object {
@@ -610,6 +622,7 @@ Array [
           }
         />
         <ContentBlock
+          basePath=""
           blockId="properties.header.style_content"
           content={
             Object {
@@ -668,6 +681,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.header.theme: light_header"
           content={
             Object {
@@ -715,6 +729,7 @@ Array [
           }
         />
         <ContentBlock
+          basePath=""
           blockId="properties.header.theme: light_content"
           content={
             Object {
@@ -773,6 +788,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.logo.alt_header"
           content={
             Object {
@@ -819,6 +835,7 @@ Array [
           }
         />
         <ContentBlock
+          basePath=""
           blockId="properties.logo.alt_content"
           content={
             Object {
@@ -877,6 +894,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.logo.size_header"
           content={
             Object {
@@ -923,6 +941,7 @@ Array [
           }
         />
         <ContentBlock
+          basePath=""
           blockId="properties.logo.size_content"
           content={
             Object {
@@ -981,6 +1000,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.logo.src_header"
           content={
             Object {
@@ -1027,6 +1047,7 @@ Array [
           }
         />
         <ContentBlock
+          basePath=""
           blockId="properties.logo.src_content"
           content={
             Object {
@@ -1085,6 +1106,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.logo.srcSet_header"
           content={
             Object {
@@ -1131,6 +1153,7 @@ Array [
           }
         />
         <ContentBlock
+          basePath=""
           blockId="properties.logo.srcSet_content"
           content={
             Object {
@@ -1189,6 +1212,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.logo.style_header"
           content={
             Object {
@@ -1235,6 +1259,7 @@ Array [
           }
         />
         <ContentBlock
+          basePath=""
           blockId="properties.logo.style_content"
           content={
             Object {
@@ -1293,6 +1318,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.menu_header"
           content={
             Object {
@@ -1339,6 +1365,7 @@ Array [
           }
         />
         <ContentBlock
+          basePath=""
           blockId="properties.menu_content"
           content={
             Object {
@@ -1397,6 +1424,7 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
+          basePath=""
           blockId="properties.style_header"
           content={
             Object {
@@ -1443,6 +1471,7 @@ Array [
           }
         />
         <ContentBlock
+          basePath=""
           blockId="properties.style_content"
           content={
             Object {

@@ -30,19 +30,31 @@ _ref:
     description: |
       The `JsAction` action is used to call a custom JavaScript function which was loaded onto the page using the `window.lowdefy.registerJsAction()` method. This JavaScript function can be asynchronous. See [Custom Code](/custom-code) for more details on how to register a new JavaScript action.
 
-      The returned result of the JavaScript function is accessible through the [`_actions`](/_actions) operator for subsequent action in the event action list.
+      The returned result of the JavaScript function is accessible through the [`_actions`](/_actions) operator for subsequent actions in the event action list.
 
-      A `JsAction` is called with a context object which includes all [`context` data objects](/context-and-state) as well as the list of `args` passed to the action.
+      #### JsAction function parameters
+
+      A `JsAction` function is called with a context object which includes all [`context` data objects](/context-and-state) as well as the list of `args` passed to the action.
+
       ```text
       (context: {
-        user: object,
+        actions: object,
+        contextId: string,
         global: object,
+        input: object,
+        pageId: string,
+        requests: object,
         state: object,
         urlQuery: object,
-        input: object,
+        user: object,
       },
       ...args?: any[]): any
       ```
+
+      #### Using Lowdefy actions in a JsAction
+
+      The context passed to the custom JsAction function contains an object called `actions`. This object contains all the Lowdefy action functions like `SetState`, `Request`, and `CallMethod`. The functions can be called using the same parameters as when they are used directly in the Lowdefy configuration. Operators in these parameters are not evaluated.
+
     params: |
       ###### object
         - `name: string`: __Required__ - The registered name of the JavaScript function to call when the action is triggered.
@@ -54,7 +66,7 @@ _ref:
       ```yaml
       # lowdefy.yaml
       name: intercom-example
-      lowdefy: '3.18.0'
+      lowdefy: '3.22.0'
       app:
         html:
           appendBody: |
@@ -125,7 +137,7 @@ _ref:
       ```yaml
       # file: lowdefy.yaml
       name: text-highlight-example
-      lowdefy: '3.18.0'
+      lowdefy: '3.22.0'
       app:
         html:
           # Load the custom modules into the index.html head tag.
@@ -231,4 +243,39 @@ _ref:
           }
         }
       }
+      ```
+
+      ##### Use Lowdefy SetState action:
+
+      ```js
+      // file: /public/theAnswer.js
+      function theAnswer({actions}) {
+        // Think for a while...
+        return actions.SetState({ answer: 42 })
+      }
+      export default theAnswer;
+      ```
+
+      ##### Use Lowdefy Request action to loop over a list of requests:
+      ```js
+      // file: /public/loopRequests.js
+      function loopRequests({ actions }, ...requestIds) {
+        return Promise.all(requestIds.map((id) => actions.Request(id)));
+      }
+      export default loopRequests;
+      ```
+
+      ```yaml
+      id: call_all_requests
+      type: Button
+      events:
+        onClick:
+          - id: loop_requests
+            type: JsAction
+            params:
+              name: loopRequests
+              args:
+                - request_1
+                - request_2
+                - request_3
       ```

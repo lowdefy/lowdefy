@@ -15,7 +15,7 @@
 */
 
 import React, { useState, useEffect } from 'react';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 import { get } from '@lowdefy/helpers';
 import { Modal } from 'antd';
 
@@ -50,17 +50,22 @@ const ModalBlock = ({ blockId, content, properties, events, methods }) => {
     <div id={blockId}>
       <Modal
         id={`${blockId}_modal`}
-        title={properties.title}
+        title={renderHtml({ html: properties.title, methods })}
         bodyStyle={methods.makeCssClass(properties.bodyStyle, { styleObjectOnly: true })}
         visible={openState}
         onOk={async () => {
-          await methods.triggerEvent({ name: 'onOk' });
-          // the visible should only close if actions finished successfully
-          triggerSetOpen({ state: false, setOpen, methods });
+          const response = await methods.triggerEvent({ name: 'onOk' });
+          if (response.success === false) return;
+          if (response.bounced !== true) {
+            triggerSetOpen({ state: false, setOpen, methods });
+          }
         }}
         onCancel={async () => {
-          await methods.triggerEvent({ name: 'onCancel' });
-          triggerSetOpen({ state: false, setOpen, methods });
+          const response = await methods.triggerEvent({ name: 'onCancel' });
+          if (response.success === false) return;
+          if (response.bounced !== true) {
+            triggerSetOpen({ state: false, setOpen, methods });
+          }
         }}
         afterClose={() => methods.triggerEvent({ name: 'afterClose' })}
         confirmLoading={get(events, 'onOk.loading')}

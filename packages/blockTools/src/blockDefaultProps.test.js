@@ -32,6 +32,7 @@ beforeEach(() => {
 test('default', () => {
   expect(blockDefaultProps).toMatchInlineSnapshot(`
     Object {
+      "basePath": "",
       "blockId": "undefined_id",
       "content": Object {},
       "events": Object {},

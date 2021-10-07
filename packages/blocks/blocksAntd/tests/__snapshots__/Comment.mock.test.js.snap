@@ -18,6 +18,7 @@ Array [
       ],
       "author": "Comment author",
       "avatar": <AvatarBlock
+        basePath=""
         blockId="undefined_id"
         content={Object {}}
         events={Object {}}
@@ -65,6 +66,7 @@ Array [
       ],
       "author": undefined,
       "avatar": <AvatarBlock
+        basePath=""
         blockId="undefined_id"
         content={Object {}}
         events={Object {}}
@@ -117,6 +119,7 @@ Array [
       ],
       "author": "Comment author",
       "avatar": <AvatarBlock
+        basePath=""
         blockId="undefined_id"
         content={Object {}}
         events={Object {}}
@@ -173,6 +176,7 @@ Array [
       ],
       "author": "Comment author",
       "avatar": <AvatarBlock
+        basePath=""
         blockId="undefined_id"
         content={Object {}}
         events={Object {}}
@@ -220,6 +224,7 @@ Array [
       ],
       "author": "Comment author",
       "avatar": <AvatarBlock
+        basePath=""
         blockId="undefined_id"
         content={Object {}}
         events={Object {}}

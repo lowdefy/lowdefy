@@ -21,7 +21,7 @@ import { get } from '@lowdefy/helpers';
 import { readFile } from '@lowdefy/node-utils';
 import findOpenPort from '../../utils/findOpenPort';
 
-async function getExpress({ context, gqlServer, options }) {
+async function getExpress({ context, gqlServer }) {
   const serveIndex = async (req, res) => {
     let indexHtml = await readFile(path.resolve(__dirname, 'shell/index.html'));
     let appConfig = await readFile(path.resolve(context.outputDirectory, 'app.json'));
@@ -39,7 +39,8 @@ async function getExpress({ context, gqlServer, options }) {
 
   const app = express();
 
-  app.set('port', parseInt(options.port));
+  // port is initialized to 3000 in prepare function
+  app.set('port', parseInt(context.options.port));
 
   gqlServer.applyMiddleware({ app, path: '/api/graphql' });
 
@@ -56,9 +57,16 @@ async function getExpress({ context, gqlServer, options }) {
   // serve webpack files
   app.use(express.static(path.resolve(__dirname, 'shell')));
 
-  // serve version for renderer module federation
-  app.use('/api/dev/version', (req, res) => {
-    res.json(context.lowdefyVersion);
+  // Serve rendererRemoteEntryUrl for renderer module federation
+  app.use('/api/dev/rendererRemoteEntryUrl', (req, res) => {
+    let rendererRemoteEntryUrl;
+
+    if (context.options.blocksServerUrl) {
+      rendererRemoteEntryUrl = `${context.options.blocksServerUrl}/renderer/remoteEntry.js`;
+    } else {
+      rendererRemoteEntryUrl = `https://blocks-cdn.lowdefy.com/v${context.lowdefyVersion}/renderer/remoteEntry.js`;
+    }
+    res.json(rendererRemoteEntryUrl);
   });
 
   // Redirect all 404 to index.html with status 200

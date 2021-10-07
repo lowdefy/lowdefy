@@ -17,16 +17,12 @@
 import writePages from './writePages';
 import testContext from '../test/testContext';
 
-const mockSet = jest.fn();
+const mockWriteBuildArtifact = jest.fn();
 
-const artifactSetter = {
-  set: mockSet,
-};
-
-const context = testContext({ artifactSetter });
+const context = testContext({ writeBuildArtifact: mockWriteBuildArtifact });
 
 beforeEach(() => {
-  mockSet.mockReset();
+  mockWriteBuildArtifact.mockReset();
 });
 
 test('writePages write page', async () => {
@@ -41,7 +37,7 @@ test('writePages write page', async () => {
     ],
   };
   await writePages({ components, context });
-  expect(mockSet.mock.calls).toEqual([
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
       {
         filePath: 'pages/page1/page1.json',
@@ -74,7 +70,7 @@ test('writePages multiple pages', async () => {
     ],
   };
   await writePages({ components, context });
-  expect(mockSet.mock.calls).toEqual([
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
       {
         filePath: 'pages/page1/page1.json',
@@ -105,13 +101,13 @@ test('writePages no pages', async () => {
     pages: [],
   };
   await writePages({ components, context });
-  expect(mockSet.mock.calls).toEqual([]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([]);
 });
 
 test('writePages pages undefined', async () => {
   const components = {};
   await writePages({ components, context });
-  expect(mockSet.mock.calls).toEqual([]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([]);
 });
 
 test('writePages pages not an array', async () => {

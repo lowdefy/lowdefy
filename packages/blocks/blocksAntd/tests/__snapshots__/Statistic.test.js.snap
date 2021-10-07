@@ -152,6 +152,7 @@ exports[`Render properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
     >
       <span
         aria-label="loading-3-quarters"
+        basePath=""
         className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
         id="properties.prefixIcon: AccountBookFilled_prefixIcon"
         required={false}
@@ -252,6 +253,7 @@ exports[`Render properties.suffixIcon: AccountBookFilled - value[0] 1`] = `
     >
       <span
         aria-label="loading-3-quarters"
+        basePath=""
         className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
         id="properties.suffixIcon: AccountBookFilled_suffixIcon"
         required={false}
@@ -283,7 +285,9 @@ exports[`Render properties.title - value[0] 1`] = `
   <div
     className="ant-statistic-title"
   >
-    Statistic title
+    <span
+      className="{}"
+    />
   </div>
   <div
     className="ant-statistic-content"
@@ -301,6 +305,41 @@ exports[`Render properties.title - value[0] 1`] = `
       
     </span>
     
+  </div>
+</div>
+`;
+
+exports[`Render properties.title with html - value[0] 1`] = `
+<div
+  className="ant-statistic {}"
+>
+  <div
+    className="ant-statistic-title"
+  >
+    <span
+      className="{}"
+    />
+  </div>
+  <div
+    className="ant-statistic-content"
+  >
+    
+    <span
+      className="ant-statistic-content-value"
+    >
+      <span
+        className="ant-statistic-content-value-int"
+      >
+        
+        100
+      </span>
+      
+    </span>
+    <span
+      className="ant-statistic-content-suffix"
+    >
+      %
+    </span>
   </div>
 </div>
 `;
@@ -396,6 +435,10 @@ exports[`Test Schema properties.suffixIcon: AccountBookFilled 2`] = `null`;
 exports[`Test Schema properties.title 1`] = `true`;
 
 exports[`Test Schema properties.title 2`] = `null`;
+
+exports[`Test Schema properties.title with html 1`] = `true`;
+
+exports[`Test Schema properties.title with html 2`] = `null`;
 
 exports[`Test Schema properties.value: '3.45' as string 1`] = `true`;
 
