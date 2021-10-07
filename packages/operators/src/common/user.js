@@ -16,12 +16,9 @@
 
 import getFromObject from '../getFromObject';
 
-function _user({ arrayIndices, context, contexts, env, location, params, user }) {
+function _user({ arrayIndices, location, params, user }) {
   return getFromObject({
     arrayIndices,
-    context,
-    contexts,
-    env,
     location,
     object: user,
     operator: '_user',

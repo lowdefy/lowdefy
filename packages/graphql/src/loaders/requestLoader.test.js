@@ -24,11 +24,10 @@ test('load request', async () => {
   const requestLoader = createRequestLoader({ CONFIGURATION_BASE_PATH });
   const res = await requestLoader.load({
     pageId: 'page1',
-    contextId: 'page1',
     requestId: 'request1',
   });
   expect(res).toEqual({
-    id: 'request:page1:page1:request1',
+    id: 'request:page1:request1',
     type: 'TestRequest',
   });
 });
@@ -37,7 +36,6 @@ test('load request, request does not exist', async () => {
   const requestLoader = createRequestLoader({ CONFIGURATION_BASE_PATH });
   const res = await requestLoader.load({
     pageId: 'page1',
-    contextId: 'page1',
     requestId: 'doesNotExist',
   });
   expect(res).toEqual(null);
@@ -47,7 +45,6 @@ test('load request, context does not exist', async () => {
   const requestLoader = createRequestLoader({ CONFIGURATION_BASE_PATH });
   const res = await requestLoader.load({
     pageId: 'page1',
-    contextId: 'doesNotExist',
     requestId: 'doesNotExist',
   });
   expect(res).toEqual(null);
@@ -57,7 +54,6 @@ test('load request, page does not exist', async () => {
   const requestLoader = createRequestLoader({ CONFIGURATION_BASE_PATH });
   const res = await requestLoader.load({
     pageId: 'doesNotExist',
-    contextId: 'doesNotExist',
     requestId: 'doesNotExist',
   });
   expect(res).toEqual(null);
@@ -65,7 +61,7 @@ test('load request, page does not exist', async () => {
 
 test('load request, invalid JSON', async () => {
   const requestLoader = createRequestLoader({ CONFIGURATION_BASE_PATH });
-  await expect(
-    requestLoader.load({ pageId: 'page1', contextId: 'page1', requestId: 'invalid' })
-  ).rejects.toThrow(ConfigurationError);
+  await expect(requestLoader.load({ pageId: 'page1', requestId: 'invalid' })).rejects.toThrow(
+    ConfigurationError
+  );
 });

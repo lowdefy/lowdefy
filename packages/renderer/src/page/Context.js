@@ -17,10 +17,10 @@
 import React, { useEffect, useState } from 'react';
 import getContext from '@lowdefy/engine';
 
-import MountEvents from './MountEvents';
-import LoadingBlock from './LoadingBlock';
+import MountEvents from './block/MountEvents';
+import LoadingBlock from './block/LoadingBlock';
 
-const Context = ({ block, children, contextId, lowdefy }) => {
+const Context = ({ page, children, lowdefy }) => {
   const [context, setContext] = useState({});
   const [error, setError] = useState(null);
 
@@ -29,8 +29,7 @@ const Context = ({ block, children, contextId, lowdefy }) => {
     const mount = async () => {
       try {
         const ctx = await getContext({
-          block,
-          contextId,
+          page,
           lowdefy,
         });
         if (mounted) {
@@ -44,9 +43,9 @@ const Context = ({ block, children, contextId, lowdefy }) => {
     return () => {
       mounted = false;
     };
-  }, [block, lowdefy, contextId]);
+  }, [page, lowdefy]);
 
-  if (context.id !== contextId) return <LoadingBlock block={block} lowdefy={lowdefy} />;
+  if (context.id !== page.pageId) return <LoadingBlock block={page} lowdefy={lowdefy} />;
 
   if (error) throw error;
 
@@ -59,7 +58,7 @@ const Context = ({ block, children, contextId, lowdefy }) => {
         context.RootBlocks.areas.root.blocks[0].triggerEvent({ name })
       }
     >
-      {(loaded) => (!loaded ? <LoadingBlock block={block} lowdefy={lowdefy} /> : children(context))}
+      {(loaded) => (!loaded ? <LoadingBlock block={page} lowdefy={lowdefy} /> : children(context))}
     </MountEvents>
   );
 };

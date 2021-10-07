@@ -16,12 +16,9 @@
 
 import getFromObject from '../getFromObject';
 
-function _state({ arrayIndices, context, contexts, env, location, params, state }) {
+function _state({ arrayIndices, location, params, state }) {
   return getFromObject({
     arrayIndices,
-    context,
-    contexts,
-    env,
     location,
     object: state,
     operator: '_state',

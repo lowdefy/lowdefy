@@ -31,11 +31,10 @@ class RequestController {
 
   async callRequest(requestInput) {
     // get variables needed to load request/connection from requestInput
-    const { blockId, pageId, requestId } = requestInput;
+    const { pageId, requestId } = requestInput;
 
     const request = await this.loadRequest({
       pageId,
-      contextId: blockId,
       requestId,
     });
 
@@ -88,8 +87,8 @@ class RequestController {
     };
   }
 
-  async loadRequest({ pageId, contextId, requestId }) {
-    const request = await this.requestLoader.load({ pageId, contextId, requestId });
+  async loadRequest({ pageId, requestId }) {
+    const request = await this.requestLoader.load({ pageId, requestId });
     if (!request) {
       throw new ConfigurationError(`Request "${requestId}" does not exist.`);
     }

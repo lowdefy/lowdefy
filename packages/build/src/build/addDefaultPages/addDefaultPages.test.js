@@ -35,48 +35,42 @@ test('addDefaultPages, no pages array', async () => {
   expect(res).toEqual({
     pages: [
       {
-        blocks: [
-          {
-            areas: {
-              extra: {
-                blocks: [
-                  {
-                    events: {
-                      onClick: [
-                        {
-                          id: 'home',
-                          params: {
-                            home: true,
-                          },
-                          type: 'Link',
-                        },
-                      ],
-                    },
-                    id: 'home',
-                    properties: {
-                      icon: 'HomeOutlined',
-                      title: 'Go to home page',
-                      type: 'Link',
-                    },
-                    type: 'Button',
-                  },
-                ],
-              },
-            },
-            id: '404_result',
-            properties: {
-              status: 404,
-              subTitle: 'Sorry, the page you are visiting does not exist.',
-              title: '404',
-            },
-            type: 'Result',
-          },
-        ],
         id: '404',
+        type: 'Result',
         style: {
           minHeight: '100vh',
         },
-        type: 'Context',
+        properties: {
+          status: 404,
+          subTitle: 'Sorry, the page you are visiting does not exist.',
+          title: '404',
+        },
+        areas: {
+          extra: {
+            blocks: [
+              {
+                events: {
+                  onClick: [
+                    {
+                      id: 'home',
+                      params: {
+                        home: true,
+                      },
+                      type: 'Link',
+                    },
+                  ],
+                },
+                id: 'home',
+                properties: {
+                  icon: 'HomeOutlined',
+                  title: 'Go to home page',
+                  type: 'Link',
+                },
+                type: 'Button',
+              },
+            ],
+          },
+        },
       },
     ],
   });
@@ -88,105 +82,93 @@ test('addDefaultPages, empty pages array', async () => {
   expect(res).toEqual({
     pages: [
       {
-        blocks: [
-          {
-            areas: {
-              extra: {
-                blocks: [
-                  {
-                    events: {
-                      onClick: [
-                        {
-                          id: 'home',
-                          params: {
-                            home: true,
-                          },
-                          type: 'Link',
-                        },
-                      ],
-                    },
-                    id: 'home',
-                    properties: {
-                      icon: 'HomeOutlined',
-                      title: 'Go to home page',
-                      type: 'Link',
-                    },
-                    type: 'Button',
-                  },
-                ],
-              },
-            },
-            id: '404_result',
-            properties: {
-              status: 404,
-              subTitle: 'Sorry, the page you are visiting does not exist.',
-              title: '404',
-            },
-            type: 'Result',
-          },
-        ],
         id: '404',
+        type: 'Result',
         style: {
           minHeight: '100vh',
         },
-        type: 'Context',
+        properties: {
+          status: 404,
+          subTitle: 'Sorry, the page you are visiting does not exist.',
+          title: '404',
+        },
+        areas: {
+          extra: {
+            blocks: [
+              {
+                events: {
+                  onClick: [
+                    {
+                      id: 'home',
+                      params: {
+                        home: true,
+                      },
+                      type: 'Link',
+                    },
+                  ],
+                },
+                id: 'home',
+                properties: {
+                  icon: 'HomeOutlined',
+                  title: 'Go to home page',
+                  type: 'Link',
+                },
+                type: 'Button',
+              },
+            ],
+          },
+        },
       },
     ],
   });
 });
 
 test('addDefaultPages, pages without 404 page', async () => {
-  const components = { pages: [{ id: 'page1', type: 'Context' }] };
+  const components = { pages: [{ id: 'page1', type: 'PageHeaderMenu' }] };
   const res = await addDefaultPages({ components, context });
   expect(res).toEqual({
     pages: [
       {
         id: 'page1',
-        type: 'Context',
+        type: 'PageHeaderMenu',
       },
       {
-        blocks: [
-          {
-            areas: {
-              extra: {
-                blocks: [
-                  {
-                    events: {
-                      onClick: [
-                        {
-                          id: 'home',
-                          params: {
-                            home: true,
-                          },
-                          type: 'Link',
-                        },
-                      ],
-                    },
-                    id: 'home',
-                    properties: {
-                      icon: 'HomeOutlined',
-                      title: 'Go to home page',
-                      type: 'Link',
-                    },
-                    type: 'Button',
-                  },
-                ],
-              },
-            },
-            id: '404_result',
-            properties: {
-              status: 404,
-              subTitle: 'Sorry, the page you are visiting does not exist.',
-              title: '404',
-            },
-            type: 'Result',
-          },
-        ],
         id: '404',
+        type: 'Result',
         style: {
           minHeight: '100vh',
         },
-        type: 'Context',
+        properties: {
+          status: 404,
+          subTitle: 'Sorry, the page you are visiting does not exist.',
+          title: '404',
+        },
+        areas: {
+          extra: {
+            blocks: [
+              {
+                events: {
+                  onClick: [
+                    {
+                      id: 'home',
+                      params: {
+                        home: true,
+                      },
+                      type: 'Link',
+                    },
+                  ],
+                },
+                id: 'home',
+                properties: {
+                  icon: 'HomeOutlined',
+                  title: 'Go to home page',
+                  type: 'Link',
+                },
+                type: 'Button',
+              },
+            ],
+          },
+        },
       },
     ],
   });
@@ -195,8 +177,8 @@ test('addDefaultPages, pages without 404 page', async () => {
 test('addDefaultPages, pages with 404 page, should not overwrite', async () => {
   const components = {
     pages: [
-      { id: 'page1', type: 'Context' },
-      { id: '404', type: 'Context' },
+      { id: 'page1', type: 'PageHeaderMenu' },
+      { id: '404', type: 'PageHeaderMenu' },
     ],
   };
   const res = await addDefaultPages({ components, context });
@@ -204,11 +186,11 @@ test('addDefaultPages, pages with 404 page, should not overwrite', async () => {
     pages: [
       {
         id: 'page1',
-        type: 'Context',
+        type: 'PageHeaderMenu',
       },
       {
         id: '404',
-        type: 'Context',
+        type: 'PageHeaderMenu',
       },
     ],
   });
@@ -216,7 +198,7 @@ test('addDefaultPages, pages with 404 page, should not overwrite', async () => {
 
 test('addDefaultPages, pages not an array', async () => {
   const components = {
-    pages: { id: 'page1', type: 'Context' },
+    pages: { id: 'page1', type: 'PageHeaderMenu' },
   };
   await expect(addDefaultPages({ components, context })).rejects.toThrow(
     'lowdefy.pages is not an array.'

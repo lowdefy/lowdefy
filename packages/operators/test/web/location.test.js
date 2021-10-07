@@ -40,8 +40,6 @@ beforeEach(() => {
 const input = {
   arrayIndices: [0],
   context: { context: true, lowdefy: { basePath: 'base', homePageId: 'home', pageId: 'page-one' } },
-  contexts: { contexts: true },
-  env: 'env',
   location: 'location',
   lowdefyGlobal: { lowdefyGlobal: true },
   params: 'origin',
@@ -53,14 +51,6 @@ test('location calls getFromObject', () => {
     [
       {
         arrayIndices: [0],
-        context: {
-          context: true,
-          lowdefy: { basePath: 'base', homePageId: 'home', pageId: 'page-one' },
-        },
-        contexts: {
-          contexts: true,
-        },
-        env: 'env',
         location: 'location',
         object: {
           basePath: 'base',

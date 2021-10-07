@@ -22,10 +22,9 @@ import { useQuery, gql } from '@apollo/client';
 
 import { Loading } from '@lowdefy/block-tools';
 import { get, urlQuery } from '@lowdefy/helpers';
-import { makeContextId } from '@lowdefy/engine';
 
 import Block from './block/Block';
-import Context from './block/Context';
+import Context from './Context';
 import Helmet from './Helmet';
 import setupLink from '../utils/setupLink';
 
@@ -66,15 +65,7 @@ const PageContext = ({ lowdefy }) => {
   );
   return (
     <div id={pageId}>
-      <Context
-        block={data.page}
-        contextId={makeContextId({
-          blockId: pageId,
-          pageId,
-          urlQuery: lowdefy.urlQuery,
-        })}
-        lowdefy={lowdefy}
-      >
+      <Context page={data.page} lowdefy={lowdefy}>
         {(context) => (
           <>
             <Helmet properties={context.RootBlocks.map[pageId].eval.properties} />
@@ -82,7 +73,6 @@ const PageContext = ({ lowdefy }) => {
               block={context.RootBlocks.map[pageId]}
               Blocks={context.RootBlocks}
               context={context}
-              isRoot={true}
               lowdefy={lowdefy}
             />
           </>

@@ -22,9 +22,6 @@ jest.mock('../../src/getFromObject');
 const input = {
   args: [{ args: true }],
   arrayIndices: [0],
-  context: { context: true },
-  contexts: { contexts: true },
-  env: 'env',
   location: 'location',
   params: 'params',
 };
@@ -35,7 +32,6 @@ test('args calls getFromObject', () => {
     [
       {
         arrayIndices: [0],
-        env: 'env',
         location: 'location',
         object: [{ args: true }],
         operator: '_args',

@@ -15,7 +15,7 @@
 */
 
 import WebParser from '../../src/webParser';
-import { context, contexts } from '../testContext';
+import { context } from '../testContext';
 
 const arrayIndices = [1];
 
@@ -23,7 +23,7 @@ console.error = () => {};
 
 test('_nunjucks string template', async () => {
   const input = { _nunjucks: 'String with {{ string }} embedded' };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('String with state embedded');
@@ -32,7 +32,7 @@ test('_nunjucks string template', async () => {
 
 test('_nunjucks null', async () => {
   const input = { _nunjucks: null };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
@@ -43,7 +43,7 @@ test('_nunjucks { template: , on: }', async () => {
   const input = {
     _nunjucks: { template: 'String with {{ string }} embedded', on: { string: 'test' } },
   };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('String with test embedded');
@@ -52,7 +52,7 @@ test('_nunjucks { template: , on: }', async () => {
 
 test('_nunjucks template not a string', async () => {
   const input = { _nunjucks: ['String with {{ string }} embedded'] };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
@@ -63,7 +63,7 @@ test('_nunjucks params on template not a string', async () => {
   const input = {
     _nunjucks: { template: ['String with {{ string }} embedded'], on: { string: 'test' } },
   };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
@@ -74,7 +74,7 @@ test('_nunjucks on not a object', async () => {
   const input = {
     _nunjucks: { template: 'String with {{ string }} embedded', on: [{ string: 'test' }] },
   };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe('String with  embedded');
@@ -85,7 +85,7 @@ test('_nunjucks on null', async () => {
   const input = {
     _nunjucks: { template: 'String with {{ string }} embedded', on: null },
   };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe('String with  embedded');
@@ -94,7 +94,7 @@ test('_nunjucks on null', async () => {
 
 test('_nunjucks invalid template', async () => {
   const input = { _nunjucks: 'String with {{ string  embedded' };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);

@@ -16,12 +16,9 @@
 
 import getFromObject from '../getFromObject';
 
-function _event_log({ params, eventLog, context, contexts, arrayIndices, location, env }) {
+function _event_log({ arrayIndices, eventLog, location, params }) {
   return getFromObject({
     arrayIndices,
-    context,
-    contexts,
-    env,
     location,
     object: eventLog,
     operator: '_event_log',

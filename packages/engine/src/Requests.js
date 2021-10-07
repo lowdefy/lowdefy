@@ -104,7 +104,6 @@ class Requests {
         variables: {
           input: {
             requestId,
-            blockId: this.context.blockId,
             pageId: this.context.pageId,
             payload: serializer.serialize(payload),
           },

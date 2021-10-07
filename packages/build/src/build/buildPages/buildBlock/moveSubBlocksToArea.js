@@ -14,16 +14,20 @@
   limitations under the License.
 */
 
-import { serializer, type } from '@lowdefy/helpers';
+import { set, type } from '@lowdefy/helpers';
 
-function makeContextId({ blockId, pageId, urlQuery = {} }) {
-  if (!type.isString(blockId)) {
-    throw new Error(`Expected string for parameter blockId, received ${blockId}`);
+function moveSubBlocksToArea(block, pageContext) {
+  if (!type.isNone(block.blocks)) {
+    if (!type.isArray(block.blocks)) {
+      throw new Error(
+        `Blocks at ${block.blockId} on page ${
+          pageContext.pageId
+        } is not an array. Received ${JSON.stringify(block.blocks)}`
+      );
+    }
+    set(block, 'areas.content.blocks', block.blocks);
+    delete block.blocks;
   }
-  if (!type.isString(pageId)) {
-    throw new Error(`Expected string for parameter pageId, received ${pageId}`);
-  }
-  return `${pageId}:${blockId}:${serializer.serializeToString(urlQuery)}`;
 }
 
-export default makeContextId;
+export default moveSubBlocksToArea;

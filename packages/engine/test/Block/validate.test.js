@@ -28,7 +28,7 @@ test('parse validate on fields', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -91,7 +91,7 @@ test('validate should fail if parser has errors', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -133,7 +133,7 @@ test('validate, only test where parser failed should fail', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -178,7 +178,7 @@ test('parse validate, validate an object not an array', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -224,7 +224,7 @@ test('RootBlock.validate(match) to ignore errors where field not visible', async
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -352,7 +352,7 @@ test('required on input to return validation error on RootBlock.validate(match)'
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -399,7 +399,7 @@ test('required on input to return validation error with priority over validation
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -472,7 +472,7 @@ test('nested arrays with validate, and RootBlock.validate(match) returns all val
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -765,7 +765,7 @@ test('validation warnings', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -834,7 +834,7 @@ test('showValidation only on fields that matches for error', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -898,7 +898,7 @@ test('showValidation only on fields that matches for warning', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -964,7 +964,7 @@ test('showValidation only on fields that matches for success', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -1030,7 +1030,7 @@ test('drop showValidation on RootBlocks.reset()', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -1091,7 +1091,7 @@ test('drop showValidation on RootBlocks.resetValidation()', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {

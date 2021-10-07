@@ -81,7 +81,6 @@ const loaders = {
 const context = testBootstrapContext({ loaders, getSecrets });
 
 const defaultInput = {
-  blockId: 'contextId',
   pageId: 'pageId',
   payload: {},
   requestId: 'requestId',
@@ -101,10 +100,10 @@ const defaultLoadConnectionImp = (id) => {
   return null;
 };
 
-const defaultLoadRequestImp = ({ pageId, contextId, requestId }) => {
-  if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+const defaultLoadRequestImp = ({ pageId, requestId }) => {
+  if (`${pageId}:${requestId}` === 'pageId:requestId') {
     return {
-      id: 'request:pageId:contextId:requestId',
+      id: 'request:pageId:requestId',
       type: 'TestRequest',
       requestId: 'requestId',
       connectionId: 'testConnection',
@@ -135,7 +134,7 @@ test('call request, public auth', async () => {
   const controller = createRequestController(context);
   const res = await controller.callRequest(defaultInput);
   expect(res).toEqual({
-    id: 'request:pageId:contextId:requestId',
+    id: 'request:pageId:requestId',
     response: {
       connection: {
         connectionProperty: 'connectionProperty',
@@ -151,10 +150,10 @@ test('call request, public auth', async () => {
 
 test('call request, protected auth with user', async () => {
   mockLoadConnection.mockImplementation(defaultLoadConnectionImp);
-  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
-    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+  mockLoadRequest.mockImplementation(({ pageId, requestId }) => {
+    if (`${pageId}:${requestId}` === 'pageId:requestId') {
       return {
-        id: 'request:pageId:contextId:requestId',
+        id: 'request:pageId:requestId',
         type: 'TestRequest',
         requestId: 'requestId',
         connectionId: 'testConnection',
@@ -172,7 +171,7 @@ test('call request, protected auth with user', async () => {
   );
   const res = await controller.callRequest(defaultInput);
   expect(res).toEqual({
-    id: 'request:pageId:contextId:requestId',
+    id: 'request:pageId:requestId',
     response: {
       connection: {
         connectionProperty: 'connectionProperty',
@@ -188,10 +187,10 @@ test('call request, protected auth with user', async () => {
 
 test('call request, protected auth without user', async () => {
   mockLoadConnection.mockImplementation(defaultLoadConnectionImp);
-  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
-    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+  mockLoadRequest.mockImplementation(({ pageId, requestId }) => {
+    if (`${pageId}:${requestId}` === 'pageId:requestId') {
       return {
-        id: 'request:pageId:contextId:requestId',
+        id: 'request:pageId:requestId',
         type: 'TestRequest',
         requestId: 'requestId',
         connectionId: 'testConnection',
@@ -224,10 +223,10 @@ test('request does not exist', async () => {
 
 test('request does not have a connectionId', async () => {
   mockLoadConnection.mockImplementation(defaultLoadConnectionImp);
-  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
-    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+  mockLoadRequest.mockImplementation(({ pageId, requestId }) => {
+    if (`${pageId}:${requestId}` === 'pageId:requestId') {
       return {
-        id: 'request:pageId:contextId:requestId',
+        id: 'request:pageId:requestId',
         type: 'TestRequest',
         requestId: 'requestId',
         auth: { public: true },
@@ -248,10 +247,10 @@ test('request does not have a connectionId', async () => {
 
 test('request is not a valid request type', async () => {
   mockLoadConnection.mockImplementation(defaultLoadConnectionImp);
-  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
-    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+  mockLoadRequest.mockImplementation(({ pageId, requestId }) => {
+    if (`${pageId}:${requestId}` === 'pageId:requestId') {
       return {
-        id: 'request:pageId:contextId:requestId',
+        id: 'request:pageId:requestId',
         type: 'InvalidType',
         requestId: 'requestId',
         connectionId: 'testConnection',
@@ -307,10 +306,10 @@ test('connection does not have correct type', async () => {
 
 test('deserialize inputs', async () => {
   mockLoadConnection.mockImplementation(defaultLoadConnectionImp);
-  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
-    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+  mockLoadRequest.mockImplementation(({ pageId, requestId }) => {
+    if (`${pageId}:${requestId}` === 'pageId:requestId') {
       return {
-        id: 'request:pageId:contextId:requestId',
+        id: 'request:pageId:requestId',
         type: 'TestRequest',
         requestId: 'requestId',
         connectionId: 'testConnection',
@@ -350,10 +349,10 @@ test('deserialize inputs', async () => {
 
 test('parse request properties for operators', async () => {
   mockLoadConnection.mockImplementation(defaultLoadConnectionImp);
-  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
-    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+  mockLoadRequest.mockImplementation(({ pageId, requestId }) => {
+    if (`${pageId}:${requestId}` === 'pageId:requestId') {
       return {
-        id: 'request:pageId:contextId:requestId',
+        id: 'request:pageId:requestId',
         type: 'TestRequest',
         requestId: 'requestId',
         connectionId: 'testConnection',
@@ -379,7 +378,7 @@ test('parse request properties for operators', async () => {
     requestId: 'requestId',
   });
   expect(res).toEqual({
-    id: 'request:pageId:contextId:requestId',
+    id: 'request:pageId:requestId',
     response: {
       connection: {
         connectionProperty: 'connectionProperty',
@@ -423,7 +422,7 @@ test('parse connection properties for operators', async () => {
     requestId: 'requestId',
   });
   expect(res).toEqual({
-    id: 'request:pageId:contextId:requestId',
+    id: 'request:pageId:requestId',
     response: {
       connection: {
         payload: 'payloadValue',
@@ -452,10 +451,10 @@ test('parse secrets', async () => {
     }
     return null;
   });
-  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
-    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+  mockLoadRequest.mockImplementation(({ pageId, requestId }) => {
+    if (`${pageId}:${requestId}` === 'pageId:requestId') {
       return {
-        id: 'request:pageId:contextId:requestId',
+        id: 'request:pageId:requestId',
         type: 'TestRequest',
         requestId: 'requestId',
         connectionId: 'testConnection',
@@ -471,7 +470,7 @@ test('parse secrets', async () => {
   const controller = createRequestController(context);
   const res = await controller.callRequest(defaultInput);
   expect(res).toEqual({
-    id: 'request:pageId:contextId:requestId',
+    id: 'request:pageId:requestId',
     response: {
       connection: {
         secret: 'connectionSecret',
@@ -487,10 +486,10 @@ test('parse secrets', async () => {
 
 test('request properties default value', async () => {
   mockLoadConnection.mockImplementation(defaultLoadConnectionImp);
-  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
-    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+  mockLoadRequest.mockImplementation(({ pageId, requestId }) => {
+    if (`${pageId}:${requestId}` === 'pageId:requestId') {
       return {
-        id: 'request:pageId:contextId:requestId',
+        id: 'request:pageId:requestId',
         type: 'TestRequest',
         requestId: 'requestId',
         connectionId: 'testConnection',
@@ -503,7 +502,7 @@ test('request properties default value', async () => {
   const controller = createRequestController(context);
   const res = await controller.callRequest(defaultInput);
   expect(res).toEqual({
-    id: 'request:pageId:contextId:requestId',
+    id: 'request:pageId:requestId',
     response: {
       connection: {
         connectionProperty: 'connectionProperty',
@@ -531,7 +530,7 @@ test('connection properties default value', async () => {
   const controller = createRequestController(context);
   const res = await controller.callRequest(defaultInput);
   expect(res).toEqual({
-    id: 'request:pageId:contextId:requestId',
+    id: 'request:pageId:requestId',
     response: {
       connection: {},
       request: {
@@ -545,10 +544,10 @@ test('connection properties default value', async () => {
 
 test('request properties operator error', async () => {
   mockLoadConnection.mockImplementation(defaultLoadConnectionImp);
-  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
-    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+  mockLoadRequest.mockImplementation(({ pageId, requestId }) => {
+    if (`${pageId}:${requestId}` === 'pageId:requestId') {
       return {
-        id: 'request:pageId:contextId:requestId',
+        id: 'request:pageId:requestId',
         type: 'TestRequest',
         requestId: 'requestId',
         connectionId: 'testConnection',
@@ -648,10 +647,10 @@ test('connection properties schema error', async () => {
 
 test('request properties schema error', async () => {
   mockLoadConnection.mockImplementation(defaultLoadConnectionImp);
-  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
-    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+  mockLoadRequest.mockImplementation(({ pageId, requestId }) => {
+    if (`${pageId}:${requestId}` === 'pageId:requestId') {
       return {
-        id: 'request:pageId:contextId:requestId',
+        id: 'request:pageId:requestId',
         type: 'TestRequest',
         requestId: 'requestId',
         connectionId: 'testConnection',
@@ -683,10 +682,10 @@ test('checkRead, read explicitly true', async () => {
     }
     return null;
   });
-  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
-    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+  mockLoadRequest.mockImplementation(({ pageId, requestId }) => {
+    if (`${pageId}:${requestId}` === 'pageId:requestId') {
       return {
-        id: 'request:pageId:contextId:requestId',
+        id: 'request:pageId:requestId',
         type: 'TestRequestCheckRead',
         requestId: 'requestId',
         connectionId: 'testConnection',
@@ -700,7 +699,7 @@ test('checkRead, read explicitly true', async () => {
   const controller = createRequestController(context);
   const res = await controller.callRequest(defaultInput);
   expect(res).toEqual({
-    id: 'request:pageId:contextId:requestId',
+    id: 'request:pageId:requestId',
     response: {
       connection: {
         read: true,
@@ -726,10 +725,10 @@ test('checkRead, read explicitly false', async () => {
     }
     return null;
   });
-  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
-    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+  mockLoadRequest.mockImplementation(({ pageId, requestId }) => {
+    if (`${pageId}:${requestId}` === 'pageId:requestId') {
       return {
-        id: 'request:pageId:contextId:requestId',
+        id: 'request:pageId:requestId',
         type: 'TestRequestCheckRead',
         requestId: 'requestId',
         connectionId: 'testConnection',
@@ -760,10 +759,10 @@ test('checkRead, read not set', async () => {
     }
     return null;
   });
-  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
-    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+  mockLoadRequest.mockImplementation(({ pageId, requestId }) => {
+    if (`${pageId}:${requestId}` === 'pageId:requestId') {
       return {
-        id: 'request:pageId:contextId:requestId',
+        id: 'request:pageId:requestId',
         type: 'TestRequestCheckRead',
         requestId: 'requestId',
         connectionId: 'testConnection',
@@ -777,7 +776,7 @@ test('checkRead, read not set', async () => {
   const controller = createRequestController(context);
   const res = await controller.callRequest(defaultInput);
   expect(res).toEqual({
-    id: 'request:pageId:contextId:requestId',
+    id: 'request:pageId:requestId',
     response: {
       connection: {},
       request: {},
@@ -801,10 +800,10 @@ test('checkWrite, write explicitly true', async () => {
     }
     return null;
   });
-  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
-    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+  mockLoadRequest.mockImplementation(({ pageId, requestId }) => {
+    if (`${pageId}:${requestId}` === 'pageId:requestId') {
       return {
-        id: 'request:pageId:contextId:requestId',
+        id: 'request:pageId:requestId',
         type: 'TestRequestCheckWrite',
         requestId: 'requestId',
         connectionId: 'testConnection',
@@ -818,7 +817,7 @@ test('checkWrite, write explicitly true', async () => {
   const controller = createRequestController(context);
   const res = await controller.callRequest(defaultInput);
   expect(res).toEqual({
-    id: 'request:pageId:contextId:requestId',
+    id: 'request:pageId:requestId',
     response: {
       connection: {
         write: true,
@@ -844,10 +843,10 @@ test('checkWrite, write explicitly false', async () => {
     }
     return null;
   });
-  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
-    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+  mockLoadRequest.mockImplementation(({ pageId, requestId }) => {
+    if (`${pageId}:${requestId}` === 'pageId:requestId') {
       return {
-        id: 'request:pageId:contextId:requestId',
+        id: 'request:pageId:requestId',
         type: 'TestRequestCheckWrite',
         requestId: 'requestId',
         connectionId: 'testConnection',
@@ -877,10 +876,10 @@ test('checkWrite, write not set', async () => {
     }
     return null;
   });
-  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
-    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+  mockLoadRequest.mockImplementation(({ pageId, requestId }) => {
+    if (`${pageId}:${requestId}` === 'pageId:requestId') {
       return {
-        id: 'request:pageId:contextId:requestId',
+        id: 'request:pageId:requestId',
         type: 'TestRequestCheckWrite',
         requestId: 'requestId',
         connectionId: 'testConnection',
