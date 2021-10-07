@@ -53,6 +53,11 @@
         title: How To
         icon: QuestionOutlined
       links:
+        - id: generate-csv
+          type: MenuLink
+          pageId: generate-csv
+          properties:
+            title: Generate CSVs
         - id: generate-pdf
           type: MenuLink
           pageId: generate-pdf-document-from-data

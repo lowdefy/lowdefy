@@ -11,6 +11,7 @@
 - _ref: tutorial/tutorial-deploy.yaml
 - _ref: tutorial/next-steps.yaml
 
+- _ref: howto/generate-csv.yaml
 - _ref:
     path: howto/generate-pdf.yaml.njk
     vars:
