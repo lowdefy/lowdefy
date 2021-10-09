@@ -12,6 +12,7 @@
 **/.env
 **/lowdefy.yaml
 !packages/docs/lowdefy.yaml
+!packages/docs/howto/**/lowdefy.yaml
 
 .DS_Store
 
@@ -19,4 +20,3 @@ packages/express/config/**
 packages/build/src/test/writeFile.txt
 packages/graphql/globalConfig.json
 packages/graphql/node_modules/**
-
