@@ -78,14 +78,6 @@ properties:
     style:
       background: '#FFFFFF'
       padding: 16px 0px 0px 0px
-  breadcrumb:
-    list:
-      - _ref: version.yaml
-  {% if section %}
-      - {{ section }}
-      - {{ pageTitle }}
-  {% endif %}
-
 areas:
   header:
     blocks:
@@ -106,6 +98,28 @@ areas:
   content:
     justify: center
     blocks:
+      - id: affix_breadcrumb
+        type: Affix
+        style:
+          background: '#FFFFFF'
+        blocks:
+          - id: breadcrumb
+            type: Breadcrumb
+            style:
+              background: '#FFFFFF'
+              margin: 0px -32px 0px -32px
+              padding: 8px 32px 8px 32px
+            properties:
+              list:
+                - label:
+                    _ref: version.yaml
+                  pageId: introduction
+                - label: Lowdefy Docs
+                  pageId: introduction
+            {% if section %}
+                - {{ section }}
+                - {{ pageTitle }}
+            {% endif %}
       {% if pageImage %}
       - id: page_image
         type: Img
@@ -136,3 +150,45 @@ areas:
               contentGutter: 16
             blocks:
               _var: content
+      - id: max_width
+        type: Box
+        layout:
+          flex: 0 1 800px
+          contentGutter: 16
+        blocks:
+          {% if discussionsLink %}
+          - id: md5
+            type: MarkdownWithCode
+            properties:
+              content: |
+                -----
+                Comments and questions regarding this how-to is hosted on this [GitHub Discussions Thread]({{ discussionsLink }})
+          {% endif %}
+          {% if authorName %}
+          - id: md_author
+            type: DangerousMarkdown
+            properties:
+              content: |
+                -----
+
+                This how-to article was written by:
+          {% if authorProfile %}
+          - id: author
+            type: Avatar
+            layout:
+              flex: 0 1 auto
+            properties:
+              src:
+                _var: authorProfile
+              size: large
+          {% endif %}
+          - id: author_name
+            type: Html
+            style:
+              marginTop: -3
+            layout:
+              flex: 1 0 auto
+            properties:
+              html:
+                _var: authorName
+          {% endif %}
