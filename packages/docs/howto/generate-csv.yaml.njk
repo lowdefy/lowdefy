@@ -1,0 +1,241 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/blog.yaml.njk
+  vars:
+    pageId: generate-csv-files-from-data
+    pageTitle: How to generate CSVs using Lowdefy
+    section: How To
+    filePath: howto/generate-csv.yaml
+    pageImage: /public/images/howto/header_generate_csv.jpg
+    discussionsLink: https://github.com/lowdefy/lowdefy/discussions/891
+    authorProfile: /public/images/authors/sandile.jpeg
+    authorName: |
+      <div>Sandile Memela</div>
+      <a href="https://github.com/sah-memela">Follow @sah-memela on Github</a>
+    articleLinks:
+      - title: Generate PDFs from data in Lowdefy
+        pageId: generate-pdf-document-from-data
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          style:
+            text-align: left
+          content: |
+            Adding the functionality to generate a CSV file in Lowdefy can be accomplished by using a [JsAction](/JsAction). This action can be triggered by any in app event, such as clicking a button. This action evokes a JavaScript function that generates a and downloads a CSV file.
+
+            Click the button below to see this in action:
+
+      - id: generate_csv
+        type: Button
+        properties:
+          size: large
+          title: Generate a CSV
+          color: '#1890ff'
+        events:
+          onClick:
+            - id: generate_csv
+              type: JsAction
+              params:
+                name: csvMake
+                args:
+                  - profiles.csv          # csv filename
+                  - - Username: booker12  # an array of data, usually a reference
+                      Identifier: 9012
+                      FirstName: Rachel
+                      LastName: Booker
+                    - Username: grey07
+                      Identifier: 2070
+                      FirstName: Laura
+                      LastName: Grey
+                    - Username: johnson81
+                      Identifier: 4081
+                      FirstName: Craig
+                      LastName: Johnson
+                    - Username: jenkins46
+                      Identifier: 9346
+                      FirstName: Mary
+                      LastName: Jenkins
+                    - Username: smith79
+                      Identifier: 5079
+                      FirstName: Jamie
+                      LastName: Smith
+                  - - Username           # an array of field definitions
+                    - Identifier
+                    - FirstName
+                    - LastName
+
+      - id: md2
+        type: MarkdownWithCode
+        properties:
+          content: |
+            The full project folder for this how-to is available at:
+            https://github.com/lowdefy/lowdefy/tree/main/packages/docs/howto/generateCsv
+
+            > This how-to assumes that you are already running a Lowdefy app locally in dev mode. If not:
+            >  1) Create a empty folder.
+            >  2) Open your terminal or cmd and 'cd' to your empty folder.
+            >  3) Run 'npx lowdefy@latest init && npx lowdefy@latest dev' to initialize and start your Lowdefy app development server.
+
+            ## Generate CSV files TDLR;
+
+            1. Add the CSV JavaScript function to the app and register the [JsAction](/JsAction) method.
+            2. Load the custom JavaScript into your app HTML header.
+            3. Add a JsAction to a button's onClick event with parameters populated.
+
+            ## 1. Add the CSV JavaScript function to the app and register the JsAction method
+
+            Custom JavaScript code can be added to a Lowdefy app to allow it to accomplish things that extend the functionality of Lowdefy. Let's create a custom action which will generate a CSV based on a JavaScript function called `csvMakeFn`.
+
+            1) Create a `public` folder inside your Lowdefy working directory.
+            2) Since all content in the `public` folder is served by the Lowdefy server, simply create a `csvMake.js` file inside the `public` folder.
+            3) Add this script to the file and save.
+
+            ###### /public/csvMake.js
+            ```js
+            const csvMakeFn = async (
+              context,
+              filename,
+              data,
+              fields,
+              ) => {
+              if (!Array.isArray(data) || typeof data[0] !== 'object') {
+                throw new Error('csvMake data takes an array of objects');
+              }
+              if (!fields) {
+                fields = Object.keys(data[0]);
+              }
+              const arrays = [fields];
+              data.forEach(obj => arrays.push(fields.map(field => obj[field])));
+              const csv = arrays.map(row =>
+                row
+                .map(cell => typeof cell === 'undefined' || cell === null ? '' : cell)
+                .map(String)
+                .map(v => v.replaceAll('"', '""'))
+                .map(v => `"${v}"`)
+                .join(',')
+              ).join('\r\n');
+              const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+              const url = URL.createObjectURL(blob);
+              const el = document.createElement('a');
+              el.href = url;
+              el.setAttribute('download', filename);
+              el.click();
+            };
+            window.lowdefy.registerJsAction('csvMake', csvMakeFn);
+            ```
+
+            This script gets a few things done, firstly a csvMake function is defined and it checks if an array of data has been provided and whether the CSV fields have been populated. It then creates an array with fields and adds the provided data to the array according to the field definition. Finally, a file is downloaded using this data string.
+
+            It is important to note that in order to call this function from within your Lowdefy app, it needs to be registered as a [JsAction](/JsAction). Once this is done, the action can be triggered by any event that calls this function along with parameters.
+
+            ## 2. Load the custom JavaScript into your app HTML header
+
+            To include an external JavaScript file, we use the script tag and add an `app.html.appendHead` property to the `lowdefy.yaml` file as seen below:
+
+            ###### /lowdefy.yaml
+            ```yaml
+            name: Generate a CSV
+            lowdefy: {{ version }}
+            app:
+              html:
+                appendHead: |
+                  <script type="module" src="/public/csvMake.js"></script>
+            pages:
+            # ...
+            ```
+
+            Once this is done, the JavaScript code will be linked to the Lowdefy app using the script tag which is added to the header of the HTML file.
+
+            ## 3. Add a JsAction to a button's onClick event with parameters populated
+
+            Lowdefy actions are triggered by events, like `onClick` when a user clicks a button, or `onEnter` when the page loads. Lowdefy comes with a list of predefined actions, however, sometimes custom code is just what you need.
+
+            By default Lowdefy builds apps with a set of pre-configured, default block types to make it easier to build apps, for example using [`Button`](/Button), [`TextInput`](/TextInput), [`Box`](/Box), etc. All the blocks documented in the Lowdefy docs are default types.
+
+            We will be using a [`Button`](/Button) with an `onClick` event to trigger the JsAction that will generate and download the CSV from the provided data.
+
+            We will need to pass an array with the arguments for the csvMake function (csv filename, data, field definitions) to the custom JsAction.
+
+            Edit the `docs_button` in the Welcome page to include the JsAction as shown below:
+
+            ###### /lowdefy.yaml
+            ```yaml
+            lowdefy: 3.22.0
+            name: Generate PDF from data with Lowdefy
+
+            app:
+              html:
+                appendHead: |
+                  <script type="module" src="/public/csvMake.js"></script>
+
+            pages:
+              - id: example
+                type: PageHeaderMenu
+                properties:
+                  title: Example
+                areas:
+                  content:
+                    justify: center
+                    blocks:
+                      - id: docs_button
+                        type: Button
+                        properties:
+                          size: large
+                          title: Generate a CSV
+                          color: '#1890ff'
+                        events:
+                          onClick:
+                            - id: generate_csv
+                              type: JsAction
+                              params:
+                                name: csvMake
+                                args:
+                                  - profiles.csv          # csv filename
+                                  - - Username: booker12  # an array of data, usually a reference
+                                      Identifier: 9012
+                                      FirstName: Rachel
+                                      LastName: Booker
+                                    - Username: grey07
+                                      Identifier: 2070
+                                      FirstName: Laura
+                                      LastName: Grey
+                                    - Username: johnson81
+                                      Identifier: 4081
+                                      FirstName: Craig
+                                      LastName: Johnson
+                                    - Username: jenkins46
+                                      Identifier: 9346
+                                      FirstName: Mary
+                                      LastName: Jenkins
+                                    - Username: smith79
+                                      Identifier: 5079
+                                      FirstName: Jamie
+                                      LastName: Smith
+                                  - - Username           # an array of field definitions
+                                    - Identifier
+                                    - FirstName
+                                    - LastName
+            ```
+
+            ## Conclusion
+
+            Congratulations 🏆 your custom JsAction is now available in your Lowdefy app and ready to use to generate a CSV with the click of a button.
+
+            Check out the project folder for this how-to and why not give it a try:
+            https://github.com/lowdefy/lowdefy/tree/main/packages/docs/howto/generateCsv
+
+            Next, try fetching data from a data source and generata a CSV from the returned data.

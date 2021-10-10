@@ -55,7 +55,7 @@
       links:
         - id: generate-csv
           type: MenuLink
-          pageId: generate-csv
+          pageId: generate-csv-files-from-data
           properties:
             title: Generate CSVs
         - id: generate-pdf
