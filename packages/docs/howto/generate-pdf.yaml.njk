@@ -27,7 +27,7 @@ _ref:
       <a href="https://twitter.com/gervwyk">Follow @gervwyk on Twitter</a>
     articleLinks:
       - title: Generate CSV in Lowdefy
-        pageId: generate-csv
+        pageId: generate-csv-files-from-data
     content:
       - id: md1
         type: MarkdownWithCode
@@ -35,10 +35,10 @@ _ref:
           content: |
             It is possible to extend the functionality of Lowdefy beyond the framework's current capabilities by creating custom blocks, actions or operators. In this how-to example we will create a custom action to generate PDF documents client side or in the browser.
 
-            To see how this works, click this button to generate a PDF of an example invoice that will be discussed in this how-to.
-
-            The full project folder for this how-to is availible at:
+            The full project folder for this how-to is available at:
             https://github.com/lowdefy/lowdefy/tree/main/packages/docs/howto/generatePdf
+
+            To see how this works, click this button to generate a PDF of an example invoice that will be discussed in this how-to.
 
       - id: pdf_generate_button
         type: Button
@@ -124,9 +124,9 @@ _ref:
           content: |
             ## Generate PDF TDLR;
 
-            1. Select a client side PDF library and add the javascript to your Lowdefy app, we'll be using [pdfMake](https://github.com/bpampuch/pdfmake).
-            2. Register a custom [JsAction](/JsAction) method to generate the PDF document.
-            3. Load the custom javascript into your app HTML header.
+            1. Select a client side PDF library and add the JavaScript to your Lowdefy app, we'll be using [pdfMake](https://github.com/bpampuch/pdfmake).
+            2. Register a [JsAction](/JsAction) method to generates the PDF document.
+            3. Load the custom JavaScript into your app HTML header.
             4. Add a button with a onClick action to call the generate PDF method.
             5. Define the content of your PDF and add data variables as needed.
 
@@ -134,11 +134,10 @@ _ref:
 
             Generating PDFs is often required in workflow applications where data needs to be parsed into a document. These type of documents can be anything from quotes or invoices to contracts or even recipes. Making these documents a 100% represent the latest data, or exactly match the desired formatting can be tricky and time consuming and thats were a auto generated PDFs can be a great solution.
 
-
             > This how-to assumes that you are already running a Lowdefy app locally in dev mode. If not:
             >  1) Create a empty folder.
             >  2) Open your terminal or cmd and 'cd' to your empty folder.
-            >  3) Run 'npx lowdefy@latest init && npx lowdefy@latest dev' to initialize and start your Lowdefy app.
+            >  3) Run 'npx lowdefy@latest init && npx lowdefy@latest dev' to initialize and start your Lowdefy app development server.
 
             ## 1. Choosing a open-source PDF library
 
@@ -151,7 +150,7 @@ _ref:
 
             > If you use open-source libraries to automate your business and save you time, please try to thank the maintainers by contributing where possible or simply providing sponsorship. Look for the sponsorship links usually found in the project readme files.
 
-            ## 2. Register a custom javascript Action
+            ## 2. Register a custom JavaScript Action
 
             Lowdefy actions are triggered by page events, like `onClick` when a user clicks a button, or `onEnter` when the page loads. Lowdefy comes with a list of predefined actions, however, sometimes custom code is the best awnser. Let's create a custom action which will generate a PDF based on pdfMake config.
 
@@ -186,9 +185,9 @@ _ref:
 
             > IMPORTANT: We mentioned two additional files here. [`importUmd.js`](/public/modules/importUmd.js) is a helper function to load umd modules from a source, and [`vfs_fonts.js`](/public/modules/vfs_fonts.js) is a virtualized font which we provide to pdfMake. Download these files and copy them into your `public` folder.
 
-            ## 3. Load the custom javascript into your app HTML header
+            ## 3. Load the custom JavaScript into your app HTML header
 
-            With our javascript ready, we need to load the javascript onto our page in order for it to be evaluated by the browser.
+            With our JavaScript ready, we need to load the JavaScript onto our page in order for it to be evaluated by the browser.
 
             Create a `my_header.html` file inside your project route and add the following HTML:
 
@@ -639,4 +638,4 @@ _ref:
           content: |
             ## Conclusion
 
-            This how-to aims to demonstrate how easy custom JsActions in Lowdefy can be. With Lowdefy's ability to reference data and use javascript libraries like [pdfMake](https://github.com/bpampuch/pdfmake), Lowdefy becomes a superpower capable of even generating advanced PDFs with ease. Check out the project folder for this how-to and why not give it a try: https://github.com/lowdefy/lowdefy/tree/main/packages/docs/howto/generatePdf
+            This how-to aims to demonstrate how easy custom JsActions in Lowdefy can be. With Lowdefy's ability to reference data and use JavaScript libraries like [pdfMake](https://github.com/bpampuch/pdfmake), Lowdefy becomes a superpower capable of even generating advanced PDFs with ease. Check out the project folder for this how-to and why not give it a try: https://github.com/lowdefy/lowdefy/tree/main/packages/docs/howto/generatePdf
