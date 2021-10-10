@@ -162,33 +162,63 @@ areas:
             properties:
               content: |
                 -----
-                Comments and questions regarding this how-to is hosted on this [GitHub Discussions Thread]({{ discussionsLink }})
+                ###### Comments and questions regarding this how-to is hosted on this [GitHub Discussions Thread]({{ discussionsLink }})
+
           {% endif %}
-          {% if authorName %}
-          - id: md_author
-            type: DangerousMarkdown
+          - id: footer_links
+            type: MarkdownWithCode
             properties:
               content: |
                 -----
+          - id: links_box
+            type: Box
+            layout:
+              span: 12
+              contentGutter: 16
+            blocks:
+              - id: md_author
+                type: MarkdownWithCode
+                properties:
+                  content: |
+                    ###### Other interesting how-to guides:
+              {% for item in articleLinks %}
+              - id: links-{{ item.pageId }}
+                type: Anchor
+                properties:
+                  icon: LinkOutlined
+                  href: /{{ item.pageId }}
+                  title: {{ item.title }}
+              {% endfor %}
 
-                This how-to article was written by:
-          {% if authorProfile %}
-          - id: author
-            type: Avatar
+          {% if authorName %}
+          - id: author_box
+            type: Box
             layout:
-              flex: 0 1 auto
-            properties:
-              src:
-                _var: authorProfile
-              size: large
-          {% endif %}
-          - id: author_name
-            type: Html
-            style:
-              marginTop: -3
-            layout:
-              flex: 1 0 auto
-            properties:
-              html:
-                _var: authorName
+              span: 12
+              contentGutter: 16
+            blocks:
+              - id: md_author
+                type: MarkdownWithCode
+                properties:
+                  content: |
+                    ###### This how-to article was written by:
+              {% if authorProfile %}
+              - id: author
+                type: Avatar
+                layout:
+                  flex: 0 1 auto
+                properties:
+                  src:
+                    _var: authorProfile
+                  size: large
+              {% endif %}
+              - id: author_name
+                type: Html
+                style:
+                  marginTop: -3
+                layout:
+                  flex: 1 0 auto
+                properties:
+                  html:
+                    _var: authorName
           {% endif %}
