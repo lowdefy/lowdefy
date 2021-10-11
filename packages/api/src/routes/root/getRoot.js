@@ -14,19 +14,21 @@
   limitations under the License.
 */
 
-import cachedPromises from './cachedPromises';
-import cleanDirectory from './cleanDirectory';
-import createGetSecretsFromEnv from './createGetSecretsFromEnv';
-import getFileExtension, { getFileSubExtension } from './getFileExtension';
-import readFile from './readFile';
-import writeFile from './writeFile';
+import getHomePageId from './getHomePageId';
+import getLowdefyGlobal from './getLowdefyGlobal';
+import getMenus from './menus/getMenus';
 
-export {
-  cachedPromises,
-  cleanDirectory,
-  createGetSecretsFromEnv,
-  getFileExtension,
-  getFileSubExtension,
-  readFile,
-  writeFile,
-};
+async function getRoot(context) {
+  const lowdefyGlobalPromise = getLowdefyGlobal(context);
+  const menusPromise = getMenus(context);
+  const [lowdefyGlobal, menus] = await Promise.all([lowdefyGlobalPromise, menusPromise]);
+  const homePageId = await getHomePageId(context, { menus });
+  return {
+    authenticated: context.authenticated,
+    homePageId,
+    lowdefyGlobal,
+    menus,
+  };
+}
+
+export default getRoot;

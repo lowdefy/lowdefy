@@ -14,19 +14,11 @@
   limitations under the License.
 */
 
-import cachedPromises from './cachedPromises';
-import cleanDirectory from './cleanDirectory';
-import createGetSecretsFromEnv from './createGetSecretsFromEnv';
-import getFileExtension, { getFileSubExtension } from './getFileExtension';
-import readFile from './readFile';
-import writeFile from './writeFile';
+async function getPage({ authorize, readConfigFile }, { pageId }) {
+  const page = await readConfigFile(`pages/${pageId}/${pageId}.json`);
+  if (!page) return null;
+  if (authorize(page)) return page;
+  return null;
+}
 
-export {
-  cachedPromises,
-  cleanDirectory,
-  createGetSecretsFromEnv,
-  getFileExtension,
-  getFileSubExtension,
-  readFile,
-  writeFile,
-};
+export default getPage;

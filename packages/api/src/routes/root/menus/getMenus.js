@@ -14,19 +14,14 @@
   limitations under the License.
 */
 
-import cachedPromises from './cachedPromises';
-import cleanDirectory from './cleanDirectory';
-import createGetSecretsFromEnv from './createGetSecretsFromEnv';
-import getFileExtension, { getFileSubExtension } from './getFileExtension';
-import readFile from './readFile';
-import writeFile from './writeFile';
+import filterMenus from './filterMenus';
 
-export {
-  cachedPromises,
-  cleanDirectory,
-  createGetSecretsFromEnv,
-  getFileExtension,
-  getFileSubExtension,
-  readFile,
-  writeFile,
-};
+async function getMenus(context) {
+  const unfilteredMenus = await context.readConfigFile('menus.json');
+  // TODO: Do we need a default if build will always write the file?
+  // Someone could delete the file on disk, but then the app is broken, so it might be better to error?
+  // Same for global
+  return filterMenus(context, { menus: unfilteredMenus || [] });
+}
+
+export default getMenus;

@@ -14,18 +14,12 @@
   limitations under the License.
 */
 
-function cachedPromises(getter) {
-  const cache = {};
-
-  function getCachedPromise(key) {
-    if (cache[key]) {
-      return Promise.resolve(cache[key]);
-    }
-    cache[key] = getter(key);
-    return Promise.resolve(cache[key]);
-  }
-
-  return getCachedPromise;
+function testContext({ readConfigFile, user }) {
+  return {
+    // TODO: use actual implementation
+    authorize: () => {},
+    readConfigFile,
+  };
 }
 
-export default cachedPromises;
+export default testContext;

@@ -14,19 +14,16 @@
   limitations under the License.
 */
 
-import cachedPromises from './cachedPromises';
-import cleanDirectory from './cleanDirectory';
-import createGetSecretsFromEnv from './createGetSecretsFromEnv';
-import getFileExtension, { getFileSubExtension } from './getFileExtension';
-import readFile from './readFile';
-import writeFile from './writeFile';
+import { get } from '@lowdefy/helpers';
+import filterMenuList from './filterMenuList';
 
-export {
-  cachedPromises,
-  cleanDirectory,
-  createGetSecretsFromEnv,
-  getFileExtension,
-  getFileSubExtension,
-  readFile,
-  writeFile,
-};
+async function getMenus(context, { menus }) {
+  return menus.map((menu) => {
+    return {
+      ...menu,
+      links: filterMenuList(context, { menuList: get(menu, 'links', { default: [] }) }),
+    };
+  });
+}
+
+export default getMenus;

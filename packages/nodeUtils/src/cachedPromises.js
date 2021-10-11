@@ -14,19 +14,19 @@
   limitations under the License.
 */
 
-import cachedPromises from './cachedPromises';
-import cleanDirectory from './cleanDirectory';
-import createGetSecretsFromEnv from './createGetSecretsFromEnv';
-import getFileExtension, { getFileSubExtension } from './getFileExtension';
-import readFile from './readFile';
-import writeFile from './writeFile';
+function cachedPromises(getter) {
+  const cache = new Map();
 
-export {
-  cachedPromises,
-  cleanDirectory,
-  createGetSecretsFromEnv,
-  getFileExtension,
-  getFileSubExtension,
-  readFile,
-  writeFile,
-};
+  function getCachedPromise(key) {
+    if (cache.has(key)) {
+      return Promise.resolve(cache.get(key));
+    }
+    const promise = getter(key);
+    cache.set(key, promise);
+    return Promise.resolve(promise);
+  }
+
+  return getCachedPromise;
+}
+
+export default cachedPromises;
