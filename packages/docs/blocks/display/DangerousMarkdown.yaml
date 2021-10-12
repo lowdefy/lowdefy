@@ -24,23 +24,23 @@ _ref:
         ## Some Html content:
 
         <div style="background: #123456; padding: 10px;"><h4 style="color: white;">A simple white title box</h4></div>
-        
+
     description_content: |
       Render markdown content which can include HTML elements. If the markdown content does not need to render HTML, use the [Markdown](/Markdown) or [MarkdownWithCode](/MarkdownWithCode) blocks instead. Specify what HTML element to allow or remove by changing the default modifying the [DOMPurify's options](https://github.com/cure53/DOMPurify#can-i-configure-dompurify).
-      
-      > The DangerousMarkdown block sanitizes the markdown content using [DOMPurify's](https://github.com/cure53/DOMPurify) before converting the markdown to HTML. DangerousMarkdown provides the ability to customize the sanitization options. This comes with some security considerations, please consider [DOMPurify's Security Goals and Threat Model](https://github.com/cure53/DOMPurify/wiki/Security-Goals-&-Threat-Model) for more details regarding the security impact of using the DangerousMarkdown block. 
-      > 
+
+      > The DangerousMarkdown block sanitizes the markdown content using [DOMPurify's](https://github.com/cure53/DOMPurify) before converting the markdown to HTML. DangerousMarkdown provides the ability to customize the sanitization options. This comes with some security considerations, please consider [DOMPurify's Security Goals and Threat Model](https://github.com/cure53/DOMPurify/wiki/Security-Goals-&-Threat-Model) for more details regarding the security impact of using the DangerousMarkdown block.
+      >
       > In short, it is strongly advised to never render any user input DangerousMarkdown content, only render hardcoded or trusted markdown and HTML content.
-    
+
     examples:
       - title: DangerousMarkdown headings
         block:
           id: iframes_example
           type: DangerousMarkdown
           properties:
-            DOMPurifyOptions": 
-              ADD_TAGS": 
+            DOMPurifyOptions":
+              ADD_TAGS":
                 - iframe
             content: |
               # Markdown with an iframe:
-              <iframe style="max-width: 512px;" width="100%" src="https://www.youtube.com/embed/7N7GWdlQJlU" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              <iframe width="560" height="315" src="https://www.youtube.com/embed/pkCJpDleMtI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

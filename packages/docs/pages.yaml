@@ -11,6 +11,17 @@
 - _ref: tutorial/tutorial-deploy.yaml
 - _ref: tutorial/next-steps.yaml
 
+- _ref:
+    path: howto/generate-csv.yaml.njk
+    vars:
+      version:
+        _ref: version.yaml
+- _ref:
+    path: howto/generate-pdf.yaml.njk
+    vars:
+      version:
+        _ref: version.yaml
+
 - _ref: concepts/overview.yaml
 - _ref: concepts/cli.yaml
 - _ref: concepts/lowdefy-schema.yaml
@@ -205,6 +216,7 @@
 - _ref: operators/_string.yaml
 - _ref: operators/_subtract.yaml
 - _ref: operators/_sum.yaml
+- _ref: operators/_switch.yaml
 - _ref: operators/_type.yaml
 - _ref: operators/_uri.yaml
 - _ref: operators/_url_query.yaml
