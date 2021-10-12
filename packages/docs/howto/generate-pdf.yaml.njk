@@ -129,7 +129,18 @@ _ref:
             3. Load the custom JavaScript using a script tag.
             4. Add a button with a onClick action to call the generate PDF method.
             5. Define the content of your PDF and add data variables as needed.
-
+      - id: md_vid
+        type: DangerousMarkdown
+        properties:
+            DOMPurifyOptions:
+              ADD_TAGS:
+                - iframe
+            content: |
+              <div style="position: relative; padding-bottom: 62.5%; height: 0;"><iframe src="https://www.loom.com/embed/771948a63b0240238d7edb0d0a9a59e7" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
+      - id: md2_1
+        type: MarkdownWithCode
+        properties:
+          content: |
             ## Background
 
             Generating PDFs are often required in workflow applications where data needs to be parsed into a document. These type of documents can be anything from quotes or invoices to contracts or even recipes. Making these documents represent the latest data, or exactly match the desired formatting can be tricky and time consuming. Auto generated PDFs are a great solution.

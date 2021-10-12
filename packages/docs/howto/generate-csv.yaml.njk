@@ -87,15 +87,26 @@ _ref:
 
             > This how-to assumes that you are already running a Lowdefy app locally in dev mode. If not:
             >  1) Create a empty folder.
-            >  2) Open your terminal or cmd and 'cd' to your empty folder.
-            >  3) Run 'npx lowdefy@latest init && npx lowdefy@latest dev' to initialize and start your Lowdefy app development server.
+            >  2) Open your terminal or cmd and `cd` to your empty folder.
+            >  3) Run `npx lowdefy@latest init && npx lowdefy@latest dev` to initialize and start your Lowdefy app development server.
 
             ## Generate CSV files TLDR;
 
             1. Add the CSV JavaScript function to the app and register the [JsAction](/JsAction) method.
             2. Load the custom JavaScript using a script tag.
             3. Add a JsAction to a button's onClick event with parameters populated.
-
+      - id: md_vid
+        type: DangerousMarkdown
+        properties:
+            DOMPurifyOptions:
+              ADD_TAGS:
+                - iframe
+            content: |
+              <div style="position: relative; padding-bottom: 62.5%; height: 0;"><iframe src="https://www.loom.com/embed/b12dad89d2b54c5aad84bd92593bb7cd" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
+      - id: md2_1
+        type: MarkdownWithCode
+        properties:
+          content: |
             ## 1. Add the CSV JavaScript function to the app and register the JsAction method
 
             Custom JavaScript code can be added to a Lowdefy app to allow it to accomplish things that extend the functionality of Lowdefy. Let's create a custom action which will generate a CSV based on a JavaScript function called `csvMakeFn`.
