@@ -35,7 +35,7 @@ _ref:
           style:
             text-align: left
           content: |
-            Adding the functionality to generate a CSV file in Lowdefy can be accomplished by using a [JsAction](/JsAction). This action can be triggered by any in app event, such as clicking a button. This action evokes a JavaScript function that generates a and downloads a CSV file.
+            Adding the functionality to generate a CSV file in Lowdefy can be accomplished by using a [JsAction](/JsAction). This action can be triggered by any in app event, such as clicking a button. This action evokes a JavaScript function that generates and downloads a CSV file.
 
             Click the button below to see this in action:
 
@@ -90,10 +90,10 @@ _ref:
             >  2) Open your terminal or cmd and 'cd' to your empty folder.
             >  3) Run 'npx lowdefy@latest init && npx lowdefy@latest dev' to initialize and start your Lowdefy app development server.
 
-            ## Generate CSV files TDLR;
+            ## Generate CSV files TLDR;
 
             1. Add the CSV JavaScript function to the app and register the [JsAction](/JsAction) method.
-            2. Load the custom JavaScript into your app HTML header.
+            2. Load the custom JavaScript using a script tag.
             3. Add a JsAction to a button's onClick event with parameters populated.
 
             ## 1. Add the CSV JavaScript function to the app and register the JsAction method
@@ -137,14 +137,13 @@ _ref:
             };
             window.lowdefy.registerJsAction('csvMake', csvMakeFn);
             ```
-
             This script gets a few things done, firstly a csvMake function is defined and it checks if an array of data has been provided and whether the CSV fields have been populated. It then creates an array with fields and adds the provided data to the array according to the field definition. Finally, a file is downloaded using this data string.
 
-            It is important to note that in order to call this function from within your Lowdefy app, it needs to be registered as a [JsAction](/JsAction). Once this is done, the action can be triggered by any event that calls this function along with parameters.
+            It is important to note that to call this function from within your Lowdefy app, it needs to be registered as a [JsAction](/JsAction). This is done by calling the `window.registerAction` function, which takes two arguments - the action name and the action function. Once this is done, the action can be triggered by any event that calls this function along with parameters.
 
-            ## 2. Load the custom JavaScript into your app HTML header
+            ## 2. Load the custom JavaScript using a script tag
 
-            To include an external JavaScript file, we use the script tag and add an `app.html.appendHead` property to the `lowdefy.yaml` file as seen below:
+            To load the external JavaScript file we use the `app.html.appendHead` property in the `lowdefy.yaml` file to add a script tag that loads the module:
 
             ###### /lowdefy.yaml
             ```yaml
@@ -158,7 +157,7 @@ _ref:
             # ...
             ```
 
-            Once this is done, the JavaScript code will be linked to the Lowdefy app using the script tag which is added to the header of the HTML file.
+            This instructs the browser to fetch and execute our JavaScript file, which registers the action function so it can be used in the app.
 
             ## 3. Add a JsAction to a button's onClick event with parameters populated
 
@@ -191,7 +190,7 @@ _ref:
                   content:
                     justify: center
                     blocks:
-                      - id: docs_button
+                      - id: generate_csv
                         type: Button
                         properties:
                           size: large
@@ -238,4 +237,4 @@ _ref:
             Check out the project folder for this how-to and why not give it a try:
             https://github.com/lowdefy/lowdefy/tree/main/packages/docs/howto/generateCsv
 
-            Next, try fetching data from a data source and generata a CSV from the returned data.
+            Next, try fetching data from a data source and generate a CSV from the returned data.

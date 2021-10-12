@@ -122,22 +122,22 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            ## Generate PDF TDLR;
+            ## Generate PDF TLDR;
 
             1. Select a client side PDF library and add the JavaScript to your Lowdefy app, we'll be using [pdfMake](https://github.com/bpampuch/pdfmake).
-            2. Register a [JsAction](/JsAction) method to generates the PDF document.
-            3. Load the custom JavaScript into your app HTML header.
+            2. Register a [JsAction](/JsAction) method to generate the PDF document.
+            3. Load the custom JavaScript using a script tag.
             4. Add a button with a onClick action to call the generate PDF method.
             5. Define the content of your PDF and add data variables as needed.
 
             ## Background
 
-            Generating PDFs is often required in workflow applications where data needs to be parsed into a document. These type of documents can be anything from quotes or invoices to contracts or even recipes. Making these documents a 100% represent the latest data, or exactly match the desired formatting can be tricky and time consuming and thats were a auto generated PDFs can be a great solution.
+            Generating PDFs are often required in workflow applications where data needs to be parsed into a document. These type of documents can be anything from quotes or invoices to contracts or even recipes. Making these documents represent the latest data, or exactly match the desired formatting can be tricky and time consuming. Auto generated PDFs are a great solution.
 
             > This how-to assumes that you are already running a Lowdefy app locally in dev mode. If not:
             >  1) Create a empty folder.
-            >  2) Open your terminal or cmd and 'cd' to your empty folder.
-            >  3) Run 'npx lowdefy@latest init && npx lowdefy@latest dev' to initialize and start your Lowdefy app development server.
+            >  2) Open your terminal or cmd and `cd` to your empty folder.
+            >  3) Run `npx lowdefy@latest init && npx lowdefy@latest dev` to initialize and start your Lowdefy app development server.
 
             ## 1. Choosing a open-source PDF library
 
@@ -185,7 +185,7 @@ _ref:
 
             > IMPORTANT: We mentioned two additional files here. [`importUmd.js`](/public/modules/importUmd.js) is a helper function to load umd modules from a source, and [`vfs_fonts.js`](/public/modules/vfs_fonts.js) is a virtualized font which we provide to pdfMake. Download these files and copy them into your `public` folder.
 
-            ## 3. Load the custom JavaScript into your app HTML header
+            ## 3. Load the custom JavaScript using a script tag
 
             With our JavaScript ready, we need to load the JavaScript onto our page in order for it to be evaluated by the browser.
 
@@ -237,7 +237,7 @@ _ref:
               - id: generate-a-pdf
                 type: PageHeaderMenu
                 blocks:
-                  - id: make_pdf_button
+                  - id: generate_pdf_button
                     type: Button
                     properties:
                       title: Download PDF
@@ -287,8 +287,7 @@ _ref:
           content: |
             ## 4. Define the content of the PDF
 
-            Finally to demonstrate how powerful this can be, we'll build out our pdfMake config to generate an invoice. In practice we would  request the account data from our database and then pass the data to pdfMake when the button is clicked. For this example, we'll just hard code the invoice data and set it to the page state. The full project folder for this example is availible at: https://github.com/lowdefy/lowdefy/tree/main/packages/docs/howto/generatePdf
-
+            Finally to demonstrate how powerful this can be, we'll build out our pdfMake config to generate an invoice. In practice we would request the account data from our database and then pass the data to pdfMake when the button is clicked. For this example, we'll just hard code the invoice data and set it to the page state. The full project folder for this example is available at: https://github.com/lowdefy/lowdefy/tree/main/packages/docs/howto/generatePdf
 
             ###### /lowdefy.yaml
             ```yaml

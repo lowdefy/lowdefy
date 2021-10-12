@@ -15,7 +15,7 @@ pages:
       content:
         justify: center
         blocks:
-          - id: docs_button
+          - id: generate_csv
             type: Button
             properties:
               size: large
@@ -53,3 +53,11 @@ pages:
                         - Identifier
                         - FirstName
                         - LastName
+      footer:
+        blocks:
+          - id: footer
+            type: Paragraph
+            properties:
+              type: secondary
+              content: |
+                Made by a Lowdefy 🤖

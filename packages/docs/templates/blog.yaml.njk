@@ -136,6 +136,7 @@ areas:
         type: Box
         layout:
           flex: 0 1 800px
+          contentGutter: 16
         style:
           marginTop: 32
         blocks:
@@ -152,19 +153,13 @@ areas:
               contentGutter: 16
             blocks:
               _var: content
-      - id: max_width
-        type: Box
-        layout:
-          flex: 0 1 800px
-          contentGutter: 16
-        blocks:
           {% if discussionsLink %}
           - id: md5
             type: MarkdownWithCode
             properties:
               content: |
                 -----
-                ###### Comments and questions regarding this how-to is hosted on this [GitHub Discussions Thread]({{ discussionsLink }})
+                ###### Comments and questions regarding this how-to are availible on [this GitHub Discussions Thread]({{ discussionsLink }})
 
           {% endif %}
           - id: footer_links

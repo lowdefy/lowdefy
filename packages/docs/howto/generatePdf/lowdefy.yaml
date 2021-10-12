@@ -91,7 +91,7 @@ pages:
                               on:
                                 _state: invoice.customer
 
-                      - id: docs_button
+                      - id: generate_pdf_button
                         type: Button
                         properties:
                           size: large
