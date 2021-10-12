@@ -35,4 +35,7 @@ const server = getServer({
   shellDirectory,
 });
 
+// TODO: listen on 0.0.0.0 as host
+//www.fastify.io/docs/latest/Server/#listen
+
 server.listen({ port }, () => console.log(`Server started at port ${port}`));
