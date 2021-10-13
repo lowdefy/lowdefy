@@ -4823,7 +4823,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["style-loader", "virtual:28dcad45a9eac85c87b0e2a47aa8e9671d3685bd1cfba266c3134977bb5537f09c8e3a1904c7953f631857e3b29ef6f27a3ed5d92a8e3b7ec6fd199ab66357d0#npm:2.0.0"],
             ["swr", "virtual:28dcad45a9eac85c87b0e2a47aa8e9671d3685bd1cfba266c3134977bb5537f09c8e3a1904c7953f631857e3b29ef6f27a3ed5d92a8e3b7ec6fd199ab66357d0#npm:1.0.1"],
             ["webpack", "virtual:28dcad45a9eac85c87b0e2a47aa8e9671d3685bd1cfba266c3134977bb5537f09c8e3a1904c7953f631857e3b29ef6f27a3ed5d92a8e3b7ec6fd199ab66357d0#npm:5.38.1"],
-            ["webpack-cli", "virtual:28dcad45a9eac85c87b0e2a47aa8e9671d3685bd1cfba266c3134977bb5537f09c8e3a1904c7953f631857e3b29ef6f27a3ed5d92a8e3b7ec6fd199ab66357d0#npm:4.7.0"]
+            ["webpack-cli", "virtual:28dcad45a9eac85c87b0e2a47aa8e9671d3685bd1cfba266c3134977bb5537f09c8e3a1904c7953f631857e3b29ef6f27a3ed5d92a8e3b7ec6fd199ab66357d0#npm:4.7.0"],
+            ["webpack-merge", "npm:5.7.3"]
           ],
           "linkType": "SOFT",
         }]

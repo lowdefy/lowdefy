@@ -15,18 +15,43 @@
 */
 
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import usePageData from '../swr/usePageData';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 
-const Page = () => {
+import { urlQuery } from '@lowdefy/helpers';
+
+import usePageData from '../swr/usePageData';
+import Block from './block/Block';
+import Context from './Context';
+import Helmet from './Helmet';
+import setupLink from '../utils/setupLink';
+
+const Page = ({ lowdefy }) => {
+  console.log('Page', lowdefy);
   const { pageId } = useParams();
-  const { data } = usePageData(pageId);
-  if (!data) return <div>Loading...</div>;
+  const { search } = useLocation();
+  lowdefy.pageId = pageId;
+  lowdefy.routeHistory = useHistory();
+  lowdefy.link = setupLink(lowdefy);
+  lowdefy.urlQuery = urlQuery.parse(search || '');
+
+  const { data: page } = usePageData(pageId);
+  console.log('page', page);
   return (
-    <>
-      <h1>{`This is page ${pageId}`}</h1>
-      <p>{JSON.stringify(data)}</p>
-    </>
+    <div id={pageId}>
+      <Context page={page} lowdefy={lowdefy}>
+        {(context) => (
+          <>
+            <Helmet properties={context.RootBlocks.map[pageId].eval.properties} />
+            <Block
+              block={context.RootBlocks.map[pageId]}
+              Blocks={context.RootBlocks}
+              context={context}
+              lowdefy={lowdefy}
+            />
+          </>
+        )}
+      </Context>
+    </div>
   );
 };
 

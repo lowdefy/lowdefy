@@ -14,14 +14,15 @@
   limitations under the License.
 */
 
-import filterMenus from './filterMenus';
+import useSWR from 'swr';
 
-async function getMenus(context) {
-  const unfilteredMenus = await context.readConfigFile('menus.json');
-  // TODO: Do we need a default if build will always write the file?
-  // Someone could delete the file on disk, but then the app is broken, so it might be better to error?
-  // Same for global
-  return filterMenus(context, { menus: unfilteredMenus || [] });
+function fetchRootData() {
+  return fetch('/lowdefy/root').then((res) => res.json());
 }
 
-export default getMenus;
+function useRootData() {
+  const { data } = useSWR('root', fetchRootData, { suspense: true });
+  return { data };
+}
+
+export default useRootData;

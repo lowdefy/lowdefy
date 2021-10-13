@@ -32,10 +32,11 @@
   "scripts": {
     "babel": "babel src/location.js --out-dir dist",
     "build": "yarn webpack && yarn babel",
-    "build:dev": "NODE_ENV=development yarn webpack && yarn babel",
+    "build:dev": "yarn webpack:dev && yarn babel",
     "clean": "rm -rf dist",
     "prepare": "yarn build",
-    "webpack": "webpack --config webpack.config.js"
+    "webpack": "webpack --config webpack.config.js",
+    "webpack:dev": "webpack --config webpack.dev.js"
   },
   "dependencies": {
     "@lowdefy/block-tools": "3.22.0",
@@ -62,7 +63,8 @@
     "jest": "26.6.3",
     "style-loader": "2.0.0",
     "webpack": "5.38.1",
-    "webpack-cli": "4.7.0"
+    "webpack-cli": "4.7.0",
+    "webpack-merge": "5.7.3"
   },
   "publishConfig": {
     "access": "public"

@@ -14,19 +14,15 @@
   limitations under the License.
 */
 
-import getHomePageId from './getHomePageId';
-import getLowdefyGlobal from './getLowdefyGlobal';
-import getMenus from './menus/getMenus';
+import React from 'react';
+import { Helmet } from 'react-helmet';
 
-async function getRoot(context) {
-  const [lowdefyGlobal, menus] = await Promise.all([getLowdefyGlobal(context), getMenus(context)]);
-  const homePageId = await getHomePageId(context, { menus });
-  return {
-    authenticated: context.authenticated,
-    homePageId,
-    lowdefyGlobal,
-    menus,
-  };
-}
+const BindHelmet = ({ properties }) => {
+  return (
+    <Helmet>
+      <title>{properties.title}</title>
+    </Helmet>
+  );
+};
 
-export default getRoot;
+export default BindHelmet;

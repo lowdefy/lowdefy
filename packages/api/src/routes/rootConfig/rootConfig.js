@@ -14,15 +14,19 @@
   limitations under the License.
 */
 
-import useSWR from 'swr';
+import getHomePageId from './getHomePageId';
+import getLowdefyGlobal from './getLowdefyGlobal';
+import getMenus from './menus/getMenus';
 
-function fetchPageData(pageId) {
-  return fetch(`/lowdefy/page/${pageId}`).then((res) => res.json());
+async function rootConfig(context) {
+  const [lowdefyGlobal, menus] = await Promise.all([getLowdefyGlobal(context), getMenus(context)]);
+  const homePageId = await getHomePageId(context, { menus });
+  return {
+    authenticated: context.authenticated,
+    homePageId,
+    lowdefyGlobal,
+    menus,
+  };
 }
 
-function usePageData(pageId) {
-  const { data } = useSWR(pageId, fetchPageData, { suspense: true });
-  return { data };
-}
-
-export default usePageData;
+export default rootConfig;

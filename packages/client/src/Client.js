@@ -14,24 +14,70 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+
+import { ErrorBoundary, Loading } from '@lowdefy/block-tools';
+import { get } from '@lowdefy/helpers';
+
 import Page from './page/Page';
+import useRootData from './swr/useRootData';
+
+const lowdefy = {
+  basePath: window.lowdefy.basePath,
+  contexts: {},
+  displayMessage: () => () => undefined,
+  document,
+  imports: {
+    jsActions: window.lowdefy.imports.jsActions,
+    jsOperators: window.lowdefy.imports.jsOperators,
+  },
+  inputs: {},
+  link: () => {},
+  localStorage,
+  registerJsAction: window.lowdefy.registerJsAction,
+  registerJsOperator: window.lowdefy.registerJsOperator,
+  updaters: {},
+  window,
+};
+
+delete window.lowdefy.imports;
+if (window.location.origin.includes('http://localhost')) {
+  window.lowdefy = lowdefy;
+}
+
+const RootData = ({ children, lowdefy }) => {
+  const { data } = useRootData();
+  console.log('RootData', data);
+
+  lowdefy.homePageId = data.homePageId;
+  lowdefy.menus = data.menus;
+  lowdefy.lowdefyGlobal = JSON.parse(JSON.stringify(get(data, 'lowdefyGlobal', { default: {} })));
+  return <>{children}</>;
+};
 
 const Root = () => {
+  lowdefy.updateBlock = (blockId) => lowdefy.updaters[blockId] && lowdefy.updaters[blockId]();
+  lowdefy.user = {};
   return (
-    <Switch>
-      <Route exact path={'/:pageId'}>
-        <Page />
-      </Route>
-    </Switch>
+    <RootData lowdefy={lowdefy}>
+      <Switch>
+        <Route exact path={'/:pageId'}>
+          <Page lowdefy={lowdefy} />
+        </Route>
+      </Switch>
+    </RootData>
   );
 };
 
 const Client = () => (
-  <BrowserRouter>
-    <Root />
-  </BrowserRouter>
+  <ErrorBoundary fullPage>
+    <Suspense fallback={<Loading type="Spinner" properties={{ height: '100vh' }} />}>
+      <BrowserRouter>
+        <Root />
+      </BrowserRouter>
+    </Suspense>
+  </ErrorBoundary>
 );
 
 export default Client;

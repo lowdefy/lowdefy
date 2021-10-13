@@ -22,6 +22,7 @@ function pageHtml({ context, page, templateFn }) {
   return templateFn({
     LOWDEFY_VERSION: context.version,
     LOWDEFY_PAGE_ID: page.pageId,
+    // TODO: Don't use properties.title since it might be an operator
     LOWDEFY_PAGE_TITLE: get(page, 'properties.title', { default: 'Lowdefy App' }),
     LOWDEFY_SERVER_BASE_PATH: get(context, 'serverBasePath', { default: '' }),
     // TODO: Implement

@@ -1,18 +1,23 @@
 const path = require('path');
 const webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+// const CopyPlugin = require('copy-webpack-plugin');
 const { ModuleFederationPlugin } = require('webpack').container;
 const packageJson = require('./package.json');
 
 module.exports = {
   entry: './src/index',
-  mode: 'production',
+  // mode: 'production',
   output: {
     filename: `[name]_${packageJson.version}.js`,
     chunkFilename: '[contenthash].js',
     path: path.resolve(__dirname, 'dist/client'),
+  },
+  resolve: {
+    alias: {
+      buffer: require.resolve('buffer'),
+    },
+    fallback: { buffer: false, path: false, fs: false, crypto: false },
   },
   module: {
     rules: [
@@ -44,14 +49,9 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(),
-    new HtmlWebpackPlugin({
-      minify: false,
-      publicPath: '__LOWDEFY_SERVER_BASE_PATH__/client',
-      template: './src/index.html',
-    }),
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('production'),
-    }),
+    // new webpack.DefinePlugin({
+    //   'process.env.NODE_ENV': JSON.stringify('production'),
+    // }),
     new ModuleFederationPlugin({
       name: 'lowdefy_client',
       shared: {
@@ -68,6 +68,7 @@ module.exports = {
         },
       },
     }),
+    new webpack.ProvidePlugin({ Buffer: ['buffer', 'Buffer'] }),
     // new CopyPlugin({
     //   patterns: [
     //     {
