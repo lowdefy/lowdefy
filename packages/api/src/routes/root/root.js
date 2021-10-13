@@ -14,11 +14,19 @@
   limitations under the License.
 */
 
-import { getRoot } from '@lowdefy/api';
+import getHomePageId from './getHomePageId';
+import getLowdefyGlobal from './getLowdefyGlobal';
+import getMenus from './menus/getMenus';
 
-async function page(request, reply) {
-  const root = await getRoot(request.lowdefyContext);
-  reply.send(root);
+async function getRoot(context) {
+  const [lowdefyGlobal, menus] = await Promise.all([getLowdefyGlobal(context), getMenus(context)]);
+  const homePageId = await getHomePageId(context, { menus });
+  return {
+    authenticated: context.authenticated,
+    homePageId,
+    lowdefyGlobal,
+    menus,
+  };
 }
 
-export default page;
+export default getRoot;

@@ -14,18 +14,12 @@
   limitations under the License.
 */
 
-import path from 'path';
-import { cachedPromises, getFileExtension, readFile } from '@lowdefy/node-utils';
+import { pageConfig } from '@lowdefy/api';
 
-function createReadConfigFile({ configDirectory }) {
-  async function readConfigFile(filePath) {
-    const fileContent = await readFile(path.resolve(configDirectory, filePath));
-    if (getFileExtension(filePath) === 'json') {
-      return JSON.parse(fileContent);
-    }
-    return fileContent;
-  }
-  return cachedPromises(readConfigFile);
+async function page(request, reply) {
+  const { pageId } = request.params;
+  const page = await pageConfig(request.lowdefyContext, { pageId });
+  reply.send(page);
 }
 
-export default createReadConfigFile;
+export default page;

@@ -14,21 +14,9 @@
   limitations under the License.
 */
 
-import getHomePageId from './getHomePageId';
-import getLowdefyGlobal from './getLowdefyGlobal';
-import getMenus from './menus/getMenus';
-
-async function getRoot(context) {
-  console.log('getRoot');
-  const [lowdefyGlobal, menus] = await Promise.all([getLowdefyGlobal(context), getMenus(context)]);
-  console.log('menus', menus);
-  const homePageId = await getHomePageId(context, { menus });
-  return {
-    authenticated: context.authenticated,
-    homePageId,
-    lowdefyGlobal,
-    menus,
-  };
+function home(request, reply) {
+  // TODO
+  reply.redirect('/welcome');
 }
 
-export default getRoot;
+export default home;

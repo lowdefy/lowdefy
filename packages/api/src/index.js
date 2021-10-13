@@ -15,7 +15,8 @@
 */
 
 import createContext from './context/createContext';
-import getPage from './routes/page/getPage';
-import getRoot from './routes/root/getRoot';
+import pageConfig from './routes/pageConfig/pageConfig';
+import pageHtml from './routes/pageHtml/pageHtml';
+import root from './routes/root/root';
 
-export { createContext, getPage, getRoot };
+export { createContext, pageConfig, pageHtml, root };

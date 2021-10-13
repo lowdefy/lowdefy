@@ -15,15 +15,17 @@
 */
 
 import { createContext } from '@lowdefy/api';
-import page from './page';
+import homeHtml from './homeHtml';
+import pageHtml from './pageHtml';
+import pageConfig from './pageConfig';
 import root from './root';
 
 async function routes(fastify, { lowdefy }, done) {
   // This is done as an optimisation, the lowdefyContext object will be added in the preHandler hook
   fastify.decorateRequest('lowdefyContext', null);
 
-  const { apiPath, configDirectory, development, getSecrets } = lowdefy;
-  const contextFn = await createContext({ apiPath, configDirectory, development, getSecrets });
+  const { configDirectory, development, getSecrets, serveStaticFiles } = lowdefy;
+  const contextFn = await createContext({ configDirectory, development, getSecrets });
 
   fastify.addHook('preHandler', (request, reply, done) => {
     request.lowdefyContext = contextFn({
@@ -34,8 +36,12 @@ async function routes(fastify, { lowdefy }, done) {
     done();
   });
 
-  fastify.get('/page/:pageId', page);
-  fastify.get('/root', root);
+  if (serveStaticFiles) {
+    fastify.get('/', homeHtml);
+    fastify.get('/:pageId', pageHtml);
+  }
+  fastify.get('/lowdefy/page/:pageId', pageConfig);
+  fastify.get('/lowdefy/root', root);
   done();
 }
 

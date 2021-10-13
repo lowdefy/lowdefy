@@ -10,7 +10,7 @@ module.exports = {
   entry: './src/index',
   mode: 'production',
   output: {
-    filename: `[name]_v${packageJson.version.replaceAll('.', '_')}.js`,
+    filename: `[name]_${packageJson.version}.js`,
     chunkFilename: '[contenthash].js',
     path: path.resolve(__dirname, 'dist/client'),
   },

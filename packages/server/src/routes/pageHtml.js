@@ -14,9 +14,16 @@
   limitations under the License.
 */
 
-function home(request, reply) {
-  // TODO: We need to call /lowdefy/root here to get homepageId given user auth
-  reply.redirect('/home');
+import { pageHtml } from '@lowdefy/api';
+
+async function page(request, reply) {
+  const { pageId } = request.params;
+  const page = await pageHtml(request.lowdefyContext, { pageId });
+  if (!page) {
+    reply.redirect('/404');
+  }
+  reply.type('text/html');
+  reply.send(page);
 }
 
-export default home;
+export default page;

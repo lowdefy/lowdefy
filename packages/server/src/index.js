@@ -16,16 +16,14 @@
 
 import Fastify from 'fastify';
 
-import html from './routes/html';
-import lowdefy from './routes/lowdefy';
-import staticFiles from './routes/staticFiles';
+import routes from './routes';
+import staticFiles from './staticFiles';
 
 function getServer({
   configDirectory,
   clientDirectory,
   development = false,
   getSecrets,
-  apiPath,
   publicDirectory,
   // serverBasePath = '',
   serveStaticFiles = true,
@@ -35,13 +33,12 @@ function getServer({
     logger: true,
   });
 
-  fastify.register(lowdefy, {
-    prefix: '/lowdefy',
+  fastify.register(routes, {
     lowdefy: {
       configDirectory,
       development,
       getSecrets,
-      apiPath,
+      serveStaticFiles,
     },
   });
 
@@ -58,8 +55,6 @@ function getServer({
         directory: publicDirectory,
       },
     });
-
-    fastify.register(html);
   }
 
   return fastify;

@@ -14,13 +14,11 @@
   limitations under the License.
 */
 
-import home from './home';
-import page from './page';
-
-function routes(fastify, options, done) {
-  fastify.get('/', home);
-  fastify.get('/:pageId', page);
-  done();
+async function pageHtml({ authorize, readConfigFile }, { pageId }) {
+  const page = await readConfigFile(`static/${pageId}.html`);
+  if (!page) return null;
+  if (authorize(page)) return page;
+  return null;
 }
 
-export default routes;
+export default pageHtml;
