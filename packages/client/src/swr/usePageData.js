@@ -14,13 +14,15 @@
   limitations under the License.
 */
 
-import home from './home';
-import page from './page';
+import useSWR from 'swr';
 
-function routes(fastify, options, done) {
-  fastify.get('/', home);
-  fastify.get('/:pageId', page);
-  done();
+function fetchPageData(pageId) {
+  return fetch(`/lowdefy/page/${pageId}`).then((res) => res.json());
 }
 
-export default routes;
+function usePageData(pageId) {
+  const { data } = useSWR(pageId, fetchPageData);
+  return { data };
+}
+
+export default usePageData;

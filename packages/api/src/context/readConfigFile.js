@@ -19,7 +19,8 @@ import { cachedPromises, readFile } from '@lowdefy/node-utils';
 
 function createReadConfigFile({ configDirectory }) {
   async function readConfigFile(filePath) {
-    return readFile(path.resolve(configDirectory, filePath));
+    const fileContent = await readFile(path.resolve(configDirectory, filePath));
+    return JSON.parse(fileContent);
   }
   return cachedPromises(readConfigFile);
 }

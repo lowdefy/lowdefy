@@ -19,9 +19,9 @@ import getLowdefyGlobal from './getLowdefyGlobal';
 import getMenus from './menus/getMenus';
 
 async function getRoot(context) {
-  const lowdefyGlobalPromise = getLowdefyGlobal(context);
-  const menusPromise = getMenus(context);
-  const [lowdefyGlobal, menus] = await Promise.all([lowdefyGlobalPromise, menusPromise]);
+  console.log('getRoot');
+  const [lowdefyGlobal, menus] = await Promise.all([getLowdefyGlobal(context), getMenus(context)]);
+  console.log('menus', menus);
   const homePageId = await getHomePageId(context, { menus });
   return {
     authenticated: context.authenticated,

@@ -17,7 +17,7 @@
 import { get } from '@lowdefy/helpers';
 import filterMenuList from './filterMenuList';
 
-async function getMenus(context, { menus }) {
+function filterMenus(context, { menus }) {
   return menus.map((menu) => {
     return {
       ...menu,
@@ -26,4 +26,4 @@ async function getMenus(context, { menus }) {
   });
 }
 
-export default getMenus;
+export default filterMenus;

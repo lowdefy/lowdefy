@@ -14,13 +14,24 @@
   limitations under the License.
 */
 
-import home from './home';
-import page from './page';
+import React from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Page from './page/Page';
 
-function routes(fastify, options, done) {
-  fastify.get('/', home);
-  fastify.get('/:pageId', page);
-  done();
-}
+const Root = () => {
+  return (
+    <Switch>
+      <Route exact path={'/:pageId'}>
+        <Page />
+      </Route>
+    </Switch>
+  );
+};
 
-export default routes;
+const Client = () => (
+  <BrowserRouter>
+    <Root />
+  </BrowserRouter>
+);
+
+export default Client;

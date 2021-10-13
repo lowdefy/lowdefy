@@ -1,12 +1,11 @@
 {
-  "name": "@lowdefy/server",
+  "name": "@lowdefy/client",
   "version": "3.22.0",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
   "keywords": [
-    "lowdefy",
-    "server"
+    "lowdefy"
   ],
   "bugs": {
     "url": "https://github.com/lowdefy/lowdefy/issues"
@@ -25,35 +24,45 @@
     "type": "git",
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
-  "main": "dist/index.js",
+  "browser": "dist/index.js",
+  "main": "dist/location.js",
   "files": [
     "dist/*"
   ],
   "scripts": {
-    "babel": "babel src --out-dir dist",
-    "build": "rm -rf dist && babel src --out-dir dist",
-    "clean": "rm -rf dist && rm -rf .lowdefy",
+    "babel": "babel src/location.js --out-dir dist",
+    "build": "yarn webpack && yarn babel",
+    "build:dev": "NODE_ENV=development yarn webpack && yarn babel",
+    "clean": "rm -rf dist",
     "prepare": "yarn build",
-    "start": "nodemon dist/server.js"
+    "webpack": "webpack --config webpack.config.js"
   },
   "dependencies": {
-    "@lowdefy/api": "3.22.0",
-    "@lowdefy/client": "3.22.0",
+    "@lowdefy/block-tools": "3.22.0",
+    "@lowdefy/engine": "3.22.0",
     "@lowdefy/helpers": "3.22.0",
-    "@lowdefy/node-utils": "3.22.0",
-    "fastify": "3.22.0",
-    "fastify-static": "4.4.1"
+    "@lowdefy/layout": "3.22.0",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-helmet": "6.1.0",
+    "react-router-dom": "5.2.0",
+    "swr": "1.0.1"
   },
   "devDependencies": {
     "@babel/cli": "7.14.3",
     "@babel/core": "7.14.3",
     "@babel/preset-env": "7.14.4",
     "@babel/preset-react": "7.13.13",
-    "@lowdefy/block-tools": "3.22.0",
     "babel-jest": "26.6.3",
     "babel-loader": "8.2.2",
+    "clean-webpack-plugin": "3.0.0",
+    "copy-webpack-plugin": "9.0.0",
+    "css-loader": "5.2.6",
+    "html-webpack-plugin": "5.3.1",
     "jest": "26.6.3",
-    "nodemon": "2.0.7"
+    "style-loader": "2.0.0",
+    "webpack": "5.38.1",
+    "webpack-cli": "4.7.0"
   },
   "publishConfig": {
     "access": "public"

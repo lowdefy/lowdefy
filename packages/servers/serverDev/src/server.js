@@ -16,7 +16,7 @@
 
 import dotenv from 'dotenv';
 import getServer from '@lowdefy/server';
-import { publicDirectory as defaultPublicDirectory } from '@lowdefy/shell';
+import { clientDirectory, publicDirectory as defaultPublicDirectory } from '@lowdefy/client';
 import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
 
 dotenv.config({ silent: true });
@@ -29,7 +29,7 @@ const serverBasePath = process.env.LOWDEFY_SERVER_BASE_PATH || '';
 
 const server = getServer({
   configDirectory,
-  clientDirectory: '../../client/dist',
+  clientDirectory,
   development: true,
   getSecrets: createGetSecretsFromEnv(),
   publicDirectory,

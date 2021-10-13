@@ -3234,6 +3234,36 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@lowdefy/client@3.22.0, @lowdefy/client@workspace:packages/client":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/client@workspace:packages/client"
+  dependencies:
+    "@babel/cli": 7.14.3
+    "@babel/core": 7.14.3
+    "@babel/preset-env": 7.14.4
+    "@babel/preset-react": 7.13.13
+    "@lowdefy/block-tools": 3.22.0
+    "@lowdefy/engine": 3.22.0
+    "@lowdefy/helpers": 3.22.0
+    "@lowdefy/layout": 3.22.0
+    babel-jest: 26.6.3
+    babel-loader: 8.2.2
+    clean-webpack-plugin: 3.0.0
+    copy-webpack-plugin: 9.0.0
+    css-loader: 5.2.6
+    html-webpack-plugin: 5.3.1
+    jest: 26.6.3
+    react: 17.0.2
+    react-dom: 17.0.2
+    react-helmet: 6.1.0
+    react-router-dom: 5.2.0
+    style-loader: 2.0.0
+    swr: 1.0.1
+    webpack: 5.38.1
+    webpack-cli: 4.7.0
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/color@3.22.0, @lowdefy/color@workspace:packages/color":
   version: 0.0.0-use.local
   resolution: "@lowdefy/color@workspace:packages/color"
@@ -3546,9 +3576,9 @@ __metadata:
     "@babel/cli": 7.14.3
     "@babel/core": 7.14.3
     "@babel/preset-env": 7.14.4
+    "@lowdefy/client": 3.22.0
     "@lowdefy/node-utils": 3.22.0
     "@lowdefy/server": 3.22.0
-    "@lowdefy/shell": 3.22.0
     babel-jest: 26.6.3
     dotenv: 10.0.0
     jest: 26.6.3
@@ -3640,6 +3670,7 @@ __metadata:
     "@babel/preset-react": 7.13.13
     "@lowdefy/api": 3.22.0
     "@lowdefy/block-tools": 3.22.0
+    "@lowdefy/client": 3.22.0
     "@lowdefy/helpers": 3.22.0
     "@lowdefy/node-utils": 3.22.0
     babel-jest: 26.6.3
@@ -8535,6 +8566,13 @@ __metadata:
   version: 2.3.1
   resolution: "deprecation@npm:2.3.1"
   checksum: 59343a0b927c5b6f67abb899fda68bf42b132c05ef1a985952c1e220c41fe5035b2d54a28c7c2a8b5239075d1dc25c83340242ada75f1c06c1bb047176f05f9b
+  languageName: node
+  linkType: hard
+
+"dequal@npm:2.0.2":
+  version: 2.0.2
+  resolution: "dequal@npm:2.0.2"
+  checksum: 3b5b019a873da282a25512c632c077e5e8e2a019e71c5b6968836443b861e44176ee3934facfecdc14994d553c1ff4a6c7232278d6aef87baf65e2413d41760c
   languageName: node
   linkType: hard
 
@@ -20209,6 +20247,17 @@ resolve@^2.0.0-next.3:
     has-flag: ^4.0.0
     supports-color: ^7.0.0
   checksum: 91af5f206c55fe38c5acacafca8e13bee8ddf59f817178d3cb83388bd85d3ec181a59c446439b63aafa0375e579a7e8d8ec044a0ed1143137ba12f303eb76c6a
+  languageName: node
+  linkType: hard
+
+"swr@npm:1.0.1":
+  version: 1.0.1
+  resolution: "swr@npm:1.0.1"
+  dependencies:
+    dequal: 2.0.2
+  peerDependencies:
+    react: ^16.11.0 || ^17.0.0
+  checksum: aac517e3cde34bbc9904fbf1f9aac79797ec0857d7ec381023ba87505e170ae2fea3689dff659112f150d7a2b6af6df6df3b7e9e6a61f4e21125834d1539f1ee
   languageName: node
   linkType: hard
 

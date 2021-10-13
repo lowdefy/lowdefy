@@ -36,9 +36,9 @@
     "start": "nodemon dist/server.js"
   },
   "dependencies": {
+    "@lowdefy/client": "3.22.0",
     "@lowdefy/node-utils": "3.22.0",
     "@lowdefy/server": "3.22.0",
-    "@lowdefy/shell": "3.22.0",
     "dotenv": "10.0.0"
   },
   "devDependencies": {
