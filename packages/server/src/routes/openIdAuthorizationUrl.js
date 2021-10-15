@@ -14,12 +14,17 @@
   limitations under the License.
 */
 
-import { pageConfig } from '@lowdefy/api';
+import { openIdAuthorizationUrl } from '@lowdefy/api';
 
-async function pageConfigHandler(request, reply) {
-  const { pageId } = request.params;
-  const page = await pageConfig(request.lowdefyContext, { pageId });
+async function openIdAuthorizationUrlHandler(request, reply) {
+  const { authUrlQueryParams, input, pageId, urlQuery } = request.body;
+  const page = await openIdAuthorizationUrl(request.lowdefyContext, {
+    authUrlQueryParams,
+    input,
+    pageId,
+    urlQuery,
+  });
   reply.send(page);
 }
 
-export default pageConfigHandler;
+export default openIdAuthorizationUrlHandler;

@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import filterMenus from './filterMenus';
+// import filterMenus from './filterMenus';
 
 async function getMenus(context) {
   const unfilteredMenus = await context.readConfigFile('menus.json');
-  return unfilteredMenus;
   // TODO: fix
-  return filterMenus(context, { menus: unfilteredMenus });
+  // return filterMenus(context, { menus: unfilteredMenus });
+  return unfilteredMenus;
 }
 
 export default getMenus;

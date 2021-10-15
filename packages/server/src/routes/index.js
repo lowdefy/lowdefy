@@ -16,6 +16,9 @@
 
 import { createContext } from '@lowdefy/api';
 import homeHtml from './homeHtml';
+import openIdAuthorizationUrl from './openIdAuthorizationUrl';
+import openIdCallback from './openIdCallback';
+import openIdLogoutUrl from './openIdLogoutUrl';
 import pageHtml from './pageHtml';
 import pageConfig from './pageConfig';
 import root from './root';
@@ -42,6 +45,10 @@ async function routes(fastify, { lowdefy }, done) {
   }
   fastify.get('/lowdefy/page/:pageId', pageConfig);
   fastify.get('/lowdefy/root', root);
+
+  fastify.post('/lowdefy/auth/openIdAuthorizationUrl', openIdAuthorizationUrl);
+  fastify.post('/lowdefy/auth/openIdCallback', openIdCallback);
+  fastify.post('/lowdefy/auth/openIdLogoutUrl', openIdLogoutUrl);
   done();
 }
 

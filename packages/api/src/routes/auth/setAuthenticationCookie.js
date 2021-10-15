@@ -19,7 +19,7 @@ import cookie from 'cookie';
 async function setAuthenticationCookie({ setHeader }, { value }) {
   const CookieHeader = cookie.serialize('authorization', value, {
     httpOnly: true,
-    path: this.gqlUri,
+    path: '/',
     sameSite: 'lax',
     secure: !this.development,
   });

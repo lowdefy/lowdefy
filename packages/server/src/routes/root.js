@@ -16,9 +16,9 @@
 
 import { rootConfig } from '@lowdefy/api';
 
-async function page(request, reply) {
+async function rootConfigHandler(request, reply) {
   const root = await rootConfig(request.lowdefyContext);
   reply.send(root);
 }
 
-export default page;
+export default rootConfigHandler;

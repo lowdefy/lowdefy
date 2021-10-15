@@ -14,12 +14,14 @@
   limitations under the License.
 */
 
-import { pageConfig } from '@lowdefy/api';
+import { openIdLogoutUrl } from '@lowdefy/api';
 
-async function pageConfigHandler(request, reply) {
-  const { pageId } = request.params;
-  const page = await pageConfig(request.lowdefyContext, { pageId });
+async function openIdLogoutUrlHandler(request, reply) {
+  const { idToken } = request.body;
+  const page = await openIdLogoutUrl(request.lowdefyContext, {
+    idToken,
+  });
   reply.send(page);
 }
 
-export default pageConfigHandler;
+export default openIdLogoutUrlHandler;

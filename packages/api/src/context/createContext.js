@@ -15,7 +15,7 @@
 */
 
 import createReadConfigFile from './readConfigFile';
-// import verifyAccessToken from './verifyAccessToken';
+import verifyAuthorizationHeader from './verifyAuthorizationHeader';
 
 async function createContext({
   // apiPath,
@@ -27,7 +27,6 @@ async function createContext({
   const [config, secrets] = await Promise.all([readConfigFile('config.json'), getSecrets()]);
   function contextFn({ headers, host, setHeader }) {
     const context = {
-      // apiPath,
       authorize: () => true,
       config,
       development,
@@ -38,9 +37,9 @@ async function createContext({
       secrets,
       setHeader,
     };
-    // const { user, roles } = verifyAccessToken(context);
-    // context.user = user;
-    // context.roles = roles;
+    const { user, roles } = verifyAuthorizationHeader(context);
+    context.user = user;
+    context.roles = roles;
     return context;
   }
   return contextFn;

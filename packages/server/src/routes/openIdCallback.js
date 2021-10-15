@@ -14,12 +14,15 @@
   limitations under the License.
 */
 
-import { pageConfig } from '@lowdefy/api';
+import { openIdCallback } from '@lowdefy/api';
 
-async function pageConfigHandler(request, reply) {
-  const { pageId } = request.params;
-  const page = await pageConfig(request.lowdefyContext, { pageId });
+async function openIdCallbackHandler(request, reply) {
+  const { code, state } = request.body;
+  const page = await openIdCallback(request.lowdefyContext, {
+    code,
+    state,
+  });
   reply.send(page);
 }
 
-export default pageConfigHandler;
+export default openIdCallbackHandler;

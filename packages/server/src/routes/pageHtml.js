@@ -16,7 +16,7 @@
 
 import { pageHtml } from '@lowdefy/api';
 
-async function page(request, reply) {
+async function pageHtmlHandler(request, reply) {
   const { pageId } = request.params;
   const page = await pageHtml(request.lowdefyContext, { pageId });
   if (!page) {
@@ -26,4 +26,4 @@ async function page(request, reply) {
   reply.send(page);
 }
 
-export default page;
+export default pageHtmlHandler;
