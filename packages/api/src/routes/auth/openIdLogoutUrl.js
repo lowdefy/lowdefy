@@ -28,7 +28,7 @@ function parseLogoutUrlNunjucks(context, { openIdConfig, idToken }) {
     id_token_hint: idToken,
     client_id: openIdConfig.clientId,
     openid_domain: openIdConfig.domain,
-    host: encodeURIComponent(`${context.httpPrefix}://${context.host}`),
+    host: encodeURIComponent(`${context.protocol}://${context.host}`),
   });
 }
 

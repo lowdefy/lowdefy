@@ -25,15 +25,14 @@ function testContext({
   secrets = {},
   setHeader,
   user,
-  development = false,
+  protocol = 'https',
 } = {}) {
   return {
     authorize: createAuthorize({ user, roles }),
     config,
-    development,
     headers,
     host,
-    httpPrefix: development ? 'http' : 'https',
+    protocol,
     readConfigFile,
     secrets,
     setHeader,

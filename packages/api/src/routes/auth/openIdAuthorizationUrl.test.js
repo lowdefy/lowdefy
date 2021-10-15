@@ -17,10 +17,8 @@
 import { Issuer } from 'openid-client';
 import openIdAuthorizationUrl from './openIdAuthorizationUrl';
 import testContext from '../../test/testContext';
-import setAuthenticationCookie from './setAuthenticationCookie';
 import { ConfigurationError } from '../../context/errors';
 
-jest.mock('./setAuthenticationCookie');
 jest.mock('openid-client');
 
 const mockOpenIdAuthorizationUrl = jest.fn(
@@ -53,7 +51,6 @@ mockNow.mockImplementation(() => 1000);
 global.Date.now = mockNow;
 
 beforeEach(() => {
-  setAuthenticationCookie.mockReset();
   global.Date.now = mockNow;
 });
 

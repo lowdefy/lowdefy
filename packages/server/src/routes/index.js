@@ -32,9 +32,10 @@ async function routes(fastify, { lowdefy }, done) {
 
   fastify.addHook('preHandler', (request, reply, done) => {
     request.lowdefyContext = contextFn({
-      headers: {},
-      host: '',
-      setHeader: () => {},
+      headers: request.headers,
+      host: request.hostname,
+      protocol: request.protocol,
+      setHeader: reply.header,
     });
     done();
   });

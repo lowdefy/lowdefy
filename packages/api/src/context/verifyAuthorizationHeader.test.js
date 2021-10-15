@@ -118,12 +118,12 @@ test('expired token', () => {
   expect(() => verifyAuthorizationHeader(context)).toThrow('Token expired.');
 });
 
-test('development header', () => {
+test('http header', () => {
   let context = testContext({
     headers: { cookie: 'authorization=invalid' },
     secrets,
     setHeader,
-    development: true,
+    protocol: 'http',
   });
   expect(() => verifyAuthorizationHeader(context)).toThrow(AuthenticationError);
   expect(setHeader.mock.calls).toEqual([

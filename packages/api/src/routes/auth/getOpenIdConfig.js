@@ -18,7 +18,7 @@ import { get } from '@lowdefy/helpers';
 
 import { ConfigurationError } from '../../context/errors';
 
-function getOpenIdConfig({ httpPrefix, host, config, secrets }) {
+function getOpenIdConfig({ protocol, host, config, secrets }) {
   const { OPENID_CLIENT_ID, OPENID_CLIENT_SECRET, OPENID_DOMAIN } = secrets;
 
   if (!(OPENID_CLIENT_ID && OPENID_CLIENT_SECRET && OPENID_DOMAIN)) {
@@ -31,7 +31,7 @@ function getOpenIdConfig({ httpPrefix, host, config, secrets }) {
     clientId: OPENID_CLIENT_ID,
     clientSecret: OPENID_CLIENT_SECRET,
     domain: OPENID_DOMAIN,
-    redirectUri: `${httpPrefix}://${host}/auth/openid-callback`,
+    redirectUri: `${protocol}://${host}/auth/openid-callback`,
   };
 }
 
