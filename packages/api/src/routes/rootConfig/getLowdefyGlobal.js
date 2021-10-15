@@ -15,7 +15,8 @@
 */
 
 async function getLowdefyGlobal({ readConfigFile }) {
-  return readConfigFile('global.json');
+  const lowdefyGlobal = await readConfigFile('global.json');
+  return lowdefyGlobal || {};
 }
 
 export default getLowdefyGlobal;

@@ -14,11 +14,18 @@
   limitations under the License.
 */
 
-async function pageConfig({ authorize, readConfigFile }, { pageId }) {
-  const page = await readConfigFile(`pages/${pageId}/${pageId}.json`);
-  if (!page) return null;
-  if (authorize(page)) return page;
-  return null;
+import cookie from 'cookie';
+
+function setAuthenticationCookie({ development, setHeader }) {
+  const CookieHeader = cookie.serialize('authorization', '', {
+    httpOnly: true,
+    path: '/',
+    sameSite: 'lax',
+    secure: !development,
+    maxAge: 0,
+  });
+
+  setHeader('Set-Cookie', CookieHeader);
 }
 
-export default pageConfig;
+export default setAuthenticationCookie;

@@ -16,7 +16,8 @@
 
 import { get } from '@lowdefy/helpers';
 
-async function filterMenuList({ authorize }, { menuList }) {
+function filterMenuList(context, { menuList }) {
+  const { authorize } = context;
   return menuList
     .map((item) => {
       if (item.type === 'MenuLink') {
@@ -26,7 +27,7 @@ async function filterMenuList({ authorize }, { menuList }) {
         return null;
       }
       if (item.type === 'MenuGroup') {
-        const filteredSubItems = filterMenuList({
+        const filteredSubItems = filterMenuList(context, {
           menuList: get(item, 'links', { default: [] }),
         });
         if (filteredSubItems.length > 0) {

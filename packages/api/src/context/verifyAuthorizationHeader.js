@@ -20,9 +20,9 @@ import { get } from '@lowdefy/helpers';
 import cookie from 'cookie';
 
 import verifyAccessToken from '../routes/auth/verifyAccessToken';
-import setAuthenticationCookie from '../routes/auth/setAuthenticationCookie';
+import unsetAuthenticationCookie from '../routes/auth/unsetAuthenticationCookie';
 
-async function verifyAuthorizationHeader(context) {
+function verifyAuthorizationHeader(context) {
   const { config, headers } = context;
   const cookieHeader = get(headers, 'cookie') || '';
   const { authorization: token } = cookie.parse(cookieHeader);
@@ -38,7 +38,7 @@ async function verifyAuthorizationHeader(context) {
     }
     return { user, roles };
   } catch (error) {
-    setAuthenticationCookie(context, { value: '' });
+    unsetAuthenticationCookie(context);
     throw error;
   }
 }

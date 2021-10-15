@@ -16,12 +16,12 @@
 
 import cookie from 'cookie';
 
-async function setAuthenticationCookie({ setHeader }, { value }) {
+function setAuthenticationCookie({ development, setHeader }, { value }) {
   const CookieHeader = cookie.serialize('authorization', value, {
     httpOnly: true,
     path: '/',
     sameSite: 'lax',
-    secure: !this.development,
+    secure: !development,
   });
 
   setHeader('Set-Cookie', CookieHeader);

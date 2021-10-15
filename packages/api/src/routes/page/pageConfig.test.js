@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getPage from './getPage';
+import pageConfig from './pageConfig';
 import testContext from '../../test/testContext';
 
 const mockReadConfigFile = jest.fn();
@@ -25,7 +25,7 @@ beforeEach(() => {
   mockReadConfigFile.mockReset();
 });
 
-test('getPage, public', async () => {
+test('pageConfig, public', async () => {
   mockReadConfigFile.mockImplementation((path) => {
     if (path === 'pages/pageId/pageId.json') {
       return {
@@ -37,7 +37,7 @@ test('getPage, public', async () => {
     }
     return null;
   });
-  const res = await getPage(context, { pageId: 'pageId' });
+  const res = await pageConfig(context, { pageId: 'pageId' });
   expect(res).toEqual({
     id: 'page:pageId',
     auth: {
@@ -46,7 +46,7 @@ test('getPage, public', async () => {
   });
 });
 
-test('getPage, protected, no user', async () => {
+test('pageConfig, protected, no user', async () => {
   mockReadConfigFile.mockImplementation((path) => {
     if (path === 'pages/pageId/pageId.json') {
       return {
@@ -58,11 +58,11 @@ test('getPage, protected, no user', async () => {
     }
     return null;
   });
-  const res = await getPage(context, { pageId: 'pageId' });
+  const res = await pageConfig(context, { pageId: 'pageId' });
   expect(res).toEqual(null);
 });
 
-test('getPage, protected, with user', async () => {
+test('pageConfig, protected, with user', async () => {
   mockReadConfigFile.mockImplementation((path) => {
     if (path === 'pages/pageId/pageId.json') {
       return {
@@ -75,7 +75,7 @@ test('getPage, protected, with user', async () => {
     return null;
   });
 
-  const res = await getPage(
+  const res = await pageConfig(
     testContext({ readConfigFile: mockReadConfigFile, user: { sub: 'sub' } }),
     { pageId: 'pageId' }
   );
@@ -87,7 +87,7 @@ test('getPage, protected, with user', async () => {
   });
 });
 
-test('getPage, page does not exist', async () => {
+test('pageConfig, page does not exist', async () => {
   mockReadConfigFile.mockImplementation((path) => {
     if (path === 'pages/pageId/pageId.json') {
       return {
@@ -99,6 +99,6 @@ test('getPage, page does not exist', async () => {
     }
     return null;
   });
-  const res = await getPage(context, { pageId: 'doesNotExist' });
+  const res = await pageConfig(context, { pageId: 'doesNotExist' });
   expect(res).toEqual(null);
 });

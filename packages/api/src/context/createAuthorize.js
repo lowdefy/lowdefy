@@ -14,11 +14,23 @@
   limitations under the License.
 */
 
-async function pageConfig({ authorize, readConfigFile }, { pageId }) {
-  const page = await readConfigFile(`pages/${pageId}/${pageId}.json`);
-  if (!page) return null;
-  if (authorize(page)) return page;
-  return null;
+import { get, type } from '@lowdefy/helpers';
+import { ServerError } from '../context/errors';
+
+function createAuthorize({ user, roles = [] }) {
+  const authenticated = type.isString(get(user, 'sub'));
+
+  function authorize({ auth }) {
+    if (auth.public === true) return true;
+    if (auth.public === false) {
+      if (auth.roles) {
+        return authenticated && auth.roles.some((role) => roles.includes(role));
+      }
+      return authenticated;
+    }
+    throw new ServerError('Invalid auth configuration');
+  }
+  return authorize;
 }
 
-export default pageConfig;
+export default createAuthorize;

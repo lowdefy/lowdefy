@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import createAuthorize from './createAuthorize';
 import createReadConfigFile from './readConfigFile';
 import verifyAuthorizationHeader from './verifyAuthorizationHeader';
 
@@ -38,8 +39,7 @@ async function createContext({
       setHeader,
     };
     const { user, roles } = verifyAuthorizationHeader(context);
-    context.user = user;
-    context.roles = roles;
+    context.authorize = createAuthorize({ user, roles });
     return context;
   }
   return contextFn;
