@@ -35,7 +35,7 @@
     "build:dev": "yarn webpack:dev && yarn babel",
     "clean": "rm -rf dist",
     "prepare": "yarn build",
-    "webpack": "webpack --config webpack.config.js",
+    "webpack": "webpack --config webpack.prod.js",
     "webpack:dev": "webpack --config webpack.dev.js"
   },
   "dependencies": {

@@ -33,6 +33,7 @@ async function createContext({
       development,
       headers,
       host,
+      httpPrefix: development ? 'http' : 'https',
       readConfigFile,
       secrets,
       setHeader,

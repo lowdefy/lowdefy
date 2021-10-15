@@ -15,8 +15,21 @@
 */
 
 import createContext from './context/createContext';
-import pageConfig from './routes/pageConfig/pageConfig';
-import pageHtml from './routes/pageHtml/pageHtml';
+import homePageId from './routes/rootConfig/homePageId';
+import openIdAuthorizationUrl from './routes/auth/openIdAuthorizationUrl';
+import openIdCallback from './routes/auth/openIdCallback';
+import openIdLogoutUrl from './routes/auth/openIdLogoutUrl';
+import pageConfig from './routes/page/pageConfig';
+import pageHtml from './routes/page/pageHtml';
 import rootConfig from './routes/rootConfig/rootConfig';
 
-export { createContext, pageConfig, pageHtml, rootConfig };
+export {
+  createContext,
+  homePageId,
+  openIdAuthorizationUrl,
+  openIdCallback,
+  openIdLogoutUrl,
+  pageConfig,
+  pageHtml,
+  rootConfig,
+};

@@ -4498,6 +4498,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/ajv", "workspace:packages/ajv"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
             ["@lowdefy/node-utils", "workspace:packages/nodeUtils"],
+            ["@lowdefy/nunjucks", "workspace:packages/nunjucks"],
             ["@lowdefy/operators", "workspace:packages/operators"],
             ["babel-jest", "virtual:caddf51df4928b33a437ca87b8f5ddfb6205ebd6d8231f74d4ee7223f3866e6f815b221aa1e2bd33e98915f701e95bae72a93d2288b49a34a6246bdbc2a4a132#npm:26.6.3"],
             ["babel-loader", "virtual:b0ff8d6fd5e77238fc1445226d171d4547961f54c66bc3d70a3dd085250fbc6494ee85c696f570abd3219cbbe9c61301b4eeb2b6ce6f6a7c311c07b628d0433c#npm:8.2.2"],

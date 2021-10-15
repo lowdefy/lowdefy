@@ -14,13 +14,17 @@
   limitations under the License.
 */
 
-import { homePageId } from '@lowdefy/api';
+import cookie from 'cookie';
 
-async function home(request, reply) {
-  // TODO: If user has configured homePageId, mount homePage
-  // else redirect
-  const home = await homePageId(request.lowdefyContext);
-  reply.redirect(`/${home}`);
+async function setAuthenticationCookie({ setHeader }, { value }) {
+  const CookieHeader = cookie.serialize('authorization', value, {
+    httpOnly: true,
+    path: this.gqlUri,
+    sameSite: 'lax',
+    secure: !this.development,
+  });
+
+  setHeader('Set-Cookie', CookieHeader);
 }
 
-export default home;
+export default setAuthenticationCookie;

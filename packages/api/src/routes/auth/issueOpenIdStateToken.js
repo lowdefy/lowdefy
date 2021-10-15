@@ -14,13 +14,24 @@
   limitations under the License.
 */
 
-import { homePageId } from '@lowdefy/api';
+import jwt from 'jsonwebtoken';
 
-async function home(request, reply) {
-  // TODO: If user has configured homePageId, mount homePage
-  // else redirect
-  const home = await homePageId(request.lowdefyContext);
-  reply.redirect(`/${home}`);
+function issueOpenIdStateToken({ host, secrets }, { input, pageId, urlQuery }) {
+  const { JWT_SECRET } = secrets;
+  return jwt.sign(
+    {
+      input,
+      lowdefy_openid_state_token: true,
+      pageId,
+      urlQuery,
+    },
+    JWT_SECRET,
+    {
+      expiresIn: '5min',
+      audience: host,
+      issuer: host,
+    }
+  );
 }
 
-export default home;
+export default issueOpenIdStateToken;

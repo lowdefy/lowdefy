@@ -16,10 +16,9 @@
 
 import { get } from '@lowdefy/helpers';
 
-async function getHomePageId({ readConfigFile }, { menus }) {
-  const configData = await readConfigFile('config.json');
-  if (get(configData, 'homePageId')) {
-    return get(configData, 'homePageId');
+function getHomePageId({ config }, { menus }) {
+  if (get(config, 'homePageId')) {
+    return get(config, 'homePageId');
   }
   let defaultMenu = menus.find((menu) => menu.menuId === 'default');
   if (!defaultMenu) {

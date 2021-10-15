@@ -72,7 +72,7 @@ const Root = () => {
 
 const Client = () => (
   <ErrorBoundary fullPage>
-    <Suspense fallback={<Loading type="Spinner" properties={{ height: '100vh' }} />}>
+    <Suspense fallback={<div id="loading-lowdefy-root"></div>}>
       <BrowserRouter>
         <Root />
       </BrowserRouter>

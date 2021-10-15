@@ -20,10 +20,9 @@ import getMenus from './menus/getMenus';
 
 async function rootConfig(context) {
   const [lowdefyGlobal, menus] = await Promise.all([getLowdefyGlobal(context), getMenus(context)]);
-  const homePageId = await getHomePageId(context, { menus });
   return {
     authenticated: context.authenticated,
-    homePageId,
+    homePageId: getHomePageId(context, { menus }),
     lowdefyGlobal,
     menus,
   };

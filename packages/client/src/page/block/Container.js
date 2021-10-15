@@ -21,7 +21,6 @@ import { makeCssClass } from '@lowdefy/block-tools';
 import Block from './Block';
 
 const Container = ({ block, Blocks, Component, context, lowdefy }) => {
-  console.log('menus', lowdefy.menus);
   const content = {};
   // eslint-disable-next-line prefer-destructuring
   const areas = Blocks.subBlocks[block.id][0].areas;

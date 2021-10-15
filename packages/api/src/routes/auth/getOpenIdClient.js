@@ -14,13 +14,15 @@
   limitations under the License.
 */
 
-import { homePageId } from '@lowdefy/api';
+import { Issuer } from 'openid-client';
 
-async function home(request, reply) {
-  // TODO: If user has configured homePageId, mount homePage
-  // else redirect
-  const home = await homePageId(request.lowdefyContext);
-  reply.redirect(`/${home}`);
+async function getOpenIdClient(context, { openIdConfig }) {
+  const issuer = await Issuer.discover(openIdConfig.domain);
+  return new issuer.Client({
+    client_id: openIdConfig.clientId,
+    client_secret: openIdConfig.clientSecret,
+    redirect_uris: [openIdConfig.redirectUri],
+  });
 }
 
-export default home;
+export default getOpenIdClient;

@@ -14,13 +14,12 @@
   limitations under the License.
 */
 
-import { homePageId } from '@lowdefy/api';
+import getHomePageId from '../rootConfig/getHomePageId';
+import getMenus from '../rootConfig/menus/getMenus';
 
-async function home(request, reply) {
-  // TODO: If user has configured homePageId, mount homePage
-  // else redirect
-  const home = await homePageId(request.lowdefyContext);
-  reply.redirect(`/${home}`);
+async function homePageId(context) {
+  const menus = await getMenus(context);
+  return getHomePageId(context, { menus });
 }
 
-export default home;
+export default homePageId;

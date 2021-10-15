@@ -14,13 +14,26 @@
   limitations under the License.
 */
 
-import { homePageId } from '@lowdefy/api';
+import { get } from '@lowdefy/helpers';
+import jwt from 'jsonwebtoken';
 
-async function home(request, reply) {
-  // TODO: If user has configured homePageId, mount homePage
-  // else redirect
-  const home = await homePageId(request.lowdefyContext);
-  reply.redirect(`/${home}`);
+function issueAccessToken({ config, host, secrets }, { claims }) {
+  const { JWT_SECRET } = secrets;
+  const { expiresIn } = get(config, 'auth.jwt', { default: {} });
+  // eslint-disable-next-line no-unused-vars
+  const { aud, exp, iat, iss, ...otherClaims } = claims;
+  return jwt.sign(
+    {
+      ...otherClaims,
+      lowdefy_access_token: true,
+    },
+    JWT_SECRET,
+    {
+      expiresIn: expiresIn || '4h',
+      audience: host,
+      issuer: host,
+    }
+  );
 }
 
-export default home;
+export default issueAccessToken;
