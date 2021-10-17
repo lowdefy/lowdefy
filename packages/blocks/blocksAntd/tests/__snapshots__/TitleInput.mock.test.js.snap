@@ -38,11 +38,15 @@ exports[`Mock render - properties.ellipsis: rows, suffix - value[0] - default 1`
 
 exports[`Mock render - properties.ellipsis: true - value[0] - default 1`] = `Array []`;
 
+exports[`Mock render - properties.italic: true - value[0] - default 1`] = `Array []`;
+
 exports[`Mock render - properties.level: 2  - value[0] - default 1`] = `Array []`;
 
 exports[`Mock render - properties.level: 3  - value[0] - default 1`] = `Array []`;
 
 exports[`Mock render - properties.level: 4  - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - properties.level: 5 - value[0] - default 1`] = `Array []`;
 
 exports[`Mock render - properties.mark: true  - value[0] - default 1`] = `Array []`;
 
