@@ -3447,7 +3447,7 @@ exports[`Render properties.suffixIcon: DoubleLeftOutlined - value[0] 1`] = `
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin {}"
                 id="properties.suffixIcon: DoubleLeftOutlined_suffixIcon"
                 required={false}
                 role="img"
@@ -7047,7 +7047,7 @@ exports[`Render required = true properties.suffixIcon: DoubleLeftOutlined - valu
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin {}"
                 id="properties.suffixIcon: DoubleLeftOutlined_suffixIcon"
                 required={false}
                 role="img"
@@ -11396,7 +11396,7 @@ exports[`Render validation.status = error properties.suffixIcon: DoubleLeftOutli
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin {}"
                 id="properties.suffixIcon: DoubleLeftOutlined_suffixIcon"
                 required={false}
                 role="img"
@@ -15052,7 +15052,7 @@ exports[`Render validation.status = null properties.suffixIcon: DoubleLeftOutlin
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin {}"
                 id="properties.suffixIcon: DoubleLeftOutlined_suffixIcon"
                 required={false}
                 role="img"
@@ -19273,7 +19273,7 @@ exports[`Render validation.status = success properties.suffixIcon: DoubleLeftOut
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin {}"
                 id="properties.suffixIcon: DoubleLeftOutlined_suffixIcon"
                 required={false}
                 role="img"
@@ -23668,7 +23668,7 @@ exports[`Render validation.status = warning properties.suffixIcon: DoubleLeftOut
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin {}"
                 id="properties.suffixIcon: DoubleLeftOutlined_suffixIcon"
                 required={false}
                 role="img"

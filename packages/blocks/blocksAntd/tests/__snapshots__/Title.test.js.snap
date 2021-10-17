@@ -100,7 +100,7 @@ exports[`Render properties.copyable: icon - value[0] 1`] = `
     <span
       aria-label="loading-3-quarters"
       basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {}"
       id="properties.copyable: icon_copyable_icon"
       required={false}
       role="img"
@@ -159,7 +159,7 @@ exports[`Render properties.copyable: icon: [] - value[0] 1`] = `
     <span
       aria-label="loading-3-quarters"
       basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {}"
       id="properties.copyable: icon: []_copyable_before_icon"
       required={false}
       role="img"
