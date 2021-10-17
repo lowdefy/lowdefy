@@ -138,6 +138,7 @@
         },
         "showCount": {
           "type": ["boolean", "object"],
+          "default": false,
           "description": "Show input character count."
         },
         "title": {
