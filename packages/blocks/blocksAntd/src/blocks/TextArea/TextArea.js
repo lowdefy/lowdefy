@@ -47,9 +47,22 @@ const TextAreaBlock = ({
           return (
             <TextAreaComp
               id={`${blockId}_input`}
+              allowClear={properties.allowClear}
+              autoFocus={properties.autoFocus}
+              bordered={properties.bordered}
               className={methods.makeCssClass(properties.inputStyle)}
               disabled={properties.disabled}
-              autoFocus={properties.autoFocus}
+              maxLength={properties.maxLength}
+              placeholder={properties.placeholder}
+              showCount={properties.showCount}
+              value={value}
+              autoSize={
+                properties.rows
+                  ? { minRows: properties.rows, maxRows: properties.rows }
+                  : type.isNone(properties.autoSize)
+                  ? { minRows: 3 }
+                  : properties.autoSize
+              }
               onChange={(event) => {
                 methods.setValue(event.target.value);
                 methods.triggerEvent({ name: 'onChange' });
@@ -62,16 +75,6 @@ const TextAreaBlock = ({
               onPressEnter={() => {
                 methods.triggerEvent({ name: 'onPressEnter' });
               }}
-              placeholder={properties.placeholder}
-              value={value}
-              allowClear={properties.allowClear}
-              autoSize={
-                properties.rows
-                  ? { minRows: properties.rows, maxRows: properties.rows }
-                  : type.isNone(properties.autoSize)
-                  ? { minRows: 3 }
-                  : properties.autoSize
-              }
             />
           );
         },
