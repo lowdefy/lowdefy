@@ -139,7 +139,10 @@
         "showCount": {
           "type": ["boolean", "object"],
           "default": false,
-          "description": "Show input character count."
+          "description": "Show input character count.",
+          "docs": {
+            "displayType": "boolean"
+          }
         },
         "title": {
           "type": "string",
