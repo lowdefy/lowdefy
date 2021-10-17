@@ -120,6 +120,28 @@
             pageId: page_1_2
             properties:
               title: Menu Item two
+- id: 'properties.expandIcon: CheckOutlined'
+  type: Menu
+  properties:
+    expandIcon:
+      name: CheckOutlined
+      color: '#ff00f0'
+    links:
+      - id: menu_group_1
+        type: MenuGroup
+        properties:
+          title: Menu Group 1
+        links:
+          - id: menu_item_1
+            type: MenuLink
+            pageId: page_1_1
+            properties:
+              title: Menu Item one
+          - id: menu_item_2
+            type: MenuLink
+            pageId: page_1_2
+            properties:
+              title: Menu Item two
 - id: 'properties.danger: true'
   type: Menu
   properties:

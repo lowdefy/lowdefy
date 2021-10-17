@@ -88,7 +88,19 @@ const MenuComp = ({ basePath, blockId, events, methods, menus, pageId, propertie
   return (
     <Menu
       id={blockId}
+      expandIcon={
+        properties.expandIcon && (
+          <Icon
+            blockId={`${blockId}_expandIcon`}
+            events={events}
+            properties={properties.expandIcon}
+          />
+        )
+      }
+      forceSubMenuRender={properties.forceSubMenuRender}
       mode={properties.mode}
+      selectable={true}
+      theme={theme}
       className={methods.makeCssClass([
         styles,
         properties.backgroundColor && bgColor,
@@ -112,9 +124,6 @@ const MenuComp = ({ basePath, blockId, events, methods, menus, pageId, propertie
           },
         properties.style,
       ])}
-      forceSubMenuRender={properties.forceSubMenuRender}
-      theme={theme}
-      selectable={true}
       defaultOpenKeys={
         properties.defaultOpenKeys ||
         (properties.mode === 'inline' &&

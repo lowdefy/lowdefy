@@ -13,6 +13,13 @@
             "displayType": "color"
           }
         },
+        "expandIcon": {
+          "type": ["string", "object"],
+          "description": "Menu expand icon.",
+          "docs": {
+            "displayType": "icon"
+          }
+        },
         "selectedColor": {
           "type": "string",
           "description": "Menu primary selected color.",
