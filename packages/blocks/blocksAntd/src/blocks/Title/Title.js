@@ -101,6 +101,7 @@ const TitleBlock = ({ blockId, events, properties, methods }) => {
             }
           : properties.ellipsis
       }
+      italic={properties.italic}
       level={properties.level}
       mark={properties.mark}
       type={properties.type}

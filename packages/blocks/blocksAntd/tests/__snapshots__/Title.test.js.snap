@@ -449,6 +449,24 @@ exports[`Render properties.ellipsis: true - value[0] 1`] = `
 </h1>
 `;
 
+exports[`Render properties.italic: true - value[0] 1`] = `
+<h1
+  className="ant-typography {\\"style\\":[null,null]}"
+  id="properties.italic: true"
+  style={
+    Object {
+      "WebkitLineClamp": undefined,
+    }
+  }
+>
+  <i>
+    <span
+      className="{}"
+    />
+  </i>
+</h1>
+`;
+
 exports[`Render properties.level: 2  - value[0] 1`] = `
 <h2
   className="ant-typography {\\"style\\":[null,null]}"
@@ -495,6 +513,22 @@ exports[`Render properties.level: 4  - value[0] 1`] = `
     className="{}"
   />
 </h4>
+`;
+
+exports[`Render properties.level: 5 - value[0] 1`] = `
+<h5
+  className="ant-typography {\\"style\\":[null,null]}"
+  id="properties.level: 5"
+  style={
+    Object {
+      "WebkitLineClamp": undefined,
+    }
+  }
+>
+  <span
+    className="{}"
+  />
+</h5>
 `;
 
 exports[`Render properties.mark: true  - value[0] 1`] = `
@@ -657,6 +691,10 @@ exports[`Test Schema properties.ellipsis: true 1`] = `true`;
 
 exports[`Test Schema properties.ellipsis: true 2`] = `null`;
 
+exports[`Test Schema properties.italic: true 1`] = `true`;
+
+exports[`Test Schema properties.italic: true 2`] = `null`;
+
 exports[`Test Schema properties.level: 2  1`] = `true`;
 
 exports[`Test Schema properties.level: 2  2`] = `null`;
@@ -668,6 +706,10 @@ exports[`Test Schema properties.level: 3  2`] = `null`;
 exports[`Test Schema properties.level: 4  1`] = `true`;
 
 exports[`Test Schema properties.level: 4  2`] = `null`;
+
+exports[`Test Schema properties.level: 5 1`] = `true`;
+
+exports[`Test Schema properties.level: 5 2`] = `null`;
 
 exports[`Test Schema properties.mark: true  1`] = `true`;
 

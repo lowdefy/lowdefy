@@ -39,6 +39,16 @@
   properties:
     level: 4
     content: Lorem ipsum dolor sit amet
+- id: 'properties.level: 5'
+  type: Title
+  properties:
+    level: 5
+    content: Lorem ipsum dolor sit amet
+- id: 'properties.italic: true'
+  type: Title
+  properties:
+    italic: true
+    content: Lorem ipsum dolor sit amet
 - id: 'properties.mark: true '
   type: Title
   properties:
