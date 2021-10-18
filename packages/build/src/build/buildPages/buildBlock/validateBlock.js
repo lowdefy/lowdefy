@@ -16,7 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-function validateBlock(block, { pageId }) {
+function validateBlock(block, { pageId, checkDuplicateBlockId }) {
   if (!type.isObject(block)) {
     throw new Error(
       `Expected block to be an object on page "${pageId}". Received ${JSON.stringify(block)}.`
@@ -30,6 +30,7 @@ function validateBlock(block, { pageId }) {
       `Block id is not a string at page "${pageId}". Received ${JSON.stringify(block.id)}.`
     );
   }
+  checkDuplicateBlockId({ id: block.id, pageId });
   if (type.isNone(block.type)) {
     throw new Error(`Block type is not defined at "${block.id}" on page "${pageId}".`);
   }

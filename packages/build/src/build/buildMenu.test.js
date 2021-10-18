@@ -29,6 +29,184 @@ beforeEach(() => {
   mockLogWarn.mockReset();
 });
 
+test('menu id is not defined', async () => {
+  const components = {
+    menus: [
+      {
+        id: undefined,
+        links: [
+          {
+            id: 'menu_page_1',
+            properties: {
+              title: 'Page 1',
+            },
+            type: 'MenuLink',
+            pageId: 'page_1',
+          },
+        ],
+      },
+    ],
+    pages: [
+      {
+        id: 'page:page_1',
+        pageId: 'page_1',
+        auth: { public: true },
+      },
+      {
+        id: 'page:page_2',
+        pageId: 'page_2',
+        auth: { public: false },
+      },
+    ],
+  };
+  await expect(buildMenu({ components, context })).rejects.toThrow('Menu id missing.');
+});
+
+test('menu id is not a string', async () => {
+  const components = {
+    menus: [
+      {
+        id: true,
+        links: [
+          {
+            id: 'menu_page_1',
+            properties: {
+              title: 'Page 1',
+            },
+            type: 'MenuLink',
+            pageId: 'page_1',
+          },
+        ],
+      },
+    ],
+    pages: [
+      {
+        id: 'page:page_1',
+        pageId: 'page_1',
+        auth: { public: true },
+      },
+      {
+        id: 'page:page_2',
+        pageId: 'page_2',
+        auth: { public: false },
+      },
+    ],
+  };
+  await expect(buildMenu({ components, context })).rejects.toThrow(
+    'Menu id is not a string. Received true.'
+  );
+});
+
+test('throw on Duplicate menu ids', async () => {
+  const components = {
+    menus: [
+      {
+        id: 'my_menu',
+        links: [
+          {
+            id: 'menu_page_1',
+            properties: {
+              title: 'Page 1',
+            },
+            type: 'MenuLink',
+            pageId: 'page_1',
+          },
+        ],
+      },
+      {
+        id: 'my_menu',
+        links: [
+          {
+            id: 'menu_page_1',
+            properties: {
+              title: 'Page 1',
+            },
+            type: 'MenuLink',
+            pageId: 'page_1',
+          },
+        ],
+      },
+    ],
+    pages: [
+      {
+        id: 'page:page_1',
+        pageId: 'page_1',
+        auth: { public: true },
+      },
+      {
+        id: 'page:page_2',
+        pageId: 'page_2',
+        auth: { public: false },
+      },
+    ],
+  };
+  await expect(buildMenu({ components, context })).rejects.toThrow('Duplicate menuId "my_menu".');
+});
+
+test('throw on Duplicate menu item ids', async () => {
+  const components = {
+    menus: [
+      {
+        id: 'default',
+        links: [
+          {
+            id: 'menu_page_1',
+            properties: {
+              title: 'Page 1',
+            },
+            type: 'MenuLink',
+            pageId: 'page_1',
+          },
+          {
+            id: 'menu_page_2',
+            properties: {
+              title: 'Page 2',
+            },
+            type: 'MenuLink',
+            pageId: 'page_2',
+          },
+        ],
+      },
+      {
+        id: 'my_menu',
+        links: [
+          {
+            id: 'menu_page_1',
+            properties: {
+              title: 'Page 1',
+            },
+            type: 'MenuLink',
+            pageId: 'page_1',
+          },
+          {
+            id: 'menu_page_1',
+            properties: {
+              title: 'Page 1',
+            },
+            type: 'MenuLink',
+            pageId: 'page_1',
+          },
+        ],
+      },
+    ],
+    pages: [
+      {
+        id: 'page:page_1',
+        pageId: 'page_1',
+        auth: { public: true },
+      },
+      {
+        id: 'page:page_2',
+        pageId: 'page_2',
+        auth: { public: false },
+      },
+    ],
+  };
+  await expect(buildMenu({ components, context })).rejects.toThrow(
+    'Duplicate menuItemId "menu_page_1" on menu "my_menu".'
+  );
+});
+
 test('buildMenu menus exist', async () => {
   const components = {
     menus: [

@@ -195,8 +195,38 @@ test('page id is not a string', async () => {
     ],
   };
   await expect(buildPages({ components, context })).rejects.toThrow(
-    'Page id is not a string at at page 0. Received true.'
+    'Page id is not a string at page 0. Received true.'
   );
+});
+
+test('throw on Duplicate ids', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'one',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'one',
+            type: 'Input',
+          },
+        ],
+      },
+      {
+        id: 'one',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'one',
+            type: 'Input',
+          },
+        ],
+      },
+    ],
+  };
+  await expect(buildPages({ components, context })).rejects.toThrow('Duplicate pageId "one".');
 });
 
 test('block does not have an id', async () => {
@@ -237,6 +267,39 @@ test('block id is not a string', async () => {
   };
   await expect(buildPages({ components, context })).rejects.toThrow(
     'Block id is not a string at page "page1". Received true.'
+  );
+});
+
+test('throw on Duplicate block ids', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'one',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'two',
+            type: 'Container',
+            blocks: [
+              {
+                id: 'three',
+                type: 'Container',
+                blocks: [
+                  {
+                    id: 'one',
+                    type: 'Input',
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+  await expect(buildPages({ components, context })).rejects.toThrow(
+    'Duplicate blockId "one" on page "one."'
   );
 });
 
@@ -1092,4 +1155,22 @@ test('add user defined loading to meta', async () => {
       },
     ],
   });
+});
+
+test('throw on Duplicate ids', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+      },
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+      },
+    ],
+  };
+  await expect(buildPages({ components, context })).rejects.toThrow('Duplicate pageId "page_1".');
 });

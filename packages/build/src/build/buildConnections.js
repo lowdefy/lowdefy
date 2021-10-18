@@ -17,10 +17,23 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import createCheckDuplicateId from '../utils/createCheckDuplicateId';
 
 async function buildConnections({ components }) {
+  const checkDuplicateConnectionId = createCheckDuplicateId({
+    message: 'Duplicate connectionId "{{ id }}".',
+  });
   if (type.isArray(components.connections)) {
     components.connections.forEach((connection) => {
+      if (!type.isString(connection.id)) {
+        if (type.isUndefined(connection.id)) {
+          throw new Error(`Connection id missing.`);
+        }
+        throw new Error(
+          `Connection id is not a string. Received ${JSON.stringify(connection.id)}.`
+        );
+      }
+      checkDuplicateConnectionId({ id: connection.id });
       connection.connectionId = connection.id;
       connection.id = `connection:${connection.id}`;
     });
