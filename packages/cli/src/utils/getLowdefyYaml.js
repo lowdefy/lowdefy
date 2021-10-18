@@ -20,7 +20,10 @@ import { readFile } from '@lowdefy/node-utils';
 import YAML from 'js-yaml';
 
 async function getLowdefyYaml({ baseDirectory, command }) {
-  const lowdefyYaml = await readFile(path.resolve(baseDirectory, 'lowdefy.yaml'));
+  let lowdefyYaml = await readFile(path.resolve(baseDirectory, 'lowdefy.yaml'));
+  if (!lowdefyYaml) {
+    lowdefyYaml = await readFile(path.resolve(baseDirectory, 'lowdefy.yml'));
+  }
   if (!lowdefyYaml) {
     if (!['init', 'clean-cache'].includes(command)) {
       throw new Error(
