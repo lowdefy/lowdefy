@@ -18,10 +18,10 @@ import { type } from '@lowdefy/helpers';
 
 function buildRequest(request, pageContext) {
   const { auth, pageId, checkDuplicateRequestId } = pageContext;
+  if (type.isUndefined(request.id)) {
+    throw new Error(`Request id missing at page "${pageId}".`);
+  }
   if (!type.isString(request.id)) {
-    if (type.isUndefined(request.id)) {
-      throw new Error(`Request id missing at page "${pageId}".`);
-    }
     throw new Error(
       `Request id is not a string at page "${pageId}". Received ${JSON.stringify(request.id)}.`
     );

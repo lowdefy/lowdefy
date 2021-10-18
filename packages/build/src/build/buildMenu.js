@@ -39,7 +39,7 @@ async function buildDefaultMenu({ components, context }) {
   return menus;
 }
 
-function loopItems(parent, menuId, pages, missingPageWarnings, checkDuplicateMenuItemId) {
+function loopItems({ parent, menuId, pages, missingPageWarnings, checkDuplicateMenuItemId }) {
   if (type.isArray(parent.links)) {
     parent.links.forEach((menuItem) => {
       if (menuItem.type === 'MenuLink') {
@@ -66,7 +66,7 @@ function loopItems(parent, menuId, pages, missingPageWarnings, checkDuplicateMen
       checkDuplicateMenuItemId({ id: menuItem.id, menuId });
       menuItem.menuItemId = menuItem.id;
       menuItem.id = `menuitem:${menuId}:${menuItem.id}`;
-      loopItems(menuItem, menuId, pages, missingPageWarnings, checkDuplicateMenuItemId);
+      loopItems({ parent: menuItem, menuId, pages, missingPageWarnings, checkDuplicateMenuItemId });
     });
     parent.links = parent.links.filter((item) => item.remove !== true);
   }
@@ -80,10 +80,10 @@ async function buildMenu({ components, context }) {
   const missingPageWarnings = [];
   const checkDuplicateMenuId = createCheckDuplicateId({ message: 'Duplicate menuId "{{ id }}".' });
   components.menus.forEach((menu) => {
+    if (type.isUndefined(menu.id)) {
+      throw new Error(`Menu id missing.`);
+    }
     if (!type.isString(menu.id)) {
-      if (type.isUndefined(menu.id)) {
-        throw new Error(`Menu id missing.`);
-      }
       throw new Error(`Menu id is not a string. Received ${JSON.stringify(menu.id)}.`);
     }
     checkDuplicateMenuId({ id: menu.id });
@@ -92,7 +92,13 @@ async function buildMenu({ components, context }) {
     const checkDuplicateMenuItemId = createCheckDuplicateId({
       message: 'Duplicate menuItemId "{{ id }}" on menu "{{ menuId }}".',
     });
-    loopItems(menu, menu.menuId, pages, missingPageWarnings, checkDuplicateMenuItemId);
+    loopItems({
+      parent: menu,
+      menuId: menu.menuId,
+      pages,
+      missingPageWarnings,
+      checkDuplicateMenuItemId,
+    });
   });
   await Promise.all(
     missingPageWarnings.map(async (warning) => {

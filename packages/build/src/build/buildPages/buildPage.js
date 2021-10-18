@@ -21,10 +21,10 @@ import buildBlock from './buildBlock/buildBlock';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId';
 
 async function buildPage({ page, index, context, checkDuplicatePageId }) {
+  if (type.isUndefined(page.id)) {
+    throw new Error(`Page id missing at page ${index}.`);
+  }
   if (!type.isString(page.id)) {
-    if (type.isUndefined(page.id)) {
-      throw new Error(`Page id missing at page ${index}.`);
-    }
     throw new Error(
       `Page id is not a string at page ${index}. Received ${JSON.stringify(page.id)}.`
     );

@@ -19,25 +19,22 @@ import createCheckDuplicateId from '../../../utils/createCheckDuplicateId';
 
 function checkActionId(action, eventContext) {
   const { eventId, blockId, pageId, checkDuplicateActionId } = eventContext;
-  const blockIdOnly = blockId.split(':');
-  if (!type.isString(action.id)) {
-    if (type.isUndefined(action.id)) {
-      throw new Error(
-        `Action id missing on event "${eventId}" on block "${
-          blockIdOnly[blockIdOnly.length - 1]
-        }" on page "${pageId}".`
-      );
-    }
+  if (type.isUndefined(action.id)) {
     throw new Error(
-      `Action id is not a string on event "${eventId}" on block "${
-        blockIdOnly[blockIdOnly.length - 1]
-      }" on page "${pageId}". Received ${JSON.stringify(action.id)}.`
+      `Action id missing on event "${eventId}" on block "${blockId}" on page "${pageId}".`
+    );
+  }
+  if (!type.isString(action.id)) {
+    throw new Error(
+      `Action id is not a string on event "${eventId}" on block "${blockId}" on page "${pageId}". Received ${JSON.stringify(
+        action.id
+      )}.`
     );
   }
   checkDuplicateActionId({
     id: action.id,
     eventId,
-    blockId: blockIdOnly[blockIdOnly.length - 1],
+    blockId,
     pageId,
   });
 }
@@ -74,7 +71,7 @@ function buildEvents(block, pageContext) {
       block.events[key].try.map((action) =>
         checkActionId(action, {
           eventId: key,
-          blockId: block.id,
+          blockId: block.blockId,
           pageId: pageContext.pageId,
           checkDuplicateActionId,
         })
@@ -82,7 +79,7 @@ function buildEvents(block, pageContext) {
       block.events[key].catch.map((action) =>
         checkActionId(action, {
           eventId: key,
-          blockId: block.id,
+          blockId: block.blockId,
           pageId: pageContext.pageId,
           checkDuplicateActionId,
         })

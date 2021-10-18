@@ -25,10 +25,10 @@ async function buildConnections({ components }) {
   });
   if (type.isArray(components.connections)) {
     components.connections.forEach((connection) => {
+      if (type.isUndefined(connection.id)) {
+        throw new Error(`Connection id missing.`);
+      }
       if (!type.isString(connection.id)) {
-        if (type.isUndefined(connection.id)) {
-          throw new Error(`Connection id missing.`);
-        }
         throw new Error(
           `Connection id is not a string. Received ${JSON.stringify(connection.id)}.`
         );
