@@ -59,9 +59,9 @@ test('buildConnections', async () => {
   ]);
 });
 
-test('throw on undefined id', async () => {
+test('throw on missing id', async () => {
   const components = {
-    connections: [{ id: undefined }],
+    connections: [{ type: 'ConnectionType' }],
   };
   await expect(buildConnections({ components, context })).rejects.toThrow('Connection id missing.');
 });

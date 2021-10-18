@@ -199,34 +199,22 @@ test('page id is not a string', async () => {
   );
 });
 
-test('throw on Duplicate ids', async () => {
+test('Throw on duplicate page ids', async () => {
   const components = {
     pages: [
       {
-        id: 'one',
+        id: 'page_1',
         type: 'Container',
         auth,
-        blocks: [
-          {
-            id: 'one',
-            type: 'Input',
-          },
-        ],
       },
       {
-        id: 'one',
+        id: 'page_1',
         type: 'Container',
         auth,
-        blocks: [
-          {
-            id: 'one',
-            type: 'Input',
-          },
-        ],
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow('Duplicate pageId "one".');
+  await expect(buildPages({ components, context })).rejects.toThrow('Duplicate pageId "page_1".');
 });
 
 test('block does not have an id', async () => {
@@ -270,7 +258,7 @@ test('block id is not a string', async () => {
   );
 });
 
-test('throw on Duplicate block ids', async () => {
+test('Throw on duplicate block ids', async () => {
   const components = {
     pages: [
       {
@@ -1155,22 +1143,4 @@ test('add user defined loading to meta', async () => {
       },
     ],
   });
-});
-
-test('throw on Duplicate ids', async () => {
-  const components = {
-    pages: [
-      {
-        id: 'page_1',
-        type: 'Container',
-        auth,
-      },
-      {
-        id: 'page_1',
-        type: 'Container',
-        auth,
-      },
-    ],
-  };
-  await expect(buildPages({ components, context })).rejects.toThrow('Duplicate pageId "page_1".');
 });

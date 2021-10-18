@@ -204,7 +204,7 @@ test('request id not a string', async () => {
   );
 });
 
-test('throw on Duplicate ids', async () => {
+test('Throw on duplicate request ids', async () => {
   const components = {
     pages: [
       {
@@ -223,7 +223,7 @@ test('throw on Duplicate ids', async () => {
   );
 });
 
-test('throw on Duplicate ids', async () => {
+test('Throw on duplicate request ids', async () => {
   const components = {
     pages: [
       {

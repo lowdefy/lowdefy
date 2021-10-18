@@ -435,3 +435,77 @@ test('throw on Duplicate block events action ids', async () => {
     'Duplicate actionId "action_1" on event "onClick" on block "block_1" on page "page_1".'
   );
 });
+
+test("don't throw on Duplicate separate block events action ids", async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            events: {
+              onClick: {
+                try: [
+                  {
+                    id: 'action_1',
+                    type: 'Reset',
+                  },
+                ],
+                catch: [
+                  {
+                    id: 'action_2',
+                    type: 'Retry',
+                  },
+                ],
+              },
+              onChange: {
+                try: [
+                  {
+                    id: 'action_1',
+                    type: 'Reset',
+                  },
+                ],
+                catch: [
+                  {
+                    id: 'action_2',
+                    type: 'Retry',
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  const res = await buildPages({ components, context });
+  expect(get(res, 'pages.0.areas.content.blocks.0')).toEqual({
+    blockId: 'block_1',
+    events: {
+      onChange: {
+        catch: [{ id: 'action_2', type: 'Retry' }],
+        try: [{ id: 'action_1', type: 'Reset' }],
+      },
+      onClick: {
+        catch: [{ id: 'action_2', type: 'Retry' }],
+        try: [{ id: 'action_1', type: 'Reset' }],
+      },
+    },
+    id: 'block:page_1:block_1',
+    meta: {
+      category: 'input',
+      loading: { type: 'SkeletonInput' },
+      moduleFederation: {
+        module: 'Input',
+        scope: 'blocks',
+        url: 'https://example.com/remoteEntry.js',
+      },
+      valueType: 'string',
+    },
+    type: 'Input',
+  });
+});
