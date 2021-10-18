@@ -1,0 +1,131 @@
+id: stacked_line_chart
+type: EChart
+properties:
+  option:
+    tooltip:
+      trigger: axis
+      axisPointer:
+        type: cross
+        label:
+          backgroundColor: '#6a7985'
+    legend:
+      data:
+        - Direct
+        - Mail Ad
+        - Affiliate Ad
+        - Video Ad
+        - Search Engine
+    toolbox:
+      feature:
+        saveAsImage: {}
+    grid:
+      left: 3%
+      right: 4%
+      bottom: 3%
+      containLabel: true
+    xAxis:
+      - type: category
+        boundaryGap: false
+        data:
+          _array.map:
+            on:
+              _global: chart_data.ads_daily
+            callback:
+              _function:
+                __args: 0.day
+    yAxis:
+      - type: value
+    series:
+      - name: Direct
+        type: line
+        stack: Total
+        smooth: true
+        lineStyle:
+          width: 0
+        showSymbol: false
+        areaStyle:
+          opacity: 1
+        emphasis:
+          focus: series
+        data:
+          _array.map:
+            on:
+              _global: chart_data.ads_daily
+            callback:
+              _function:
+                __args: 0.direct
+      - name: Mail Ad
+        type: line
+        stack: Total
+        smooth: true
+        lineStyle:
+          width: 0
+        showSymbol: false
+        areaStyle:
+          opacity: 1
+        emphasis:
+          focus: series
+        data:
+          _array.map:
+            on:
+              _global: chart_data.ads_daily
+            callback:
+              _function:
+                __args: 0.mail_ad
+      - name: Affiliate Ad
+        type: line
+        stack: Total
+        smooth: true
+        lineStyle:
+          width: 0
+        showSymbol: false
+        areaStyle:
+          opacity: 1
+        emphasis:
+          focus: series
+        data:
+          _array.map:
+            on:
+              _global: chart_data.ads_daily
+            callback:
+              _function:
+                __args: 0.affiliate_ad
+      - name: Video Ad
+        type: line
+        stack: Total
+        smooth: true
+        lineStyle:
+          width: 0
+        showSymbol: false
+        areaStyle:
+          opacity: 1
+        emphasis:
+          focus: series
+        data:
+          _array.map:
+            on:
+              _global: chart_data.ads_daily
+            callback:
+              _function:
+                __args: 0.video_ad
+      - name: Search Engine
+        type: line
+        stack: Total
+        smooth: true
+        lineStyle:
+          width: 0
+        showSymbol: false
+        label:
+          show: true
+          position: top
+        areaStyle:
+          opacity: 1
+        emphasis:
+          focus: series
+        data:
+          _array.map:
+            on:
+              _global: chart_data.ads_daily
+            callback:
+              _function:
+                __args: 0.search_engine

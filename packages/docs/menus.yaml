@@ -63,6 +63,10 @@
           pageId: generate-pdf-document-from-data
           properties:
             title: Generate PDFs
+        - type: MenuLink
+          pageId: make-charts-from-data
+          properties:
+            title: Make Charts
     - id: concepts
       type: MenuGroup
       properties:

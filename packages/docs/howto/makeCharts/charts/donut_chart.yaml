@@ -1,0 +1,32 @@
+id: donut_chart
+type: EChart
+properties:
+  option:
+    tooltip:
+      trigger: item
+    legend:
+      top: 5%
+      left: center
+    series:
+      - name: Access From
+        type: pie
+        radius:
+          - 40%
+          - 70%
+        avoidLabelOverlap: false
+        itemStyle:
+          borderRadius: 12
+          borderColor: '#fff'
+          borderWidth: 2
+        label:
+          show: false
+          position: center
+        emphasis:
+          label:
+            show: true
+            fontSize: '12'
+            fontWeight: bold
+        labelLine:
+          show: false
+        data:
+          _global: chart_data.ads

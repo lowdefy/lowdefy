@@ -1,0 +1,16 @@
+id: line_chart
+type: EChart
+properties:
+  option:
+    dataset:
+      source:
+        _global: chart_data.counts
+    xAxis:
+      type: category
+    yAxis:
+      type: value
+    series:
+      - type: line
+        encode:
+          x: day
+          y: value

@@ -1,0 +1,70 @@
+chart_data:
+  counts:
+    - day: Mon
+      value: 120
+    - day: Tue
+      value: 200
+    - day: Wed
+      value: 150
+    - day: Thu
+      value: 80
+    - day: Fri
+      value: 70
+    - day: Sat
+      value: 110
+    - day: Sun
+      value: 130
+  ads:
+    - value: 1048
+      name: Search Engine
+    - value: 735
+      name: Direct
+    - value: 580
+      name: Email
+    - value: 484
+      name: Union Ads
+    - value: 300
+      name: Video Ads
+  ads_daily:
+    - day: Mon
+      direct: 140
+      mail_ad: 120
+      affiliate_ad: 320
+      video_ad: 220
+      search_engine: 220
+    - day: Tue
+      direct: 232
+      mail_ad: 282
+      affiliate_ad: 132
+      video_ad: 402
+      search_engine: 302
+    - day: Wed
+      direct: 101
+      mail_ad: 111
+      affiliate_ad: 201
+      video_ad: 231
+      search_engine: 181
+    - day: Thu
+      direct: 264
+      mail_ad: 234
+      affiliate_ad: 334
+      video_ad: 134
+      search_engine: 234
+    - day: Fri
+      direct: 90
+      mail_ad: 220
+      affiliate_ad: 190
+      video_ad: 190
+      search_engine: 210
+    - day: Sat
+      direct: 340
+      mail_ad: 340
+      affiliate_ad: 130
+      video_ad: 230
+      search_engine: 290
+    - day: Sun
+      direct: 250
+      mail_ad: 310
+      affiliate_ad: 220
+      video_ad: 120
+      search_engine: 150

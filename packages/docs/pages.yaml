@@ -21,6 +21,11 @@
     vars:
       version:
         _ref: version.yaml
+- _ref:
+    path: howto/make-charts.yaml.njk
+    vars:
+      version:
+        _ref: version.yaml
 
 - _ref: concepts/overview.yaml
 - _ref: concepts/cli.yaml

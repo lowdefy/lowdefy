@@ -1,0 +1,1044 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/blog.yaml.njk
+  vars:
+    pageId: make-charts-from-data
+    pageTitle: How to make charts using Lowdefy
+    section: How To
+    filePath: howto/make-charts.yaml
+    {# pageImage: /public/images/howto/header_generate_csv.jpg #}
+    discussionsLink: https://github.com/lowdefy/lowdefy/discussions/907
+    authorProfile: /public/images/authors/sandile.jpeg
+    authorName: |
+      <div>Sandile Memela</div>
+      <a href="https://github.com/sah-memela">Follow @sah-memela on Github</a>
+    articleLinks:
+      - title: How to generate CSVs using Lowdefy
+        pageId: generate-csv-files-from-data
+    onMount:
+      - id: set_state
+        type: SetState
+        params:
+          chart_data:
+            counts:
+              - day: Mon
+                value: 120
+              - day: Tue
+                value: 200
+              - day: Wed
+                value: 150
+              - day: Thu
+                value: 80
+              - day: Fri
+                value: 70
+              - day: Sat
+                value: 110
+              - day: Sun
+                value: 130
+            ads:
+              - value: 1048
+                name: Search Engine
+              - value: 735
+                name: Direct
+              - value: 580
+                name: Email
+              - value: 484
+                name: Union Ads
+              - value: 300
+                name: Video Ads
+            ads_daily:
+              - day: Mon
+                direct: 140
+                mail_ad: 120
+                affiliate_ad: 320
+                video_ad: 220
+                search_engine: 220
+              - day: Tue
+                direct: 232
+                mail_ad: 282
+                affiliate_ad: 132
+                video_ad: 402
+                search_engine: 302
+              - day: Wed
+                direct: 101
+                mail_ad: 111
+                affiliate_ad: 201
+                video_ad: 231
+                search_engine: 181
+              - day: Thu
+                direct: 264
+                mail_ad: 234
+                affiliate_ad: 334
+                video_ad: 134
+                search_engine: 234
+              - day: Fri
+                direct: 90
+                mail_ad: 220
+                affiliate_ad: 190
+                video_ad: 190
+                search_engine: 210
+              - day: Sat
+                direct: 340
+                mail_ad: 340
+                affiliate_ad: 130
+                video_ad: 230
+                search_engine: 290
+              - day: Sun
+                direct: 250
+                mail_ad: 310
+                affiliate_ad: 220
+                video_ad: 120
+                search_engine: 150
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          style:
+            text-align: left
+          content: |
+            Adding the functionality to display charts in Lowdefy can be accomplished by using the [EChart](/EChart) block. This block is a minimal wrapper for the feature rich Apache EChart javascript charting library for react. This means that you can write normal Apache EChart configurations to make charts.
+
+            Take a look at the charts below to get a glimpse of the charts that you're going to make:
+
+      - id: line_bar_chart_box
+        type: Box
+        layout:
+          contentGutter: 16
+        blocks:
+          - id: line_chart_card
+            type: Card
+            layout:
+              span: 12
+            blocks:
+              - id: line_chart
+                type: EChart
+                properties:
+                  option:
+                    dataset:
+                      source:
+                        _state: chart_data.counts
+                    xAxis:
+                      type: category
+                    yAxis:
+                      type: value
+                    series:
+                      - type: line
+                        encode:
+                          x: day
+                          y: value
+          - id: bar_chart_card
+            type: Card
+            layout:
+              span: 12
+            blocks:
+              - id: bar_chart
+                type: EChart
+                properties:
+                  option:
+                    dataset:
+                      source:
+                        _state: chart_data.counts
+                    xAxis:
+                      type: category
+                    yAxis:
+                      type: value
+                    series:
+                      - type: bar
+                        encode:
+                          x: day
+                          y: value
+      - id: pie_charts_box
+        type: Box
+        layout:
+          contentGutter: 16
+        blocks:
+          - id: pie_chart_card
+            type: Card
+            layout:
+              span: 12
+            blocks:
+              - id: pie_chart
+                type: EChart
+                properties:
+                  option:
+                    tooltip:
+                      trigger: item
+                    legend:
+                      orient: vertical
+                      left: left
+                    series:
+                      - name: Access From
+                        type: pie
+                        radius: 70%
+                        emphasis:
+                          itemStyle:
+                            shadowBlur: 10
+                            shadowOffsetX: 0
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        data:
+                          _state: chart_data.ads
+          - id: donut_chart_card
+            type: Card
+            layout:
+              span: 12
+            blocks:
+              - id: donut_chart
+                type: EChart
+                properties:
+                  option:
+                    tooltip:
+                      trigger: item
+                    legend:
+                      top: 5%
+                      left: center
+                    series:
+                      - name: Access From
+                        type: pie
+                        radius:
+                          - 40%
+                          - 70%
+                        avoidLabelOverlap: false
+                        itemStyle:
+                          borderRadius: 12
+                          borderColor: '#fff'
+                          borderWidth: 2
+                        label:
+                          show: false
+                          position: center
+                        emphasis:
+                          label:
+                            show: true
+                            fontSize: '12'
+                            fontWeight: bold
+                        labelLine:
+                          show: false
+                        data:
+                          _state: chart_data.ads
+      - id: stacked_line_charts_box
+        type: Box
+        layout:
+          contentGutter: 16
+        blocks:
+          - id: stacked_line_chart_card
+            type: Card
+            layout:
+              span: 12
+            blocks:
+              - id: stacked_line_chart
+                type: EChart
+                properties:
+                  option:
+                    tooltip:
+                      trigger: axis
+                      axisPointer:
+                        type: cross
+                        label:
+                          backgroundColor: '#6a7985'
+                    legend:
+                      data:
+                        - Direct
+                        - Mail Ad
+                        - Affiliate Ad
+                        - Video Ad
+                        - Search Engine
+                    toolbox:
+                      feature:
+                        saveAsImage: {}
+                    grid:
+                      left: 3%
+                      right: 4%
+                      bottom: 3%
+                      containLabel: true
+                    xAxis:
+                      - type: category
+                        boundaryGap: false
+                        data:
+                          _array.map:
+                            on:
+                              _state: chart_data.ads_daily
+                            callback:
+                              _function:
+                                __args: 0.day
+                    yAxis:
+                      - type: value
+                    series:
+                      - name: Direct
+                        type: line
+                        stack: Total
+                        smooth: true
+                        lineStyle:
+                          width: 0
+                        showSymbol: false
+                        areaStyle:
+                          opacity: 1
+                        emphasis:
+                          focus: series
+                        data:
+                          _array.map:
+                            on:
+                              _state: chart_data.ads_daily
+                            callback:
+                              _function:
+                                __args: 0.direct
+                      - name: Mail Ad
+                        type: line
+                        stack: Total
+                        smooth: true
+                        lineStyle:
+                          width: 0
+                        showSymbol: false
+                        areaStyle:
+                          opacity: 1
+                        emphasis:
+                          focus: series
+                        data:
+                          _array.map:
+                            on:
+                              _state: chart_data.ads_daily
+                            callback:
+                              _function:
+                                __args: 0.mail_ad
+                      - name: Affiliate Ad
+                        type: line
+                        stack: Total
+                        smooth: true
+                        lineStyle:
+                          width: 0
+                        showSymbol: false
+                        areaStyle:
+                          opacity: 1
+                        emphasis:
+                          focus: series
+                        data:
+                          _array.map:
+                            on:
+                              _state: chart_data.ads_daily
+                            callback:
+                              _function:
+                                __args: 0.affiliate_ad
+                      - name: Video Ad
+                        type: line
+                        stack: Total
+                        smooth: true
+                        lineStyle:
+                          width: 0
+                        showSymbol: false
+                        areaStyle:
+                          opacity: 1
+                        emphasis:
+                          focus: series
+                        data:
+                          _array.map:
+                            on:
+                              _state: chart_data.ads_daily
+                            callback:
+                              _function:
+                                __args: 0.video_ad
+                      - name: Search Engine
+                        type: line
+                        stack: Total
+                        smooth: true
+                        lineStyle:
+                          width: 0
+                        showSymbol: false
+                        label:
+                          show: true
+                          position: top
+                        areaStyle:
+                          opacity: 1
+                        emphasis:
+                          focus: series
+                        data:
+                          _array.map:
+                            on:
+                              _state: chart_data.ads_daily
+                            callback:
+                              _function:
+                                __args: 0.search_engine
+          - id: stacked_bar_chart_card
+            type: Card
+            layout:
+              span: 12
+            blocks:
+              - id: stacked_bar_chart
+                type: EChart
+                properties:
+                  option:
+                    tooltip:
+                      trigger: axis
+                      axisPointer:
+                        type: shadow
+                    legend: {}
+                    grid:
+                      left: 3%
+                      right: 4%
+                      bottom: 3%
+                      containLabel: true
+                    xAxis:
+                      type: value
+                    yAxis:
+                      type: category
+                      data:
+                        _array.map:
+                          on:
+                            _state: chart_data.ads_daily
+                          callback:
+                            _function:
+                              __args: 0.day
+                    series:
+                      - name: Direct
+                        type: bar
+                        stack: total
+                        label:
+                          show: true
+                        emphasis:
+                          focus: series
+                        data:
+                          _array.map:
+                            on:
+                              _state: chart_data.ads_daily
+                            callback:
+                              _function:
+                                __args: 0.direct
+                      - name: Mail Ad
+                        type: bar
+                        stack: total
+                        label:
+                          show: true
+                        emphasis:
+                          focus: series
+                        data:
+                          _array.map:
+                            on:
+                              _state: chart_data.ads_daily
+                            callback:
+                              _function:
+                                __args: 0.mail_ad
+                      - name: Affiliate Ad
+                        type: bar
+                        stack: total
+                        label:
+                          show: true
+                        emphasis:
+                          focus: series
+                        data:
+                          _array.map:
+                            on:
+                              _state: chart_data.ads_daily
+                            callback:
+                              _function:
+                                __args: 0.affiliate_ad
+                      - name: Video Ad
+                        type: bar
+                        stack: total
+                        label:
+                          show: true
+                        emphasis:
+                          focus: series
+                        data:
+                          _array.map:
+                            on:
+                              _state: chart_data.ads_daily
+                            callback:
+                              _function:
+                                __args: 0.video_ad
+                      - name: Search Engine
+                        type: bar
+                        stack: total
+                        label:
+                          show: true
+                        emphasis:
+                          focus: series
+                        data:
+                          _array.map:
+                            on:
+                              _state: chart_data.ads_daily
+                            callback:
+                              _function:
+                                __args: 0.se
+      - id: md2
+        type: MarkdownWithCode
+        properties:
+          content: |
+            The full project folder for this how-to is available at:
+            https://github.com/lowdefy/lowdefy/tree/main/packages/docs/howto/makeCharts
+
+            > This how-to assumes that you are already running a Lowdefy app locally in dev mode. If not:
+            >  1) Create a empty folder.
+            >  2) Open your terminal or cmd and `cd` to your empty folder.
+            >  3) Run `npx lowdefy@latest init && npx lowdefy@latest dev` to initialize and start your Lowdefy app development server.
+
+            ## Make charts using Lowdefy TLDR;
+
+            1. Add all the sample data for the charts to global.
+            2. Add the charts to your Lowdefy app.
+            3. Add chart component references to your chart page.
+      {# - id: md_vid
+        type: DangerousMarkdown
+        properties:
+            DOMPurifyOptions:
+              ADD_TAGS:
+                - iframe
+            content: |
+              <div style="position: relative; padding-bottom: 62.5%; height: 0;"><iframe src="https://www.loom.com/embed/" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div> #}
+      - id: md2_1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            ## 1. Add all the sample data for the charts to global.
+
+            1) Create a `global.yaml` file in your working directory and add the following sample chart data to it:
+
+            ###### /global.yaml
+            ```yaml
+            chart_data:
+              counts:
+                - day: Mon
+                  value: 120
+                - day: Tue
+                  value: 200
+                - day: Wed
+                  value: 150
+                - day: Thu
+                  value: 80
+                - day: Fri
+                  value: 70
+                - day: Sat
+                  value: 110
+                - day: Sun
+                  value: 130
+              ads:
+                - value: 1048
+                  name: Search Engine
+                - value: 735
+                  name: Direct
+                - value: 580
+                  name: Email
+                - value: 484
+                  name: Union Ads
+                - value: 300
+                  name: Video Ads
+              ads_daily:
+                - day: Mon
+                  direct: 140
+                  mail_ad: 120
+                  affiliate_ad: 320
+                  video_ad: 220
+                  search_engine: 220
+                - day: Tue
+                  direct: 232
+                  mail_ad: 282
+                  affiliate_ad: 132
+                  video_ad: 402
+                  search_engine: 302
+                - day: Wed
+                  direct: 101
+                  mail_ad: 111
+                  affiliate_ad: 201
+                  video_ad: 231
+                  search_engine: 181
+                - day: Thu
+                  direct: 264
+                  mail_ad: 234
+                  affiliate_ad: 334
+                  video_ad: 134
+                  search_engine: 234
+                - day: Fri
+                  direct: 90
+                  mail_ad: 220
+                  affiliate_ad: 190
+                  video_ad: 190
+                  search_engine: 210
+                - day: Sat
+                  direct: 340
+                  mail_ad: 340
+                  affiliate_ad: 130
+                  video_ad: 230
+                  search_engine: 290
+                - day: Sun
+                  direct: 250
+                  mail_ad: 310
+                  affiliate_ad: 220
+                  video_ad: 120
+                  search_engine: 150
+            ```
+
+            The first grouping of `chart_data` is `counts` which specifies counts for each day. The second grouping of `chart_data` is `ads` which specifies the `name` and `value` for each data item. The last grouping of `chart_data` is `ads_daily` which specifies the ads and day for each data item.
+
+            2) Update your `lowdefy.yaml` file in your working directory to reference your data as global:
+
+            ###### /lowdefy.yaml
+            ```yaml
+            lowdefy: 3.22.0
+            name: How to make charts using Lowdefy
+            global:
+              _ref: global.yaml
+            # ...
+            ```
+
+            ## 2. Add the charts to your Lowdefy app.
+
+            1) Create a new `charts` folder in your working directory.
+
+            2) Add the `line_chart.yaml` file to the `charts` folder.
+
+            ###### /charts/line_chart.yaml
+            ```yaml
+            id: line_chart
+            type: EChart
+            properties:
+              option:
+                dataset:
+                  source:
+                    _global: chart_data.counts
+                xAxis:
+                  type: category
+                yAxis:
+                  type: value
+                series:
+                  - type: line
+                    encode:
+                      x: day
+                      y: value
+            ```
+
+            This chart uses the `dataset` option as a source of data for the chart and uses encoding for the line series to select the appropriate data for each of the `x`, `y` axes.
+
+            3) Add the `bar_chart.yaml` file to the `charts` folder.
+
+            ###### /charts/bar_chart.yaml
+            ```yaml
+            id: bar_chart
+            type: EChart
+            properties:
+              option:
+                dataset:
+                  source:
+                    _global: chart_data.counts
+                xAxis:
+                  type: category
+                yAxis:
+                  type: value
+                series:
+                  - type: bar
+                    encode:
+                      x: day
+                      y: value
+            ```
+
+            This chart uses the same dataset as the `line_chart` and also uses encoding for the `x` and `y` axes.
+
+            4) Add the `pie_chart.yaml` file to the `charts` folder.
+
+            ###### /charts/pie_chart.yaml
+            ```yaml
+            id: pie_chart
+            type: EChart
+            properties:
+              option:
+                tooltip:
+                  trigger: item
+                legend:
+                  orient: vertical
+                  left: left
+                series:
+                  - name: Access From
+                    type: pie
+                    radius: 70%
+                    emphasis:
+                      itemStyle:
+                        shadowBlur: 10
+                        shadowOffsetX: 0
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    data:
+                      _global: chart_data.ads
+            ```
+
+            This chart uses the `data` option for the `pie` series where the data is formatted into `name`, and `value' for each data item.
+
+            5) Add the `donut_chart.yaml` file to the `charts` folder.
+
+            ###### /charts/donut_chart.yaml
+            ```yaml
+            id: donut_chart
+            type: EChart
+            properties:
+              option:
+                tooltip:
+                  trigger: item
+                legend:
+                  top: 5%
+                  left: center
+                series:
+                  - name: Access From
+                    type: pie
+                    radius:
+                      - 40%
+                      - 70%
+                    avoidLabelOverlap: false
+                    itemStyle:
+                      borderRadius: 12
+                      borderColor: '#fff'
+                      borderWidth: 2
+                    label:
+                      show: false
+                      position: center
+                    emphasis:
+                      label:
+                        show: true
+                        fontSize: '12'
+                        fontWeight: bold
+                    labelLine:
+                      show: false
+                    data:
+                      _global: chart_data.ads
+            ```
+
+            This chart uses the `data` option for the `pie` series where the data is formatted into `name`, and `value' for each data item. The donut shape is made by specifying a `radius` for the `pie` series.
+
+            6) Add the `stacked_line_chart.yaml` file to the `charts` folder.
+
+            ###### /charts/stacked_line_chart.yaml
+            ```yaml
+            id: stacked_line_chart
+            type: EChart
+            properties:
+              option:
+                tooltip:
+                  trigger: axis
+                  axisPointer:
+                    type: cross
+                    label:
+                      backgroundColor: '#6a7985'
+                legend:
+                  data:
+                    - Direct
+                    - Mail Ad
+                    - Affiliate Ad
+                    - Video Ad
+                    - Search Engine
+                toolbox:
+                  feature:
+                    saveAsImage: {}
+                grid:
+                  left: 3%
+                  right: 4%
+                  bottom: 3%
+                  containLabel: true
+                xAxis:
+                  - type: category
+                    boundaryGap: false
+                    data:
+                      _array.map:
+                        on:
+                          _global: chart_data.ads_daily
+                        callback:
+                          _function:
+                            __args: 0.day
+                yAxis:
+                  - type: value
+                series:
+                  - name: Direct
+                    type: line
+                    stack: Total
+                    smooth: true
+                    lineStyle:
+                      width: 0
+                    showSymbol: false
+                    areaStyle:
+                      opacity: 1
+                    emphasis:
+                      focus: series
+                    data:
+                      _array.map:
+                        on:
+                          _global: chart_data.ads_daily
+                        callback:
+                          _function:
+                            __args: 0.direct
+                  - name: Mail Ad
+                    type: line
+                    stack: Total
+                    smooth: true
+                    lineStyle:
+                      width: 0
+                    showSymbol: false
+                    areaStyle:
+                      opacity: 1
+                    emphasis:
+                      focus: series
+                    data:
+                      _array.map:
+                        on:
+                          _global: chart_data.ads_daily
+                        callback:
+                          _function:
+                            __args: 0.mail_ad
+                  - name: Affiliate Ad
+                    type: line
+                    stack: Total
+                    smooth: true
+                    lineStyle:
+                      width: 0
+                    showSymbol: false
+                    areaStyle:
+                      opacity: 1
+                    emphasis:
+                      focus: series
+                    data:
+                      _array.map:
+                        on:
+                          _global: chart_data.ads_daily
+                        callback:
+                          _function:
+                            __args: 0.affiliate_ad
+                  - name: Video Ad
+                    type: line
+                    stack: Total
+                    smooth: true
+                    lineStyle:
+                      width: 0
+                    showSymbol: false
+                    areaStyle:
+                      opacity: 1
+                    emphasis:
+                      focus: series
+                    data:
+                      _array.map:
+                        on:
+                          _global: chart_data.ads_daily
+                        callback:
+                          _function:
+                            __args: 0.video_ad
+                  - name: Search Engine
+                    type: line
+                    stack: Total
+                    smooth: true
+                    lineStyle:
+                      width: 0
+                    showSymbol: false
+                    label:
+                      show: true
+                      position: top
+                    areaStyle:
+                      opacity: 1
+                    emphasis:
+                      focus: series
+                    data:
+                      _array.map:
+                        on:
+                          _global: chart_data.ads_daily
+                        callback:
+                          _function:
+                            __args: 0.search_engine
+            ```
+
+            This chart uses the `data` option for the `axes` or `line` series where an array of data is constructed by mapping over the data and only returning the relevant data for the respective series or axes. The stack is made by using the `stack` option in each `series`.
+
+            7) Add the `stacked_bar_chart.yaml` file to the `charts` folder.
+
+            ###### /charts/stacked_bar_chart.yaml
+            ```yaml
+            id: stacked_bar_chart
+            type: EChart
+            properties:
+              option:
+                tooltip:
+                  trigger: axis
+                  axisPointer:
+                    type: shadow
+                legend: {}
+                grid:
+                  left: 3%
+                  right: 4%
+                  bottom: 3%
+                  containLabel: true
+                xAxis:
+                  type: value
+                yAxis:
+                  type: category
+                  data:
+                    _array.map:
+                      on:
+                        _global: chart_data.ads_daily
+                      callback:
+                        _function:
+                          __args: 0.day
+                series:
+                  - name: Direct
+                    type: bar
+                    stack: total
+                    label:
+                      show: true
+                    emphasis:
+                      focus: series
+                    data:
+                      _array.map:
+                        on:
+                          _global: chart_data.ads_daily
+                        callback:
+                          _function:
+                            __args: 0.direct
+                  - name: Mail Ad
+                    type: bar
+                    stack: total
+                    label:
+                      show: true
+                    emphasis:
+                      focus: series
+                    data:
+                      _array.map:
+                        on:
+                          _global: chart_data.ads_daily
+                        callback:
+                          _function:
+                            __args: 0.mail_ad
+                  - name: Affiliate Ad
+                    type: bar
+                    stack: total
+                    label:
+                      show: true
+                    emphasis:
+                      focus: series
+                    data:
+                      _array.map:
+                        on:
+                          _global: chart_data.ads_daily
+                        callback:
+                          _function:
+                            __args: 0.affiliate_ad
+                  - name: Video Ad
+                    type: bar
+                    stack: total
+                    label:
+                      show: true
+                    emphasis:
+                      focus: series
+                    data:
+                      _array.map:
+                        on:
+                          _global: chart_data.ads_daily
+                        callback:
+                          _function:
+                            __args: 0.video_ad
+                  - name: Search Engine
+                    type: bar
+                    stack: total
+                    label:
+                      show: true
+                    emphasis:
+                      focus: series
+                    data:
+                      _array.map:
+                        on:
+                          _global: chart_data.ads_daily
+                        callback:
+                          _function:
+                            __args: 0.search_engine
+            ```
+
+            This chart uses the `data` option for the `axes` or `line` series where an array of data is constructed by mapping over the data and only returning the relevant data for the respective series or axes. The stack is made by using the `stack` option in each `series`.
+
+            ## 3. Add chart component references to your chart page.
+
+            1) Update your page to include the chart component references:
+
+            ###### /lowdefy.yaml
+            ```yaml
+            lowdefy: 3.22.0
+            name: How to make charts using Lowdefy
+            global:
+              _ref: global.yaml
+            pages:
+              - id: charts
+                type: PageHeaderMenu
+                properties:
+                  title: Charts
+                areas:
+                  content:
+                    justify: center
+                    blocks:
+                      - id: line_bar_chart_box
+                        type: Box
+                        layout:
+                          contentGutter: 16
+                        blocks:
+                          - id: line_chart_card
+                            type: Card
+                            layout:
+                              span: 12
+                            blocks:
+                              - _ref: charts/line_chart.yaml
+                          - id: bar_chart_card
+                            type: Card
+                            layout:
+                              span: 12
+                            blocks:
+                              - _ref: charts/bar_chart.yaml
+                      - id: pie_charts_box
+                        type: Box
+                        layout:
+                          contentGutter: 16
+                        blocks:
+                          - id: pie_chart_card
+                            type: Card
+                            layout:
+                              span: 12
+                            blocks:
+                              - _ref: charts/pie_chart.yaml
+                          - id: donut_chart_card
+                            type: Card
+                            layout:
+                              span: 12
+                            blocks:
+                              - _ref: charts/donut_chart.yaml
+                      - id: stacked_line_charts_box
+                        type: Box
+                        layout:
+                          contentGutter: 16
+                        blocks:
+                          - id: stacked_line_chart_card
+                            type: Card
+                            layout:
+                              span: 12
+                            blocks:
+                              - _ref: charts/stacked_line_chart.yaml
+                          - id: stacked_bar_chart_card
+                            type: Card
+                            layout:
+                              span: 12
+                            blocks:
+                              - _ref: charts/stacked_bar_chart.yaml
+                  footer:
+                    blocks:
+                      - id: footer
+                        type: Paragraph
+                        properties:
+                          type: secondary
+                          content: |
+                            Made by a Lowdefy 🤖
+            ```
+
+            The updates to your page accomplish two main things, firstly they make cards for all the charts that you're going to display and secondly, they add a reference for each chart from the `charts` folder to the corresponding card on the page.
+
+            ## Conclusion
+
+            Congratulations 🏆 you have completed adding charts to your Lowdefy app and they're ready to use to display data.
+
+            Check out the project folder for this how-to and why not give it a try:
+            https://github.com/lowdefy/lowdefy/tree/main/packages/docs/howto/makeCharts
+
+            Next, try fetching data from a data source and generate a chart from the returned data.

@@ -1,0 +1,72 @@
+lowdefy: 3.22.0
+name: How to make charts using Lowdefy
+global:
+  _ref: global.yaml
+pages:
+  - id: charts
+    type: PageHeaderMenu
+    properties:
+      title: Charts
+    areas:
+      content:
+        justify: center
+        blocks:
+          - id: line_bar_chart_box
+            type: Box
+            layout:
+              contentGutter: 16
+            blocks:
+              - id: line_chart_card
+                type: Card
+                layout:
+                  span: 12
+                blocks:
+                  - _ref: charts/line_chart.yaml
+              - id: bar_chart_card
+                type: Card
+                layout:
+                  span: 12
+                blocks:
+                  - _ref: charts/bar_chart.yaml
+          - id: pie_charts_box
+            type: Box
+            layout:
+              contentGutter: 16
+            blocks:
+              - id: pie_chart_card
+                type: Card
+                layout:
+                  span: 12
+                blocks:
+                  - _ref: charts/pie_chart.yaml
+              - id: donut_chart_card
+                type: Card
+                layout:
+                  span: 12
+                blocks:
+                  - _ref: charts/donut_chart.yaml
+          - id: stacked_line_charts_box
+            type: Box
+            layout:
+              contentGutter: 16
+            blocks:
+              - id: stacked_line_chart_card
+                type: Card
+                layout:
+                  span: 12
+                blocks:
+                  - _ref: charts/stacked_line_chart.yaml
+              - id: stacked_bar_chart_card
+                type: Card
+                layout:
+                  span: 12
+                blocks:
+                  - _ref: charts/stacked_bar_chart.yaml
+      footer:
+        blocks:
+          - id: footer
+            type: Paragraph
+            properties:
+              type: secondary
+              content: |
+                Made by a Lowdefy 🤖

@@ -1,0 +1,96 @@
+id: stacked_bar_chart
+type: EChart
+properties:
+  option:
+    tooltip:
+      trigger: axis
+      axisPointer:
+        type: shadow
+    legend: {}
+    grid:
+      left: 3%
+      right: 4%
+      bottom: 3%
+      containLabel: true
+    xAxis:
+      type: value
+    yAxis:
+      type: category
+      data:
+        _array.map:
+          on:
+            _global: chart_data.ads_daily
+          callback:
+            _function:
+              __args: 0.day
+    series:
+      - name: Direct
+        type: bar
+        stack: total
+        label:
+          show: true
+        emphasis:
+          focus: series
+        data:
+          _array.map:
+            on:
+              _global: chart_data.ads_daily
+            callback:
+              _function:
+                __args: 0.direct
+      - name: Mail Ad
+        type: bar
+        stack: total
+        label:
+          show: true
+        emphasis:
+          focus: series
+        data:
+          _array.map:
+            on:
+              _global: chart_data.ads_daily
+            callback:
+              _function:
+                __args: 0.mail_ad
+      - name: Affiliate Ad
+        type: bar
+        stack: total
+        label:
+          show: true
+        emphasis:
+          focus: series
+        data:
+          _array.map:
+            on:
+              _global: chart_data.ads_daily
+            callback:
+              _function:
+                __args: 0.affiliate_ad
+      - name: Video Ad
+        type: bar
+        stack: total
+        label:
+          show: true
+        emphasis:
+          focus: series
+        data:
+          _array.map:
+            on:
+              _global: chart_data.ads_daily
+            callback:
+              _function:
+                __args: 0.video_ad
+      - name: Search Engine
+        type: bar
+        stack: total
+        label:
+          show: true
+        emphasis:
+          focus: series
+        data:
+          _array.map:
+            on:
+              _global: chart_data.ads_daily
+            callback:
+              _function:
+                __args: 0.search_engine
