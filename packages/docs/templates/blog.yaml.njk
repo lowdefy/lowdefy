@@ -54,7 +54,9 @@ events:
         error: false
       params: post_telemetry
   onMount:
-    _var: onMount
+    _var:
+      name: onMount
+      default: []
 
 properties:
   title: {{ pageTitle }}
