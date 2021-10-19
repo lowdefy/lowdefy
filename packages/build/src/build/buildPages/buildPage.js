@@ -39,9 +39,6 @@ async function buildPage({ page, index, context, checkDuplicatePageId }) {
     operators,
     pageId: page.pageId,
     requests,
-    checkDuplicateBlockId: createCheckDuplicateId({
-      message: 'Duplicate blockId "{{ id }}" on page "{{ pageId }}."',
-    }),
     checkDuplicateRequestId: createCheckDuplicateId({
       message: 'Duplicate requestId "{{ id }}" on page "{{ pageId }}".',
     }),

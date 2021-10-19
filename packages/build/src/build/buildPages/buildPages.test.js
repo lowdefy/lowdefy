@@ -258,39 +258,6 @@ test('block id is not a string', async () => {
   );
 });
 
-test('Throw on duplicate block ids', async () => {
-  const components = {
-    pages: [
-      {
-        id: 'one',
-        type: 'Container',
-        auth,
-        blocks: [
-          {
-            id: 'two',
-            type: 'Container',
-            blocks: [
-              {
-                id: 'three',
-                type: 'Container',
-                blocks: [
-                  {
-                    id: 'one',
-                    type: 'Input',
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  };
-  await expect(buildPages({ components, context })).rejects.toThrow(
-    'Duplicate blockId "one" on page "one."'
-  );
-});
-
 test('page type missing', async () => {
   const components = {
     pages: [
