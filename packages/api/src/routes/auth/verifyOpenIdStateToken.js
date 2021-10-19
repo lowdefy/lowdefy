@@ -15,7 +15,7 @@
 */
 
 import jwt from 'jsonwebtoken';
-import { AuthenticationError, TokenExpiredError } from '../../context/errors';
+import { AuthenticationError } from '../../context/errors';
 
 function verifyOpenIdStateToken({ host, secrets }, { token }) {
   try {
@@ -31,7 +31,7 @@ function verifyOpenIdStateToken({ host, secrets }, { token }) {
     return claims;
   } catch (err) {
     if (err.name === 'TokenExpiredError') {
-      throw new TokenExpiredError('Token expired.');
+      throw new AuthenticationError('Token expired.');
     } else {
       throw new AuthenticationError('Invalid token.');
     }
