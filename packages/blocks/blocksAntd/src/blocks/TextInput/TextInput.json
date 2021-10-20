@@ -26,7 +26,7 @@
         "bordered": {
           "type": "boolean",
           "default": true,
-          "description": "Whether or not the textarea has a border style."
+          "description": "Whether or not the text input has a border style."
         },
         "disabled": {
           "type": "boolean",

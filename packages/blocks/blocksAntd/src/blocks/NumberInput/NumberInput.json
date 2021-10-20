@@ -18,10 +18,32 @@
           "default": false,
           "description": "Autofocus to the block on page load."
         },
+        "bordered": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether or not the number input has a border style."
+        },
+        "controls": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether or not to show the +- controls."
+        },
         "disabled": {
           "type": "boolean",
           "default": false,
           "description": "Disable the block if true."
+        },
+        "formatter": {
+          "type": "object",
+          "description": "A function specifying the format of the value presented.",
+          "docs": {
+            "displayType": "yaml"
+          }
+        },
+        "keyboard": {
+          "type": "boolean",
+          "default": true,
+          "description": "If enabled, control input with keyboard up and down."
         },
         "inputStyle": {
           "type": "object",
