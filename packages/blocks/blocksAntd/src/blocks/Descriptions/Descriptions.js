@@ -20,7 +20,7 @@ import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 import { Descriptions } from 'antd';
 import { type } from '@lowdefy/helpers';
 
-const DescriptionsBlock = ({ blockId, properties, methods }) => {
+const DescriptionsBlock = ({ blockId, content, properties, methods }) => {
   let dataItem = properties.items || [];
   if (type.isObject(dataItem)) {
     dataItem = Object.keys(dataItem).map((key) => ({ value: dataItem[key], key }));
@@ -29,12 +29,15 @@ const DescriptionsBlock = ({ blockId, properties, methods }) => {
   return (
     <Descriptions
       id={blockId}
-      title={renderHtml({ html: properties.title, methods })}
       bordered={properties.bordered}
-      column={properties.column}
-      size={properties.size}
-      layout={properties.layout}
       colon={properties.colon}
+      column={properties.column}
+      contentStyle={properties.contentStyle}
+      extra={content.extra && content.extra()}
+      labelStyle={properties.labelStyle}
+      layout={properties.layout}
+      size={properties.size}
+      title={renderHtml({ html: properties.title, methods })}
     >
       {dataItem.map((item, i) => {
         let row = item;
@@ -53,6 +56,8 @@ const DescriptionsBlock = ({ blockId, properties, methods }) => {
           <Descriptions.Item
             key={i}
             label={renderHtml({ html: label, methods })}
+            contentStyle={row.contentStyle}
+            labelStyle={row.labelStyle}
             span={
               row.span ||
               (type.isFunction(itemOption.span) ? itemOption.span(row, i) : itemOption.span)

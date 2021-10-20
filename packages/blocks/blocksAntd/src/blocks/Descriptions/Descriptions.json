@@ -1,5 +1,5 @@
 {
-  "category": "display",
+  "category": "container",
   "loading": {
     "type": "Skeleton",
     "properties": {
@@ -20,6 +20,13 @@
           "type": "boolean",
           "default": true,
           "description": "Include a colon in item labels."
+        },
+        "contentStyle": {
+          "type": "object",
+          "description": "Customize content style.",
+          "docs": {
+            "displayType": "yaml"
+          }
         },
         "column": {
           "default": 3,
@@ -105,6 +112,20 @@
                 "type": "object",
                 "required": ["label"],
                 "properties": {
+                  "contentStyle": {
+                    "type": "object",
+                    "description": "Customize content style.",
+                    "docs": {
+                      "displayType": "yaml"
+                    }
+                  },
+                  "labelStyle": {
+                    "type": "object",
+                    "description": "Customize label style.",
+                    "docs": {
+                      "displayType": "yaml"
+                    }
+                  },
                   "label": {
                     "type": "string",
                     "description": "Item label - supports html."
@@ -143,6 +164,13 @@
               }
             }
           ]
+        },
+        "labelStyle": {
+          "type": "object",
+          "description": "Customize label style.",
+          "docs": {
+            "displayType": "yaml"
+          }
         },
         "layout": {
           "type": "string",
