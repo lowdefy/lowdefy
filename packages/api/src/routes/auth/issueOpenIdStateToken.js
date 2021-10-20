@@ -16,11 +16,10 @@
 
 import jwt from 'jsonwebtoken';
 
-function issueOpenIdStateToken({ host, secrets }, { input, pageId, urlQuery }) {
+function issueOpenIdStateToken({ host, secrets }, { pageId, urlQuery }) {
   const { JWT_SECRET } = secrets;
   return jwt.sign(
     {
-      input,
       lowdefy_openid_state_token: true,
       pageId,
       urlQuery,

@@ -14,18 +14,26 @@
   limitations under the License.
 */
 
-import cookie from 'cookie';
+import request from '../utils/request';
 
-function setAuthenticationCookie({ protocol, setHeader }) {
-  const CookieHeader = cookie.serialize('authorization', '', {
-    httpOnly: true,
-    path: '/',
-    sameSite: 'lax',
-    secure: !(protocol !== 'https'),
-    maxAge: 0,
-  });
+function createLogin({ window }) {
+  async function login({ authUrlQueryParams, pageId, urlQuery } = {}) {
+    const data = await request({
+      url: '/lowdefy/auth/openIdAuthorizationUrl',
+      method: 'POST',
+      body: {
+        authUrlQueryParams,
+        pageId,
+        urlQuery,
+      },
+    });
+    if (!data.openIdAuthorizationUrl) {
+      throw new Error('Authorization URL not found.');
+    }
+    window.location.href = data.openIdAuthorizationUrl;
+  }
 
-  setHeader('Set-Cookie', CookieHeader);
+  return login;
 }
 
-export default setAuthenticationCookie;
+export default createLogin;

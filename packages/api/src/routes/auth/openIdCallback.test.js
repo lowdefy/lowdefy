@@ -18,10 +18,12 @@ import { Issuer } from 'openid-client';
 import openIdCallback from './openIdCallback';
 import issueOpenIdStateToken from './issueOpenIdStateToken';
 import testContext from '../../test/testContext';
-import setAuthenticationCookie from './setAuthenticationCookie';
+import setAuthorizationCookie from './setAuthorizationCookie';
+import setIdTokenCookie from './setIdTokenCookie';
 import { AuthenticationError, ConfigurationError } from '../../context/errors';
 
-jest.mock('./setAuthenticationCookie');
+jest.mock('./setAuthorizationCookie');
+jest.mock('./setIdTokenCookie');
 jest.mock('openid-client');
 
 const mockOpenIdCallback = jest.fn(() => ({
@@ -51,7 +53,8 @@ mockNow.mockImplementation(() => 1000);
 global.Date.now = mockNow;
 
 beforeEach(() => {
-  setAuthenticationCookie.mockReset();
+  setAuthorizationCookie.mockReset();
+  setIdTokenCookie.mockReset();
   global.Date.now = mockNow;
 });
 
@@ -67,13 +70,12 @@ test('callback, no openId config', async () => {
   await expect(openIdCallback(context, { code: 'code', state: 'state' })).rejects.toThrow(
     'Invalid OpenID Connect configuration.'
   );
-  expect(setAuthenticationCookie.mock.calls).toEqual([]);
+  expect(setAuthorizationCookie.mock.calls).toEqual([]);
 });
 
 test('callback', async () => {
   const context = testContext({ secrets });
   const state = issueOpenIdStateToken(context, {
-    input: { i: true },
     pageId: 'pageId',
     urlQuery: { u: true },
   });
@@ -99,18 +101,17 @@ test('callback', async () => {
     ],
   ]);
   expect(res).toEqual({
-    idToken: 'id_token',
-    input: {
-      i: true,
-    },
     pageId: 'pageId',
     urlQuery: {
       u: true,
     },
   });
-  expect(setAuthenticationCookie.mock.calls[0][1]).toEqual({
-    value:
+  expect(setAuthorizationCookie.mock.calls[0][1]).toEqual({
+    accessToken:
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdWIiLCJsb3dkZWZ5X2FjY2Vzc190b2tlbiI6dHJ1ZSwiaWF0IjoxLCJleHAiOjE0NDAxLCJhdWQiOiJob3N0IiwiaXNzIjoiaG9zdCJ9.oADZ37ERfvONPBGiFsStQUOEHO6BaX_zkGXCHY8PbRA',
+  });
+  expect(setIdTokenCookie.mock.calls[0][1]).toEqual({
+    idToken: 'id_token',
   });
 });
 
@@ -122,13 +123,12 @@ test('callback, invalid state', async () => {
   await expect(openIdCallback(context, { code: 'code', state: 'state' })).rejects.toThrow(
     'Invalid token.'
   );
-  expect(setAuthenticationCookie.mock.calls).toEqual([]);
+  expect(setAuthorizationCookie.mock.calls).toEqual([]);
 });
 
 test('callback, openId callback error', async () => {
   const context = testContext({ secrets });
   const state = issueOpenIdStateToken(context, {
-    input: { i: true },
     pageId: 'pageId',
     urlQuery: { u: true },
   });
@@ -144,5 +144,5 @@ test('callback, openId callback error', async () => {
   await expect(openIdCallback(context, { code: 'code', state })).rejects.toThrow(
     'OpenId Callback Error'
   );
-  expect(setAuthenticationCookie.mock.calls).toEqual([]);
+  expect(setAuthorizationCookie.mock.calls).toEqual([]);
 });

@@ -36,7 +36,7 @@ Issuer.discover = jest.fn(() => ({
   Client: mockClient,
 }));
 
-const authorizationUrlInput = { input: { i: true }, pageId: 'pageId', urlQuery: { u: true } };
+const authorizationUrlInput = { pageId: 'pageId', urlQuery: { u: true } };
 
 const secrets = {
   OPENID_CLIENT_ID: 'OPENID_CLIENT_ID',
@@ -77,9 +77,10 @@ test('authorizationUrl, no optional config', async () => {
       },
     ],
   ]);
-  expect(url).toEqual(
-    'https://host/auth/openid-callback:code:openid profile email:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpbnB1dCI6eyJpIjp0cnVlfSwibG93ZGVmeV9vcGVuaWRfc3RhdGVfdG9rZW4iOnRydWUsInBhZ2VJZCI6InBhZ2VJZCIsInVybFF1ZXJ5Ijp7InUiOnRydWV9LCJpYXQiOjEsImV4cCI6MzAxLCJhdWQiOiJob3N0IiwiaXNzIjoiaG9zdCJ9.-GLdtCspyagMhdx9z1VootZXXbIdLY3cbzpn5UK8eGI:{}'
-  );
+  expect(url).toEqual({
+    openIdAuthorizationUrl:
+      'https://host/auth/openid-callback:code:openid profile email:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb3dkZWZ5X29wZW5pZF9zdGF0ZV90b2tlbiI6dHJ1ZSwicGFnZUlkIjoicGFnZUlkIiwidXJsUXVlcnkiOnsidSI6dHJ1ZX0sImlhdCI6MSwiZXhwIjozMDEsImF1ZCI6Imhvc3QiLCJpc3MiOiJob3N0In0.ZuOwJcz0v65hzQssSA2XHv8FQq453D3kSHxocS9AFBU:{}',
+  });
 });
 
 test('authorizationUrl, set scope', async () => {
@@ -94,9 +95,10 @@ test('authorizationUrl, set scope', async () => {
     },
   });
   const url = await openIdAuthorizationUrl(context, authorizationUrlInput);
-  expect(url).toEqual(
-    'https://host/auth/openid-callback:code:custom scope:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpbnB1dCI6eyJpIjp0cnVlfSwibG93ZGVmeV9vcGVuaWRfc3RhdGVfdG9rZW4iOnRydWUsInBhZ2VJZCI6InBhZ2VJZCIsInVybFF1ZXJ5Ijp7InUiOnRydWV9LCJpYXQiOjEsImV4cCI6MzAxLCJhdWQiOiJob3N0IiwiaXNzIjoiaG9zdCJ9.-GLdtCspyagMhdx9z1VootZXXbIdLY3cbzpn5UK8eGI:{}'
-  );
+  expect(url).toEqual({
+    openIdAuthorizationUrl:
+      'https://host/auth/openid-callback:code:custom scope:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb3dkZWZ5X29wZW5pZF9zdGF0ZV90b2tlbiI6dHJ1ZSwicGFnZUlkIjoicGFnZUlkIiwidXJsUXVlcnkiOnsidSI6dHJ1ZX0sImlhdCI6MSwiZXhwIjozMDEsImF1ZCI6Imhvc3QiLCJpc3MiOiJob3N0In0.ZuOwJcz0v65hzQssSA2XHv8FQq453D3kSHxocS9AFBU:{}',
+  });
 });
 
 test('authorizationUrl, jwt config error', async () => {
@@ -128,9 +130,10 @@ test('authorizationUrl, additional query params', async () => {
       },
     ],
   ]);
-  expect(url).toEqual(
-    'https://host/auth/openid-callback:code:openid profile email:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb3dkZWZ5X29wZW5pZF9zdGF0ZV90b2tlbiI6dHJ1ZSwiaWF0IjoxLCJleHAiOjMwMSwiYXVkIjoiaG9zdCIsImlzcyI6Imhvc3QifQ.-UtxdTFvQW6pFFFHTO0EtmubPbkDl8EJQwBQA2pp_M4:{"screen_hint":"sign-up"}'
-  );
+  expect(url).toEqual({
+    openIdAuthorizationUrl:
+      'https://host/auth/openid-callback:code:openid profile email:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb3dkZWZ5X29wZW5pZF9zdGF0ZV90b2tlbiI6dHJ1ZSwiaWF0IjoxLCJleHAiOjMwMSwiYXVkIjoiaG9zdCIsImlzcyI6Imhvc3QifQ.-UtxdTFvQW6pFFFHTO0EtmubPbkDl8EJQwBQA2pp_M4:{"screen_hint":"sign-up"}',
+  });
 });
 
 test('authorizationUrl, additional query do not overwrite fixed params', async () => {
@@ -154,7 +157,8 @@ test('authorizationUrl, additional query do not overwrite fixed params', async (
       },
     ],
   ]);
-  expect(url).toEqual(
-    'https://host/auth/openid-callback:code:openid profile email:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb3dkZWZ5X29wZW5pZF9zdGF0ZV90b2tlbiI6dHJ1ZSwiaWF0IjoxLCJleHAiOjMwMSwiYXVkIjoiaG9zdCIsImlzcyI6Imhvc3QifQ.-UtxdTFvQW6pFFFHTO0EtmubPbkDl8EJQwBQA2pp_M4:{}'
-  );
+  expect(url).toEqual({
+    openIdAuthorizationUrl:
+      'https://host/auth/openid-callback:code:openid profile email:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb3dkZWZ5X29wZW5pZF9zdGF0ZV90b2tlbiI6dHJ1ZSwiaWF0IjoxLCJleHAiOjMwMSwiYXVkIjoiaG9zdCIsImlzcyI6Imhvc3QifQ.-UtxdTFvQW6pFFFHTO0EtmubPbkDl8EJQwBQA2pp_M4:{}',
+  });
 });

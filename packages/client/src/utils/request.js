@@ -14,19 +14,20 @@
   limitations under the License.
 */
 
-import useSWR from 'swr';
-
-import request from '../utils/request';
-
-// TODO: Handle TokenExpiredError
-
-function fetchRootData() {
-  return request({ url: '/lowdefy/root' });
+async function request({ url, method = 'GET', body }) {
+  const res = await fetch(url, {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) {
+    // TODO
+    // Do we handle TokenExpiredError here?
+    throw new Error('Request Error');
+  }
+  return res.json();
 }
 
-function useRootData() {
-  const { data } = useSWR('root', fetchRootData, { suspense: true });
-  return { data };
-}
-
-export default useRootData;
+export default request;

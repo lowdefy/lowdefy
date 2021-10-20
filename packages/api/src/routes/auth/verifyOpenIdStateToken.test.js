@@ -44,7 +44,6 @@ afterAll(() => {
 
 test('verifyOpenIdStateToken', () => {
   const token = issueOpenIdStateToken(context, {
-    input: { i: true },
     pageId: 'pageId',
     urlQuery: { u: true },
   });
@@ -53,7 +52,6 @@ test('verifyOpenIdStateToken', () => {
     aud: 'host',
     exp: 301, // 5min
     iat: 1,
-    input: { i: true },
     iss: 'host',
     lowdefy_openid_state_token: true,
     pageId: 'pageId',

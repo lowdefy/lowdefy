@@ -14,19 +14,23 @@
   limitations under the License.
 */
 
-import useSWR from 'swr';
+// Source:
+// https://stackoverflow.com/questions/38552003/how-to-decode-jwt-token-in-javascript-without-using-a-library
+// by Peheje: https://stackoverflow.com/users/2781524/peheje
 
-import request from '../utils/request';
+function parseJwt(token) {
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const jsonPayload = decodeURIComponent(
+    atob(base64)
+      .split('')
+      .map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join('')
+  );
 
-// TODO: Handle TokenExpiredError
-
-function fetchRootData() {
-  return request({ url: '/lowdefy/root' });
+  return JSON.parse(jsonPayload);
 }
 
-function useRootData() {
-  const { data } = useSWR('root', fetchRootData, { suspense: true });
-  return { data };
-}
-
-export default useRootData;
+export default parseJwt;

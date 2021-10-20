@@ -14,19 +14,11 @@
   limitations under the License.
 */
 
-import useSWR from 'swr';
-
-import request from '../utils/request';
-
-// TODO: Handle TokenExpiredError
-
-function fetchRootData() {
-  return request({ url: '/lowdefy/root' });
+function getCookie(name) {
+  // TODO: Should we use document from lowdefy here (for testing)?
+  const match = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+  if (!match) return null;
+  return match.pop();
 }
 
-function useRootData() {
-  const { data } = useSWR('root', fetchRootData, { suspense: true });
-  return { data };
-}
-
-export default useRootData;
+export default getCookie;

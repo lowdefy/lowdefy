@@ -53,14 +53,16 @@ const createCookieHeader = ({ expired, customRoles } = {}) => {
 };
 
 test('no cookie header', () => {
-  expect(verifyAuthorizationHeader(testContext())).toEqual({});
+  expect(verifyAuthorizationHeader(testContext())).toEqual({ authenticated: false });
 });
 
 test('empty cookie header', () => {
-  expect(verifyAuthorizationHeader(testContext({ headers: { cookie: '' } }))).toEqual({});
+  expect(verifyAuthorizationHeader(testContext({ headers: { cookie: '' } }))).toEqual({
+    authenticated: false,
+  });
 
   expect(verifyAuthorizationHeader(testContext({ headers: { cookie: 'authorization=' } }))).toEqual(
-    {}
+    { authenticated: false }
   );
 });
 
@@ -71,7 +73,7 @@ test('valid authorization cookie', () => {
     secrets,
   });
   const res = verifyAuthorizationHeader(context);
-  expect(res).toEqual({ user: { sub: 'sub', email: 'email' }, roles: [] });
+  expect(res).toEqual({ authenticated: true, user: { sub: 'sub', email: 'email' }, roles: [] });
 });
 
 test('valid authorization cookie with roles', () => {
@@ -85,6 +87,7 @@ test('valid authorization cookie with roles', () => {
   });
   let res = verifyAuthorizationHeader(context);
   expect(res).toEqual({
+    authenticated: true,
     user: { sub: 'sub', email: 'email', customRoles: ['role1', 'role2'] },
     roles: ['role1', 'role2'],
   });

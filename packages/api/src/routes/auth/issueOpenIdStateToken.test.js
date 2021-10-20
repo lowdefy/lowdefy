@@ -54,7 +54,6 @@ afterAll(() => {
 
 test('issueOpenIdStateToken', async () => {
   const stateToken = issueOpenIdStateToken(testContext({ host: 'host', secrets }), {
-    input: { i: true },
     pageId: 'pageId',
     urlQuery: { u: true },
   });
@@ -67,7 +66,6 @@ test('issueOpenIdStateToken', async () => {
     aud: 'host',
     exp: 301, // 5min
     iat: 1,
-    input: { i: true },
     iss: 'host',
     lowdefy_openid_state_token: true,
     pageId: 'pageId',

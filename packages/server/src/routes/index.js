@@ -35,7 +35,7 @@ async function routes(fastify, { lowdefy }, done) {
       headers: request.headers,
       host: request.hostname,
       protocol: request.protocol,
-      setHeader: reply.header,
+      setHeader: (key, value) => reply.header(key, value),
     });
     done();
   });
@@ -46,9 +46,9 @@ async function routes(fastify, { lowdefy }, done) {
   }
   fastify.get('/lowdefy/page/:pageId', pageConfig);
   fastify.get('/lowdefy/root', root);
+  fastify.get('/auth/openid-callback', openIdCallback);
 
   fastify.post('/lowdefy/auth/openIdAuthorizationUrl', openIdAuthorizationUrl);
-  fastify.post('/lowdefy/auth/openIdCallback', openIdCallback);
   fastify.post('/lowdefy/auth/openIdLogoutUrl', openIdLogoutUrl);
   done();
 }

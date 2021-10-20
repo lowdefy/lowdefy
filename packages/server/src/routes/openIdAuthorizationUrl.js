@@ -17,14 +17,13 @@
 import { openIdAuthorizationUrl } from '@lowdefy/api';
 
 async function openIdAuthorizationUrlHandler(request, reply) {
-  const { authUrlQueryParams, input, pageId, urlQuery } = request.body;
-  const page = await openIdAuthorizationUrl(request.lowdefyContext, {
+  const { authUrlQueryParams, pageId, urlQuery } = request.body;
+  const data = await openIdAuthorizationUrl(request.lowdefyContext, {
     authUrlQueryParams,
-    input,
     pageId,
     urlQuery,
   });
-  reply.send(page);
+  reply.send(data);
 }
 
 export default openIdAuthorizationUrlHandler;

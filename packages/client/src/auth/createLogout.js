@@ -14,19 +14,29 @@
   limitations under the License.
 */
 
-import useSWR from 'swr';
-
 import request from '../utils/request';
 
-// TODO: Handle TokenExpiredError
+function createLogout(lowdefy) {
+  async function logout() {
+    console.log('logout');
+    lowdefy.user = {};
+    const idToken = lowdefy.localStorage.getItem('idToken');
+    lowdefy.localStorage.setItem(`idToken`, '');
 
-function fetchRootData() {
-  return request({ url: '/lowdefy/root' });
+    const data = await request({
+      url: '/lowdefy/auth/openIdLogoutUrl',
+      method: 'POST',
+      body: {
+        idToken,
+      },
+    });
+
+    console.log('data', data);
+
+    lowdefy.window.location.href = data.openIdLogoutUrl || lowdefy.window.location.origin;
+  }
+
+  return logout;
 }
 
-function useRootData() {
-  const { data } = useSWR('root', fetchRootData, { suspense: true });
-  return { data };
-}
-
-export default useRootData;
+export default createLogout;

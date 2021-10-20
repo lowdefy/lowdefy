@@ -16,9 +16,11 @@
 
 import cookie from 'cookie';
 
-function setAuthenticationCookie({ protocol, setHeader }, { value }) {
-  const CookieHeader = cookie.serialize('authorization', value, {
-    httpOnly: true,
+function setIdTokenCookie({ protocol, setHeader }, { idToken }) {
+  // TODO: Set maxAge here
+  // If not set the cookie is a session cookie
+  // const { expiresIn } = get(config, 'auth.jwt', { default: {} });
+  const CookieHeader = cookie.serialize('idToken', idToken, {
     path: '/',
     sameSite: 'lax',
     secure: !(protocol !== 'https'),
@@ -27,4 +29,4 @@ function setAuthenticationCookie({ protocol, setHeader }, { value }) {
   setHeader('Set-Cookie', CookieHeader);
 }
 
-export default setAuthenticationCookie;
+export default setIdTokenCookie;

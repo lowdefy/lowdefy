@@ -16,10 +16,10 @@
 
 import openIdLogoutUrl from './openIdLogoutUrl';
 import testContext from '../../test/testContext';
-import unsetAuthenticationCookie from './unsetAuthenticationCookie';
+import unsetAuthorizationCookie from './unsetAuthorizationCookie';
 import { AuthenticationError } from '../../context/errors';
 
-jest.mock('./unsetAuthenticationCookie');
+jest.mock('./unsetAuthorizationCookie');
 
 const secrets = {
   OPENID_CLIENT_ID: 'OPENID_CLIENT_ID',
@@ -29,7 +29,7 @@ const secrets = {
 };
 
 beforeEach(() => {
-  unsetAuthenticationCookie.mockReset();
+  unsetAuthorizationCookie.mockReset();
 });
 
 test('logout, no openId config', () => {
@@ -37,7 +37,7 @@ test('logout, no openId config', () => {
   expect(() => openIdLogoutUrl(context, { idToken: 'idToken' })).toThrow(
     'Invalid OpenID Connect configuration.'
   );
-  expect(unsetAuthenticationCookie).toHaveBeenCalled();
+  expect(unsetAuthorizationCookie).toHaveBeenCalled();
 });
 
 test('logout with logoutRedirectUri', () => {
@@ -57,7 +57,7 @@ test('logout with logoutRedirectUri', () => {
   expect(url).toEqual(
     'OPENID_DOMAIN/logout/?id_token_hint=idToken&client_id=OPENID_CLIENT_ID&return_to=https%3A%2F%2Fhost%2Flogged-out'
   );
-  expect(unsetAuthenticationCookie).toHaveBeenCalled();
+  expect(unsetAuthorizationCookie).toHaveBeenCalled();
 });
 
 test('logout with logoutRedirectUri, protocol is http', () => {
@@ -78,7 +78,7 @@ test('logout with logoutRedirectUri, protocol is http', () => {
   expect(url).toEqual(
     'OPENID_DOMAIN/logout/?id_token_hint=idToken&client_id=OPENID_CLIENT_ID&return_to=http%3A%2F%2Fhost%2Flogged-out'
   );
-  expect(unsetAuthenticationCookie).toHaveBeenCalled();
+  expect(unsetAuthorizationCookie).toHaveBeenCalled();
 });
 
 test('logout with logoutRedirectUri, invalid template', () => {

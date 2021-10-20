@@ -60,7 +60,6 @@ test('verifyAccessToken', () => {
 
 test('verifyAccessToken openIdState token invalid', () => {
   const token = issueOpenIdStateToken(context, {
-    input: { i: true },
     pageId: 'pageId',
     urlQuery: { u: true },
   });

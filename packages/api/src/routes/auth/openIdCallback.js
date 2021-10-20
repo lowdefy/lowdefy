@@ -18,13 +18,14 @@ import { AuthenticationError } from '../../context/errors';
 import getOpenIdClient from './getOpenIdClient';
 import getOpenIdConfig from './getOpenIdConfig';
 import issueAccessToken from './issueAccessToken';
-import setAuthenticationCookie from './setAuthenticationCookie';
+import setAuthorizationCookie from './setAuthorizationCookie';
+import setIdTokenCookie from './setIdTokenCookie';
 import verifyOpenIdStateToken from './verifyOpenIdStateToken';
 
 async function openIdCallback(context, { code, state }) {
   const openIdConfig = getOpenIdConfig(context);
   try {
-    const { input, pageId, urlQuery } = verifyOpenIdStateToken(context, { token: state });
+    const { pageId, urlQuery } = verifyOpenIdStateToken(context, { token: state });
 
     const client = await getOpenIdClient(context, { openIdConfig });
     const tokenSet = await client.callback(
@@ -36,11 +37,10 @@ async function openIdCallback(context, { code, state }) {
     const idToken = tokenSet.id_token;
 
     const accessToken = issueAccessToken(context, { claims });
-    setAuthenticationCookie(context, { value: accessToken });
+    setAuthorizationCookie(context, { accessToken });
+    setIdTokenCookie(context, { idToken });
 
     return {
-      idToken,
-      input,
       pageId,
       urlQuery,
     };

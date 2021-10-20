@@ -14,15 +14,39 @@
   limitations under the License.
 */
 
-import { openIdCallback } from '@lowdefy/api';
+import { homePageId, openIdCallback, AuthenticationError } from '@lowdefy/api';
 
 async function openIdCallbackHandler(request, reply) {
-  const { code, state } = request.body;
-  const page = await openIdCallback(request.lowdefyContext, {
-    code,
-    state,
-  });
-  reply.send(page);
+  try {
+    const { code, state, error, error_description } = request.query;
+
+    if (error) {
+      if (error_description) throw new AuthenticationError(error_description);
+      throw new AuthenticationError(error);
+    }
+
+    if (!code || !state) throw new AuthenticationError('Authentication error.');
+
+    // Authentication an idToken cookies are set by openIdCallback function.
+    let { pageId, urlQuery } = await openIdCallback(request.lowdefyContext, {
+      code,
+      state,
+    });
+
+    if (!pageId) {
+      pageId = await homePageId(request.lowdefyContext);
+    }
+
+    // Need to set idToken, urlQuery
+
+    reply.redirect(`/${pageId}`);
+  } catch (error) {
+    console.log(error);
+    console.log(error.message);
+    console.log(error.stack);
+    reply.type('text/html');
+    reply.send(`<h1>Error</h1><h4>${error.message}</h4>`);
+  }
 }
 
 export default openIdCallbackHandler;

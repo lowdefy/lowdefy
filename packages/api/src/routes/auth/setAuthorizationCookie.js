@@ -14,19 +14,19 @@
   limitations under the License.
 */
 
-import useSWR from 'swr';
+import cookie from 'cookie';
 
-import request from '../utils/request';
+function setAuthorizationCookie({ protocol, setHeader }, { accessToken }) {
+  // TODO: Set maxAge here
+  // const { expiresIn } = get(config, 'auth.jwt', { default: {} });
+  const CookieHeader = cookie.serialize('authorization', accessToken, {
+    httpOnly: true,
+    path: '/',
+    sameSite: 'lax',
+    secure: !(protocol !== 'https'),
+  });
 
-// TODO: Handle TokenExpiredError
-
-function fetchRootData() {
-  return request({ url: '/lowdefy/root' });
+  setHeader('Set-Cookie', CookieHeader);
 }
 
-function useRootData() {
-  const { data } = useSWR('root', fetchRootData, { suspense: true });
-  return { data };
-}
-
-export default useRootData;
+export default setAuthorizationCookie;

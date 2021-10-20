@@ -20,7 +20,7 @@ import { nunjucksFunction } from '@lowdefy/nunjucks';
 import { AuthenticationError } from '../../context/errors';
 
 import getOpenIdConfig from './getOpenIdConfig';
-import unsetAuthenticationCookie from './unsetAuthenticationCookie';
+import unsetAuthorizationCookie from './unsetAuthorizationCookie';
 
 function parseLogoutUrlNunjucks(context, { openIdConfig, idToken }) {
   const template = nunjucksFunction(openIdConfig.logoutRedirectUri);
@@ -34,7 +34,7 @@ function parseLogoutUrlNunjucks(context, { openIdConfig, idToken }) {
 
 function openIdLogoutUrl(context, { idToken }) {
   try {
-    unsetAuthenticationCookie(context);
+    unsetAuthorizationCookie(context);
 
     const openIdConfig = getOpenIdConfig(context);
     if (!type.isString(openIdConfig.logoutRedirectUri)) return null;

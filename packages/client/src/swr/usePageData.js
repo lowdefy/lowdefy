@@ -16,8 +16,12 @@
 
 import useSWR from 'swr';
 
+import request from '../utils/request';
+
+// TODO: Handle TokenExpiredError
+
 function fetchPageData(pageId) {
-  return fetch(`/lowdefy/page/${pageId}`).then((res) => res.json());
+  return request({ url: `/lowdefy/page/${pageId}` });
 }
 
 function usePageData(pageId) {

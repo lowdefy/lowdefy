@@ -23,6 +23,14 @@ import pageConfig from './routes/page/pageConfig';
 import pageHtml from './routes/page/pageHtml';
 import rootConfig from './routes/rootConfig/rootConfig';
 
+import {
+  AuthenticationError,
+  ConfigurationError,
+  RequestError,
+  ServerError,
+  TokenExpiredError,
+} from './context/errors';
+
 export {
   createContext,
   homePageId,
@@ -32,4 +40,9 @@ export {
   pageConfig,
   pageHtml,
   rootConfig,
+  AuthenticationError,
+  ConfigurationError,
+  RequestError,
+  ServerError,
+  TokenExpiredError,
 };

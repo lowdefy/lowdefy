@@ -20,13 +20,13 @@ import { get } from '@lowdefy/helpers';
 import cookie from 'cookie';
 
 import verifyAccessToken from '../routes/auth/verifyAccessToken';
-import unsetAuthenticationCookie from '../routes/auth/unsetAuthenticationCookie';
+import unsetAuthorizationCookie from '../routes/auth/unsetAuthorizationCookie';
 
 function verifyAuthorizationHeader(context) {
   const { config, headers } = context;
   const cookieHeader = get(headers, 'cookie') || '';
   const { authorization: token } = cookie.parse(cookieHeader);
-  if (!token) return {};
+  if (!token) return { authenticated: false };
   try {
     const { iat, exp, aud, iss, lowdefy_access_token, ...user } = verifyAccessToken(context, {
       token,
@@ -36,9 +36,9 @@ function verifyAuthorizationHeader(context) {
     if (rolesField) {
       roles = get(user, rolesField);
     }
-    return { user, roles };
+    return { authenticated: true, user, roles };
   } catch (error) {
-    unsetAuthenticationCookie(context);
+    unsetAuthorizationCookie(context);
     throw error;
   }
 }
