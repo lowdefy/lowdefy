@@ -449,6 +449,24 @@ exports[`Render properties.ellipsis: true - value[0] 1`] = `
 </div>
 `;
 
+exports[`Render properties.italic: true - value[0] 1`] = `
+<div
+  className="ant-typography {}"
+  id="properties.italic: true"
+  style={
+    Object {
+      "WebkitLineClamp": undefined,
+    }
+  }
+>
+  <i>
+    <span
+      className="{}"
+    />
+  </i>
+</div>
+`;
+
 exports[`Render properties.mark: true - value[0] 1`] = `
 <div
   className="ant-typography {}"
@@ -626,6 +644,10 @@ exports[`Test Schema properties.ellipsis: rows, suffix 2`] = `null`;
 exports[`Test Schema properties.ellipsis: true 1`] = `true`;
 
 exports[`Test Schema properties.ellipsis: true 2`] = `null`;
+
+exports[`Test Schema properties.italic: true 1`] = `true`;
+
+exports[`Test Schema properties.italic: true 2`] = `null`;
 
 exports[`Test Schema properties.mark: true 1`] = `true`;
 
