@@ -409,6 +409,7 @@
 - { label: 'HighlightOutlined', value: 'HighlightOutlined' }
 - { label: 'HighlightTwoTone', value: 'HighlightTwoTone' }
 - { label: 'HistoryOutlined', value: 'HistoryOutlined' }
+- { label: 'HolderOutlined', value: 'HolderOutlined' }
 - { label: 'HomeFilled', value: 'HomeFilled' }
 - { label: 'HomeOutlined', value: 'HomeOutlined' }
 - { label: 'HomeTwoTone', value: 'HomeTwoTone' }
