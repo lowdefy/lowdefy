@@ -20,7 +20,7 @@ import packageJson from '../../../package.json';
 const { version } = packageJson;
 
 test('metaLocations default URL', async () => {
-  expect(metaLocations({})).toEqual({
+  expect(metaLocations({ version })).toEqual({
     Affix: {
       url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Affix.json`,
     },
