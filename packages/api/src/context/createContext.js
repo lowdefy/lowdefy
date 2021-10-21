@@ -33,8 +33,9 @@ async function createContext({ configDirectory, getSecrets }) {
       setHeader,
     };
     const { authenticated, user, roles } = verifyAuthorizationHeader(context);
-    context.authorize = createAuthorize({ authenticated, user, roles } );
+    context.authorize = createAuthorize({ authenticated, roles });
     context.authenticated = authenticated;
+    context.user = user;
     return context;
   }
   return contextFn;

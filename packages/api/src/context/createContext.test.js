@@ -43,7 +43,7 @@ test('createContext', async () => {
     headers: { header: 'header' },
     host: 'host',
     protocol: 'https',
-    setHeader: () => {},
+    setHeader: 'setHeaderFunction',
   });
   expect(context).toMatchInlineSnapshot(`
     Object {
@@ -66,7 +66,10 @@ test('createContext', async () => {
       "secrets": Object {
         "secret": true,
       },
-      "setHeader": [Function],
+      "setHeader": "setHeaderFunction",
+      "user": Object {
+        "sub": "sub",
+      },
     }
   `);
   expect(verifyAuthorizationHeader.mock.calls).toMatchInlineSnapshot(`
@@ -92,7 +95,10 @@ test('createContext', async () => {
           "secrets": Object {
             "secret": true,
           },
-          "setHeader": [Function],
+          "setHeader": "setHeaderFunction",
+          "user": Object {
+            "sub": "sub",
+          },
         },
       ],
     ]

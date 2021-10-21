@@ -27,8 +27,10 @@ function testContext({
   user,
   protocol = 'https',
 } = {}) {
+  const authenticated = user && !!user.sub;
   return {
-    authorize: createAuthorize({ user, roles }),
+    authenticated,
+    authorize: createAuthorize({ authenticated, roles }),
     config,
     headers,
     host,
@@ -36,6 +38,7 @@ function testContext({
     readConfigFile,
     secrets,
     setHeader,
+    user,
   };
 }
 

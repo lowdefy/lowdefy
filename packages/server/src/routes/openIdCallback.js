@@ -28,7 +28,10 @@ async function openIdCallbackHandler(request, reply) {
     if (!code || !state) throw new AuthenticationError('Authentication error.');
 
     // Authentication an idToken cookies are set by openIdCallback function.
-    let { pageId, urlQuery } = await openIdCallback(request.lowdefyContext, {
+    let {
+      pageId,
+      //urlQuery
+    } = await openIdCallback(request.lowdefyContext, {
       code,
       state,
     });
@@ -37,7 +40,7 @@ async function openIdCallbackHandler(request, reply) {
       pageId = await homePageId(request.lowdefyContext);
     }
 
-    // Need to set idToken, urlQuery
+    // TODO: Need to set urlQuery;
 
     reply.redirect(`/${pageId}`);
   } catch (error) {

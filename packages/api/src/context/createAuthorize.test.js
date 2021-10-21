@@ -30,10 +30,10 @@ test('authorize public object', async () => {
 test('authorize protected object, no roles', async () => {
   const auth = { public: false };
 
-  let authorize = createAuthorize({});
+  let authorize = createAuthorize({ authenticated: false });
   expect(authorize({ auth })).toBe(false);
 
-  authorize = createAuthorize({ user: { sub: 'sub' } });
+  authorize = createAuthorize({ authenticated: true });
   expect(authorize({ auth })).toBe(true);
 });
 
@@ -43,19 +43,19 @@ test('authorize role protected object', async () => {
   let authorize = createAuthorize({});
   expect(authorize({ auth })).toBe(false);
 
-  authorize = createAuthorize({ user: { sub: 'sub' } });
+  authorize = createAuthorize({ authenticated: true });
   expect(authorize({ auth })).toBe(false);
 
-  authorize = createAuthorize({ user: { sub: 'sub' }, roles: [] });
+  authorize = createAuthorize({ authenticated: true, roles: [] });
   expect(authorize({ auth })).toBe(false);
 
-  authorize = createAuthorize({ user: { sub: 'sub' }, roles: ['role2'] });
+  authorize = createAuthorize({ authenticated: true, roles: ['role2'] });
   expect(authorize({ auth })).toBe(false);
 
-  authorize = createAuthorize({ user: { sub: 'sub' }, roles: ['role1'] });
+  authorize = createAuthorize({ authenticated: true, roles: ['role1'] });
   expect(authorize({ auth })).toBe(true);
 
-  authorize = createAuthorize({ user: { sub: 'sub' }, roles: ['role1', 'role2'] });
+  authorize = createAuthorize({ authenticated: true, roles: ['role1', 'role2'] });
   expect(authorize({ auth })).toBe(true);
 });
 

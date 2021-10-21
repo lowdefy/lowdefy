@@ -17,7 +17,7 @@
 import cookie from 'cookie';
 
 function setIdTokenCookie({ protocol, setHeader }, { idToken }) {
-  // TODO: Set maxAge here
+  // TODO: Set maxAge here, else cookie is a session cookie
   // If not set the cookie is a session cookie
   // const { expiresIn } = get(config, 'auth.jwt', { default: {} });
   const CookieHeader = cookie.serialize('idToken', idToken, {
