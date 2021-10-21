@@ -413,31 +413,6 @@
         - id: Modal
           type: MenuLink
           pageId: Modal
-        - id: Result
-          type: MenuLink
-          pageId: Result
-        - id: Span
-          type: MenuLink
-          pageId: Span
-        - id: Spin
-          type: MenuLink
-          pageId: Spin
-        - id: Tabs
-          type: MenuLink
-          pageId: Tabs
-        - id: Tooltip
-          type: MenuLink
-          pageId: Tooltip
-
-    - id: blocks_context
-      type: MenuGroup
-      properties:
-        title: Context Blocks
-        icon: GroupOutlined
-      links:
-        - id: Context
-          type: MenuLink
-          pageId: Context
         - id: PageHCF
           type: MenuLink
           pageId: PageHCF
@@ -456,6 +431,22 @@
         - id: PageSiderMenu
           type: MenuLink
           pageId: PageSiderMenu
+        - id: Result
+          type: MenuLink
+          pageId: Result
+        - id: Span
+          type: MenuLink
+          pageId: Span
+        - id: Spin
+          type: MenuLink
+          pageId: Spin
+        - id: Tabs
+          type: MenuLink
+          pageId: Tabs
+        - id: Tooltip
+          type: MenuLink
+          pageId: Tooltip
+
     - id: blocks_list
       type: MenuGroup
       properties:

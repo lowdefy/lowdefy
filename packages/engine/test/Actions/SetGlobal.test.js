@@ -26,7 +26,7 @@ test('SetGlobal data to global', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {

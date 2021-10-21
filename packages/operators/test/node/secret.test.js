@@ -24,7 +24,6 @@ console.error = () => {};
 test('secret calls getFromObject', () => {
   secret({
     arrayIndices: [0],
-    env: 'env',
     location: 'location',
     params: 'params',
     secrets: { secrets: true },
@@ -32,7 +31,6 @@ test('secret calls getFromObject', () => {
   expect(getFromObject.mock.calls).toEqual([
     [
       {
-        env: 'env',
         location: 'location',
         object: {
           secrets: true,
@@ -47,14 +45,12 @@ test('secret calls getFromObject', () => {
 test('secret default value', () => {
   secret({
     arrayIndices: [0],
-    env: 'env',
     location: 'location',
     params: 'params',
   });
   expect(getFromObject.mock.calls).toEqual([
     [
       {
-        env: 'env',
         location: 'location',
         object: {},
         operator: '_secret',
@@ -79,7 +75,6 @@ test('secret get all is not allowed', () => {
 test('secret OpenID Connect and JSON web token secrets are filtered out', () => {
   secret({
     arrayIndices: [0],
-    env: 'env',
     location: 'location',
     params: 'params',
     secrets: {
@@ -93,7 +88,6 @@ test('secret OpenID Connect and JSON web token secrets are filtered out', () => 
   expect(getFromObject.mock.calls).toEqual([
     [
       {
-        env: 'env',
         location: 'location',
         object: {
           OPENID_CLIENT_ID: 'OPENID_CLIENT_ID',

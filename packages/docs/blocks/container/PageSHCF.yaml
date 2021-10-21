@@ -15,12 +15,12 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: PageHSCF
-    category: context
-    schema: ../blocks/blocksAntd/src/blocks/PageHSCF/PageHSCF.json
-    filePath: blocks/context/PageHSCF.yaml
+    block_type: PageSHCF
+    category: container
+    schema: ../blocks/blocksAntd/src/blocks/PageSHCF/PageSHCF.json
+    filePath: blocks/container/PageSHCF.yaml
     description_content: |
-      Page HSCF provides a minimal layout structure for a page container with a header, sider, content, and footer arrangement.
+      Page SHCF provides a minimal layout structure for a page container with a sider, header, content, and footer arrangement.
 
     areas:
       - content

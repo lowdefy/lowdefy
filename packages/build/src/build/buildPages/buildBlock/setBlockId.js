@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
-function _list_contexts({ contexts }) {
-  return Object.keys(contexts).sort();
+function setBlockId(block, { pageId }) {
+  block.blockId = block.id;
+  block.id = `block:${pageId}:${block.id}`;
 }
 
-export default _list_contexts;
+export default setBlockId;

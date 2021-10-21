@@ -17,7 +17,7 @@
 import { get, type } from '@lowdefy/helpers';
 import getFromObject from '../getFromObject';
 
-function _get({ arrayIndices, env, location, params }) {
+function _get({ arrayIndices, location, params }) {
   if (!type.isObject(params)) {
     throw new Error(
       `Operator Error: _get takes an object as params. Received: ${JSON.stringify(
@@ -37,7 +37,6 @@ function _get({ arrayIndices, env, location, params }) {
   }
   return getFromObject({
     arrayIndices,
-    env,
     location,
     object: params.from,
     operator: '_get',

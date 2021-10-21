@@ -75,7 +75,7 @@ test('call a synchronous action', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
   };
   const context = await testContext({
@@ -114,7 +114,7 @@ test('call a asynchronous action', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
   };
   const context = await testContext({
@@ -153,7 +153,7 @@ test('call 2 actions', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
   };
   const context = await testContext({
@@ -199,7 +199,7 @@ test('operators are evaluated in params, skip and messages', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
   };
   const context = await testContext({
@@ -275,7 +275,7 @@ test('operators are evaluated in error messages after error', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
   };
   const context = await testContext({
@@ -323,7 +323,7 @@ test('action error in error messages from same action id', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
   };
   const context = await testContext({
@@ -379,7 +379,7 @@ test('action error in error parser', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
   };
   const context = await testContext({
@@ -432,7 +432,7 @@ test('error with messages undefined', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
   };
   const context = await testContext({
@@ -468,7 +468,7 @@ test('skip a action', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
   };
   const context = await testContext({
@@ -507,7 +507,7 @@ test('action throws a error', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
   };
   const context = await testContext({
@@ -558,7 +558,7 @@ test('actions after a error are not called throws a error', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
   };
   const context = await testContext({
@@ -613,7 +613,7 @@ test('Invalid action type', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
   };
   const context = await testContext({
@@ -663,7 +663,7 @@ test('Parser error in action', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
   };
   const context = await testContext({
@@ -719,7 +719,7 @@ test('Display default loading and success messages when value == true ', async (
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
   };
   const context = await testContext({
@@ -764,7 +764,7 @@ test('Display custom loading and success messages when value is a string ', asyn
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
   };
   const context = await testContext({
@@ -809,7 +809,7 @@ test('Do not display loading and success messages by default', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
   };
   const context = await testContext({
@@ -838,7 +838,7 @@ test('Display error message by default', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
   };
   const context = await testContext({
@@ -874,7 +874,7 @@ test('Display custom error message', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
   };
   const context = await testContext({
@@ -913,7 +913,7 @@ test('Do not display an error message if message === false', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
   };
   const context = await testContext({
@@ -944,7 +944,7 @@ test('Call catchActions when actions throws error', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
   };
   const context = await testContext({
@@ -1020,7 +1020,7 @@ test('Call catchActions when actions throws error and catchActions throws error'
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
   };
   const context = await testContext({
@@ -1123,7 +1123,7 @@ test('call 2 actions, first with async: true', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
   };
   const context = await testContext({
@@ -1186,7 +1186,7 @@ test('call async: true with error', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
   };
   const context = await testContext({
@@ -1249,7 +1249,7 @@ test('call 2 actions, first with async: false', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
   };
   const context = await testContext({
@@ -1295,7 +1295,7 @@ test('call 2 actions, first with async: null', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
   };
   const context = await testContext({

@@ -54,7 +54,7 @@ const client = { query: mockQuery };
 const rootBlock = {
   blockId: 'page1',
   meta: {
-    category: 'context',
+    category: 'container',
   },
   requests: [
     {
@@ -130,7 +130,6 @@ test('callRequest, payload operators are evaluated', async () => {
   });
   expect(mockQuery.mock.calls[0][0].variables).toEqual({
     input: {
-      blockId: 'page1',
       pageId: 'page1',
       requestId: 'req_one',
       payload: {

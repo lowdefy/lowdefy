@@ -16,9 +16,8 @@
 
 import getFromObject from '../getFromObject';
 
-function _payload({ env, location, params, payload }) {
+function _payload({ location, params, payload }) {
   return getFromObject({
-    env,
     location,
     object: payload,
     operator: '_payload',

@@ -97,7 +97,7 @@ test('Request call one request', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     requests: [
       {
@@ -161,7 +161,7 @@ test('Request call all requests', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     requests: [
       {
@@ -242,7 +242,7 @@ test('Request call array of requests', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     requests: [
       {
@@ -323,7 +323,7 @@ test('Request pass if params are none', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     requests: [
       {
@@ -364,7 +364,7 @@ test('Request call request error', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     requests: [
       {
@@ -435,7 +435,7 @@ test('Request call request graphql error', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     requests: [
       {

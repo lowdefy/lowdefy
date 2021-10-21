@@ -15,7 +15,6 @@
 */
 
 import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
-import { makeContextId } from '@lowdefy/engine';
 
 function createLink({ backLink, lowdefy, newOriginLink, sameOriginLink }) {
   function link({ back, home, input, newTab, pageId, url, urlQuery }) {
@@ -26,12 +25,7 @@ function createLink({ backLink, lowdefy, newOriginLink, sameOriginLink }) {
     if (home) pageId = lowdefy.homePageId;
     if (pageId) {
       if (!type.isNone(input)) {
-        const nextContextId = makeContextId({
-          pageId,
-          urlQuery: urlQuery,
-          blockId: pageId,
-        });
-        lowdefy.inputs[nextContextId] = input;
+        lowdefy.inputs[pageId] = input;
       }
       return sameOriginLink(`/${pageId}${lowdefyUrlQuery}`, newTab);
     } else if (url) {

@@ -16,9 +16,9 @@ _ref:
   path: templates/blocks/template.yaml.njk
   vars:
     block_type: PageSiderMenu
-    category: context
+    category: container
     schema: ../blocks/blocksAntd/src/blocks/PageSiderMenu/PageSiderMenu.json
-    filePath: blocks/context/PageSiderMenu.yaml
+    filePath: blocks/container/PageSiderMenu.yaml
     description_content: |
       The Page Sider Menu block provides a structured layout for a page with a header, sider including menu, content and footer area.
     init_state_values:

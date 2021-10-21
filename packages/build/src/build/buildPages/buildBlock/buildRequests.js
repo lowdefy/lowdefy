@@ -16,8 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
-function buildRequest(request, blockContext) {
-  const { auth, contextId, pageId } = blockContext;
+function buildRequest(request, pageContext) {
+  const { auth, pageId } = pageContext;
   if (!type.isString(request.id)) {
     if (type.isUndefined(request.id)) {
       throw new Error(`Request id missing at page "${pageId}".`);
@@ -40,25 +40,16 @@ function buildRequest(request, blockContext) {
 
   request.auth = auth;
   request.requestId = request.id;
-  request.contextId = contextId;
-  request.id = `request:${pageId}:${contextId}:${request.id}`;
-  blockContext.requests.push(request);
+  request.pageId = pageId;
+  request.id = `request:${pageId}:${request.id}`;
+  pageContext.requests.push(request);
 }
 
-function buildRequests(block, blockContext) {
-  if (!type.isNone(block.requests)) {
-    if (!type.isArray(block.requests)) {
-      throw new Error(
-        `Requests is not an array at ${block.blockId} on page ${
-          blockContext.pageId
-        }. Received ${JSON.stringify(block.requests)}`
-      );
-    }
-    block.requests.forEach((request) => {
-      buildRequest(request, blockContext);
-    });
-    delete block.requests;
-  }
+function buildRequests(block, pageContext) {
+  (block.requests || []).forEach((request) => {
+    buildRequest(request, pageContext);
+  });
+  delete block.requests;
 }
 
 export default buildRequests;

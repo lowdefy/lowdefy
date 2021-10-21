@@ -31,7 +31,7 @@ const validProperties = [
   'hash',
 ];
 
-function _location({ arrayIndices, context, contexts, env, location, params }) {
+function _location({ arrayIndices, context, location, params }) {
   if (!window || !window.location) {
     throw new Error(
       `Operator Error: Browser window.location not available for _location. Received: ${JSON.stringify(
@@ -62,9 +62,6 @@ function _location({ arrayIndices, context, contexts, env, location, params }) {
   };
   return getFromObject({
     arrayIndices,
-    context,
-    contexts,
-    env,
     location,
     object: windowLocation,
     operator: '_location',

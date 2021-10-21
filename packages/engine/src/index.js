@@ -18,12 +18,11 @@ import Actions from './Actions';
 import Events from './Events';
 import Blocks from './Blocks';
 import createLink from './createLink';
-import makeContextId from './makeContextId';
 import Requests from './Requests';
 import State from './State';
 
 import getContext from './getContext';
 
-export { Actions, Events, Blocks, createLink, makeContextId, Requests, State };
+export { Actions, Events, Blocks, createLink, Requests, State };
 
 export default getContext;

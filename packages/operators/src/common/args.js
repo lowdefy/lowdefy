@@ -16,10 +16,9 @@
 
 import getFromObject from '../getFromObject';
 
-function _args({ args, arrayIndices, env, location, params }) {
+function _args({ args, arrayIndices, location, params }) {
   return getFromObject({
     arrayIndices,
-    env,
     location,
     object: args,
     operator: '_args',

@@ -250,11 +250,7 @@ class Blocks {
         } else {
           block.value = blockValue;
         }
-      } else if (
-        get(block, 'meta.category') === 'container' ||
-        // do not make sub blocks for sub contexts
-        (get(block, 'meta.category') === 'context' && this === this.context.RootBlocks)
-      ) {
+      } else if (get(block, 'meta.category') === 'container') {
         if (!type.isArray(this.subBlocks[block.id])) {
           this.subBlocks[block.id] = [];
         }
@@ -398,11 +394,7 @@ class Blocks {
           arrayIndices: this.arrayIndices,
         });
       }
-      if (
-        get(block, 'meta.category') === 'container' ||
-        get(block, 'meta.category') === 'context' ||
-        get(block, 'meta.category') === 'list'
-      ) {
+      if (get(block, 'meta.category') === 'container' || get(block, 'meta.category') === 'list') {
         if (this.subBlocks[block.id] && this.subBlocks[block.id].length > 0) {
           this.subBlocks[block.id].forEach((blockClass) => {
             repeat = blockClass.recEval(block.visibleEval.output) || repeat;
@@ -423,11 +415,7 @@ class Blocks {
     const toDelete = new Set();
     this.loopBlocks((block) => {
       if (block.visibleEval.output !== false) {
-        if (
-          get(block, 'meta.category') === 'container' ||
-          get(block, 'meta.category') === 'context' ||
-          get(block, 'meta.category') === 'list'
-        ) {
+        if (get(block, 'meta.category') === 'container' || get(block, 'meta.category') === 'list') {
           if (this.subBlocks[block.id] && this.subBlocks[block.id].length > 0) {
             this.subBlocks[block.id].forEach((blockClass) => {
               blockClass.updateState();
@@ -440,10 +428,7 @@ class Blocks {
           toSet.add(block.field);
           this.context.State.set(block.field, block.value);
         }
-      } else if (
-        get(block, 'meta.category') === 'container' ||
-        get(block, 'meta.category') === 'context'
-      ) {
+      } else if (get(block, 'meta.category') === 'container') {
         this.subBlocks[block.id].forEach((blockClass) => {
           blockClass.recContainerDelState(toDelete);
         });
@@ -460,10 +445,7 @@ class Blocks {
 
   recContainerDelState(toDelete) {
     this.loopBlocks((block) => {
-      if (
-        get(block, 'meta.category') === 'container' ||
-        get(block, 'meta.category') === 'context'
-      ) {
+      if (get(block, 'meta.category') === 'container') {
         this.subBlocks[block.id].forEach((blockClass) => {
           blockClass.recContainerDelState(toDelete);
         });

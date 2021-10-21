@@ -16,9 +16,9 @@ _ref:
   path: templates/blocks/template.yaml.njk
   vars:
     block_type: PageHeaderMenu
-    category: context
+    category: container
     schema: ../blocks/blocksAntd/src/blocks/PageHeaderMenu/PageHeaderMenu.json
-    filePath: blocks/context/PageHeaderMenu.yaml
+    filePath: blocks/container/PageHeaderMenu.yaml
     description_content: |
       The Page Header Menu block provides a structured layout for a page with a header containing a menu, content and footer area.
     init_state_values:

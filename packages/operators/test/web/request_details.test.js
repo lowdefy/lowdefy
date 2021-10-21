@@ -16,7 +16,7 @@
 
 /* eslint-disable max-classes-per-file */
 import WebParser from '../../src/webParser';
-import { context, contexts } from '../testContext';
+import { context } from '../testContext';
 
 const arrayIndices = [1];
 
@@ -24,7 +24,7 @@ console.error = () => {};
 
 test('_request_details in object', async () => {
   const input = { _request_details: 'string' };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({ loading: false, response: 'request String' });
@@ -33,7 +33,7 @@ test('_request_details in object', async () => {
 
 test('_request_details all requests', async () => {
   const input = { _request_details: true };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
@@ -48,7 +48,7 @@ test('_request_details all requests', async () => {
 
 test('_request_details null', async () => {
   const input = { _request_details: null };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
@@ -61,7 +61,7 @@ test('_request_details null', async () => {
 
 test('_request_details nested', async () => {
   const input = { _request_details: 'string.response' };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('request String');
@@ -74,7 +74,7 @@ test('_request_details param object key', async () => {
       key: 'string',
     },
   };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({ loading: false, response: 'request String' });
@@ -87,7 +87,7 @@ test('_request_details param object all', async () => {
       all: true,
     },
   };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
@@ -107,7 +107,7 @@ test('_request_details param object all and key', async () => {
       key: 'string',
     },
   };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
@@ -126,7 +126,7 @@ test('_request_details param object invalid', async () => {
       other: true,
     },
   };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);
@@ -141,7 +141,7 @@ test('_request_details param array', async () => {
   const input = {
     _request_details: ['string'],
   };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);
@@ -159,7 +159,7 @@ test('_request_details param object with string default', async () => {
       default: 'defaultValue',
     },
   };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('defaultValue');
@@ -172,7 +172,7 @@ test('_request_details param object with no default', async () => {
       key: 'notFound',
     },
   };
-  const parser = new WebParser({ context, contexts });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);

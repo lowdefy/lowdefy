@@ -21,9 +21,6 @@ jest.mock('../../src/getFromObject');
 
 const input = {
   arrayIndices: [0],
-  context: { context: true },
-  contexts: { contexts: true },
-  env: 'env',
   location: 'location',
   params: 'params',
   user: { name: 'first name' },
@@ -35,13 +32,6 @@ test('user calls getFromObject', () => {
     [
       {
         arrayIndices: [0],
-        context: {
-          context: true,
-        },
-        contexts: {
-          contexts: true,
-        },
-        env: 'env',
         location: 'location',
         object: {
           name: 'first name',

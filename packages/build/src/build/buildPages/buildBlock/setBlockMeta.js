@@ -14,25 +14,13 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
 async function setBlockMeta(block, { getMeta, pageId }) {
-  if (type.isNone(block.type)) {
-    throw new Error(`Block type is not defined at ${block.blockId} on page ${pageId}.`);
-  }
-  if (!type.isString(block.type)) {
-    throw new Error(
-      `Block type is not a string at ${block.blockId} on page ${pageId}. Received ${JSON.stringify(
-        block.type
-      )}`
-    );
-  }
   const meta = await getMeta(block.type);
   if (!meta) {
     throw new Error(
-      `Invalid Block type at ${block.blockId} on page ${pageId}. Received ${JSON.stringify(
+      `Invalid block type at "${block.blockId}" on page "${pageId}". Received ${JSON.stringify(
         block.type
-      )}`
+      )}.`
     );
   }
   const { category, loading, moduleFederation, valueType } = meta;

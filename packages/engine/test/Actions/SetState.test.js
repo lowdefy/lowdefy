@@ -24,7 +24,7 @@ test('SetState data to state', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -68,7 +68,7 @@ test('SetState field to state and update block value', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -114,7 +114,7 @@ test('SetState field to state with incorrect type - NOTE SetState IS NOT TYPE SA
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -160,7 +160,7 @@ test('SetState value on array and create new Blocks for array items', async () =
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
