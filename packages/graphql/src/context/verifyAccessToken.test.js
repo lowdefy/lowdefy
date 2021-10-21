@@ -37,7 +37,9 @@ const createCookieHeader = async ({ expired, customRoles } = {}) => {
     host: 'host',
     getLoader: () => ({
       load: () => ({
-        ,
+        auth: {
+          jwt: { expiresIn: expired ? -10000 : 10000 },
+        },
       }),
     }),
   });
