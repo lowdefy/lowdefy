@@ -39,6 +39,13 @@
     options:
       - Option 1
       - Option 2
+- id: 'property.bordered: false'
+  type: Selector
+  properties:
+    bordered: false
+    options:
+      - Option 1
+      - Option 2
 - id: 'properties.clearIcon: ChromeFilled'
   type: Selector
   properties:
