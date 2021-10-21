@@ -10,6 +10,58 @@
       - id: Menu Item two
         type: MenuLink
         pageId: page_2
+- id: 'link.type: MenuDivider'
+  type: Menu
+  properties:
+    links:
+      - id: Menu_item_one
+        type: MenuLink
+        pageId: page_1
+      - id: Menu_divider
+        type: MenuDivider
+      - id: Menu Item two
+        type: MenuLink
+        pageId: page_2
+      - id: Menu_divider
+        type: MenuDivider
+        properties:
+          dashed: true
+      - id: Menu Item three
+        type: MenuLink
+        pageId: page_3
+      - id: menu_group_1
+        type: MenuGroup
+        properties:
+          title: Menu Group 1
+        links:
+          - id: menu_item_1_1
+            type: MenuLink
+            pageId: page_1_1
+            properties:
+              title: Menu Item one
+          - id: Menu_divider
+            type: MenuDivider
+            properties:
+              dashed: true
+          - id: menu_item_1_2
+            type: MenuGroup
+            properties:
+              title: Menu Group
+            links:
+              - id: menu_item_1_2_1
+                type: MenuLink
+                pageId: page_1_2_1
+                properties:
+                  title: Menu Group one
+              - id: Menu_divider
+                type: MenuDivider
+                properties:
+                  dashed: true
+              - id: menu_item_1_2_2
+                type: MenuLink
+                pageId: page_1_2_2
+                properties:
+                  title: Menu Group two
 - id: 'properties.icon'
   type: Menu
   properties:

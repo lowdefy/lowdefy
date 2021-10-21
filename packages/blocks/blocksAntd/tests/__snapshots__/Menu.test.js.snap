@@ -21,6 +21,142 @@ Array [
 ]
 `;
 
+exports[`Render link.type: MenuDivider - value[0] 1`] = `
+Array [
+  <ul
+    className="ant-menu ant-menu-root ant-menu-vertical ant-menu-dark {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}"
+    data-menu-list={true}
+    id="link.type: MenuDivider"
+    onKeyDown={[Function]}
+    role="menu"
+    tabIndex={0}
+  >
+    <li
+      className="ant-menu-item ant-menu-item-only-child"
+      data-menu-id="link.type: MenuDivider-page_1"
+      onClick={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+      role="menuitem"
+      style={Object {}}
+      tabIndex={-1}
+    >
+      <span
+        className="ant-menu-title-content"
+      >
+        <a
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
+          href="/page_1"
+          onClick={[Function]}
+        >
+          page_1
+        </a>
+      </span>
+    </li>
+    <li
+      className="ant-menu-item-divider {\\"style\\":[null]}"
+    />
+    <li
+      className="ant-menu-item ant-menu-item-only-child"
+      data-menu-id="link.type: MenuDivider-page_2"
+      onClick={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+      role="menuitem"
+      style={Object {}}
+      tabIndex={-1}
+    >
+      <span
+        className="ant-menu-title-content"
+      >
+        <a
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
+          href="/page_2"
+          onClick={[Function]}
+        >
+          page_2
+        </a>
+      </span>
+    </li>
+    <li
+      className="ant-menu-item-divider ant-menu-item-divider-dashed {\\"style\\":[null]}"
+    />
+    <li
+      className="ant-menu-item ant-menu-item-only-child"
+      data-menu-id="link.type: MenuDivider-page_3"
+      onClick={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+      role="menuitem"
+      style={Object {}}
+      tabIndex={-1}
+    >
+      <span
+        className="ant-menu-title-content"
+      >
+        <a
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
+          href="/page_3"
+          onClick={[Function]}
+        >
+          page_3
+        </a>
+      </span>
+    </li>
+    <li
+      className="ant-menu-submenu ant-menu-submenu-vertical {\\"style\\":[{\\"& > ul\\":{}}]}"
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+      role="none"
+      style={Object {}}
+    >
+      <div
+        aria-controls="link.type: MenuDivider-menu_group_1-popup"
+        aria-expanded={false}
+        aria-haspopup={true}
+        className="ant-menu-submenu-title"
+        data-menu-id="link.type: MenuDivider-menu_group_1"
+        onClick={[Function]}
+        onFocus={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        role="menuitem"
+        style={null}
+        tabIndex={-1}
+        title={null}
+      >
+        <span
+          className="ant-menu-title-content"
+        >
+          <span
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
+          >
+            Menu Group 1
+          </span>
+        </span>
+        <i
+          className="ant-menu-submenu-arrow"
+        />
+      </div>
+    </li>
+  </ul>,
+  <div
+    aria-hidden={true}
+    style={
+      Object {
+        "display": "none",
+      }
+    }
+  />,
+]
+`;
+
 exports[`Render menus: default - value[0] 1`] = `
 Array [
   <ul
@@ -57,7 +193,7 @@ Array [
           className="ant-menu-title-content"
         >
           <span
-            className="{\\"style\\":[null]}"
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           >
             default Menu Group 1
           </span>
@@ -115,7 +251,7 @@ Array [
           className="ant-menu-title-content"
         >
           <span
-            className="{\\"style\\":[null]}"
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           >
             Menu Group 1
           </span>
@@ -163,7 +299,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_2"
           onClick={[Function]}
         >
@@ -219,7 +355,7 @@ Array [
           className="ant-menu-title-content"
         >
           <span
-            className="{\\"style\\":[null]}"
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           >
             Menu Group 1
           </span>
@@ -267,7 +403,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_2"
           onClick={[Function]}
         >
@@ -335,7 +471,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/pageId_page_2"
           onClick={[Function]}
         >
@@ -403,7 +539,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_2"
           onClick={[Function]}
         >
@@ -471,7 +607,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="http://page.com"
         >
           http://page.com
@@ -530,7 +666,7 @@ Array [
           className="ant-menu-title-content"
         >
           <span
-            className="{\\"style\\":[null]}"
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           >
             Menu Group 1
           </span>
@@ -582,7 +718,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_2"
           onClick={[Function]}
         >
@@ -632,7 +768,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_3"
           onClick={[Function]}
         >
@@ -692,7 +828,7 @@ Array [
           className="ant-menu-title-content"
         >
           <span
-            className="{\\"style\\":[null]}"
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           >
             Menu Group 1
           </span>
@@ -726,7 +862,7 @@ Array [
             className="ant-menu-title-content"
           >
             <a
-              className="{\\"style\\":[null]}"
+              className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
               href="/page_1_1"
               onClick={[Function]}
             >
@@ -742,7 +878,7 @@ Array [
             className="ant-menu-item-group-title"
           >
             <span
-              className="{\\"style\\":[null]}"
+              className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
             >
               Menu Group
             </span>
@@ -770,7 +906,7 @@ Array [
                 className="ant-menu-title-content"
               >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/page_1_2_1"
                   onClick={[Function]}
                 >
@@ -798,7 +934,7 @@ Array [
                 className="ant-menu-title-content"
               >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/page_1_2_2"
                   onClick={[Function]}
                 >
@@ -852,7 +988,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_2"
           onClick={[Function]}
         >
@@ -902,7 +1038,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_3"
           onClick={[Function]}
         >
@@ -962,7 +1098,7 @@ Array [
           className="ant-menu-title-content"
         >
           <span
-            className="{\\"style\\":[null]}"
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           >
             Menu Group 1
           </span>
@@ -996,7 +1132,7 @@ Array [
             className="ant-menu-title-content"
           >
             <a
-              className="{\\"style\\":[null]}"
+              className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
               href="/page_1_1"
               onClick={[Function]}
             >
@@ -1012,7 +1148,7 @@ Array [
             className="ant-menu-item-group-title"
           >
             <span
-              className="{\\"style\\":[null]}"
+              className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
             >
               Menu Group
             </span>
@@ -1040,7 +1176,7 @@ Array [
                 className="ant-menu-title-content"
               >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/page_1_2_1"
                   onClick={[Function]}
                 >
@@ -1068,7 +1204,7 @@ Array [
                 className="ant-menu-title-content"
               >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/page_1_2_2"
                   onClick={[Function]}
                 >
@@ -1122,7 +1258,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_2"
           onClick={[Function]}
         >
@@ -1172,7 +1308,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_3"
           onClick={[Function]}
         >
@@ -1232,7 +1368,7 @@ Array [
           className="ant-menu-title-content"
         >
           <span
-            className="{\\"style\\":[null]}"
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           >
             Menu Group 1
           </span>
@@ -1284,7 +1420,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_2"
           onClick={[Function]}
         >
@@ -1334,7 +1470,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_3"
           onClick={[Function]}
         >
@@ -1394,7 +1530,7 @@ Array [
           className="ant-menu-title-content"
         >
           <span
-            className="{\\"style\\":[null]}"
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           >
             Menu Group 1
           </span>
@@ -1446,7 +1582,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_2"
           onClick={[Function]}
         >
@@ -1496,7 +1632,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_3"
           onClick={[Function]}
         >
@@ -1556,7 +1692,7 @@ Array [
           className="ant-menu-title-content"
         >
           <span
-            className="{\\"style\\":[null]}"
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           >
             Menu Group 1
           </span>
@@ -1608,7 +1744,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_2"
           onClick={[Function]}
         >
@@ -1658,7 +1794,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_3"
           onClick={[Function]}
         >
@@ -1718,7 +1854,7 @@ Array [
           className="ant-menu-title-content"
         >
           <span
-            className="{\\"style\\":[null]}"
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           >
             Menu Group 1
           </span>
@@ -1770,7 +1906,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_2"
           onClick={[Function]}
         >
@@ -1820,7 +1956,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_3"
           onClick={[Function]}
         >
@@ -1880,7 +2016,7 @@ Array [
           className="ant-menu-title-content"
         >
           <span
-            className="{\\"style\\":[null]}"
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           >
             Menu Group 1
           </span>
@@ -1932,7 +2068,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_2"
           onClick={[Function]}
         >
@@ -1982,7 +2118,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_3"
           onClick={[Function]}
         >
@@ -2042,7 +2178,7 @@ Array [
           className="ant-menu-title-content"
         >
           <span
-            className="{\\"style\\":[null]}"
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           >
             Menu Group 1
           </span>
@@ -2094,7 +2230,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_2"
           onClick={[Function]}
         >
@@ -2144,7 +2280,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_3"
           onClick={[Function]}
         >
@@ -2204,7 +2340,7 @@ Array [
           className="ant-menu-title-content"
         >
           <span
-            className="{\\"style\\":[null]}"
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           >
             Menu Group 1
           </span>
@@ -2256,7 +2392,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_2"
           onClick={[Function]}
         >
@@ -2306,7 +2442,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_3"
           onClick={[Function]}
         >
@@ -2362,7 +2498,7 @@ Array [
           className="ant-menu-title-content"
         >
           <span
-            className="{\\"style\\":[null]}"
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           >
             Menu Group 1
           </span>
@@ -2410,7 +2546,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_2"
           onClick={[Function]}
         >
@@ -2456,7 +2592,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_3"
           onClick={[Function]}
         >
@@ -2512,7 +2648,7 @@ Array [
           className="ant-menu-title-content"
         >
           <span
-            className="{\\"style\\":[null]}"
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           >
             Menu Group 1
           </span>
@@ -2560,7 +2696,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_2"
           onClick={[Function]}
         >
@@ -2606,7 +2742,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_3"
           onClick={[Function]}
         >
@@ -2662,7 +2798,7 @@ Array [
           className="ant-menu-title-content"
         >
           <span
-            className="{\\"style\\":[null]}"
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           >
             Menu Group 1
           </span>
@@ -2710,7 +2846,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_2"
           onClick={[Function]}
         >
@@ -2756,7 +2892,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_3"
           onClick={[Function]}
         >
@@ -2812,7 +2948,7 @@ Array [
           className="ant-menu-title-content"
         >
           <span
-            className="{\\"style\\":[null]}"
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           >
             Menu Group 1
           </span>
@@ -2860,7 +2996,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_2"
           onClick={[Function]}
         >
@@ -2906,7 +3042,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_3"
           onClick={[Function]}
         >
@@ -2962,7 +3098,7 @@ Array [
           className="ant-menu-title-content"
         >
           <span
-            className="{\\"style\\":[null]}"
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           >
             Menu Group 1
           </span>
@@ -3010,7 +3146,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_2"
           onClick={[Function]}
         >
@@ -3056,7 +3192,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_3"
           onClick={[Function]}
         >
@@ -3112,7 +3248,7 @@ Array [
           className="ant-menu-title-content"
         >
           <span
-            className="{\\"style\\":[null]}"
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           >
             Menu Group 1
           </span>
@@ -3160,7 +3296,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_2"
           onClick={[Function]}
         >
@@ -3206,7 +3342,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_3"
           onClick={[Function]}
         >
@@ -3262,7 +3398,7 @@ Array [
           className="ant-menu-title-content"
         >
           <span
-            className="{\\"style\\":[null]}"
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           >
             Menu Group 1
           </span>
@@ -3310,7 +3446,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_2"
           onClick={[Function]}
         >
@@ -3356,7 +3492,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_3"
           onClick={[Function]}
         >
@@ -3412,7 +3548,7 @@ Array [
           className="ant-menu-title-content"
         >
           <span
-            className="{\\"style\\":[null]}"
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           >
             Menu Group 1
           </span>
@@ -3460,7 +3596,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_2"
           onClick={[Function]}
         >
@@ -3506,7 +3642,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_3"
           onClick={[Function]}
         >
@@ -3562,7 +3698,7 @@ Array [
           className="ant-menu-title-content"
         >
           <span
-            className="{\\"style\\":[null]}"
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           >
             Menu Group 1
           </span>
@@ -3620,7 +3756,7 @@ Array [
           className="ant-menu-title-content"
         >
           <span
-            className="{\\"style\\":[null]}"
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           >
             Menu Group 1
           </span>
@@ -3668,7 +3804,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_2"
           onClick={[Function]}
         >
@@ -3724,7 +3860,7 @@ Array [
           className="ant-menu-title-content"
         >
           <span
-            className="{\\"style\\":[null]}"
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           >
             Menu Group 1
           </span>
@@ -3813,7 +3949,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_1"
           onClick={[Function]}
         >
@@ -3859,7 +3995,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_2"
           onClick={[Function]}
         >
@@ -3905,7 +4041,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_1"
           onClick={[Function]}
         >
@@ -3929,7 +4065,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_2"
           onClick={[Function]}
         >
@@ -3985,7 +4121,7 @@ Array [
           className="ant-menu-title-content"
         >
           <span
-            className="{\\"style\\":[null]}"
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           >
             Menu Group 1
           </span>
@@ -4043,7 +4179,7 @@ Array [
           className="ant-menu-title-content"
         >
           <span
-            className="{\\"style\\":[null]}"
+            className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           >
             Menu Group 1
           </span>
@@ -4113,7 +4249,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_1"
           onClick={[Function]}
         >
@@ -4159,7 +4295,7 @@ Array [
         className="ant-menu-title-content"
       >
         <a
-          className="{\\"style\\":[null]}"
+          className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
           href="/page_2"
           onClick={[Function]}
         >
@@ -4182,6 +4318,10 @@ Array [
 exports[`Test Schema default 1`] = `true`;
 
 exports[`Test Schema default 2`] = `null`;
+
+exports[`Test Schema link.type: MenuDivider 1`] = `true`;
+
+exports[`Test Schema link.type: MenuDivider 2`] = `null`;
 
 exports[`Test Schema menus: default 1`] = `true`;
 

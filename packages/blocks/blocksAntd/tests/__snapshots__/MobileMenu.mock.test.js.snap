@@ -108,6 +108,12 @@ Array [
                       "styleObjectOnly": true,
                     },
                   ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
                 ],
                 "results": Array [
                   Object {
@@ -125,6 +131,10 @@ Array [
                   Object {
                     "type": "return",
                     "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#016e1e\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
                   },
                   Object {
                     "type": "return",
@@ -232,7 +242,9 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -361,6 +373,12 @@ Array [
                       "styleObjectOnly": true,
                     },
                   ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
                 ],
                 "results": Array [
                   Object {
@@ -378,6 +396,10 @@ Array [
                   Object {
                     "type": "return",
                     "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
                   },
                   Object {
                     "type": "return",
@@ -417,7 +439,9 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -604,6 +628,12 @@ Array [
                       "styleObjectOnly": true,
                     },
                   ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
                 ],
                 "results": Array [
                   Object {
@@ -621,6 +651,10 @@ Array [
                   Object {
                     "type": "return",
                     "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
                   },
                   Object {
                     "type": "return",
@@ -660,7 +694,9 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -824,6 +860,12 @@ Array [
                       "styleObjectOnly": true,
                     },
                   ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
                 ],
                 "results": Array [
                   Object {
@@ -841,6 +883,10 @@ Array [
                   Object {
                     "type": "return",
                     "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
                   },
                   Object {
                     "type": "return",
@@ -880,7 +926,9 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -1067,6 +1115,12 @@ Array [
                       "styleObjectOnly": true,
                     },
                   ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
                 ],
                 "results": Array [
                   Object {
@@ -1084,6 +1138,10 @@ Array [
                   Object {
                     "type": "return",
                     "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
                   },
                   Object {
                     "type": "return",
@@ -1124,7 +1182,9 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -1270,6 +1330,12 @@ Array [
                       "styleObjectOnly": true,
                     },
                   ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
                 ],
                 "results": Array [
                   Object {
@@ -1287,6 +1353,10 @@ Array [
                   Object {
                     "type": "return",
                     "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
                   },
                   Object {
                     "type": "return",
@@ -1326,7 +1396,9 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -1473,6 +1545,12 @@ Array [
                       "styleObjectOnly": true,
                     },
                   ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
                 ],
                 "results": Array [
                   Object {
@@ -1490,6 +1568,10 @@ Array [
                   Object {
                     "type": "return",
                     "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
                   },
                   Object {
                     "type": "return",
@@ -1529,7 +1611,9 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -1675,6 +1759,12 @@ Array [
                       "styleObjectOnly": true,
                     },
                   ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
                 ],
                 "results": Array [
                   Object {
@@ -1692,6 +1782,10 @@ Array [
                   Object {
                     "type": "return",
                     "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
                   },
                   Object {
                     "type": "return",
@@ -1731,7 +1825,9 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -1860,6 +1956,12 @@ Array [
                       "styleObjectOnly": true,
                     },
                   ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
                 ],
                 "results": Array [
                   Object {
@@ -1877,6 +1979,10 @@ Array [
                   Object {
                     "type": "return",
                     "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
                   },
                   Object {
                     "type": "return",
@@ -1943,7 +2049,9 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -2072,6 +2180,12 @@ Array [
                       "styleObjectOnly": true,
                     },
                   ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
                 ],
                 "results": Array [
                   Object {
@@ -2089,6 +2203,10 @@ Array [
                   Object {
                     "type": "return",
                     "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
                   },
                   Object {
                     "type": "return",
@@ -2165,7 +2283,9 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -2294,6 +2414,12 @@ Array [
                       "styleObjectOnly": true,
                     },
                   ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
                 ],
                 "results": Array [
                   Object {
@@ -2311,6 +2437,10 @@ Array [
                   Object {
                     "type": "return",
                     "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
                   },
                   Object {
                     "type": "return",
@@ -2368,7 +2498,9 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -2497,6 +2629,12 @@ Array [
                       "styleObjectOnly": true,
                     },
                   ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
                 ],
                 "results": Array [
                   Object {
@@ -2514,6 +2652,10 @@ Array [
                   Object {
                     "type": "return",
                     "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
                   },
                   Object {
                     "type": "return",
@@ -2565,7 +2707,9 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -2694,6 +2838,12 @@ Array [
                       "styleObjectOnly": true,
                     },
                   ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
                 ],
                 "results": Array [
                   Object {
@@ -2711,6 +2861,10 @@ Array [
                   Object {
                     "type": "return",
                     "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
                   },
                   Object {
                     "type": "return",
@@ -2778,7 +2932,9 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -2907,6 +3063,12 @@ Array [
                       "styleObjectOnly": true,
                     },
                   ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
                 ],
                 "results": Array [
                   Object {
@@ -2924,6 +3086,10 @@ Array [
                   Object {
                     "type": "return",
                     "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
                   },
                   Object {
                     "type": "return",
@@ -2991,7 +3157,9 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -3120,6 +3288,12 @@ Array [
                       "styleObjectOnly": true,
                     },
                   ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
                 ],
                 "results": Array [
                   Object {
@@ -3137,6 +3311,10 @@ Array [
                   Object {
                     "type": "return",
                     "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
                   },
                   Object {
                     "type": "return",
@@ -3196,7 +3374,9 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -3325,6 +3505,12 @@ Array [
                       "styleObjectOnly": true,
                     },
                   ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
                 ],
                 "results": Array [
                   Object {
@@ -3342,6 +3528,10 @@ Array [
                   Object {
                     "type": "return",
                     "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
                   },
                   Object {
                     "type": "return",
@@ -3449,7 +3639,9 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -3578,6 +3770,12 @@ Array [
                       "styleObjectOnly": true,
                     },
                   ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
                 ],
                 "results": Array [
                   Object {
@@ -3595,6 +3793,10 @@ Array [
                   Object {
                     "type": "return",
                     "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#016e1e\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
                   },
                   Object {
                     "type": "return",
@@ -3703,7 +3905,9 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -3832,6 +4036,12 @@ Array [
                       "styleObjectOnly": true,
                     },
                   ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
                 ],
                 "results": Array [
                   Object {
@@ -3849,6 +4059,10 @@ Array [
                   Object {
                     "type": "return",
                     "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
                   },
                   Object {
                     "type": "return",
@@ -3955,7 +4169,9 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -4084,6 +4300,12 @@ Array [
                       "styleObjectOnly": true,
                     },
                   ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
                 ],
                 "results": Array [
                   Object {
@@ -4101,6 +4323,10 @@ Array [
                   Object {
                     "type": "return",
                     "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
                   },
                   Object {
                     "type": "return",
@@ -4208,7 +4434,9 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -4337,6 +4565,12 @@ Array [
                       "styleObjectOnly": true,
                     },
                   ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
                 ],
                 "results": Array [
                   Object {
@@ -4354,6 +4588,10 @@ Array [
                   Object {
                     "type": "return",
                     "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#91cfcf\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
                   },
                   Object {
                     "type": "return",
@@ -4462,7 +4700,9 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
