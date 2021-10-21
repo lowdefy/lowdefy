@@ -119,3 +119,7 @@ exports[`Test Schema properties.suffixIcon: DoubleLeftOutlined 2`] = `null`;
 exports[`Test Schema properties.title: My MultipleSelector Title 1`] = `true`;
 
 exports[`Test Schema properties.title: My MultipleSelector Title 2`] = `null`;
+
+exports[`Test Schema property.bordered: false 1`] = `true`;
+
+exports[`Test Schema property.bordered: false 2`] = `null`;
