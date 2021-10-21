@@ -120,8 +120,8 @@
         },
         "size": {
           "type": "string",
-          "enum": ["small", "default", "large"],
-          "default": "default",
+          "enum": ["small", "middle", "large"],
+          "default": "middle",
           "description": "Size of the block."
         },
         "suffix": {

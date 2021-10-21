@@ -55,6 +55,7 @@ const TextAreaBlock = ({
               maxLength={properties.maxLength}
               placeholder={properties.placeholder}
               showCount={properties.showCount}
+              size={properties.size}
               value={value}
               autoSize={
                 properties.rows

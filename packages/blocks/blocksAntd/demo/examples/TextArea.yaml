@@ -76,3 +76,11 @@
   type: TextArea
   properties:
     showCount: true
+- id: 'properties.size: small'
+  type: TextArea
+  properties:
+    size: 'small'
+- id: 'properties.size: large'
+  type: TextArea
+  properties:
+    size: 'large'

@@ -136,6 +136,12 @@
           "minimum": 1,
           "description": "Number of rows in the block, should be greater or equal to 1. Defining rows disables any prefix."
         },
+        "size": {
+          "type": "string",
+          "enum": ["small", "middle", "large"],
+          "default": "middle",
+          "description": "Size of the block."
+        },
         "showCount": {
           "type": ["boolean", "object"],
           "default": false,
