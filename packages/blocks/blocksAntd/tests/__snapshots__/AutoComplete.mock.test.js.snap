@@ -7,6 +7,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [],
       "className": "{}",
       "defaultOpen": undefined,
@@ -31,6 +32,7 @@ Array [
       "allowClear": false,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [
         <mockConstructor
           className="{}"
@@ -144,6 +146,7 @@ Array [
       "allowClear": true,
       "autoFocus": true,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [
         <mockConstructor
           className="{}"
@@ -257,6 +260,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": true,
+      "bordered": undefined,
       "children": Array [
         <mockConstructor
           className="{}"
@@ -363,6 +367,31 @@ Array [
 ]
 `;
 
+exports[`Mock render - properties.bordered: false - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "backfill": undefined,
+      "bordered": false,
+      "children": Array [],
+      "className": "{}",
+      "defaultOpen": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "id": "properties.bordered: false_input",
+      "onChange": [Function],
+      "onSearch": [Function],
+      "placeholder": "Type or select item",
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
 exports[`Mock render - properties.inputStyle: CSS style applied - value[0] - default 1`] = `
 Array [
   Array [
@@ -370,6 +399,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [
         <mockConstructor
           className="{}"
@@ -487,6 +517,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [],
       "className": "{}",
       "defaultOpen": undefined,
@@ -511,6 +542,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [],
       "className": "{}",
       "defaultOpen": undefined,
@@ -535,6 +567,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [],
       "className": "{}",
       "defaultOpen": undefined,
@@ -559,6 +592,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [],
       "className": "{}",
       "defaultOpen": undefined,
@@ -583,6 +617,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [],
       "className": "{}",
       "defaultOpen": undefined,
@@ -607,6 +642,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [],
       "className": "{}",
       "defaultOpen": undefined,
@@ -631,6 +667,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [
         <mockConstructor
           className="{\\"style\\":[null,null]}"
@@ -843,6 +880,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [
         <mockConstructor
           className="{\\"style\\":[null,null]}"
@@ -1057,6 +1095,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [
         <mockConstructor
           className="{}"
@@ -1242,6 +1281,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [
         <mockConstructor
           className="{\\"style\\":[null,null]}"
@@ -1367,6 +1407,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [
         <mockConstructor
           className="{}"
@@ -1480,6 +1521,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [
         <mockConstructor
           className="{\\"style\\":[null,{\\"color\\":\\"red\\"}]}"
@@ -1609,6 +1651,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [
         <mockConstructor
           className="{\\"style\\":{\\"color\\":\\"blue\\"}}"
@@ -1730,6 +1773,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [],
       "className": "{}",
       "defaultOpen": undefined,
@@ -1754,6 +1798,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [
         <mockConstructor
           className="{}"
@@ -1867,6 +1912,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [
         <mockConstructor
           className="{}"
@@ -1980,6 +2026,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [],
       "className": "{}",
       "defaultOpen": undefined,

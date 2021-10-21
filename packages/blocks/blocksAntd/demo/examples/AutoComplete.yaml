@@ -10,6 +10,10 @@
   type: AutoComplete
   properties:
     title: 'properties.title: My AutoComplete Title'
+- id: 'properties.bordered: false'
+  type: AutoComplete
+  properties:
+    bordered: false
 - id: 'properties.allowClear: false'
   type: AutoComplete
   properties:

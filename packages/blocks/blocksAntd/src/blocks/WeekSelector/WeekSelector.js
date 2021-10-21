@@ -50,13 +50,15 @@ const WeekSelector = ({
             <div id={`${blockId}_popup`} />
             <WeekPicker
               id={`${blockId}_input`}
-              className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
-              autoFocus={properties.autoFocus}
-              getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
-              disabled={properties.disabled}
               allowClear={properties.allowClear !== false}
-              placeholder={properties.placeholder || 'Select Week'}
+              autoFocus={properties.autoFocus}
+              bordered={properties.bordered}
+              className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
+              disabled={properties.disabled}
+              disabledDate={disabledDate(properties.disabledDates)}
               format={properties.format || 'YYYY-wo'}
+              getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
+              placeholder={properties.placeholder || 'Select Week'}
               size={properties.size}
               suffixIcon={
                 properties.suffixIcon && (
@@ -67,7 +69,6 @@ const WeekSelector = ({
                   />
                 )
               }
-              disabledDate={disabledDate(properties.disabledDates)}
               onChange={(newVal) => {
                 methods.setValue(
                   !newVal

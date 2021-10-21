@@ -48,13 +48,14 @@ const DateSelector = ({
             <div id={`${blockId}_popup`} />
             <DatePicker
               id={`${blockId}_input`}
-              className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
-              autoFocus={properties.autoFocus}
-              disabled={properties.disabled}
-              getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
               allowClear={properties.allowClear !== false}
-              placeholder={properties.placeholder || 'Select Date'}
+              autoFocus={properties.autoFocus}
+              bordered={properties.bordered}
+              className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
+              disabled={properties.disabled}
               format={properties.format || 'YYYY-MM-DD'}
+              getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
+              placeholder={properties.placeholder || 'Select Date'}
               showToday={properties.showToday}
               size={properties.size}
               suffixIcon={

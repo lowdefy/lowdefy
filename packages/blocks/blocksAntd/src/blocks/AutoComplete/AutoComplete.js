@@ -49,6 +49,7 @@ const AutoCompleteInput = ({
             id={`${blockId}_input`}
             autoFocus={properties.autoFocus}
             backfill={properties.backfill}
+            bordered={properties.bordered}
             className={methods.makeCssClass(properties.inputStyle)}
             defaultOpen={properties.defaultOpen}
             disabled={properties.disabled}

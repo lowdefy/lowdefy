@@ -6,6 +6,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
+      "bordered": undefined,
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
@@ -30,6 +31,7 @@ Array [
     Object {
       "allowClear": false,
       "autoFocus": undefined,
+      "bordered": undefined,
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
@@ -54,6 +56,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": true,
+      "bordered": undefined,
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
@@ -72,12 +75,38 @@ Array [
 ]
 `;
 
+exports[`Mock render - properties.bordered: false - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "bordered": false,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "YYYY-MM-DD",
+      "getPopupContainer": [Function],
+      "id": "properties.bordered: false_input",
+      "onChange": [Function],
+      "placeholder": "Select Date",
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
 exports[`Mock render - properties.disabled: true - value[0] - default 1`] = `
 Array [
   Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
+      "bordered": undefined,
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": true,
       "disabledDate": [Function],
@@ -102,6 +131,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
+      "bordered": undefined,
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
@@ -126,6 +156,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
+      "bordered": undefined,
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
@@ -150,6 +181,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
+      "bordered": undefined,
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
@@ -174,6 +206,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
+      "bordered": undefined,
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
@@ -198,6 +231,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
+      "bordered": undefined,
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
@@ -222,6 +256,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
+      "bordered": undefined,
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},{\\"border\\":\\"1px solid red\\"}]}",
       "disabled": undefined,
       "disabledDate": [Function],
@@ -246,6 +281,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
+      "bordered": undefined,
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
@@ -270,6 +306,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
+      "bordered": undefined,
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
@@ -294,6 +331,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
+      "bordered": undefined,
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
@@ -318,6 +356,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
+      "bordered": undefined,
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
@@ -342,6 +381,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
+      "bordered": undefined,
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
@@ -366,6 +406,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
+      "bordered": undefined,
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
@@ -390,6 +431,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
+      "bordered": undefined,
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
@@ -414,6 +456,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
+      "bordered": undefined,
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
@@ -438,6 +481,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
+      "bordered": undefined,
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
@@ -462,6 +506,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
+      "bordered": undefined,
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
@@ -511,6 +556,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
+      "bordered": undefined,
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
