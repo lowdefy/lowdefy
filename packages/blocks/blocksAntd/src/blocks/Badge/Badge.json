@@ -8,7 +8,7 @@
       "properties": {
         "color": {
           "type": "string",
-          "description": "Customize Badge dot color",
+          "description": "Customize Badge dot color.",
           "docs": {
             "displayType": "color"
           }
@@ -23,7 +23,13 @@
         "dot": {
           "type": "boolean",
           "default": false,
-          "description": "Whether to display a red dot instead of count"
+          "description": "Whether to display a red dot instead of count."
+        },
+        "size": {
+          "type": "string",
+          "default": "default",
+          "enum": ["default", "small"],
+          "description": "Sets the size of badge if count is set."
         },
         "icon": {
           "type": ["string", "object"],
@@ -35,7 +41,7 @@
         "offset": {
           "type": "array",
           "items": { "type": "number" },
-          "description": "Set offset of the badge dot, array of numbers for x and y offset ([x,y])"
+          "description": "Set offset of the badge dot, array of numbers for x and y offset ([x,y])."
         },
         "overflowCount": {
           "type": "number",
@@ -45,21 +51,21 @@
         "showZero": {
           "type": "boolean",
           "default": false,
-          "description": "Whether to show badge when count is zero"
+          "description": "Whether to show badge when count is zero."
         },
         "status": {
           "type": "string",
           "enum": ["success", "processing", "default", "error", "warning"],
           "default": null,
-          "description": "Set Badge as a status dot"
+          "description": "Set Badge as a status dot."
         },
         "text": {
           "type": "string",
-          "description": "If status is set, text sets the display text of the status dot"
+          "description": "If status is set, text sets the display text of the status dot."
         },
         "title": {
           "type": "string",
-          "description": "Text to show when hovering over the badge"
+          "description": "Text to show when hovering over the badge."
         }
       }
     }
