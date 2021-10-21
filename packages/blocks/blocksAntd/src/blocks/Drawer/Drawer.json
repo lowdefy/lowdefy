@@ -69,6 +69,13 @@
             "displayType": "yaml"
           }
         },
+        "contentWrapperStyle": {
+          "type": "object",
+          "description": "Css style to applied to content area.",
+          "docs": {
+            "displayType": "yaml"
+          }
+        },
         "maskStyle": {
           "type": "object",
           "description": "Css style to applied to drawer mask.",

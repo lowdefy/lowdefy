@@ -26,6 +26,7 @@ _ref:
       > To open the drawer, invoke a drawer method.
     areas:
       - content
+      - extra
     methods:
       - name: toggleOpen
         onClick:
