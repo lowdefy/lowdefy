@@ -21,7 +21,7 @@ import { type } from '@lowdefy/helpers';
 
 import Icon from '../Icon/Icon';
 
-const AlertBlock = ({ blockId, events, methods, properties }) => {
+const AlertBlock = ({ blockId, content, events, methods, properties }) => {
   const additionalProps = {};
   if (properties.icon) {
     additionalProps.icon = (
@@ -30,6 +30,7 @@ const AlertBlock = ({ blockId, events, methods, properties }) => {
   }
   return (
     <Alert
+      action={content.action && content.action()}
       afterClose={() => methods.triggerEvent({ name: 'afterClose' })}
       banner={properties.banner}
       closable={properties.closable}

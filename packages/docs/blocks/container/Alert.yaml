@@ -16,11 +16,12 @@ _ref:
   path: templates/blocks/template.yaml.njk
   vars:
     block_type: Alert
-    category: display
+    category: container
     schema: ../blocks/blocksAntd/src/blocks/Alert/Alert.json
     filePath: blocks/display/Alert.yaml
     init_property_values:
       message: Alerts help to highlight important information.
     description_content: |
       Alert is used to render user feedback messages in a Alert styled frame.
-
+    areas:
+      - action

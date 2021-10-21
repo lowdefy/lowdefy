@@ -1,5 +1,123 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render areas.action and properties.description - value[0] 1`] = `
+<div
+  className="ant-alert ant-alert-info ant-alert-with-description"
+  data-show={true}
+  role="alert"
+  style={Object {}}
+>
+  <span
+    aria-label="info-circle"
+    className="anticon anticon-info-circle ant-alert-icon"
+    role="img"
+  >
+    <svg
+      aria-hidden="true"
+      data-icon="info-circle"
+      fill="currentColor"
+      focusable="false"
+      height="1em"
+      viewBox="64 64 896 896"
+      width="1em"
+    >
+      <path
+        d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+      />
+      <path
+        d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"
+      />
+    </svg>
+  </span>
+  <div
+    className="ant-alert-content"
+  >
+    <div
+      className="ant-alert-message"
+    >
+      <span
+        className="{}"
+      />
+    </div>
+    <div
+      className="ant-alert-description"
+    >
+      <span
+        className="{}"
+      />
+    </div>
+  </div>
+  <div
+    className="ant-alert-action"
+  >
+    <div
+      style={
+        Object {
+          "border": "1px solid red",
+          "padding": 10,
+        }
+      }
+    >
+      action
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render areas.action and properties.message - value[0] 1`] = `
+<div
+  className="ant-alert ant-alert-info"
+  data-show={true}
+  role="alert"
+  style={Object {}}
+>
+  <span
+    aria-label="info-circle"
+    className="anticon anticon-info-circle ant-alert-icon"
+    role="img"
+  >
+    <svg
+      aria-hidden="true"
+      data-icon="info-circle"
+      fill="currentColor"
+      focusable="false"
+      height="1em"
+      viewBox="64 64 896 896"
+      width="1em"
+    >
+      <path
+        d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm32 664c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V456c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272zm-32-344a48.01 48.01 0 010-96 48.01 48.01 0 010 96z"
+      />
+    </svg>
+  </span>
+  <div
+    className="ant-alert-content"
+  >
+    <div
+      className="ant-alert-message"
+    >
+      <span
+        className="{}"
+      />
+    </div>
+  </div>
+  <div
+    className="ant-alert-action"
+  >
+    <div
+      style={
+        Object {
+          "border": "1px solid red",
+          "padding": 10,
+        }
+      }
+    >
+      action
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render default - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-info"
@@ -40,9 +158,6 @@ exports[`Render default - value[0] 1`] = `
         }
       />
     </div>
-    <div
-      className="ant-alert-description"
-    />
   </div>
 </div>
 `;
@@ -83,9 +198,6 @@ exports[`Render properties.closable: true - value[0] 1`] = `
         className="{}"
       />
     </div>
-    <div
-      className="ant-alert-description"
-    />
   </div>
   <button
     className="ant-alert-close-icon"
@@ -152,9 +264,6 @@ exports[`Render properties.closeText: Close Text - value[0] 1`] = `
         className="{}"
       />
     </div>
-    <div
-      className="ant-alert-description"
-    />
   </div>
   <button
     className="ant-alert-close-icon"
@@ -210,9 +319,6 @@ exports[`Render properties.icon object - value[0] 1`] = `
         className="{}"
       />
     </div>
-    <div
-      className="ant-alert-description"
-    />
   </div>
 </div>
 `;
@@ -256,9 +362,6 @@ exports[`Render properties.icon string - value[0] 1`] = `
         className="{}"
       />
     </div>
-    <div
-      className="ant-alert-description"
-    />
   </div>
 </div>
 `;
@@ -299,9 +402,6 @@ exports[`Render properties.message - value[0] 1`] = `
         className="{}"
       />
     </div>
-    <div
-      className="ant-alert-description"
-    />
   </div>
 </div>
 `;
@@ -342,9 +442,6 @@ exports[`Render properties.type: error - value[0] 1`] = `
         className="{}"
       />
     </div>
-    <div
-      className="ant-alert-description"
-    />
   </div>
 </div>
 `;
@@ -385,9 +482,6 @@ exports[`Render properties.type: error banner: true - value[0] 1`] = `
         className="{}"
       />
     </div>
-    <div
-      className="ant-alert-description"
-    />
   </div>
 </div>
 `;
@@ -409,9 +503,6 @@ exports[`Render properties.type: error showIcon: false - value[0] 1`] = `
         className="{}"
       />
     </div>
-    <div
-      className="ant-alert-description"
-    />
   </div>
 </div>
 `;
@@ -452,9 +543,6 @@ exports[`Render properties.type: info - value[0] 1`] = `
         className="{}"
       />
     </div>
-    <div
-      className="ant-alert-description"
-    />
   </div>
 </div>
 `;
@@ -495,9 +583,6 @@ exports[`Render properties.type: info banner: true - value[0] 1`] = `
         className="{}"
       />
     </div>
-    <div
-      className="ant-alert-description"
-    />
   </div>
 </div>
 `;
@@ -519,9 +604,6 @@ exports[`Render properties.type: info showIcon: false - value[0] 1`] = `
         className="{}"
       />
     </div>
-    <div
-      className="ant-alert-description"
-    />
   </div>
 </div>
 `;
@@ -562,9 +644,6 @@ exports[`Render properties.type: success - value[0] 1`] = `
         className="{}"
       />
     </div>
-    <div
-      className="ant-alert-description"
-    />
   </div>
 </div>
 `;
@@ -605,9 +684,6 @@ exports[`Render properties.type: success banner: true - value[0] 1`] = `
         className="{}"
       />
     </div>
-    <div
-      className="ant-alert-description"
-    />
   </div>
 </div>
 `;
@@ -629,9 +705,6 @@ exports[`Render properties.type: success showIcon: false - value[0] 1`] = `
         className="{}"
       />
     </div>
-    <div
-      className="ant-alert-description"
-    />
   </div>
 </div>
 `;
@@ -672,9 +745,6 @@ exports[`Render properties.type: warning - value[0] 1`] = `
         className="{}"
       />
     </div>
-    <div
-      className="ant-alert-description"
-    />
   </div>
 </div>
 `;
@@ -715,9 +785,6 @@ exports[`Render properties.type: warning banner: true - value[0] 1`] = `
         className="{}"
       />
     </div>
-    <div
-      className="ant-alert-description"
-    />
   </div>
 </div>
 `;
@@ -739,9 +806,6 @@ exports[`Render properties.type: warning showIcon: false - value[0] 1`] = `
         className="{}"
       />
     </div>
-    <div
-      className="ant-alert-description"
-    />
   </div>
 </div>
 `;
@@ -1722,12 +1786,17 @@ exports[`Render with message uses html - value[0] 1`] = `
         className="{}"
       />
     </div>
-    <div
-      className="ant-alert-description"
-    />
   </div>
 </div>
 `;
+
+exports[`Test Schema areas.action and properties.description 1`] = `true`;
+
+exports[`Test Schema areas.action and properties.description 2`] = `null`;
+
+exports[`Test Schema areas.action and properties.message 1`] = `true`;
+
+exports[`Test Schema areas.action and properties.message 2`] = `null`;
 
 exports[`Test Schema default 1`] = `true`;
 
