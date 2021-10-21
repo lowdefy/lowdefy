@@ -45,6 +45,7 @@ const PasswordInput = ({
           return (
             <Input.Password
               id={`${blockId}_input`}
+              bordered={properties.bordered}
               className={methods.makeCssClass(properties.inputStyle)}
               autoFocus={properties.autoFocus}
               disabled={properties.disabled}
@@ -63,6 +64,7 @@ const PasswordInput = ({
               placeholder={properties.placeholder}
               value={value}
               size={properties.size}
+              visibilityToggle={properties.visibilityToggle}
             />
           );
         },
