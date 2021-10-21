@@ -27,10 +27,11 @@ const StatisticBlock = ({ blockId, events, properties, methods }) => (
     decimalSeparator={properties.decimalSeparator}
     groupSeparator={properties.groupSeparator}
     id={blockId}
+    loading={properties.loading}
     precision={properties.precision}
     title={renderHtml({ html: properties.title, methods })}
     value={type.isNone(properties.value) ? '' : properties.value}
-    valueStyle={properties.valueStyle}
+    valueStyle={methods.makeCssClass(properties.valueStyle, { styleObjectOnly: true })}
     prefix={
       properties.prefixIcon ? (
         <Icon
