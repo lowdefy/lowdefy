@@ -14,12 +14,9 @@
   limitations under the License.
 */
 
-import { get, type } from '@lowdefy/helpers';
 import { ServerError } from '../context/errors';
 
-function createAuthorize({ user, roles = [] }) {
-  const authenticated = type.isString(get(user, 'sub'));
-
+function createAuthorize({ authenticated = false, roles = [] }) {
   function authorize({ auth }) {
     if (auth.public === true) return true;
     if (auth.public === false) {
