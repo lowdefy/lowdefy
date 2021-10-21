@@ -1146,6 +1146,62 @@ exports[`Render properties.ellipsis: true - value[0] 1`] = `
 </div>
 `;
 
+exports[`Render properties.italic: true - value[0] 1`] = `
+<div
+  className="ant-typography {}"
+  id="properties.italic: true"
+  style={
+    Object {
+      "WebkitLineClamp": undefined,
+    }
+  }
+>
+  <i>
+    
+  </i>
+  <div
+    aria-label="Edit"
+    className="ant-typography-edit"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    role="button"
+    style={
+      Object {
+        "background": "transparent",
+        "border": 0,
+        "display": "inline-block",
+        "lineHeight": "inherit",
+        "padding": 0,
+      }
+    }
+    tabIndex={0}
+  >
+    <span
+      aria-label="edit"
+      className="anticon anticon-edit"
+      role="button"
+    >
+      <svg
+        aria-hidden="true"
+        data-icon="edit"
+        fill="currentColor"
+        focusable="false"
+        height="1em"
+        viewBox="64 64 896 896"
+        width="1em"
+      >
+        <path
+          d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"
+        />
+      </svg>
+    </span>
+  </div>
+</div>
+`;
+
 exports[`Render properties.mark: true - value[0] 1`] = `
 <div
   className="ant-typography {}"
@@ -2579,6 +2635,62 @@ exports[`Render required = true properties.ellipsis: true - value[0] 1`] = `
   }
 >
   
+  <div
+    aria-label="Edit"
+    className="ant-typography-edit"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    role="button"
+    style={
+      Object {
+        "background": "transparent",
+        "border": 0,
+        "display": "inline-block",
+        "lineHeight": "inherit",
+        "padding": 0,
+      }
+    }
+    tabIndex={0}
+  >
+    <span
+      aria-label="edit"
+      className="anticon anticon-edit"
+      role="button"
+    >
+      <svg
+        aria-hidden="true"
+        data-icon="edit"
+        fill="currentColor"
+        focusable="false"
+        height="1em"
+        viewBox="64 64 896 896"
+        width="1em"
+      >
+        <path
+          d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"
+        />
+      </svg>
+    </span>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.italic: true - value[0] 1`] = `
+<div
+  className="ant-typography {}"
+  id="properties.italic: true"
+  style={
+    Object {
+      "WebkitLineClamp": undefined,
+    }
+  }
+>
+  <i>
+    
+  </i>
   <div
     aria-label="Edit"
     className="ant-typography-edit"
@@ -4098,6 +4210,62 @@ exports[`Render validation.status = error properties.ellipsis: true - value[0] 1
 </div>
 `;
 
+exports[`Render validation.status = error properties.italic: true - value[0] 1`] = `
+<div
+  className="ant-typography {}"
+  id="properties.italic: true"
+  style={
+    Object {
+      "WebkitLineClamp": undefined,
+    }
+  }
+>
+  <i>
+    
+  </i>
+  <div
+    aria-label="Edit"
+    className="ant-typography-edit"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    role="button"
+    style={
+      Object {
+        "background": "transparent",
+        "border": 0,
+        "display": "inline-block",
+        "lineHeight": "inherit",
+        "padding": 0,
+      }
+    }
+    tabIndex={0}
+  >
+    <span
+      aria-label="edit"
+      className="anticon anticon-edit"
+      role="button"
+    >
+      <svg
+        aria-hidden="true"
+        data-icon="edit"
+        fill="currentColor"
+        focusable="false"
+        height="1em"
+        viewBox="64 64 896 896"
+        width="1em"
+      >
+        <path
+          d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"
+        />
+      </svg>
+    </span>
+  </div>
+</div>
+`;
+
 exports[`Render validation.status = error properties.mark: true - value[0] 1`] = `
 <div
   className="ant-typography {}"
@@ -5531,6 +5699,62 @@ exports[`Render validation.status = null properties.ellipsis: true - value[0] 1`
   }
 >
   
+  <div
+    aria-label="Edit"
+    className="ant-typography-edit"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    role="button"
+    style={
+      Object {
+        "background": "transparent",
+        "border": 0,
+        "display": "inline-block",
+        "lineHeight": "inherit",
+        "padding": 0,
+      }
+    }
+    tabIndex={0}
+  >
+    <span
+      aria-label="edit"
+      className="anticon anticon-edit"
+      role="button"
+    >
+      <svg
+        aria-hidden="true"
+        data-icon="edit"
+        fill="currentColor"
+        focusable="false"
+        height="1em"
+        viewBox="64 64 896 896"
+        width="1em"
+      >
+        <path
+          d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"
+        />
+      </svg>
+    </span>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = null properties.italic: true - value[0] 1`] = `
+<div
+  className="ant-typography {}"
+  id="properties.italic: true"
+  style={
+    Object {
+      "WebkitLineClamp": undefined,
+    }
+  }
+>
+  <i>
+    
+  </i>
   <div
     aria-label="Edit"
     className="ant-typography-edit"
@@ -7050,6 +7274,62 @@ exports[`Render validation.status = success properties.ellipsis: true - value[0]
 </div>
 `;
 
+exports[`Render validation.status = success properties.italic: true - value[0] 1`] = `
+<div
+  className="ant-typography {}"
+  id="properties.italic: true"
+  style={
+    Object {
+      "WebkitLineClamp": undefined,
+    }
+  }
+>
+  <i>
+    
+  </i>
+  <div
+    aria-label="Edit"
+    className="ant-typography-edit"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    role="button"
+    style={
+      Object {
+        "background": "transparent",
+        "border": 0,
+        "display": "inline-block",
+        "lineHeight": "inherit",
+        "padding": 0,
+      }
+    }
+    tabIndex={0}
+  >
+    <span
+      aria-label="edit"
+      className="anticon anticon-edit"
+      role="button"
+    >
+      <svg
+        aria-hidden="true"
+        data-icon="edit"
+        fill="currentColor"
+        focusable="false"
+        height="1em"
+        viewBox="64 64 896 896"
+        width="1em"
+      >
+        <path
+          d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"
+        />
+      </svg>
+    </span>
+  </div>
+</div>
+`;
+
 exports[`Render validation.status = success properties.mark: true - value[0] 1`] = `
 <div
   className="ant-typography {}"
@@ -8526,6 +8806,62 @@ exports[`Render validation.status = warning properties.ellipsis: true - value[0]
 </div>
 `;
 
+exports[`Render validation.status = warning properties.italic: true - value[0] 1`] = `
+<div
+  className="ant-typography {}"
+  id="properties.italic: true"
+  style={
+    Object {
+      "WebkitLineClamp": undefined,
+    }
+  }
+>
+  <i>
+    
+  </i>
+  <div
+    aria-label="Edit"
+    className="ant-typography-edit"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    role="button"
+    style={
+      Object {
+        "background": "transparent",
+        "border": 0,
+        "display": "inline-block",
+        "lineHeight": "inherit",
+        "padding": 0,
+      }
+    }
+    tabIndex={0}
+  >
+    <span
+      aria-label="edit"
+      className="anticon anticon-edit"
+      role="button"
+    >
+      <svg
+        aria-hidden="true"
+        data-icon="edit"
+        fill="currentColor"
+        focusable="false"
+        height="1em"
+        viewBox="64 64 896 896"
+        width="1em"
+      >
+        <path
+          d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"
+        />
+      </svg>
+    </span>
+  </div>
+</div>
+`;
+
 exports[`Render validation.status = warning properties.mark: true - value[0] 1`] = `
 <div
   className="ant-typography {}"
@@ -8927,6 +9263,10 @@ exports[`Test Schema properties.ellipsis: rows, suffix 2`] = `null`;
 exports[`Test Schema properties.ellipsis: true 1`] = `true`;
 
 exports[`Test Schema properties.ellipsis: true 2`] = `null`;
+
+exports[`Test Schema properties.italic: true 1`] = `true`;
+
+exports[`Test Schema properties.italic: true 2`] = `null`;
 
 exports[`Test Schema properties.mark: true 1`] = `true`;
 

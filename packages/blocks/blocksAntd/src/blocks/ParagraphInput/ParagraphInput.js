@@ -122,6 +122,7 @@ const ParagraphInput = ({ blockId, events, properties, methods, value }) => {
             }
           : properties.editable !== false && editableEvents
       }
+      italic={properties.italic}
       mark={properties.mark}
       strong={properties.strong}
       type={properties.type}
