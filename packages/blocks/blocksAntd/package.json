@@ -44,11 +44,11 @@
     "build:moduleFederation": "webpack --config webpack.prod.js"
   },
   "dependencies": {
-    "@ant-design/icons": "4.5.0",
+    "@ant-design/icons": "4.7.0",
     "@lowdefy/block-tools": "3.22.0",
     "@lowdefy/color": "3.22.0",
     "@lowdefy/helpers": "3.22.0",
-    "antd": "4.16.13",
+    "antd": "4.17.0-alpha.7",
     "classnames": "2.3.1",
     "moment": "2.29.1",
     "rc-animate": "3.1.1",
