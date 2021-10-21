@@ -121,6 +121,17 @@ exports[`Render properties.avatar object square - value[0] 1`] = `
 </div>
 `;
 
+exports[`Render properties.block block true - value[0] 1`] = `
+<div
+  className="ant-skeleton ant-skeleton-element ant-skeleton-block {}"
+>
+  <span
+    className="ant-skeleton-button {}"
+    style={Object {}}
+  />
+</div>
+`;
+
 exports[`Render properties.button object circle - value[0] 1`] = `
 <div
   className="ant-skeleton ant-skeleton-element {}"
@@ -342,6 +353,10 @@ exports[`Test Schema properties.avatar object circle 2`] = `null`;
 exports[`Test Schema properties.avatar object square 1`] = `true`;
 
 exports[`Test Schema properties.avatar object square 2`] = `null`;
+
+exports[`Test Schema properties.block block true 1`] = `true`;
+
+exports[`Test Schema properties.block block true 2`] = `null`;
 
 exports[`Test Schema properties.button object circle 1`] = `true`;
 

@@ -23,11 +23,12 @@ const SkeletonBlock = ({ blockId, events, properties, methods }) => {
     return (
       <Skeleton.Button
         id={blockId}
+        active={properties.active || properties.button.active}
+        block={properties.block || properties.button.block}
         className={methods.makeCssClass(properties.style)}
         events={events}
-        active={properties.active || properties.button.active}
-        size={properties.size || properties.button.size}
         shape={properties.shape || properties.button.shape}
+        size={properties.size || properties.button.size}
       />
     );
   }

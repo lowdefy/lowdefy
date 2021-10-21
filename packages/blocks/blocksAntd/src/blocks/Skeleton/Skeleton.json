@@ -80,6 +80,11 @@
                   "enum": ["small", "default", "large"],
                   "default": "large",
                   "description": "The size of the button."
+                },
+                "block": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Option to fit button Skeleton width to its parent width."
                 }
               }
             }
