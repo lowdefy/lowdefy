@@ -54,9 +54,10 @@ test('logout with logoutRedirectUri', () => {
   });
 
   const url = openIdLogoutUrl(context, { idToken: 'idToken' });
-  expect(url).toEqual(
-    'OPENID_DOMAIN/logout/?id_token_hint=idToken&client_id=OPENID_CLIENT_ID&return_to=https%3A%2F%2Fhost%2Flogged-out'
-  );
+  expect(url).toEqual({
+    openIdLogoutUrl:
+      'OPENID_DOMAIN/logout/?id_token_hint=idToken&client_id=OPENID_CLIENT_ID&return_to=https%3A%2F%2Fhost%2Flogged-out',
+  });
   expect(unsetAuthorizationCookie).toHaveBeenCalled();
 });
 
@@ -75,9 +76,10 @@ test('logout with logoutRedirectUri, protocol is http', () => {
   });
 
   const url = openIdLogoutUrl(context, { idToken: 'idToken' });
-  expect(url).toEqual(
-    'OPENID_DOMAIN/logout/?id_token_hint=idToken&client_id=OPENID_CLIENT_ID&return_to=http%3A%2F%2Fhost%2Flogged-out'
-  );
+  expect(url).toEqual({
+    openIdLogoutUrl:
+      'OPENID_DOMAIN/logout/?id_token_hint=idToken&client_id=OPENID_CLIENT_ID&return_to=http%3A%2F%2Fhost%2Flogged-out',
+  });
   expect(unsetAuthorizationCookie).toHaveBeenCalled();
 });
 
