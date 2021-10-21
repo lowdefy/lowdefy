@@ -137,7 +137,7 @@ exports[`Render properties.addToFront: true - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn ant-btn-default {\\"style\\":[{},null]}"
+        className="ant-btn {\\"style\\":[{},null]}"
         id="properties.addToFront: true_add_button"
         onClick={[Function]}
         type="button"
@@ -736,7 +736,7 @@ exports[`Render required = true properties.addToFront: true - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn ant-btn-default {\\"style\\":[{},null]}"
+        className="ant-btn {\\"style\\":[{},null]}"
         id="properties.addToFront: true_add_button"
         onClick={[Function]}
         type="button"
@@ -1335,7 +1335,7 @@ exports[`Render validation.status = error properties.addToFront: true - value[0]
     >
       <br />
       <button
-        className="ant-btn ant-btn-default {\\"style\\":[{},null]}"
+        className="ant-btn {\\"style\\":[{},null]}"
         id="properties.addToFront: true_add_button"
         onClick={[Function]}
         type="button"
@@ -1934,7 +1934,7 @@ exports[`Render validation.status = null properties.addToFront: true - value[0] 
     >
       <br />
       <button
-        className="ant-btn ant-btn-default {\\"style\\":[{},null]}"
+        className="ant-btn {\\"style\\":[{},null]}"
         id="properties.addToFront: true_add_button"
         onClick={[Function]}
         type="button"
@@ -2533,7 +2533,7 @@ exports[`Render validation.status = success properties.addToFront: true - value[
     >
       <br />
       <button
-        className="ant-btn ant-btn-default {\\"style\\":[{},null]}"
+        className="ant-btn {\\"style\\":[{},null]}"
         id="properties.addToFront: true_add_button"
         onClick={[Function]}
         type="button"
@@ -3132,7 +3132,7 @@ exports[`Render validation.status = warning properties.addToFront: true - value[
     >
       <br />
       <button
-        className="ant-btn ant-btn-default {\\"style\\":[{},null]}"
+        className="ant-btn {\\"style\\":[{},null]}"
         id="properties.addToFront: true_add_button"
         onClick={[Function]}
         type="button"

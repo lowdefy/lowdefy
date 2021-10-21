@@ -16,31 +16,33 @@ exports[`Render default - value[0] 1`] = `
       role="button"
       tabIndex={0}
     >
-      <span
-        aria-label="right"
-        className="anticon anticon-right ant-collapse-arrow"
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="right"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          style={
-            Object {
-              "msTransform": "rotate(90deg)",
-              "transform": "rotate(90deg)",
-            }
-          }
-          viewBox="64 64 896 896"
-          width="1em"
+      <div>
+        <span
+          aria-label="right"
+          className="anticon anticon-right ant-collapse-arrow"
+          role="img"
         >
-          <path
-            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="right"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            style={
+              Object {
+                "msTransform": "rotate(90deg)",
+                "transform": "rotate(90deg)",
+              }
+            }
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+            />
+          </svg>
+        </span>
+      </div>
       <span
         className="{}"
       />
@@ -84,31 +86,33 @@ exports[`Render properties.accordion: true - value[0] 1`] = `
       role="tab"
       tabIndex={0}
     >
-      <span
-        aria-label="right"
-        className="anticon anticon-right ant-collapse-arrow"
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="right"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          style={
-            Object {
-              "msTransform": "rotate(90deg)",
-              "transform": "rotate(90deg)",
-            }
-          }
-          viewBox="64 64 896 896"
-          width="1em"
+      <div>
+        <span
+          aria-label="right"
+          className="anticon anticon-right ant-collapse-arrow"
+          role="img"
         >
-          <path
-            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="right"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            style={
+              Object {
+                "msTransform": "rotate(90deg)",
+                "transform": "rotate(90deg)",
+              }
+            }
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+            />
+          </svg>
+        </span>
+      </div>
       <span
         className="{}"
       />
@@ -144,25 +148,27 @@ exports[`Render properties.accordion: true - value[0] 1`] = `
       role="tab"
       tabIndex={0}
     >
-      <span
-        aria-label="right"
-        className="anticon anticon-right ant-collapse-arrow"
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="right"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          viewBox="64 64 896 896"
-          width="1em"
+      <div>
+        <span
+          aria-label="right"
+          className="anticon anticon-right ant-collapse-arrow"
+          role="img"
         >
-          <path
-            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="right"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+            />
+          </svg>
+        </span>
+      </div>
       <span
         className="{}"
       />
@@ -187,25 +193,27 @@ exports[`Render properties.activeKey: content_two - value[0] 1`] = `
       role="button"
       tabIndex={0}
     >
-      <span
-        aria-label="right"
-        className="anticon anticon-right ant-collapse-arrow"
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="right"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          viewBox="64 64 896 896"
-          width="1em"
+      <div>
+        <span
+          aria-label="right"
+          className="anticon anticon-right ant-collapse-arrow"
+          role="img"
         >
-          <path
-            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="right"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+            />
+          </svg>
+        </span>
+      </div>
       <span
         className="{}"
       />
@@ -222,31 +230,33 @@ exports[`Render properties.activeKey: content_two - value[0] 1`] = `
       role="button"
       tabIndex={0}
     >
-      <span
-        aria-label="right"
-        className="anticon anticon-right ant-collapse-arrow"
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="right"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          style={
-            Object {
-              "msTransform": "rotate(90deg)",
-              "transform": "rotate(90deg)",
-            }
-          }
-          viewBox="64 64 896 896"
-          width="1em"
+      <div>
+        <span
+          aria-label="right"
+          className="anticon anticon-right ant-collapse-arrow"
+          role="img"
         >
-          <path
-            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="right"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            style={
+              Object {
+                "msTransform": "rotate(90deg)",
+                "transform": "rotate(90deg)",
+              }
+            }
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+            />
+          </svg>
+        </span>
+      </div>
       <span
         className="{}"
       />
@@ -290,31 +300,33 @@ exports[`Render properties.bordered: false - value[0] 1`] = `
       role="button"
       tabIndex={0}
     >
-      <span
-        aria-label="right"
-        className="anticon anticon-right ant-collapse-arrow"
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="right"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          style={
-            Object {
-              "msTransform": "rotate(90deg)",
-              "transform": "rotate(90deg)",
-            }
-          }
-          viewBox="64 64 896 896"
-          width="1em"
+      <div>
+        <span
+          aria-label="right"
+          className="anticon anticon-right ant-collapse-arrow"
+          role="img"
         >
-          <path
-            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="right"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            style={
+              Object {
+                "msTransform": "rotate(90deg)",
+                "transform": "rotate(90deg)",
+              }
+            }
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+            />
+          </svg>
+        </span>
+      </div>
       <span
         className="{}"
       />
@@ -350,25 +362,27 @@ exports[`Render properties.bordered: false - value[0] 1`] = `
       role="button"
       tabIndex={0}
     >
-      <span
-        aria-label="right"
-        className="anticon anticon-right ant-collapse-arrow"
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="right"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          viewBox="64 64 896 896"
-          width="1em"
+      <div>
+        <span
+          aria-label="right"
+          className="anticon anticon-right ant-collapse-arrow"
+          role="img"
         >
-          <path
-            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="right"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+            />
+          </svg>
+        </span>
+      </div>
       <span
         className="{}"
       />
@@ -393,25 +407,27 @@ exports[`Render properties.defaultActiveKey: content_two - value[0] 1`] = `
       role="button"
       tabIndex={0}
     >
-      <span
-        aria-label="right"
-        className="anticon anticon-right ant-collapse-arrow"
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="right"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          viewBox="64 64 896 896"
-          width="1em"
+      <div>
+        <span
+          aria-label="right"
+          className="anticon anticon-right ant-collapse-arrow"
+          role="img"
         >
-          <path
-            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="right"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+            />
+          </svg>
+        </span>
+      </div>
       <span
         className="{}"
       />
@@ -428,31 +444,33 @@ exports[`Render properties.defaultActiveKey: content_two - value[0] 1`] = `
       role="button"
       tabIndex={0}
     >
-      <span
-        aria-label="right"
-        className="anticon anticon-right ant-collapse-arrow"
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="right"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          style={
-            Object {
-              "msTransform": "rotate(90deg)",
-              "transform": "rotate(90deg)",
-            }
-          }
-          viewBox="64 64 896 896"
-          width="1em"
+      <div>
+        <span
+          aria-label="right"
+          className="anticon anticon-right ant-collapse-arrow"
+          role="img"
         >
-          <path
-            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="right"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            style={
+              Object {
+                "msTransform": "rotate(90deg)",
+                "transform": "rotate(90deg)",
+              }
+            }
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+            />
+          </svg>
+        </span>
+      </div>
       <span
         className="{}"
       />
@@ -496,31 +514,33 @@ exports[`Render properties.destroyInactivePanel: true - value[0] 1`] = `
       role="button"
       tabIndex={0}
     >
-      <span
-        aria-label="right"
-        className="anticon anticon-right ant-collapse-arrow"
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="right"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          style={
-            Object {
-              "msTransform": "rotate(90deg)",
-              "transform": "rotate(90deg)",
-            }
-          }
-          viewBox="64 64 896 896"
-          width="1em"
+      <div>
+        <span
+          aria-label="right"
+          className="anticon anticon-right ant-collapse-arrow"
+          role="img"
         >
-          <path
-            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="right"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            style={
+              Object {
+                "msTransform": "rotate(90deg)",
+                "transform": "rotate(90deg)",
+              }
+            }
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+            />
+          </svg>
+        </span>
+      </div>
       <span
         className="{}"
       />
@@ -556,25 +576,27 @@ exports[`Render properties.destroyInactivePanel: true - value[0] 1`] = `
       role="button"
       tabIndex={0}
     >
-      <span
-        aria-label="right"
-        className="anticon anticon-right ant-collapse-arrow"
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="right"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          viewBox="64 64 896 896"
-          width="1em"
+      <div>
+        <span
+          aria-label="right"
+          className="anticon anticon-right ant-collapse-arrow"
+          role="img"
         >
-          <path
-            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="right"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+            />
+          </svg>
+        </span>
+      </div>
       <span
         className="{}"
       />
@@ -599,34 +621,36 @@ exports[`Render properties.expandIcon: ArrowRightOutlined - value[0] 1`] = `
       role="button"
       tabIndex={0}
     >
-      <span
-        aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin ant-collapse-arrow"
-        id="properties.expandIcon: ArrowRightOutlined_expandIcon"
-        required={false}
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="loading-3-quarters"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          style={
-            Object {
-              "msTransform": "rotate(90deg)",
-              "transform": "rotate(90deg)",
-            }
-          }
-          viewBox="0 0 1024 1024"
-          width="1em"
+      <div>
+        <span
+          aria-label="loading-3-quarters"
+          basePath=""
+          className="anticon anticon-loading-3-quarters anticon-spin ant-collapse-arrow"
+          id="properties.expandIcon: ArrowRightOutlined_expandIcon"
+          required={false}
+          role="img"
         >
-          <path
-            d="M512 1024c-69.1 0-136.2-13.5-199.3-40.2C251.7 958 197 921 150 874c-47-47-84-101.7-109.8-162.7C13.5 648.2 0 581.1 0 512c0-19.9 16.1-36 36-36s36 16.1 36 36c0 59.4 11.6 117 34.6 171.3 22.2 52.4 53.9 99.5 94.3 139.9 40.4 40.4 87.5 72.2 139.9 94.3C395 940.4 452.6 952 512 952c59.4 0 117-11.6 171.3-34.6 52.4-22.2 99.5-53.9 139.9-94.3 40.4-40.4 72.2-87.5 94.3-139.9C940.4 629 952 571.4 952 512c0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.2C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3s-13.5 136.2-40.2 199.3C958 772.3 921 827 874 874c-47 47-101.8 83.9-162.7 109.7-63.1 26.8-130.2 40.3-199.3 40.3z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="loading-3-quarters"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            style={
+              Object {
+                "msTransform": "rotate(90deg)",
+                "transform": "rotate(90deg)",
+              }
+            }
+            viewBox="0 0 1024 1024"
+            width="1em"
+          >
+            <path
+              d="M512 1024c-69.1 0-136.2-13.5-199.3-40.2C251.7 958 197 921 150 874c-47-47-84-101.7-109.8-162.7C13.5 648.2 0 581.1 0 512c0-19.9 16.1-36 36-36s36 16.1 36 36c0 59.4 11.6 117 34.6 171.3 22.2 52.4 53.9 99.5 94.3 139.9 40.4 40.4 87.5 72.2 139.9 94.3C395 940.4 452.6 952 512 952c59.4 0 117-11.6 171.3-34.6 52.4-22.2 99.5-53.9 139.9-94.3 40.4-40.4 72.2-87.5 94.3-139.9C940.4 629 952 571.4 952 512c0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.2C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3s-13.5 136.2-40.2 199.3C958 772.3 921 827 874 874c-47 47-101.8 83.9-162.7 109.7-63.1 26.8-130.2 40.3-199.3 40.3z"
+            />
+          </svg>
+        </span>
+      </div>
       <span
         className="{}"
       />
@@ -662,28 +686,30 @@ exports[`Render properties.expandIcon: ArrowRightOutlined - value[0] 1`] = `
       role="button"
       tabIndex={0}
     >
-      <span
-        aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin ant-collapse-arrow"
-        id="properties.expandIcon: ArrowRightOutlined_expandIcon"
-        required={false}
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="loading-3-quarters"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          viewBox="0 0 1024 1024"
-          width="1em"
+      <div>
+        <span
+          aria-label="loading-3-quarters"
+          basePath=""
+          className="anticon anticon-loading-3-quarters anticon-spin ant-collapse-arrow"
+          id="properties.expandIcon: ArrowRightOutlined_expandIcon"
+          required={false}
+          role="img"
         >
-          <path
-            d="M512 1024c-69.1 0-136.2-13.5-199.3-40.2C251.7 958 197 921 150 874c-47-47-84-101.7-109.8-162.7C13.5 648.2 0 581.1 0 512c0-19.9 16.1-36 36-36s36 16.1 36 36c0 59.4 11.6 117 34.6 171.3 22.2 52.4 53.9 99.5 94.3 139.9 40.4 40.4 87.5 72.2 139.9 94.3C395 940.4 452.6 952 512 952c59.4 0 117-11.6 171.3-34.6 52.4-22.2 99.5-53.9 139.9-94.3 40.4-40.4 72.2-87.5 94.3-139.9C940.4 629 952 571.4 952 512c0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.2C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3s-13.5 136.2-40.2 199.3C958 772.3 921 827 874 874c-47 47-101.8 83.9-162.7 109.7-63.1 26.8-130.2 40.3-199.3 40.3z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="loading-3-quarters"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="0 0 1024 1024"
+            width="1em"
+          >
+            <path
+              d="M512 1024c-69.1 0-136.2-13.5-199.3-40.2C251.7 958 197 921 150 874c-47-47-84-101.7-109.8-162.7C13.5 648.2 0 581.1 0 512c0-19.9 16.1-36 36-36s36 16.1 36 36c0 59.4 11.6 117 34.6 171.3 22.2 52.4 53.9 99.5 94.3 139.9 40.4 40.4 87.5 72.2 139.9 94.3C395 940.4 452.6 952 512 952c59.4 0 117-11.6 171.3-34.6 52.4-22.2 99.5-53.9 139.9-94.3 40.4-40.4 72.2-87.5 94.3-139.9C940.4 629 952 571.4 952 512c0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.2C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3s-13.5 136.2-40.2 199.3C958 772.3 921 827 874 874c-47 47-101.8 83.9-162.7 109.7-63.1 26.8-130.2 40.3-199.3 40.3z"
+            />
+          </svg>
+        </span>
+      </div>
       <span
         className="{}"
       />
@@ -708,31 +734,33 @@ exports[`Render properties.expandIconPosition: right - value[0] 1`] = `
       role="button"
       tabIndex={0}
     >
-      <span
-        aria-label="right"
-        className="anticon anticon-right ant-collapse-arrow"
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="right"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          style={
-            Object {
-              "msTransform": "rotate(90deg)",
-              "transform": "rotate(90deg)",
-            }
-          }
-          viewBox="64 64 896 896"
-          width="1em"
+      <div>
+        <span
+          aria-label="right"
+          className="anticon anticon-right ant-collapse-arrow"
+          role="img"
         >
-          <path
-            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="right"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            style={
+              Object {
+                "msTransform": "rotate(90deg)",
+                "transform": "rotate(90deg)",
+              }
+            }
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+            />
+          </svg>
+        </span>
+      </div>
       <span
         className="{}"
       />
@@ -768,25 +796,27 @@ exports[`Render properties.expandIconPosition: right - value[0] 1`] = `
       role="button"
       tabIndex={0}
     >
-      <span
-        aria-label="right"
-        className="anticon anticon-right ant-collapse-arrow"
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="right"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          viewBox="64 64 896 896"
-          width="1em"
+      <div>
+        <span
+          aria-label="right"
+          className="anticon anticon-right ant-collapse-arrow"
+          role="img"
         >
-          <path
-            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="right"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+            />
+          </svg>
+        </span>
+      </div>
       <span
         className="{}"
       />
@@ -811,31 +841,33 @@ exports[`Render properties.forceRender: true - value[0] 1`] = `
       role="button"
       tabIndex={0}
     >
-      <span
-        aria-label="right"
-        className="anticon anticon-right ant-collapse-arrow"
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="right"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          style={
-            Object {
-              "msTransform": "rotate(90deg)",
-              "transform": "rotate(90deg)",
-            }
-          }
-          viewBox="64 64 896 896"
-          width="1em"
+      <div>
+        <span
+          aria-label="right"
+          className="anticon anticon-right ant-collapse-arrow"
+          role="img"
         >
-          <path
-            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="right"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            style={
+              Object {
+                "msTransform": "rotate(90deg)",
+                "transform": "rotate(90deg)",
+              }
+            }
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+            />
+          </svg>
+        </span>
+      </div>
       <span
         className="{}"
       />
@@ -871,25 +903,27 @@ exports[`Render properties.forceRender: true - value[0] 1`] = `
       role="button"
       tabIndex={0}
     >
-      <span
-        aria-label="right"
-        className="anticon anticon-right ant-collapse-arrow"
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="right"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          viewBox="64 64 896 896"
-          width="1em"
+      <div>
+        <span
+          aria-label="right"
+          className="anticon anticon-right ant-collapse-arrow"
+          role="img"
         >
-          <path
-            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="right"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+            />
+          </svg>
+        </span>
+      </div>
       <span
         className="{}"
       />
@@ -938,31 +972,33 @@ exports[`Render properties.panels - value[0] 1`] = `
       role="button"
       tabIndex={0}
     >
-      <span
-        aria-label="right"
-        className="anticon anticon-right ant-collapse-arrow"
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="right"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          style={
-            Object {
-              "msTransform": "rotate(90deg)",
-              "transform": "rotate(90deg)",
-            }
-          }
-          viewBox="64 64 896 896"
-          width="1em"
+      <div>
+        <span
+          aria-label="right"
+          className="anticon anticon-right ant-collapse-arrow"
+          role="img"
         >
-          <path
-            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="right"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            style={
+              Object {
+                "msTransform": "rotate(90deg)",
+                "transform": "rotate(90deg)",
+              }
+            }
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+            />
+          </svg>
+        </span>
+      </div>
     </div>
     <div
       className="ant-collapse-content ant-collapse-content-active"
@@ -995,25 +1031,27 @@ exports[`Render properties.panels - value[0] 1`] = `
       role="button"
       tabIndex={0}
     >
-      <span
-        aria-label="right"
-        className="anticon anticon-right ant-collapse-arrow"
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="right"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          viewBox="64 64 896 896"
-          width="1em"
+      <div>
+        <span
+          aria-label="right"
+          className="anticon anticon-right ant-collapse-arrow"
+          role="img"
         >
-          <path
-            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="right"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+            />
+          </svg>
+        </span>
+      </div>
     </div>
   </div>
 </div>
@@ -1035,31 +1073,33 @@ exports[`Render properties.panels.disabled - value[0] 1`] = `
       role="button"
       tabIndex={-1}
     >
-      <span
-        aria-label="right"
-        className="anticon anticon-right ant-collapse-arrow"
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="right"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          style={
-            Object {
-              "msTransform": "rotate(90deg)",
-              "transform": "rotate(90deg)",
-            }
-          }
-          viewBox="64 64 896 896"
-          width="1em"
+      <div>
+        <span
+          aria-label="right"
+          className="anticon anticon-right ant-collapse-arrow"
+          role="img"
         >
-          <path
-            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="right"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            style={
+              Object {
+                "msTransform": "rotate(90deg)",
+                "transform": "rotate(90deg)",
+              }
+            }
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+            />
+          </svg>
+        </span>
+      </div>
       <span
         className="{}"
       />
@@ -1095,25 +1135,27 @@ exports[`Render properties.panels.disabled - value[0] 1`] = `
       role="button"
       tabIndex={-1}
     >
-      <span
-        aria-label="right"
-        className="anticon anticon-right ant-collapse-arrow"
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="right"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          viewBox="64 64 896 896"
-          width="1em"
+      <div>
+        <span
+          aria-label="right"
+          className="anticon anticon-right ant-collapse-arrow"
+          role="img"
         >
-          <path
-            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="right"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+            />
+          </svg>
+        </span>
+      </div>
       <span
         className="{}"
       />
@@ -1138,31 +1180,33 @@ exports[`Render properties.panels.extraKey - value[0] 1`] = `
       role="tab"
       tabIndex={0}
     >
-      <span
-        aria-label="right"
-        className="anticon anticon-right ant-collapse-arrow"
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="right"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          style={
-            Object {
-              "msTransform": "rotate(90deg)",
-              "transform": "rotate(90deg)",
-            }
-          }
-          viewBox="64 64 896 896"
-          width="1em"
+      <div>
+        <span
+          aria-label="right"
+          className="anticon anticon-right ant-collapse-arrow"
+          role="img"
         >
-          <path
-            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="right"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            style={
+              Object {
+                "msTransform": "rotate(90deg)",
+                "transform": "rotate(90deg)",
+              }
+            }
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+            />
+          </svg>
+        </span>
+      </div>
       <span
         className="{}"
       />
@@ -1212,25 +1256,27 @@ exports[`Render properties.panels.extraKey - value[0] 1`] = `
       role="tab"
       tabIndex={0}
     >
-      <span
-        aria-label="right"
-        className="anticon anticon-right ant-collapse-arrow"
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="right"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          viewBox="64 64 896 896"
-          width="1em"
+      <div>
+        <span
+          aria-label="right"
+          className="anticon anticon-right ant-collapse-arrow"
+          role="img"
         >
-          <path
-            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="right"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+            />
+          </svg>
+        </span>
+      </div>
       <span
         className="{}"
       />
@@ -1269,31 +1315,33 @@ exports[`Render properties.panels.title - value[0] 1`] = `
       role="button"
       tabIndex={0}
     >
-      <span
-        aria-label="right"
-        className="anticon anticon-right ant-collapse-arrow"
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="right"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          style={
-            Object {
-              "msTransform": "rotate(90deg)",
-              "transform": "rotate(90deg)",
-            }
-          }
-          viewBox="64 64 896 896"
-          width="1em"
+      <div>
+        <span
+          aria-label="right"
+          className="anticon anticon-right ant-collapse-arrow"
+          role="img"
         >
-          <path
-            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="right"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            style={
+              Object {
+                "msTransform": "rotate(90deg)",
+                "transform": "rotate(90deg)",
+              }
+            }
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+            />
+          </svg>
+        </span>
+      </div>
       <span
         className="{}"
       />
@@ -1329,25 +1377,27 @@ exports[`Render properties.panels.title - value[0] 1`] = `
       role="button"
       tabIndex={0}
     >
-      <span
-        aria-label="right"
-        className="anticon anticon-right ant-collapse-arrow"
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="right"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          viewBox="64 64 896 896"
-          width="1em"
+      <div>
+        <span
+          aria-label="right"
+          className="anticon anticon-right ant-collapse-arrow"
+          role="img"
         >
-          <path
-            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="right"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+            />
+          </svg>
+        </span>
+      </div>
       <span
         className="{}"
       />
@@ -1431,31 +1481,33 @@ exports[`Render with html in panel title - value[0] 1`] = `
       role="button"
       tabIndex={0}
     >
-      <span
-        aria-label="right"
-        className="anticon anticon-right ant-collapse-arrow"
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="right"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          style={
-            Object {
-              "msTransform": "rotate(90deg)",
-              "transform": "rotate(90deg)",
-            }
-          }
-          viewBox="64 64 896 896"
-          width="1em"
+      <div>
+        <span
+          aria-label="right"
+          className="anticon anticon-right ant-collapse-arrow"
+          role="img"
         >
-          <path
-            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="right"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            style={
+              Object {
+                "msTransform": "rotate(90deg)",
+                "transform": "rotate(90deg)",
+              }
+            }
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+            />
+          </svg>
+        </span>
+      </div>
       <span
         className="{}"
       />
@@ -1480,25 +1532,27 @@ exports[`Render with html in panel title - value[0] 1`] = `
       role="button"
       tabIndex={0}
     >
-      <span
-        aria-label="right"
-        className="anticon anticon-right ant-collapse-arrow"
-        role="img"
-      >
-        <svg
-          aria-hidden="true"
-          data-icon="right"
-          fill="currentColor"
-          focusable="false"
-          height="1em"
-          viewBox="64 64 896 896"
-          width="1em"
+      <div>
+        <span
+          aria-label="right"
+          className="anticon anticon-right ant-collapse-arrow"
+          role="img"
         >
-          <path
-            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
-          />
-        </svg>
-      </span>
+          <svg
+            aria-hidden="true"
+            data-icon="right"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+            />
+          </svg>
+        </span>
+      </div>
       <span
         className="{}"
       />

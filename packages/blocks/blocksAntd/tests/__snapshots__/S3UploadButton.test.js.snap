@@ -30,7 +30,7 @@ exports[`Render default - value[0] 1`] = `
         type="file"
       />
       <button
-        className="ant-btn ant-btn-default {\\"style\\":[{},null]}"
+        className="ant-btn {\\"style\\":[{},null]}"
         id="default_button"
         onClick={[Function]}
         type="button"
@@ -99,7 +99,7 @@ exports[`Render properties.accept - value[0] 1`] = `
         type="file"
       />
       <button
-        className="ant-btn ant-btn-default {\\"style\\":[{},null]}"
+        className="ant-btn {\\"style\\":[{},null]}"
         id="properties.accept_button"
         onClick={[Function]}
         type="button"
@@ -231,7 +231,7 @@ exports[`Render properties.disabled - value[0] 1`] = `
         type="file"
       />
       <button
-        className="ant-btn ant-btn-default {\\"style\\":[{},null]}"
+        className="ant-btn {\\"style\\":[{},null]}"
         disabled={true}
         id="properties.disabled_button"
         onClick={[Function]}
@@ -301,7 +301,7 @@ exports[`Render properties.showUploadList - value[0] 1`] = `
         type="file"
       />
       <button
-        className="ant-btn ant-btn-default {\\"style\\":[{},null]}"
+        className="ant-btn {\\"style\\":[{},null]}"
         id="properties.showUploadList_button"
         onClick={[Function]}
         type="button"
@@ -370,7 +370,7 @@ exports[`Render properties.singleFile - value[0] 1`] = `
         type="file"
       />
       <button
-        className="ant-btn ant-btn-default {\\"style\\":[{},null]}"
+        className="ant-btn {\\"style\\":[{},null]}"
         id="properties.singleFile_button"
         onClick={[Function]}
         type="button"

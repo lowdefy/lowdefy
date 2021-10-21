@@ -930,7 +930,7 @@ exports[`Render properties.header.color - value[0] 1`] = `
                 className="ant-menu-title-content"
               >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/introduction"
                   onClick={[Function]}
                 >
@@ -980,7 +980,7 @@ exports[`Render properties.header.color - value[0] 1`] = `
                 className="ant-menu-title-content"
               >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/Alert"
                   onClick={[Function]}
                 >
@@ -1411,7 +1411,7 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
                 className="ant-menu-title-content"
               >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/introduction"
                   onClick={[Function]}
                 >
@@ -1461,7 +1461,7 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
                 className="ant-menu-title-content"
               >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/Alert"
                   onClick={[Function]}
                 >
@@ -1697,7 +1697,7 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
                 className="ant-menu-title-content"
               >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/introduction"
                   onClick={[Function]}
                 >
@@ -1747,7 +1747,7 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
                 className="ant-menu-title-content"
               >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/Alert"
                   onClick={[Function]}
                 >
@@ -1983,7 +1983,7 @@ exports[`Render properties.logo.size - value[0] 1`] = `
                 className="ant-menu-title-content"
               >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/introduction"
                   onClick={[Function]}
                 >
@@ -2033,7 +2033,7 @@ exports[`Render properties.logo.size - value[0] 1`] = `
                 className="ant-menu-title-content"
               >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/Alert"
                   onClick={[Function]}
                 >
@@ -2269,7 +2269,7 @@ exports[`Render properties.logo.src - value[0] 1`] = `
                 className="ant-menu-title-content"
               >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/introduction"
                   onClick={[Function]}
                 >
@@ -2319,7 +2319,7 @@ exports[`Render properties.logo.src - value[0] 1`] = `
                 className="ant-menu-title-content"
               >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/Alert"
                   onClick={[Function]}
                 >
@@ -2555,7 +2555,7 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
                 className="ant-menu-title-content"
               >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/introduction"
                   onClick={[Function]}
                 >
@@ -2605,7 +2605,7 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
                 className="ant-menu-title-content"
               >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/Alert"
                   onClick={[Function]}
                 >
@@ -3026,7 +3026,7 @@ exports[`Render properties.menu - value[0] 1`] = `
                 className="ant-menu-title-content"
               >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/introduction"
                   onClick={[Function]}
                 >
@@ -3076,7 +3076,7 @@ exports[`Render properties.menu - value[0] 1`] = `
                 className="ant-menu-title-content"
               >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/Alert"
                   onClick={[Function]}
                 >
@@ -3312,7 +3312,7 @@ exports[`Render properties.menu.selectedColor - value[0] 1`] = `
                 className="ant-menu-title-content"
               >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/introduction"
                   onClick={[Function]}
                 >
@@ -3362,7 +3362,7 @@ exports[`Render properties.menu.selectedColor - value[0] 1`] = `
                 className="ant-menu-title-content"
               >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/Alert"
                   onClick={[Function]}
                 >
@@ -3598,7 +3598,7 @@ exports[`Render properties.sider.color - value[0] 1`] = `
                 className="ant-menu-title-content"
               >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/introduction"
                   onClick={[Function]}
                 >
@@ -3648,7 +3648,7 @@ exports[`Render properties.sider.color - value[0] 1`] = `
                 className="ant-menu-title-content"
               >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/Alert"
                   onClick={[Function]}
                 >

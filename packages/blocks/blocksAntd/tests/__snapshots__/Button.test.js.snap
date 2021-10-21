@@ -287,7 +287,7 @@ exports[`Render properties.type: dashed - value[0] 1`] = `
 
 exports[`Render properties.type: default - value[0] 1`] = `
 <button
-  className="ant-btn ant-btn-default {\\"style\\":[{},null]}"
+  className="ant-btn {\\"style\\":[{},null]}"
   id="properties.type: default"
   onClick={[Function]}
   type="button"
