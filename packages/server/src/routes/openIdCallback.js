@@ -15,6 +15,7 @@
 */
 
 import { homePageId, openIdCallback, AuthenticationError } from '@lowdefy/api';
+import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
 async function openIdCallbackHandler(request, reply) {
   try {
@@ -28,10 +29,7 @@ async function openIdCallbackHandler(request, reply) {
     if (!code || !state) throw new AuthenticationError('Authentication error.');
 
     // Authentication an idToken cookies are set by openIdCallback function.
-    let {
-      pageId,
-      //urlQuery
-    } = await openIdCallback(request.lowdefyContext, {
+    let { pageId, urlQuery } = await openIdCallback(request.lowdefyContext, {
       code,
       state,
     });
@@ -39,10 +37,9 @@ async function openIdCallbackHandler(request, reply) {
     if (!pageId) {
       pageId = await homePageId(request.lowdefyContext);
     }
+    const templateUrlQuery = type.isNone(urlQuery) ? '' : `?${urlQueryFn.stringify(urlQuery)}`;
 
-    // TODO: Need to set urlQuery;
-
-    reply.redirect(`/${pageId}`);
+    reply.redirect(`/${pageId}${templateUrlQuery}`);
   } catch (error) {
     console.log(error);
     console.log(error.message);

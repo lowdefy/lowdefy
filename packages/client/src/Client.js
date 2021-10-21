@@ -18,16 +18,14 @@ import React, { Suspense } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import { ErrorBoundary } from '@lowdefy/block-tools';
-import { get } from '@lowdefy/helpers';
 
 import createLogin from './auth/createLogin';
 import createLogout from './auth/createLogout';
 import DisplayMessage from './page/DisplayMessage';
-import Page from './page/Page';
-import useRootData from './swr/useRootData';
-import parseJwt from './auth/parseJwt';
-
 import getCookie from './utils/getCookie';
+import Page from './page/Page';
+import parseJwt from './auth/parseJwt';
+import useRootData from './swr/useRootData';
 
 const lowdefy = {
   basePath: window.lowdefy.basePath,
@@ -57,15 +55,18 @@ const RootData = ({ children, lowdefy }) => {
 
   lowdefy.homePageId = data.homePageId;
   lowdefy.menus = data.menus;
-  // Make a copy to avoid immutable error when calling setGlobal.
-  lowdefy.lowdefyGlobal = JSON.parse(JSON.stringify(get(data, 'lowdefyGlobal', { default: {} })));
+  // TODO We used to make a copy to avoid immutable error when calling setGlobal using Apollo Client.
+  // Check if still needed
+  // lowdefy.lowdefyGlobal = JSON.parse(JSON.stringify(get(data, 'lowdefyGlobal', { default: {} })));
+  lowdefy.lowdefyGlobal = data.lowdefyGlobal;
 
   if (data.authenticated) {
-    const idToken = getCookie('idToken');
+    const idToken = getCookie(lowdefy, { cookieName: 'idToken' });
 
     if (!idToken) {
-      // This is async, so maybe we need a useEffect?
       lowdefy.auth.logout();
+      // Throw promise to suspend till user is logged out.
+      throw new Promise(() => {});
     }
     // eslint-disable-next-line no-unused-vars
     const { iat, exp, aud, iss, ...user } = parseJwt(idToken);

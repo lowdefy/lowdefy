@@ -24,12 +24,14 @@ import unsetAuthorizationCookie from './unsetAuthorizationCookie';
 
 function parseLogoutUrlNunjucks(context, { openIdConfig, idToken }) {
   const template = nunjucksFunction(openIdConfig.logoutRedirectUri);
-  return template({
-    id_token_hint: idToken,
-    client_id: openIdConfig.clientId,
-    openid_domain: openIdConfig.domain,
-    host: encodeURIComponent(`${context.protocol}://${context.host}`),
-  });
+  return {
+    openIdLogoutUrl: template({
+      id_token_hint: idToken,
+      client_id: openIdConfig.clientId,
+      openid_domain: openIdConfig.domain,
+      host: encodeURIComponent(`${context.protocol}://${context.host}`),
+    }),
+  };
 }
 
 function openIdLogoutUrl(context, { idToken }) {
@@ -37,7 +39,7 @@ function openIdLogoutUrl(context, { idToken }) {
     unsetAuthorizationCookie(context);
 
     const openIdConfig = getOpenIdConfig(context);
-    if (!type.isString(openIdConfig.logoutRedirectUri)) return null;
+    if (!type.isString(openIdConfig.logoutRedirectUri)) return { openIdLogoutUrl: null };
 
     return parseLogoutUrlNunjucks(context, { openIdConfig, idToken });
   } catch (error) {

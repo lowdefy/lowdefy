@@ -18,7 +18,6 @@ import request from '../utils/request';
 
 function createLogout(lowdefy) {
   async function logout() {
-    console.log('logout');
     lowdefy.user = {};
     const idToken = lowdefy.localStorage.getItem('idToken');
     lowdefy.localStorage.setItem(`idToken`, '');
@@ -30,8 +29,6 @@ function createLogout(lowdefy) {
         idToken,
       },
     });
-
-    console.log('data', data);
 
     lowdefy.window.location.href = data.openIdLogoutUrl || lowdefy.window.location.origin;
   }

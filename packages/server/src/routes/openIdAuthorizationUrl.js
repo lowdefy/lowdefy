@@ -18,6 +18,7 @@ import { openIdAuthorizationUrl } from '@lowdefy/api';
 
 async function openIdAuthorizationUrlHandler(request, reply) {
   const { authUrlQueryParams, pageId, urlQuery } = request.body;
+
   const data = await openIdAuthorizationUrl(request.lowdefyContext, {
     authUrlQueryParams,
     pageId,

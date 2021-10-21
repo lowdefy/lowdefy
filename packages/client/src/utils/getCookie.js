@@ -14,9 +14,8 @@
   limitations under the License.
 */
 
-function getCookie(name) {
-  // TODO: Should we use document from lowdefy here (for testing)?
-  const match = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+function getCookie({ document }, { cookieName }) {
+  const match = document.cookie.match('(^|;)\\s*' + cookieName + '\\s*=\\s*([^;]+)');
   if (!match) return null;
   return match.pop();
 }

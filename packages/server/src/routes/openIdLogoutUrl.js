@@ -18,10 +18,10 @@ import { openIdLogoutUrl } from '@lowdefy/api';
 
 async function openIdLogoutUrlHandler(request, reply) {
   const { idToken } = request.body;
-  const page = await openIdLogoutUrl(request.lowdefyContext, {
+  const data = await openIdLogoutUrl(request.lowdefyContext, {
     idToken,
   });
-  reply.send(page);
+  reply.send(data);
 }
 
 export default openIdLogoutUrlHandler;
