@@ -2,9 +2,13 @@
 
 exports[`Mock render - default - value[0] - default 1`] = `Array []`;
 
+exports[`Mock render - properties.bodyStyle: background: green - value[0] - default 1`] = `Array []`;
+
 exports[`Mock render - properties.cancelText: Cancel text - value[0] - default 1`] = `Array []`;
 
 exports[`Mock render - properties.centered: true - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - properties.closable: false - value[0] - default 1`] = `Array []`;
 
 exports[`Mock render - properties.content - value[0] - default 1`] = `Array []`;
 
@@ -13,6 +17,8 @@ exports[`Mock render - properties.icon: AndroidFilled - value[0] - default 1`] =
 exports[`Mock render - properties.mask: false - value[0] - default 1`] = `Array []`;
 
 exports[`Mock render - properties.maskClosable: true - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - properties.modalStyle: background: yellow - value[0] - default 1`] = `Array []`;
 
 exports[`Mock render - properties.okText: Ok text - value[0] - default 1`] = `Array []`;
 
