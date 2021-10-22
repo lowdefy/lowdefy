@@ -14,13 +14,15 @@
   limitations under the License.
 */
 
+import getCookie from '../utils/getCookie';
 import request from '../utils/request';
 
 function createLogout(lowdefy) {
   async function logout() {
     lowdefy.user = {};
-    const idToken = lowdefy.localStorage.getItem('idToken');
-    lowdefy.localStorage.setItem(`idToken`, '');
+
+    // TODO: What if idToken is null?
+    const idToken = getCookie(lowdefy, { cookieName: 'idToken' });
 
     const data = await request({
       url: '/lowdefy/auth/openIdLogoutUrl',

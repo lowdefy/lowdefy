@@ -23,7 +23,6 @@ async function createContext({ configDirectory, getSecrets }) {
   const [config, secrets] = await Promise.all([readConfigFile('config.json'), getSecrets()]);
   function contextFn({ headers, host, protocol, setHeader }) {
     const context = {
-      authorize: () => true,
       config,
       headers,
       host,

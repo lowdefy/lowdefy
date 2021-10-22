@@ -16,8 +16,7 @@
 
 async function pageConfig({ authorize, readConfigFile }, { pageId }) {
   const pageConfig = await readConfigFile(`pages/${pageId}/${pageId}.json`);
-  if (!pageConfig) return null;
-  if (authorize(pageConfig)) return pageConfig;
+  if (pageConfig && authorize(pageConfig)) return pageConfig;
   return null;
 }
 

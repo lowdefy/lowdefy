@@ -18,6 +18,8 @@ import getHomePageId from '../rootConfig/getHomePageId';
 import getMenus from '../rootConfig/menus/getMenus';
 
 async function homePageId(context) {
+  // TODO: We can optimise here as we don't need to read menus if homepageId is configured
+  // but not sure if it is worth the added complexity
   const menus = await getMenus(context);
   return getHomePageId(context, { menus });
 }
