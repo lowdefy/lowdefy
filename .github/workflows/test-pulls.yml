@@ -46,7 +46,7 @@ jobs:
       - name: yarn install
         run: yarn install
       - name: Build packages
-        run: yarn build --ignore='@lowdefy/api' --ignore='@lowdefy/build' --ignore='@lowdefy/cli' --ignore='@lowdefy/client' --ignore='@lowdefy/engine' --ignore='@lowdefy/graphql*' --ignore='@lowdefy/layout' --ignore='@lowdefy/node-utils' --ignore='@lowdefy/renderer'
+        run: yarn build --ignore='@lowdefy/api' --ignore='@lowdefy/build' --ignore='@lowdefy/cli' --ignore='@lowdefy/client' --ignore='@lowdefy/engine' --ignore='@lowdefy/graphql*' --ignore='@lowdefy/layout' --ignore='@lowdefy/node-utils' --ignore='@lowdefy/operators' --ignore='@lowdefy/renderer' --ignore='@lowdefy/server*'
 
       # format tests don't pass on node 12 since icu is missing and tests don't work with locales
       - name: Test packages
