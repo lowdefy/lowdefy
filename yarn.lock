@@ -3236,7 +3236,7 @@ __metadata:
     jest: 26.6.3
     jest-serializer-html: 7.0.0
     js-yaml: 4.1.0
-    less: 3.13.0
+    less: 4.1.2
     less-loader: 10.2.0
     moment: 2.29.1
     rc-animate: 3.1.1
@@ -3319,7 +3319,7 @@ __metadata:
     jest: 26.6.3
     jest-serializer-html: 7.0.0
     js-yaml: 4.1.0
-    less: 3.13.0
+    less: 4.1.2
     less-loader: 10.2.0
     react: 17.0.2
     react-color: 2.19.3
@@ -3622,7 +3622,7 @@ __metadata:
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
     js-yaml: 4.1.0
-    less: 3.13.0
+    less: 4.1.2
     less-loader: 10.2.0
     path-browserify: 1.0.1
     process: 0.11.10
@@ -8191,6 +8191,15 @@ __metadata:
   version: 0.4.1
   resolution: "cookie@npm:0.4.1"
   checksum: bd7c47f5d94ab70ccdfe8210cde7d725880d2fcda06d8e375afbdd82de0c8d3b73541996e9ce57d35f67f672c4ee6d60208adec06b3c5fc94cebb85196084cf8
+  languageName: node
+  linkType: hard
+
+"copy-anything@npm:^2.0.1":
+  version: 2.0.3
+  resolution: "copy-anything@npm:2.0.3"
+  dependencies:
+    is-what: ^3.12.0
+  checksum: 50f6423fa7e346416c18658fd253bfbe8783ff51c4f244a3c18c39693369cc7cb84cc9e4a4e109c0ab2f81e44eb345ce9ca8f0fb4b48f4aae3a396423912d60f
   languageName: node
   linkType: hard
 
@@ -12796,6 +12805,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"is-what@npm:^3.12.0":
+  version: 3.14.1
+  resolution: "is-what@npm:3.14.1"
+  checksum: a9a6ce92d33799f1ae0916c7afb6f8128a23ce9d28bd69d9ec3ec88910e7a1f68432e6236c3c8a4d544cf0b864675e5d828437efde60ee0cf8102061d395c1df
+  languageName: node
+  linkType: hard
+
 "is-windows@npm:^1.0.2":
   version: 1.0.2
   resolution: "is-windows@npm:1.0.2"
@@ -13994,18 +14010,20 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"less@npm:3.13.0":
-  version: 3.13.0
-  resolution: "less@npm:3.13.0"
+"less@npm:4.1.2":
+  version: 4.1.2
+  resolution: "less@npm:4.1.2"
   dependencies:
+    copy-anything: ^2.0.1
     errno: ^0.1.1
     graceful-fs: ^4.1.2
     image-size: ~0.5.0
     make-dir: ^2.1.0
     mime: ^1.4.1
-    native-request: ^1.0.5
+    needle: ^2.5.2
+    parse-node-version: ^1.0.1
     source-map: ~0.6.0
-    tslib: ^1.10.0
+    tslib: ^2.3.0
   dependenciesMeta:
     errno:
       optional: true
@@ -14017,13 +14035,13 @@ fsevents@^1.2.7:
       optional: true
     mime:
       optional: true
-    native-request:
+    needle:
       optional: true
     source-map:
       optional: true
   bin:
-    lessc: ./bin/lessc
-  checksum: fa479570a5cb963f12ae3ac204cc035c5a01bfc53eae0c3798941c5ecdfdafdce3c803cc6befa1a14b3daab03a9e3d4491ccdd971a7b99643764f564b988788e
+    lessc: bin/lessc
+  checksum: d3cbc3e18a8313e44f7feaf5fce1728b25911e116a8b9f7206e1f7bf5660902ddaf470b58e68a52288488c8a337433b7de686a3d2405ce49155c2280191983de
   languageName: node
   linkType: hard
 
@@ -15434,13 +15452,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"native-request@npm:^1.0.5":
-  version: 1.1.0
-  resolution: "native-request@npm:1.1.0"
-  checksum: ab96f79c7a5e726a88eaa90c700d4d844af884e68d9784d90d42134c12224105453e4db82b5985624b458e4a304d5f664c1be760e88b63f7f247001f4e755603
-  languageName: node
-  linkType: hard
-
 "natural-compare@npm:^1.4.0":
   version: 1.4.0
   resolution: "natural-compare@npm:1.4.0"
@@ -15465,7 +15476,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"needle@npm:^2.2.1":
+"needle@npm:^2.2.1, needle@npm:^2.5.2":
   version: 2.9.1
   resolution: "needle@npm:2.9.1"
   dependencies:
@@ -16646,6 +16657,13 @@ fsevents@^1.2.7:
     json-parse-even-better-errors: ^2.3.0
     lines-and-columns: ^1.1.6
   checksum: 62085b17d64da57f40f6afc2ac1f4d95def18c4323577e1eced571db75d9ab59b297d1d10582920f84b15985cbfc6b6d450ccbf317644cfa176f3ed982ad87e2
+  languageName: node
+  linkType: hard
+
+"parse-node-version@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "parse-node-version@npm:1.0.1"
+  checksum: c192393b6a978092c1ef8df2c42c0a02e4534b96543e23d335f1b9b5b913ac75473d18fe6050b58d6995c57fb383ee71a5cb8397e363caaf38a6df8215cc52fd
   languageName: node
   linkType: hard
 
@@ -20993,7 +21011,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.0.0, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.2.0":
+"tslib@npm:^2.0.0, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.2.0, tslib@npm:^2.3.0":
   version: 2.3.1
   resolution: "tslib@npm:2.3.1"
   checksum: de17a98d4614481f7fcb5cd53ffc1aaf8654313be0291e1bfaee4b4bb31a20494b7d218ff2e15017883e8ea9626599b3b0e0229c18383ba9dce89da2adf15cb9
