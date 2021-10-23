@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
+import { runRenderTests } from '@lowdefy/block-dev';
+
 import examples from '../../demo/examples/Skeleton.yaml';
-import runRenderTests from '../runRenderTests';
 import Skeleton from './Skeleton';
 
 runRenderTests({ examples, Block: Skeleton, meta: {} });
