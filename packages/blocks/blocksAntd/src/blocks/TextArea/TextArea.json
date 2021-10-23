@@ -47,6 +47,11 @@
           ],
           "description": "autoSize can either be a boolean value, or an object with minimum and maximum rows.  Defining autoSize disables any prefix or suffix defined."
         },
+        "bordered": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether or not the textarea has a border style."
+        },
         "disabled": {
           "type": "boolean",
           "default": false,
@@ -118,6 +123,10 @@
             }
           }
         },
+        "maxLength": {
+          "type": "integer",
+          "description": "The max number of input characters."
+        },
         "placeholder": {
           "type": "string",
           "description": "Placeholder text inside the block before user types input."
@@ -126,6 +135,20 @@
           "type": "integer",
           "minimum": 1,
           "description": "Number of rows in the block, should be greater or equal to 1. Defining rows disables any prefix."
+        },
+        "size": {
+          "type": "string",
+          "enum": ["small", "middle", "large"],
+          "default": "middle",
+          "description": "Size of the block."
+        },
+        "showCount": {
+          "type": ["boolean", "object"],
+          "default": false,
+          "description": "Show input character count.",
+          "docs": {
+            "displayType": "boolean"
+          }
         },
         "title": {
           "type": "string",

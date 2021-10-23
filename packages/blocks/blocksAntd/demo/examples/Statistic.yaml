@@ -8,6 +8,12 @@
   type: Statistic
   properties:
     value: 3.45
+- id: 'properties.loading: true'
+  type: Statistic
+  properties:
+    title: Statistic title
+    value: 3.45
+    loading: true
 - id: "properties.value: '3.45' as string"
   type: Statistic
   properties:

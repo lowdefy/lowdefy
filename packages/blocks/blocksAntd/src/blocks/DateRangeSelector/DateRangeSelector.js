@@ -56,19 +56,22 @@ const DateRangeSelector = ({
             <div id={`${blockId}_popup`} />
             <RangePicker
               id={`${blockId}_input`}
+              allowClear={properties.allowClear !== false}
               autoFocus={properties.autoFocus}
-              getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
+              bordered={properties.bordered}
               className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
               disabled={properties.disabled}
-              allowClear={properties.allowClear !== false}
+              disabledDate={disabledDate(properties.disabledDates)}
+              format={properties.format || 'YYYY-MM-DD'}
+              getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
+              separator={properties.separator || '~'}
+              size={properties.size}
               placeholder={
                 (type.isArray(properties.placeholder) && [
                   properties.placeholder[0] || 'Start Date',
                   properties.placeholder[1] || 'End Date',
                 ]) || ['Start Date', 'End Date']
               }
-              format={properties.format || 'YYYY-MM-DD'}
-              size={properties.size}
               suffixIcon={
                 properties.suffixIcon && (
                   <Icon
@@ -78,8 +81,6 @@ const DateRangeSelector = ({
                   />
                 )
               }
-              separator={properties.separator || '~'}
-              disabledDate={disabledDate(properties.disabledDates)}
               onChange={(newVal) => {
                 methods.setValue(
                   !newVal

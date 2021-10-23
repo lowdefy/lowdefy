@@ -6,7 +6,7 @@ exports[`Render default - value[0] 1`] = `
   id="default"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -60,7 +60,7 @@ exports[`Render properties.code: true - value[0] 1`] = `
   id="properties.code: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -116,7 +116,7 @@ exports[`Render properties.copyable: icon - value[0] 1`] = `
   id="properties.copyable: icon"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -184,7 +184,7 @@ exports[`Render properties.copyable: icon - value[0] 1`] = `
     <span
       aria-label="loading-3-quarters"
       basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {}"
       id="properties.copyable: icon_copyable_icon"
       required={false}
       role="img"
@@ -213,7 +213,7 @@ exports[`Render properties.copyable: icon: [] - value[0] 1`] = `
   id="properties.copyable: icon: []"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -281,30 +281,8 @@ exports[`Render properties.copyable: icon: [] - value[0] 1`] = `
     <span
       aria-label="loading-3-quarters"
       basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {}"
       id="properties.copyable: icon: []_copyable_before_icon"
-      required={false}
-      role="img"
-    >
-      <svg
-        aria-hidden="true"
-        data-icon="loading-3-quarters"
-        fill="currentColor"
-        focusable="false"
-        height="1em"
-        viewBox="0 0 1024 1024"
-        width="1em"
-      >
-        <path
-          d="M512 1024c-69.1 0-136.2-13.5-199.3-40.2C251.7 958 197 921 150 874c-47-47-84-101.7-109.8-162.7C13.5 648.2 0 581.1 0 512c0-19.9 16.1-36 36-36s36 16.1 36 36c0 59.4 11.6 117 34.6 171.3 22.2 52.4 53.9 99.5 94.3 139.9 40.4 40.4 87.5 72.2 139.9 94.3C395 940.4 452.6 952 512 952c59.4 0 117-11.6 171.3-34.6 52.4-22.2 99.5-53.9 139.9-94.3 40.4-40.4 72.2-87.5 94.3-139.9C940.4 629 952 571.4 952 512c0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.2C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3s-13.5 136.2-40.2 199.3C958 772.3 921 827 874 874c-47 47-101.8 83.9-162.7 109.7-63.1 26.8-130.2 40.3-199.3 40.3z"
-        />
-      </svg>
-    </span>
-    <span
-      aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
-      id="properties.copyable: icon: []_copyable_after_icon"
       required={false}
       role="img"
     >
@@ -332,7 +310,7 @@ exports[`Render properties.copyable: text: one - value[0] 1`] = `
   id="properties.copyable: text: one"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -426,7 +404,7 @@ exports[`Render properties.copyable: tooltips: [] - value[0] 1`] = `
   id="properties.copyable: tooltips: []"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -520,7 +498,7 @@ exports[`Render properties.copyable: true - value[0] 1`] = `
   id="properties.copyable: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -614,7 +592,7 @@ exports[`Render properties.delete: true - value[0] 1`] = `
   id="properties.delete: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -666,11 +644,11 @@ exports[`Render properties.delete: true - value[0] 1`] = `
 
 exports[`Render properties.disabled: true - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-disabled"
+  className="ant-typography ant-typography-disabled {}"
   id="properties.disabled: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -724,7 +702,7 @@ exports[`Render properties.editable.icon - value[0] 1`] = `
   id="properties.editable.icon"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -750,21 +728,24 @@ exports[`Render properties.editable.icon - value[0] 1`] = `
     tabIndex={0}
   >
     <span
-      aria-label="edit"
-      className="anticon anticon-edit"
-      role="button"
+      aria-label="loading-3-quarters"
+      basePath=""
+      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      id="properties.editable.icon_editable_icon"
+      required={false}
+      role="img"
     >
       <svg
         aria-hidden="true"
-        data-icon="edit"
+        data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"
         height="1em"
-        viewBox="64 64 896 896"
+        viewBox="0 0 1024 1024"
         width="1em"
       >
         <path
-          d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"
+          d="M512 1024c-69.1 0-136.2-13.5-199.3-40.2C251.7 958 197 921 150 874c-47-47-84-101.7-109.8-162.7C13.5 648.2 0 581.1 0 512c0-19.9 16.1-36 36-36s36 16.1 36 36c0 59.4 11.6 117 34.6 171.3 22.2 52.4 53.9 99.5 94.3 139.9 40.4 40.4 87.5 72.2 139.9 94.3C395 940.4 452.6 952 512 952c59.4 0 117-11.6 171.3-34.6 52.4-22.2 99.5-53.9 139.9-94.3 40.4-40.4 72.2-87.5 94.3-139.9C940.4 629 952 571.4 952 512c0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.2C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3s-13.5 136.2-40.2 199.3C958 772.3 921 827 874 874c-47 47-101.8 83.9-162.7 109.7-63.1 26.8-130.2 40.3-199.3 40.3z"
         />
       </svg>
     </span>
@@ -778,7 +759,7 @@ exports[`Render properties.editable.maxLength: 10 - value[0] 1`] = `
   id="properties.editable.maxLength: 10"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -832,13 +813,13 @@ exports[`Render properties.editable.tooltip - value[0] 1`] = `
   id="properties.editable.tooltip"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
   
   <div
-    aria-label="Edit"
+    aria-label="Change the value"
     className="ant-typography-edit"
     onClick={[Function]}
     onKeyDown={[Function]}
@@ -886,7 +867,7 @@ exports[`Render properties.editable: false - value[0] 1`] = `
   id="properties.editable: false"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -900,7 +881,7 @@ exports[`Render properties.editable: true - value[0] 1`] = `
   id="properties.editable: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -950,11 +931,11 @@ exports[`Render properties.editable: true - value[0] 1`] = `
 
 exports[`Render properties.ellipsis: expandable, rows - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-ellipsis"
+  className="ant-typography ant-typography-ellipsis {}"
   id="properties.ellipsis: expandable, rows"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -1004,11 +985,11 @@ exports[`Render properties.ellipsis: expandable, rows - value[0] 1`] = `
 
 exports[`Render properties.ellipsis: rows - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-ellipsis"
+  className="ant-typography ant-typography-ellipsis {}"
   id="properties.ellipsis: rows"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -1058,11 +1039,11 @@ exports[`Render properties.ellipsis: rows - value[0] 1`] = `
 
 exports[`Render properties.ellipsis: rows, suffix - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-ellipsis"
+  className="ant-typography ant-typography-ellipsis {}"
   id="properties.ellipsis: rows, suffix"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -1113,15 +1094,71 @@ exports[`Render properties.ellipsis: rows, suffix - value[0] 1`] = `
 
 exports[`Render properties.ellipsis: true - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-ellipsis"
+  className="ant-typography ant-typography-ellipsis ant-typography-single-line {}"
   id="properties.ellipsis: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
   
+  <div
+    aria-label="Edit"
+    className="ant-typography-edit"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    role="button"
+    style={
+      Object {
+        "background": "transparent",
+        "border": 0,
+        "display": "inline-block",
+        "lineHeight": "inherit",
+        "padding": 0,
+      }
+    }
+    tabIndex={0}
+  >
+    <span
+      aria-label="edit"
+      className="anticon anticon-edit"
+      role="button"
+    >
+      <svg
+        aria-hidden="true"
+        data-icon="edit"
+        fill="currentColor"
+        focusable="false"
+        height="1em"
+        viewBox="64 64 896 896"
+        width="1em"
+      >
+        <path
+          d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"
+        />
+      </svg>
+    </span>
+  </div>
+</div>
+`;
+
+exports[`Render properties.italic: true - value[0] 1`] = `
+<div
+  className="ant-typography {}"
+  id="properties.italic: true"
+  style={
+    Object {
+      "WebkitLineClamp": undefined,
+    }
+  }
+>
+  <i>
+    
+  </i>
   <div
     aria-label="Edit"
     className="ant-typography-edit"
@@ -1171,7 +1208,7 @@ exports[`Render properties.mark: true - value[0] 1`] = `
   id="properties.mark: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -1227,7 +1264,7 @@ exports[`Render properties.strong: true - value[0] 1`] = `
   id="properties.strong: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -1279,11 +1316,11 @@ exports[`Render properties.strong: true - value[0] 1`] = `
 
 exports[`Render properties.type: danger - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-danger"
+  className="ant-typography ant-typography-danger {}"
   id="properties.type: danger"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -1333,11 +1370,11 @@ exports[`Render properties.type: danger - value[0] 1`] = `
 
 exports[`Render properties.type: secondary - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-secondary"
+  className="ant-typography ant-typography-secondary {}"
   id="properties.type: secondary"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -1387,11 +1424,11 @@ exports[`Render properties.type: secondary - value[0] 1`] = `
 
 exports[`Render properties.type: warning - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-warning"
+  className="ant-typography ant-typography-warning {}"
   id="properties.type: warning"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -1445,7 +1482,7 @@ exports[`Render properties.underline: true - value[0] 1`] = `
   id="properties.underline: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -1501,7 +1538,7 @@ exports[`Render required = true default - value[0] 1`] = `
   id="default"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -1555,7 +1592,7 @@ exports[`Render required = true properties.code: true - value[0] 1`] = `
   id="properties.code: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -1611,7 +1648,7 @@ exports[`Render required = true properties.copyable: icon - value[0] 1`] = `
   id="properties.copyable: icon"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -1679,7 +1716,7 @@ exports[`Render required = true properties.copyable: icon - value[0] 1`] = `
     <span
       aria-label="loading-3-quarters"
       basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {}"
       id="properties.copyable: icon_copyable_icon"
       required={false}
       role="img"
@@ -1708,7 +1745,7 @@ exports[`Render required = true properties.copyable: icon: [] - value[0] 1`] = `
   id="properties.copyable: icon: []"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -1776,30 +1813,8 @@ exports[`Render required = true properties.copyable: icon: [] - value[0] 1`] = `
     <span
       aria-label="loading-3-quarters"
       basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {}"
       id="properties.copyable: icon: []_copyable_before_icon"
-      required={false}
-      role="img"
-    >
-      <svg
-        aria-hidden="true"
-        data-icon="loading-3-quarters"
-        fill="currentColor"
-        focusable="false"
-        height="1em"
-        viewBox="0 0 1024 1024"
-        width="1em"
-      >
-        <path
-          d="M512 1024c-69.1 0-136.2-13.5-199.3-40.2C251.7 958 197 921 150 874c-47-47-84-101.7-109.8-162.7C13.5 648.2 0 581.1 0 512c0-19.9 16.1-36 36-36s36 16.1 36 36c0 59.4 11.6 117 34.6 171.3 22.2 52.4 53.9 99.5 94.3 139.9 40.4 40.4 87.5 72.2 139.9 94.3C395 940.4 452.6 952 512 952c59.4 0 117-11.6 171.3-34.6 52.4-22.2 99.5-53.9 139.9-94.3 40.4-40.4 72.2-87.5 94.3-139.9C940.4 629 952 571.4 952 512c0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.2C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3s-13.5 136.2-40.2 199.3C958 772.3 921 827 874 874c-47 47-101.8 83.9-162.7 109.7-63.1 26.8-130.2 40.3-199.3 40.3z"
-        />
-      </svg>
-    </span>
-    <span
-      aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
-      id="properties.copyable: icon: []_copyable_after_icon"
       required={false}
       role="img"
     >
@@ -1827,7 +1842,7 @@ exports[`Render required = true properties.copyable: text: one - value[0] 1`] = 
   id="properties.copyable: text: one"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -1921,7 +1936,7 @@ exports[`Render required = true properties.copyable: tooltips: [] - value[0] 1`]
   id="properties.copyable: tooltips: []"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -2015,7 +2030,7 @@ exports[`Render required = true properties.copyable: true - value[0] 1`] = `
   id="properties.copyable: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -2109,7 +2124,7 @@ exports[`Render required = true properties.delete: true - value[0] 1`] = `
   id="properties.delete: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -2161,11 +2176,11 @@ exports[`Render required = true properties.delete: true - value[0] 1`] = `
 
 exports[`Render required = true properties.disabled: true - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-disabled"
+  className="ant-typography ant-typography-disabled {}"
   id="properties.disabled: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -2219,7 +2234,7 @@ exports[`Render required = true properties.editable.icon - value[0] 1`] = `
   id="properties.editable.icon"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -2245,21 +2260,24 @@ exports[`Render required = true properties.editable.icon - value[0] 1`] = `
     tabIndex={0}
   >
     <span
-      aria-label="edit"
-      className="anticon anticon-edit"
-      role="button"
+      aria-label="loading-3-quarters"
+      basePath=""
+      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      id="properties.editable.icon_editable_icon"
+      required={false}
+      role="img"
     >
       <svg
         aria-hidden="true"
-        data-icon="edit"
+        data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"
         height="1em"
-        viewBox="64 64 896 896"
+        viewBox="0 0 1024 1024"
         width="1em"
       >
         <path
-          d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"
+          d="M512 1024c-69.1 0-136.2-13.5-199.3-40.2C251.7 958 197 921 150 874c-47-47-84-101.7-109.8-162.7C13.5 648.2 0 581.1 0 512c0-19.9 16.1-36 36-36s36 16.1 36 36c0 59.4 11.6 117 34.6 171.3 22.2 52.4 53.9 99.5 94.3 139.9 40.4 40.4 87.5 72.2 139.9 94.3C395 940.4 452.6 952 512 952c59.4 0 117-11.6 171.3-34.6 52.4-22.2 99.5-53.9 139.9-94.3 40.4-40.4 72.2-87.5 94.3-139.9C940.4 629 952 571.4 952 512c0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.2C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3s-13.5 136.2-40.2 199.3C958 772.3 921 827 874 874c-47 47-101.8 83.9-162.7 109.7-63.1 26.8-130.2 40.3-199.3 40.3z"
         />
       </svg>
     </span>
@@ -2273,7 +2291,7 @@ exports[`Render required = true properties.editable.maxLength: 10 - value[0] 1`]
   id="properties.editable.maxLength: 10"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -2327,13 +2345,13 @@ exports[`Render required = true properties.editable.tooltip - value[0] 1`] = `
   id="properties.editable.tooltip"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
   
   <div
-    aria-label="Edit"
+    aria-label="Change the value"
     className="ant-typography-edit"
     onClick={[Function]}
     onKeyDown={[Function]}
@@ -2381,7 +2399,7 @@ exports[`Render required = true properties.editable: false - value[0] 1`] = `
   id="properties.editable: false"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -2395,7 +2413,7 @@ exports[`Render required = true properties.editable: true - value[0] 1`] = `
   id="properties.editable: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -2445,11 +2463,11 @@ exports[`Render required = true properties.editable: true - value[0] 1`] = `
 
 exports[`Render required = true properties.ellipsis: expandable, rows - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-ellipsis"
+  className="ant-typography ant-typography-ellipsis {}"
   id="properties.ellipsis: expandable, rows"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -2499,11 +2517,11 @@ exports[`Render required = true properties.ellipsis: expandable, rows - value[0]
 
 exports[`Render required = true properties.ellipsis: rows - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-ellipsis"
+  className="ant-typography ant-typography-ellipsis {}"
   id="properties.ellipsis: rows"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -2553,11 +2571,11 @@ exports[`Render required = true properties.ellipsis: rows - value[0] 1`] = `
 
 exports[`Render required = true properties.ellipsis: rows, suffix - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-ellipsis"
+  className="ant-typography ant-typography-ellipsis {}"
   id="properties.ellipsis: rows, suffix"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -2608,15 +2626,71 @@ exports[`Render required = true properties.ellipsis: rows, suffix - value[0] 1`]
 
 exports[`Render required = true properties.ellipsis: true - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-ellipsis"
+  className="ant-typography ant-typography-ellipsis ant-typography-single-line {}"
   id="properties.ellipsis: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
   
+  <div
+    aria-label="Edit"
+    className="ant-typography-edit"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    role="button"
+    style={
+      Object {
+        "background": "transparent",
+        "border": 0,
+        "display": "inline-block",
+        "lineHeight": "inherit",
+        "padding": 0,
+      }
+    }
+    tabIndex={0}
+  >
+    <span
+      aria-label="edit"
+      className="anticon anticon-edit"
+      role="button"
+    >
+      <svg
+        aria-hidden="true"
+        data-icon="edit"
+        fill="currentColor"
+        focusable="false"
+        height="1em"
+        viewBox="64 64 896 896"
+        width="1em"
+      >
+        <path
+          d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"
+        />
+      </svg>
+    </span>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.italic: true - value[0] 1`] = `
+<div
+  className="ant-typography {}"
+  id="properties.italic: true"
+  style={
+    Object {
+      "WebkitLineClamp": undefined,
+    }
+  }
+>
+  <i>
+    
+  </i>
   <div
     aria-label="Edit"
     className="ant-typography-edit"
@@ -2666,7 +2740,7 @@ exports[`Render required = true properties.mark: true - value[0] 1`] = `
   id="properties.mark: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -2722,7 +2796,7 @@ exports[`Render required = true properties.strong: true - value[0] 1`] = `
   id="properties.strong: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -2774,11 +2848,11 @@ exports[`Render required = true properties.strong: true - value[0] 1`] = `
 
 exports[`Render required = true properties.type: danger - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-danger"
+  className="ant-typography ant-typography-danger {}"
   id="properties.type: danger"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -2828,11 +2902,11 @@ exports[`Render required = true properties.type: danger - value[0] 1`] = `
 
 exports[`Render required = true properties.type: secondary - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-secondary"
+  className="ant-typography ant-typography-secondary {}"
   id="properties.type: secondary"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -2882,11 +2956,11 @@ exports[`Render required = true properties.type: secondary - value[0] 1`] = `
 
 exports[`Render required = true properties.type: warning - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-warning"
+  className="ant-typography ant-typography-warning {}"
   id="properties.type: warning"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -2940,7 +3014,7 @@ exports[`Render required = true properties.underline: true - value[0] 1`] = `
   id="properties.underline: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -2996,7 +3070,7 @@ exports[`Render validation.status = error default - value[0] 1`] = `
   id="default"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -3050,7 +3124,7 @@ exports[`Render validation.status = error properties.code: true - value[0] 1`] =
   id="properties.code: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -3106,7 +3180,7 @@ exports[`Render validation.status = error properties.copyable: icon - value[0] 1
   id="properties.copyable: icon"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -3174,7 +3248,7 @@ exports[`Render validation.status = error properties.copyable: icon - value[0] 1
     <span
       aria-label="loading-3-quarters"
       basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {}"
       id="properties.copyable: icon_copyable_icon"
       required={false}
       role="img"
@@ -3203,7 +3277,7 @@ exports[`Render validation.status = error properties.copyable: icon: [] - value[
   id="properties.copyable: icon: []"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -3271,30 +3345,8 @@ exports[`Render validation.status = error properties.copyable: icon: [] - value[
     <span
       aria-label="loading-3-quarters"
       basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {}"
       id="properties.copyable: icon: []_copyable_before_icon"
-      required={false}
-      role="img"
-    >
-      <svg
-        aria-hidden="true"
-        data-icon="loading-3-quarters"
-        fill="currentColor"
-        focusable="false"
-        height="1em"
-        viewBox="0 0 1024 1024"
-        width="1em"
-      >
-        <path
-          d="M512 1024c-69.1 0-136.2-13.5-199.3-40.2C251.7 958 197 921 150 874c-47-47-84-101.7-109.8-162.7C13.5 648.2 0 581.1 0 512c0-19.9 16.1-36 36-36s36 16.1 36 36c0 59.4 11.6 117 34.6 171.3 22.2 52.4 53.9 99.5 94.3 139.9 40.4 40.4 87.5 72.2 139.9 94.3C395 940.4 452.6 952 512 952c59.4 0 117-11.6 171.3-34.6 52.4-22.2 99.5-53.9 139.9-94.3 40.4-40.4 72.2-87.5 94.3-139.9C940.4 629 952 571.4 952 512c0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.2C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3s-13.5 136.2-40.2 199.3C958 772.3 921 827 874 874c-47 47-101.8 83.9-162.7 109.7-63.1 26.8-130.2 40.3-199.3 40.3z"
-        />
-      </svg>
-    </span>
-    <span
-      aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
-      id="properties.copyable: icon: []_copyable_after_icon"
       required={false}
       role="img"
     >
@@ -3322,7 +3374,7 @@ exports[`Render validation.status = error properties.copyable: text: one - value
   id="properties.copyable: text: one"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -3416,7 +3468,7 @@ exports[`Render validation.status = error properties.copyable: tooltips: [] - va
   id="properties.copyable: tooltips: []"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -3510,7 +3562,7 @@ exports[`Render validation.status = error properties.copyable: true - value[0] 1
   id="properties.copyable: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -3604,7 +3656,7 @@ exports[`Render validation.status = error properties.delete: true - value[0] 1`]
   id="properties.delete: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -3656,11 +3708,11 @@ exports[`Render validation.status = error properties.delete: true - value[0] 1`]
 
 exports[`Render validation.status = error properties.disabled: true - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-disabled"
+  className="ant-typography ant-typography-disabled {}"
   id="properties.disabled: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -3714,7 +3766,7 @@ exports[`Render validation.status = error properties.editable.icon - value[0] 1`
   id="properties.editable.icon"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -3740,21 +3792,24 @@ exports[`Render validation.status = error properties.editable.icon - value[0] 1`
     tabIndex={0}
   >
     <span
-      aria-label="edit"
-      className="anticon anticon-edit"
-      role="button"
+      aria-label="loading-3-quarters"
+      basePath=""
+      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      id="properties.editable.icon_editable_icon"
+      required={false}
+      role="img"
     >
       <svg
         aria-hidden="true"
-        data-icon="edit"
+        data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"
         height="1em"
-        viewBox="64 64 896 896"
+        viewBox="0 0 1024 1024"
         width="1em"
       >
         <path
-          d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"
+          d="M512 1024c-69.1 0-136.2-13.5-199.3-40.2C251.7 958 197 921 150 874c-47-47-84-101.7-109.8-162.7C13.5 648.2 0 581.1 0 512c0-19.9 16.1-36 36-36s36 16.1 36 36c0 59.4 11.6 117 34.6 171.3 22.2 52.4 53.9 99.5 94.3 139.9 40.4 40.4 87.5 72.2 139.9 94.3C395 940.4 452.6 952 512 952c59.4 0 117-11.6 171.3-34.6 52.4-22.2 99.5-53.9 139.9-94.3 40.4-40.4 72.2-87.5 94.3-139.9C940.4 629 952 571.4 952 512c0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.2C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3s-13.5 136.2-40.2 199.3C958 772.3 921 827 874 874c-47 47-101.8 83.9-162.7 109.7-63.1 26.8-130.2 40.3-199.3 40.3z"
         />
       </svg>
     </span>
@@ -3768,7 +3823,7 @@ exports[`Render validation.status = error properties.editable.maxLength: 10 - va
   id="properties.editable.maxLength: 10"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -3822,13 +3877,13 @@ exports[`Render validation.status = error properties.editable.tooltip - value[0]
   id="properties.editable.tooltip"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
   
   <div
-    aria-label="Edit"
+    aria-label="Change the value"
     className="ant-typography-edit"
     onClick={[Function]}
     onKeyDown={[Function]}
@@ -3876,7 +3931,7 @@ exports[`Render validation.status = error properties.editable: false - value[0] 
   id="properties.editable: false"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -3890,7 +3945,7 @@ exports[`Render validation.status = error properties.editable: true - value[0] 1
   id="properties.editable: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -3940,11 +3995,11 @@ exports[`Render validation.status = error properties.editable: true - value[0] 1
 
 exports[`Render validation.status = error properties.ellipsis: expandable, rows - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-ellipsis"
+  className="ant-typography ant-typography-ellipsis {}"
   id="properties.ellipsis: expandable, rows"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -3994,11 +4049,11 @@ exports[`Render validation.status = error properties.ellipsis: expandable, rows 
 
 exports[`Render validation.status = error properties.ellipsis: rows - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-ellipsis"
+  className="ant-typography ant-typography-ellipsis {}"
   id="properties.ellipsis: rows"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -4048,11 +4103,11 @@ exports[`Render validation.status = error properties.ellipsis: rows - value[0] 1
 
 exports[`Render validation.status = error properties.ellipsis: rows, suffix - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-ellipsis"
+  className="ant-typography ant-typography-ellipsis {}"
   id="properties.ellipsis: rows, suffix"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -4103,15 +4158,71 @@ exports[`Render validation.status = error properties.ellipsis: rows, suffix - va
 
 exports[`Render validation.status = error properties.ellipsis: true - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-ellipsis"
+  className="ant-typography ant-typography-ellipsis ant-typography-single-line {}"
   id="properties.ellipsis: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
   
+  <div
+    aria-label="Edit"
+    className="ant-typography-edit"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    role="button"
+    style={
+      Object {
+        "background": "transparent",
+        "border": 0,
+        "display": "inline-block",
+        "lineHeight": "inherit",
+        "padding": 0,
+      }
+    }
+    tabIndex={0}
+  >
+    <span
+      aria-label="edit"
+      className="anticon anticon-edit"
+      role="button"
+    >
+      <svg
+        aria-hidden="true"
+        data-icon="edit"
+        fill="currentColor"
+        focusable="false"
+        height="1em"
+        viewBox="64 64 896 896"
+        width="1em"
+      >
+        <path
+          d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"
+        />
+      </svg>
+    </span>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = error properties.italic: true - value[0] 1`] = `
+<div
+  className="ant-typography {}"
+  id="properties.italic: true"
+  style={
+    Object {
+      "WebkitLineClamp": undefined,
+    }
+  }
+>
+  <i>
+    
+  </i>
   <div
     aria-label="Edit"
     className="ant-typography-edit"
@@ -4161,7 +4272,7 @@ exports[`Render validation.status = error properties.mark: true - value[0] 1`] =
   id="properties.mark: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -4217,7 +4328,7 @@ exports[`Render validation.status = error properties.strong: true - value[0] 1`]
   id="properties.strong: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -4269,11 +4380,11 @@ exports[`Render validation.status = error properties.strong: true - value[0] 1`]
 
 exports[`Render validation.status = error properties.type: danger - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-danger"
+  className="ant-typography ant-typography-danger {}"
   id="properties.type: danger"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -4323,11 +4434,11 @@ exports[`Render validation.status = error properties.type: danger - value[0] 1`]
 
 exports[`Render validation.status = error properties.type: secondary - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-secondary"
+  className="ant-typography ant-typography-secondary {}"
   id="properties.type: secondary"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -4377,11 +4488,11 @@ exports[`Render validation.status = error properties.type: secondary - value[0] 
 
 exports[`Render validation.status = error properties.type: warning - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-warning"
+  className="ant-typography ant-typography-warning {}"
   id="properties.type: warning"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -4435,7 +4546,7 @@ exports[`Render validation.status = error properties.underline: true - value[0] 
   id="properties.underline: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -4491,7 +4602,7 @@ exports[`Render validation.status = null default - value[0] 1`] = `
   id="default"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -4545,7 +4656,7 @@ exports[`Render validation.status = null properties.code: true - value[0] 1`] = 
   id="properties.code: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -4601,7 +4712,7 @@ exports[`Render validation.status = null properties.copyable: icon - value[0] 1`
   id="properties.copyable: icon"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -4669,7 +4780,7 @@ exports[`Render validation.status = null properties.copyable: icon - value[0] 1`
     <span
       aria-label="loading-3-quarters"
       basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {}"
       id="properties.copyable: icon_copyable_icon"
       required={false}
       role="img"
@@ -4698,7 +4809,7 @@ exports[`Render validation.status = null properties.copyable: icon: [] - value[0
   id="properties.copyable: icon: []"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -4766,30 +4877,8 @@ exports[`Render validation.status = null properties.copyable: icon: [] - value[0
     <span
       aria-label="loading-3-quarters"
       basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {}"
       id="properties.copyable: icon: []_copyable_before_icon"
-      required={false}
-      role="img"
-    >
-      <svg
-        aria-hidden="true"
-        data-icon="loading-3-quarters"
-        fill="currentColor"
-        focusable="false"
-        height="1em"
-        viewBox="0 0 1024 1024"
-        width="1em"
-      >
-        <path
-          d="M512 1024c-69.1 0-136.2-13.5-199.3-40.2C251.7 958 197 921 150 874c-47-47-84-101.7-109.8-162.7C13.5 648.2 0 581.1 0 512c0-19.9 16.1-36 36-36s36 16.1 36 36c0 59.4 11.6 117 34.6 171.3 22.2 52.4 53.9 99.5 94.3 139.9 40.4 40.4 87.5 72.2 139.9 94.3C395 940.4 452.6 952 512 952c59.4 0 117-11.6 171.3-34.6 52.4-22.2 99.5-53.9 139.9-94.3 40.4-40.4 72.2-87.5 94.3-139.9C940.4 629 952 571.4 952 512c0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.2C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3s-13.5 136.2-40.2 199.3C958 772.3 921 827 874 874c-47 47-101.8 83.9-162.7 109.7-63.1 26.8-130.2 40.3-199.3 40.3z"
-        />
-      </svg>
-    </span>
-    <span
-      aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
-      id="properties.copyable: icon: []_copyable_after_icon"
       required={false}
       role="img"
     >
@@ -4817,7 +4906,7 @@ exports[`Render validation.status = null properties.copyable: text: one - value[
   id="properties.copyable: text: one"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -4911,7 +5000,7 @@ exports[`Render validation.status = null properties.copyable: tooltips: [] - val
   id="properties.copyable: tooltips: []"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -5005,7 +5094,7 @@ exports[`Render validation.status = null properties.copyable: true - value[0] 1`
   id="properties.copyable: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -5099,7 +5188,7 @@ exports[`Render validation.status = null properties.delete: true - value[0] 1`] 
   id="properties.delete: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -5151,11 +5240,11 @@ exports[`Render validation.status = null properties.delete: true - value[0] 1`] 
 
 exports[`Render validation.status = null properties.disabled: true - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-disabled"
+  className="ant-typography ant-typography-disabled {}"
   id="properties.disabled: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -5209,7 +5298,7 @@ exports[`Render validation.status = null properties.editable.icon - value[0] 1`]
   id="properties.editable.icon"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -5235,21 +5324,24 @@ exports[`Render validation.status = null properties.editable.icon - value[0] 1`]
     tabIndex={0}
   >
     <span
-      aria-label="edit"
-      className="anticon anticon-edit"
-      role="button"
+      aria-label="loading-3-quarters"
+      basePath=""
+      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      id="properties.editable.icon_editable_icon"
+      required={false}
+      role="img"
     >
       <svg
         aria-hidden="true"
-        data-icon="edit"
+        data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"
         height="1em"
-        viewBox="64 64 896 896"
+        viewBox="0 0 1024 1024"
         width="1em"
       >
         <path
-          d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"
+          d="M512 1024c-69.1 0-136.2-13.5-199.3-40.2C251.7 958 197 921 150 874c-47-47-84-101.7-109.8-162.7C13.5 648.2 0 581.1 0 512c0-19.9 16.1-36 36-36s36 16.1 36 36c0 59.4 11.6 117 34.6 171.3 22.2 52.4 53.9 99.5 94.3 139.9 40.4 40.4 87.5 72.2 139.9 94.3C395 940.4 452.6 952 512 952c59.4 0 117-11.6 171.3-34.6 52.4-22.2 99.5-53.9 139.9-94.3 40.4-40.4 72.2-87.5 94.3-139.9C940.4 629 952 571.4 952 512c0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.2C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3s-13.5 136.2-40.2 199.3C958 772.3 921 827 874 874c-47 47-101.8 83.9-162.7 109.7-63.1 26.8-130.2 40.3-199.3 40.3z"
         />
       </svg>
     </span>
@@ -5263,7 +5355,7 @@ exports[`Render validation.status = null properties.editable.maxLength: 10 - val
   id="properties.editable.maxLength: 10"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -5317,13 +5409,13 @@ exports[`Render validation.status = null properties.editable.tooltip - value[0] 
   id="properties.editable.tooltip"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
   
   <div
-    aria-label="Edit"
+    aria-label="Change the value"
     className="ant-typography-edit"
     onClick={[Function]}
     onKeyDown={[Function]}
@@ -5371,7 +5463,7 @@ exports[`Render validation.status = null properties.editable: false - value[0] 1
   id="properties.editable: false"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -5385,7 +5477,7 @@ exports[`Render validation.status = null properties.editable: true - value[0] 1`
   id="properties.editable: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -5435,11 +5527,11 @@ exports[`Render validation.status = null properties.editable: true - value[0] 1`
 
 exports[`Render validation.status = null properties.ellipsis: expandable, rows - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-ellipsis"
+  className="ant-typography ant-typography-ellipsis {}"
   id="properties.ellipsis: expandable, rows"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -5489,11 +5581,11 @@ exports[`Render validation.status = null properties.ellipsis: expandable, rows -
 
 exports[`Render validation.status = null properties.ellipsis: rows - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-ellipsis"
+  className="ant-typography ant-typography-ellipsis {}"
   id="properties.ellipsis: rows"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -5543,11 +5635,11 @@ exports[`Render validation.status = null properties.ellipsis: rows - value[0] 1`
 
 exports[`Render validation.status = null properties.ellipsis: rows, suffix - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-ellipsis"
+  className="ant-typography ant-typography-ellipsis {}"
   id="properties.ellipsis: rows, suffix"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -5598,15 +5690,71 @@ exports[`Render validation.status = null properties.ellipsis: rows, suffix - val
 
 exports[`Render validation.status = null properties.ellipsis: true - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-ellipsis"
+  className="ant-typography ant-typography-ellipsis ant-typography-single-line {}"
   id="properties.ellipsis: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
   
+  <div
+    aria-label="Edit"
+    className="ant-typography-edit"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    role="button"
+    style={
+      Object {
+        "background": "transparent",
+        "border": 0,
+        "display": "inline-block",
+        "lineHeight": "inherit",
+        "padding": 0,
+      }
+    }
+    tabIndex={0}
+  >
+    <span
+      aria-label="edit"
+      className="anticon anticon-edit"
+      role="button"
+    >
+      <svg
+        aria-hidden="true"
+        data-icon="edit"
+        fill="currentColor"
+        focusable="false"
+        height="1em"
+        viewBox="64 64 896 896"
+        width="1em"
+      >
+        <path
+          d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"
+        />
+      </svg>
+    </span>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = null properties.italic: true - value[0] 1`] = `
+<div
+  className="ant-typography {}"
+  id="properties.italic: true"
+  style={
+    Object {
+      "WebkitLineClamp": undefined,
+    }
+  }
+>
+  <i>
+    
+  </i>
   <div
     aria-label="Edit"
     className="ant-typography-edit"
@@ -5656,7 +5804,7 @@ exports[`Render validation.status = null properties.mark: true - value[0] 1`] = 
   id="properties.mark: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -5712,7 +5860,7 @@ exports[`Render validation.status = null properties.strong: true - value[0] 1`] 
   id="properties.strong: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -5764,11 +5912,11 @@ exports[`Render validation.status = null properties.strong: true - value[0] 1`] 
 
 exports[`Render validation.status = null properties.type: danger - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-danger"
+  className="ant-typography ant-typography-danger {}"
   id="properties.type: danger"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -5818,11 +5966,11 @@ exports[`Render validation.status = null properties.type: danger - value[0] 1`] 
 
 exports[`Render validation.status = null properties.type: secondary - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-secondary"
+  className="ant-typography ant-typography-secondary {}"
   id="properties.type: secondary"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -5872,11 +6020,11 @@ exports[`Render validation.status = null properties.type: secondary - value[0] 1
 
 exports[`Render validation.status = null properties.type: warning - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-warning"
+  className="ant-typography ant-typography-warning {}"
   id="properties.type: warning"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -5930,7 +6078,7 @@ exports[`Render validation.status = null properties.underline: true - value[0] 1
   id="properties.underline: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -5986,7 +6134,7 @@ exports[`Render validation.status = success default - value[0] 1`] = `
   id="default"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -6040,7 +6188,7 @@ exports[`Render validation.status = success properties.code: true - value[0] 1`]
   id="properties.code: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -6096,7 +6244,7 @@ exports[`Render validation.status = success properties.copyable: icon - value[0]
   id="properties.copyable: icon"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -6164,7 +6312,7 @@ exports[`Render validation.status = success properties.copyable: icon - value[0]
     <span
       aria-label="loading-3-quarters"
       basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {}"
       id="properties.copyable: icon_copyable_icon"
       required={false}
       role="img"
@@ -6193,7 +6341,7 @@ exports[`Render validation.status = success properties.copyable: icon: [] - valu
   id="properties.copyable: icon: []"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -6261,30 +6409,8 @@ exports[`Render validation.status = success properties.copyable: icon: [] - valu
     <span
       aria-label="loading-3-quarters"
       basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {}"
       id="properties.copyable: icon: []_copyable_before_icon"
-      required={false}
-      role="img"
-    >
-      <svg
-        aria-hidden="true"
-        data-icon="loading-3-quarters"
-        fill="currentColor"
-        focusable="false"
-        height="1em"
-        viewBox="0 0 1024 1024"
-        width="1em"
-      >
-        <path
-          d="M512 1024c-69.1 0-136.2-13.5-199.3-40.2C251.7 958 197 921 150 874c-47-47-84-101.7-109.8-162.7C13.5 648.2 0 581.1 0 512c0-19.9 16.1-36 36-36s36 16.1 36 36c0 59.4 11.6 117 34.6 171.3 22.2 52.4 53.9 99.5 94.3 139.9 40.4 40.4 87.5 72.2 139.9 94.3C395 940.4 452.6 952 512 952c59.4 0 117-11.6 171.3-34.6 52.4-22.2 99.5-53.9 139.9-94.3 40.4-40.4 72.2-87.5 94.3-139.9C940.4 629 952 571.4 952 512c0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.2C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3s-13.5 136.2-40.2 199.3C958 772.3 921 827 874 874c-47 47-101.8 83.9-162.7 109.7-63.1 26.8-130.2 40.3-199.3 40.3z"
-        />
-      </svg>
-    </span>
-    <span
-      aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
-      id="properties.copyable: icon: []_copyable_after_icon"
       required={false}
       role="img"
     >
@@ -6312,7 +6438,7 @@ exports[`Render validation.status = success properties.copyable: text: one - val
   id="properties.copyable: text: one"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -6406,7 +6532,7 @@ exports[`Render validation.status = success properties.copyable: tooltips: [] - 
   id="properties.copyable: tooltips: []"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -6500,7 +6626,7 @@ exports[`Render validation.status = success properties.copyable: true - value[0]
   id="properties.copyable: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -6594,7 +6720,7 @@ exports[`Render validation.status = success properties.delete: true - value[0] 1
   id="properties.delete: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -6646,11 +6772,11 @@ exports[`Render validation.status = success properties.delete: true - value[0] 1
 
 exports[`Render validation.status = success properties.disabled: true - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-disabled"
+  className="ant-typography ant-typography-disabled {}"
   id="properties.disabled: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -6704,7 +6830,7 @@ exports[`Render validation.status = success properties.editable.icon - value[0] 
   id="properties.editable.icon"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -6730,21 +6856,24 @@ exports[`Render validation.status = success properties.editable.icon - value[0] 
     tabIndex={0}
   >
     <span
-      aria-label="edit"
-      className="anticon anticon-edit"
-      role="button"
+      aria-label="loading-3-quarters"
+      basePath=""
+      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      id="properties.editable.icon_editable_icon"
+      required={false}
+      role="img"
     >
       <svg
         aria-hidden="true"
-        data-icon="edit"
+        data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"
         height="1em"
-        viewBox="64 64 896 896"
+        viewBox="0 0 1024 1024"
         width="1em"
       >
         <path
-          d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"
+          d="M512 1024c-69.1 0-136.2-13.5-199.3-40.2C251.7 958 197 921 150 874c-47-47-84-101.7-109.8-162.7C13.5 648.2 0 581.1 0 512c0-19.9 16.1-36 36-36s36 16.1 36 36c0 59.4 11.6 117 34.6 171.3 22.2 52.4 53.9 99.5 94.3 139.9 40.4 40.4 87.5 72.2 139.9 94.3C395 940.4 452.6 952 512 952c59.4 0 117-11.6 171.3-34.6 52.4-22.2 99.5-53.9 139.9-94.3 40.4-40.4 72.2-87.5 94.3-139.9C940.4 629 952 571.4 952 512c0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.2C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3s-13.5 136.2-40.2 199.3C958 772.3 921 827 874 874c-47 47-101.8 83.9-162.7 109.7-63.1 26.8-130.2 40.3-199.3 40.3z"
         />
       </svg>
     </span>
@@ -6758,7 +6887,7 @@ exports[`Render validation.status = success properties.editable.maxLength: 10 - 
   id="properties.editable.maxLength: 10"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -6812,13 +6941,13 @@ exports[`Render validation.status = success properties.editable.tooltip - value[
   id="properties.editable.tooltip"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
   
   <div
-    aria-label="Edit"
+    aria-label="Change the value"
     className="ant-typography-edit"
     onClick={[Function]}
     onKeyDown={[Function]}
@@ -6866,7 +6995,7 @@ exports[`Render validation.status = success properties.editable: false - value[0
   id="properties.editable: false"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -6880,7 +7009,7 @@ exports[`Render validation.status = success properties.editable: true - value[0]
   id="properties.editable: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -6930,11 +7059,11 @@ exports[`Render validation.status = success properties.editable: true - value[0]
 
 exports[`Render validation.status = success properties.ellipsis: expandable, rows - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-ellipsis"
+  className="ant-typography ant-typography-ellipsis {}"
   id="properties.ellipsis: expandable, rows"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -6984,11 +7113,11 @@ exports[`Render validation.status = success properties.ellipsis: expandable, row
 
 exports[`Render validation.status = success properties.ellipsis: rows - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-ellipsis"
+  className="ant-typography ant-typography-ellipsis {}"
   id="properties.ellipsis: rows"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -7038,11 +7167,11 @@ exports[`Render validation.status = success properties.ellipsis: rows - value[0]
 
 exports[`Render validation.status = success properties.ellipsis: rows, suffix - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-ellipsis"
+  className="ant-typography ant-typography-ellipsis {}"
   id="properties.ellipsis: rows, suffix"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -7093,15 +7222,71 @@ exports[`Render validation.status = success properties.ellipsis: rows, suffix - 
 
 exports[`Render validation.status = success properties.ellipsis: true - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-ellipsis"
+  className="ant-typography ant-typography-ellipsis ant-typography-single-line {}"
   id="properties.ellipsis: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
   
+  <div
+    aria-label="Edit"
+    className="ant-typography-edit"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    role="button"
+    style={
+      Object {
+        "background": "transparent",
+        "border": 0,
+        "display": "inline-block",
+        "lineHeight": "inherit",
+        "padding": 0,
+      }
+    }
+    tabIndex={0}
+  >
+    <span
+      aria-label="edit"
+      className="anticon anticon-edit"
+      role="button"
+    >
+      <svg
+        aria-hidden="true"
+        data-icon="edit"
+        fill="currentColor"
+        focusable="false"
+        height="1em"
+        viewBox="64 64 896 896"
+        width="1em"
+      >
+        <path
+          d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"
+        />
+      </svg>
+    </span>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = success properties.italic: true - value[0] 1`] = `
+<div
+  className="ant-typography {}"
+  id="properties.italic: true"
+  style={
+    Object {
+      "WebkitLineClamp": undefined,
+    }
+  }
+>
+  <i>
+    
+  </i>
   <div
     aria-label="Edit"
     className="ant-typography-edit"
@@ -7151,7 +7336,7 @@ exports[`Render validation.status = success properties.mark: true - value[0] 1`]
   id="properties.mark: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -7207,7 +7392,7 @@ exports[`Render validation.status = success properties.strong: true - value[0] 1
   id="properties.strong: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -7259,11 +7444,11 @@ exports[`Render validation.status = success properties.strong: true - value[0] 1
 
 exports[`Render validation.status = success properties.type: danger - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-danger"
+  className="ant-typography ant-typography-danger {}"
   id="properties.type: danger"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -7313,11 +7498,11 @@ exports[`Render validation.status = success properties.type: danger - value[0] 1
 
 exports[`Render validation.status = success properties.type: secondary - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-secondary"
+  className="ant-typography ant-typography-secondary {}"
   id="properties.type: secondary"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -7367,11 +7552,11 @@ exports[`Render validation.status = success properties.type: secondary - value[0
 
 exports[`Render validation.status = success properties.type: warning - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-warning"
+  className="ant-typography ant-typography-warning {}"
   id="properties.type: warning"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -7425,7 +7610,7 @@ exports[`Render validation.status = success properties.underline: true - value[0
   id="properties.underline: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -7481,7 +7666,7 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
   id="default"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -7535,7 +7720,7 @@ exports[`Render validation.status = warning properties.code: true - value[0] 1`]
   id="properties.code: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -7591,7 +7776,7 @@ exports[`Render validation.status = warning properties.copyable: icon - value[0]
   id="properties.copyable: icon"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -7659,7 +7844,7 @@ exports[`Render validation.status = warning properties.copyable: icon - value[0]
     <span
       aria-label="loading-3-quarters"
       basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {}"
       id="properties.copyable: icon_copyable_icon"
       required={false}
       role="img"
@@ -7688,7 +7873,7 @@ exports[`Render validation.status = warning properties.copyable: icon: [] - valu
   id="properties.copyable: icon: []"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -7756,30 +7941,8 @@ exports[`Render validation.status = warning properties.copyable: icon: [] - valu
     <span
       aria-label="loading-3-quarters"
       basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {}"
       id="properties.copyable: icon: []_copyable_before_icon"
-      required={false}
-      role="img"
-    >
-      <svg
-        aria-hidden="true"
-        data-icon="loading-3-quarters"
-        fill="currentColor"
-        focusable="false"
-        height="1em"
-        viewBox="0 0 1024 1024"
-        width="1em"
-      >
-        <path
-          d="M512 1024c-69.1 0-136.2-13.5-199.3-40.2C251.7 958 197 921 150 874c-47-47-84-101.7-109.8-162.7C13.5 648.2 0 581.1 0 512c0-19.9 16.1-36 36-36s36 16.1 36 36c0 59.4 11.6 117 34.6 171.3 22.2 52.4 53.9 99.5 94.3 139.9 40.4 40.4 87.5 72.2 139.9 94.3C395 940.4 452.6 952 512 952c59.4 0 117-11.6 171.3-34.6 52.4-22.2 99.5-53.9 139.9-94.3 40.4-40.4 72.2-87.5 94.3-139.9C940.4 629 952 571.4 952 512c0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.2C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3s-13.5 136.2-40.2 199.3C958 772.3 921 827 874 874c-47 47-101.8 83.9-162.7 109.7-63.1 26.8-130.2 40.3-199.3 40.3z"
-        />
-      </svg>
-    </span>
-    <span
-      aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
-      id="properties.copyable: icon: []_copyable_after_icon"
       required={false}
       role="img"
     >
@@ -7807,7 +7970,7 @@ exports[`Render validation.status = warning properties.copyable: text: one - val
   id="properties.copyable: text: one"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -7901,7 +8064,7 @@ exports[`Render validation.status = warning properties.copyable: tooltips: [] - 
   id="properties.copyable: tooltips: []"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -7995,7 +8158,7 @@ exports[`Render validation.status = warning properties.copyable: true - value[0]
   id="properties.copyable: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -8089,7 +8252,7 @@ exports[`Render validation.status = warning properties.delete: true - value[0] 1
   id="properties.delete: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -8141,11 +8304,11 @@ exports[`Render validation.status = warning properties.delete: true - value[0] 1
 
 exports[`Render validation.status = warning properties.disabled: true - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-disabled"
+  className="ant-typography ant-typography-disabled {}"
   id="properties.disabled: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -8199,7 +8362,7 @@ exports[`Render validation.status = warning properties.editable.icon - value[0] 
   id="properties.editable.icon"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -8225,21 +8388,24 @@ exports[`Render validation.status = warning properties.editable.icon - value[0] 
     tabIndex={0}
   >
     <span
-      aria-label="edit"
-      className="anticon anticon-edit"
-      role="button"
+      aria-label="loading-3-quarters"
+      basePath=""
+      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      id="properties.editable.icon_editable_icon"
+      required={false}
+      role="img"
     >
       <svg
         aria-hidden="true"
-        data-icon="edit"
+        data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"
         height="1em"
-        viewBox="64 64 896 896"
+        viewBox="0 0 1024 1024"
         width="1em"
       >
         <path
-          d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"
+          d="M512 1024c-69.1 0-136.2-13.5-199.3-40.2C251.7 958 197 921 150 874c-47-47-84-101.7-109.8-162.7C13.5 648.2 0 581.1 0 512c0-19.9 16.1-36 36-36s36 16.1 36 36c0 59.4 11.6 117 34.6 171.3 22.2 52.4 53.9 99.5 94.3 139.9 40.4 40.4 87.5 72.2 139.9 94.3C395 940.4 452.6 952 512 952c59.4 0 117-11.6 171.3-34.6 52.4-22.2 99.5-53.9 139.9-94.3 40.4-40.4 72.2-87.5 94.3-139.9C940.4 629 952 571.4 952 512c0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.2C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3s-13.5 136.2-40.2 199.3C958 772.3 921 827 874 874c-47 47-101.8 83.9-162.7 109.7-63.1 26.8-130.2 40.3-199.3 40.3z"
         />
       </svg>
     </span>
@@ -8253,7 +8419,7 @@ exports[`Render validation.status = warning properties.editable.maxLength: 10 - 
   id="properties.editable.maxLength: 10"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -8307,13 +8473,13 @@ exports[`Render validation.status = warning properties.editable.tooltip - value[
   id="properties.editable.tooltip"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
   
   <div
-    aria-label="Edit"
+    aria-label="Change the value"
     className="ant-typography-edit"
     onClick={[Function]}
     onKeyDown={[Function]}
@@ -8361,7 +8527,7 @@ exports[`Render validation.status = warning properties.editable: false - value[0
   id="properties.editable: false"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -8375,7 +8541,7 @@ exports[`Render validation.status = warning properties.editable: true - value[0]
   id="properties.editable: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -8425,11 +8591,11 @@ exports[`Render validation.status = warning properties.editable: true - value[0]
 
 exports[`Render validation.status = warning properties.ellipsis: expandable, rows - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-ellipsis"
+  className="ant-typography ant-typography-ellipsis {}"
   id="properties.ellipsis: expandable, rows"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -8479,11 +8645,11 @@ exports[`Render validation.status = warning properties.ellipsis: expandable, row
 
 exports[`Render validation.status = warning properties.ellipsis: rows - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-ellipsis"
+  className="ant-typography ant-typography-ellipsis {}"
   id="properties.ellipsis: rows"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -8533,11 +8699,11 @@ exports[`Render validation.status = warning properties.ellipsis: rows - value[0]
 
 exports[`Render validation.status = warning properties.ellipsis: rows, suffix - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-ellipsis"
+  className="ant-typography ant-typography-ellipsis {}"
   id="properties.ellipsis: rows, suffix"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -8588,15 +8754,71 @@ exports[`Render validation.status = warning properties.ellipsis: rows, suffix - 
 
 exports[`Render validation.status = warning properties.ellipsis: true - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-ellipsis"
+  className="ant-typography ant-typography-ellipsis ant-typography-single-line {}"
   id="properties.ellipsis: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
   
+  <div
+    aria-label="Edit"
+    className="ant-typography-edit"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    role="button"
+    style={
+      Object {
+        "background": "transparent",
+        "border": 0,
+        "display": "inline-block",
+        "lineHeight": "inherit",
+        "padding": 0,
+      }
+    }
+    tabIndex={0}
+  >
+    <span
+      aria-label="edit"
+      className="anticon anticon-edit"
+      role="button"
+    >
+      <svg
+        aria-hidden="true"
+        data-icon="edit"
+        fill="currentColor"
+        focusable="false"
+        height="1em"
+        viewBox="64 64 896 896"
+        width="1em"
+      >
+        <path
+          d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"
+        />
+      </svg>
+    </span>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = warning properties.italic: true - value[0] 1`] = `
+<div
+  className="ant-typography {}"
+  id="properties.italic: true"
+  style={
+    Object {
+      "WebkitLineClamp": undefined,
+    }
+  }
+>
+  <i>
+    
+  </i>
   <div
     aria-label="Edit"
     className="ant-typography-edit"
@@ -8646,7 +8868,7 @@ exports[`Render validation.status = warning properties.mark: true - value[0] 1`]
   id="properties.mark: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -8702,7 +8924,7 @@ exports[`Render validation.status = warning properties.strong: true - value[0] 1
   id="properties.strong: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -8754,11 +8976,11 @@ exports[`Render validation.status = warning properties.strong: true - value[0] 1
 
 exports[`Render validation.status = warning properties.type: danger - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-danger"
+  className="ant-typography ant-typography-danger {}"
   id="properties.type: danger"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -8808,11 +9030,11 @@ exports[`Render validation.status = warning properties.type: danger - value[0] 1
 
 exports[`Render validation.status = warning properties.type: secondary - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-secondary"
+  className="ant-typography ant-typography-secondary {}"
   id="properties.type: secondary"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -8862,11 +9084,11 @@ exports[`Render validation.status = warning properties.type: secondary - value[0
 
 exports[`Render validation.status = warning properties.type: warning - value[0] 1`] = `
 <div
-  className="ant-typography {} ant-typography-warning"
+  className="ant-typography ant-typography-warning {}"
   id="properties.type: warning"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -8920,7 +9142,7 @@ exports[`Render validation.status = warning properties.underline: true - value[0
   id="properties.underline: true"
   style={
     Object {
-      "WebkitLineClamp": null,
+      "WebkitLineClamp": undefined,
     }
   }
 >
@@ -9041,6 +9263,10 @@ exports[`Test Schema properties.ellipsis: rows, suffix 2`] = `null`;
 exports[`Test Schema properties.ellipsis: true 1`] = `true`;
 
 exports[`Test Schema properties.ellipsis: true 2`] = `null`;
+
+exports[`Test Schema properties.italic: true 1`] = `true`;
+
+exports[`Test Schema properties.italic: true 2`] = `null`;
 
 exports[`Test Schema properties.mark: true 1`] = `true`;
 

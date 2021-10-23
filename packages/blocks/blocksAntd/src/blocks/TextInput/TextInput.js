@@ -46,9 +46,15 @@ const TextInput = ({
           return (
             <Input
               id={`${blockId}_input`}
-              className={methods.makeCssClass(properties.inputStyle)}
+              allowClear={properties.allowClear}
               autoFocus={properties.autoFocus}
+              bordered={properties.bordered}
+              className={methods.makeCssClass(properties.inputStyle)}
               disabled={properties.disabled}
+              maxLength={properties.maxLength}
+              placeholder={properties.placeholder}
+              size={properties.size}
+              value={value}
               onChange={(event) => {
                 methods.setValue(event.target.value);
                 methods.triggerEvent({ name: 'onChange' });
@@ -61,8 +67,6 @@ const TextInput = ({
               onPressEnter={() => {
                 methods.triggerEvent({ name: 'onPressEnter' });
               }}
-              placeholder={properties.placeholder}
-              value={value}
               prefix={
                 properties.prefix ||
                 (properties.prefixIcon && (
@@ -83,8 +87,6 @@ const TextInput = ({
                   />
                 ))
               }
-              size={properties.size}
-              allowClear={properties.allowClear}
             />
           );
         },

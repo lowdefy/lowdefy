@@ -11,6 +11,17 @@
 - _ref: tutorial/tutorial-deploy.yaml
 - _ref: tutorial/next-steps.yaml
 
+- _ref:
+    path: howto/generate-csv.yaml.njk
+    vars:
+      version:
+        _ref: version.yaml
+- _ref:
+    path: howto/generate-pdf.yaml.njk
+    vars:
+      version:
+        _ref: version.yaml
+
 - _ref: concepts/overview.yaml
 - _ref: concepts/cli.yaml
 - _ref: concepts/lowdefy-schema.yaml

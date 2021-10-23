@@ -32,10 +32,12 @@ const ConfirmModal = ({ blockId, events, content, methods, properties }) => {
       Modal[args.status || properties.status || 'confirm']({
         id: `${blockId}_confirm_modal`,
         title: renderHtml({ html: properties.title, methods }),
+        bodyStyle: methods.makeCssClass(properties.bodyStyle, { styleObjectOnly: true }),
         content:
           (content.content && content.content()) ||
           renderHtml({ html: properties.content, methods }),
         className: methods.makeCssClass(properties.modalStyle),
+        closable: properties.closable,
         okText: properties.okText || 'Ok',
         okButtonProps: properties.okButton,
         cancelButtonProps: properties.cancelButton,

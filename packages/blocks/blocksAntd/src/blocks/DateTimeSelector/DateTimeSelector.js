@@ -55,13 +55,16 @@ const DateTimeSelector = ({
             <div id={`${blockId}_popup`} />
             <DatePicker
               id={`${blockId}_input`}
+              allowClear={properties.allowClear !== false}
               autoFocus={properties.autoFocus}
+              bordered={properties.bordered}
               className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
               disabled={properties.disabled}
-              getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
-              allowClear={properties.allowClear !== false}
-              placeholder={properties.placeholder || 'Select Date & Time'}
+              disabledDate={disabledDate(properties.disabledDates)}
               format={properties.format || 'YYYY-MM-DD HH:mm'}
+              getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
+              placeholder={properties.placeholder || 'Select Date & Time'}
+              showNow={properties.showNow}
               showToday={properties.showToday}
               size={properties.size}
               suffixIcon={
@@ -79,8 +82,6 @@ const DateTimeSelector = ({
                 minuteStep: properties.minuteStep || 5,
                 secondStep: properties.secondStep || 30,
               }}
-              showNow={properties.showNow}
-              disabledDate={disabledDate(properties.disabledDates)}
               onChange={(newVal) => {
                 methods.setValue(
                   !newVal

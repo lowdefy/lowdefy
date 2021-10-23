@@ -23,10 +23,19 @@
           "default": false,
           "description": "Autofocus to the block on page load."
         },
+        "bordered": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether or not the text input has a border style."
+        },
         "disabled": {
           "type": "boolean",
           "default": false,
           "description": "Disable the block if true."
+        },
+        "maxLength": {
+          "type": "integer",
+          "description": "The max number of input characters."
         },
         "placeholder": {
           "type": "string",
@@ -111,8 +120,8 @@
         },
         "size": {
           "type": "string",
-          "enum": ["small", "default", "large"],
-          "default": "default",
+          "enum": ["small", "middle", "large"],
+          "default": "middle",
           "description": "Size of the block."
         },
         "suffix": {

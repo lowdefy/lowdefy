@@ -17,6 +17,7 @@
 import React from 'react';
 import { InputNumber } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
+import { type } from '@lowdefy/helpers';
 import Label from '../Label/Label';
 
 const NumberInput = ({
@@ -33,25 +34,28 @@ const NumberInput = ({
     <Label
       blockId={blockId}
       events={events}
-      properties={{ title: properties.title, size: properties.size, ...properties.label }}
-      validation={validation}
-      required={required}
       loading={loading}
+      properties={{ title: properties.title, size: properties.size, ...properties.label }}
+      required={required}
+      validation={validation}
       content={{
         content: () => (
           <InputNumber
             id={`${blockId}_input`}
-            className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
-            autoFocus={properties.autoFocus}
-            disabled={properties.disabled}
-            placeholder={properties.placeholder}
             autoComplete="off"
+            autoFocus={properties.autoFocus}
+            bordered={properties.bordered}
+            className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
             decimalSeparator={properties.decimalSeparator}
-            min={properties.min}
+            disabled={properties.disabled}
+            formatter={properties.formatter}
             max={properties.max}
+            min={properties.min}
+            keyboard={properties.keyboard}
+            placeholder={properties.placeholder}
             precision={properties.precision}
-            step={properties.step}
             size={properties.size}
+            step={properties.step}
             onChange={(newVal) => {
               methods.setValue(newVal);
               methods.triggerEvent({ name: 'onChange' });

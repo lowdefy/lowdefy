@@ -139,6 +139,52 @@ exports[`Render properties.autoFocus: true - value[0] 1`] = `
 </div>
 `;
 
+exports[`Render properties.bordered: false - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.bordered: false"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.bordered: false_input"
+      title="properties.bordered: false"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <input
+          className="ant-input ant-input-borderless {}"
+          id="properties.bordered: false_input"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          type="text"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render properties.disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
@@ -463,6 +509,53 @@ exports[`Render properties.label span: 12 - value[0] 1`] = `
 </div>
 `;
 
+exports[`Render properties.maxLength: 4 - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.maxLength: 4"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.maxLength: 4_input"
+      title="properties.maxLength: 4"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <input
+          className="ant-input {}"
+          id="properties.maxLength: 4_input"
+          maxLength={4}
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          type="text"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render properties.placeholder: Type your text here - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
@@ -541,7 +634,7 @@ exports[`Render properties.prefix: Prefix to the text - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -598,7 +691,7 @@ exports[`Render properties.prefixIcon.size: 24 - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -607,7 +700,7 @@ exports[`Render properties.prefixIcon.size: 24 - value[0] 1`] = `
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.prefixIcon.size: 24_prefixIcon"
               required={false}
               role="img"
@@ -676,7 +769,7 @@ exports[`Render properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -685,7 +778,7 @@ exports[`Render properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
               required={false}
               role="img"
@@ -846,7 +939,7 @@ exports[`Render properties.suffix: Suffix to the text - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -903,7 +996,7 @@ exports[`Render properties.suffixIcon.size 24 - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -923,7 +1016,7 @@ exports[`Render properties.suffixIcon.size 24 - value[0] 1`] = `
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.suffixIcon.size 24_suffixIcon"
               required={false}
               role="img"
@@ -981,7 +1074,7 @@ exports[`Render properties.suffixIcon: AlertFilled - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -1001,7 +1094,7 @@ exports[`Render properties.suffixIcon: AlertFilled - value[0] 1`] = `
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
               required={false}
               role="img"
@@ -1200,6 +1293,52 @@ exports[`Render required = true properties.autoFocus: true - value[0] 1`] = `
           autoFocus={true}
           className="ant-input {}"
           id="properties.autoFocus: true_input"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          type="text"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.bordered: false - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.bordered: false"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.bordered: false_input"
+      title="properties.bordered: false"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <input
+          className="ant-input ant-input-borderless {}"
+          id="properties.bordered: false_input"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
@@ -1537,6 +1676,53 @@ exports[`Render required = true properties.label span: 12 - value[0] 1`] = `
 </div>
 `;
 
+exports[`Render required = true properties.maxLength: 4 - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.maxLength: 4"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.maxLength: 4_input"
+      title="properties.maxLength: 4"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <input
+          className="ant-input {}"
+          id="properties.maxLength: 4_input"
+          maxLength={4}
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          type="text"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render required = true properties.placeholder: Type your text here - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
@@ -1615,7 +1801,7 @@ exports[`Render required = true properties.prefix: Prefix to the text - value[0]
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -1672,7 +1858,7 @@ exports[`Render required = true properties.prefixIcon.size: 24 - value[0] 1`] = 
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -1681,7 +1867,7 @@ exports[`Render required = true properties.prefixIcon.size: 24 - value[0] 1`] = 
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.prefixIcon.size: 24_prefixIcon"
               required={false}
               role="img"
@@ -1750,7 +1936,7 @@ exports[`Render required = true properties.prefixIcon: AccountBookFilled - value
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -1759,7 +1945,7 @@ exports[`Render required = true properties.prefixIcon: AccountBookFilled - value
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
               required={false}
               role="img"
@@ -1920,7 +2106,7 @@ exports[`Render required = true properties.suffix: Suffix to the text - value[0]
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -1977,7 +2163,7 @@ exports[`Render required = true properties.suffixIcon.size 24 - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -1997,7 +2183,7 @@ exports[`Render required = true properties.suffixIcon.size 24 - value[0] 1`] = `
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.suffixIcon.size 24_suffixIcon"
               required={false}
               role="img"
@@ -2055,7 +2241,7 @@ exports[`Render required = true properties.suffixIcon: AlertFilled - value[0] 1`
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -2075,7 +2261,7 @@ exports[`Render required = true properties.suffixIcon: AlertFilled - value[0] 1`
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
               required={false}
               role="img"
@@ -2214,7 +2400,7 @@ exports[`Render validation.status = error default - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -2288,7 +2474,7 @@ exports[`Render validation.status = error properties.allowClear: false - value[0
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -2363,7 +2549,81 @@ exports[`Render validation.status = error properties.autoFocus: true - value[0] 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      validation error
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = error properties.bordered: false - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.bordered: false"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.bordered: false_input"
+      title="properties.bordered: false"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <input
+          className="ant-input ant-input-borderless {}"
+          id="properties.bordered: false_input"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          type="text"
+          value=""
+        />
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="close-circle"
+          className="anticon anticon-close-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="close-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -2438,7 +2698,7 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -2512,7 +2772,7 @@ exports[`Render validation.status = error properties.label align: right - value[
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -2586,7 +2846,7 @@ exports[`Render validation.status = error properties.label colon: false - value[
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -2646,7 +2906,7 @@ exports[`Render validation.status = error properties.label disabled: true - valu
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -2720,7 +2980,7 @@ exports[`Render validation.status = error properties.label extra: showing extra 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -2802,7 +3062,7 @@ exports[`Render validation.status = error properties.label inline: true - value[
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -2876,7 +3136,82 @@ exports[`Render validation.status = error properties.label span: 12 - value[0] 1
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      validation error
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = error properties.maxLength: 4 - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.maxLength: 4"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.maxLength: 4_input"
+      title="properties.maxLength: 4"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <input
+          className="ant-input {}"
+          id="properties.maxLength: 4_input"
+          maxLength={4}
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          type="text"
+          value=""
+        />
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="close-circle"
+          className="anticon anticon-close-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="close-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -2951,7 +3286,7 @@ exports[`Render validation.status = error properties.placeholder: Type your text
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -2990,7 +3325,7 @@ exports[`Render validation.status = error properties.prefix: Prefix to the text 
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -3036,7 +3371,7 @@ exports[`Render validation.status = error properties.prefix: Prefix to the text 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -3075,7 +3410,7 @@ exports[`Render validation.status = error properties.prefixIcon.size: 24 - value
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -3084,7 +3419,7 @@ exports[`Render validation.status = error properties.prefixIcon.size: 24 - value
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.prefixIcon.size: 24_prefixIcon"
               required={false}
               role="img"
@@ -3142,7 +3477,7 @@ exports[`Render validation.status = error properties.prefixIcon.size: 24 - value
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -3181,7 +3516,7 @@ exports[`Render validation.status = error properties.prefixIcon: AccountBookFill
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -3190,7 +3525,7 @@ exports[`Render validation.status = error properties.prefixIcon: AccountBookFill
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
               required={false}
               role="img"
@@ -3248,7 +3583,7 @@ exports[`Render validation.status = error properties.prefixIcon: AccountBookFill
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -3322,7 +3657,7 @@ exports[`Render validation.status = error properties.size: large - value[0] 1`] 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -3396,7 +3731,7 @@ exports[`Render validation.status = error properties.size: small - value[0] 1`] 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
       validation error
     </div>
@@ -3435,7 +3770,7 @@ exports[`Render validation.status = error properties.suffix: Suffix to the text 
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -3481,7 +3816,7 @@ exports[`Render validation.status = error properties.suffix: Suffix to the text 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -3520,7 +3855,7 @@ exports[`Render validation.status = error properties.suffixIcon.size 24 - value[
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -3540,7 +3875,7 @@ exports[`Render validation.status = error properties.suffixIcon.size 24 - value[
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.suffixIcon.size 24_suffixIcon"
               required={false}
               role="img"
@@ -3587,7 +3922,7 @@ exports[`Render validation.status = error properties.suffixIcon.size 24 - value[
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -3626,7 +3961,7 @@ exports[`Render validation.status = error properties.suffixIcon: AlertFilled - v
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -3646,7 +3981,7 @@ exports[`Render validation.status = error properties.suffixIcon: AlertFilled - v
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
               required={false}
               role="img"
@@ -3693,7 +4028,7 @@ exports[`Render validation.status = error properties.suffixIcon: AlertFilled - v
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -3767,7 +4102,7 @@ exports[`Render validation.status = error properties.title: My TextInput Title -
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -3901,6 +4236,52 @@ exports[`Render validation.status = null properties.autoFocus: true - value[0] 1
           autoFocus={true}
           className="ant-input {}"
           id="properties.autoFocus: true_input"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          type="text"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = null properties.bordered: false - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.bordered: false"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.bordered: false_input"
+      title="properties.bordered: false"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <input
+          className="ant-input ant-input-borderless {}"
+          id="properties.bordered: false_input"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
@@ -4238,6 +4619,53 @@ exports[`Render validation.status = null properties.label span: 12 - value[0] 1`
 </div>
 `;
 
+exports[`Render validation.status = null properties.maxLength: 4 - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.maxLength: 4"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.maxLength: 4_input"
+      title="properties.maxLength: 4"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <input
+          className="ant-input {}"
+          id="properties.maxLength: 4_input"
+          maxLength={4}
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          type="text"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render validation.status = null properties.placeholder: Type your text here - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
@@ -4316,7 +4744,7 @@ exports[`Render validation.status = null properties.prefix: Prefix to the text -
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -4373,7 +4801,7 @@ exports[`Render validation.status = null properties.prefixIcon.size: 24 - value[
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -4382,7 +4810,7 @@ exports[`Render validation.status = null properties.prefixIcon.size: 24 - value[
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.prefixIcon.size: 24_prefixIcon"
               required={false}
               role="img"
@@ -4451,7 +4879,7 @@ exports[`Render validation.status = null properties.prefixIcon: AccountBookFille
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -4460,7 +4888,7 @@ exports[`Render validation.status = null properties.prefixIcon: AccountBookFille
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
               required={false}
               role="img"
@@ -4621,7 +5049,7 @@ exports[`Render validation.status = null properties.suffix: Suffix to the text -
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -4678,7 +5106,7 @@ exports[`Render validation.status = null properties.suffixIcon.size 24 - value[0
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -4698,7 +5126,7 @@ exports[`Render validation.status = null properties.suffixIcon.size 24 - value[0
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.suffixIcon.size 24_suffixIcon"
               required={false}
               role="img"
@@ -4756,7 +5184,7 @@ exports[`Render validation.status = null properties.suffixIcon: AlertFilled - va
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -4776,7 +5204,7 @@ exports[`Render validation.status = null properties.suffixIcon: AlertFilled - va
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
               required={false}
               role="img"
@@ -5021,6 +5449,75 @@ exports[`Render validation.status = success properties.autoFocus: true - value[0
           autoFocus={true}
           className="ant-input {}"
           id="properties.autoFocus: true_input"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          type="text"
+          value=""
+        />
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="check-circle"
+          className="anticon anticon-check-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="check-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm193.5 301.7l-210.6 292a31.8 31.8 0 01-51.7 0L318.5 484.9c-3.8-5.3 0-12.7 6.5-12.7h46.9c10.2 0 19.9 4.9 25.9 13.3l71.2 98.8 157.2-218c6-8.3 15.6-13.3 25.9-13.3H699c6.5 0 10.3 7.4 6.5 12.7z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = success properties.bordered: false - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.bordered: false"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.bordered: false_input"
+      title="properties.bordered: false"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <input
+          className="ant-input ant-input-borderless {}"
+          id="properties.bordered: false_input"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
@@ -5542,6 +6039,76 @@ exports[`Render validation.status = success properties.label span: 12 - value[0]
 </div>
 `;
 
+exports[`Render validation.status = success properties.maxLength: 4 - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.maxLength: 4"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.maxLength: 4_input"
+      title="properties.maxLength: 4"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <input
+          className="ant-input {}"
+          id="properties.maxLength: 4_input"
+          maxLength={4}
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          type="text"
+          value=""
+        />
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="check-circle"
+          className="anticon anticon-check-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="check-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm193.5 301.7l-210.6 292a31.8 31.8 0 01-51.7 0L318.5 484.9c-3.8-5.3 0-12.7 6.5-12.7h46.9c10.2 0 19.9 4.9 25.9 13.3l71.2 98.8 157.2-218c6-8.3 15.6-13.3 25.9-13.3H699c6.5 0 10.3 7.4 6.5 12.7z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render validation.status = success properties.placeholder: Type your text here - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
@@ -5643,7 +6210,7 @@ exports[`Render validation.status = success properties.prefix: Prefix to the tex
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -5723,7 +6290,7 @@ exports[`Render validation.status = success properties.prefixIcon.size: 24 - val
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -5732,7 +6299,7 @@ exports[`Render validation.status = success properties.prefixIcon.size: 24 - val
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.prefixIcon.size: 24_prefixIcon"
               required={false}
               role="img"
@@ -5824,7 +6391,7 @@ exports[`Render validation.status = success properties.prefixIcon: AccountBookFi
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -5833,7 +6400,7 @@ exports[`Render validation.status = success properties.prefixIcon: AccountBookFi
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
               required={false}
               role="img"
@@ -6063,7 +6630,7 @@ exports[`Render validation.status = success properties.suffix: Suffix to the tex
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -6143,7 +6710,7 @@ exports[`Render validation.status = success properties.suffixIcon.size 24 - valu
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -6163,7 +6730,7 @@ exports[`Render validation.status = success properties.suffixIcon.size 24 - valu
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.suffixIcon.size 24_suffixIcon"
               required={false}
               role="img"
@@ -6244,7 +6811,7 @@ exports[`Render validation.status = success properties.suffixIcon: AlertFilled -
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -6264,7 +6831,7 @@ exports[`Render validation.status = success properties.suffixIcon: AlertFilled -
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
               required={false}
               role="img"
@@ -6449,7 +7016,7 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -6523,7 +7090,7 @@ exports[`Render validation.status = warning properties.allowClear: false - value
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -6598,7 +7165,81 @@ exports[`Render validation.status = warning properties.autoFocus: true - value[0
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      validation warning
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = warning properties.bordered: false - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.bordered: false"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.bordered: false_input"
+      title="properties.bordered: false"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <input
+          className="ant-input ant-input-borderless {}"
+          id="properties.bordered: false_input"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          type="text"
+          value=""
+        />
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="exclamation-circle"
+          className="anticon anticon-exclamation-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="exclamation-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 010-96 48.01 48.01 0 010 96z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -6673,7 +7314,7 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -6747,7 +7388,7 @@ exports[`Render validation.status = warning properties.label align: right - valu
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -6821,7 +7462,7 @@ exports[`Render validation.status = warning properties.label colon: false - valu
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -6881,7 +7522,7 @@ exports[`Render validation.status = warning properties.label disabled: true - va
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -6955,7 +7596,7 @@ exports[`Render validation.status = warning properties.label extra: showing extr
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -7037,7 +7678,7 @@ exports[`Render validation.status = warning properties.label inline: true - valu
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -7111,7 +7752,82 @@ exports[`Render validation.status = warning properties.label span: 12 - value[0]
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      validation warning
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = warning properties.maxLength: 4 - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.maxLength: 4"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.maxLength: 4_input"
+      title="properties.maxLength: 4"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <input
+          className="ant-input {}"
+          id="properties.maxLength: 4_input"
+          maxLength={4}
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          type="text"
+          value=""
+        />
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="exclamation-circle"
+          className="anticon anticon-exclamation-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="exclamation-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 010-96 48.01 48.01 0 010 96z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -7186,7 +7902,7 @@ exports[`Render validation.status = warning properties.placeholder: Type your te
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -7225,7 +7941,7 @@ exports[`Render validation.status = warning properties.prefix: Prefix to the tex
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -7271,7 +7987,7 @@ exports[`Render validation.status = warning properties.prefix: Prefix to the tex
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -7310,7 +8026,7 @@ exports[`Render validation.status = warning properties.prefixIcon.size: 24 - val
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -7319,7 +8035,7 @@ exports[`Render validation.status = warning properties.prefixIcon.size: 24 - val
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.prefixIcon.size: 24_prefixIcon"
               required={false}
               role="img"
@@ -7377,7 +8093,7 @@ exports[`Render validation.status = warning properties.prefixIcon.size: 24 - val
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -7416,7 +8132,7 @@ exports[`Render validation.status = warning properties.prefixIcon: AccountBookFi
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <span
@@ -7425,7 +8141,7 @@ exports[`Render validation.status = warning properties.prefixIcon: AccountBookFi
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
               required={false}
               role="img"
@@ -7483,7 +8199,7 @@ exports[`Render validation.status = warning properties.prefixIcon: AccountBookFi
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -7557,7 +8273,7 @@ exports[`Render validation.status = warning properties.size: large - value[0] 1`
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -7631,7 +8347,7 @@ exports[`Render validation.status = warning properties.size: small - value[0] 1`
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
       validation warning
     </div>
@@ -7670,7 +8386,7 @@ exports[`Render validation.status = warning properties.suffix: Suffix to the tex
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -7716,7 +8432,7 @@ exports[`Render validation.status = warning properties.suffix: Suffix to the tex
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -7755,7 +8471,7 @@ exports[`Render validation.status = warning properties.suffixIcon.size 24 - valu
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -7775,7 +8491,7 @@ exports[`Render validation.status = warning properties.suffixIcon.size 24 - valu
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"fontSize\\":24},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.suffixIcon.size 24_suffixIcon"
               required={false}
               role="img"
@@ -7822,7 +8538,7 @@ exports[`Render validation.status = warning properties.suffixIcon.size 24 - valu
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -7861,7 +8577,7 @@ exports[`Render validation.status = warning properties.suffixIcon: AlertFilled -
         className="ant-form-item-control-input-content"
       >
         <span
-          className="{} ant-input-affix-wrapper"
+          className="ant-input-affix-wrapper {}"
           onMouseUp={[Function]}
         >
           <input
@@ -7881,7 +8597,7 @@ exports[`Render validation.status = warning properties.suffixIcon: AlertFilled -
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
               required={false}
               role="img"
@@ -7928,7 +8644,7 @@ exports[`Render validation.status = warning properties.suffixIcon: AlertFilled -
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -8002,7 +8718,7 @@ exports[`Render validation.status = warning properties.title: My TextInput Title
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -8021,6 +8737,10 @@ exports[`Test Schema properties.allowClear: false 2`] = `null`;
 exports[`Test Schema properties.autoFocus: true 1`] = `true`;
 
 exports[`Test Schema properties.autoFocus: true 2`] = `null`;
+
+exports[`Test Schema properties.bordered: false 1`] = `true`;
+
+exports[`Test Schema properties.bordered: false 2`] = `null`;
 
 exports[`Test Schema properties.disabled: true 1`] = `true`;
 
@@ -8049,6 +8769,10 @@ exports[`Test Schema properties.label inline: true 2`] = `null`;
 exports[`Test Schema properties.label span: 12 1`] = `true`;
 
 exports[`Test Schema properties.label span: 12 2`] = `null`;
+
+exports[`Test Schema properties.maxLength: 4 1`] = `true`;
+
+exports[`Test Schema properties.maxLength: 4 2`] = `null`;
 
 exports[`Test Schema properties.placeholder: Type your text here 1`] = `true`;
 

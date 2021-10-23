@@ -16,7 +16,10 @@
   type: DateTimeSelector
   properties:
     disabled: true
-
+- id: 'properties.bordered: false'
+  type: DateTimeSelector
+  properties:
+    bordered: false
 - id: 'properties.disabledDates.min'
   type: DateSelector
   properties:

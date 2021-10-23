@@ -41,10 +41,13 @@
           "description": "Shape of the avatar."
         },
         "size": {
-          "type": "string",
+          "type": ["string", "object"],
           "default": "default",
           "enum": ["default", "small", "large"],
-          "description": "Size of the avatar."
+          "description": "Size of the avatar; default, small, large or responsive.",
+          "docs": {
+            "displayType": "string"
+          }
         },
         "src": {
           "type": "string",

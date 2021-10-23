@@ -57,7 +57,7 @@ ${example.description || ''}
               _nunjucks: {
                 template: `
 \`\`\`yaml
-{{ block }}
+{{ block | safe }}
 \`\`\`
 `,
                 on: {

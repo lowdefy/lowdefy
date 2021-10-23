@@ -30,6 +30,8 @@ exports[`Mock render - properties.ellipsis: rows, suffix - value[0] - default 1`
 
 exports[`Mock render - properties.ellipsis: true - value[0] - default 1`] = `Array []`;
 
+exports[`Mock render - properties.italic: true - value[0] - default 1`] = `Array []`;
+
 exports[`Mock render - properties.mark: true - value[0] - default 1`] = `Array []`;
 
 exports[`Mock render - properties.strong: true - value[0] - default 1`] = `Array []`;

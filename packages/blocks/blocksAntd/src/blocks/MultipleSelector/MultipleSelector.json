@@ -23,6 +23,11 @@
           "default": false,
           "description": "Autofocus to the block on page load."
         },
+        "bordered": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether or not the selector has a border style."
+        },
         "clearIcon": {
           "type": ["string", "object"],
           "default": "CloseCircleOutlined",

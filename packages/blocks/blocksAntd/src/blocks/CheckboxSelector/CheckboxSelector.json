@@ -13,6 +13,12 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "align": {
+          "type": "string",
+          "enum": ["start", "end", "center", "baseline"],
+          "default": "start",
+          "description": "Align options."
+        },
         "color": {
           "type": "string",
           "description": "Selected checkbox color.",
@@ -24,6 +30,17 @@
           "type": "boolean",
           "default": false,
           "description": "Disable the block if true."
+        },
+        "direction": {
+          "type": "string",
+          "enum": ["horizontal", "vertical"],
+          "default": "horizontal",
+          "description": "List options horizontally or vertical."
+        },
+        "wrap": {
+          "type": "boolean",
+          "default": true,
+          "description": "Specifies wrapping of options. Applies when 'direction' is 'horizontal'."
         },
         "inputStyle": {
           "type": "object",

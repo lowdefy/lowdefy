@@ -11,8 +11,16 @@
   type: CheckboxSelector
   properties:
     options:
-      - Option 1
-      - Option 2
+      - Option One
+      - Option Two
+      - Option Three
+      - Option Four
+      - Option Five
+      - Option Six
+      - Option Seven
+      - Option Eight
+      - Option Nine
+      - Option Ten
 - id: 'properties.options-number'
   type: CheckboxSelector
   properties:
@@ -116,3 +124,100 @@
           background: red
       - label: two
         value: 2
+- id: 'properties.direction horizontal'
+  type: CheckboxSelector
+  properties:
+    direction: horizontal
+    options:
+      - label: one
+        value: 1
+      - label: two
+        value: 2
+      - label: three
+        value: 3
+      - label: four
+        value: 4
+      - label: five
+        value: 5
+- id: 'properties.direction vertical'
+  type: CheckboxSelector
+  properties:
+    direction: vertical
+    options:
+      - label: one
+        value: 1
+      - label: two
+        value: 2
+      - label: three
+        value: 3
+      - label: four
+        value: 4
+      - label: five
+        value: 5
+- id: 'properties.wrap false'
+  type: CheckboxSelector
+  properties:
+    wrap: false
+    options:
+      - Option One A
+      - Option Two A
+      - Option Three A
+      - Option Four A
+      - Option Five A
+      - Option Six A
+      - Option Seven A
+      - Option Eight A
+      - Option Nine A
+      - Option Ten A
+      - Option One B
+      - Option Two B
+      - Option Three B
+      - Option Four B
+      - Option Five B
+      - Option Six B
+      - Option Seven B
+      - Option Eight B
+      - Option Nine B
+      - Option Ten B
+      - Option One C
+      - Option Two C
+      - Option Three C
+      - Option Four C
+      - Option Five C
+      - Option Six C
+      - Option Seven C
+      - Option Eight C
+      - Option Nine C
+      - Option Ten C
+- id: 'properties.align: start'
+  type: CheckboxSelector
+  properties:
+    align: start
+    options:
+      - '<div>Some main text</div><div style="font-size: 6px;">Some small subtext</div>'
+      - '<div style="color: green;">Option green</div>'
+      - Option 3
+- id: 'properties.align: end'
+  type: CheckboxSelector
+  properties:
+    align: end
+    options:
+      - '<div>Some main text</div><div style="font-size: 6px;">Some small subtext</div>'
+      - '<div style="color: green;">Option green</div>'
+      - Option 3
+- id: 'properties.align: center'
+  type: CheckboxSelector
+  properties:
+    align: center
+    options:
+      - '<div>Some main text</div><div style="font-size: 6px;">Some small subtext</div>'
+      - '<div style="color: green;">Option green</div>'
+      - Option 3
+- id: 'properties.align: baseline'
+  type: CheckboxSelector
+  properties:
+    align: baseline
+    options:
+      - '<div>Some main text</div><div style="font-size: 6px;">Some small subtext</div>'
+      - '<div style="color: green;">Option green</div>'
+      - Option 3

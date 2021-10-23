@@ -31,7 +31,7 @@ exports[`Render default - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,null,null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,null,null]}"
         >
           <span
             className="ant-checkbox"
@@ -53,6 +53,7 @@ exports[`Render default - value[0] 1`] = `
               className="ant-checkbox-inner"
             />
           </span>
+          <span />
         </label>
       </div>
     </div>
@@ -91,7 +92,7 @@ exports[`Render properties.color_red - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[{\\"& > span.ant-checkbox-checked:not(.ant-checkbox-disabled) > span\\":{\\"backgroundColor\\":\\"#ff0000 !important\\",\\"borderColor\\":\\"#ff0000 !important\\"}},{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[{\\"& > span.ant-checkbox-checked:not(.ant-checkbox-disabled) > span\\":{\\"backgroundColor\\":\\"#ff0000 !important\\",\\"borderColor\\":\\"#ff0000 !important\\"}},{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -114,9 +115,28 @@ exports[`Render properties.color_red - value[0] 1`] = `
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -156,7 +176,7 @@ exports[`Render properties.description: html - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -179,9 +199,28 @@ exports[`Render properties.description: html - value[0] 1`] = `
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -221,7 +260,7 @@ exports[`Render properties.description: long text - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -244,9 +283,28 @@ exports[`Render properties.description: long text - value[0] 1`] = `
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -272,7 +330,7 @@ exports[`Render properties.description: long text label disabled - value[0] 1`] 
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -295,9 +353,28 @@ exports[`Render properties.description: long text label disabled - value[0] 1`] 
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -337,7 +414,7 @@ exports[`Render properties.description-string - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -360,9 +437,28 @@ exports[`Render properties.description-string - value[0] 1`] = `
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -402,7 +498,7 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper ant-checkbox-wrapper-disabled"
+          className="ant-checkbox-wrapper ant-checkbox-wrapper-disabled {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox ant-checkbox-disabled"
@@ -426,9 +522,28 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -468,7 +583,7 @@ exports[`Render properties.inputStyle - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},{\\"fontSize\\":20}]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},{\\"fontSize\\":20}]}"
         >
           <span
             className="ant-checkbox"
@@ -491,9 +606,28 @@ exports[`Render properties.inputStyle - value[0] 1`] = `
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -533,7 +667,7 @@ exports[`Render properties.label.colon: false - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -556,9 +690,28 @@ exports[`Render properties.label.colon: false - value[0] 1`] = `
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -584,7 +737,7 @@ exports[`Render properties.label.disabled: true - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -607,9 +760,28 @@ exports[`Render properties.label.disabled: true - value[0] 1`] = `
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -649,7 +821,7 @@ exports[`Render properties.label.extra: showingextra - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -672,9 +844,28 @@ exports[`Render properties.label.extra: showingextra - value[0] 1`] = `
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -721,7 +912,7 @@ exports[`Render properties.label.title - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -744,9 +935,28 @@ exports[`Render properties.label.title - value[0] 1`] = `
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -786,7 +996,7 @@ exports[`Render properties.label: align_right - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -809,9 +1019,28 @@ exports[`Render properties.label: align_right - value[0] 1`] = `
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -859,7 +1088,7 @@ exports[`Render properties.label: inline_true - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -882,9 +1111,28 @@ exports[`Render properties.label: inline_true - value[0] 1`] = `
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -924,7 +1172,7 @@ exports[`Render properties.label: span_12 - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -947,9 +1195,28 @@ exports[`Render properties.label: span_12 - value[0] 1`] = `
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -989,7 +1256,7 @@ exports[`Render properties.title - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,null,null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,null,null]}"
         >
           <span
             className="ant-checkbox"
@@ -1011,6 +1278,7 @@ exports[`Render properties.title - value[0] 1`] = `
               className="ant-checkbox-inner"
             />
           </span>
+          <span />
         </label>
       </div>
     </div>
@@ -1049,7 +1317,7 @@ exports[`Render required = true default - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,null,null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,null,null]}"
         >
           <span
             className="ant-checkbox"
@@ -1071,6 +1339,7 @@ exports[`Render required = true default - value[0] 1`] = `
               className="ant-checkbox-inner"
             />
           </span>
+          <span />
         </label>
       </div>
     </div>
@@ -1109,7 +1378,7 @@ exports[`Render required = true properties.color_red - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[{\\"& > span.ant-checkbox-checked:not(.ant-checkbox-disabled) > span\\":{\\"backgroundColor\\":\\"#ff0000 !important\\",\\"borderColor\\":\\"#ff0000 !important\\"}},{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[{\\"& > span.ant-checkbox-checked:not(.ant-checkbox-disabled) > span\\":{\\"backgroundColor\\":\\"#ff0000 !important\\",\\"borderColor\\":\\"#ff0000 !important\\"}},{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -1132,9 +1401,28 @@ exports[`Render required = true properties.color_red - value[0] 1`] = `
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -1174,7 +1462,7 @@ exports[`Render required = true properties.description: html - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -1197,9 +1485,28 @@ exports[`Render required = true properties.description: html - value[0] 1`] = `
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -1239,7 +1546,7 @@ exports[`Render required = true properties.description: long text - value[0] 1`]
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -1262,9 +1569,28 @@ exports[`Render required = true properties.description: long text - value[0] 1`]
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -1290,7 +1616,7 @@ exports[`Render required = true properties.description: long text label disabled
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -1313,9 +1639,28 @@ exports[`Render required = true properties.description: long text label disabled
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -1355,7 +1700,7 @@ exports[`Render required = true properties.description-string - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -1378,9 +1723,28 @@ exports[`Render required = true properties.description-string - value[0] 1`] = `
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -1420,7 +1784,7 @@ exports[`Render required = true properties.disabled: true - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper ant-checkbox-wrapper-disabled"
+          className="ant-checkbox-wrapper ant-checkbox-wrapper-disabled {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox ant-checkbox-disabled"
@@ -1444,9 +1808,28 @@ exports[`Render required = true properties.disabled: true - value[0] 1`] = `
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -1486,7 +1869,7 @@ exports[`Render required = true properties.inputStyle - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},{\\"fontSize\\":20}]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},{\\"fontSize\\":20}]}"
         >
           <span
             className="ant-checkbox"
@@ -1509,9 +1892,28 @@ exports[`Render required = true properties.inputStyle - value[0] 1`] = `
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -1551,7 +1953,7 @@ exports[`Render required = true properties.label.colon: false - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -1574,9 +1976,28 @@ exports[`Render required = true properties.label.colon: false - value[0] 1`] = `
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -1602,7 +2023,7 @@ exports[`Render required = true properties.label.disabled: true - value[0] 1`] =
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -1625,9 +2046,28 @@ exports[`Render required = true properties.label.disabled: true - value[0] 1`] =
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -1667,7 +2107,7 @@ exports[`Render required = true properties.label.extra: showingextra - value[0] 
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -1690,9 +2130,28 @@ exports[`Render required = true properties.label.extra: showingextra - value[0] 
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -1739,7 +2198,7 @@ exports[`Render required = true properties.label.title - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -1762,9 +2221,28 @@ exports[`Render required = true properties.label.title - value[0] 1`] = `
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -1804,7 +2282,7 @@ exports[`Render required = true properties.label: align_right - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -1827,9 +2305,28 @@ exports[`Render required = true properties.label: align_right - value[0] 1`] = `
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -1877,7 +2374,7 @@ exports[`Render required = true properties.label: inline_true - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -1900,9 +2397,28 @@ exports[`Render required = true properties.label: inline_true - value[0] 1`] = `
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -1942,7 +2458,7 @@ exports[`Render required = true properties.label: span_12 - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -1965,9 +2481,28 @@ exports[`Render required = true properties.label: span_12 - value[0] 1`] = `
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -2007,7 +2542,7 @@ exports[`Render required = true properties.title - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,null,null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,null,null]}"
         >
           <span
             className="ant-checkbox"
@@ -2029,6 +2564,7 @@ exports[`Render required = true properties.title - value[0] 1`] = `
               className="ant-checkbox-inner"
             />
           </span>
+          <span />
         </label>
       </div>
     </div>
@@ -2067,7 +2603,7 @@ exports[`Render validation.status = error default - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,null,null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,null,null]}"
         >
           <span
             className="ant-checkbox"
@@ -2089,6 +2625,7 @@ exports[`Render validation.status = error default - value[0] 1`] = `
               className="ant-checkbox-inner"
             />
           </span>
+          <span />
         </label>
       </div>
       <span
@@ -2116,7 +2653,7 @@ exports[`Render validation.status = error default - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -2155,7 +2692,7 @@ exports[`Render validation.status = error properties.color_red - value[0] 1`] = 
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[{\\"& > span.ant-checkbox-checked:not(.ant-checkbox-disabled) > span\\":{\\"backgroundColor\\":\\"#ff0000 !important\\",\\"borderColor\\":\\"#ff0000 !important\\"}},{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[{\\"& > span.ant-checkbox-checked:not(.ant-checkbox-disabled) > span\\":{\\"backgroundColor\\":\\"#ff0000 !important\\",\\"borderColor\\":\\"#ff0000 !important\\"}},{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -2178,9 +2715,28 @@ exports[`Render validation.status = error properties.color_red - value[0] 1`] = 
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -2209,7 +2765,7 @@ exports[`Render validation.status = error properties.color_red - value[0] 1`] = 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -2248,7 +2804,7 @@ exports[`Render validation.status = error properties.description: html - value[0
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -2271,9 +2827,28 @@ exports[`Render validation.status = error properties.description: html - value[0
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -2302,7 +2877,7 @@ exports[`Render validation.status = error properties.description: html - value[0
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -2341,7 +2916,7 @@ exports[`Render validation.status = error properties.description: long text - va
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -2364,9 +2939,28 @@ exports[`Render validation.status = error properties.description: long text - va
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -2395,7 +2989,7 @@ exports[`Render validation.status = error properties.description: long text - va
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -2420,7 +3014,7 @@ exports[`Render validation.status = error properties.description: long text labe
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -2443,9 +3037,28 @@ exports[`Render validation.status = error properties.description: long text labe
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -2474,7 +3087,7 @@ exports[`Render validation.status = error properties.description: long text labe
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -2513,7 +3126,7 @@ exports[`Render validation.status = error properties.description-string - value[
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -2536,9 +3149,28 @@ exports[`Render validation.status = error properties.description-string - value[
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -2567,7 +3199,7 @@ exports[`Render validation.status = error properties.description-string - value[
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -2606,7 +3238,7 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper ant-checkbox-wrapper-disabled"
+          className="ant-checkbox-wrapper ant-checkbox-wrapper-disabled {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox ant-checkbox-disabled"
@@ -2630,9 +3262,28 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -2661,7 +3312,7 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -2700,7 +3351,7 @@ exports[`Render validation.status = error properties.inputStyle - value[0] 1`] =
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},{\\"fontSize\\":20}]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},{\\"fontSize\\":20}]}"
         >
           <span
             className="ant-checkbox"
@@ -2723,9 +3374,28 @@ exports[`Render validation.status = error properties.inputStyle - value[0] 1`] =
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -2754,7 +3424,7 @@ exports[`Render validation.status = error properties.inputStyle - value[0] 1`] =
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -2793,7 +3463,7 @@ exports[`Render validation.status = error properties.label.colon: false - value[
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -2816,9 +3486,28 @@ exports[`Render validation.status = error properties.label.colon: false - value[
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -2847,7 +3536,7 @@ exports[`Render validation.status = error properties.label.colon: false - value[
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -2872,7 +3561,7 @@ exports[`Render validation.status = error properties.label.disabled: true - valu
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -2895,9 +3584,28 @@ exports[`Render validation.status = error properties.label.disabled: true - valu
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -2926,7 +3634,7 @@ exports[`Render validation.status = error properties.label.disabled: true - valu
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -2965,7 +3673,7 @@ exports[`Render validation.status = error properties.label.extra: showingextra -
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -2988,9 +3696,28 @@ exports[`Render validation.status = error properties.label.extra: showingextra -
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -3019,7 +3746,7 @@ exports[`Render validation.status = error properties.label.extra: showingextra -
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -3058,7 +3785,7 @@ exports[`Render validation.status = error properties.label.title - value[0] 1`] 
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -3081,9 +3808,28 @@ exports[`Render validation.status = error properties.label.title - value[0] 1`] 
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -3112,7 +3858,7 @@ exports[`Render validation.status = error properties.label.title - value[0] 1`] 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -3151,7 +3897,7 @@ exports[`Render validation.status = error properties.label: align_right - value[
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -3174,9 +3920,28 @@ exports[`Render validation.status = error properties.label: align_right - value[
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -3205,7 +3970,7 @@ exports[`Render validation.status = error properties.label: align_right - value[
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -3252,7 +4017,7 @@ exports[`Render validation.status = error properties.label: inline_true - value[
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -3275,9 +4040,28 @@ exports[`Render validation.status = error properties.label: inline_true - value[
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -3306,7 +4090,7 @@ exports[`Render validation.status = error properties.label: inline_true - value[
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -3345,7 +4129,7 @@ exports[`Render validation.status = error properties.label: span_12 - value[0] 1
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -3368,9 +4152,28 @@ exports[`Render validation.status = error properties.label: span_12 - value[0] 1
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -3399,7 +4202,7 @@ exports[`Render validation.status = error properties.label: span_12 - value[0] 1
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -3438,7 +4241,7 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,null,null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,null,null]}"
         >
           <span
             className="ant-checkbox"
@@ -3460,6 +4263,7 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
               className="ant-checkbox-inner"
             />
           </span>
+          <span />
         </label>
       </div>
       <span
@@ -3487,7 +4291,7 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -3526,7 +4330,7 @@ exports[`Render validation.status = null default - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,null,null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,null,null]}"
         >
           <span
             className="ant-checkbox"
@@ -3548,6 +4352,7 @@ exports[`Render validation.status = null default - value[0] 1`] = `
               className="ant-checkbox-inner"
             />
           </span>
+          <span />
         </label>
       </div>
     </div>
@@ -3586,7 +4391,7 @@ exports[`Render validation.status = null properties.color_red - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[{\\"& > span.ant-checkbox-checked:not(.ant-checkbox-disabled) > span\\":{\\"backgroundColor\\":\\"#ff0000 !important\\",\\"borderColor\\":\\"#ff0000 !important\\"}},{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[{\\"& > span.ant-checkbox-checked:not(.ant-checkbox-disabled) > span\\":{\\"backgroundColor\\":\\"#ff0000 !important\\",\\"borderColor\\":\\"#ff0000 !important\\"}},{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -3609,9 +4414,28 @@ exports[`Render validation.status = null properties.color_red - value[0] 1`] = `
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -3651,7 +4475,7 @@ exports[`Render validation.status = null properties.description: html - value[0]
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -3674,9 +4498,28 @@ exports[`Render validation.status = null properties.description: html - value[0]
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -3716,7 +4559,7 @@ exports[`Render validation.status = null properties.description: long text - val
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -3739,9 +4582,28 @@ exports[`Render validation.status = null properties.description: long text - val
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -3767,7 +4629,7 @@ exports[`Render validation.status = null properties.description: long text label
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -3790,9 +4652,28 @@ exports[`Render validation.status = null properties.description: long text label
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -3832,7 +4713,7 @@ exports[`Render validation.status = null properties.description-string - value[0
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -3855,9 +4736,28 @@ exports[`Render validation.status = null properties.description-string - value[0
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -3897,7 +4797,7 @@ exports[`Render validation.status = null properties.disabled: true - value[0] 1`
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper ant-checkbox-wrapper-disabled"
+          className="ant-checkbox-wrapper ant-checkbox-wrapper-disabled {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox ant-checkbox-disabled"
@@ -3921,9 +4821,28 @@ exports[`Render validation.status = null properties.disabled: true - value[0] 1`
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -3963,7 +4882,7 @@ exports[`Render validation.status = null properties.inputStyle - value[0] 1`] = 
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},{\\"fontSize\\":20}]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},{\\"fontSize\\":20}]}"
         >
           <span
             className="ant-checkbox"
@@ -3986,9 +4905,28 @@ exports[`Render validation.status = null properties.inputStyle - value[0] 1`] = 
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -4028,7 +4966,7 @@ exports[`Render validation.status = null properties.label.colon: false - value[0
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -4051,9 +4989,28 @@ exports[`Render validation.status = null properties.label.colon: false - value[0
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -4079,7 +5036,7 @@ exports[`Render validation.status = null properties.label.disabled: true - value
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -4102,9 +5059,28 @@ exports[`Render validation.status = null properties.label.disabled: true - value
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -4144,7 +5120,7 @@ exports[`Render validation.status = null properties.label.extra: showingextra - 
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -4167,9 +5143,28 @@ exports[`Render validation.status = null properties.label.extra: showingextra - 
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -4216,7 +5211,7 @@ exports[`Render validation.status = null properties.label.title - value[0] 1`] =
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -4239,9 +5234,28 @@ exports[`Render validation.status = null properties.label.title - value[0] 1`] =
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -4281,7 +5295,7 @@ exports[`Render validation.status = null properties.label: align_right - value[0
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -4304,9 +5318,28 @@ exports[`Render validation.status = null properties.label: align_right - value[0
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -4354,7 +5387,7 @@ exports[`Render validation.status = null properties.label: inline_true - value[0
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -4377,9 +5410,28 @@ exports[`Render validation.status = null properties.label: inline_true - value[0
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -4419,7 +5471,7 @@ exports[`Render validation.status = null properties.label: span_12 - value[0] 1`
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -4442,9 +5494,28 @@ exports[`Render validation.status = null properties.label: span_12 - value[0] 1`
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -4484,7 +5555,7 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,null,null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,null,null]}"
         >
           <span
             className="ant-checkbox"
@@ -4506,6 +5577,7 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
               className="ant-checkbox-inner"
             />
           </span>
+          <span />
         </label>
       </div>
     </div>
@@ -4544,7 +5616,7 @@ exports[`Render validation.status = success default - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,null,null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,null,null]}"
         >
           <span
             className="ant-checkbox"
@@ -4566,6 +5638,7 @@ exports[`Render validation.status = success default - value[0] 1`] = `
               className="ant-checkbox-inner"
             />
           </span>
+          <span />
         </label>
       </div>
       <span
@@ -4627,7 +5700,7 @@ exports[`Render validation.status = success properties.color_red - value[0] 1`] 
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[{\\"& > span.ant-checkbox-checked:not(.ant-checkbox-disabled) > span\\":{\\"backgroundColor\\":\\"#ff0000 !important\\",\\"borderColor\\":\\"#ff0000 !important\\"}},{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[{\\"& > span.ant-checkbox-checked:not(.ant-checkbox-disabled) > span\\":{\\"backgroundColor\\":\\"#ff0000 !important\\",\\"borderColor\\":\\"#ff0000 !important\\"}},{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -4650,9 +5723,28 @@ exports[`Render validation.status = success properties.color_red - value[0] 1`] 
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -4715,7 +5807,7 @@ exports[`Render validation.status = success properties.description: html - value
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -4738,9 +5830,28 @@ exports[`Render validation.status = success properties.description: html - value
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -4803,7 +5914,7 @@ exports[`Render validation.status = success properties.description: long text - 
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -4826,9 +5937,28 @@ exports[`Render validation.status = success properties.description: long text - 
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -4877,7 +6007,7 @@ exports[`Render validation.status = success properties.description: long text la
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -4900,9 +6030,28 @@ exports[`Render validation.status = success properties.description: long text la
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -4965,7 +6114,7 @@ exports[`Render validation.status = success properties.description-string - valu
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -4988,9 +6137,28 @@ exports[`Render validation.status = success properties.description-string - valu
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -5053,7 +6221,7 @@ exports[`Render validation.status = success properties.disabled: true - value[0]
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper ant-checkbox-wrapper-disabled"
+          className="ant-checkbox-wrapper ant-checkbox-wrapper-disabled {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox ant-checkbox-disabled"
@@ -5077,9 +6245,28 @@ exports[`Render validation.status = success properties.disabled: true - value[0]
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -5142,7 +6329,7 @@ exports[`Render validation.status = success properties.inputStyle - value[0] 1`]
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},{\\"fontSize\\":20}]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},{\\"fontSize\\":20}]}"
         >
           <span
             className="ant-checkbox"
@@ -5165,9 +6352,28 @@ exports[`Render validation.status = success properties.inputStyle - value[0] 1`]
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -5230,7 +6436,7 @@ exports[`Render validation.status = success properties.label.colon: false - valu
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -5253,9 +6459,28 @@ exports[`Render validation.status = success properties.label.colon: false - valu
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -5304,7 +6529,7 @@ exports[`Render validation.status = success properties.label.disabled: true - va
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -5327,9 +6552,28 @@ exports[`Render validation.status = success properties.label.disabled: true - va
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -5392,7 +6636,7 @@ exports[`Render validation.status = success properties.label.extra: showingextra
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -5415,9 +6659,28 @@ exports[`Render validation.status = success properties.label.extra: showingextra
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -5487,7 +6750,7 @@ exports[`Render validation.status = success properties.label.title - value[0] 1`
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -5510,9 +6773,28 @@ exports[`Render validation.status = success properties.label.title - value[0] 1`
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -5575,7 +6857,7 @@ exports[`Render validation.status = success properties.label: align_right - valu
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -5598,9 +6880,28 @@ exports[`Render validation.status = success properties.label: align_right - valu
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -5671,7 +6972,7 @@ exports[`Render validation.status = success properties.label: inline_true - valu
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -5694,9 +6995,28 @@ exports[`Render validation.status = success properties.label: inline_true - valu
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -5759,7 +7079,7 @@ exports[`Render validation.status = success properties.label: span_12 - value[0]
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -5782,9 +7102,28 @@ exports[`Render validation.status = success properties.label: span_12 - value[0]
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -5847,7 +7186,7 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,null,null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,null,null]}"
         >
           <span
             className="ant-checkbox"
@@ -5869,6 +7208,7 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
               className="ant-checkbox-inner"
             />
           </span>
+          <span />
         </label>
       </div>
       <span
@@ -5930,7 +7270,7 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,null,null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,null,null]}"
         >
           <span
             className="ant-checkbox"
@@ -5952,6 +7292,7 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
               className="ant-checkbox-inner"
             />
           </span>
+          <span />
         </label>
       </div>
       <span
@@ -5979,7 +7320,7 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -6018,7 +7359,7 @@ exports[`Render validation.status = warning properties.color_red - value[0] 1`] 
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[{\\"& > span.ant-checkbox-checked:not(.ant-checkbox-disabled) > span\\":{\\"backgroundColor\\":\\"#ff0000 !important\\",\\"borderColor\\":\\"#ff0000 !important\\"}},{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[{\\"& > span.ant-checkbox-checked:not(.ant-checkbox-disabled) > span\\":{\\"backgroundColor\\":\\"#ff0000 !important\\",\\"borderColor\\":\\"#ff0000 !important\\"}},{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -6041,9 +7382,28 @@ exports[`Render validation.status = warning properties.color_red - value[0] 1`] 
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -6072,7 +7432,7 @@ exports[`Render validation.status = warning properties.color_red - value[0] 1`] 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -6111,7 +7471,7 @@ exports[`Render validation.status = warning properties.description: html - value
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -6134,9 +7494,28 @@ exports[`Render validation.status = warning properties.description: html - value
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -6165,7 +7544,7 @@ exports[`Render validation.status = warning properties.description: html - value
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -6204,7 +7583,7 @@ exports[`Render validation.status = warning properties.description: long text - 
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -6227,9 +7606,28 @@ exports[`Render validation.status = warning properties.description: long text - 
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -6258,7 +7656,7 @@ exports[`Render validation.status = warning properties.description: long text - 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -6283,7 +7681,7 @@ exports[`Render validation.status = warning properties.description: long text la
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -6306,9 +7704,28 @@ exports[`Render validation.status = warning properties.description: long text la
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -6337,7 +7754,7 @@ exports[`Render validation.status = warning properties.description: long text la
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -6376,7 +7793,7 @@ exports[`Render validation.status = warning properties.description-string - valu
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -6399,9 +7816,28 @@ exports[`Render validation.status = warning properties.description-string - valu
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -6430,7 +7866,7 @@ exports[`Render validation.status = warning properties.description-string - valu
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -6469,7 +7905,7 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper ant-checkbox-wrapper-disabled"
+          className="ant-checkbox-wrapper ant-checkbox-wrapper-disabled {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox ant-checkbox-disabled"
@@ -6493,9 +7929,28 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -6524,7 +7979,7 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -6563,7 +8018,7 @@ exports[`Render validation.status = warning properties.inputStyle - value[0] 1`]
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},{\\"fontSize\\":20}]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},{\\"fontSize\\":20}]}"
         >
           <span
             className="ant-checkbox"
@@ -6586,9 +8041,28 @@ exports[`Render validation.status = warning properties.inputStyle - value[0] 1`]
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -6617,7 +8091,7 @@ exports[`Render validation.status = warning properties.inputStyle - value[0] 1`]
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -6656,7 +8130,7 @@ exports[`Render validation.status = warning properties.label.colon: false - valu
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -6679,9 +8153,28 @@ exports[`Render validation.status = warning properties.label.colon: false - valu
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -6710,7 +8203,7 @@ exports[`Render validation.status = warning properties.label.colon: false - valu
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -6735,7 +8228,7 @@ exports[`Render validation.status = warning properties.label.disabled: true - va
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -6758,9 +8251,28 @@ exports[`Render validation.status = warning properties.label.disabled: true - va
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -6789,7 +8301,7 @@ exports[`Render validation.status = warning properties.label.disabled: true - va
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -6828,7 +8340,7 @@ exports[`Render validation.status = warning properties.label.extra: showingextra
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -6851,9 +8363,28 @@ exports[`Render validation.status = warning properties.label.extra: showingextra
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -6882,7 +8413,7 @@ exports[`Render validation.status = warning properties.label.extra: showingextra
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -6921,7 +8452,7 @@ exports[`Render validation.status = warning properties.label.title - value[0] 1`
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -6944,9 +8475,28 @@ exports[`Render validation.status = warning properties.label.title - value[0] 1`
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -6975,7 +8525,7 @@ exports[`Render validation.status = warning properties.label.title - value[0] 1`
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -7014,7 +8564,7 @@ exports[`Render validation.status = warning properties.label: align_right - valu
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -7037,9 +8587,28 @@ exports[`Render validation.status = warning properties.label: align_right - valu
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -7068,7 +8637,7 @@ exports[`Render validation.status = warning properties.label: align_right - valu
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -7115,7 +8684,7 @@ exports[`Render validation.status = warning properties.label: inline_true - valu
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -7138,9 +8707,28 @@ exports[`Render validation.status = warning properties.label: inline_true - valu
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -7169,7 +8757,7 @@ exports[`Render validation.status = warning properties.label: inline_true - valu
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -7208,7 +8796,7 @@ exports[`Render validation.status = warning properties.label: span_12 - value[0]
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,{\\"marginRight\\":\\"30px\\"},null]}"
         >
           <span
             className="ant-checkbox"
@@ -7231,9 +8819,28 @@ exports[`Render validation.status = warning properties.label: span_12 - value[0]
             />
           </span>
           <span>
-            <span
-              className="{}"
-            />
+            <div
+              className="ant-space ant-space-horizontal ant-space-align-center"
+              style={
+                Object {
+                  "flexWrap": "wrap",
+                  "marginBottom": -8,
+                }
+              }
+            >
+              <div
+                className="ant-space-item"
+                style={
+                  Object {
+                    "paddingBottom": 8,
+                  }
+                }
+              >
+                <span
+                  className="{}"
+                />
+              </div>
+            </div>
           </span>
         </label>
       </div>
@@ -7262,7 +8869,7 @@ exports[`Render validation.status = warning properties.label: span_12 - value[0]
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -7301,7 +8908,7 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
         className="ant-form-item-control-input-content"
       >
         <label
-          className="{\\"style\\":[null,null,null]} ant-checkbox-wrapper"
+          className="ant-checkbox-wrapper {\\"style\\":[null,null,null]}"
         >
           <span
             className="ant-checkbox"
@@ -7323,6 +8930,7 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
               className="ant-checkbox-inner"
             />
           </span>
+          <span />
         </label>
       </div>
       <span
@@ -7350,7 +8958,7 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>

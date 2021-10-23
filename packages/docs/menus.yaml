@@ -47,6 +47,22 @@
           pageId: next-steps
           properties:
             title: Next steps
+    - id: howto
+      type: MenuGroup
+      properties:
+        title: How To
+        icon: QuestionOutlined
+      links:
+        - id: generate-csv
+          type: MenuLink
+          pageId: generate-csv-files-from-data
+          properties:
+            title: Generate CSVs
+        - id: generate-pdf
+          type: MenuLink
+          pageId: generate-pdf-document-from-data
+          properties:
+            title: Generate PDFs
     - id: concepts
       type: MenuGroup
       properties:
@@ -724,9 +740,10 @@
         - id: _sum
           type: MenuLink
           pageId: _sum
-        - id: _switch
-          type: MenuLink
-          pageId: _switch
+        # TODO NEXT v3.22.0 INCLUDE
+        # - id: _switch
+        #   type: MenuLink
+        #   pageId: _switch
         - id: _type
           type: MenuLink
           pageId: _type

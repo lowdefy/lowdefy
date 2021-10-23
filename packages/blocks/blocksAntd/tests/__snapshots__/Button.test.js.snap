@@ -2,7 +2,7 @@
 
 exports[`Render default - value[0] 1`] = `
 <button
-  className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+  className="ant-btn ant-btn-primary {\\"style\\":[{},null]}"
   id="default"
   onClick={[Function]}
   type="button"
@@ -15,7 +15,7 @@ exports[`Render default - value[0] 1`] = `
 
 exports[`Render properties.block: true - value[0] 1`] = `
 <button
-  className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-block"
+  className="ant-btn ant-btn-primary ant-btn-block {\\"style\\":[{},null]}"
   id="properties.block: true"
   onClick={[Function]}
   type="button"
@@ -28,7 +28,7 @@ exports[`Render properties.block: true - value[0] 1`] = `
 
 exports[`Render properties.color: #9c27b0 - value[0] 1`] = `
 <button
-  className="ant-btn {\\"style\\":[{\\"backgroundColor\\":\\"#9c27b0\\",\\"borderColor\\":\\"#9c27b0\\",\\"&:active\\":{\\"backgroundColor\\":\\"#75178a\\",\\"borderColor\\":\\"#75178a\\"},\\"&:hover\\":{\\"backgroundColor\\":\\"#af48bd\\",\\"borderColor\\":\\"#af48bd\\"}},null]} ant-btn-primary"
+  className="ant-btn ant-btn-primary {\\"style\\":[{\\"backgroundColor\\":\\"#9c27b0\\",\\"borderColor\\":\\"#9c27b0\\",\\"&:active\\":{\\"backgroundColor\\":\\"#75178a\\",\\"borderColor\\":\\"#75178a\\"},\\"&:hover\\":{\\"backgroundColor\\":\\"#af48bd\\",\\"borderColor\\":\\"#af48bd\\"}},null]}"
   id="properties.color: #9c27b0"
   onClick={[Function]}
   type="button"
@@ -41,7 +41,7 @@ exports[`Render properties.color: #9c27b0 - value[0] 1`] = `
 
 exports[`Render properties.danger: true - value[0] 1`] = `
 <button
-  className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-dangerous"
+  className="ant-btn ant-btn-primary ant-btn-dangerous {\\"style\\":[{},null]}"
   id="properties.danger: true"
   onClick={[Function]}
   type="button"
@@ -54,7 +54,7 @@ exports[`Render properties.danger: true - value[0] 1`] = `
 
 exports[`Render properties.disabled: true - value[0] 1`] = `
 <button
-  className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+  className="ant-btn ant-btn-primary {\\"style\\":[{},null]}"
   disabled={true}
   id="properties.disabled: true"
   onClick={[Function]}
@@ -68,7 +68,7 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
 
 exports[`Render properties.ghost: true - value[0] 1`] = `
 <button
-  className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-background-ghost"
+  className="ant-btn ant-btn-primary ant-btn-background-ghost {\\"style\\":[{},null]}"
   id="properties.ghost: true"
   onClick={[Function]}
   type="button"
@@ -81,7 +81,7 @@ exports[`Render properties.ghost: true - value[0] 1`] = `
 
 exports[`Render properties.hideTitle: true - value[0] 1`] = `
 <button
-  className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+  className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
   id="properties.hideTitle: true"
   onClick={[Function]}
   type="button"
@@ -89,7 +89,7 @@ exports[`Render properties.hideTitle: true - value[0] 1`] = `
   <span
     aria-label="loading-3-quarters"
     basePath=""
-    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+    className="anticon anticon-loading-3-quarters anticon-spin {}"
     id="properties.hideTitle: true_icon"
     required={false}
     role="img"
@@ -113,7 +113,7 @@ exports[`Render properties.hideTitle: true - value[0] 1`] = `
 
 exports[`Render properties.href: www.lowdefy.com - value[0] 1`] = `
 <a
-  className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+  className="ant-btn ant-btn-primary {\\"style\\":[{},null]}"
   href="https://www.lowdefy.com"
   id="properties.href: www.lowdefy.com"
   onClick={[Function]}
@@ -126,7 +126,7 @@ exports[`Render properties.href: www.lowdefy.com - value[0] 1`] = `
 
 exports[`Render properties.icon object - value[0] 1`] = `
 <button
-  className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+  className="ant-btn ant-btn-primary {\\"style\\":[{},null]}"
   id="properties.icon object"
   onClick={[Function]}
   type="button"
@@ -134,7 +134,7 @@ exports[`Render properties.icon object - value[0] 1`] = `
   <span
     aria-label="loading-3-quarters"
     basePath=""
-    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"red\\"},null]}"
+    className="anticon anticon-loading-3-quarters anticon-spin {}"
     id="properties.icon object_icon"
     required={false}
     role="img"
@@ -161,7 +161,7 @@ exports[`Render properties.icon object - value[0] 1`] = `
 
 exports[`Render properties.icon string - value[0] 1`] = `
 <button
-  className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+  className="ant-btn ant-btn-primary {\\"style\\":[{},null]}"
   id="properties.icon string"
   onClick={[Function]}
   type="button"
@@ -169,7 +169,7 @@ exports[`Render properties.icon string - value[0] 1`] = `
   <span
     aria-label="loading-3-quarters"
     basePath=""
-    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+    className="anticon anticon-loading-3-quarters anticon-spin {}"
     id="properties.icon string_icon"
     required={false}
     role="img"
@@ -196,7 +196,7 @@ exports[`Render properties.icon string - value[0] 1`] = `
 
 exports[`Render properties.shape: circle - value[0] 1`] = `
 <button
-  className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-circle"
+  className="ant-btn ant-btn-primary ant-btn-circle {\\"style\\":[{},null]}"
   id="properties.shape: circle"
   onClick={[Function]}
   type="button"
@@ -209,7 +209,7 @@ exports[`Render properties.shape: circle - value[0] 1`] = `
 
 exports[`Render properties.shape: round - value[0] 1`] = `
 <button
-  className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-round"
+  className="ant-btn ant-btn-primary ant-btn-round {\\"style\\":[{},null]}"
   id="properties.shape: round"
   onClick={[Function]}
   type="button"
@@ -222,7 +222,7 @@ exports[`Render properties.shape: round - value[0] 1`] = `
 
 exports[`Render properties.size: large - value[0] 1`] = `
 <button
-  className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-lg"
+  className="ant-btn ant-btn-primary ant-btn-lg {\\"style\\":[{},null]}"
   id="properties.size: large"
   onClick={[Function]}
   type="button"
@@ -235,7 +235,7 @@ exports[`Render properties.size: large - value[0] 1`] = `
 
 exports[`Render properties.size: small - value[0] 1`] = `
 <button
-  className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-sm"
+  className="ant-btn ant-btn-primary ant-btn-sm {\\"style\\":[{},null]}"
   id="properties.size: small"
   onClick={[Function]}
   type="button"
@@ -248,7 +248,7 @@ exports[`Render properties.size: small - value[0] 1`] = `
 
 exports[`Render properties.title - value[0] 1`] = `
 <button
-  className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+  className="ant-btn ant-btn-primary {\\"style\\":[{},null]}"
   id="properties.title"
   onClick={[Function]}
   type="button"
@@ -261,7 +261,7 @@ exports[`Render properties.title - value[0] 1`] = `
 
 exports[`Render properties.type: danger - value[0] 1`] = `
 <button
-  className="ant-btn {\\"style\\":[{},null]} ant-btn-danger"
+  className="ant-btn ant-btn-danger {\\"style\\":[{},null]}"
   id="properties.type: danger"
   onClick={[Function]}
   type="button"
@@ -274,7 +274,7 @@ exports[`Render properties.type: danger - value[0] 1`] = `
 
 exports[`Render properties.type: dashed - value[0] 1`] = `
 <button
-  className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+  className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
   id="properties.type: dashed"
   onClick={[Function]}
   type="button"
@@ -287,7 +287,7 @@ exports[`Render properties.type: dashed - value[0] 1`] = `
 
 exports[`Render properties.type: default - value[0] 1`] = `
 <button
-  className="ant-btn {\\"style\\":[{},null]} ant-btn-default"
+  className="ant-btn {\\"style\\":[{},null]}"
   id="properties.type: default"
   onClick={[Function]}
   type="button"
@@ -300,7 +300,7 @@ exports[`Render properties.type: default - value[0] 1`] = `
 
 exports[`Render properties.type: link - value[0] 1`] = `
 <button
-  className="ant-btn {\\"style\\":[{},null]} ant-btn-link"
+  className="ant-btn ant-btn-link {\\"style\\":[{},null]}"
   id="properties.type: link"
   onClick={[Function]}
   type="button"
@@ -313,7 +313,7 @@ exports[`Render properties.type: link - value[0] 1`] = `
 
 exports[`Render properties.type: text - value[0] 1`] = `
 <button
-  className="ant-btn {\\"style\\":[{},null]} ant-btn-text"
+  className="ant-btn ant-btn-text {\\"style\\":[{},null]}"
   id="properties.type: text"
   onClick={[Function]}
   type="button"
@@ -326,7 +326,7 @@ exports[`Render properties.type: text - value[0] 1`] = `
 
 exports[`Render with html in title - value[0] 1`] = `
 <button
-  className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+  className="ant-btn ant-btn-primary {\\"style\\":[{},null]}"
   id="with html in title"
   onClick={[Function]}
   type="button"
@@ -339,7 +339,7 @@ exports[`Render with html in title - value[0] 1`] = `
 
 exports[`Render with html in title - value[0] 2`] = `
 <button
-  className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+  className="ant-btn ant-btn-primary {\\"style\\":[{},null]}"
   id="with html in title"
   onClick={[Function]}
   type="button"
@@ -347,7 +347,7 @@ exports[`Render with html in title - value[0] 2`] = `
   <span
     aria-label="loading-3-quarters"
     basePath=""
-    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+    className="anticon anticon-loading-3-quarters anticon-spin {}"
     id="with html in title_icon"
     required={false}
     role="img"

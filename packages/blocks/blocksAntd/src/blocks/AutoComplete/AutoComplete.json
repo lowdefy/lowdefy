@@ -23,6 +23,11 @@
           "default": false,
           "description": "Autofocus to the block on page load."
         },
+        "bordered": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether or not the input has a border style."
+        },
         "backfill": {
           "type": "boolean",
           "default": false,
@@ -183,6 +188,10 @@
         "onChange": {
           "type": "array",
           "description": "Trigger actions when selection is changed."
+        },
+        "onSearch": {
+          "type": "array",
+          "description": "Called when searching items."
         }
       }
     }

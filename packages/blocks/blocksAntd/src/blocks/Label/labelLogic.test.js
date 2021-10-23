@@ -245,7 +245,7 @@ test('label default logic with validation.status = error', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Test title",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -284,7 +284,7 @@ test('label default logic with validation.status = warning', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Test title",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -324,7 +324,7 @@ test('label default logic with validation.status = success', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-success {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Test title",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -398,7 +398,7 @@ test('label default logic with required', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Test title",
       "labelClassName": "ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -436,7 +436,7 @@ test('label default logic with required', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Test title",
       "labelClassName": "ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -474,7 +474,7 @@ test('label default logic with required', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-success {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Test title",
       "labelClassName": "ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -548,7 +548,7 @@ test('label default logic properties.align = right', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -586,7 +586,7 @@ test('label default logic properties.align = right', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -624,7 +624,7 @@ test('label default logic properties.align = right', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-success {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -698,7 +698,7 @@ test('label default logic properties.align = left', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -736,7 +736,7 @@ test('label default logic properties.align = left', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -774,7 +774,7 @@ test('label default logic properties.align = left', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-success {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -838,7 +838,7 @@ test('label default logic properties.inline = true', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -866,7 +866,7 @@ test('label default logic properties.inline = true', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -894,7 +894,7 @@ test('label default logic properties.inline = true', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-success {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -958,7 +958,7 @@ test('label default logic properties.colon = true', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -996,7 +996,7 @@ test('label default logic properties.colon = true', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -1034,7 +1034,7 @@ test('label default logic properties.colon = true', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-success {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -1108,7 +1108,7 @@ test('label default logic properties.title = title_1', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "title_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -1146,7 +1146,7 @@ test('label default logic properties.title = title_1', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "title_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -1184,7 +1184,7 @@ test('label default logic properties.title = title_1', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-success {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "title_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -1264,7 +1264,7 @@ test('label default logic properties.title = long', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -1305,7 +1305,7 @@ test('label default logic properties.title = long', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -1346,7 +1346,7 @@ test('label default logic properties.title = long', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-success {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -1418,7 +1418,7 @@ test('label default logic properties.title = long and properties.inline = true',
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -1450,7 +1450,7 @@ test('label default logic properties.title = long and properties.inline = true',
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -1482,7 +1482,7 @@ test('label default logic properties.title = long and properties.inline = true',
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-success {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -1546,7 +1546,7 @@ test('label default logic properties.size = small', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":-4},null]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}",
       "labelCol": Object {
@@ -1584,7 +1584,7 @@ test('label default logic properties.size = small', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":-4},null]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}",
       "labelCol": Object {
@@ -1622,7 +1622,7 @@ test('label default logic properties.size = small', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-success {\\"style\\":[{\\"marginTop\\":-4},null]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}",
       "labelCol": Object {
@@ -1696,7 +1696,7 @@ test('label default logic properties.size = large', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}",
       "labelCol": Object {
@@ -1734,7 +1734,7 @@ test('label default logic properties.size = large', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}",
       "labelCol": Object {
@@ -1772,7 +1772,7 @@ test('label default logic properties.size = large', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-success {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}",
       "labelCol": Object {
@@ -1846,7 +1846,7 @@ test('label default logic properties.disabled = true', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": false,
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -1884,7 +1884,7 @@ test('label default logic properties.disabled = true', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": false,
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -1922,7 +1922,7 @@ test('label default logic properties.disabled = true', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-success {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": false,
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -2004,7 +2004,7 @@ test('label default logic properties.style', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},{\\"border\\":\\"1px solid yellow\\"}]}",
       "labelCol": Object {
@@ -2046,7 +2046,7 @@ test('label default logic properties.style', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},{\\"border\\":\\"1px solid yellow\\"}]}",
       "labelCol": Object {
@@ -2088,7 +2088,7 @@ test('label default logic properties.style', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-success {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},{\\"border\\":\\"1px solid yellow\\"}]}",
       "labelCol": Object {
@@ -2170,7 +2170,7 @@ test('label default logic properties.extraStyle', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid yellow\\"}]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -2212,7 +2212,7 @@ test('label default logic properties.extraStyle', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid yellow\\"}]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -2254,7 +2254,7 @@ test('label default logic properties.extraStyle', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid yellow\\"}]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-success {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -2336,7 +2336,7 @@ test('label default logic properties.feedbackStyle', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid yellow\\"}]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid yellow\\"}]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -2378,7 +2378,7 @@ test('label default logic properties.feedbackStyle', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid yellow\\"}]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid yellow\\"}]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -2420,7 +2420,7 @@ test('label default logic properties.feedbackStyle', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid yellow\\"}]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-success {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid yellow\\"}]}",
       "label": "label_1",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -2494,7 +2494,7 @@ test('label default logic content.content = () => one', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Test title",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -2532,7 +2532,7 @@ test('label default logic content.content = () => one', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Test title",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
@@ -2570,7 +2570,7 @@ test('label default logic content.content = () => one', () => {
   ).toMatchInlineSnapshot(`
     Object {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
-      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-success {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Test title",
       "labelClassName": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
       "labelCol": Object {
