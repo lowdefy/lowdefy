@@ -3392,7 +3392,7 @@ __metadata:
     mssql: 7.2.1
     mysql: 2.18.1
     openid-client: 4.9.1
-    pg: 8.6.0
+    pg: 8.7.1
     saslprep: 1.0.3
     sqlite3: 5.0.2
     stripe: 8.172.0
@@ -13624,7 +13624,7 @@ __metadata:
     mysql: 2.18.1
     opener: 1.5.2
     ora: 5.4.0
-    pg: 8.6.0
+    pg: 8.7.1
     react: 17.0.2
     react-dom: 17.0.2
     reload: 3.1.1
@@ -15989,7 +15989,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg-pool@npm:^3.3.0":
+"pg-pool@npm:^3.4.1":
   version: 3.4.1
   resolution: "pg-pool@npm:3.4.1"
   peerDependencies:
@@ -16018,14 +16018,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg@npm:8.6.0":
-  version: 8.6.0
-  resolution: "pg@npm:8.6.0"
+"pg@npm:8.7.1":
+  version: 8.7.1
+  resolution: "pg@npm:8.7.1"
   dependencies:
     buffer-writer: 2.0.0
     packet-reader: 1.0.0
     pg-connection-string: ^2.5.0
-    pg-pool: ^3.3.0
+    pg-pool: ^3.4.1
     pg-protocol: ^1.5.0
     pg-types: ^2.1.0
     pgpass: 1.x
@@ -16034,7 +16034,7 @@ __metadata:
   peerDependenciesMeta:
     pg-native:
       optional: true
-  checksum: 37d5d656bf827409c33b3f44cbefc2a435238252f69dfae38112dc35c191090194ab2d5b221ae7b8dc9beed24c71f7f8a97f891130272c6db831d2f9f689d07c
+  checksum: 3a17d9a73df9c9f5f99400751144f9d5e8dbe1948ca44f5b5eecb2166ad78cab36d070c2a97438cd3a5d1d083e70af1d3e0aad4554a45fe74b77d98ed4487242
   languageName: node
   linkType: hard
 
