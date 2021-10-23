@@ -21,6 +21,11 @@
           "default": ",",
           "description": "Group separator."
         },
+        "loading": {
+          "type": "boolean",
+          "default": false,
+          "description": "Control the loading status of Statistic."
+        },
         "precision": {
           "type": "number",
           "description": "Number of decimals to display."

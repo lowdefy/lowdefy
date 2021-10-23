@@ -34,10 +34,10 @@ import metaLocations from './metaLocations';
 import fetchMetaUrl from './fetchMetaUrl';
 
 function createGetMeta({ components, context }) {
-  const { blocksServerUrl, cacheDirectory } = context;
+  const { cacheDirectory } = context;
   const { types } = components;
   const allMetaLocations = {
-    ...metaLocations({ blocksServerUrl, context }),
+    ...metaLocations(context),
     ...types,
   };
   const fetchMetaCache = createFetchMetaCache({ cacheDirectory });

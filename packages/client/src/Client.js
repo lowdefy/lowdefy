@@ -18,9 +18,13 @@ import React, { Suspense } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import { ErrorBoundary } from '@lowdefy/block-tools';
-import { get } from '@lowdefy/helpers';
 
+import createLogin from './auth/createLogin';
+import createLogout from './auth/createLogout';
+import DisplayMessage from './page/DisplayMessage';
+import getCookie from './utils/getCookie';
 import Page from './page/Page';
+import parseJwt from './auth/parseJwt';
 import useRootData from './swr/useRootData';
 
 const lowdefy = {
@@ -48,19 +52,46 @@ if (window.location.origin.includes('http://localhost')) {
 
 const RootData = ({ children, lowdefy }) => {
   const { data } = useRootData();
-  console.log('RootData', data);
 
   lowdefy.homePageId = data.homePageId;
   lowdefy.menus = data.menus;
-  lowdefy.lowdefyGlobal = JSON.parse(JSON.stringify(get(data, 'lowdefyGlobal', { default: {} })));
+  // TODO We used to make a copy to avoid immutable error when calling setGlobal using Apollo Client.
+  // Check if still needed
+  // lowdefy.lowdefyGlobal = JSON.parse(JSON.stringify(get(data, 'lowdefyGlobal', { default: {} })));
+  lowdefy.lowdefyGlobal = data.lowdefyGlobal;
+
+  if (data.authenticated) {
+    const idToken = getCookie(lowdefy, { cookieName: 'idToken' });
+
+    if (!idToken) {
+      lowdefy.auth.logout();
+      // Throw promise to suspend till user is logged out.
+      throw new Promise(() => {});
+    }
+    // eslint-disable-next-line no-unused-vars
+    const { iat, exp, aud, iss, ...user } = parseJwt(idToken);
+    lowdefy.user = user;
+  }
+
   return <>{children}</>;
 };
 
 const Root = () => {
   lowdefy.updateBlock = (blockId) => lowdefy.updaters[blockId] && lowdefy.updaters[blockId]();
+  lowdefy.auth = {
+    login: createLogin(lowdefy),
+    logout: createLogout(lowdefy),
+  };
   lowdefy.user = {};
   return (
     <RootData lowdefy={lowdefy}>
+      <DisplayMessage
+        methods={{
+          registerMethod: (_, method) => {
+            lowdefy.displayMessage = method;
+          },
+        }}
+      />
       <Switch>
         <Route exact path={'/:pageId'}>
           <Page lowdefy={lowdefy} />

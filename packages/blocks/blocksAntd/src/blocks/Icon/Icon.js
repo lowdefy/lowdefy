@@ -42,10 +42,7 @@ const IconBlock = ({ blockId, events, methods, properties, ...props }) => {
   }
   const iconProps = {
     id: blockId,
-    className: methods.makeCssClass([
-      { color: propertiesObj.color, fontSize: propertiesObj.size },
-      propertiesObj.style,
-    ]),
+    className: methods.makeCssClass(propertiesObj.style),
     rotate: propertiesObj.rotate,
     spin: propertiesObj.spin,
     twoToneColor: propertiesObj.color,
@@ -68,6 +65,7 @@ const IconBlock = ({ blockId, events, methods, properties, ...props }) => {
                     name: 'onClick',
                   }))
               }
+              style={{ color: propertiesObj.color, fontSize: propertiesObj.size }}
               {...iconProps} // spread props for Ant design to populate props from parent
             />
           </Suspense>

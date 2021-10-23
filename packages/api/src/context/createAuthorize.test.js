@@ -1,0 +1,68 @@
+/*
+  Copyright 2020-2021 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import createAuthorize from './createAuthorize';
+
+import { ServerError } from '../context/errors';
+
+test('authorize public object', async () => {
+  const auth = { public: true };
+  let authorize = createAuthorize({});
+  expect(authorize({ auth })).toBe(true);
+
+  authorize = createAuthorize({ user: { sub: 'sub' } });
+  expect(authorize({ auth })).toBe(true);
+});
+
+test('authorize protected object, no roles', async () => {
+  const auth = { public: false };
+
+  let authorize = createAuthorize({ authenticated: false });
+  expect(authorize({ auth })).toBe(false);
+
+  authorize = createAuthorize({ authenticated: true });
+  expect(authorize({ auth })).toBe(true);
+});
+
+test('authorize role protected object', async () => {
+  const auth = { public: false, roles: ['role1'] };
+
+  let authorize = createAuthorize({});
+  expect(authorize({ auth })).toBe(false);
+
+  authorize = createAuthorize({ authenticated: true });
+  expect(authorize({ auth })).toBe(false);
+
+  authorize = createAuthorize({ authenticated: true, roles: [] });
+  expect(authorize({ auth })).toBe(false);
+
+  authorize = createAuthorize({ authenticated: true, roles: ['role2'] });
+  expect(authorize({ auth })).toBe(false);
+
+  authorize = createAuthorize({ authenticated: true, roles: ['role1'] });
+  expect(authorize({ auth })).toBe(true);
+
+  authorize = createAuthorize({ authenticated: true, roles: ['role1', 'role2'] });
+  expect(authorize({ auth })).toBe(true);
+});
+
+test('invalid auth config', async () => {
+  const authorize = createAuthorize({});
+  expect(() => authorize({ auth: { other: 'value' } })).toThrow(ServerError);
+  expect(() => authorize({ auth: {} })).toThrow(ServerError);
+  expect(() => authorize({})).toThrow();
+  expect(() => authorize()).toThrow();
+});

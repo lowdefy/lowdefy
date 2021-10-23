@@ -44,6 +44,7 @@ const DrawerBlock = ({ blockId, content, properties, methods, rename, onClose })
     <Drawer
       id={blockId}
       closable={properties.closable}
+      extra={content.extra && content.extra()}
       getContainer={properties.getContainer}
       mask={properties.mask}
       maskClosable={properties.maskClosable}
@@ -68,6 +69,9 @@ const DrawerBlock = ({ blockId, content, properties, methods, rename, onClose })
       headerStyle={methods.makeCssClass(properties.headerStyle, { styleObjectOnly: true })}
       bodyStyle={methods.makeCssClass(properties.bodyStyle, { styleObjectOnly: true })}
       maskStyle={methods.makeCssClass(properties.maskStyle, { styleObjectOnly: true })}
+      contentWrapperStyle={methods.makeCssClass(properties.contentWrapperStyle, {
+        styleObjectOnly: true,
+      })}
     >
       {content.content && content.content()}
     </Drawer>

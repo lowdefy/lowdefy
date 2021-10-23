@@ -29,6 +29,10 @@
   type: ConfirmModal
   properties:
     centered: true
+- id: 'properties.closable: false'
+  type: ConfirmModal
+  properties:
+    closable: false
 - id: 'properties.content'
   type: ConfirmModal
   properties:
@@ -65,3 +69,13 @@
   type: ConfirmModal
   properties:
     title: '<div style="color:purple">Html Title</div>'
+- id: 'properties.modalStyle: background: yellow'
+  type: ConfirmModal
+  properties:
+    modalStyle:
+      background: yellow
+- id: 'properties.bodyStyle: background: green'
+  type: ConfirmModal
+  properties:
+    bodyStyle:
+      background: green

@@ -20,18 +20,17 @@ import getOpenIdClient from './getOpenIdClient';
 import getOpenIdConfig from './getOpenIdConfig';
 import issueOpenIdStateToken from './issueOpenIdStateToken';
 
-async function openIdAuthorizationUrl(context, { authUrlQueryParams, input, pageId, urlQuery }) {
+async function openIdAuthorizationUrl(context, { authUrlQueryParams, pageId, urlQuery }) {
   try {
     const openIdConfig = getOpenIdConfig(context);
 
     const state = issueOpenIdStateToken(context, {
-      input,
       pageId,
       urlQuery,
     });
 
     const client = await getOpenIdClient(context, { openIdConfig });
-    const url = client.authorizationUrl({
+    const openIdAuthorizationUrl = client.authorizationUrl({
       ...authUrlQueryParams,
       redirect_uri: openIdConfig.redirectUri,
       response_type: 'code',
@@ -39,7 +38,7 @@ async function openIdAuthorizationUrl(context, { authUrlQueryParams, input, page
       state,
     });
 
-    return url;
+    return { openIdAuthorizationUrl };
   } catch (error) {
     throw new ConfigurationError(error);
   }

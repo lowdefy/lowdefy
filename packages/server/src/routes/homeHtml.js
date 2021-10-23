@@ -17,9 +17,11 @@
 import { homePageId } from '@lowdefy/api';
 
 async function homeHtmlHandler(request, reply) {
-  // TODO: If user has configured homePageId, mount homePage
-  // else redirect
   const home = await homePageId(request.lowdefyContext);
+  if (!home) {
+    reply.redirect('/404');
+    return;
+  }
   reply.redirect(`/${home}`);
 }
 

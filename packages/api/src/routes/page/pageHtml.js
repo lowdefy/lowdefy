@@ -15,9 +15,11 @@
 */
 
 async function pageHtml({ authorize, readConfigFile }, { pageId }) {
-  const page = await readConfigFile(`static/${pageId}.html`);
-  if (!page) return null;
-  if (authorize(page)) return page;
+  const pageHtml = await readConfigFile(`static/${pageId}.html`);
+  if (!pageHtml) return null;
+  // TODO: What if html exists but JSON config does not?
+  const pageConfig = await readConfigFile(`pages/${pageId}/${pageId}.json`);
+  if (authorize(pageConfig)) return pageHtml;
   return null;
 }
 

@@ -49,6 +49,7 @@ const MultipleSelector = ({
             <div id={`${blockId}_popup`} />
             <Select
               id={`${blockId}_input`}
+              bordered={properties.bordered}
               className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
               getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
               mode="multiple"

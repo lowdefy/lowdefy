@@ -16,9 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
-function metaLocations({ blocksServerUrl, context }) {
+function metaLocations({ blocksServerUrl, version }) {
   let baseUrl = blocksServerUrl;
-  const { version } = context;
   if (type.isNone(baseUrl)) {
     baseUrl = `https://blocks-cdn.lowdefy.com/v${version}`;
   }

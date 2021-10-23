@@ -119,6 +119,7 @@ const TitleInput = ({ blockId, events, properties, methods, value }) => {
             }
           : properties.editable !== false && editableEvents
       }
+      italic={properties.italic}
       level={properties.level}
       mark={properties.mark}
       type={properties.type}

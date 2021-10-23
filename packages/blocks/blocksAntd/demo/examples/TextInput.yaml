@@ -31,7 +31,7 @@
 - id: 'properties.prefixIcon.size: 24'
   type: TextInput
   properties:
-    prefixIcon: 
+    prefixIcon:
       name: AccountBookFilled
       size: 24
 - id: 'properties.size: large'
@@ -53,7 +53,7 @@
 - id: 'properties.suffixIcon.size 24'
   type: TextInput
   properties:
-    suffixIcon: 
+    suffixIcon:
       name: AlertFilled
       size: 24
 - id: 'properties.label span: 12'
@@ -86,4 +86,11 @@
   properties:
     label:
       extra: showing extra
-
+- id: 'properties.bordered: false'
+  type: TextInput
+  properties:
+    bordered: false
+- id: 'properties.maxLength: 4'
+  type: TextInput
+  properties:
+    maxLength: 4

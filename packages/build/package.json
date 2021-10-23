@@ -32,6 +32,7 @@
     "build": "yarn webpack",
     "clean": "rm -rf dist",
     "prepare": "yarn build",
+    "start": "node run.js",
     "test": "jest --coverage",
     "webpack": "webpack --config webpack.config.js"
   },

@@ -1,9 +1,100 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Mock render - areas.action and properties.description - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "action": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        action
+      </div>,
+      "afterClose": [Function],
+      "banner": undefined,
+      "closable": undefined,
+      "closeText": undefined,
+      "description": <HtmlComponent
+        html="This is a description for the block."
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "id": "areas.action and properties.description",
+      "message": <HtmlComponent
+        html="Alert message - Completed!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "onClose": [Function],
+      "showIcon": true,
+      "type": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - areas.action and properties.message - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "action": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        action
+      </div>,
+      "afterClose": [Function],
+      "banner": undefined,
+      "closable": undefined,
+      "closeText": undefined,
+      "description": undefined,
+      "id": "areas.action and properties.message",
+      "message": <HtmlComponent
+        html="Alert message - Completed!"
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+      />,
+      "onClose": [Function],
+      "showIcon": true,
+      "type": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
 exports[`Mock render - default - value[0] - default 1`] = `
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,
@@ -13,7 +104,7 @@ Array [
       "message": <div
         style={
           Object {
-            "height": "1.5175em",
+            "marginBottom": -4,
           }
         }
       />,
@@ -30,6 +121,7 @@ exports[`Mock render - properties.closable: true - value[0] - default 1`] = `
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": true,
@@ -60,6 +152,7 @@ exports[`Mock render - properties.closeText: Close Text - value[0] - default 1`]
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": true,
@@ -90,6 +183,7 @@ exports[`Mock render - properties.icon object - value[0] - default 1`] = `
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,
@@ -152,6 +246,7 @@ exports[`Mock render - properties.icon string - value[0] - default 1`] = `
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,
@@ -208,6 +303,7 @@ exports[`Mock render - properties.message - value[0] - default 1`] = `
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,
@@ -238,6 +334,7 @@ exports[`Mock render - properties.type: error - value[0] - default 1`] = `
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,
@@ -268,6 +365,7 @@ exports[`Mock render - properties.type: error banner: true - value[0] - default 
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": true,
       "closable": undefined,
@@ -298,6 +396,7 @@ exports[`Mock render - properties.type: error showIcon: false - value[0] - defau
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,
@@ -328,6 +427,7 @@ exports[`Mock render - properties.type: info - value[0] - default 1`] = `
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,
@@ -358,6 +458,7 @@ exports[`Mock render - properties.type: info banner: true - value[0] - default 1
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": true,
       "closable": undefined,
@@ -388,6 +489,7 @@ exports[`Mock render - properties.type: info showIcon: false - value[0] - defaul
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,
@@ -418,6 +520,7 @@ exports[`Mock render - properties.type: success - value[0] - default 1`] = `
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,
@@ -448,6 +551,7 @@ exports[`Mock render - properties.type: success banner: true - value[0] - defaul
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": true,
       "closable": undefined,
@@ -478,6 +582,7 @@ exports[`Mock render - properties.type: success showIcon: false - value[0] - def
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,
@@ -508,6 +613,7 @@ exports[`Mock render - properties.type: warning - value[0] - default 1`] = `
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,
@@ -538,6 +644,7 @@ exports[`Mock render - properties.type: warning banner: true - value[0] - defaul
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": true,
       "closable": undefined,
@@ -568,6 +675,7 @@ exports[`Mock render - properties.type: warning showIcon: false - value[0] - def
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,
@@ -598,6 +706,7 @@ exports[`Mock render - with description only - value[0] - default 1`] = `
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,
@@ -614,7 +723,13 @@ Array [
         }
       />,
       "id": "with description only",
-      "message": false,
+      "message": <div
+        style={
+          Object {
+            "marginBottom": -4,
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": undefined,
@@ -628,6 +743,7 @@ exports[`Mock render - with description only and icon false - value[0] - default
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,
@@ -644,7 +760,13 @@ Array [
         }
       />,
       "id": "with description only and icon false",
-      "message": false,
+      "message": <div
+        style={
+          Object {
+            "marginBottom": -4,
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": false,
       "type": undefined,
@@ -658,6 +780,7 @@ exports[`Mock render - with description properties.closable: true - value[0] - d
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": true,
@@ -698,6 +821,7 @@ exports[`Mock render - with description properties.closeText: Close Text - value
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": true,
@@ -738,6 +862,7 @@ exports[`Mock render - with description properties.icon object - value[0] - defa
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,
@@ -810,6 +935,7 @@ exports[`Mock render - with description properties.icon string - value[0] - defa
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,
@@ -876,6 +1002,7 @@ exports[`Mock render - with description properties.message - value[0] - default 
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,
@@ -916,6 +1043,7 @@ exports[`Mock render - with description properties.type: error - value[0] - defa
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,
@@ -956,6 +1084,7 @@ exports[`Mock render - with description properties.type: error banner: true - va
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": true,
       "closable": undefined,
@@ -996,6 +1125,7 @@ exports[`Mock render - with description properties.type: error showIcon: false -
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,
@@ -1036,6 +1166,7 @@ exports[`Mock render - with description properties.type: info - value[0] - defau
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,
@@ -1076,6 +1207,7 @@ exports[`Mock render - with description properties.type: info banner: true - val
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": true,
       "closable": undefined,
@@ -1116,6 +1248,7 @@ exports[`Mock render - with description properties.type: info showIcon: false - 
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,
@@ -1156,6 +1289,7 @@ exports[`Mock render - with description properties.type: success - value[0] - de
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,
@@ -1196,6 +1330,7 @@ exports[`Mock render - with description properties.type: success banner: true - 
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": true,
       "closable": undefined,
@@ -1236,6 +1371,7 @@ exports[`Mock render - with description properties.type: success showIcon: false
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,
@@ -1276,6 +1412,7 @@ exports[`Mock render - with description properties.type: warning - value[0] - de
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,
@@ -1316,6 +1453,7 @@ exports[`Mock render - with description properties.type: warning banner: true - 
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": true,
       "closable": undefined,
@@ -1356,6 +1494,7 @@ exports[`Mock render - with description properties.type: warning showIcon: false
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,
@@ -1396,6 +1535,7 @@ exports[`Mock render - with description uses html - value[0] - default 1`] = `
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,
@@ -1414,7 +1554,13 @@ Array [
         }
       />,
       "id": "with description uses html",
-      "message": false,
+      "message": <div
+        style={
+          Object {
+            "marginBottom": -4,
+          }
+        }
+      />,
       "onClose": [Function],
       "showIcon": true,
       "type": undefined,
@@ -1428,6 +1574,7 @@ exports[`Mock render - with message uses html - value[0] - default 1`] = `
 Array [
   Array [
     Object {
+      "action": undefined,
       "afterClose": [Function],
       "banner": undefined,
       "closable": undefined,

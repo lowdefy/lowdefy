@@ -28,8 +28,8 @@ async function run() {
     // configDirectory: path.resolve(process.cwd(), '../docs'),
     // configDirectory: path.resolve(process.cwd(), '../servers/serverDev'),
     configDirectory: process.cwd(),
-    // outputDirectory: path.resolve(process.cwd(), '../servers/serverDev/.lowdefy/build'),
-    outputDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
+    outputDirectory: path.resolve(process.cwd(), '../servers/serverDev/.lowdefy/build'),
+    // outputDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
   });
 }
 

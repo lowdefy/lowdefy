@@ -16,8 +16,12 @@
 
 import useSWR from 'swr';
 
+import request from '../utils/request';
+
+// TODO: Handle TokenExpiredError
+
 function fetchRootData() {
-  return fetch('/lowdefy/root').then((res) => res.json());
+  return request({ url: '/lowdefy/root' });
 }
 
 function useRootData() {

@@ -116,11 +116,11 @@ exports[`Render areas.header - value[0] 1`] = `
 
 exports[`Render areas.sider - value[0] 1`] = `
 <section
-  className="ant-layout ant-layout-has-sider {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
+  className="ant-layout {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
   id="areas.sider"
 >
   <aside
-    className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark"
+    className="ant-layout-sider ant-layout-sider-dark {\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print"
     id="areas.sider_sider"
     style={
       Object {
@@ -199,11 +199,11 @@ exports[`Render default - value[0] 1`] = `
 
 exports[`Render properties.content.style: border: 5px solid blue - value[0] 1`] = `
 <section
-  className="ant-layout ant-layout-has-sider {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
+  className="ant-layout {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
   id="properties.content.style: border: 5px solid blue"
 >
   <aside
-    className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark"
+    className="ant-layout-sider ant-layout-sider-dark {\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print"
     id="properties.content.style: border: 5px solid blue_sider"
     style={
       Object {
@@ -284,11 +284,11 @@ exports[`Render properties.content.style: border: 5px solid blue - value[0] 1`] 
 
 exports[`Render properties.footer.style: border: 5px solid blue - value[0] 1`] = `
 <section
-  className="ant-layout ant-layout-has-sider {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
+  className="ant-layout {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
   id="properties.footer.style: border: 5px solid blue"
 >
   <aside
-    className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark"
+    className="ant-layout-sider ant-layout-sider-dark {\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print"
     id="properties.footer.style: border: 5px solid blue_sider"
     style={
       Object {
@@ -369,11 +369,11 @@ exports[`Render properties.footer.style: border: 5px solid blue - value[0] 1`] =
 
 exports[`Render properties.header.color: #4432a8  - value[0] 1`] = `
 <section
-  className="ant-layout ant-layout-has-sider {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
+  className="ant-layout {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
   id="properties.header.color: #4432a8 "
 >
   <aside
-    className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark"
+    className="ant-layout-sider ant-layout-sider-dark {\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print"
     id="properties.header.color: #4432a8 _sider"
     style={
       Object {
@@ -454,11 +454,11 @@ exports[`Render properties.header.color: #4432a8  - value[0] 1`] = `
 
 exports[`Render properties.header.style: border: 5px solid blue - value[0] 1`] = `
 <section
-  className="ant-layout ant-layout-has-sider {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
+  className="ant-layout {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
   id="properties.header.style: border: 5px solid blue"
 >
   <aside
-    className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark"
+    className="ant-layout-sider ant-layout-sider-dark {\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print"
     id="properties.header.style: border: 5px solid blue_sider"
     style={
       Object {
@@ -539,11 +539,11 @@ exports[`Render properties.header.style: border: 5px solid blue - value[0] 1`] =
 
 exports[`Render properties.header.theme: light - dark is default - value[0] 1`] = `
 <section
-  className="ant-layout ant-layout-has-sider {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
+  className="ant-layout {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
   id="properties.header.theme: light - dark is default"
 >
   <aside
-    className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark"
+    className="ant-layout-sider ant-layout-sider-dark {\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print"
     id="properties.header.theme: light - dark is default_sider"
     style={
       Object {
@@ -624,11 +624,11 @@ exports[`Render properties.header.theme: light - dark is default - value[0] 1`] 
 
 exports[`Render properties.main.style: border: 5px solid blue - value[0] 1`] = `
 <section
-  className="ant-layout ant-layout-has-sider {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
+  className="ant-layout {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
   id="properties.main.style: border: 5px solid blue"
 >
   <aside
-    className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark"
+    className="ant-layout-sider ant-layout-sider-dark {\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print"
     id="properties.main.style: border: 5px solid blue_sider"
     style={
       Object {
@@ -709,11 +709,11 @@ exports[`Render properties.main.style: border: 5px solid blue - value[0] 1`] = `
 
 exports[`Render properties.sider.style: border: 5px solid blue - value[0] 1`] = `
 <section
-  className="ant-layout ant-layout-has-sider {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
+  className="ant-layout {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
   id="properties.sider.style: border: 5px solid blue"
 >
   <aside
-    className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"border\\":\\"5px solid blue\\"}]} hide-on-print ant-layout-sider ant-layout-sider-dark"
+    className="ant-layout-sider ant-layout-sider-dark {\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"border\\":\\"5px solid blue\\"}]} hide-on-print"
     id="properties.sider.style: border: 5px solid blue_sider"
     style={
       Object {
@@ -794,11 +794,11 @@ exports[`Render properties.sider.style: border: 5px solid blue - value[0] 1`] = 
 
 exports[`Render properties.sider.theme: light - dark is default - value[0] 1`] = `
 <section
-  className="ant-layout ant-layout-has-sider {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
+  className="ant-layout {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
   id="properties.sider.theme: light - dark is default"
 >
   <aside
-    className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-light"
+    className="ant-layout-sider ant-layout-sider-light {\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print"
     id="properties.sider.theme: light - dark is default_sider"
     style={
       Object {
@@ -879,11 +879,11 @@ exports[`Render properties.sider.theme: light - dark is default - value[0] 1`] =
 
 exports[`Render properties.style: border: 5px solid blue - value[0] 1`] = `
 <section
-  className="ant-layout ant-layout-has-sider {\\"style\\":{\\"minHeight\\":\\"100vh\\",\\"border\\":\\"5px solid blue\\"}}"
+  className="ant-layout {\\"style\\":{\\"minHeight\\":\\"100vh\\",\\"border\\":\\"5px solid blue\\"}}"
   id="properties.style: border: 5px solid blue"
 >
   <aside
-    className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark"
+    className="ant-layout-sider ant-layout-sider-dark {\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print"
     id="properties.style: border: 5px solid blue_sider"
     style={
       Object {

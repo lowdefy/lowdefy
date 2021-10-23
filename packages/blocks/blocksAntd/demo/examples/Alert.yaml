@@ -4,6 +4,15 @@
   type: Alert
   properties:
     message: Alert message - Completed!
+- id: areas.action and properties.message
+  type: Alert
+  properties:
+    message: Alert message - Completed!
+  areas:
+    action:
+      blocks:
+        - id: ex_1_block_1
+          type: Test
 - id: 'properties.icon string'
   type: Info
   properties:
@@ -149,6 +158,16 @@
     description: This is a description for the block.
     message: Alert message - error!
     type: error
+- id: areas.action and properties.description
+  type: Alert
+  properties:
+    message: Alert message - Completed!
+    description: This is a description for the block.
+  areas:
+    action:
+      blocks:
+        - id: ex_1_block_1
+          type: Test
 - id: 'with description properties.type: success showIcon: false'
   type: Alert
   properties:

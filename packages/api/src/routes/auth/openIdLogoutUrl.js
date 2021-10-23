@@ -20,24 +20,26 @@ import { nunjucksFunction } from '@lowdefy/nunjucks';
 import { AuthenticationError } from '../../context/errors';
 
 import getOpenIdConfig from './getOpenIdConfig';
-import setAuthenticationCookie from './setAuthenticationCookie';
+import unsetAuthorizationCookie from './unsetAuthorizationCookie';
 
 function parseLogoutUrlNunjucks(context, { openIdConfig, idToken }) {
   const template = nunjucksFunction(openIdConfig.logoutRedirectUri);
-  return template({
-    id_token_hint: idToken,
-    client_id: openIdConfig.clientId,
-    openid_domain: openIdConfig.domain,
-    host: encodeURIComponent(`${this.httpPrefix}://${this.host}`),
-  });
+  return {
+    openIdLogoutUrl: template({
+      id_token_hint: idToken,
+      client_id: openIdConfig.clientId,
+      openid_domain: openIdConfig.domain,
+      host: encodeURIComponent(`${context.protocol}://${context.host}`),
+    }),
+  };
 }
 
-async function openIdLogoutUrl(context, { idToken }) {
+function openIdLogoutUrl(context, { idToken }) {
   try {
-    setAuthenticationCookie(context, { value: '' });
+    unsetAuthorizationCookie(context);
 
     const openIdConfig = getOpenIdConfig(context);
-    if (!type.isString(openIdConfig.logoutRedirectUri)) return null;
+    if (!type.isString(openIdConfig.logoutRedirectUri)) return { openIdLogoutUrl: null };
 
     return parseLogoutUrlNunjucks(context, { openIdConfig, idToken });
   } catch (error) {

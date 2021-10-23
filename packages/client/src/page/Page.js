@@ -26,7 +26,6 @@ import Helmet from './Helmet';
 import setupLink from '../utils/setupLink';
 
 const Page = ({ lowdefy }) => {
-  console.log('Page', lowdefy);
   const { pageId } = useParams();
   const { search } = useLocation();
   lowdefy.pageId = pageId;
@@ -35,7 +34,6 @@ const Page = ({ lowdefy }) => {
   lowdefy.urlQuery = urlQuery.parse(search || '');
 
   const { data: page } = usePageData(pageId);
-  console.log('page', page);
   return (
     <div id={pageId}>
       <Context page={page} lowdefy={lowdefy}>

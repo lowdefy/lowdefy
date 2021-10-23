@@ -31,6 +31,13 @@
   properties:
     label:
       title: My MultipleSelector Title
+- id: 'property.bordered: false'
+  type: MultipleSelector
+  properties:
+    bordered: false
+    options:
+      - Option 1
+      - Option 2
 - id: 'properties.inputStyle: CSS style applied'
   type: MultipleSelector
   properties:

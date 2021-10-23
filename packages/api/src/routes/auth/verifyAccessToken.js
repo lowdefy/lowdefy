@@ -17,7 +17,7 @@
 import jwt from 'jsonwebtoken';
 import { AuthenticationError, TokenExpiredError } from '../../context/errors';
 
-function verifyOpenIdStateToken({ host, secrets }, { token }) {
+function verifyAccessToken({ host, secrets }, { token }) {
   try {
     const { JWT_SECRET } = secrets;
     const claims = jwt.verify(token, JWT_SECRET, {
@@ -25,12 +25,15 @@ function verifyOpenIdStateToken({ host, secrets }, { token }) {
       audience: host,
       issuer: host,
     });
-    if (claims.lowdefy_openid_state_token !== true) {
+    if (claims.lowdefy_access_token !== true) {
+      throw new AuthenticationError('Invalid token.');
+    }
+    if (!claims.sub) {
       throw new AuthenticationError('Invalid token.');
     }
     return claims;
-  } catch (err) {
-    if (err.name === 'TokenExpiredError') {
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') {
       throw new TokenExpiredError('Token expired.');
     } else {
       throw new AuthenticationError('Invalid token.');
@@ -38,4 +41,4 @@ function verifyOpenIdStateToken({ host, secrets }, { token }) {
   }
 }
 
-export default verifyOpenIdStateToken;
+export default verifyAccessToken;

@@ -99,6 +99,105 @@ exports[`Render default - value[0] 1`] = `
 </div>
 `;
 
+exports[`Render properties.bordered: false - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.bordered: false"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.bordered: false_input"
+      title="properties.bordered: false"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.bordered: false_popup"
+          />
+          <div
+            className="ant-picker ant-picker-range ant-picker-borderless {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                id="properties.bordered: false_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder="Start Date"
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder="End Date"
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-active-bar"
+              style={
+                Object {
+                  "left": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render properties.disabledDates.dates - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
@@ -1920,7 +2019,7 @@ exports[`Render property.size: large - value[0] 1`] = `
             id="property.size: large_popup"
           />
           <div
-            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-picker-large"
+            className="ant-picker ant-picker-range ant-picker-large {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
             onClick={[Function]}
             onMouseDown={[Function]}
           >
@@ -2019,7 +2118,7 @@ exports[`Render property.size: small - value[0] 1`] = `
             id="property.size: small_popup"
           />
           <div
-            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-picker-small"
+            className="ant-picker ant-picker-range ant-picker-small {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
             onClick={[Function]}
             onMouseDown={[Function]}
           >
@@ -2178,7 +2277,7 @@ exports[`Render property.suffixIcon Red: CalendarOutlined - value[0] 1`] = `
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"Red\\"},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin {}"
                 id="property.suffixIcon Red: CalendarOutlined_suffixIcon"
                 required={false}
                 role="img"
@@ -2303,7 +2402,7 @@ exports[`Render property.suffixIcon: CalendarOutlined - value[0] 1`] = `
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin {}"
                 id="property.suffixIcon: CalendarOutlined_suffixIcon"
                 required={false}
                 role="img"
@@ -2379,6 +2478,105 @@ exports[`Render required = true default - value[0] 1`] = `
                 autoComplete="off"
                 disabled={false}
                 id="default_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder="Start Date"
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder="End Date"
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-active-bar"
+              style={
+                Object {
+                  "left": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.bordered: false - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.bordered: false"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.bordered: false_input"
+      title="properties.bordered: false"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.bordered: false_popup"
+          />
+          <div
+            className="ant-picker ant-picker-range ant-picker-borderless {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                id="properties.bordered: false_input"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -4251,7 +4449,7 @@ exports[`Render required = true property.size: large - value[0] 1`] = `
             id="property.size: large_popup"
           />
           <div
-            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-picker-large"
+            className="ant-picker ant-picker-range ant-picker-large {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
             onClick={[Function]}
             onMouseDown={[Function]}
           >
@@ -4350,7 +4548,7 @@ exports[`Render required = true property.size: small - value[0] 1`] = `
             id="property.size: small_popup"
           />
           <div
-            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-picker-small"
+            className="ant-picker ant-picker-range ant-picker-small {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
             onClick={[Function]}
             onMouseDown={[Function]}
           >
@@ -4509,7 +4707,7 @@ exports[`Render required = true property.suffixIcon Red: CalendarOutlined - valu
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"Red\\"},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin {}"
                 id="property.suffixIcon Red: CalendarOutlined_suffixIcon"
                 required={false}
                 role="img"
@@ -4634,7 +4832,7 @@ exports[`Render required = true property.suffixIcon: CalendarOutlined - value[0]
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin {}"
                 id="property.suffixIcon: CalendarOutlined_suffixIcon"
                 required={false}
                 role="img"
@@ -4781,7 +4979,134 @@ exports[`Render validation.status = error default - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      validation error
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = error properties.bordered: false - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.bordered: false"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.bordered: false_input"
+      title="properties.bordered: false"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.bordered: false_popup"
+          />
+          <div
+            className="ant-picker ant-picker-range ant-picker-borderless {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                id="properties.bordered: false_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder="Start Date"
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder="End Date"
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-active-bar"
+              style={
+                Object {
+                  "left": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="close-circle"
+          className="anticon anticon-close-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="close-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -4908,7 +5233,7 @@ exports[`Render validation.status = error properties.disabledDates.dates - value
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -5035,7 +5360,7 @@ exports[`Render validation.status = error properties.disabledDates.max - value[0
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -5162,7 +5487,7 @@ exports[`Render validation.status = error properties.disabledDates.min - value[0
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -5289,7 +5614,7 @@ exports[`Render validation.status = error properties.disabledDates.ranges - valu
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -5416,7 +5741,7 @@ exports[`Render validation.status = error properties.inputStyle: CSS style appli
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -5543,7 +5868,7 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -5670,7 +5995,7 @@ exports[`Render validation.status = error property.allowClear: false - value[0] 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -5798,7 +6123,7 @@ exports[`Render validation.status = error property.autoFocus: true - value[0] 1`
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -5925,7 +6250,7 @@ exports[`Render validation.status = error property.disabled: true - value[0] 1`]
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -6052,7 +6377,7 @@ exports[`Render validation.status = error property.format: YYYY-MMM-DD - value[0
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -6179,7 +6504,7 @@ exports[`Render validation.status = error property.label align: right - value[0]
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -6306,7 +6631,7 @@ exports[`Render validation.status = error property.label colon: true - value[0] 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -6419,7 +6744,7 @@ exports[`Render validation.status = error property.label disabled: true - value[
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -6546,7 +6871,7 @@ exports[`Render validation.status = error property.label extra: extra text added
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -6681,7 +7006,7 @@ exports[`Render validation.status = error property.label inline: true - value[0]
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -6808,7 +7133,7 @@ exports[`Render validation.status = error property.label span: 5 - value[0] 1`] 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -6935,7 +7260,7 @@ exports[`Render validation.status = error property.placeholder: - Start Date - E
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -7062,7 +7387,7 @@ exports[`Render validation.status = error property.separator: ǁ - value[0] 1`] 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -7107,7 +7432,7 @@ exports[`Render validation.status = error property.size: large - value[0] 1`] = 
             id="property.size: large_popup"
           />
           <div
-            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-picker-large"
+            className="ant-picker ant-picker-range ant-picker-large {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
             onClick={[Function]}
             onMouseDown={[Function]}
           >
@@ -7189,7 +7514,7 @@ exports[`Render validation.status = error property.size: large - value[0] 1`] = 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -7234,7 +7559,7 @@ exports[`Render validation.status = error property.size: small - value[0] 1`] = 
             id="property.size: small_popup"
           />
           <div
-            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-picker-small"
+            className="ant-picker ant-picker-range ant-picker-small {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
             onClick={[Function]}
             onMouseDown={[Function]}
           >
@@ -7316,7 +7641,7 @@ exports[`Render validation.status = error property.size: small - value[0] 1`] = 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
       validation error
     </div>
@@ -7421,7 +7746,7 @@ exports[`Render validation.status = error property.suffixIcon Red: CalendarOutli
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"Red\\"},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin {}"
                 id="property.suffixIcon Red: CalendarOutlined_suffixIcon"
                 required={false}
                 role="img"
@@ -7469,7 +7794,7 @@ exports[`Render validation.status = error property.suffixIcon Red: CalendarOutli
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -7574,7 +7899,7 @@ exports[`Render validation.status = error property.suffixIcon: CalendarOutlined 
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin {}"
                 id="property.suffixIcon: CalendarOutlined_suffixIcon"
                 required={false}
                 role="img"
@@ -7622,7 +7947,7 @@ exports[`Render validation.status = error property.suffixIcon: CalendarOutlined 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -7678,6 +8003,105 @@ exports[`Render validation.status = null default - value[0] 1`] = `
                 autoComplete="off"
                 disabled={false}
                 id="default_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder="Start Date"
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder="End Date"
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-active-bar"
+              style={
+                Object {
+                  "left": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = null properties.bordered: false - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.bordered: false"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.bordered: false_input"
+      title="properties.bordered: false"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.bordered: false_popup"
+          />
+          <div
+            className="ant-picker ant-picker-range ant-picker-borderless {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                id="properties.bordered: false_input"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -9550,7 +9974,7 @@ exports[`Render validation.status = null property.size: large - value[0] 1`] = `
             id="property.size: large_popup"
           />
           <div
-            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-picker-large"
+            className="ant-picker ant-picker-range ant-picker-large {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
             onClick={[Function]}
             onMouseDown={[Function]}
           >
@@ -9649,7 +10073,7 @@ exports[`Render validation.status = null property.size: small - value[0] 1`] = `
             id="property.size: small_popup"
           />
           <div
-            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-picker-small"
+            className="ant-picker ant-picker-range ant-picker-small {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
             onClick={[Function]}
             onMouseDown={[Function]}
           >
@@ -9808,7 +10232,7 @@ exports[`Render validation.status = null property.suffixIcon Red: CalendarOutlin
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"Red\\"},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin {}"
                 id="property.suffixIcon Red: CalendarOutlined_suffixIcon"
                 required={false}
                 role="img"
@@ -9933,7 +10357,7 @@ exports[`Render validation.status = null property.suffixIcon: CalendarOutlined -
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin {}"
                 id="property.suffixIcon: CalendarOutlined_suffixIcon"
                 required={false}
                 role="img"
@@ -10009,6 +10433,128 @@ exports[`Render validation.status = success default - value[0] 1`] = `
                 autoComplete="off"
                 disabled={false}
                 id="default_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder="Start Date"
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder="End Date"
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-active-bar"
+              style={
+                Object {
+                  "left": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="check-circle"
+          className="anticon anticon-check-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="check-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm193.5 301.7l-210.6 292a31.8 31.8 0 01-51.7 0L318.5 484.9c-3.8-5.3 0-12.7 6.5-12.7h46.9c10.2 0 19.9 4.9 25.9 13.3l71.2 98.8 157.2-218c6-8.3 15.6-13.3 25.9-13.3H699c6.5 0 10.3 7.4 6.5 12.7z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = success properties.bordered: false - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.bordered: false"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.bordered: false_input"
+      title="properties.bordered: false"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.bordered: false_popup"
+          />
+          <div
+            className="ant-picker ant-picker-range ant-picker-borderless {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                id="properties.bordered: false_input"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -12318,7 +12864,7 @@ exports[`Render validation.status = success property.size: large - value[0] 1`] 
             id="property.size: large_popup"
           />
           <div
-            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-picker-large"
+            className="ant-picker ant-picker-range ant-picker-large {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
             onClick={[Function]}
             onMouseDown={[Function]}
           >
@@ -12440,7 +12986,7 @@ exports[`Render validation.status = success property.size: small - value[0] 1`] 
             id="property.size: small_popup"
           />
           <div
-            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-picker-small"
+            className="ant-picker ant-picker-range ant-picker-small {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
             onClick={[Function]}
             onMouseDown={[Function]}
           >
@@ -12622,7 +13168,7 @@ exports[`Render validation.status = success property.suffixIcon Red: CalendarOut
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"Red\\"},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin {}"
                 id="property.suffixIcon Red: CalendarOutlined_suffixIcon"
                 required={false}
                 role="img"
@@ -12770,7 +13316,7 @@ exports[`Render validation.status = success property.suffixIcon: CalendarOutline
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin {}"
                 id="property.suffixIcon: CalendarOutlined_suffixIcon"
                 required={false}
                 role="img"
@@ -12940,7 +13486,134 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      validation warning
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render validation.status = warning properties.bordered: false - value[0] 1`] = `
+<div
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
+  id="properties.bordered: false"
+  style={Object {}}
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
+      htmlFor="properties.bordered: false_input"
+      title="properties.bordered: false"
+    >
+      <span
+        className="{}"
+      />
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.bordered: false_popup"
+          />
+          <div
+            className="ant-picker ant-picker-range ant-picker-borderless {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                id="properties.bordered: false_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder="Start Date"
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder="End Date"
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-active-bar"
+              style={
+                Object {
+                  "left": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+      <span
+        className="ant-form-item-children-icon"
+      >
+        <span
+          aria-label="exclamation-circle"
+          className="anticon anticon-exclamation-circle"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="exclamation-circle"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 010-96 48.01 48.01 0 010 96z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -13067,7 +13740,7 @@ exports[`Render validation.status = warning properties.disabledDates.dates - val
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -13194,7 +13867,7 @@ exports[`Render validation.status = warning properties.disabledDates.max - value
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -13321,7 +13994,7 @@ exports[`Render validation.status = warning properties.disabledDates.min - value
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -13448,7 +14121,7 @@ exports[`Render validation.status = warning properties.disabledDates.ranges - va
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -13575,7 +14248,7 @@ exports[`Render validation.status = warning properties.inputStyle: CSS style app
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -13702,7 +14375,7 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -13829,7 +14502,7 @@ exports[`Render validation.status = warning property.allowClear: false - value[0
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -13957,7 +14630,7 @@ exports[`Render validation.status = warning property.autoFocus: true - value[0] 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -14084,7 +14757,7 @@ exports[`Render validation.status = warning property.disabled: true - value[0] 1
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -14211,7 +14884,7 @@ exports[`Render validation.status = warning property.format: YYYY-MMM-DD - value
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -14338,7 +15011,7 @@ exports[`Render validation.status = warning property.label align: right - value[
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -14465,7 +15138,7 @@ exports[`Render validation.status = warning property.label colon: true - value[0
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -14578,7 +15251,7 @@ exports[`Render validation.status = warning property.label disabled: true - valu
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -14705,7 +15378,7 @@ exports[`Render validation.status = warning property.label extra: extra text add
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -14840,7 +15513,7 @@ exports[`Render validation.status = warning property.label inline: true - value[
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -14967,7 +15640,7 @@ exports[`Render validation.status = warning property.label span: 5 - value[0] 1`
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -15094,7 +15767,7 @@ exports[`Render validation.status = warning property.placeholder: - Start Date -
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -15221,7 +15894,7 @@ exports[`Render validation.status = warning property.separator: ǁ - value[0] 1`
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -15266,7 +15939,7 @@ exports[`Render validation.status = warning property.size: large - value[0] 1`] 
             id="property.size: large_popup"
           />
           <div
-            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-picker-large"
+            className="ant-picker ant-picker-range ant-picker-large {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
             onClick={[Function]}
             onMouseDown={[Function]}
           >
@@ -15348,7 +16021,7 @@ exports[`Render validation.status = warning property.size: large - value[0] 1`] 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -15393,7 +16066,7 @@ exports[`Render validation.status = warning property.size: small - value[0] 1`] 
             id="property.size: small_popup"
           />
           <div
-            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-picker-small"
+            className="ant-picker ant-picker-range ant-picker-small {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
             onClick={[Function]}
             onMouseDown={[Function]}
           >
@@ -15475,7 +16148,7 @@ exports[`Render validation.status = warning property.size: small - value[0] 1`] 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
       validation warning
     </div>
@@ -15580,7 +16253,7 @@ exports[`Render validation.status = warning property.suffixIcon Red: CalendarOut
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"Red\\"},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin {}"
                 id="property.suffixIcon Red: CalendarOutlined_suffixIcon"
                 required={false}
                 role="img"
@@ -15628,7 +16301,7 @@ exports[`Render validation.status = warning property.suffixIcon Red: CalendarOut
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -15733,7 +16406,7 @@ exports[`Render validation.status = warning property.suffixIcon: CalendarOutline
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin {}"
                 id="property.suffixIcon: CalendarOutlined_suffixIcon"
                 required={false}
                 role="img"
@@ -15781,7 +16454,7 @@ exports[`Render validation.status = warning property.suffixIcon: CalendarOutline
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -15792,6 +16465,10 @@ exports[`Render validation.status = warning property.suffixIcon: CalendarOutline
 exports[`Test Schema default 1`] = `true`;
 
 exports[`Test Schema default 2`] = `null`;
+
+exports[`Test Schema properties.bordered: false 1`] = `true`;
+
+exports[`Test Schema properties.bordered: false 2`] = `null`;
 
 exports[`Test Schema properties.disabledDates.dates 1`] = `true`;
 

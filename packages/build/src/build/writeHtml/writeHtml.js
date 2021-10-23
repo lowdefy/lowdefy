@@ -18,7 +18,9 @@ import { get, type } from '@lowdefy/helpers';
 import { nunjucksFunction } from '@lowdefy/nunjucks';
 import template from './template';
 
-function pageHtml({ context, page, templateFn }) {
+const templateFn = nunjucksFunction(template);
+
+function pageHtml({ context, page }) {
   return templateFn({
     LOWDEFY_VERSION: context.version,
     LOWDEFY_PAGE_ID: page.pageId,
@@ -42,11 +44,10 @@ async function writePageHtml({ context, page, templateFn }) {
 
 async function writeHtml({ components, context }) {
   if (type.isNone(components.pages)) return;
-  const templateFn = nunjucksFunction(template);
-  const writePromises = components.pages.map((page) =>
-    writePageHtml({ context, page, templateFn })
-  );
+  const writePromises = components.pages.map((page) => writePageHtml({ context, page }));
   return Promise.all(writePromises);
 }
+
+export { pageHtml };
 
 export default writeHtml;

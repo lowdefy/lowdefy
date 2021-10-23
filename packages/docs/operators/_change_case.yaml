@@ -72,8 +72,8 @@ _ref:
       _change_case.capitalCase:
         on:
           foo: 'bar'
-          options:
-            convertKeys: true
+        options:
+          convertKeys: true
       ```
       Returns: `{ "Foo": "Bar" }`
 
@@ -82,8 +82,8 @@ _ref:
       _change_case.capitalCase:
         on:
           foo: 'bar'
-          options:
-            convertValues: false
+        options:
+          convertValues: false
       ```
       Returns: `{ "foo": "bar" }`
 

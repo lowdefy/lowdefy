@@ -21,6 +21,7 @@ async function pageHtmlHandler(request, reply) {
   const page = await pageHtml(request.lowdefyContext, { pageId });
   if (!page) {
     reply.redirect('/404');
+    return;
   }
   reply.type('text/html');
   reply.send(page);

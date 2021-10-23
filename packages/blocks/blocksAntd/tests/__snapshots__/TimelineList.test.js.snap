@@ -29,7 +29,7 @@ exports[`Render properties.mode: alternate - value[0] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"red\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.mode: alternate_0_icon"
         required={false}
         role="img"
@@ -81,7 +81,7 @@ exports[`Render properties.mode: alternate - value[0] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"green\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.mode: alternate_1_icon"
         required={false}
         role="img"
@@ -133,7 +133,7 @@ exports[`Render properties.mode: alternate - value[0] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"blue\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.mode: alternate_2_icon"
         required={false}
         role="img"
@@ -193,7 +193,7 @@ exports[`Render properties.mode: alternate - value[1] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"red\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.mode: alternate_0_icon"
         required={false}
         role="img"
@@ -245,7 +245,7 @@ exports[`Render properties.mode: alternate - value[1] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"green\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.mode: alternate_1_icon"
         required={false}
         role="img"
@@ -297,7 +297,7 @@ exports[`Render properties.mode: alternate - value[1] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"blue\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.mode: alternate_2_icon"
         required={false}
         role="img"
@@ -357,7 +357,7 @@ exports[`Render properties.mode: left - value[0] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"red\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.mode: left_0_icon"
         required={false}
         role="img"
@@ -409,7 +409,7 @@ exports[`Render properties.mode: left - value[0] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"green\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.mode: left_1_icon"
         required={false}
         role="img"
@@ -461,7 +461,7 @@ exports[`Render properties.mode: left - value[0] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"blue\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.mode: left_2_icon"
         required={false}
         role="img"
@@ -521,7 +521,7 @@ exports[`Render properties.mode: left - value[1] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"red\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.mode: left_0_icon"
         required={false}
         role="img"
@@ -573,7 +573,7 @@ exports[`Render properties.mode: left - value[1] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"green\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.mode: left_1_icon"
         required={false}
         role="img"
@@ -625,7 +625,7 @@ exports[`Render properties.mode: left - value[1] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"blue\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.mode: left_2_icon"
         required={false}
         role="img"
@@ -685,7 +685,7 @@ exports[`Render properties.mode: right - value[0] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"red\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.mode: right_0_icon"
         required={false}
         role="img"
@@ -737,7 +737,7 @@ exports[`Render properties.mode: right - value[0] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"green\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.mode: right_1_icon"
         required={false}
         role="img"
@@ -789,7 +789,7 @@ exports[`Render properties.mode: right - value[0] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"blue\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.mode: right_2_icon"
         required={false}
         role="img"
@@ -849,7 +849,7 @@ exports[`Render properties.mode: right - value[1] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"red\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.mode: right_0_icon"
         required={false}
         role="img"
@@ -901,7 +901,7 @@ exports[`Render properties.mode: right - value[1] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"green\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.mode: right_1_icon"
         required={false}
         role="img"
@@ -953,7 +953,7 @@ exports[`Render properties.mode: right - value[1] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"blue\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.mode: right_2_icon"
         required={false}
         role="img"
@@ -1013,7 +1013,7 @@ exports[`Render properties.pending: true - value[0] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"red\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.pending: true_0_icon"
         required={false}
         role="img"
@@ -1065,7 +1065,7 @@ exports[`Render properties.pending: true - value[0] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"green\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.pending: true_1_icon"
         required={false}
         role="img"
@@ -1117,7 +1117,7 @@ exports[`Render properties.pending: true - value[0] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"blue\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.pending: true_2_icon"
         required={false}
         role="img"
@@ -1215,7 +1215,7 @@ exports[`Render properties.pending: true - value[1] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"red\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.pending: true_0_icon"
         required={false}
         role="img"
@@ -1267,7 +1267,7 @@ exports[`Render properties.pending: true - value[1] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"green\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.pending: true_1_icon"
         required={false}
         role="img"
@@ -1319,7 +1319,7 @@ exports[`Render properties.pending: true - value[1] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"blue\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.pending: true_2_icon"
         required={false}
         role="img"
@@ -1417,7 +1417,7 @@ exports[`Render properties.pendingDotIcon:  - value[0] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"red\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.pendingDotIcon: _0_icon"
         required={false}
         role="img"
@@ -1469,7 +1469,7 @@ exports[`Render properties.pendingDotIcon:  - value[0] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"green\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.pendingDotIcon: _1_icon"
         required={false}
         role="img"
@@ -1521,7 +1521,7 @@ exports[`Render properties.pendingDotIcon:  - value[0] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"blue\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.pendingDotIcon: _2_icon"
         required={false}
         role="img"
@@ -1573,7 +1573,7 @@ exports[`Render properties.pendingDotIcon:  - value[0] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},{\\"fontSize\\":16}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{\\"fontSize\\":16}}"
         id="properties.pendingDotIcon: _pendingDotIcon"
         required={false}
         role="img"
@@ -1622,7 +1622,7 @@ exports[`Render properties.pendingDotIcon:  - value[1] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"red\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.pendingDotIcon: _0_icon"
         required={false}
         role="img"
@@ -1674,7 +1674,7 @@ exports[`Render properties.pendingDotIcon:  - value[1] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"green\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.pendingDotIcon: _1_icon"
         required={false}
         role="img"
@@ -1726,7 +1726,7 @@ exports[`Render properties.pendingDotIcon:  - value[1] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"blue\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.pendingDotIcon: _2_icon"
         required={false}
         role="img"
@@ -1778,7 +1778,7 @@ exports[`Render properties.pendingDotIcon:  - value[1] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},{\\"fontSize\\":16}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{\\"fontSize\\":16}}"
         id="properties.pendingDotIcon: _pendingDotIcon"
         required={false}
         role="img"
@@ -1827,7 +1827,7 @@ exports[`Render properties.reverse: true - value[0] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"blue\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.reverse: true_2_icon"
         required={false}
         role="img"
@@ -1879,7 +1879,7 @@ exports[`Render properties.reverse: true - value[0] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"green\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.reverse: true_1_icon"
         required={false}
         role="img"
@@ -1931,7 +1931,7 @@ exports[`Render properties.reverse: true - value[0] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"red\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.reverse: true_0_icon"
         required={false}
         role="img"
@@ -1991,7 +1991,7 @@ exports[`Render properties.reverse: true - value[1] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"blue\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.reverse: true_2_icon"
         required={false}
         role="img"
@@ -2043,7 +2043,7 @@ exports[`Render properties.reverse: true - value[1] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"green\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.reverse: true_1_icon"
         required={false}
         role="img"
@@ -2095,7 +2095,7 @@ exports[`Render properties.reverse: true - value[1] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"red\\"},{}]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
         id="properties.reverse: true_0_icon"
         required={false}
         role="img"

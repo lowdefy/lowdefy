@@ -84,7 +84,7 @@ exports[`Render properties.icon and properties.title - value[0] 1`] = `
   <span
     aria-label="loading-3-quarters"
     basePath=""
-    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+    className="anticon anticon-loading-3-quarters anticon-spin {}"
     id="properties.icon and properties.title_icon"
     required={false}
     role="img"
@@ -118,7 +118,7 @@ exports[`Render properties.icon object - value[0] 1`] = `
   <span
     aria-label="loading-3-quarters"
     basePath=""
-    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"red\\"},null]}"
+    className="anticon anticon-loading-3-quarters anticon-spin {}"
     id="properties.icon object_icon"
     required={false}
     role="img"
@@ -152,7 +152,7 @@ exports[`Render properties.icon string - value[0] 1`] = `
   <span
     aria-label="loading-3-quarters"
     basePath=""
-    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+    className="anticon anticon-loading-3-quarters anticon-spin {}"
     id="properties.icon string_icon"
     required={false}
     role="img"
@@ -183,7 +183,7 @@ exports[`Render properties.icon, properties.title and properties.disabled - valu
   <span
     aria-label="loading-3-quarters"
     basePath=""
-    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+    className="anticon anticon-loading-3-quarters anticon-spin {}"
     id="properties.icon, properties.title and properties.disabled_icon"
     required={false}
     role="img"
@@ -243,7 +243,7 @@ exports[`Render properties.style with icon - value[0] 1`] = `
   <span
     aria-label="loading-3-quarters"
     basePath=""
-    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+    className="anticon anticon-loading-3-quarters anticon-spin {}"
     id="properties.style with icon_icon"
     required={false}
     role="img"

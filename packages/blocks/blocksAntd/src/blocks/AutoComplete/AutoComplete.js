@@ -49,6 +49,7 @@ const AutoCompleteInput = ({
             id={`${blockId}_input`}
             autoFocus={properties.autoFocus}
             backfill={properties.backfill}
+            bordered={properties.bordered}
             className={methods.makeCssClass(properties.inputStyle)}
             defaultOpen={properties.defaultOpen}
             disabled={properties.disabled}
@@ -69,6 +70,9 @@ const AutoCompleteInput = ({
               }
               methods.setValue(val);
               methods.triggerEvent({ name: 'onChange' });
+            }}
+            onSearch={(newVal) => {
+              methods.triggerEvent({ name: 'onSearch', event: { value: newVal } });
             }}
             value={type.isNone(value) ? undefined : value}
           >

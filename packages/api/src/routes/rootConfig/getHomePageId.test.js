@@ -17,23 +17,8 @@
 import getHomePageId from './getHomePageId';
 import testContext from '../../test/testContext';
 
-const mockReadConfigFile = jest.fn();
-
-const context = testContext({ readConfigFile: mockReadConfigFile });
-
-beforeEach(() => {
-  mockReadConfigFile.mockReset();
-});
-
-test('getMenus, menu with configured home page id', async () => {
-  mockReadConfigFile.mockImplementation((path) => {
-    if (path === 'config.json') {
-      return {
-        homePageId: 'homePageId',
-      };
-    }
-    return null;
-  });
+test('getMenus, menu with configured home page id', () => {
+  const context = testContext({ config: { homePageId: 'homePageId' } });
   const menus = [
     {
       menuId: 'default',
@@ -56,17 +41,12 @@ test('getMenus, menu with configured home page id', async () => {
       ],
     },
   ];
-  const res = await getHomePageId(context, { menus });
+  const res = getHomePageId(context, { menus });
   expect(res).toEqual('homePageId');
 });
 
-test('getMenus, get homePageId at first level', async () => {
-  mockReadConfigFile.mockImplementation((path) => {
-    if (path === 'config.json') {
-      return {};
-    }
-    return null;
-  });
+test('getMenus, get homePageId at first level', () => {
+  const context = testContext();
   const menus = [
     {
       menuId: 'default',
@@ -81,17 +61,12 @@ test('getMenus, get homePageId at first level', async () => {
       ],
     },
   ];
-  const res = await getHomePageId(context, { menus });
+  const res = getHomePageId(context, { menus });
   expect(res).toEqual('page');
 });
 
-test('getMenus, get homePageId at second level', async () => {
-  mockReadConfigFile.mockImplementation((path) => {
-    if (path === 'config.json') {
-      return {};
-    }
-    return null;
-  });
+test('getMenus, get homePageId at second level', () => {
+  const context = testContext();
   const menus = [
     {
       menuId: 'default',
@@ -114,17 +89,12 @@ test('getMenus, get homePageId at second level', async () => {
       ],
     },
   ];
-  const res = await getHomePageId(context, { menus });
+  const res = getHomePageId(context, { menus });
   expect(res).toEqual('page');
 });
 
-test('getMenus, get homePageId at third level', async () => {
-  mockReadConfigFile.mockImplementation((path) => {
-    if (path === 'config.json') {
-      return {};
-    }
-    return null;
-  });
+test('getMenus, get homePageId at third level', () => {
+  const context = testContext();
   const menus = [
     {
       menuId: 'default',
@@ -155,17 +125,12 @@ test('getMenus, get homePageId at third level', async () => {
       ],
     },
   ];
-  const res = await getHomePageId(context, { menus });
+  const res = getHomePageId(context, { menus });
   expect(res).toEqual('page');
 });
 
-test('getMenus, no default menu, no configured homepage', async () => {
-  mockReadConfigFile.mockImplementation((path) => {
-    if (path === 'config.json') {
-      return {};
-    }
-    return null;
-  });
+test('getMenus, no default menu, no configured homepage', () => {
+  const context = testContext();
   const menus = [
     {
       menuId: 'my_menu',
@@ -180,17 +145,12 @@ test('getMenus, no default menu, no configured homepage', async () => {
       ],
     },
   ];
-  const res = await getHomePageId(context, { menus });
+  const res = getHomePageId(context, { menus });
   expect(res).toEqual('page');
 });
 
-test('getMenus, more than 1 menu, no configured homepage', async () => {
-  mockReadConfigFile.mockImplementation((path) => {
-    if (path === 'config.json') {
-      return {};
-    }
-    return null;
-  });
+test('getMenus, more than 1 menu, no configured homepage', () => {
+  const context = testContext();
   const menus = [
     {
       menuId: 'other',
@@ -217,23 +177,18 @@ test('getMenus, more than 1 menu, no configured homepage', async () => {
       ],
     },
   ];
-  const res = await getHomePageId(context, { menus });
+  const res = getHomePageId(context, { menus });
   expect(res).toEqual('default-page');
 });
 
-test('getMenus, default menu has no links', async () => {
-  mockReadConfigFile.mockImplementation((path) => {
-    if (path === 'config.json') {
-      return {};
-    }
-    return null;
-  });
+test('getMenus, default menu has no links', () => {
+  const context = testContext();
   const menus = [
     {
       menuId: 'default',
       links: [],
     },
   ];
-  const res = await getHomePageId(context, { menus });
+  const res = getHomePageId(context, { menus });
   expect(res).toEqual(null);
 });

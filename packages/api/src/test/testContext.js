@@ -14,11 +14,31 @@
   limitations under the License.
 */
 
-function testContext({ readConfigFile, user }) {
+import createAuthorize from '../context/createAuthorize';
+
+function testContext({
+  config = {},
+  headers = {},
+  host = 'host',
+  readConfigFile,
+  roles,
+  secrets = {},
+  setHeader,
+  user,
+  protocol = 'https',
+} = {}) {
+  const authenticated = user && !!user.sub;
   return {
-    // TODO: use actual implementation
-    authorize: () => {},
+    authenticated,
+    authorize: createAuthorize({ authenticated, roles }),
+    config,
+    headers,
+    host,
+    protocol,
     readConfigFile,
+    secrets,
+    setHeader,
+    user,
   };
 }
 

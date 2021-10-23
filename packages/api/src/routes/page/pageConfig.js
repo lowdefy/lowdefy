@@ -14,11 +14,10 @@
   limitations under the License.
 */
 
-async function getPage({ authorize, readConfigFile }, { pageId }) {
-  const page = await readConfigFile(`pages/${pageId}/${pageId}.json`);
-  if (!page) return null;
-  if (authorize(page)) return page;
+async function pageConfig({ authorize, readConfigFile }, { pageId }) {
+  const pageConfig = await readConfigFile(`pages/${pageId}/${pageId}.json`);
+  if (pageConfig && authorize(pageConfig)) return pageConfig;
   return null;
 }
 
-export default getPage;
+export default pageConfig;

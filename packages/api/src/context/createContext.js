@@ -14,32 +14,27 @@
   limitations under the License.
 */
 
+import createAuthorize from './createAuthorize';
 import createReadConfigFile from './readConfigFile';
 import verifyAuthorizationHeader from './verifyAuthorizationHeader';
 
-async function createContext({
-  // apiPath,
-  configDirectory,
-  development,
-  getSecrets,
-}) {
+async function createContext({ configDirectory, getSecrets }) {
   const readConfigFile = createReadConfigFile({ configDirectory });
   const [config, secrets] = await Promise.all([readConfigFile('config.json'), getSecrets()]);
-  function contextFn({ headers, host, setHeader }) {
+  function contextFn({ headers, host, protocol, setHeader }) {
     const context = {
-      authorize: () => true,
       config,
-      development,
       headers,
       host,
-      httpPrefix: development ? 'http' : 'https',
+      protocol,
       readConfigFile,
       secrets,
       setHeader,
     };
-    const { user, roles } = verifyAuthorizationHeader(context);
+    const { authenticated, user, roles } = verifyAuthorizationHeader(context);
+    context.authorize = createAuthorize({ authenticated, roles });
+    context.authenticated = authenticated;
     context.user = user;
-    context.roles = roles;
     return context;
   }
   return contextFn;

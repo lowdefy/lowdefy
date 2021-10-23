@@ -29,6 +29,7 @@ function getServer({
   serveStaticFiles = true,
 }) {
   const fastify = Fastify({
+    // TODO
     // prefix: serverBasePath !== '' ? `/${serverBasePath}` : '',
     logger: true,
   });
@@ -54,6 +55,11 @@ function getServer({
       lowdefy: {
         directory: publicDirectory,
       },
+    });
+
+    // TODO: Is this useful, might just cause issues?
+    fastify.get('/favicon.ico', (_, reply) => {
+      reply.redirect('/public/icon.svg');
     });
   }
 

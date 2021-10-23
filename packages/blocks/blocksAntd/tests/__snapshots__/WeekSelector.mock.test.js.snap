@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Mock render - properties.bordered: false - value[0] - default 1`] = `Array []`;
+
 exports[`Mock render - properties.disabledDates.dates - value[0] - default 1`] = `Array []`;
 
 exports[`Mock render - properties.disabledDates.max - value[0] - default 1`] = `Array []`;

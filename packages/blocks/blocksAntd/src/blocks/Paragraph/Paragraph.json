@@ -90,6 +90,11 @@
             }
           ]
         },
+        "italic": {
+          "type": "boolean",
+          "default": false,
+          "description": "Apply italic style."
+        },
         "mark": {
           "type": "boolean",
           "default": false,
@@ -102,8 +107,8 @@
         },
         "type": {
           "type": "string",
-          "enum": ["secondary", "warning", "danger"],
           "default": "default",
+          "enum": ["success", "default", "secondary", "warning", "danger"],
           "description": "Additional types. Don't specify for default."
         },
         "underline": {

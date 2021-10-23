@@ -6,6 +6,7 @@ exports[`Render default - value[0] 1`] = `
 >
   <div
     className="ant-statistic-content"
+    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
   >
     
     <span
@@ -30,6 +31,7 @@ exports[`Render properties.decimalSeparator: ',' - value[0] 1`] = `
 >
   <div
     className="ant-statistic-content"
+    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
   >
     
     <span
@@ -58,6 +60,7 @@ exports[`Render properties.groupSeparator: ',' - value[0] 1`] = `
 >
   <div
     className="ant-statistic-content"
+    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
   >
     
     <span
@@ -80,12 +83,43 @@ exports[`Render properties.groupSeparator: ',' - value[0] 1`] = `
 </div>
 `;
 
+exports[`Render properties.loading: true - value[0] 1`] = `
+<div
+  className="ant-statistic {}"
+>
+  <div
+    className="ant-statistic-title"
+  >
+    <span
+      className="{}"
+    />
+  </div>
+  <div
+    className="ant-skeleton"
+  >
+    <div
+      className="ant-skeleton-content"
+    >
+      <h3
+        className="ant-skeleton-title"
+        style={
+          Object {
+            "width": undefined,
+          }
+        }
+      />
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render properties.precision: 2 - value[0] 1`] = `
 <div
   className="ant-statistic {}"
 >
   <div
     className="ant-statistic-content"
+    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
   >
     
     <span
@@ -114,6 +148,7 @@ exports[`Render properties.prefix: R - value[0] 1`] = `
 >
   <div
     className="ant-statistic-content"
+    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
   >
     <span
       className="ant-statistic-content-prefix"
@@ -146,6 +181,7 @@ exports[`Render properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
 >
   <div
     className="ant-statistic-content"
+    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
   >
     <span
       className="ant-statistic-content-prefix"
@@ -153,7 +189,7 @@ exports[`Render properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {}"
         id="properties.prefixIcon: AccountBookFilled_prefixIcon"
         required={false}
         role="img"
@@ -199,6 +235,7 @@ exports[`Render properties.suffix: Rand - value[0] 1`] = `
 >
   <div
     className="ant-statistic-content"
+    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
   >
     
     <span
@@ -231,6 +268,7 @@ exports[`Render properties.suffixIcon: AccountBookFilled - value[0] 1`] = `
 >
   <div
     className="ant-statistic-content"
+    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
   >
     
     <span
@@ -254,7 +292,7 @@ exports[`Render properties.suffixIcon: AccountBookFilled - value[0] 1`] = `
       <span
         aria-label="loading-3-quarters"
         basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {}"
         id="properties.suffixIcon: AccountBookFilled_suffixIcon"
         required={false}
         role="img"
@@ -291,6 +329,7 @@ exports[`Render properties.title - value[0] 1`] = `
   </div>
   <div
     className="ant-statistic-content"
+    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
   >
     
     <span
@@ -322,6 +361,7 @@ exports[`Render properties.title with html - value[0] 1`] = `
   </div>
   <div
     className="ant-statistic-content"
+    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
   >
     
     <span
@@ -350,6 +390,7 @@ exports[`Render properties.value: '3.45' as string - value[0] 1`] = `
 >
   <div
     className="ant-statistic-content"
+    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
   >
     
     <span
@@ -378,6 +419,7 @@ exports[`Render properties.value: 3.45 as number - value[0] 1`] = `
 >
   <div
     className="ant-statistic-content"
+    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
   >
     
     <span
@@ -411,6 +453,10 @@ exports[`Test Schema properties.decimalSeparator: ',' 2`] = `null`;
 exports[`Test Schema properties.groupSeparator: ',' 1`] = `true`;
 
 exports[`Test Schema properties.groupSeparator: ',' 2`] = `null`;
+
+exports[`Test Schema properties.loading: true 1`] = `true`;
+
+exports[`Test Schema properties.loading: true 2`] = `null`;
 
 exports[`Test Schema properties.precision: 2 1`] = `true`;
 
