@@ -5946,7 +5946,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["clean-webpack-plugin", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:4.0.0"],
             ["create-emotion", "npm:10.0.27"],
             ["css-loader", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:6.4.0"],
-            ["dompurify", "npm:2.2.8"],
+            ["dompurify", "npm:2.3.3"],
             ["enzyme", "npm:3.11.0"],
             ["enzyme-to-json", "virtual:ef041dcfb1a84323e84b33f148b44908e40798740b13580fd51cdd5f1fad53f80b7752a65dee444bedf9ec3a7529b8e94c59a28878b8dfe27a045663ef6ef0a9#npm:3.6.2"],
             ["html-webpack-plugin", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:5.4.0"],
@@ -6037,7 +6037,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["clean-webpack-plugin", "virtual:beb4c218366cad8c4da96fe997fe88a6dbf8be39fc0c58c2a268588a03658c7ba45d103fbf636a724af6c876096f657636ab125613932f8c99e093546f94adb0#npm:4.0.0"],
             ["copy-webpack-plugin", "virtual:beb4c218366cad8c4da96fe997fe88a6dbf8be39fc0c58c2a268588a03658c7ba45d103fbf636a724af6c876096f657636ab125613932f8c99e093546f94adb0#npm:9.0.1"],
             ["css-loader", "virtual:beb4c218366cad8c4da96fe997fe88a6dbf8be39fc0c58c2a268588a03658c7ba45d103fbf636a724af6c876096f657636ab125613932f8c99e093546f94adb0#npm:6.4.0"],
-            ["dompurify", "npm:2.2.8"],
+            ["dompurify", "npm:2.3.3"],
             ["enzyme", "npm:3.11.0"],
             ["html-webpack-plugin", "virtual:beb4c218366cad8c4da96fe997fe88a6dbf8be39fc0c58c2a268588a03658c7ba45d103fbf636a724af6c876096f657636ab125613932f8c99e093546f94adb0#npm:5.4.0"],
             ["identity-obj-proxy", "npm:3.0.0"],
@@ -6160,7 +6160,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["clean-webpack-plugin", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:4.0.0"],
             ["copy-webpack-plugin", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:9.0.1"],
             ["css-loader", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:6.4.0"],
-            ["dompurify", "npm:2.2.8"],
+            ["dompurify", "npm:2.3.3"],
             ["enzyme", "npm:3.11.0"],
             ["html-webpack-plugin", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:5.4.0"],
             ["identity-obj-proxy", "npm:3.0.0"],
@@ -14837,10 +14837,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["dompurify", [
-        ["npm:2.2.8", {
-          "packageLocation": "./.yarn/cache/dompurify-npm-2.2.8-a7cc9802e5-ddd770b35a.zip/node_modules/dompurify/",
+        ["npm:2.3.3", {
+          "packageLocation": "./.yarn/cache/dompurify-npm-2.3.3-a36506accf-947e366168.zip/node_modules/dompurify/",
           "packageDependencies": [
-            ["dompurify", "npm:2.2.8"]
+            ["dompurify", "npm:2.3.3"]
           ],
           "linkType": "HARD",
         }]

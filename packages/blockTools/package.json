@@ -39,7 +39,7 @@
   "dependencies": {
     "@lowdefy/helpers": "3.22.0",
     "create-emotion": "10.0.27",
-    "dompurify": "2.2.8",
+    "dompurify": "2.3.3",
     "react": "17.0.2"
   },
   "devDependencies": {

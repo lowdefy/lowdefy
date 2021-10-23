@@ -3186,7 +3186,7 @@ __metadata:
     clean-webpack-plugin: 4.0.0
     create-emotion: 10.0.27
     css-loader: 6.4.0
-    dompurify: 2.2.8
+    dompurify: 2.3.3
     enzyme: 3.11.0
     enzyme-to-json: 3.6.2
     html-webpack-plugin: 5.4.0
@@ -3273,7 +3273,7 @@ __metadata:
     clean-webpack-plugin: 4.0.0
     copy-webpack-plugin: 9.0.1
     css-loader: 6.4.0
-    dompurify: 2.2.8
+    dompurify: 2.3.3
     enzyme: 3.11.0
     html-webpack-plugin: 5.4.0
     identity-obj-proxy: 3.0.0
@@ -3390,7 +3390,7 @@ __metadata:
     clean-webpack-plugin: 4.0.0
     copy-webpack-plugin: 9.0.1
     css-loader: 6.4.0
-    dompurify: 2.2.8
+    dompurify: 2.3.3
     enzyme: 3.11.0
     html-webpack-plugin: 5.4.0
     identity-obj-proxy: 3.0.0
@@ -9120,10 +9120,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dompurify@npm:2.2.8":
-  version: 2.2.8
-  resolution: "dompurify@npm:2.2.8"
-  checksum: ddd770b35aec6804591b1ee978ce5034ecb64e3610bef9592744db454aed20aa315ec6c0ca7d29ac550bfbc1fb32b83c532ff1846ce8922a5e36acce73057c5b
+"dompurify@npm:2.3.3":
+  version: 2.3.3
+  resolution: "dompurify@npm:2.3.3"
+  checksum: 947e3661681bd183aae1cd08f991b14c6aa41fd188f6c801c5e916c2dc4575bbefbaa121ed06dbe0cb0f595545527d588a44b53bfc35d1cbb898c214dc0d7930
   languageName: node
   linkType: hard
 
