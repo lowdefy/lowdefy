@@ -26,18 +26,18 @@ Steps to fetch meta
 */
 
 import { type as typeHelper } from '@lowdefy/helpers';
+import { cachedPromises } from '@lowdefy/node-utils';
 
-import cachedPromises from '../cachePromises';
 import createFetchMetaCache from './fetchMetaCache';
 import createWriteMetaCache from './writeMetaCache';
 import metaLocations from './metaLocations';
 import fetchMetaUrl from './fetchMetaUrl';
 
 function createGetMeta({ components, context }) {
-  const { blocksServerUrl, cacheDirectory } = context;
+  const { cacheDirectory } = context;
   const { types } = components;
   const allMetaLocations = {
-    ...metaLocations({ blocksServerUrl }),
+    ...metaLocations(context),
     ...types,
   };
   const fetchMetaCache = createFetchMetaCache({ cacheDirectory });

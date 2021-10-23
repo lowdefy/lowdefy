@@ -16,7 +16,7 @@
 
 import React from 'react';
 
-const scripts = new Set();
+const scripts = {};
 
 const useDynamicScript = ({ src }) => {
   const [ready, setReady] = React.useState(false);
@@ -25,11 +25,26 @@ const useDynamicScript = ({ src }) => {
   React.useEffect(() => {
     if (!src) return;
 
-    // Check if script is already added to DOM
-    if (scripts.has(src)) {
-      setReady(true);
-      return;
+    if (scripts[src]) {
+      if (scripts[src].ready === true) {
+        setReady(true);
+        return;
+      }
+      if (scripts[src].failed === true) {
+        setFailed(true);
+        return;
+      }
+    } else {
+      scripts[src] = {
+        ready: false,
+        failed: false,
+        setReadies: [],
+        setFailures: [],
+      };
     }
+
+    scripts[src].setReadies.push(setReady);
+    scripts[src].setFailures.push(setFailed);
 
     const element = document.createElement('script');
 
@@ -38,14 +53,15 @@ const useDynamicScript = ({ src }) => {
     element.async = true;
 
     element.onload = () => {
-      scripts.add(src);
-      setReady(true);
+      scripts[src].ready = true;
+      scripts[src].setReadies.forEach((setRdy) => setRdy(true));
     };
 
     element.onerror = (error) => {
       console.error(`Dynamic Script Error: ${src}`, error);
-      setReady(false);
-      setFailed(true);
+      scripts[src].ready = false;
+      scripts[src].failed = true;
+      scripts[src].setFailures.forEach((setFail) => setFail(true));
     };
 
     document.head.appendChild(element);

@@ -1,0 +1,72 @@
+{
+  "name": "@lowdefy/client",
+  "version": "3.22.0",
+  "license": "Apache-2.0",
+  "description": "",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Sam Tolmay",
+      "url": "https://github.com/SamTolmay"
+    },
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "browser": "dist/index.js",
+  "main": "dist/location.js",
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "babel": "babel src/location.js --out-dir dist",
+    "build": "yarn webpack && yarn babel",
+    "build:dev": "yarn webpack:dev && yarn babel",
+    "clean": "rm -rf dist",
+    "prepare": "yarn build",
+    "webpack": "webpack --config webpack.prod.js",
+    "webpack:dev": "webpack --config webpack.dev.js"
+  },
+  "dependencies": {
+    "@lowdefy/block-tools": "3.22.0",
+    "@lowdefy/engine": "3.22.0",
+    "@lowdefy/helpers": "3.22.0",
+    "@lowdefy/layout": "3.22.0",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-helmet": "6.1.0",
+    "react-router-dom": "5.2.0",
+    "swr": "1.0.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.14.3",
+    "@babel/core": "7.14.3",
+    "@babel/preset-env": "7.14.4",
+    "@babel/preset-react": "7.13.13",
+    "babel-jest": "26.6.3",
+    "babel-loader": "8.2.2",
+    "clean-webpack-plugin": "3.0.0",
+    "copy-webpack-plugin": "9.0.0",
+    "css-loader": "5.2.6",
+    "html-webpack-plugin": "5.3.1",
+    "jest": "26.6.3",
+    "style-loader": "2.0.0",
+    "webpack": "5.38.1",
+    "webpack-cli": "4.7.0",
+    "webpack-merge": "5.7.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

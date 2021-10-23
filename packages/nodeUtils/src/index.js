@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import cachedPromises from './cachedPromises';
 import cleanDirectory from './cleanDirectory';
 import createGetSecretsFromEnv from './createGetSecretsFromEnv';
 import getFileExtension, { getFileSubExtension } from './getFileExtension';
@@ -21,6 +22,7 @@ import readFile from './readFile';
 import writeFile from './writeFile';
 
 export {
+  cachedPromises,
   cleanDirectory,
   createGetSecretsFromEnv,
   getFileExtension,

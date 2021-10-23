@@ -215,15 +215,16 @@ test('getMeta meta is memoised when returned from cache', async () => {
   ]);
 });
 
-test('blocksServerUrl is passed to metaLoactions', async () => {
+test('The correct params are passed to metaLocations', async () => {
   createGetMeta({
     components,
-    context: { blocksServerUrl: 'blocksServerUrl', cacheDirectory: 'cacheDirectory' },
+    context: { blocksServerUrl: 'blocksServerUrl', version: 'v1.0.0' },
   });
   expect(metaLocations.mock.calls).toEqual([
     [
       {
         blocksServerUrl: 'blocksServerUrl',
+        version: 'v1.0.0',
       },
     ],
   ]);

@@ -14,86 +14,56 @@
   limitations under the License.
 */
 
-import path from 'path';
-import express from 'express';
-import { ApolloServer } from 'apollo-server-express';
-import { typeDefs, resolvers, createContext } from '@lowdefy/graphql';
-import { get } from '@lowdefy/helpers';
-import { readFile } from '@lowdefy/node-utils';
+import Fastify from 'fastify';
+
+import routes from './routes';
+import staticFiles from './staticFiles';
 
 function getServer({
-  buildDirectory,
+  configDirectory,
+  clientDirectory,
   development = false,
   getSecrets,
-  gqlExpressPath,
-  gqlUri,
-  logger,
   publicDirectory,
-  serverBasePath = '',
+  // serverBasePath = '',
   serveStaticFiles = true,
-  shellDirectory,
 }) {
-  const context = createContext({
-    CONFIGURATION_BASE_PATH: buildDirectory,
-    development,
-    getSecrets,
-    gqlUri,
-    logger,
-  });
-  const gqlServer = new ApolloServer({
-    typeDefs,
-    resolvers,
-    context,
+  const fastify = Fastify({
+    // TODO
+    // prefix: serverBasePath !== '' ? `/${serverBasePath}` : '',
+    logger: true,
   });
 
-  let indexHtml = null;
-
-  if (serverBasePath !== '') {
-    serverBasePath = `/${serverBasePath}`;
-  }
-
-  const serveIndex = async (req, res) => {
-    // TODO: can do better here?
-    if (!indexHtml || development) {
-      indexHtml = await readFile(path.resolve(shellDirectory, 'index.html'));
-      let appConfig = await readFile(path.resolve(buildDirectory, 'app.json'));
-      appConfig = JSON.parse(appConfig);
-      indexHtml = indexHtml.replace(
-        '<!-- __LOWDEFY_APP_HEAD_HTML__ -->',
-        get(appConfig, 'html.appendHead', { default: '' })
-      );
-      indexHtml = indexHtml.replace(
-        '<!-- __LOWDEFY_APP_BODY_HTML__ -->',
-        get(appConfig, 'html.appendBody', { default: '' })
-      );
-      indexHtml = indexHtml.replace(/__LOWDEFY_SERVER_BASE_PATH__/g, serverBasePath);
-    }
-    res.send(indexHtml);
-  };
-
-  const server = express();
-
-  gqlServer.applyMiddleware({
-    app: server,
-    path: gqlExpressPath || `${serverBasePath}/api/graphql`,
-    bodyParserConfig: { limit: '5mb' },
+  fastify.register(routes, {
+    lowdefy: {
+      configDirectory,
+      development,
+      getSecrets,
+      serveStaticFiles,
+    },
   });
 
   if (serveStaticFiles) {
-    // serve index.html with appended html
-    // else static server serves without appended html
-    server.get(`${serverBasePath}/`, serveIndex);
+    fastify.register(staticFiles, {
+      prefix: '/client',
+      lowdefy: {
+        directory: clientDirectory,
+      },
+    });
+    fastify.register(staticFiles, {
+      prefix: '/public',
+      lowdefy: {
+        directory: publicDirectory,
+      },
+    });
 
-    server.use(`${serverBasePath}/shell`, express.static(path.resolve(shellDirectory)));
-
-    // serve public files
-    server.use(`${serverBasePath}/public`, express.static(path.resolve(publicDirectory)));
-
-    // Redirect all 404 to index.html with status 200
-    // This should always be the last route
-    server.use(`${serverBasePath}/*`, serveIndex);
+    // TODO: Is this useful, might just cause issues?
+    fastify.get('/favicon.ico', (_, reply) => {
+      reply.redirect('/public/icon.svg');
+    });
   }
-  return server;
+
+  return fastify;
 }
 
 export default getServer;

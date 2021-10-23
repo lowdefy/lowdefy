@@ -15,11 +15,8 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import packageJson from '../../../package.json';
 
-const { version } = packageJson;
-
-function defaultMetaLocations({ blocksServerUrl }) {
+function metaLocations({ blocksServerUrl, version }) {
   let baseUrl = blocksServerUrl;
   if (type.isNone(baseUrl)) {
     baseUrl = `https://blocks-cdn.lowdefy.com/v${version}`;
@@ -290,4 +287,4 @@ function defaultMetaLocations({ blocksServerUrl }) {
   };
 }
 
-export default defaultMetaLocations;
+export default metaLocations;

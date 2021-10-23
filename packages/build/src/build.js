@@ -16,6 +16,8 @@
   limitations under the License.
 */
 
+import packageJson from '../package.json';
+
 import createGetMeta from './utils/meta/getMeta';
 import createWriteBuildArtifact from './utils/files/writeBuildArtifact';
 import createReadConfigFile from './utils/files/readConfigFile';
@@ -34,6 +36,7 @@ import writeApp from './build/writeApp';
 import writeConfig from './build/writeConfig';
 import writeConnections from './build/writeConnections';
 import writeGlobal from './build/writeGlobal';
+import writeHtml from './build/writeHtml/writeHtml';
 import writeMenus from './build/writeMenus';
 import writePages from './build/writePages';
 import writeRequests from './build/writeRequests';
@@ -50,6 +53,7 @@ function createContext(options) {
     logger,
     outputDirectory,
     refResolver,
+    version: packageJson.version,
   };
   return context;
 }
@@ -72,6 +76,7 @@ async function build(options) {
     await writeConnections({ components, context });
     await writeRequests({ components, context });
     await writePages({ components, context });
+    await writeHtml({ components, context });
     await writeConfig({ components, context });
     await writeGlobal({ components, context });
     await writeMenus({ components, context });
