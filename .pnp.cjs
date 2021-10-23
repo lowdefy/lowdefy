@@ -5196,7 +5196,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["express", "npm:4.17.1"],
             ["graphql", "npm:15.5.0"],
             ["jest", "npm:26.6.3"],
-            ["yargs", "npm:17.1.0"]
+            ["yargs", "npm:17.2.1"]
           ],
           "linkType": "SOFT",
         }]
@@ -30418,10 +30418,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:17.1.0", {
-          "packageLocation": "./.yarn/cache/yargs-npm-17.1.0-06b940cf1f-259d496db8.zip/node_modules/yargs/",
+        ["npm:17.2.1", {
+          "packageLocation": "./.yarn/cache/yargs-npm-17.2.1-592dabfd58-451aac46f8.zip/node_modules/yargs/",
           "packageDependencies": [
-            ["yargs", "npm:17.1.0"],
+            ["yargs", "npm:17.2.1"],
             ["cliui", "npm:7.0.4"],
             ["escalade", "npm:3.1.1"],
             ["get-caller-file", "npm:2.0.5"],
