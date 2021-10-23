@@ -42,7 +42,7 @@
     "change-case": "4.1.2",
     "deep-diff": "1.0.2",
     "js-yaml": "4.1.0",
-    "mingo": "4.1.2",
+    "mingo": "4.2.0",
     "uuid": "8.3.2"
   },
   "devDependencies": {

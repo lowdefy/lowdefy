@@ -4877,7 +4877,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest", "npm:26.6.3"],
             ["jsonwebtoken", "npm:8.5.1"],
             ["knex", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:0.95.11"],
-            ["mingo", "npm:4.1.2"],
+            ["mingo", "npm:4.2.0"],
             ["moment", "npm:2.29.1"],
             ["mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:3.6.5"],
             ["mssql", "npm:7.2.1"],
@@ -5038,7 +5038,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["deep-diff", "npm:1.0.2"],
             ["jest", "npm:26.6.3"],
             ["js-yaml", "npm:4.1.0"],
-            ["mingo", "npm:4.1.2"],
+            ["mingo", "npm:4.2.0"],
             ["uuid", "npm:8.3.2"]
           ],
           "linkType": "SOFT",
@@ -19456,10 +19456,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["mingo", [
-        ["npm:4.1.2", {
-          "packageLocation": "./.yarn/cache/mingo-npm-4.1.2-523c6ce497-6708401f8e.zip/node_modules/mingo/",
+        ["npm:4.2.0", {
+          "packageLocation": "./.yarn/cache/mingo-npm-4.2.0-54ca3fdbc7-7079c6182f.zip/node_modules/mingo/",
           "packageDependencies": [
-            ["mingo", "npm:4.1.2"]
+            ["mingo", "npm:4.2.0"]
           ],
           "linkType": "HARD",
         }]
