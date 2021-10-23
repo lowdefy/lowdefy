@@ -48,7 +48,7 @@
     "ajv": "6.12.6",
     "ajv-errors": "1.0.1",
     "apollo-server": "2.25.0",
-    "aws-sdk": "2.918.0",
+    "aws-sdk": "2.1013.0",
     "axios": "0.21.4",
     "cookie": "0.4.1",
     "dataloader": "2.0.0",
