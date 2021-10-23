@@ -10370,21 +10370,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["chokidar", [
-        ["npm:3.5.1", {
-          "packageLocation": "./.yarn/cache/chokidar-npm-3.5.1-205217279e-b7774e6e3a.zip/node_modules/chokidar/",
-          "packageDependencies": [
-            ["chokidar", "npm:3.5.1"],
-            ["anymatch", "npm:3.1.2"],
-            ["braces", "npm:3.0.2"],
-            ["fsevents", "patch:fsevents@npm%3A2.3.2#~builtin<compat/fsevents>::version=2.3.2&hash=1cc4b2"],
-            ["glob-parent", "npm:5.1.2"],
-            ["is-binary-path", "npm:2.1.0"],
-            ["is-glob", "npm:4.0.3"],
-            ["normalize-path", "npm:3.0.0"],
-            ["readdirp", "npm:3.5.0"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:3.5.2", {
           "packageLocation": "./.yarn/cache/chokidar-npm-3.5.2-6752340fec-d1fda32fcd.zip/node_modules/chokidar/",
           "packageDependencies": [
@@ -18832,7 +18817,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"],
             ["babel-loader", "virtual:dddca670fd0b7758fb2e1b1a3e18ac7ebd1ecd06ecdd7acec2b78bccf1d35802cb22904bfbb233b16515a81f5cb819421786d20887823d98022b367036c1ad51#npm:8.2.3"],
             ["chalk", "npm:4.1.2"],
-            ["chokidar", "npm:3.5.1"],
+            ["chokidar", "npm:3.5.2"],
             ["clean-webpack-plugin", "virtual:dddca670fd0b7758fb2e1b1a3e18ac7ebd1ecd06ecdd7acec2b78bccf1d35802cb22904bfbb233b16515a81f5cb819421786d20887823d98022b367036c1ad51#npm:4.0.0"],
             ["commander", "npm:7.2.0"],
             ["copy-webpack-plugin", "virtual:dddca670fd0b7758fb2e1b1a3e18ac7ebd1ecd06ecdd7acec2b78bccf1d35802cb22904bfbb233b16515a81f5cb819421786d20887823d98022b367036c1ad51#npm:9.0.1"],
@@ -23959,14 +23944,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["readdirp", [
-        ["npm:3.5.0", {
-          "packageLocation": "./.yarn/cache/readdirp-npm-3.5.0-a1b1568d32-6b1a9341e2.zip/node_modules/readdirp/",
-          "packageDependencies": [
-            ["readdirp", "npm:3.5.0"],
-            ["picomatch", "npm:2.3.0"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:3.6.0", {
           "packageLocation": "./.yarn/cache/readdirp-npm-3.6.0-f950cc74ab-1ced032e6e.zip/node_modules/readdirp/",
           "packageDependencies": [
