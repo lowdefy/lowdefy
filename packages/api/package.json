@@ -43,7 +43,7 @@
     "@lowdefy/operators": "3.22.0",
     "cookie": "0.4.1",
     "jsonwebtoken": "8.5.1",
-    "openid-client": "4.7.4"
+    "openid-client": "4.9.1"
   },
   "devDependencies": {
     "@babel/cli": "7.15.7",

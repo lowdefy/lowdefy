@@ -4458,7 +4458,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["cookie", "npm:0.4.1"],
             ["jest", "npm:26.6.3"],
             ["jsonwebtoken", "npm:8.5.1"],
-            ["openid-client", "npm:4.7.4"],
+            ["openid-client", "npm:4.9.1"],
             ["webpack", "virtual:b0ff8d6fd5e77238fc1445226d171d4547961f54c66bc3d70a3dd085250fbc6494ee85c696f570abd3219cbbe9c61301b4eeb2b6ce6f6a7c311c07b628d0433c#npm:5.59.1"],
             ["webpack-cli", "virtual:b0ff8d6fd5e77238fc1445226d171d4547961f54c66bc3d70a3dd085250fbc6494ee85c696f570abd3219cbbe9c61301b4eeb2b6ce6f6a7c311c07b628d0433c#npm:4.9.1"]
           ],
@@ -4882,7 +4882,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:3.6.5"],
             ["mssql", "npm:7.2.1"],
             ["mysql", "npm:2.18.1"],
-            ["openid-client", "npm:4.7.4"],
+            ["openid-client", "npm:4.9.1"],
             ["pg", "virtual:dddca670fd0b7758fb2e1b1a3e18ac7ebd1ecd06ecdd7acec2b78bccf1d35802cb22904bfbb233b16515a81f5cb819421786d20887823d98022b367036c1ad51#npm:8.6.0"],
             ["saslprep", "npm:1.0.3"],
             ["sqlite3", "virtual:dddca670fd0b7758fb2e1b1a3e18ac7ebd1ecd06ecdd7acec2b78bccf1d35802cb22904bfbb233b16515a81f5cb819421786d20887823d98022b367036c1ad51#npm:5.0.2"],
@@ -20829,10 +20829,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["openid-client", [
-        ["npm:4.7.4", {
-          "packageLocation": "./.yarn/cache/openid-client-npm-4.7.4-f32c9bc273-d77507f82b.zip/node_modules/openid-client/",
+        ["npm:4.9.1", {
+          "packageLocation": "./.yarn/cache/openid-client-npm-4.9.1-ead5a0b4ca-f40f1b4f2c.zip/node_modules/openid-client/",
           "packageDependencies": [
-            ["openid-client", "npm:4.7.4"],
+            ["openid-client", "npm:4.9.1"],
             ["aggregate-error", "npm:3.1.0"],
             ["got", "npm:11.8.2"],
             ["jose", "npm:2.0.5"],

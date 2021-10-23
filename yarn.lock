@@ -2978,7 +2978,7 @@ __metadata:
     cookie: 0.4.1
     jest: 26.6.3
     jsonwebtoken: 8.5.1
-    openid-client: 4.7.4
+    openid-client: 4.9.1
     webpack: 5.59.1
     webpack-cli: 4.9.1
   languageName: unknown
@@ -3391,7 +3391,7 @@ __metadata:
     mongodb: 3.6.12
     mssql: 7.2.1
     mysql: 2.18.1
-    openid-client: 4.7.4
+    openid-client: 4.9.1
     pg: 8.6.0
     saslprep: 1.0.3
     sqlite3: 5.0.2
@@ -15461,9 +15461,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"openid-client@npm:4.7.4":
-  version: 4.7.4
-  resolution: "openid-client@npm:4.7.4"
+"openid-client@npm:4.9.1":
+  version: 4.9.1
+  resolution: "openid-client@npm:4.9.1"
   dependencies:
     aggregate-error: ^3.1.0
     got: ^11.8.0
@@ -15472,7 +15472,7 @@ __metadata:
     make-error: ^1.3.6
     object-hash: ^2.0.1
     oidc-token-hash: ^5.0.1
-  checksum: d77507f82beaf7313387660e5eeb31b47f578851512b151db9ca6cd065f58916ca628b7a8dbefa32a8eac2e07a5335b751e887b300aa22ee07c334cf46d7dc77
+  checksum: f40f1b4f2c4618cc823c77b7c6fed2a8240550d2c2f73710c823c127233a80af5e8c30acc248115bd17e2766d5d5bc1032989a515aa135259ffd5ebcdf90226c
   languageName: node
   linkType: hard
 

@@ -62,7 +62,7 @@
     "mongodb": "3.6.12",
     "mssql": "7.2.1",
     "mysql": "2.18.1",
-    "openid-client": "4.7.4",
+    "openid-client": "4.9.1",
     "pg": "8.6.0",
     "saslprep": "1.0.3",
     "sqlite3": "5.0.2",
