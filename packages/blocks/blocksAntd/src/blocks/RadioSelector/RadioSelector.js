@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { Radio } from 'antd';
+import { Radio, Space } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 import { type } from '@lowdefy/helpers';
 
@@ -70,25 +70,31 @@ const RadioSelector = ({
             }}
             value={getValueIndex(value, uniqueValueOptions)}
           >
-            {uniqueValueOptions.map((opt, i) =>
-              type.isPrimitive(opt) ? (
-                <Radio id={`${blockId}_${opt}`} key={i} value={i}>
-                  {renderHtml({ html: `${opt}`, methods })}
-                </Radio>
-              ) : (
-                <Radio
-                  id={`${blockId}_${i}`}
-                  key={i}
-                  value={i}
-                  disabled={opt.disabled}
-                  className={methods.makeCssClass(opt.style)}
-                >
-                  {type.isNone(opt.label)
-                    ? renderHtml({ html: `${opt.value}`, methods })
-                    : renderHtml({ html: opt.label, methods })}
-                </Radio>
-              )
-            )}
+            <Space
+              direction={properties.direction}
+              wrap={type.isNone(properties.wrap) ? true : properties.wrap}
+              align={type.isNone(properties.align) ? 'start' : properties.align}
+            >
+              {uniqueValueOptions.map((opt, i) =>
+                type.isPrimitive(opt) ? (
+                  <Radio id={`${blockId}_${opt}`} key={i} value={i}>
+                    {renderHtml({ html: `${opt}`, methods })}
+                  </Radio>
+                ) : (
+                  <Radio
+                    id={`${blockId}_${i}`}
+                    key={i}
+                    value={i}
+                    disabled={opt.disabled}
+                    className={methods.makeCssClass(opt.style)}
+                  >
+                    {type.isNone(opt.label)
+                      ? renderHtml({ html: `${opt.value}`, methods })
+                      : renderHtml({ html: opt.label, methods })}
+                  </Radio>
+                )
+              )}
+            </Space>
           </RadioGroup>
         ),
       }}

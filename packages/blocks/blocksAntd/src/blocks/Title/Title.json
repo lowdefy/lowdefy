@@ -97,10 +97,15 @@
             }
           ]
         },
+        "italic": {
+          "type": "boolean",
+          "default": false,
+          "description": "Apply italic style."
+        },
         "level": {
           "type": "number",
           "default": 1,
-          "enum": [1, 2, 3, 4],
+          "enum": [1, 2, 3, 4, 5],
           "description": "Set title type. Matches with h1, h2, h3 and h4."
         },
         "mark": {
@@ -111,7 +116,7 @@
         "type": {
           "type": "string",
           "default": "default",
-          "enum": ["secondary", "warning", "danger"],
+          "enum": ["secondary", "warning", "danger", "success"],
           "description": "Additional types. Don't specify for default."
         },
         "underline": {

@@ -7,6 +7,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [],
       "className": "{}",
       "defaultOpen": undefined,
@@ -14,6 +15,7 @@ Array [
       "filterOption": [Function],
       "id": "default_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -30,6 +32,7 @@ Array [
       "allowClear": false,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [
         <mockConstructor
           className="{}"
@@ -126,6 +129,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.allowClear: false_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -142,6 +146,7 @@ Array [
       "allowClear": true,
       "autoFocus": true,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [
         <mockConstructor
           className="{}"
@@ -238,6 +243,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.autoFocus: true_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -254,6 +260,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": true,
+      "bordered": undefined,
       "children": Array [
         <mockConstructor
           className="{}"
@@ -350,6 +357,32 @@ Array [
       "filterOption": [Function],
       "id": "properties.backfill: true_input",
       "onChange": [Function],
+      "onSearch": [Function],
+      "placeholder": "Type or select item",
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.bordered: false - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "backfill": undefined,
+      "bordered": false,
+      "children": Array [],
+      "className": "{}",
+      "defaultOpen": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "id": "properties.bordered: false_input",
+      "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -366,6 +399,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [
         <mockConstructor
           className="{}"
@@ -466,6 +500,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.inputStyle: CSS style applied_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -482,6 +517,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [],
       "className": "{}",
       "defaultOpen": undefined,
@@ -489,6 +525,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.label.align_right_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -505,6 +542,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [],
       "className": "{}",
       "defaultOpen": undefined,
@@ -512,6 +550,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.label.colon_false_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -528,6 +567,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [],
       "className": "{}",
       "defaultOpen": undefined,
@@ -535,6 +575,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.label.disabled_true_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -551,6 +592,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [],
       "className": "{}",
       "defaultOpen": undefined,
@@ -558,6 +600,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.label.extra_showingextra_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -574,6 +617,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [],
       "className": "{}",
       "defaultOpen": undefined,
@@ -581,6 +625,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.label.inline_true_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -597,6 +642,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [],
       "className": "{}",
       "defaultOpen": undefined,
@@ -604,6 +650,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.label.span_12_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -620,6 +667,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [
         <mockConstructor
           className="{\\"style\\":[null,null]}"
@@ -815,6 +863,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.options.label: html_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -831,6 +880,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [
         <mockConstructor
           className="{\\"style\\":[null,null]}"
@@ -1028,6 +1078,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.options.label: html and properties.options.filterString_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -1044,6 +1095,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [
         <mockConstructor
           className="{}"
@@ -1212,6 +1264,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.options: html_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -1228,6 +1281,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [
         <mockConstructor
           className="{\\"style\\":[null,null]}"
@@ -1336,6 +1390,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.options-object_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -1352,6 +1407,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [
         <mockConstructor
           className="{}"
@@ -1448,6 +1504,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.options-string_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -1464,6 +1521,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [
         <mockConstructor
           className="{\\"style\\":[null,{\\"color\\":\\"red\\"}]}"
@@ -1576,6 +1634,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.options-style_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -1592,6 +1651,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [
         <mockConstructor
           className="{\\"style\\":{\\"color\\":\\"blue\\"}}"
@@ -1696,6 +1756,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.optionsStyle: CSS style applied_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,
@@ -1712,6 +1773,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [],
       "className": "{}",
       "defaultOpen": undefined,
@@ -1719,6 +1781,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.placeholder_Text_inside_block_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Text inside block",
       "size": undefined,
       "value": undefined,
@@ -1735,6 +1798,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [
         <mockConstructor
           className="{}"
@@ -1831,6 +1895,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.size: large_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": "large",
       "value": undefined,
@@ -1847,6 +1912,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [
         <mockConstructor
           className="{}"
@@ -1943,6 +2009,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.size: small_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": "small",
       "value": undefined,
@@ -1959,6 +2026,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "backfill": undefined,
+      "bordered": undefined,
       "children": Array [],
       "className": "{}",
       "defaultOpen": undefined,
@@ -1966,6 +2034,7 @@ Array [
       "filterOption": [Function],
       "id": "properties.title_input",
       "onChange": [Function],
+      "onSearch": [Function],
       "placeholder": "Type or select item",
       "size": undefined,
       "value": undefined,

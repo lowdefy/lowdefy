@@ -4,10 +4,12 @@ exports[`Mock for method: {"name":"open","args":{"description":"Args description
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -41,14 +43,59 @@ exports[`Mock for method: {"name":"open","args":{"description":"Args description
 
 exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - default - value[0] - warning 1`] = `Array []`;
 
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.bodyStyle: background: green - value[0] - confirm 1`] = `
+Array [
+  Array [
+    Object {
+      "bodyStyle": "{\\"style\\":{\\"background\\":\\"green\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "className": "{}",
+      "closable": undefined,
+      "content": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "id": "properties.bodyStyle: background: green_confirm_modal",
+      "mask": true,
+      "maskClosable": false,
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "width": undefined,
+      "zIndex": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.bodyStyle: background: green - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.bodyStyle: background: green - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.bodyStyle: background: green - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.bodyStyle: background: green - value[0] - warning 1`] = `Array []`;
+
 exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.cancelText: Cancel text - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel text",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -86,10 +133,12 @@ exports[`Mock for method: {"name":"open","args":{"description":"Args description
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": true,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -123,14 +172,59 @@ exports[`Mock for method: {"name":"open","args":{"description":"Args description
 
 exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.centered: true - value[0] - warning 1`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.content - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.closable: false - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": false,
+      "content": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "id": "properties.closable: false_confirm_modal",
+      "mask": true,
+      "maskClosable": false,
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "width": undefined,
+      "zIndex": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.closable: false - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.closable: false - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.closable: false - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.closable: false - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.content - value[0] - confirm 1`] = `
+Array [
+  Array [
+    Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -168,10 +262,12 @@ exports[`Mock for method: {"name":"open","args":{"description":"Args description
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -235,10 +331,12 @@ exports[`Mock for method: {"name":"open","args":{"description":"Args description
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -276,10 +374,12 @@ exports[`Mock for method: {"name":"open","args":{"description":"Args description
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -313,14 +413,59 @@ exports[`Mock for method: {"name":"open","args":{"description":"Args description
 
 exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.maskClosable: true - value[0] - warning 1`] = `Array []`;
 
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.modalStyle: background: yellow - value[0] - confirm 1`] = `
+Array [
+  Array [
+    Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "className": "{\\"style\\":{\\"background\\":\\"yellow\\"}}",
+      "closable": undefined,
+      "content": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "id": "properties.modalStyle: background: yellow_confirm_modal",
+      "mask": true,
+      "maskClosable": false,
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "width": undefined,
+      "zIndex": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.modalStyle: background: yellow - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.modalStyle: background: yellow - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.modalStyle: background: yellow - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.modalStyle: background: yellow - value[0] - warning 1`] = `Array []`;
+
 exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.okText: Ok text - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -358,10 +503,12 @@ exports[`Mock for method: {"name":"open","args":{"description":"Args description
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -401,10 +548,12 @@ exports[`Mock for method: {"name":"open","args":{"description":"Args description
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -444,10 +593,12 @@ exports[`Mock for method: {"name":"open","args":{"description":"Args description
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -487,10 +638,12 @@ exports[`Mock for method: {"name":"open","args":{"description":"Args description
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -530,10 +683,12 @@ exports[`Mock for method: {"name":"open","args":{"description":"Args description
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -563,10 +718,12 @@ exports[`Mock for method: {"name":"open","args":{"description":"Args description
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -592,9 +749,19 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
                 ],
               ],
               "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
                 Object {
                   "type": "return",
                   "value": "{}",
@@ -647,10 +814,12 @@ exports[`Mock for method: {"name":"open","args":{"description":"Args description
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -678,9 +847,19 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
                 ],
               ],
               "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
                 Object {
                   "type": "return",
                   "value": "{}",
@@ -733,10 +912,12 @@ exports[`Mock for method: {"name":"open","args":{"description":"Args description
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -774,10 +955,12 @@ exports[`Mock for method: {"name":"open","args":{"description":"Args description
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -815,10 +998,12 @@ exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - valu
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -852,14 +1037,59 @@ exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - valu
 
 exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - value[0] - warning 1`] = `Array []`;
 
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.bodyStyle: background: green - value[0] - confirm 1`] = `
+Array [
+  Array [
+    Object {
+      "bodyStyle": "{\\"style\\":{\\"background\\":\\"green\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "className": "{}",
+      "closable": undefined,
+      "content": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "id": "properties.bodyStyle: background: green_confirm_modal",
+      "mask": true,
+      "maskClosable": false,
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "width": undefined,
+      "zIndex": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.bodyStyle: background: green - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.bodyStyle: background: green - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.bodyStyle: background: green - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.bodyStyle: background: green - value[0] - warning 1`] = `Array []`;
+
 exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.cancelText: Cancel text - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel text",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -897,10 +1127,12 @@ exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.cen
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": true,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -934,14 +1166,59 @@ exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.cen
 
 exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.centered: true - value[0] - warning 1`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.closable: false - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": false,
+      "content": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "id": "properties.closable: false_confirm_modal",
+      "mask": true,
+      "maskClosable": false,
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "width": undefined,
+      "zIndex": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.closable: false - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.closable: false - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.closable: false - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.closable: false - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] - confirm 1`] = `
+Array [
+  Array [
+    Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -979,10 +1256,12 @@ exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.ico
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -1046,10 +1325,12 @@ exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.mas
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -1087,10 +1368,12 @@ exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.mas
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -1124,14 +1407,59 @@ exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.mas
 
 exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.maskClosable: true - value[0] - warning 1`] = `Array []`;
 
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.modalStyle: background: yellow - value[0] - confirm 1`] = `
+Array [
+  Array [
+    Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "className": "{\\"style\\":{\\"background\\":\\"yellow\\"}}",
+      "closable": undefined,
+      "content": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "id": "properties.modalStyle: background: yellow_confirm_modal",
+      "mask": true,
+      "maskClosable": false,
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "width": undefined,
+      "zIndex": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.modalStyle: background: yellow - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.modalStyle: background: yellow - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.modalStyle: background: yellow - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.modalStyle: background: yellow - value[0] - warning 1`] = `Array []`;
+
 exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.okText: Ok text - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -1169,10 +1497,12 @@ exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.sta
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -1212,10 +1542,12 @@ exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.sta
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -1255,10 +1587,12 @@ exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.sta
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -1298,10 +1632,12 @@ exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.sta
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -1341,10 +1677,12 @@ exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.sta
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -1374,10 +1712,12 @@ exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.tit
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -1403,9 +1743,19 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
                 ],
               ],
               "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
                 Object {
                   "type": "return",
                   "value": "{}",
@@ -1458,10 +1808,12 @@ exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.tit
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -1489,9 +1841,19 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
                 ],
               ],
               "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
                 Object {
                   "type": "return",
                   "value": "{}",
@@ -1544,10 +1906,12 @@ exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.wid
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -1585,10 +1949,12 @@ exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.zIn
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -1626,10 +1992,12 @@ exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - de
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -1663,14 +2031,59 @@ exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - de
 
 exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - default - value[0] - warning 1`] = `Array []`;
 
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.bodyStyle: background: green - value[0] - confirm 1`] = `
+Array [
+  Array [
+    Object {
+      "bodyStyle": "{\\"style\\":{\\"background\\":\\"green\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "className": "{}",
+      "closable": undefined,
+      "content": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "id": "properties.bodyStyle: background: green_confirm_modal",
+      "mask": true,
+      "maskClosable": false,
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "width": undefined,
+      "zIndex": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.bodyStyle: background: green - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.bodyStyle: background: green - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.bodyStyle: background: green - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.bodyStyle: background: green - value[0] - warning 1`] = `Array []`;
+
 exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.cancelText: Cancel text - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel text",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -1708,10 +2121,12 @@ exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - pr
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": true,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -1745,14 +2160,59 @@ exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - pr
 
 exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.centered: true - value[0] - warning 1`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.content - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.closable: false - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": false,
+      "content": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "id": "properties.closable: false_confirm_modal",
+      "mask": true,
+      "maskClosable": false,
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "width": undefined,
+      "zIndex": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.closable: false - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.closable: false - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.closable: false - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.closable: false - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.content - value[0] - confirm 1`] = `
+Array [
+  Array [
+    Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -1790,10 +2250,12 @@ exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - pr
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -1857,10 +2319,12 @@ exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - pr
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -1898,10 +2362,12 @@ exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - pr
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -1935,14 +2401,59 @@ exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - pr
 
 exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.maskClosable: true - value[0] - warning 1`] = `Array []`;
 
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.modalStyle: background: yellow - value[0] - confirm 1`] = `
+Array [
+  Array [
+    Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "className": "{\\"style\\":{\\"background\\":\\"yellow\\"}}",
+      "closable": undefined,
+      "content": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "id": "properties.modalStyle: background: yellow_confirm_modal",
+      "mask": true,
+      "maskClosable": false,
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "width": undefined,
+      "zIndex": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.modalStyle: background: yellow - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.modalStyle: background: yellow - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.modalStyle: background: yellow - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.modalStyle: background: yellow - value[0] - warning 1`] = `Array []`;
+
 exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.okText: Ok text - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -1980,10 +2491,12 @@ exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - pr
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -2023,10 +2536,12 @@ exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - pr
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -2066,10 +2581,12 @@ exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - pr
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -2109,10 +2626,12 @@ exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - pr
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -2152,10 +2671,12 @@ exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - pr
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -2185,10 +2706,12 @@ exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - pr
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -2214,9 +2737,19 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
                 ],
               ],
               "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
                 Object {
                   "type": "return",
                   "value": "{}",
@@ -2269,10 +2802,12 @@ exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - pr
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -2300,9 +2835,19 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
                 ],
               ],
               "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
                 Object {
                   "type": "return",
                   "value": "{}",
@@ -2355,10 +2900,12 @@ exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - pr
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -2396,10 +2943,12 @@ exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - pr
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -2445,10 +2994,12 @@ exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - default 
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -2460,6 +3011,49 @@ Array [
         content
       </div>,
       "id": "default_confirm_modal",
+      "mask": true,
+      "maskClosable": false,
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "width": undefined,
+      "zIndex": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.bodyStyle: background: green - value[0] - confirm 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.bodyStyle: background: green - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.bodyStyle: background: green - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.bodyStyle: background: green - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.bodyStyle: background: green - value[0] - warning 1`] = `
+Array [
+  Array [
+    Object {
+      "bodyStyle": "{\\"style\\":{\\"background\\":\\"green\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "className": "{}",
+      "closable": undefined,
+      "content": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "id": "properties.bodyStyle: background: green_confirm_modal",
       "mask": true,
       "maskClosable": false,
       "okButtonProps": undefined,
@@ -2486,10 +3080,12 @@ exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properti
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel text",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -2527,10 +3123,12 @@ exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properti
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": true,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -2542,6 +3140,49 @@ Array [
         content
       </div>,
       "id": "properties.centered: true_confirm_modal",
+      "mask": true,
+      "maskClosable": false,
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "width": undefined,
+      "zIndex": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.closable: false - value[0] - confirm 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.closable: false - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.closable: false - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.closable: false - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.closable: false - value[0] - warning 1`] = `
+Array [
+  Array [
+    Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "className": "{}",
+      "closable": false,
+      "content": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "id": "properties.closable: false_confirm_modal",
       "mask": true,
       "maskClosable": false,
       "okButtonProps": undefined,
@@ -2568,10 +3209,12 @@ exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properti
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -2609,10 +3252,12 @@ exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properti
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -2676,10 +3321,12 @@ exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properti
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -2717,10 +3364,12 @@ exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properti
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -2746,6 +3395,49 @@ Array [
 ]
 `;
 
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.modalStyle: background: yellow - value[0] - confirm 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.modalStyle: background: yellow - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.modalStyle: background: yellow - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.modalStyle: background: yellow - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.modalStyle: background: yellow - value[0] - warning 1`] = `
+Array [
+  Array [
+    Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "className": "{\\"style\\":{\\"background\\":\\"yellow\\"}}",
+      "closable": undefined,
+      "content": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "id": "properties.modalStyle: background: yellow_confirm_modal",
+      "mask": true,
+      "maskClosable": false,
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "width": undefined,
+      "zIndex": undefined,
+    },
+  ],
+]
+`;
+
 exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.okText: Ok text - value[0] - confirm 1`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.okText: Ok text - value[0] - error 1`] = `Array []`;
@@ -2758,10 +3450,12 @@ exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properti
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -2799,10 +3493,12 @@ exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properti
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -2840,10 +3536,12 @@ exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properti
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -2881,10 +3579,12 @@ exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properti
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -2922,10 +3622,12 @@ exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properti
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -2963,10 +3665,12 @@ exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properti
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -3004,10 +3708,12 @@ exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properti
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -3033,9 +3739,19 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
                 ],
               ],
               "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
                 Object {
                   "type": "return",
                   "value": "{}",
@@ -3088,10 +3804,12 @@ exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properti
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -3119,9 +3837,19 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
                 ],
               ],
               "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
                 Object {
                   "type": "return",
                   "value": "{}",
@@ -3174,10 +3902,12 @@ exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properti
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -3215,10 +3945,12 @@ exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properti
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -3248,10 +3980,12 @@ exports[`Mock for method: {"name":"open","args":{}} - default - value[0] - confi
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -3285,14 +4019,59 @@ exports[`Mock for method: {"name":"open","args":{}} - default - value[0] - succe
 
 exports[`Mock for method: {"name":"open","args":{}} - default - value[0] - warning 1`] = `Array []`;
 
+exports[`Mock for method: {"name":"open","args":{}} - properties.bodyStyle: background: green - value[0] - confirm 1`] = `
+Array [
+  Array [
+    Object {
+      "bodyStyle": "{\\"style\\":{\\"background\\":\\"green\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "className": "{}",
+      "closable": undefined,
+      "content": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "id": "properties.bodyStyle: background: green_confirm_modal",
+      "mask": true,
+      "maskClosable": false,
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "width": undefined,
+      "zIndex": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.bodyStyle: background: green - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.bodyStyle: background: green - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.bodyStyle: background: green - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.bodyStyle: background: green - value[0] - warning 1`] = `Array []`;
+
 exports[`Mock for method: {"name":"open","args":{}} - properties.cancelText: Cancel text - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel text",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -3330,10 +4109,12 @@ exports[`Mock for method: {"name":"open","args":{}} - properties.centered: true 
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": true,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -3367,14 +4148,59 @@ exports[`Mock for method: {"name":"open","args":{}} - properties.centered: true 
 
 exports[`Mock for method: {"name":"open","args":{}} - properties.centered: true - value[0] - warning 1`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.content - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{}} - properties.closable: false - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": false,
+      "content": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "id": "properties.closable: false_confirm_modal",
+      "mask": true,
+      "maskClosable": false,
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "width": undefined,
+      "zIndex": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.closable: false - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.closable: false - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.closable: false - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.closable: false - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.content - value[0] - confirm 1`] = `
+Array [
+  Array [
+    Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -3412,10 +4238,12 @@ exports[`Mock for method: {"name":"open","args":{}} - properties.icon: AndroidFi
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -3479,10 +4307,12 @@ exports[`Mock for method: {"name":"open","args":{}} - properties.mask: false - v
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -3520,10 +4350,12 @@ exports[`Mock for method: {"name":"open","args":{}} - properties.maskClosable: t
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -3557,14 +4389,59 @@ exports[`Mock for method: {"name":"open","args":{}} - properties.maskClosable: t
 
 exports[`Mock for method: {"name":"open","args":{}} - properties.maskClosable: true - value[0] - warning 1`] = `Array []`;
 
+exports[`Mock for method: {"name":"open","args":{}} - properties.modalStyle: background: yellow - value[0] - confirm 1`] = `
+Array [
+  Array [
+    Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "className": "{\\"style\\":{\\"background\\":\\"yellow\\"}}",
+      "closable": undefined,
+      "content": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "id": "properties.modalStyle: background: yellow_confirm_modal",
+      "mask": true,
+      "maskClosable": false,
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "width": undefined,
+      "zIndex": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.modalStyle: background: yellow - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.modalStyle: background: yellow - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.modalStyle: background: yellow - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.modalStyle: background: yellow - value[0] - warning 1`] = `Array []`;
+
 exports[`Mock for method: {"name":"open","args":{}} - properties.okText: Ok text - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -3602,10 +4479,12 @@ exports[`Mock for method: {"name":"open","args":{}} - properties.status: confirm
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -3645,10 +4524,12 @@ exports[`Mock for method: {"name":"open","args":{}} - properties.status: error -
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -3688,10 +4569,12 @@ exports[`Mock for method: {"name":"open","args":{}} - properties.status: info - 
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -3731,10 +4614,12 @@ exports[`Mock for method: {"name":"open","args":{}} - properties.status: success
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -3774,10 +4659,12 @@ exports[`Mock for method: {"name":"open","args":{}} - properties.status: warning
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -3807,10 +4694,12 @@ exports[`Mock for method: {"name":"open","args":{}} - properties.title - value[0
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -3836,9 +4725,19 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
                 ],
               ],
               "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
                 Object {
                   "type": "return",
                   "value": "{}",
@@ -3891,10 +4790,12 @@ exports[`Mock for method: {"name":"open","args":{}} - properties.title is html -
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -3922,9 +4823,19 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
                 ],
               ],
               "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
                 Object {
                   "type": "return",
                   "value": "{}",
@@ -3977,10 +4888,12 @@ exports[`Mock for method: {"name":"open","args":{}} - properties.width: 550px - 
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -4018,10 +4931,12 @@ exports[`Mock for method: {"name":"open","args":{}} - properties.zIndex: 1100 - 
 Array [
   Array [
     Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
       "className": "{}",
+      "closable": undefined,
       "content": <div
         style={
           Object {
@@ -4059,6 +4974,10 @@ exports[`Test Schema default 1`] = `true`;
 
 exports[`Test Schema default 2`] = `null`;
 
+exports[`Test Schema properties.bodyStyle: background: green 1`] = `true`;
+
+exports[`Test Schema properties.bodyStyle: background: green 2`] = `null`;
+
 exports[`Test Schema properties.cancelText: Cancel text 1`] = `true`;
 
 exports[`Test Schema properties.cancelText: Cancel text 2`] = `null`;
@@ -4066,6 +4985,10 @@ exports[`Test Schema properties.cancelText: Cancel text 2`] = `null`;
 exports[`Test Schema properties.centered: true 1`] = `true`;
 
 exports[`Test Schema properties.centered: true 2`] = `null`;
+
+exports[`Test Schema properties.closable: false 1`] = `true`;
+
+exports[`Test Schema properties.closable: false 2`] = `null`;
 
 exports[`Test Schema properties.content 1`] = `true`;
 
@@ -4082,6 +5005,10 @@ exports[`Test Schema properties.mask: false 2`] = `null`;
 exports[`Test Schema properties.maskClosable: true 1`] = `true`;
 
 exports[`Test Schema properties.maskClosable: true 2`] = `null`;
+
+exports[`Test Schema properties.modalStyle: background: yellow 1`] = `true`;
+
+exports[`Test Schema properties.modalStyle: background: yellow 2`] = `null`;
 
 exports[`Test Schema properties.okText: Ok text 1`] = `true`;
 

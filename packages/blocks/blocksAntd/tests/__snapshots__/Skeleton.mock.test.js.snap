@@ -114,6 +114,29 @@ exports[`Mock render - properties.avatar object square - value[0] - Input 1`] = 
 
 exports[`Mock render - properties.avatar object square - value[0] - default 1`] = `Array []`;
 
+exports[`Mock render - properties.block block true - value[0] - Avatar 1`] = `Array []`;
+
+exports[`Mock render - properties.block block true - value[0] - Button 1`] = `
+Array [
+  Array [
+    Object {
+      "active": undefined,
+      "block": true,
+      "className": "{}",
+      "events": Object {},
+      "id": "properties.block block true",
+      "shape": undefined,
+      "size": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.block block true - value[0] - Input 1`] = `Array []`;
+
+exports[`Mock render - properties.block block true - value[0] - default 1`] = `Array []`;
+
 exports[`Mock render - properties.button object circle - value[0] - Avatar 1`] = `Array []`;
 
 exports[`Mock render - properties.button object circle - value[0] - Button 1`] = `
@@ -121,6 +144,7 @@ Array [
   Array [
     Object {
       "active": undefined,
+      "block": undefined,
       "className": "{}",
       "events": Object {},
       "id": "properties.button object circle",
@@ -143,6 +167,7 @@ Array [
   Array [
     Object {
       "active": undefined,
+      "block": undefined,
       "className": "{}",
       "events": Object {},
       "id": "properties.button object round",

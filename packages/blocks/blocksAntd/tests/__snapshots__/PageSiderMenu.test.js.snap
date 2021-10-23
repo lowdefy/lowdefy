@@ -19,7 +19,7 @@ exports[`Render default - value[0] 1`] = `
           id="default_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
             id="default_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -27,7 +27,7 @@ exports[`Render default - value[0] 1`] = `
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="default_mobile_menu_button_icon"
               required={false}
               role="img"
@@ -64,11 +64,11 @@ exports[`Render default - value[0] 1`] = `
     </a>
   </header>
   <section
-    className="ant-layout ant-layout-has-sider {}"
+    className="ant-layout {}"
     id="default_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print ant-layout-sider ant-layout-sider-light"
+      className="ant-layout-sider ant-layout-sider-light {\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print"
       id="default_sider"
       style={
         Object {
@@ -92,12 +92,20 @@ exports[`Render default - value[0] 1`] = `
           }
         >
           <ul
-            className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} ant-menu-light ant-menu-root ant-menu-inline"
+            className="ant-menu ant-menu-root ant-menu-inline ant-menu-light {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]}"
+            data-menu-list={true}
             id="default_menu"
-            onMouseEnter={[Function]}
-            onTransitionEnd={[Function]}
+            onKeyDown={[Function]}
             role="menu"
-            style={Object {}}
+            tabIndex={0}
+          />
+          <div
+            aria-hidden={true}
+            style={
+              Object {
+                "display": "none",
+              }
+            }
           />
           <div
             style={
@@ -121,7 +129,7 @@ exports[`Render default - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn ant-btn-link ant-btn-icon-only ant-btn-block {\\"style\\":[{},null]}"
                   id="default_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -129,7 +137,7 @@ exports[`Render default - value[0] 1`] = `
                   <span
                     aria-label="loading-3-quarters"
                     basePath=""
-                    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                    className="anticon anticon-loading-3-quarters anticon-spin {}"
                     id="default_toggle_sider_icon"
                     required={false}
                     role="img"
@@ -196,7 +204,7 @@ exports[`Render properties.breadcrumb.list - value[0] 1`] = `
           id="properties.breadcrumb.list_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
             id="properties.breadcrumb.list_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -204,7 +212,7 @@ exports[`Render properties.breadcrumb.list - value[0] 1`] = `
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.breadcrumb.list_mobile_menu_button_icon"
               required={false}
               role="img"
@@ -241,11 +249,11 @@ exports[`Render properties.breadcrumb.list - value[0] 1`] = `
     </a>
   </header>
   <section
-    className="ant-layout ant-layout-has-sider {}"
+    className="ant-layout {}"
     id="properties.breadcrumb.list_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print ant-layout-sider ant-layout-sider-light"
+      className="ant-layout-sider ant-layout-sider-light {\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print"
       id="properties.breadcrumb.list_sider"
       style={
         Object {
@@ -269,12 +277,20 @@ exports[`Render properties.breadcrumb.list - value[0] 1`] = `
           }
         >
           <ul
-            className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} ant-menu-light ant-menu-root ant-menu-inline"
+            className="ant-menu ant-menu-root ant-menu-inline ant-menu-light {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]}"
+            data-menu-list={true}
             id="properties.breadcrumb.list_menu"
-            onMouseEnter={[Function]}
-            onTransitionEnd={[Function]}
+            onKeyDown={[Function]}
             role="menu"
-            style={Object {}}
+            tabIndex={0}
+          />
+          <div
+            aria-hidden={true}
+            style={
+              Object {
+                "display": "none",
+              }
+            }
           />
           <div
             style={
@@ -298,7 +314,7 @@ exports[`Render properties.breadcrumb.list - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn ant-btn-link ant-btn-icon-only ant-btn-block {\\"style\\":[{},null]}"
                   id="properties.breadcrumb.list_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -306,7 +322,7 @@ exports[`Render properties.breadcrumb.list - value[0] 1`] = `
                   <span
                     aria-label="loading-3-quarters"
                     basePath=""
-                    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                    className="anticon anticon-loading-3-quarters anticon-spin {}"
                     id="properties.breadcrumb.list_toggle_sider_icon"
                     required={false}
                     role="img"
@@ -337,7 +353,7 @@ exports[`Render properties.breadcrumb.list - value[0] 1`] = `
       id="properties.breadcrumb.list_content"
     >
       <div
-        className="{\\"style\\":{\\"padding\\":\\"16px 0\\"}} ant-breadcrumb"
+        className="ant-breadcrumb {\\"style\\":{\\"padding\\":\\"16px 0\\"}}"
         id="properties.breadcrumb.list_breadcrumb"
       >
         <span>
@@ -407,7 +423,7 @@ exports[`Render properties.content.style - value[0] 1`] = `
           id="properties.content.style_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
             id="properties.content.style_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -415,7 +431,7 @@ exports[`Render properties.content.style - value[0] 1`] = `
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.content.style_mobile_menu_button_icon"
               required={false}
               role="img"
@@ -452,11 +468,11 @@ exports[`Render properties.content.style - value[0] 1`] = `
     </a>
   </header>
   <section
-    className="ant-layout ant-layout-has-sider {}"
+    className="ant-layout {}"
     id="properties.content.style_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print ant-layout-sider ant-layout-sider-light"
+      className="ant-layout-sider ant-layout-sider-light {\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print"
       id="properties.content.style_sider"
       style={
         Object {
@@ -480,12 +496,20 @@ exports[`Render properties.content.style - value[0] 1`] = `
           }
         >
           <ul
-            className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} ant-menu-light ant-menu-root ant-menu-inline"
+            className="ant-menu ant-menu-root ant-menu-inline ant-menu-light {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]}"
+            data-menu-list={true}
             id="properties.content.style_menu"
-            onMouseEnter={[Function]}
-            onTransitionEnd={[Function]}
+            onKeyDown={[Function]}
             role="menu"
-            style={Object {}}
+            tabIndex={0}
+          />
+          <div
+            aria-hidden={true}
+            style={
+              Object {
+                "display": "none",
+              }
+            }
           />
           <div
             style={
@@ -509,7 +533,7 @@ exports[`Render properties.content.style - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn ant-btn-link ant-btn-icon-only ant-btn-block {\\"style\\":[{},null]}"
                   id="properties.content.style_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -517,7 +541,7 @@ exports[`Render properties.content.style - value[0] 1`] = `
                   <span
                     aria-label="loading-3-quarters"
                     basePath=""
-                    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                    className="anticon anticon-loading-3-quarters anticon-spin {}"
                     id="properties.content.style_toggle_sider_icon"
                     required={false}
                     role="img"
@@ -584,7 +608,7 @@ exports[`Render properties.footer.style - value[0] 1`] = `
           id="properties.footer.style_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
             id="properties.footer.style_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -592,7 +616,7 @@ exports[`Render properties.footer.style - value[0] 1`] = `
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.footer.style_mobile_menu_button_icon"
               required={false}
               role="img"
@@ -629,11 +653,11 @@ exports[`Render properties.footer.style - value[0] 1`] = `
     </a>
   </header>
   <section
-    className="ant-layout ant-layout-has-sider {}"
+    className="ant-layout {}"
     id="properties.footer.style_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print ant-layout-sider ant-layout-sider-light"
+      className="ant-layout-sider ant-layout-sider-light {\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print"
       id="properties.footer.style_sider"
       style={
         Object {
@@ -657,12 +681,20 @@ exports[`Render properties.footer.style - value[0] 1`] = `
           }
         >
           <ul
-            className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} ant-menu-light ant-menu-root ant-menu-inline"
+            className="ant-menu ant-menu-root ant-menu-inline ant-menu-light {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]}"
+            data-menu-list={true}
             id="properties.footer.style_menu"
-            onMouseEnter={[Function]}
-            onTransitionEnd={[Function]}
+            onKeyDown={[Function]}
             role="menu"
-            style={Object {}}
+            tabIndex={0}
+          />
+          <div
+            aria-hidden={true}
+            style={
+              Object {
+                "display": "none",
+              }
+            }
           />
           <div
             style={
@@ -686,7 +718,7 @@ exports[`Render properties.footer.style - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn ant-btn-link ant-btn-icon-only ant-btn-block {\\"style\\":[{},null]}"
                   id="properties.footer.style_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -694,7 +726,7 @@ exports[`Render properties.footer.style - value[0] 1`] = `
                   <span
                     aria-label="loading-3-quarters"
                     basePath=""
-                    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                    className="anticon anticon-loading-3-quarters anticon-spin {}"
                     id="properties.footer.style_toggle_sider_icon"
                     required={false}
                     role="img"
@@ -776,7 +808,7 @@ exports[`Render properties.header.color - value[0] 1`] = `
           id="properties.header.color_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
             id="properties.header.color_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -784,7 +816,7 @@ exports[`Render properties.header.color - value[0] 1`] = `
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.header.color_mobile_menu_button_icon"
               required={false}
               role="img"
@@ -821,11 +853,11 @@ exports[`Render properties.header.color - value[0] 1`] = `
     </a>
   </header>
   <section
-    className="ant-layout ant-layout-has-sider {}"
+    className="ant-layout {}"
     id="properties.header.color_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print ant-layout-sider ant-layout-sider-light"
+      className="ant-layout-sider ant-layout-sider-light {\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print"
       id="properties.header.color_sider"
       style={
         Object {
@@ -849,16 +881,19 @@ exports[`Render properties.header.color - value[0] 1`] = `
           }
         >
           <ul
-            className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} ant-menu-light ant-menu-root ant-menu-inline"
+            className="ant-menu ant-menu-root ant-menu-inline ant-menu-light {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]}"
+            data-menu-list={true}
             id="properties.header.color_menu"
-            onMouseEnter={[Function]}
-            onTransitionEnd={[Function]}
+            onKeyDown={[Function]}
             role="menu"
-            style={Object {}}
+            tabIndex={0}
           >
             <li
               className="ant-menu-item"
+              data-menu-id="properties.header.color_menu-introduction"
               onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               role="menuitem"
@@ -867,11 +902,12 @@ exports[`Render properties.header.color - value[0] 1`] = `
                   "paddingLeft": 24,
                 }
               }
+              tabIndex={-1}
             >
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin ant-menu-item-icon"
                 id="Introduction_icon"
                 required={false}
                 role="img"
@@ -890,9 +926,11 @@ exports[`Render properties.header.color - value[0] 1`] = `
                   />
                 </svg>
               </span>
-              <span>
+              <span
+                className="ant-menu-title-content"
+              >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/introduction"
                   onClick={[Function]}
                 >
@@ -902,7 +940,10 @@ exports[`Render properties.header.color - value[0] 1`] = `
             </li>
             <li
               className="ant-menu-item"
+              data-menu-id="properties.header.color_menu-Alert"
               onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               role="menuitem"
@@ -911,11 +952,12 @@ exports[`Render properties.header.color - value[0] 1`] = `
                   "paddingLeft": 24,
                 }
               }
+              tabIndex={-1}
             >
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin ant-menu-item-icon"
                 id="alert_icon"
                 required={false}
                 role="img"
@@ -934,9 +976,11 @@ exports[`Render properties.header.color - value[0] 1`] = `
                   />
                 </svg>
               </span>
-              <span>
+              <span
+                className="ant-menu-title-content"
+              >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/Alert"
                   onClick={[Function]}
                 >
@@ -945,6 +989,14 @@ exports[`Render properties.header.color - value[0] 1`] = `
               </span>
             </li>
           </ul>
+          <div
+            aria-hidden={true}
+            style={
+              Object {
+                "display": "none",
+              }
+            }
+          />
           <div
             style={
               Object {
@@ -967,7 +1019,7 @@ exports[`Render properties.header.color - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn ant-btn-link ant-btn-icon-only ant-btn-block {\\"style\\":[{},null]}"
                   id="properties.header.color_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -975,7 +1027,7 @@ exports[`Render properties.header.color - value[0] 1`] = `
                   <span
                     aria-label="loading-3-quarters"
                     basePath=""
-                    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                    className="anticon anticon-loading-3-quarters anticon-spin {}"
                     id="properties.header.color_toggle_sider_icon"
                     required={false}
                     role="img"
@@ -1052,7 +1104,7 @@ exports[`Render properties.header.style - value[0] 1`] = `
           id="properties.header.style_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
             id="properties.header.style_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -1060,7 +1112,7 @@ exports[`Render properties.header.style - value[0] 1`] = `
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.header.style_mobile_menu_button_icon"
               required={false}
               role="img"
@@ -1097,11 +1149,11 @@ exports[`Render properties.header.style - value[0] 1`] = `
     </a>
   </header>
   <section
-    className="ant-layout ant-layout-has-sider {}"
+    className="ant-layout {}"
     id="properties.header.style_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print ant-layout-sider ant-layout-sider-light"
+      className="ant-layout-sider ant-layout-sider-light {\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print"
       id="properties.header.style_sider"
       style={
         Object {
@@ -1125,12 +1177,20 @@ exports[`Render properties.header.style - value[0] 1`] = `
           }
         >
           <ul
-            className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} ant-menu-light ant-menu-root ant-menu-inline"
+            className="ant-menu ant-menu-root ant-menu-inline ant-menu-light {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]}"
+            data-menu-list={true}
             id="properties.header.style_menu"
-            onMouseEnter={[Function]}
-            onTransitionEnd={[Function]}
+            onKeyDown={[Function]}
             role="menu"
-            style={Object {}}
+            tabIndex={0}
+          />
+          <div
+            aria-hidden={true}
+            style={
+              Object {
+                "display": "none",
+              }
+            }
           />
           <div
             style={
@@ -1154,7 +1214,7 @@ exports[`Render properties.header.style - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn ant-btn-link ant-btn-icon-only ant-btn-block {\\"style\\":[{},null]}"
                   id="properties.header.style_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -1162,7 +1222,7 @@ exports[`Render properties.header.style - value[0] 1`] = `
                   <span
                     aria-label="loading-3-quarters"
                     basePath=""
-                    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                    className="anticon anticon-loading-3-quarters anticon-spin {}"
                     id="properties.header.style_toggle_sider_icon"
                     required={false}
                     role="img"
@@ -1229,7 +1289,7 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
           id="properties.header.theme: light_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
             id="properties.header.theme: light_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -1237,7 +1297,7 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.header.theme: light_mobile_menu_button_icon"
               required={false}
               role="img"
@@ -1274,11 +1334,11 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
     </a>
   </header>
   <section
-    className="ant-layout ant-layout-has-sider {}"
+    className="ant-layout {}"
     id="properties.header.theme: light_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print ant-layout-sider ant-layout-sider-light"
+      className="ant-layout-sider ant-layout-sider-light {\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print"
       id="properties.header.theme: light_sider"
       style={
         Object {
@@ -1302,16 +1362,19 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
           }
         >
           <ul
-            className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} ant-menu-light ant-menu-root ant-menu-inline"
+            className="ant-menu ant-menu-root ant-menu-inline ant-menu-light {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]}"
+            data-menu-list={true}
             id="properties.header.theme: light_menu"
-            onMouseEnter={[Function]}
-            onTransitionEnd={[Function]}
+            onKeyDown={[Function]}
             role="menu"
-            style={Object {}}
+            tabIndex={0}
           >
             <li
               className="ant-menu-item"
+              data-menu-id="properties.header.theme: light_menu-introduction"
               onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               role="menuitem"
@@ -1320,11 +1383,12 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
                   "paddingLeft": 24,
                 }
               }
+              tabIndex={-1}
             >
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin ant-menu-item-icon"
                 id="Introduction_icon"
                 required={false}
                 role="img"
@@ -1343,9 +1407,11 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
                   />
                 </svg>
               </span>
-              <span>
+              <span
+                className="ant-menu-title-content"
+              >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/introduction"
                   onClick={[Function]}
                 >
@@ -1355,7 +1421,10 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
             </li>
             <li
               className="ant-menu-item"
+              data-menu-id="properties.header.theme: light_menu-Alert"
               onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               role="menuitem"
@@ -1364,11 +1433,12 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
                   "paddingLeft": 24,
                 }
               }
+              tabIndex={-1}
             >
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin ant-menu-item-icon"
                 id="alert_icon"
                 required={false}
                 role="img"
@@ -1387,9 +1457,11 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
                   />
                 </svg>
               </span>
-              <span>
+              <span
+                className="ant-menu-title-content"
+              >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/Alert"
                   onClick={[Function]}
                 >
@@ -1398,6 +1470,14 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
               </span>
             </li>
           </ul>
+          <div
+            aria-hidden={true}
+            style={
+              Object {
+                "display": "none",
+              }
+            }
+          />
           <div
             style={
               Object {
@@ -1420,7 +1500,7 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn ant-btn-link ant-btn-icon-only ant-btn-block {\\"style\\":[{},null]}"
                   id="properties.header.theme: light_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -1428,7 +1508,7 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
                   <span
                     aria-label="loading-3-quarters"
                     basePath=""
-                    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                    className="anticon anticon-loading-3-quarters anticon-spin {}"
                     id="properties.header.theme: light_toggle_sider_icon"
                     required={false}
                     role="img"
@@ -1495,7 +1575,7 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
           id="properties.logo.alt_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
             id="properties.logo.alt_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -1503,7 +1583,7 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.logo.alt_mobile_menu_button_icon"
               required={false}
               role="img"
@@ -1540,11 +1620,11 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
     </a>
   </header>
   <section
-    className="ant-layout ant-layout-has-sider {}"
+    className="ant-layout {}"
     id="properties.logo.alt_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print ant-layout-sider ant-layout-sider-light"
+      className="ant-layout-sider ant-layout-sider-light {\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print"
       id="properties.logo.alt_sider"
       style={
         Object {
@@ -1568,16 +1648,19 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
           }
         >
           <ul
-            className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} ant-menu-light ant-menu-root ant-menu-inline"
+            className="ant-menu ant-menu-root ant-menu-inline ant-menu-light {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]}"
+            data-menu-list={true}
             id="properties.logo.alt_menu"
-            onMouseEnter={[Function]}
-            onTransitionEnd={[Function]}
+            onKeyDown={[Function]}
             role="menu"
-            style={Object {}}
+            tabIndex={0}
           >
             <li
               className="ant-menu-item"
+              data-menu-id="properties.logo.alt_menu-introduction"
               onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               role="menuitem"
@@ -1586,11 +1669,12 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
                   "paddingLeft": 24,
                 }
               }
+              tabIndex={-1}
             >
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin ant-menu-item-icon"
                 id="Introduction_icon"
                 required={false}
                 role="img"
@@ -1609,9 +1693,11 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
                   />
                 </svg>
               </span>
-              <span>
+              <span
+                className="ant-menu-title-content"
+              >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/introduction"
                   onClick={[Function]}
                 >
@@ -1621,7 +1707,10 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
             </li>
             <li
               className="ant-menu-item"
+              data-menu-id="properties.logo.alt_menu-Alert"
               onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               role="menuitem"
@@ -1630,11 +1719,12 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
                   "paddingLeft": 24,
                 }
               }
+              tabIndex={-1}
             >
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin ant-menu-item-icon"
                 id="alert_icon"
                 required={false}
                 role="img"
@@ -1653,9 +1743,11 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
                   />
                 </svg>
               </span>
-              <span>
+              <span
+                className="ant-menu-title-content"
+              >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/Alert"
                   onClick={[Function]}
                 >
@@ -1664,6 +1756,14 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
               </span>
             </li>
           </ul>
+          <div
+            aria-hidden={true}
+            style={
+              Object {
+                "display": "none",
+              }
+            }
+          />
           <div
             style={
               Object {
@@ -1686,7 +1786,7 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn ant-btn-link ant-btn-icon-only ant-btn-block {\\"style\\":[{},null]}"
                   id="properties.logo.alt_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -1694,7 +1794,7 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
                   <span
                     aria-label="loading-3-quarters"
                     basePath=""
-                    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                    className="anticon anticon-loading-3-quarters anticon-spin {}"
                     id="properties.logo.alt_toggle_sider_icon"
                     required={false}
                     role="img"
@@ -1761,7 +1861,7 @@ exports[`Render properties.logo.size - value[0] 1`] = `
           id="properties.logo.size_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
             id="properties.logo.size_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -1769,7 +1869,7 @@ exports[`Render properties.logo.size - value[0] 1`] = `
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.logo.size_mobile_menu_button_icon"
               required={false}
               role="img"
@@ -1806,11 +1906,11 @@ exports[`Render properties.logo.size - value[0] 1`] = `
     </a>
   </header>
   <section
-    className="ant-layout ant-layout-has-sider {}"
+    className="ant-layout {}"
     id="properties.logo.size_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print ant-layout-sider ant-layout-sider-light"
+      className="ant-layout-sider ant-layout-sider-light {\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print"
       id="properties.logo.size_sider"
       style={
         Object {
@@ -1834,16 +1934,19 @@ exports[`Render properties.logo.size - value[0] 1`] = `
           }
         >
           <ul
-            className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} ant-menu-light ant-menu-root ant-menu-inline"
+            className="ant-menu ant-menu-root ant-menu-inline ant-menu-light {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]}"
+            data-menu-list={true}
             id="properties.logo.size_menu"
-            onMouseEnter={[Function]}
-            onTransitionEnd={[Function]}
+            onKeyDown={[Function]}
             role="menu"
-            style={Object {}}
+            tabIndex={0}
           >
             <li
               className="ant-menu-item"
+              data-menu-id="properties.logo.size_menu-introduction"
               onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               role="menuitem"
@@ -1852,11 +1955,12 @@ exports[`Render properties.logo.size - value[0] 1`] = `
                   "paddingLeft": 24,
                 }
               }
+              tabIndex={-1}
             >
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin ant-menu-item-icon"
                 id="Introduction_icon"
                 required={false}
                 role="img"
@@ -1875,9 +1979,11 @@ exports[`Render properties.logo.size - value[0] 1`] = `
                   />
                 </svg>
               </span>
-              <span>
+              <span
+                className="ant-menu-title-content"
+              >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/introduction"
                   onClick={[Function]}
                 >
@@ -1887,7 +1993,10 @@ exports[`Render properties.logo.size - value[0] 1`] = `
             </li>
             <li
               className="ant-menu-item"
+              data-menu-id="properties.logo.size_menu-Alert"
               onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               role="menuitem"
@@ -1896,11 +2005,12 @@ exports[`Render properties.logo.size - value[0] 1`] = `
                   "paddingLeft": 24,
                 }
               }
+              tabIndex={-1}
             >
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin ant-menu-item-icon"
                 id="alert_icon"
                 required={false}
                 role="img"
@@ -1919,9 +2029,11 @@ exports[`Render properties.logo.size - value[0] 1`] = `
                   />
                 </svg>
               </span>
-              <span>
+              <span
+                className="ant-menu-title-content"
+              >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/Alert"
                   onClick={[Function]}
                 >
@@ -1930,6 +2042,14 @@ exports[`Render properties.logo.size - value[0] 1`] = `
               </span>
             </li>
           </ul>
+          <div
+            aria-hidden={true}
+            style={
+              Object {
+                "display": "none",
+              }
+            }
+          />
           <div
             style={
               Object {
@@ -1952,7 +2072,7 @@ exports[`Render properties.logo.size - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn ant-btn-link ant-btn-icon-only ant-btn-block {\\"style\\":[{},null]}"
                   id="properties.logo.size_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -1960,7 +2080,7 @@ exports[`Render properties.logo.size - value[0] 1`] = `
                   <span
                     aria-label="loading-3-quarters"
                     basePath=""
-                    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                    className="anticon anticon-loading-3-quarters anticon-spin {}"
                     id="properties.logo.size_toggle_sider_icon"
                     required={false}
                     role="img"
@@ -2027,7 +2147,7 @@ exports[`Render properties.logo.src - value[0] 1`] = `
           id="properties.logo.src_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
             id="properties.logo.src_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -2035,7 +2155,7 @@ exports[`Render properties.logo.src - value[0] 1`] = `
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.logo.src_mobile_menu_button_icon"
               required={false}
               role="img"
@@ -2072,11 +2192,11 @@ exports[`Render properties.logo.src - value[0] 1`] = `
     </a>
   </header>
   <section
-    className="ant-layout ant-layout-has-sider {}"
+    className="ant-layout {}"
     id="properties.logo.src_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print ant-layout-sider ant-layout-sider-light"
+      className="ant-layout-sider ant-layout-sider-light {\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print"
       id="properties.logo.src_sider"
       style={
         Object {
@@ -2100,16 +2220,19 @@ exports[`Render properties.logo.src - value[0] 1`] = `
           }
         >
           <ul
-            className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} ant-menu-light ant-menu-root ant-menu-inline"
+            className="ant-menu ant-menu-root ant-menu-inline ant-menu-light {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]}"
+            data-menu-list={true}
             id="properties.logo.src_menu"
-            onMouseEnter={[Function]}
-            onTransitionEnd={[Function]}
+            onKeyDown={[Function]}
             role="menu"
-            style={Object {}}
+            tabIndex={0}
           >
             <li
               className="ant-menu-item"
+              data-menu-id="properties.logo.src_menu-introduction"
               onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               role="menuitem"
@@ -2118,11 +2241,12 @@ exports[`Render properties.logo.src - value[0] 1`] = `
                   "paddingLeft": 24,
                 }
               }
+              tabIndex={-1}
             >
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin ant-menu-item-icon"
                 id="Introduction_icon"
                 required={false}
                 role="img"
@@ -2141,9 +2265,11 @@ exports[`Render properties.logo.src - value[0] 1`] = `
                   />
                 </svg>
               </span>
-              <span>
+              <span
+                className="ant-menu-title-content"
+              >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/introduction"
                   onClick={[Function]}
                 >
@@ -2153,7 +2279,10 @@ exports[`Render properties.logo.src - value[0] 1`] = `
             </li>
             <li
               className="ant-menu-item"
+              data-menu-id="properties.logo.src_menu-Alert"
               onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               role="menuitem"
@@ -2162,11 +2291,12 @@ exports[`Render properties.logo.src - value[0] 1`] = `
                   "paddingLeft": 24,
                 }
               }
+              tabIndex={-1}
             >
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin ant-menu-item-icon"
                 id="alert_icon"
                 required={false}
                 role="img"
@@ -2185,9 +2315,11 @@ exports[`Render properties.logo.src - value[0] 1`] = `
                   />
                 </svg>
               </span>
-              <span>
+              <span
+                className="ant-menu-title-content"
+              >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/Alert"
                   onClick={[Function]}
                 >
@@ -2196,6 +2328,14 @@ exports[`Render properties.logo.src - value[0] 1`] = `
               </span>
             </li>
           </ul>
+          <div
+            aria-hidden={true}
+            style={
+              Object {
+                "display": "none",
+              }
+            }
+          />
           <div
             style={
               Object {
@@ -2218,7 +2358,7 @@ exports[`Render properties.logo.src - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn ant-btn-link ant-btn-icon-only ant-btn-block {\\"style\\":[{},null]}"
                   id="properties.logo.src_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -2226,7 +2366,7 @@ exports[`Render properties.logo.src - value[0] 1`] = `
                   <span
                     aria-label="loading-3-quarters"
                     basePath=""
-                    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                    className="anticon anticon-loading-3-quarters anticon-spin {}"
                     id="properties.logo.src_toggle_sider_icon"
                     required={false}
                     role="img"
@@ -2293,7 +2433,7 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
           id="properties.logo.srcSet_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
             id="properties.logo.srcSet_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -2301,7 +2441,7 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.logo.srcSet_mobile_menu_button_icon"
               required={false}
               role="img"
@@ -2338,11 +2478,11 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
     </a>
   </header>
   <section
-    className="ant-layout ant-layout-has-sider {}"
+    className="ant-layout {}"
     id="properties.logo.srcSet_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print ant-layout-sider ant-layout-sider-light"
+      className="ant-layout-sider ant-layout-sider-light {\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print"
       id="properties.logo.srcSet_sider"
       style={
         Object {
@@ -2366,16 +2506,19 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
           }
         >
           <ul
-            className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} ant-menu-light ant-menu-root ant-menu-inline"
+            className="ant-menu ant-menu-root ant-menu-inline ant-menu-light {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]}"
+            data-menu-list={true}
             id="properties.logo.srcSet_menu"
-            onMouseEnter={[Function]}
-            onTransitionEnd={[Function]}
+            onKeyDown={[Function]}
             role="menu"
-            style={Object {}}
+            tabIndex={0}
           >
             <li
               className="ant-menu-item"
+              data-menu-id="properties.logo.srcSet_menu-introduction"
               onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               role="menuitem"
@@ -2384,11 +2527,12 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
                   "paddingLeft": 24,
                 }
               }
+              tabIndex={-1}
             >
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin ant-menu-item-icon"
                 id="Introduction_icon"
                 required={false}
                 role="img"
@@ -2407,9 +2551,11 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
                   />
                 </svg>
               </span>
-              <span>
+              <span
+                className="ant-menu-title-content"
+              >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/introduction"
                   onClick={[Function]}
                 >
@@ -2419,7 +2565,10 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
             </li>
             <li
               className="ant-menu-item"
+              data-menu-id="properties.logo.srcSet_menu-Alert"
               onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               role="menuitem"
@@ -2428,11 +2577,12 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
                   "paddingLeft": 24,
                 }
               }
+              tabIndex={-1}
             >
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin ant-menu-item-icon"
                 id="alert_icon"
                 required={false}
                 role="img"
@@ -2451,9 +2601,11 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
                   />
                 </svg>
               </span>
-              <span>
+              <span
+                className="ant-menu-title-content"
+              >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/Alert"
                   onClick={[Function]}
                 >
@@ -2462,6 +2614,14 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
               </span>
             </li>
           </ul>
+          <div
+            aria-hidden={true}
+            style={
+              Object {
+                "display": "none",
+              }
+            }
+          />
           <div
             style={
               Object {
@@ -2484,7 +2644,7 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn ant-btn-link ant-btn-icon-only ant-btn-block {\\"style\\":[{},null]}"
                   id="properties.logo.srcSet_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -2492,7 +2652,7 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
                   <span
                     aria-label="loading-3-quarters"
                     basePath=""
-                    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                    className="anticon anticon-loading-3-quarters anticon-spin {}"
                     id="properties.logo.srcSet_toggle_sider_icon"
                     required={false}
                     role="img"
@@ -2559,7 +2719,7 @@ exports[`Render properties.logo.style - value[0] 1`] = `
           id="properties.logo.style_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
             id="properties.logo.style_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -2567,7 +2727,7 @@ exports[`Render properties.logo.style - value[0] 1`] = `
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.logo.style_mobile_menu_button_icon"
               required={false}
               role="img"
@@ -2604,11 +2764,11 @@ exports[`Render properties.logo.style - value[0] 1`] = `
     </a>
   </header>
   <section
-    className="ant-layout ant-layout-has-sider {}"
+    className="ant-layout {}"
     id="properties.logo.style_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print ant-layout-sider ant-layout-sider-light"
+      className="ant-layout-sider ant-layout-sider-light {\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print"
       id="properties.logo.style_sider"
       style={
         Object {
@@ -2632,12 +2792,20 @@ exports[`Render properties.logo.style - value[0] 1`] = `
           }
         >
           <ul
-            className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} ant-menu-light ant-menu-root ant-menu-inline"
+            className="ant-menu ant-menu-root ant-menu-inline ant-menu-light {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]}"
+            data-menu-list={true}
             id="properties.logo.style_menu"
-            onMouseEnter={[Function]}
-            onTransitionEnd={[Function]}
+            onKeyDown={[Function]}
             role="menu"
-            style={Object {}}
+            tabIndex={0}
+          />
+          <div
+            aria-hidden={true}
+            style={
+              Object {
+                "display": "none",
+              }
+            }
           />
           <div
             style={
@@ -2661,7 +2829,7 @@ exports[`Render properties.logo.style - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn ant-btn-link ant-btn-icon-only ant-btn-block {\\"style\\":[{},null]}"
                   id="properties.logo.style_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -2669,7 +2837,7 @@ exports[`Render properties.logo.style - value[0] 1`] = `
                   <span
                     aria-label="loading-3-quarters"
                     basePath=""
-                    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                    className="anticon anticon-loading-3-quarters anticon-spin {}"
                     id="properties.logo.style_toggle_sider_icon"
                     required={false}
                     role="img"
@@ -2736,7 +2904,7 @@ exports[`Render properties.menu - value[0] 1`] = `
           id="properties.menu_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
             id="properties.menu_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -2744,7 +2912,7 @@ exports[`Render properties.menu - value[0] 1`] = `
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.menu_mobile_menu_button_icon"
               required={false}
               role="img"
@@ -2781,11 +2949,11 @@ exports[`Render properties.menu - value[0] 1`] = `
     </a>
   </header>
   <section
-    className="ant-layout ant-layout-has-sider {}"
+    className="ant-layout {}"
     id="properties.menu_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print ant-layout-sider ant-layout-sider-light"
+      className="ant-layout-sider ant-layout-sider-light {\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print"
       id="properties.menu_sider"
       style={
         Object {
@@ -2809,16 +2977,19 @@ exports[`Render properties.menu - value[0] 1`] = `
           }
         >
           <ul
-            className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} ant-menu-light ant-menu-root ant-menu-inline"
+            className="ant-menu ant-menu-root ant-menu-inline ant-menu-light {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]}"
+            data-menu-list={true}
             id="properties.menu_menu"
-            onMouseEnter={[Function]}
-            onTransitionEnd={[Function]}
+            onKeyDown={[Function]}
             role="menu"
-            style={Object {}}
+            tabIndex={0}
           >
             <li
               className="ant-menu-item"
+              data-menu-id="properties.menu_menu-introduction"
               onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               role="menuitem"
@@ -2827,11 +2998,12 @@ exports[`Render properties.menu - value[0] 1`] = `
                   "paddingLeft": 24,
                 }
               }
+              tabIndex={-1}
             >
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin ant-menu-item-icon"
                 id="Introduction_icon"
                 required={false}
                 role="img"
@@ -2850,9 +3022,11 @@ exports[`Render properties.menu - value[0] 1`] = `
                   />
                 </svg>
               </span>
-              <span>
+              <span
+                className="ant-menu-title-content"
+              >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/introduction"
                   onClick={[Function]}
                 >
@@ -2862,7 +3036,10 @@ exports[`Render properties.menu - value[0] 1`] = `
             </li>
             <li
               className="ant-menu-item"
+              data-menu-id="properties.menu_menu-Alert"
               onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               role="menuitem"
@@ -2871,11 +3048,12 @@ exports[`Render properties.menu - value[0] 1`] = `
                   "paddingLeft": 24,
                 }
               }
+              tabIndex={-1}
             >
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin ant-menu-item-icon"
                 id="alert_icon"
                 required={false}
                 role="img"
@@ -2894,9 +3072,11 @@ exports[`Render properties.menu - value[0] 1`] = `
                   />
                 </svg>
               </span>
-              <span>
+              <span
+                className="ant-menu-title-content"
+              >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/Alert"
                   onClick={[Function]}
                 >
@@ -2905,6 +3085,14 @@ exports[`Render properties.menu - value[0] 1`] = `
               </span>
             </li>
           </ul>
+          <div
+            aria-hidden={true}
+            style={
+              Object {
+                "display": "none",
+              }
+            }
+          />
           <div
             style={
               Object {
@@ -2927,7 +3115,7 @@ exports[`Render properties.menu - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn ant-btn-link ant-btn-icon-only ant-btn-block {\\"style\\":[{},null]}"
                   id="properties.menu_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -2935,7 +3123,7 @@ exports[`Render properties.menu - value[0] 1`] = `
                   <span
                     aria-label="loading-3-quarters"
                     basePath=""
-                    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                    className="anticon anticon-loading-3-quarters anticon-spin {}"
                     id="properties.menu_toggle_sider_icon"
                     required={false}
                     role="img"
@@ -3002,7 +3190,7 @@ exports[`Render properties.menu.selectedColor - value[0] 1`] = `
           id="properties.menu.selectedColor_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
             id="properties.menu.selectedColor_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -3010,7 +3198,7 @@ exports[`Render properties.menu.selectedColor - value[0] 1`] = `
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.menu.selectedColor_mobile_menu_button_icon"
               required={false}
               role="img"
@@ -3047,11 +3235,11 @@ exports[`Render properties.menu.selectedColor - value[0] 1`] = `
     </a>
   </header>
   <section
-    className="ant-layout ant-layout-has-sider {}"
+    className="ant-layout {}"
     id="properties.menu.selectedColor_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\",\\"backgroundColor\\":\\"#faf7a5 !important\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print ant-layout-sider ant-layout-sider-light"
+      className="ant-layout-sider ant-layout-sider-light {\\"style\\":[{\\"overflow\\":\\"auto\\",\\"backgroundColor\\":\\"#faf7a5 !important\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print"
       id="properties.menu.selectedColor_sider"
       style={
         Object {
@@ -3075,16 +3263,19 @@ exports[`Render properties.menu.selectedColor - value[0] 1`] = `
           }
         >
           <ul
-            className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},{\\"backgroundColor\\":\\"#faf7a5 !important\\"},false,{\\"& > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#c96577 !important\\",\\"color\\":\\"#a30331 !important\\",\\"& > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"& > * > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"borderColor\\":\\"#a30331 !important\\",\\"&:after\\":{\\"borderColor\\":\\"#a30331 !important\\"}},\\"& > li.ant-menu-submenu-selected\\":{\\"color\\":\\"#a30331 !important\\",\\"& > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"& > * > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"borderColor\\":\\"#a30331 !important\\",\\"&:after\\":{\\"borderColor\\":\\"#a30331 !important\\"}},\\"& > li.ant-menu-item:hover\\":{\\"color\\":\\"#a30331 !important\\",\\"& > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"& > * > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"borderColor\\":\\"#a30331 !important\\",\\"&:after\\":{\\"borderColor\\":\\"#a30331 !important\\"}},\\"& > li.ant-menu-submenu:hover\\":{\\"color\\":\\"#a30331 !important\\",\\"& > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"& > * > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"borderColor\\":\\"#a30331 !important\\",\\"&:after\\":{\\"borderColor\\":\\"#a30331 !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item:hover\\":{\\"color\\":\\"#a30331 !important\\",\\"& > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"& > * > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"borderColor\\":\\"#a30331 !important\\",\\"&:after\\":{\\"borderColor\\":\\"#a30331 !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#c96577 !important\\",\\"color\\":\\"#a30331 !important\\",\\"& > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"& > * > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"borderColor\\":\\"#a30331 !important\\",\\"&:after\\":{\\"borderColor\\":\\"#a30331 !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#c96577 !important\\",\\"color\\":\\"#a30331 !important\\",\\"& > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"& > * > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"borderColor\\":\\"#a30331 !important\\",\\"&:after\\":{\\"borderColor\\":\\"#a30331 !important\\"}}},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} ant-menu-light ant-menu-root ant-menu-inline"
+            className="ant-menu ant-menu-root ant-menu-inline ant-menu-light {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},{\\"backgroundColor\\":\\"#faf7a5 !important\\"},false,{\\"& > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#c96577 !important\\",\\"color\\":\\"#a30331 !important\\",\\"& > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"& > * > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"borderColor\\":\\"#a30331 !important\\",\\"&:after\\":{\\"borderColor\\":\\"#a30331 !important\\"}},\\"& > li.ant-menu-submenu-selected\\":{\\"color\\":\\"#a30331 !important\\",\\"& > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"& > * > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"borderColor\\":\\"#a30331 !important\\",\\"&:after\\":{\\"borderColor\\":\\"#a30331 !important\\"}},\\"& > li.ant-menu-item:hover\\":{\\"color\\":\\"#a30331 !important\\",\\"& > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"& > * > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"borderColor\\":\\"#a30331 !important\\",\\"&:after\\":{\\"borderColor\\":\\"#a30331 !important\\"}},\\"& > li.ant-menu-submenu:hover\\":{\\"color\\":\\"#a30331 !important\\",\\"& > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"& > * > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"borderColor\\":\\"#a30331 !important\\",\\"&:after\\":{\\"borderColor\\":\\"#a30331 !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item:hover\\":{\\"color\\":\\"#a30331 !important\\",\\"& > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"& > * > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"borderColor\\":\\"#a30331 !important\\",\\"&:after\\":{\\"borderColor\\":\\"#a30331 !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#c96577 !important\\",\\"color\\":\\"#a30331 !important\\",\\"& > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"& > * > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"borderColor\\":\\"#a30331 !important\\",\\"&:after\\":{\\"borderColor\\":\\"#a30331 !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#c96577 !important\\",\\"color\\":\\"#a30331 !important\\",\\"& > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"& > * > *\\":{\\"color\\":\\"#a30331 !important\\"},\\"borderColor\\":\\"#a30331 !important\\",\\"&:after\\":{\\"borderColor\\":\\"#a30331 !important\\"}}},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]}"
+            data-menu-list={true}
             id="properties.menu.selectedColor_menu"
-            onMouseEnter={[Function]}
-            onTransitionEnd={[Function]}
+            onKeyDown={[Function]}
             role="menu"
-            style={Object {}}
+            tabIndex={0}
           >
             <li
               className="ant-menu-item"
+              data-menu-id="properties.menu.selectedColor_menu-introduction"
               onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               role="menuitem"
@@ -3093,11 +3284,12 @@ exports[`Render properties.menu.selectedColor - value[0] 1`] = `
                   "paddingLeft": 24,
                 }
               }
+              tabIndex={-1}
             >
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin ant-menu-item-icon"
                 id="Introduction_icon"
                 required={false}
                 role="img"
@@ -3116,9 +3308,11 @@ exports[`Render properties.menu.selectedColor - value[0] 1`] = `
                   />
                 </svg>
               </span>
-              <span>
+              <span
+                className="ant-menu-title-content"
+              >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/introduction"
                   onClick={[Function]}
                 >
@@ -3128,7 +3322,10 @@ exports[`Render properties.menu.selectedColor - value[0] 1`] = `
             </li>
             <li
               className="ant-menu-item"
+              data-menu-id="properties.menu.selectedColor_menu-Alert"
               onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               role="menuitem"
@@ -3137,11 +3334,12 @@ exports[`Render properties.menu.selectedColor - value[0] 1`] = `
                   "paddingLeft": 24,
                 }
               }
+              tabIndex={-1}
             >
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin ant-menu-item-icon"
                 id="alert_icon"
                 required={false}
                 role="img"
@@ -3160,9 +3358,11 @@ exports[`Render properties.menu.selectedColor - value[0] 1`] = `
                   />
                 </svg>
               </span>
-              <span>
+              <span
+                className="ant-menu-title-content"
+              >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/Alert"
                   onClick={[Function]}
                 >
@@ -3171,6 +3371,14 @@ exports[`Render properties.menu.selectedColor - value[0] 1`] = `
               </span>
             </li>
           </ul>
+          <div
+            aria-hidden={true}
+            style={
+              Object {
+                "display": "none",
+              }
+            }
+          />
           <div
             style={
               Object {
@@ -3193,7 +3401,7 @@ exports[`Render properties.menu.selectedColor - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn ant-btn-link ant-btn-icon-only ant-btn-block {\\"style\\":[{},null]}"
                   id="properties.menu.selectedColor_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -3201,7 +3409,7 @@ exports[`Render properties.menu.selectedColor - value[0] 1`] = `
                   <span
                     aria-label="loading-3-quarters"
                     basePath=""
-                    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                    className="anticon anticon-loading-3-quarters anticon-spin {}"
                     id="properties.menu.selectedColor_toggle_sider_icon"
                     required={false}
                     role="img"
@@ -3268,7 +3476,7 @@ exports[`Render properties.sider.color - value[0] 1`] = `
           id="properties.sider.color_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
             id="properties.sider.color_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -3276,7 +3484,7 @@ exports[`Render properties.sider.color - value[0] 1`] = `
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.sider.color_mobile_menu_button_icon"
               required={false}
               role="img"
@@ -3313,11 +3521,11 @@ exports[`Render properties.sider.color - value[0] 1`] = `
     </a>
   </header>
   <section
-    className="ant-layout ant-layout-has-sider {}"
+    className="ant-layout {}"
     id="properties.sider.color_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\",\\"backgroundColor\\":\\"#faf7a5 !important\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print ant-layout-sider ant-layout-sider-light"
+      className="ant-layout-sider ant-layout-sider-light {\\"style\\":[{\\"overflow\\":\\"auto\\",\\"backgroundColor\\":\\"#faf7a5 !important\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print"
       id="properties.sider.color_sider"
       style={
         Object {
@@ -3341,16 +3549,19 @@ exports[`Render properties.sider.color - value[0] 1`] = `
           }
         >
           <ul
-            className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},{\\"backgroundColor\\":\\"#faf7a5 !important\\"},null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} ant-menu-light ant-menu-root ant-menu-inline"
+            className="ant-menu ant-menu-root ant-menu-inline ant-menu-light {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},{\\"backgroundColor\\":\\"#faf7a5 !important\\"},null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]}"
+            data-menu-list={true}
             id="properties.sider.color_menu"
-            onMouseEnter={[Function]}
-            onTransitionEnd={[Function]}
+            onKeyDown={[Function]}
             role="menu"
-            style={Object {}}
+            tabIndex={0}
           >
             <li
               className="ant-menu-item"
+              data-menu-id="properties.sider.color_menu-introduction"
               onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               role="menuitem"
@@ -3359,11 +3570,12 @@ exports[`Render properties.sider.color - value[0] 1`] = `
                   "paddingLeft": 24,
                 }
               }
+              tabIndex={-1}
             >
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin ant-menu-item-icon"
                 id="Introduction_icon"
                 required={false}
                 role="img"
@@ -3382,9 +3594,11 @@ exports[`Render properties.sider.color - value[0] 1`] = `
                   />
                 </svg>
               </span>
-              <span>
+              <span
+                className="ant-menu-title-content"
+              >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/introduction"
                   onClick={[Function]}
                 >
@@ -3394,7 +3608,10 @@ exports[`Render properties.sider.color - value[0] 1`] = `
             </li>
             <li
               className="ant-menu-item"
+              data-menu-id="properties.sider.color_menu-Alert"
               onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               role="menuitem"
@@ -3403,11 +3620,12 @@ exports[`Render properties.sider.color - value[0] 1`] = `
                   "paddingLeft": 24,
                 }
               }
+              tabIndex={-1}
             >
               <span
                 aria-label="loading-3-quarters"
                 basePath=""
-                className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                className="anticon anticon-loading-3-quarters anticon-spin ant-menu-item-icon"
                 id="alert_icon"
                 required={false}
                 role="img"
@@ -3426,9 +3644,11 @@ exports[`Render properties.sider.color - value[0] 1`] = `
                   />
                 </svg>
               </span>
-              <span>
+              <span
+                className="ant-menu-title-content"
+              >
                 <a
-                  className="{\\"style\\":[null]}"
+                  className="{\\"style\\":[\\"{\\\\\\"options\\\\\\":{\\\\\\"styleObjectOnly\\\\\\":true}}\\"]}"
                   href="/Alert"
                   onClick={[Function]}
                 >
@@ -3437,6 +3657,14 @@ exports[`Render properties.sider.color - value[0] 1`] = `
               </span>
             </li>
           </ul>
+          <div
+            aria-hidden={true}
+            style={
+              Object {
+                "display": "none",
+              }
+            }
+          />
           <div
             style={
               Object {
@@ -3459,7 +3687,7 @@ exports[`Render properties.sider.color - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn ant-btn-link ant-btn-icon-only ant-btn-block {\\"style\\":[{},null]}"
                   id="properties.sider.color_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -3467,7 +3695,7 @@ exports[`Render properties.sider.color - value[0] 1`] = `
                   <span
                     aria-label="loading-3-quarters"
                     basePath=""
-                    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                    className="anticon anticon-loading-3-quarters anticon-spin {}"
                     id="properties.sider.color_toggle_sider_icon"
                     required={false}
                     role="img"
@@ -3534,7 +3762,7 @@ exports[`Render properties.sider.initialCollapsed - value[0] 1`] = `
           id="properties.sider.initialCollapsed_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
             id="properties.sider.initialCollapsed_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -3542,7 +3770,7 @@ exports[`Render properties.sider.initialCollapsed - value[0] 1`] = `
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.sider.initialCollapsed_mobile_menu_button_icon"
               required={false}
               role="img"
@@ -3579,11 +3807,11 @@ exports[`Render properties.sider.initialCollapsed - value[0] 1`] = `
     </a>
   </header>
   <section
-    className="ant-layout ant-layout-has-sider {}"
+    className="ant-layout {}"
     id="properties.sider.initialCollapsed_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print ant-layout-sider ant-layout-sider-light ant-layout-sider-collapsed"
+      className="ant-layout-sider ant-layout-sider-light ant-layout-sider-collapsed {\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print"
       id="properties.sider.initialCollapsed_sider"
       style={
         Object {
@@ -3607,12 +3835,20 @@ exports[`Render properties.sider.initialCollapsed - value[0] 1`] = `
           }
         >
           <ul
-            className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} ant-menu-light ant-menu-inline-collapsed ant-menu-root ant-menu-vertical"
+            className="ant-menu ant-menu-root ant-menu-vertical ant-menu-light {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} ant-menu-inline-collapsed"
+            data-menu-list={true}
             id="properties.sider.initialCollapsed_menu"
-            onMouseEnter={[Function]}
-            onTransitionEnd={[Function]}
+            onKeyDown={[Function]}
             role="menu"
-            style={Object {}}
+            tabIndex={0}
+          />
+          <div
+            aria-hidden={true}
+            style={
+              Object {
+                "display": "none",
+              }
+            }
           />
           <div
             style={
@@ -3647,7 +3883,7 @@ exports[`Render properties.sider.initialCollapsed - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn ant-btn-link ant-btn-icon-only ant-btn-block {\\"style\\":[{},null]}"
                   id="properties.sider.initialCollapsed_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -3655,7 +3891,7 @@ exports[`Render properties.sider.initialCollapsed - value[0] 1`] = `
                   <span
                     aria-label="loading-3-quarters"
                     basePath=""
-                    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                    className="anticon anticon-loading-3-quarters anticon-spin {}"
                     id="properties.sider.initialCollapsed_toggle_sider_icon"
                     required={false}
                     role="img"
@@ -3722,7 +3958,7 @@ exports[`Render properties.sider.style - value[0] 1`] = `
           id="properties.sider.style_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
             id="properties.sider.style_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -3730,7 +3966,7 @@ exports[`Render properties.sider.style - value[0] 1`] = `
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.sider.style_mobile_menu_button_icon"
               required={false}
               role="img"
@@ -3767,11 +4003,11 @@ exports[`Render properties.sider.style - value[0] 1`] = `
     </a>
   </header>
   <section
-    className="ant-layout ant-layout-has-sider {}"
+    className="ant-layout {}"
     id="properties.sider.style_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"},\\"border\\":\\"5px solid blue\\"}]} hide-on-print ant-layout-sider ant-layout-sider-light"
+      className="ant-layout-sider ant-layout-sider-light {\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"},\\"border\\":\\"5px solid blue\\"}]} hide-on-print"
       id="properties.sider.style_sider"
       style={
         Object {
@@ -3795,12 +4031,20 @@ exports[`Render properties.sider.style - value[0] 1`] = `
           }
         >
           <ul
-            className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"},\\"border\\":\\"5px solid blue\\"}]} ant-menu-light ant-menu-root ant-menu-inline"
+            className="ant-menu ant-menu-root ant-menu-inline ant-menu-light {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"},\\"border\\":\\"5px solid blue\\"}]}"
+            data-menu-list={true}
             id="properties.sider.style_menu"
-            onMouseEnter={[Function]}
-            onTransitionEnd={[Function]}
+            onKeyDown={[Function]}
             role="menu"
-            style={Object {}}
+            tabIndex={0}
+          />
+          <div
+            aria-hidden={true}
+            style={
+              Object {
+                "display": "none",
+              }
+            }
           />
           <div
             style={
@@ -3835,7 +4079,7 @@ exports[`Render properties.sider.style - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn ant-btn-link ant-btn-icon-only ant-btn-block {\\"style\\":[{},null]}"
                   id="properties.sider.style_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -3843,7 +4087,7 @@ exports[`Render properties.sider.style - value[0] 1`] = `
                   <span
                     aria-label="loading-3-quarters"
                     basePath=""
-                    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                    className="anticon anticon-loading-3-quarters anticon-spin {}"
                     id="properties.sider.style_toggle_sider_icon"
                     required={false}
                     role="img"
@@ -3910,7 +4154,7 @@ exports[`Render properties.sider.theme: dark - value[0] 1`] = `
           id="properties.sider.theme: dark_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
             id="properties.sider.theme: dark_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -3918,7 +4162,7 @@ exports[`Render properties.sider.theme: dark - value[0] 1`] = `
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.sider.theme: dark_mobile_menu_button_icon"
               required={false}
               role="img"
@@ -3955,11 +4199,11 @@ exports[`Render properties.sider.theme: dark - value[0] 1`] = `
     </a>
   </header>
   <section
-    className="ant-layout ant-layout-has-sider {}"
+    className="ant-layout {}"
     id="properties.sider.theme: dark_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print ant-layout-sider ant-layout-sider-dark"
+      className="ant-layout-sider ant-layout-sider-dark {\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print"
       id="properties.sider.theme: dark_sider"
       style={
         Object {
@@ -3983,12 +4227,20 @@ exports[`Render properties.sider.theme: dark - value[0] 1`] = `
           }
         >
           <ul
-            className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} ant-menu-dark ant-menu-root ant-menu-inline"
+            className="ant-menu ant-menu-root ant-menu-inline ant-menu-dark {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]}"
+            data-menu-list={true}
             id="properties.sider.theme: dark_menu"
-            onMouseEnter={[Function]}
-            onTransitionEnd={[Function]}
+            onKeyDown={[Function]}
             role="menu"
-            style={Object {}}
+            tabIndex={0}
+          />
+          <div
+            aria-hidden={true}
+            style={
+              Object {
+                "display": "none",
+              }
+            }
           />
           <div
             style={
@@ -4012,7 +4264,7 @@ exports[`Render properties.sider.theme: dark - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn ant-btn-link ant-btn-icon-only ant-btn-block {\\"style\\":[{},null]}"
                   id="properties.sider.theme: dark_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -4020,7 +4272,7 @@ exports[`Render properties.sider.theme: dark - value[0] 1`] = `
                   <span
                     aria-label="loading-3-quarters"
                     basePath=""
-                    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                    className="anticon anticon-loading-3-quarters anticon-spin {}"
                     id="properties.sider.theme: dark_toggle_sider_icon"
                     required={false}
                     role="img"
@@ -4087,7 +4339,7 @@ exports[`Render properties.style - value[0] 1`] = `
           id="properties.style_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
             id="properties.style_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -4095,7 +4347,7 @@ exports[`Render properties.style - value[0] 1`] = `
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.style_mobile_menu_button_icon"
               required={false}
               role="img"
@@ -4132,11 +4384,11 @@ exports[`Render properties.style - value[0] 1`] = `
     </a>
   </header>
   <section
-    className="ant-layout ant-layout-has-sider {}"
+    className="ant-layout {}"
     id="properties.style_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print ant-layout-sider ant-layout-sider-light"
+      className="ant-layout-sider ant-layout-sider-light {\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print"
       id="properties.style_sider"
       style={
         Object {
@@ -4160,12 +4412,20 @@ exports[`Render properties.style - value[0] 1`] = `
           }
         >
           <ul
-            className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} ant-menu-light ant-menu-root ant-menu-inline"
+            className="ant-menu ant-menu-root ant-menu-inline ant-menu-light {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]}"
+            data-menu-list={true}
             id="properties.style_menu"
-            onMouseEnter={[Function]}
-            onTransitionEnd={[Function]}
+            onKeyDown={[Function]}
             role="menu"
-            style={Object {}}
+            tabIndex={0}
+          />
+          <div
+            aria-hidden={true}
+            style={
+              Object {
+                "display": "none",
+              }
+            }
           />
           <div
             style={
@@ -4189,7 +4449,7 @@ exports[`Render properties.style - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn ant-btn-link ant-btn-icon-only ant-btn-block {\\"style\\":[{},null]}"
                   id="properties.style_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -4197,7 +4457,7 @@ exports[`Render properties.style - value[0] 1`] = `
                   <span
                     aria-label="loading-3-quarters"
                     basePath=""
-                    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                    className="anticon anticon-loading-3-quarters anticon-spin {}"
                     id="properties.style_toggle_sider_icon"
                     required={false}
                     role="img"
@@ -4264,7 +4524,7 @@ exports[`Render properties.toggleSiderButton.hide - value[0] 1`] = `
           id="properties.toggleSiderButton.hide_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
             id="properties.toggleSiderButton.hide_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -4272,7 +4532,7 @@ exports[`Render properties.toggleSiderButton.hide - value[0] 1`] = `
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.toggleSiderButton.hide_mobile_menu_button_icon"
               required={false}
               role="img"
@@ -4309,11 +4569,11 @@ exports[`Render properties.toggleSiderButton.hide - value[0] 1`] = `
     </a>
   </header>
   <section
-    className="ant-layout ant-layout-has-sider {}"
+    className="ant-layout {}"
     id="properties.toggleSiderButton.hide_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print ant-layout-sider ant-layout-sider-light"
+      className="ant-layout-sider ant-layout-sider-light {\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print"
       id="properties.toggleSiderButton.hide_sider"
       style={
         Object {
@@ -4337,12 +4597,20 @@ exports[`Render properties.toggleSiderButton.hide - value[0] 1`] = `
           }
         >
           <ul
-            className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} ant-menu-light ant-menu-root ant-menu-inline"
+            className="ant-menu ant-menu-root ant-menu-inline ant-menu-light {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]}"
+            data-menu-list={true}
             id="properties.toggleSiderButton.hide_menu"
-            onMouseEnter={[Function]}
-            onTransitionEnd={[Function]}
+            onKeyDown={[Function]}
             role="menu"
-            style={Object {}}
+            tabIndex={0}
+          />
+          <div
+            aria-hidden={true}
+            style={
+              Object {
+                "display": "none",
+              }
+            }
           />
           <div
             style={
@@ -4377,7 +4645,7 @@ exports[`Render properties.toggleSiderButton.hide - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-link ant-btn-icon-only ant-btn-block"
+                  className="ant-btn ant-btn-link ant-btn-icon-only ant-btn-block {\\"style\\":[{},null]}"
                   id="properties.toggleSiderButton.hide_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -4385,7 +4653,7 @@ exports[`Render properties.toggleSiderButton.hide - value[0] 1`] = `
                   <span
                     aria-label="loading-3-quarters"
                     basePath=""
-                    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                    className="anticon anticon-loading-3-quarters anticon-spin {}"
                     id="properties.toggleSiderButton.hide_toggle_sider_icon"
                     required={false}
                     role="img"
@@ -4452,7 +4720,7 @@ exports[`Render properties.toggleSiderButton.type - value[0] 1`] = `
           id="properties.toggleSiderButton.type_mobile_menu"
         >
           <button
-            className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
+            className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
             id="properties.toggleSiderButton.type_mobile_menu_button"
             onClick={[Function]}
             type="button"
@@ -4460,7 +4728,7 @@ exports[`Render properties.toggleSiderButton.type - value[0] 1`] = `
             <span
               aria-label="loading-3-quarters"
               basePath=""
-              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {}"
               id="properties.toggleSiderButton.type_mobile_menu_button_icon"
               required={false}
               role="img"
@@ -4497,11 +4765,11 @@ exports[`Render properties.toggleSiderButton.type - value[0] 1`] = `
     </a>
   </header>
   <section
-    className="ant-layout ant-layout-has-sider {}"
+    className="ant-layout {}"
     id="properties.toggleSiderButton.type_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print ant-layout-sider ant-layout-sider-light"
+      className="ant-layout-sider ant-layout-sider-light {\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} hide-on-print"
       id="properties.toggleSiderButton.type_sider"
       style={
         Object {
@@ -4525,12 +4793,20 @@ exports[`Render properties.toggleSiderButton.type - value[0] 1`] = `
           }
         >
           <ul
-            className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]} ant-menu-light ant-menu-root ant-menu-inline"
+            className="ant-menu ant-menu-root ant-menu-inline ant-menu-light {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,{\\"display\\":\\"none\\",\\"lg\\":{\\"display\\":\\"block\\"}}]}"
+            data-menu-list={true}
             id="properties.toggleSiderButton.type_menu"
-            onMouseEnter={[Function]}
-            onTransitionEnd={[Function]}
+            onKeyDown={[Function]}
             role="menu"
-            style={Object {}}
+            tabIndex={0}
+          />
+          <div
+            aria-hidden={true}
+            style={
+              Object {
+                "display": "none",
+              }
+            }
           />
           <div
             style={
@@ -4565,7 +4841,7 @@ exports[`Render properties.toggleSiderButton.type - value[0] 1`] = `
                 }
               >
                 <button
-                  className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only ant-btn-block"
+                  className="ant-btn ant-btn-primary ant-btn-icon-only ant-btn-block {\\"style\\":[{},null]}"
                   id="properties.toggleSiderButton.type_toggle_sider"
                   onClick={[Function]}
                   type="button"
@@ -4573,7 +4849,7 @@ exports[`Render properties.toggleSiderButton.type - value[0] 1`] = `
                   <span
                     aria-label="loading-3-quarters"
                     basePath=""
-                    className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
+                    className="anticon anticon-loading-3-quarters anticon-spin {}"
                     id="properties.toggleSiderButton.type_toggle_sider_icon"
                     required={false}
                     role="img"

@@ -82,26 +82,31 @@ const labelLogic = ({
     ])]: true,
   });
 
-  const extraClassName = classNames(
-    'ant-form-item-explain',
-    'ant-form-item-extra',
-    methods.makeCssClass([
+  const extraClassName = classNames({
+    'ant-form-item-explain': true,
+    'ant-form-item-extra': true,
+    [methods.makeCssClass([
       {
         marginTop: properties.size === 'small' ? -4 : 0, // in size small reduce extra top margin
       },
       properties.extraStyle,
-    ])
-  );
-  const feedbackClassName = classNames(
-    'ant-form-item-explain',
-    'ant-form-item-extra',
-    methods.makeCssClass([
+    ])]: true,
+  });
+  const feedbackClassName = classNames({
+    'ant-form-item-explain': true,
+    'ant-form-item-extra': true,
+    [`ant-form-item-explain-feedback`]: validation.status && properties.hasFeedback !== false,
+    [`ant-form-item-explain-success`]: validation.status === 'success',
+    [`ant-form-item-explain-warning`]: validation.status === 'warning',
+    [`ant-form-item-explain-error`]: validation.status === 'error',
+    [`ant-form-item-explain-validating`]: validation.status === 'validating',
+    [methods.makeCssClass([
       {
         marginTop: properties.size === 'small' ? -4 : 0, // in size small reduce extra top margin
       },
       properties.feedbackStyle,
-    ])
-  );
+    ])]: true,
+  });
 
   const showExtra = !!properties.extra && (!validation.status || validation.status === 'success');
   const showFeedback = validation.status === 'warning' || validation.status === 'error';

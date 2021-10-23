@@ -2,7 +2,7 @@
 
 exports[`Render default - value[0] 1`] = `
 <aside
-  className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark"
+  className="ant-layout-sider ant-layout-sider-dark {\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print"
   id="default"
   style={
     Object {
@@ -32,7 +32,7 @@ exports[`Render default - value[0] 1`] = `
 
 exports[`Render properties.theme - value[0] 1`] = `
 <aside
-  className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark"
+  className="ant-layout-sider ant-layout-sider-dark {\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print"
   id="properties.theme"
   style={
     Object {

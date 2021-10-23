@@ -50,14 +50,17 @@ const MonthSelector = ({
             <div id={`${blockId}_popup`} />
             <MonthPicker
               id={`${blockId}_input`}
+              allowClear={properties.allowClear !== false}
               autoFocus={properties.autoFocus}
-              getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
+              bordered={properties.bordered}
               className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
               disabled={properties.disabled}
-              allowClear={properties.allowClear !== false}
-              placeholder={properties.placeholder || 'Select Month'}
+              disabledDate={disabledDate(properties.disabledDates)}
               format={properties.format || 'YYYY-MM'}
+              getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
+              placeholder={properties.placeholder || 'Select Month'}
               size={properties.size}
+              value={type.isDate(value) ? moment.utc(value).startOf('month') : null}
               suffixIcon={
                 properties.suffixIcon && (
                   <Icon
@@ -67,7 +70,6 @@ const MonthSelector = ({
                   />
                 )
               }
-              disabledDate={disabledDate(properties.disabledDates)}
               onChange={(newVal) => {
                 methods.setValue(
                   !newVal
@@ -79,7 +81,6 @@ const MonthSelector = ({
                 );
                 methods.triggerEvent({ name: 'onChange' });
               }}
-              value={type.isDate(value) ? moment.utc(value).startOf('month') : null}
             />
           </div>
         ),

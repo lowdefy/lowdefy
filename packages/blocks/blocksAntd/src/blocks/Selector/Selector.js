@@ -50,6 +50,7 @@ const Selector = ({
             <div id={`${blockId}_popup`} />
             <Select
               id={`${blockId}_input`}
+              bordered={properties.bordered}
               className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
               mode="single"
               autoFocus={properties.autoFocus}

@@ -64,3 +64,23 @@
   properties:
     label:
       extra: showing extra
+- id: 'properties.bordered: false'
+  type: TextArea
+  properties:
+    bordered: false
+- id: 'properties.maxLength: 4'
+  type: TextArea
+  properties:
+    maxLength: 4
+- id: 'properties.showCount: true'
+  type: TextArea
+  properties:
+    showCount: true
+- id: 'properties.size: small'
+  type: TextArea
+  properties:
+    size: 'small'
+- id: 'properties.size: large'
+  type: TextArea
+  properties:
+    size: 'large'

@@ -97,6 +97,7 @@ const ParagraphBlock = ({ blockId, events, properties, methods }) => (
           }
         : properties.ellipsis
     }
+    italic={properties.italic}
     mark={properties.mark}
     strong={properties.strong}
     type={properties.type}

@@ -3190,7 +3190,7 @@ exports[`Render validation.status = error default - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -3273,7 +3273,7 @@ exports[`Render validation.status = error inline and long extra default size - v
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -3356,7 +3356,7 @@ exports[`Render validation.status = error inline and long extra large size - val
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -3439,7 +3439,7 @@ exports[`Render validation.status = error inline and long extra small size - val
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
       validation error
     </div>
@@ -3513,7 +3513,7 @@ exports[`Render validation.status = error properties.align: left - value[0] 1`] 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -3587,7 +3587,7 @@ exports[`Render validation.status = error properties.align: right - value[0] 1`]
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -3661,7 +3661,7 @@ exports[`Render validation.status = error properties.colon: false - value[0] 1`]
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -3735,7 +3735,7 @@ exports[`Render validation.status = error properties.colon: true - value[0] 1`] 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -3795,7 +3795,7 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -3869,7 +3869,7 @@ exports[`Render validation.status = error properties.extra: Extra long - value[0
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -3951,7 +3951,7 @@ exports[`Render validation.status = error properties.extra: Extra long with inli
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -4033,7 +4033,7 @@ exports[`Render validation.status = error properties.extra: Extra long with inli
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -4115,7 +4115,7 @@ exports[`Render validation.status = error properties.extra: Extra long with inli
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
       validation error
     </div>
@@ -4198,7 +4198,7 @@ exports[`Render validation.status = error properties.extra: Extra long with inli
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -4272,7 +4272,7 @@ exports[`Render validation.status = error properties.extra: Extra text - value[0
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -4346,7 +4346,7 @@ exports[`Render validation.status = error properties.extra: html in extra - valu
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -4420,7 +4420,7 @@ exports[`Render validation.status = error properties.extraStyle: border 1px purp
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -4494,7 +4494,7 @@ exports[`Render validation.status = error properties.feedbackStyle: border 1px b
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid blue\\"}]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid blue\\"}]}"
     >
       validation error
     </div>
@@ -4576,7 +4576,7 @@ exports[`Render validation.status = error properties.inline: true - value[0] 1`]
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -4650,7 +4650,7 @@ exports[`Render validation.status = error properties.span: 2 - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -4724,7 +4724,7 @@ exports[`Render validation.status = error properties.span: 2 with long work titl
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -4798,7 +4798,7 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -4873,7 +4873,7 @@ exports[`Render validation.status = error properties.title long - value[0] 1`] =
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -4949,7 +4949,7 @@ exports[`Render validation.status = error properties.title: html in title - valu
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -5024,7 +5024,7 @@ exports[`Render validation.status = error span, align right and long extra for d
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -5099,7 +5099,7 @@ exports[`Render validation.status = error span, align right and long extra for l
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -5174,7 +5174,7 @@ exports[`Render validation.status = error span, align right and long extra for s
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
       validation error
     </div>
@@ -5249,7 +5249,7 @@ exports[`Render validation.status = error span, align right, long title and long
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -5324,7 +5324,7 @@ exports[`Render validation.status = error span, align right, long title and long
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation error
     </div>
@@ -5399,7 +5399,7 @@ exports[`Render validation.status = error span, align right, long title and long
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
       validation error
     </div>
@@ -9287,7 +9287,7 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -9370,7 +9370,7 @@ exports[`Render validation.status = warning inline and long extra default size -
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -9453,7 +9453,7 @@ exports[`Render validation.status = warning inline and long extra large size - v
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -9536,7 +9536,7 @@ exports[`Render validation.status = warning inline and long extra small size - v
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
       validation warning
     </div>
@@ -9610,7 +9610,7 @@ exports[`Render validation.status = warning properties.align: left - value[0] 1`
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -9684,7 +9684,7 @@ exports[`Render validation.status = warning properties.align: right - value[0] 1
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -9758,7 +9758,7 @@ exports[`Render validation.status = warning properties.colon: false - value[0] 1
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -9832,7 +9832,7 @@ exports[`Render validation.status = warning properties.colon: true - value[0] 1`
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -9892,7 +9892,7 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -9966,7 +9966,7 @@ exports[`Render validation.status = warning properties.extra: Extra long - value
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -10048,7 +10048,7 @@ exports[`Render validation.status = warning properties.extra: Extra long with in
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -10130,7 +10130,7 @@ exports[`Render validation.status = warning properties.extra: Extra long with in
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -10212,7 +10212,7 @@ exports[`Render validation.status = warning properties.extra: Extra long with in
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
       validation warning
     </div>
@@ -10295,7 +10295,7 @@ exports[`Render validation.status = warning properties.extra: Extra long with in
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -10369,7 +10369,7 @@ exports[`Render validation.status = warning properties.extra: Extra text - value
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -10443,7 +10443,7 @@ exports[`Render validation.status = warning properties.extra: html in extra - va
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -10517,7 +10517,7 @@ exports[`Render validation.status = warning properties.extraStyle: border 1px pu
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -10591,7 +10591,7 @@ exports[`Render validation.status = warning properties.feedbackStyle: border 1px
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid blue\\"}]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid blue\\"}]}"
     >
       validation warning
     </div>
@@ -10673,7 +10673,7 @@ exports[`Render validation.status = warning properties.inline: true - value[0] 1
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -10747,7 +10747,7 @@ exports[`Render validation.status = warning properties.span: 2 - value[0] 1`] = 
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -10821,7 +10821,7 @@ exports[`Render validation.status = warning properties.span: 2 with long work ti
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -10895,7 +10895,7 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -10970,7 +10970,7 @@ exports[`Render validation.status = warning properties.title long - value[0] 1`]
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -11046,7 +11046,7 @@ exports[`Render validation.status = warning properties.title: html in title - va
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -11121,7 +11121,7 @@ exports[`Render validation.status = warning span, align right and long extra for
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -11196,7 +11196,7 @@ exports[`Render validation.status = warning span, align right and long extra for
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -11271,7 +11271,7 @@ exports[`Render validation.status = warning span, align right and long extra for
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
       validation warning
     </div>
@@ -11346,7 +11346,7 @@ exports[`Render validation.status = warning span, align right, long title and lo
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -11421,7 +11421,7 @@ exports[`Render validation.status = warning span, align right, long title and lo
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":0},null]}"
     >
       validation warning
     </div>
@@ -11496,7 +11496,7 @@ exports[`Render validation.status = warning span, align right, long title and lo
       </span>
     </div>
     <div
-      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
+      className="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning {\\"style\\":[{\\"marginTop\\":-4},null]}"
     >
       validation warning
     </div>

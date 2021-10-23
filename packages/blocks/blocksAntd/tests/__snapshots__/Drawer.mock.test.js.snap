@@ -1,5 +1,53 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Mock render - areas.extra: - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        extra
+      </div>,
+      "getContainer": undefined,
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "height": undefined,
+      "id": "areas.extra:",
+      "keyboard": undefined,
+      "mask": undefined,
+      "maskClosable": undefined,
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "onClose": [Function],
+      "placement": undefined,
+      "title": undefined,
+      "visible": false,
+      "width": undefined,
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
 exports[`Mock render - default - value[0] - default 1`] = `
 Array [
   Array [
@@ -16,7 +64,9 @@ Array [
         content
       </div>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -53,11 +103,52 @@ Array [
         content
       </div>,
       "closable": false,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "properties.closable: false",
+      "keyboard": undefined,
+      "mask": undefined,
+      "maskClosable": undefined,
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "onClose": [Function],
+      "placement": undefined,
+      "title": undefined,
+      "visible": false,
+      "width": undefined,
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.contentWrapperStyle: border: 10px solid green - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "closable": undefined,
+      "contentWrapperStyle": "{\\"style\\":{\\"border\\":\\"10px solid green\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
+      "getContainer": undefined,
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "height": undefined,
+      "id": "properties.contentWrapperStyle: border: 10px solid green",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
@@ -90,7 +181,9 @@ Array [
         content
       </div>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": 500,
@@ -127,7 +220,9 @@ Array [
         content
       </div>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -164,7 +259,9 @@ Array [
         content
       </div>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -201,7 +298,9 @@ Array [
         content
       </div>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -238,7 +337,9 @@ Array [
         content
       </div>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -275,7 +376,9 @@ Array [
         content
       </div>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -312,7 +415,9 @@ Array [
         content
       </div>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -349,7 +454,9 @@ Array [
         content
       </div>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -386,7 +493,9 @@ Array [
         content
       </div>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
@@ -423,7 +532,9 @@ Array [
         content
       </div>,
       "closable": undefined,
+      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "extra": undefined,
       "getContainer": undefined,
       "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
