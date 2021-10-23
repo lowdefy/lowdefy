@@ -18,16 +18,18 @@
 
 import { type } from '@lowdefy/helpers';
 import buildBlock from './buildBlock/buildBlock';
+import createCheckDuplicateId from '../../utils/createCheckDuplicateId';
 
-async function buildPage({ page, index, context }) {
+async function buildPage({ page, index, context, checkDuplicatePageId }) {
+  if (type.isUndefined(page.id)) {
+    throw new Error(`Page id missing at page ${index}.`);
+  }
   if (!type.isString(page.id)) {
-    if (type.isUndefined(page.id)) {
-      throw new Error(`Page id missing at page ${index}.`);
-    }
     throw new Error(
-      `Page id is not a string at at page ${index}. Received ${JSON.stringify(page.id)}.`
+      `Page id is not a string at page ${index}. Received ${JSON.stringify(page.id)}.`
     );
   }
+  checkDuplicatePageId({ id: page.id });
   page.pageId = page.id;
   const requests = [];
   const operators = new Set();
@@ -37,6 +39,9 @@ async function buildPage({ page, index, context }) {
     operators,
     pageId: page.pageId,
     requests,
+    checkDuplicateRequestId: createCheckDuplicateId({
+      message: 'Duplicate requestId "{{ id }}" on page "{{ pageId }}".',
+    }),
   });
   // set page.id since buildBlock sets id as well.
   page.id = `page:${page.pageId}`;

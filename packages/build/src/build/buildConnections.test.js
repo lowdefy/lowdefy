@@ -58,3 +58,35 @@ test('buildConnections', async () => {
     },
   ]);
 });
+
+test('throw on missing id', async () => {
+  const components = {
+    connections: [{ type: 'ConnectionType' }],
+  };
+  await expect(buildConnections({ components, context })).rejects.toThrow('Connection id missing.');
+});
+
+test('connection id is not a string', async () => {
+  const components = {
+    connections: [{ id: 1 }],
+  };
+  await expect(buildConnections({ components, context })).rejects.toThrow(
+    'Connection id is not a string. Received 1.'
+  );
+});
+
+test('throw on Duplicate ids', async () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+      },
+      {
+        id: 'connection1',
+      },
+    ],
+  };
+  await expect(buildConnections({ components, context })).rejects.toThrow(
+    'Duplicate connectionId "connection1".'
+  );
+});

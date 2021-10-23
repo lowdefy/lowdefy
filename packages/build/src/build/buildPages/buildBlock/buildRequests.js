@@ -17,21 +17,21 @@
 import { type } from '@lowdefy/helpers';
 
 function buildRequest(request, pageContext) {
-  const { auth, pageId } = pageContext;
+  const { auth, pageId, checkDuplicateRequestId } = pageContext;
+  if (type.isUndefined(request.id)) {
+    throw new Error(`Request id missing at page "${pageId}".`);
+  }
   if (!type.isString(request.id)) {
-    if (type.isUndefined(request.id)) {
-      throw new Error(`Request id missing at page "${pageId}".`);
-    }
     throw new Error(
       `Request id is not a string at page "${pageId}". Received ${JSON.stringify(request.id)}.`
     );
   }
+  checkDuplicateRequestId({ id: request.id, pageId });
   if (request.id.includes('.')) {
     throw new Error(
       `Request id "${request.id}" at page "${pageId}" should not include a period (".").`
     );
   }
-
   if (type.isUndefined(request.payload)) request.payload = {};
 
   if (!type.isObject(request.payload)) {
