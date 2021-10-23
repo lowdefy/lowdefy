@@ -5060,8 +5060,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/node-utils", "workspace:packages/nodeUtils"],
             ["babel-jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"],
             ["babel-loader", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:8.2.3"],
-            ["fastify", "npm:3.22.0"],
-            ["fastify-static", "npm:4.4.1"],
+            ["fastify", "npm:3.22.1"],
+            ["fastify-static", "npm:4.4.2"],
             ["jest", "npm:26.6.3"],
             ["nodemon", "npm:2.0.7"]
           ],
@@ -14188,10 +14188,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["fastify", [
-        ["npm:3.22.0", {
-          "packageLocation": "./.yarn/cache/fastify-npm-3.22.0-1a097b9a9d-4f06ccb4b7.zip/node_modules/fastify/",
+        ["npm:3.22.1", {
+          "packageLocation": "./.yarn/cache/fastify-npm-3.22.1-7e33344f34-057f290456.zip/node_modules/fastify/",
           "packageDependencies": [
-            ["fastify", "npm:3.22.0"],
+            ["fastify", "npm:3.22.1"],
             ["@fastify/ajv-compiler", "npm:1.1.0"],
             ["abstract-logging", "npm:2.0.1"],
             ["avvio", "npm:7.2.2"],
@@ -14203,7 +14203,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["light-my-request", "npm:4.6.0"],
             ["pino", "npm:6.13.3"],
             ["proxy-addr", "npm:2.0.7"],
-            ["readable-stream", "npm:3.6.0"],
             ["rfdc", "npm:1.3.0"],
             ["secure-json-parse", "npm:2.4.0"],
             ["semver", "npm:7.3.5"],
@@ -14231,10 +14230,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["fastify-static", [
-        ["npm:4.4.1", {
-          "packageLocation": "./.yarn/cache/fastify-static-npm-4.4.1-ae8638eb1c-d5bcfecf56.zip/node_modules/fastify-static/",
+        ["npm:4.4.2", {
+          "packageLocation": "./.yarn/cache/fastify-static-npm-4.4.2-a729e8c241-2b45049c54.zip/node_modules/fastify-static/",
           "packageDependencies": [
-            ["fastify-static", "npm:4.4.1"],
+            ["fastify-static", "npm:4.4.2"],
             ["content-disposition", "npm:0.5.3"],
             ["encoding-negotiator", "npm:2.0.1"],
             ["fastify-plugin", "npm:3.0.0"],

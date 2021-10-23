@@ -3663,8 +3663,8 @@ __metadata:
     "@lowdefy/node-utils": 3.22.0
     babel-jest: 27.3.1
     babel-loader: 8.2.3
-    fastify: 3.22.0
-    fastify-static: 4.4.1
+    fastify: 3.22.1
+    fastify-static: 4.4.2
     jest: 26.6.3
     nodemon: 2.0.7
   languageName: unknown
@@ -9729,9 +9729,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fastify-static@npm:4.4.1":
-  version: 4.4.1
-  resolution: "fastify-static@npm:4.4.1"
+"fastify-static@npm:4.4.2":
+  version: 4.4.2
+  resolution: "fastify-static@npm:4.4.2"
   dependencies:
     content-disposition: ^0.5.3
     encoding-negotiator: ^2.0.1
@@ -9740,7 +9740,7 @@ __metadata:
     p-limit: ^3.1.0
     readable-stream: ^3.4.0
     send: ^0.17.1
-  checksum: d5bcfecf56fb88a66ae16e2de2b4c7231e01682ad59ba0565702789d6e2e9e513b1491b0f106964acc2f0fb6c4ecaaf21764c8c4330208215a84da8a09fd1d3f
+  checksum: 2b45049c54a6d9e28a55ac053d9ad8cffad92c6d8807844a2a9a39dcbd59b6094e4cb61ff5287917dc7736e6ab6755c5bd8ae21f7221469605a360689226859c
   languageName: node
   linkType: hard
 
@@ -9751,9 +9751,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fastify@npm:3.22.0":
-  version: 3.22.0
-  resolution: "fastify@npm:3.22.0"
+"fastify@npm:3.22.1":
+  version: 3.22.1
+  resolution: "fastify@npm:3.22.1"
   dependencies:
     "@fastify/ajv-compiler": ^1.0.0
     abstract-logging: ^2.0.0
@@ -9766,12 +9766,11 @@ __metadata:
     light-my-request: ^4.2.0
     pino: ^6.13.0
     proxy-addr: ^2.0.7
-    readable-stream: ^3.4.0
     rfdc: ^1.1.4
     secure-json-parse: ^2.0.0
     semver: ^7.3.2
     tiny-lru: ^7.0.0
-  checksum: 4f06ccb4b75df5748d8683b11050920439db642a6fecf508d0e6aa58cefd874a4d9ef76e3ec29a9e87a06c373c4d1adfa0d92c092f793d1bbfd9f3207e2c1c6a
+  checksum: 057f29045629250923b962c5fbd421811378ef32c497bc02bb1c0a75294f43ca73e7041262a306b7c1d6bf243d2096d63cc4192aaa6c9053efcd4557e225d470
   languageName: node
   linkType: hard
 
