@@ -42,14 +42,14 @@
     "change-case": "4.1.2",
     "deep-diff": "1.0.2",
     "js-yaml": "4.1.0",
-    "mingo": "4.1.2",
+    "mingo": "4.2.0",
     "uuid": "8.3.2"
   },
   "devDependencies": {
-    "@babel/cli": "7.14.3",
-    "@babel/core": "7.14.3",
-    "@babel/preset-env": "7.14.4",
-    "babel-jest": "26.6.3",
+    "@babel/cli": "7.15.7",
+    "@babel/core": "7.15.8",
+    "@babel/preset-env": "7.15.8",
+    "babel-jest": "27.3.1",
     "jest": "26.6.3"
   },
   "publishConfig": {

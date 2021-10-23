@@ -46,13 +46,13 @@
     "apollo-server-express": "2.25.0",
     "express": "4.17.1",
     "graphql": "15.5.0",
-    "yargs": "17.1.0"
+    "yargs": "17.2.1"
   },
   "devDependencies": {
-    "@babel/cli": "7.14.3",
-    "@babel/core": "7.14.3",
-    "@babel/preset-env": "7.14.4",
-    "babel-jest": "26.6.3",
+    "@babel/cli": "7.15.7",
+    "@babel/core": "7.15.8",
+    "@babel/preset-env": "7.15.8",
+    "babel-jest": "27.3.1",
     "jest": "26.6.3"
   },
   "publishConfig": {
