@@ -3102,10 +3102,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@elastic/elasticsearch", [
-        ["npm:7.13.0", {
-          "packageLocation": "./.yarn/cache/@elastic-elasticsearch-npm-7.13.0-5b187e9b28-a33fe16bc9.zip/node_modules/@elastic/elasticsearch/",
+        ["npm:7.15.0", {
+          "packageLocation": "./.yarn/cache/@elastic-elasticsearch-npm-7.15.0-081267f0f5-e23a33469c.zip/node_modules/@elastic/elasticsearch/",
           "packageDependencies": [
-            ["@elastic/elasticsearch", "npm:7.13.0"],
+            ["@elastic/elasticsearch", "npm:7.15.0"],
             ["debug", "virtual:58c45d1abcfbfa1f01b5cd3e53439720ec2578dbff5c28038489c39241aed010924080812c1c0437781a7914d49dcd5ab8069f87498c3e84e93a3fb3ed6111b7#npm:4.3.2"],
             ["hpagent", "npm:0.1.2"],
             ["ms", "npm:2.1.3"],
@@ -4852,7 +4852,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:7.15.7"],
             ["@babel/core", "npm:7.15.8"],
             ["@babel/preset-env", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:7.15.8"],
-            ["@elastic/elasticsearch", "npm:7.13.0"],
+            ["@elastic/elasticsearch", "npm:7.15.0"],
             ["@lowdefy/ajv", "workspace:packages/ajv"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
             ["@lowdefy/node-utils", "workspace:packages/nodeUtils"],
