@@ -66,7 +66,7 @@
     "pg": "8.7.1",
     "saslprep": "1.0.3",
     "sqlite3": "5.0.2",
-    "stripe": "8.172.0"
+    "stripe": "8.184.0"
   },
   "devDependencies": {
     "@babel/cli": "7.15.7",

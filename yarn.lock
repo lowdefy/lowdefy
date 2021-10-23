@@ -3395,7 +3395,7 @@ __metadata:
     pg: 8.7.1
     saslprep: 1.0.3
     sqlite3: 5.0.2
-    stripe: 8.172.0
+    stripe: 8.184.0
     webpack: 5.59.1
     webpack-cli: 4.9.1
   languageName: unknown
@@ -19326,13 +19326,13 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"stripe@npm:8.172.0":
-  version: 8.172.0
-  resolution: "stripe@npm:8.172.0"
+"stripe@npm:8.184.0":
+  version: 8.184.0
+  resolution: "stripe@npm:8.184.0"
   dependencies:
     "@types/node": ">=8.1.0"
     qs: ^6.6.0
-  checksum: afad3e08e0dac598dfaa4077460960394f987ef628c7c1e110ac1737b5d057bfbf084bb7d08411a9d5accc900691b4b383caa5ab925133f268dbdf44ac6f060f
+  checksum: 3c34c40fe0f3b00ca60e59c30e9720fc075b646b63620f9858a18a4f958d86bcf05fcce09fcfb915dc13e2d1fb1489f182571394eaa5800790a1cc97633c999d
   languageName: node
   linkType: hard
 

@@ -4886,7 +4886,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["pg", "virtual:dddca670fd0b7758fb2e1b1a3e18ac7ebd1ecd06ecdd7acec2b78bccf1d35802cb22904bfbb233b16515a81f5cb819421786d20887823d98022b367036c1ad51#npm:8.7.1"],
             ["saslprep", "npm:1.0.3"],
             ["sqlite3", "virtual:dddca670fd0b7758fb2e1b1a3e18ac7ebd1ecd06ecdd7acec2b78bccf1d35802cb22904bfbb233b16515a81f5cb819421786d20887823d98022b367036c1ad51#npm:5.0.2"],
-            ["stripe", "npm:8.172.0"],
+            ["stripe", "npm:8.184.0"],
             ["webpack", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:5.59.1"],
             ["webpack-cli", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:4.9.1"]
           ],
@@ -25783,10 +25783,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["stripe", [
-        ["npm:8.172.0", {
-          "packageLocation": "./.yarn/cache/stripe-npm-8.172.0-f088f5e7d6-afad3e08e0.zip/node_modules/stripe/",
+        ["npm:8.184.0", {
+          "packageLocation": "./.yarn/cache/stripe-npm-8.184.0-8a19345ec8-3c34c40fe0.zip/node_modules/stripe/",
           "packageDependencies": [
-            ["stripe", "npm:8.172.0"],
+            ["stripe", "npm:8.184.0"],
             ["@types/node", "npm:16.11.4"],
             ["qs", "npm:6.10.1"]
           ],
