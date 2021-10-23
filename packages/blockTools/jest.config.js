@@ -23,4 +23,5 @@ module.exports = {
     '\\.yaml$': 'yaml-jest',
     '\\.js?$': 'babel-jest',
   },
+  snapshotSerializers: ['jest-serializer-html', '@emotion/jest/serializer'],
 };

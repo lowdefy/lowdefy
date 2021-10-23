@@ -52,7 +52,7 @@
                 },
                 "type": {
                   "type": "string",
-                  "enum": ["MenuLink", "MenuGroup"],
+                  "enum": ["MenuDivider", "MenuLink", "MenuGroup"],
                   "description": "Menu item type."
                 },
                 "pageId": {
@@ -78,6 +78,11 @@
                     "danger": {
                       "type": "boolean",
                       "description": "Apply danger style to menu item."
+                    },
+                    "dashed": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Whether the divider line is dashed."
                     }
                   }
                 },
@@ -93,7 +98,7 @@
                       },
                       "type": {
                         "type": "string",
-                        "enum": ["MenuLink", "MenuGroup"],
+                        "enum": ["MenuDivider", "MenuLink", "MenuGroup"],
                         "description": "Menu item type."
                       },
                       "style": {
@@ -115,6 +120,11 @@
                           "danger": {
                             "type": "boolean",
                             "description": "Apply danger style to menu item."
+                          },
+                          "dashed": {
+                            "type": "boolean",
+                            "default": false,
+                            "description": "Whether the divider line is dashed."
                           }
                         },
                         "links": {
@@ -129,7 +139,7 @@
                               },
                               "type": {
                                 "type": "string",
-                                "enum": ["MenuLink"],
+                                "enum": ["MenuDivider", "MenuLink"],
                                 "description": "Menu item type."
                               },
                               "style": {
@@ -151,6 +161,11 @@
                                   "danger": {
                                     "type": "boolean",
                                     "description": "Apply danger style to menu item."
+                                  },
+                                  "dashed": {
+                                    "type": "boolean",
+                                    "default": false,
+                                    "description": "Whether the divider line is dashed."
                                   }
                                 }
                               }

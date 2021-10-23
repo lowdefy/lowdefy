@@ -16,5 +16,5 @@ module.exports = {
     '\\.js?$': 'babel-jest',
   },
   moduleFileExtensions: ['js', 'json', 'jsx', 'ts', 'tsx', 'node', 'yaml', 'css'],
-  snapshotSerializers: ['jest-serializer-html'],
+  snapshotSerializers: ['jest-serializer-html', '@emotion/jest/serializer'],
 };

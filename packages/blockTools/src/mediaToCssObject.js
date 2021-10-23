@@ -15,82 +15,77 @@
   limitations under the License.
 */
 
-export const breakpoints = [576, 768, 992, 1200, 1600];
+import { type } from '@lowdefy/helpers';
 
-export const mq = [
-  {
-    name: 'xs',
-    breakpoints: breakpoints[0],
-    media: `@media screen and (max-width: ${breakpoints[0]}px)`,
-    mediaReact: `@media screen and (maxWidth: ${breakpoints[0]}px)`,
-  },
-  {
-    name: 'sm',
-    breakpoints: breakpoints[0],
-    media: `@media screen and (min-width: ${breakpoints[0]}px)`,
-    mediaReact: `@media screen and (minWidth: ${breakpoints[0]}px)`,
-  },
-  {
-    name: 'md',
-    breakpoints: breakpoints[1],
-    media: `@media screen and (min-width: ${breakpoints[1]}px)`,
-    mediaReact: `@media screen and (minWidth: ${breakpoints[1]}px)`,
-  },
-  {
-    name: 'lg',
-    breakpoints: breakpoints[2],
-    media: `@media screen and (min-width: ${breakpoints[2]}px)`,
-    mediaReact: `@media screen and (minWidth: ${breakpoints[2]}px)`,
-  },
-  {
-    name: 'xl',
-    breakpoints: breakpoints[3],
-    media: `@media screen and (min-width: ${breakpoints[3]}px)`,
-    mediaReact: `@media screen and (minWidth: ${breakpoints[3]}px)`,
-  },
-  {
-    name: 'xxl',
-    breakpoints: breakpoints[4],
-    media: `@media screen and (min-width: ${breakpoints[4]}px)`,
-    mediaReact: `@media screen and (minWidth: ${breakpoints[4]}px)`,
-  },
-];
+const breakpoints = {
+  xs: 576,
+  sm: 768,
+  md: 992,
+  lg: 1200,
+  xl: 1600,
+};
+const mediaReact = {
+  xs: `@media screen and (maxWidth: ${breakpoints.xs}px)`,
+  sm: `@media screen and (minWidth: ${breakpoints.xs}px)`,
+  md: `@media screen and (minWidth: ${breakpoints.sm}px)`,
+  lg: `@media screen and (minWidth: ${breakpoints.md}px)`,
+  xl: `@media screen and (minWidth: ${breakpoints.lg}px)`,
+  xxl: `@media screen and (minWidth: ${breakpoints.xl}px)`,
+};
+const media = {
+  xs: `@media screen and (max-width: ${breakpoints.xs}px)`,
+  sm: `@media screen and (min-width: ${breakpoints.xs}px)`,
+  md: `@media screen and (min-width: ${breakpoints.sm}px)`,
+  lg: `@media screen and (min-width: ${breakpoints.md}px)`,
+  xl: `@media screen and (min-width: ${breakpoints.lg}px)`,
+  xxl: `@media screen and (min-width: ${breakpoints.xl}px)`,
+};
+const mediaRegex = /@media\s+(xs|sm|md|lg|xl|xxl)\s*{/gm;
+const setReplacer = (_, group) => media[group] + ' {';
 
-const mediaToCssObject = (obj, options) => {
-  // ES2015 key order matters.
-  const result = [];
-  const media = (options || {}).react ? 'mediaReact' : 'media';
-  Object.keys(obj || {}).forEach((key) => {
-    switch (key) {
-      case 'xs':
-        result.push({ key: mq[0][media], value: obj.xs });
-        break;
-      case 'sm':
-        result.push({ key: mq[0][media], value: obj.sm });
-        break;
-      case 'md':
-        result.push({ key: mq[1][media], value: obj.md });
-        break;
-      case 'lg':
-        result.push({ key: mq[2][media], value: obj.lg });
-        break;
-      case 'xl':
-        result.push({ key: mq[3][media], value: obj.xl });
-        break;
-      case 'xxl':
-        result.push({ key: mq[4][media], value: obj.xxl });
-        break;
-      default:
-        result.push({ key, value: obj[key] });
-        break;
+const mediaToCssObject = (styles, options = {}) => {
+  if (type.isString(styles)) {
+    return styles.replace(mediaRegex, setReplacer);
+  }
+  let styleObjects = styles;
+  if (type.isObject(styles)) {
+    styleObjects = [styles];
+  }
+  if (!type.isArray(styleObjects)) {
+    return [];
+  }
+  return styleObjects.map((style) => {
+    if (type.isString(style)) {
+      return style.replace(mediaRegex, setReplacer);
     }
+    if (!type.isObject(style)) {
+      return {};
+    }
+    let mq = media;
+    if (options.react) {
+      mq = mediaReact;
+    }
+    const { xs, sm, md, lg, xl, xxl, ...others } = style;
+    if (xs) {
+      others[mq.xs] = xs;
+    }
+    if (sm) {
+      others[mq.sm] = sm;
+    }
+    if (md) {
+      others[mq.md] = md;
+    }
+    if (lg) {
+      others[mq.lg] = lg;
+    }
+    if (xl) {
+      others[mq.xl] = xl;
+    }
+    if (xxl) {
+      others[mq.xxl] = xxl;
+    }
+    return others;
   });
-  result.reverse();
-  const value = {};
-  result.forEach((item) => {
-    value[item.key] = item.value;
-  });
-  return value;
 };
 
 export default mediaToCssObject;

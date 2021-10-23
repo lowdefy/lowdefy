@@ -16,7 +16,13 @@
 
 import getFromObject from '../getFromObject';
 
-export const breakpoints = [576, 768, 992, 1200, 1600];
+const breakpoints = {
+  xs: 576,
+  sm: 768,
+  md: 992,
+  lg: 1200,
+  xl: 1600,
+};
 
 function _media({ arrayIndices, location, params }) {
   if (!window || !window.innerWidth) {
@@ -28,19 +34,19 @@ function _media({ arrayIndices, location, params }) {
   }
   let size;
   switch (true) {
-    case window.innerWidth < breakpoints[0]:
+    case window.innerWidth < breakpoints.xs:
       size = 'xs';
       break;
-    case window.innerWidth < breakpoints[1]:
+    case window.innerWidth < breakpoints.sm:
       size = 'sm';
       break;
-    case window.innerWidth < breakpoints[2]:
+    case window.innerWidth < breakpoints.md:
       size = 'md';
       break;
-    case window.innerWidth < breakpoints[3]:
+    case window.innerWidth < breakpoints.lg:
       size = 'lg';
       break;
-    case window.innerWidth < breakpoints[4]:
+    case window.innerWidth < breakpoints.xl:
       size = 'xl';
       break;
     default:

@@ -21,10 +21,6 @@ const mockCssImp = (obj) => ({
   emotionClassFor: obj,
 });
 
-jest.mock('create-emotion', () => () => ({
-  css: (obj) => mockCss(obj),
-}));
-
 beforeEach(() => {
   mockCss.mockReset();
   mockCss.mockImplementation(mockCssImp);
