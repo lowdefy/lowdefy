@@ -3142,7 +3142,7 @@ __metadata:
     "@babel/preset-env": 7.14.4
     "@babel/preset-react": 7.13.13
     "@lowdefy/helpers": 3.22.0
-    "@wojtekmaj/enzyme-adapter-react-17": 0.6.1
+    "@wojtekmaj/enzyme-adapter-react-17": 0.6.5
     ajv: 6.12.6
     ajv-errors: 1.0.1
     babel-jest: 26.6.3
@@ -3180,7 +3180,7 @@ __metadata:
     "@babel/preset-react": 7.14.5
     "@lowdefy/block-dev": 3.22.0
     "@lowdefy/helpers": 3.22.0
-    "@wojtekmaj/enzyme-adapter-react-17": 0.6.1
+    "@wojtekmaj/enzyme-adapter-react-17": 0.6.5
     babel-jest: 27.3.1
     babel-loader: 8.2.3
     clean-webpack-plugin: 4.0.0
@@ -3219,7 +3219,7 @@ __metadata:
     "@lowdefy/block-tools": 3.22.0
     "@lowdefy/color": 3.22.0
     "@lowdefy/helpers": 3.22.0
-    "@wojtekmaj/enzyme-adapter-react-17": 0.6.1
+    "@wojtekmaj/enzyme-adapter-react-17": 0.6.5
     antd: 4.17.0-alpha.7
     babel-jest: 27.3.1
     babel-loader: 8.2.3
@@ -3266,7 +3266,7 @@ __metadata:
     "@lowdefy/block-dev": 3.22.0
     "@lowdefy/block-tools": 3.22.0
     "@lowdefy/helpers": 3.22.0
-    "@wojtekmaj/enzyme-adapter-react-17": 0.6.1
+    "@wojtekmaj/enzyme-adapter-react-17": 0.6.5
     babel-jest: 27.3.1
     babel-loader: 8.2.3
     buffer: 6.0.3
@@ -3304,7 +3304,7 @@ __metadata:
     "@lowdefy/block-dev": 3.22.0
     "@lowdefy/block-tools": 3.22.0
     "@lowdefy/blocks-antd": 3.22.0
-    "@wojtekmaj/enzyme-adapter-react-17": 0.6.1
+    "@wojtekmaj/enzyme-adapter-react-17": 0.6.5
     babel-jest: 27.3.1
     babel-loader: 8.2.3
     babel-plugin-import: 1.13.3
@@ -3383,7 +3383,7 @@ __metadata:
     "@babel/preset-react": 7.14.5
     "@lowdefy/block-dev": 3.22.0
     "@lowdefy/block-tools": 3.22.0
-    "@wojtekmaj/enzyme-adapter-react-17": 0.6.1
+    "@wojtekmaj/enzyme-adapter-react-17": 0.6.5
     babel-jest: 27.3.1
     babel-loader: 8.2.3
     buffer: 6.0.3
@@ -5334,27 +5334,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wojtekmaj/enzyme-adapter-react-17@npm:0.6.1":
-  version: 0.6.1
-  resolution: "@wojtekmaj/enzyme-adapter-react-17@npm:0.6.1"
+"@wojtekmaj/enzyme-adapter-react-17@npm:0.6.5":
+  version: 0.6.5
+  resolution: "@wojtekmaj/enzyme-adapter-react-17@npm:0.6.5"
   dependencies:
-    "@wojtekmaj/enzyme-adapter-utils": ^0.1.0
+    "@wojtekmaj/enzyme-adapter-utils": ^0.1.1
     enzyme-shallow-equal: ^1.0.0
     has: ^1.0.0
     object.assign: ^4.1.0
     object.values: ^1.1.0
     prop-types: ^15.7.0
-    react-is: ^17.0.0
+    react-is: ^17.0.2
     react-test-renderer: ^17.0.0
   peerDependencies:
     enzyme: ^3.0.0
     react: ^17.0.0-0
     react-dom: ^17.0.0-0
-  checksum: 4c970f458d2c0887ef3e13c884e62bd3272e5f7ee2f4e21df2673fff43fbe1a91e1e8fd371f0cf840437e2a2cb25b83ef58af0561bc00ede2947ae582f3be41b
+  checksum: 110f9a8a59ccc61ab5e1be47e15f61903b5868960872e1c8925c68dced184067cea47404e15e15d9d07c4d526d7e7b5324b81d885ff037dab6451dabf12e8f1f
   languageName: node
   linkType: hard
 
-"@wojtekmaj/enzyme-adapter-utils@npm:^0.1.0":
+"@wojtekmaj/enzyme-adapter-utils@npm:^0.1.1":
   version: 0.1.1
   resolution: "@wojtekmaj/enzyme-adapter-utils@npm:0.1.1"
   dependencies:
@@ -18202,7 +18202,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-is@npm:^16.12.0 || ^17.0.0, react-is@npm:^17.0.0, react-is@npm:^17.0.1, react-is@npm:^17.0.2":
+"react-is@npm:^16.12.0 || ^17.0.0, react-is@npm:^17.0.1, react-is@npm:^17.0.2":
   version: 17.0.2
   resolution: "react-is@npm:17.0.2"
   checksum: 9d6d111d8990dc98bc5402c1266a808b0459b5d54830bbea24c12d908b536df7883f268a7868cfaedde3dd9d4e0d574db456f84d2e6df9c4526f99bb4b5344d8
