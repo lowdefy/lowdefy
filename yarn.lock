@@ -1792,7 +1792,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.10.1, @babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.10.4, @babel/runtime@npm:^7.11.1, @babel/runtime@npm:^7.11.2, @babel/runtime@npm:^7.12.1, @babel/runtime@npm:^7.12.13, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.13.10, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.8.4":
+"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.10.1, @babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.10.4, @babel/runtime@npm:^7.11.1, @babel/runtime@npm:^7.11.2, @babel/runtime@npm:^7.12.1, @babel/runtime@npm:^7.12.13, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.8.4":
   version: 7.15.4
   resolution: "@babel/runtime@npm:7.15.4"
   dependencies:
@@ -1910,16 +1910,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/css-prettifier@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@emotion/css-prettifier@npm:1.0.0"
-  dependencies:
-    "@emotion/memoize": ^0.7.4
-    stylis: ^4.0.3
-  checksum: a3de555a49e26b7b226625cfb80e766cc19bd862b736d0c481021a77dc84d6588c97c949d3bcab605d7e5fd1f254ab9386fc368abc2aec74d37e6447d905354c
-  languageName: node
-  linkType: hard
-
 "@emotion/hash@npm:0.8.0":
   version: 0.8.0
   resolution: "@emotion/hash@npm:0.8.0"
@@ -1927,38 +1917,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/jest@npm:11.5.0":
-  version: 11.5.0
-  resolution: "@emotion/jest@npm:11.5.0"
-  dependencies:
-    "@babel/runtime": ^7.13.10
-    "@emotion/css-prettifier": ^1.0.0
-    chalk: ^4.1.0
-    specificity: ^0.4.1
-    stylis: ^4.0.10
-  peerDependencies:
-    "@types/jest": ^26.0.14 || ^27.0.0
-    enzyme-to-json: ^3.2.1
-  peerDependenciesMeta:
-    "@types/jest":
-      optional: true
-    enzyme-to-json:
-      optional: true
-  checksum: 1283d9b9262eb52d9eaa56bc44a59f297f1d8c22dbb58f45fec40204731c599e7524ca1192567566cefde28be8101c766e77b9a552b9bc7a72bf35728d10afd7
-  languageName: node
-  linkType: hard
-
 "@emotion/memoize@npm:0.7.4":
   version: 0.7.4
   resolution: "@emotion/memoize@npm:0.7.4"
   checksum: 4e3920d4ec95995657a37beb43d3f4b7d89fed6caa2b173a4c04d10482d089d5c3ea50bbc96618d918b020f26ed6e9c4026bbd45433566576c1f7b056c3271dc
-  languageName: node
-  linkType: hard
-
-"@emotion/memoize@npm:^0.7.4":
-  version: 0.7.5
-  resolution: "@emotion/memoize@npm:0.7.5"
-  checksum: 83da8d4a7649a92c72f960817692bc6be13cc13e107b9f7e878d63766525ed4402881bfeb3cda61145c050281e7e260f114a0a2870515527346f2ef896b915b3
   languageName: node
   linkType: hard
 
@@ -3179,7 +3141,6 @@ __metadata:
     "@babel/core": 7.14.3
     "@babel/preset-env": 7.14.4
     "@babel/preset-react": 7.13.13
-    "@emotion/jest": 11.5.0
     "@lowdefy/helpers": 3.22.0
     "@wojtekmaj/enzyme-adapter-react-17": 0.6.1
     ajv: 6.12.6
@@ -3217,6 +3178,7 @@ __metadata:
     "@babel/core": 7.15.8
     "@babel/preset-env": 7.15.8
     "@babel/preset-react": 7.14.5
+    "@lowdefy/block-dev": 3.22.0
     "@lowdefy/helpers": 3.22.0
     "@wojtekmaj/enzyme-adapter-react-17": 0.6.1
     babel-jest: 27.3.1
@@ -3234,9 +3196,7 @@ __metadata:
     process: 0.11.10
     react: 17.0.2
     react-dom: 17.0.2
-    react-router-dom: 5.2.0
     react-syntax-highlight: 15.3.1
-    react-test-renderer: 17.0.2
     style-loader: 3.3.1
     webpack: 5.59.1
     webpack-cli: 4.9.1
@@ -19955,15 +19915,6 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"specificity@npm:^0.4.1":
-  version: 0.4.1
-  resolution: "specificity@npm:0.4.1"
-  bin:
-    specificity: ./bin/specificity
-  checksum: e558f1098f85aa54a8e90277309ac0d1913c84812c0bd349aa449076aa700964f71ab69f04f5fda9b7898bef9b7da3faa1cad9caedfd3f1a1ebfebedc18604ab
-  languageName: node
-  linkType: hard
-
 "split-on-first@npm:^1.0.0":
   version: 1.1.0
   resolution: "split-on-first@npm:1.1.0"
@@ -20408,13 +20359,6 @@ resolve@^2.0.0-next.3:
   peerDependencies:
     webpack: ^5.0.0
   checksum: 470feef680f59e2fce4d6601b5c55b88c01ad8d1dd693c528ffd591ff5fd7c01a4eff3bdbe62f26f847d6bd2430c9ab594be23307cfe7a3446ab236683f0d066
-  languageName: node
-  linkType: hard
-
-"stylis@npm:^4.0.10, stylis@npm:^4.0.3":
-  version: 4.0.10
-  resolution: "stylis@npm:4.0.10"
-  checksum: 0fecaf5c234ec3ffcb0afc21478742a815a21cb964365259789be9c1692e72e13d8c081c1150fd76ed2146633a3251cdecd6e0c120b158f44bd74c38f81cafb3
   languageName: node
   linkType: hard
 

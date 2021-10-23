@@ -16,7 +16,60 @@
 
 import Ajv from 'ajv';
 import AjvErrors from 'ajv-errors';
-import blockSchema from './blockSchema.json';
+
+const appTestSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['id', 'type'],
+  properties: {
+    id: {
+      type: 'string',
+    },
+    required: {
+      type: ['boolean', 'object'],
+    },
+    type: {
+      type: 'string',
+    },
+    properties: {
+      type: 'object',
+    },
+    style: {
+      type: 'object',
+    },
+    layout: {
+      type: 'object',
+    },
+    blocks: {
+      type: 'array',
+      items: {
+        type: 'object',
+      },
+    },
+    events: {
+      type: 'object',
+    },
+    menus: {
+      type: 'array',
+    },
+    areas: {
+      type: 'object',
+      patternProperties: {
+        '^.*$': {
+          type: 'object',
+          properties: {
+            blocks: {
+              type: 'array',
+              items: {
+                type: 'object',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
 
 const testSchemaProperties = {
   value: {},
@@ -49,8 +102,8 @@ const initAjv = (options) => {
 
 const ajvInstance = initAjv();
 const schemaTest = (schema) => {
-  blockSchema.properties = { ...blockSchema.properties, ...schema, ...testSchemaProperties };
-  return ajvInstance.compile(blockSchema);
+  appTestSchema.properties = { ...appTestSchema.properties, ...schema, ...testSchemaProperties };
+  return ajvInstance.compile(appTestSchema);
 };
 
 export default schemaTest;

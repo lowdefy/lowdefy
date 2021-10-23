@@ -15,6 +15,7 @@
 */
 
 import { useState } from 'react';
+
 import stubBlockProps from './stubBlockProps';
 
 jest.mock('react', () => {

@@ -1,6 +1,7 @@
 import React from 'react';
-import BlockSchemaErrors from './BlockSchemaErrors';
 import { create, act } from 'react-test-renderer';
+
+import BlockSchemaErrors from './BlockSchemaErrors';
 
 test('default', () => {
   let comp;
