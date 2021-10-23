@@ -3241,7 +3241,7 @@ __metadata:
     "@lowdefy/node-utils": 3.22.0
     "@lowdefy/nunjucks": 3.22.0
     ajv: 6.12.6
-    axios: 0.21.4
+    axios: 0.23.0
     babel-jest: 27.3.1
     babel-loader: 8.2.3
     clean-webpack-plugin: 4.0.0
@@ -3374,7 +3374,7 @@ __metadata:
     apollo-server: 2.25.0
     apollo-server-testing: 2.25.0
     aws-sdk: 2.1013.0
-    axios: 0.21.4
+    axios: 0.23.0
     babel-jest: 27.3.1
     babel-loader: 8.2.3
     clean-webpack-plugin: 4.0.0
@@ -6098,7 +6098,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:0.21.4, axios@npm:^0.21.1, axios@npm:^0.21.4":
+"axios@npm:0.23.0":
+  version: 0.23.0
+  resolution: "axios@npm:0.23.0"
+  dependencies:
+    follow-redirects: ^1.14.4
+  checksum: 879f61022bd825da2a7ebb72410bc528683ba54c140436baa0b924b7cab02ec0919fe64a04a546f482a75f5fd570b77884f9826764a95f2fd88265e61dcb70db
+  languageName: node
+  linkType: hard
+
+"axios@npm:^0.21.1, axios@npm:^0.21.4":
   version: 0.21.4
   resolution: "axios@npm:0.21.4"
   dependencies:
@@ -9962,7 +9971,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.14.0":
+"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.14.4":
   version: 1.14.4
   resolution: "follow-redirects@npm:1.14.4"
   peerDependenciesMeta:
@@ -13622,7 +13631,7 @@ __metadata:
     "@lowdefy/helpers": 3.22.0
     "@lowdefy/node-utils": 3.22.0
     apollo-server-express: 2.25.0
-    axios: 0.21.4
+    axios: 0.23.0
     babel-jest: 27.3.1
     babel-loader: 8.2.3
     chalk: 4.1.1

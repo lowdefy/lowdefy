@@ -4735,7 +4735,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/node-utils", "workspace:packages/nodeUtils"],
             ["@lowdefy/nunjucks", "workspace:packages/nunjucks"],
             ["ajv", "npm:6.12.6"],
-            ["axios", "npm:0.21.4"],
+            ["axios", "npm:0.23.0"],
             ["babel-jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"],
             ["babel-loader", "virtual:aad21d373d6721af7549b2798c35c4ea25d83c122770abeaa0a4343ba20d55700fd9e3c5fa3289a7e6f591d09e8790df14d525c719ca4729b178b8644cca082a#npm:8.2.3"],
             ["clean-webpack-plugin", "virtual:aad21d373d6721af7549b2798c35c4ea25d83c122770abeaa0a4343ba20d55700fd9e3c5fa3289a7e6f591d09e8790df14d525c719ca4729b178b8644cca082a#npm:4.0.0"],
@@ -4865,7 +4865,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["apollo-server", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:2.25.0"],
             ["apollo-server-testing", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:2.25.0"],
             ["aws-sdk", "npm:2.1013.0"],
-            ["axios", "npm:0.21.4"],
+            ["axios", "npm:0.23.0"],
             ["babel-jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"],
             ["babel-loader", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:8.2.3"],
             ["clean-webpack-plugin", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:4.0.0"],
@@ -8925,6 +8925,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/axios-npm-0.21.4-e278873748-44245f24ac.zip/node_modules/axios/",
           "packageDependencies": [
             ["axios", "npm:0.21.4"],
+            ["follow-redirects", "virtual:a313c479c5c7e54d9ec8fbeeea69ff640f56b8989ea2dff42351a3fa5c4061fb80a52d8ede0f0826a181a216820c2d2c3f15da881e7fdf31cef1c446e42f0c45#npm:1.14.4"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.23.0", {
+          "packageLocation": "./.yarn/cache/axios-npm-0.23.0-2d08cb7826-879f61022b.zip/node_modules/axios/",
+          "packageDependencies": [
+            ["axios", "npm:0.23.0"],
             ["follow-redirects", "virtual:a313c479c5c7e54d9ec8fbeeea69ff640f56b8989ea2dff42351a3fa5c4061fb80a52d8ede0f0826a181a216820c2d2c3f15da881e7fdf31cef1c446e42f0c45#npm:1.14.4"]
           ],
           "linkType": "HARD",
@@ -18829,7 +18837,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/helpers", "workspace:packages/helpers"],
             ["@lowdefy/node-utils", "workspace:packages/nodeUtils"],
             ["apollo-server-express", "virtual:dddca670fd0b7758fb2e1b1a3e18ac7ebd1ecd06ecdd7acec2b78bccf1d35802cb22904bfbb233b16515a81f5cb819421786d20887823d98022b367036c1ad51#npm:2.25.0"],
-            ["axios", "npm:0.21.4"],
+            ["axios", "npm:0.23.0"],
             ["babel-jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"],
             ["babel-loader", "virtual:dddca670fd0b7758fb2e1b1a3e18ac7ebd1ecd06ecdd7acec2b78bccf1d35802cb22904bfbb233b16515a81f5cb819421786d20887823d98022b367036c1ad51#npm:8.2.3"],
             ["chalk", "npm:4.1.1"],
