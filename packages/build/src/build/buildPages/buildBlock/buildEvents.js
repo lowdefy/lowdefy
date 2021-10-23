@@ -15,6 +15,29 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import createCheckDuplicateId from '../../../utils/createCheckDuplicateId';
+
+function checkActionId(action, eventContext) {
+  const { eventId, blockId, pageId, checkDuplicateActionId } = eventContext;
+  if (type.isUndefined(action.id)) {
+    throw new Error(
+      `Action id missing on event "${eventId}" on block "${blockId}" on page "${pageId}".`
+    );
+  }
+  if (!type.isString(action.id)) {
+    throw new Error(
+      `Action id is not a string on event "${eventId}" on block "${blockId}" on page "${pageId}". Received ${JSON.stringify(
+        action.id
+      )}.`
+    );
+  }
+  checkDuplicateActionId({
+    id: action.id,
+    eventId,
+    blockId,
+    pageId,
+  });
+}
 
 function buildEvents(block, pageContext) {
   if (block.events) {
@@ -41,6 +64,26 @@ function buildEvents(block, pageContext) {
           )}`
         );
       }
+      const checkDuplicateActionId = createCheckDuplicateId({
+        message:
+          'Duplicate actionId "{{ id }}" on event "{{ eventId }}" on block "{{ blockId }}" on page "{{ pageId }}".',
+      });
+      block.events[key].try.map((action) =>
+        checkActionId(action, {
+          eventId: key,
+          blockId: block.blockId,
+          pageId: pageContext.pageId,
+          checkDuplicateActionId,
+        })
+      );
+      block.events[key].catch.map((action) =>
+        checkActionId(action, {
+          eventId: key,
+          blockId: block.blockId,
+          pageId: pageContext.pageId,
+          checkDuplicateActionId,
+        })
+      );
     });
   }
 }

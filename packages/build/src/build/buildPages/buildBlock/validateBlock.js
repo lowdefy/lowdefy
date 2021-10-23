@@ -22,10 +22,10 @@ function validateBlock(block, { pageId }) {
       `Expected block to be an object on page "${pageId}". Received ${JSON.stringify(block)}.`
     );
   }
+  if (type.isUndefined(block.id)) {
+    throw new Error(`Block id missing at page "${pageId}".`);
+  }
   if (!type.isString(block.id)) {
-    if (type.isUndefined(block.id)) {
-      throw new Error(`Block id missing at page "${pageId}".`);
-    }
     throw new Error(
       `Block id is not a string at page "${pageId}". Received ${JSON.stringify(block.id)}.`
     );

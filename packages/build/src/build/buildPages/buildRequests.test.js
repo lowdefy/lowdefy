@@ -204,6 +204,54 @@ test('request id not a string', async () => {
   );
 });
 
+test('Throw on duplicate request ids', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [
+          { id: 'request_1', type: 'Request' },
+          { id: 'request_1', type: 'Request' },
+        ],
+      },
+    ],
+  };
+  await expect(buildPages({ components, context })).rejects.toThrow(
+    'Duplicate requestId "request_1" on page "page_1".'
+  );
+});
+
+test('Throw on duplicate request ids', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [{ id: 'request_1', type: 'Request' }],
+        blocks: [
+          {
+            id: 'one',
+            type: 'Container',
+            blocks: [
+              {
+                id: 'two',
+                type: 'Input',
+                requests: [{ id: 'request_1', type: 'Request' }],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+  await expect(buildPages({ components, context })).rejects.toThrow(
+    'Duplicate requestId "request_1" on page "page_1".'
+  );
+});
+
 test('request id contains a "."', async () => {
   const components = {
     pages: [

@@ -212,7 +212,7 @@ test('block events actions as try catch arrays', async () => {
                 ],
                 catch: [
                   {
-                    id: 'action_1',
+                    id: 'action_2',
                     type: 'Retry',
                   },
                 ],
@@ -232,7 +232,7 @@ test('block events actions as try catch arrays', async () => {
   ]);
   expect(get(res, 'pages.0.areas.content.blocks.0.events.onClick.catch')).toEqual([
     {
-      id: 'action_1',
+      id: 'action_2',
       type: 'Retry',
     },
   ]);
@@ -319,4 +319,193 @@ test('block events actions catch not an array', async () => {
   await expect(buildPages({ components, context })).rejects.toThrow(
     'Catch events must be an array of actions at "block_1" in event "onClick" on page "page_1". Received {"id":"action_1","type":"Reset"}'
   );
+});
+
+test('block events action id is not defined', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            events: {
+              onClick: {
+                try: [
+                  {
+                    id: undefined,
+                    type: 'Reset',
+                  },
+                ],
+                catch: [
+                  {
+                    id: 'action_1',
+                    type: 'Retry',
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  await expect(buildPages({ components, context })).rejects.toThrow(
+    'Action id missing on event "onClick" on block "block_1" on page "page_1".'
+  );
+});
+
+test('block events action id is not a string', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            events: {
+              onClick: {
+                try: [
+                  {
+                    id: true,
+                    type: 'Reset',
+                  },
+                ],
+                catch: [
+                  {
+                    id: 'action_1',
+                    type: 'Retry',
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  await expect(buildPages({ components, context })).rejects.toThrow(
+    'Action id is not a string on event "onClick" on block "block_1" on page "page_1". Received true.'
+  );
+});
+
+test('throw on Duplicate block events action ids', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            events: {
+              onClick: {
+                try: [
+                  {
+                    id: 'action_1',
+                    type: 'Reset',
+                  },
+                  {
+                    id: 'action_1',
+                    type: 'Reset',
+                  },
+                ],
+                catch: [
+                  {
+                    id: 'action_2',
+                    type: 'Retry',
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  await expect(buildPages({ components, context })).rejects.toThrow(
+    'Duplicate actionId "action_1" on event "onClick" on block "block_1" on page "page_1".'
+  );
+});
+
+test("don't throw on Duplicate separate block events action ids", async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            events: {
+              onClick: {
+                try: [
+                  {
+                    id: 'action_1',
+                    type: 'Reset',
+                  },
+                ],
+                catch: [
+                  {
+                    id: 'action_2',
+                    type: 'Retry',
+                  },
+                ],
+              },
+              onChange: {
+                try: [
+                  {
+                    id: 'action_1',
+                    type: 'Reset',
+                  },
+                ],
+                catch: [
+                  {
+                    id: 'action_2',
+                    type: 'Retry',
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  const res = await buildPages({ components, context });
+  expect(get(res, 'pages.0.areas.content.blocks.0')).toEqual({
+    blockId: 'block_1',
+    events: {
+      onChange: {
+        catch: [{ id: 'action_2', type: 'Retry' }],
+        try: [{ id: 'action_1', type: 'Reset' }],
+      },
+      onClick: {
+        catch: [{ id: 'action_2', type: 'Retry' }],
+        try: [{ id: 'action_1', type: 'Reset' }],
+      },
+    },
+    id: 'block:page_1:block_1',
+    meta: {
+      category: 'input',
+      loading: { type: 'SkeletonInput' },
+      moduleFederation: {
+        module: 'Input',
+        scope: 'blocks',
+        url: 'https://example.com/remoteEntry.js',
+      },
+      valueType: 'string',
+    },
+    type: 'Input',
+  });
 });
