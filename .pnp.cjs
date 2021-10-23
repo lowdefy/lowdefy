@@ -4880,7 +4880,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mingo", "npm:4.1.2"],
             ["moment", "npm:2.29.1"],
             ["mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:3.6.5"],
-            ["mssql", "npm:7.1.0"],
+            ["mssql", "npm:7.2.1"],
             ["mysql", "npm:2.18.1"],
             ["openid-client", "npm:4.7.4"],
             ["pg", "virtual:dddca670fd0b7758fb2e1b1a3e18ac7ebd1ecd06ecdd7acec2b78bccf1d35802cb22904bfbb233b16515a81f5cb819421786d20887823d98022b367036c1ad51#npm:8.6.0"],
@@ -18847,7 +18847,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["html-webpack-plugin", "virtual:dddca670fd0b7758fb2e1b1a3e18ac7ebd1ecd06ecdd7acec2b78bccf1d35802cb22904bfbb233b16515a81f5cb819421786d20887823d98022b367036c1ad51#npm:5.4.0"],
             ["jest", "npm:26.6.3"],
             ["js-yaml", "npm:4.1.0"],
-            ["mssql", "npm:7.1.0"],
+            ["mssql", "npm:7.2.1"],
             ["mysql", "npm:2.18.1"],
             ["opener", "npm:1.5.2"],
             ["ora", "npm:5.4.0"],
@@ -19839,10 +19839,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["mssql", [
-        ["npm:7.1.0", {
-          "packageLocation": "./.yarn/cache/mssql-npm-7.1.0-4a85ceac83-a35b630242.zip/node_modules/mssql/",
+        ["npm:7.2.1", {
+          "packageLocation": "./.yarn/cache/mssql-npm-7.2.1-e0b229133d-1f706eaea8.zip/node_modules/mssql/",
           "packageDependencies": [
-            ["mssql", "npm:7.1.0"],
+            ["mssql", "npm:7.2.1"],
             ["@tediousjs/connection-string", "npm:0.3.0"],
             ["debug", "virtual:58c45d1abcfbfa1f01b5cd3e53439720ec2578dbff5c28038489c39241aed010924080812c1c0437781a7914d49dcd5ab8069f87498c3e84e93a3fb3ed6111b7#npm:4.3.2"],
             ["rfdc", "npm:1.3.0"],
