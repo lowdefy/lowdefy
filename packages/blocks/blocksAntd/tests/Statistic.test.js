@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import Statistic from '../src/blocks/Statistic/Statistic';
 import examples from '../demo/examples/Statistic.yaml';

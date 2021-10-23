@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import Tooltip from '../src/blocks/Tooltip/Tooltip';
 import examples from '../demo/examples/Tooltip.yaml';

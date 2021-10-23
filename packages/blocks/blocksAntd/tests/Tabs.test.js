@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import Tabs from '../src/blocks/Tabs/Tabs';
 import examples from '../demo/examples/Tabs.yaml';

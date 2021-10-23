@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 import ProgressBlock from '../src/blocks/Progress/Progress';
 import examples from '../demo/examples/Progress.yaml';
 import meta from '../src/blocks/Progress/Progress.json';

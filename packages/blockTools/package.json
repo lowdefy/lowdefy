@@ -38,8 +38,6 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "3.22.0",
-    "ajv": "6.12.6",
-    "ajv-errors": "1.0.1",
     "create-emotion": "10.0.27",
     "dompurify": "2.2.8",
     "react": "17.0.2",

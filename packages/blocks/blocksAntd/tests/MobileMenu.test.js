@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import MobileMenu from '../src/blocks/MobileMenu/MobileMenu';
 import examples from '../demo/examples/MobileMenu.yaml';

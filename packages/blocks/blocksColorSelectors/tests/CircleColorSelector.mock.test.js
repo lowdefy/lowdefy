@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { runMockRenderTests } from '@lowdefy/block-tools';
+import { runMockRenderTests } from '@lowdefy/block-dev';
 import Enzyme, { mount } from 'enzyme';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { CirclePicker } from 'react-color';

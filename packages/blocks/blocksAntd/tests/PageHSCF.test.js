@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import PageHSCF from '../src/blocks/PageHSCF/PageHSCF';
 import examples from '../demo/examples/PageHSCF.yaml';

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import PageHeaderMenu from '../src/blocks/PageHeaderMenu/PageHeaderMenu';
 import examples from '../demo/examples/PageHeaderMenu.yaml';

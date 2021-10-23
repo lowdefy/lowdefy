@@ -71,7 +71,7 @@ const MenuComp = ({ basePath, blockId, events, methods, menus, pageId, propertie
   };
   const exProps = {};
   if (properties.mode === 'inline') {
-    exProps.inlineCollapsed = properties.inlineCollapsed;
+    exProps.collapsed = properties.collapsed;
     exProps.inlineIndent = properties.inlineIndent;
   }
   const menu = getDefaultMenu(menus, properties.menuId, properties.links);

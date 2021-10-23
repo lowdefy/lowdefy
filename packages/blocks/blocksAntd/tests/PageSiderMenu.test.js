@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import PageSiderMenu from '../src/blocks/PageSiderMenu/PageSiderMenu';
 import examples from '../demo/examples/PageSiderMenu.yaml';

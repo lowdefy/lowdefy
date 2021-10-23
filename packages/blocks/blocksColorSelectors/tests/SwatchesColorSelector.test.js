@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import { SwatchesColorSelector } from '../src';
 import examples from '../demo/examples/SwatchesColorSelector.yaml';

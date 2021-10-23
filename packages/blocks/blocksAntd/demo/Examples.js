@@ -17,7 +17,7 @@
 import React, { useState } from 'react';
 import YAML from 'js-yaml';
 import { type as typeHelper } from '@lowdefy/helpers';
-import { stubBlockProps, blockDefaultProps, BlockSchemaErrors } from '@lowdefy/block-tools';
+import { stubBlockProps, blockDefaultProps, BlockSchemaErrors } from '@lowdefy/block-dev';
 import yaml from 'react-syntax-highlighter/dist/esm/languages/hljs/yaml';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import vs2015 from 'react-syntax-highlighter/dist/esm/styles/hljs/vs2015';

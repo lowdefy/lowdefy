@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "@lowdefy/block-tools": "3.22.0",
+    "@lowdefy/helpers": "3.22.0",
     "dompurify": "2.2.8",
     "react": "17.0.2",
     "react-dom": "17.0.2"
@@ -48,7 +49,7 @@
     "@babel/core": "7.15.8",
     "@babel/preset-env": "7.15.8",
     "@babel/preset-react": "7.14.5",
-    "@lowdefy/helpers": "3.22.0",
+    "@lowdefy/block-dev": "3.22.0",
     "@wojtekmaj/enzyme-adapter-react-17": "0.6.1",
     "babel-jest": "27.3.1",
     "babel-loader": "8.2.3",

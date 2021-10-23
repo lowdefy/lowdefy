@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import TimelineList from '../src/blocks/TimelineList/TimelineList';
 import examples from '../demo/examples/TimelineList.yaml';

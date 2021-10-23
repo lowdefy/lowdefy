@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import Paragraph from '../src/blocks/Paragraph/Paragraph';
 import examples from '../demo/examples/Paragraph.yaml';

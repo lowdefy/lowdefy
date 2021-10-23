@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { mockBlock, runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
+import { mockBlock, runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 import { configure, mount } from 'enzyme';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 configure({ adapter: new Adapter() });
