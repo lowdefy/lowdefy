@@ -3367,7 +3367,7 @@ __metadata:
     "@lowdefy/node-utils": 3.22.0
     "@lowdefy/nunjucks": 3.22.0
     "@lowdefy/operators": 3.22.0
-    "@sendgrid/mail": 7.4.4
+    "@sendgrid/mail": 7.5.0
     "@shelf/jest-mongodb": 1.2.5
     ajv: 6.12.6
     ajv-errors: 1.0.1
@@ -4044,7 +4044,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sendgrid/client@npm:^7.4.3":
+"@sendgrid/client@npm:^7.5.0":
   version: 7.5.0
   resolution: "@sendgrid/client@npm:7.5.0"
   dependencies:
@@ -4054,7 +4054,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sendgrid/helpers@npm:^7.4.3, @sendgrid/helpers@npm:^7.5.0":
+"@sendgrid/helpers@npm:^7.5.0":
   version: 7.5.0
   resolution: "@sendgrid/helpers@npm:7.5.0"
   dependencies:
@@ -4063,13 +4063,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sendgrid/mail@npm:7.4.4":
-  version: 7.4.4
-  resolution: "@sendgrid/mail@npm:7.4.4"
+"@sendgrid/mail@npm:7.5.0":
+  version: 7.5.0
+  resolution: "@sendgrid/mail@npm:7.5.0"
   dependencies:
-    "@sendgrid/client": ^7.4.3
-    "@sendgrid/helpers": ^7.4.3
-  checksum: fbfcfe62b48a4942f8324fade294641a113565675deb511f308501e34bb978b814dbb26e14e03e7b0015195ec844323834321cce0503fc1e9109eb4a9ce689e6
+    "@sendgrid/client": ^7.5.0
+    "@sendgrid/helpers": ^7.5.0
+  checksum: 0a49c7f3745baefd2d1a68ccdd057e71ea9b6c6f8b8cbd9d99736e228c69eddc2119a5790dbc6cce3a8fa33cd36cadd4d5ed0423d362b2a36b541fbeb7ae77a3
   languageName: node
   linkType: hard
 
