@@ -56,7 +56,7 @@
     "graphql": "15.5.0",
     "graphql-type-json": "0.3.2",
     "jsonwebtoken": "8.5.1",
-    "knex": "0.95.6",
+    "knex": "0.95.11",
     "mingo": "4.1.2",
     "moment": "2.29.1",
     "mongodb": "3.6.12",
