@@ -7341,7 +7341,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:7.2.0, commander@npm:^7.0.0, commander@npm:^7.1.0":
+"commander@npm:7.2.0, commander@npm:^7.0.0, commander@npm:^7.1.0, commander@npm:~7.2.0":
   version: 7.2.0
   resolution: "commander@npm:7.2.0"
   checksum: 53501cbeee61d5157546c0bef0fedb6cdfc763a882136284bed9a07225f09a14b82d2a84e7637edfd1a679fb35ed9502fd58ef1d091e6287f60d790147f68ddc
@@ -7373,13 +7373,6 @@ __metadata:
   version: 8.3.0
   resolution: "commander@npm:8.3.0"
   checksum: 0f82321821fc27b83bd409510bb9deeebcfa799ff0bf5d102128b500b7af22872c0c92cb6a0ebc5a4cf19c6b550fba9cedfa7329d18c6442a625f851377bacf0
-  languageName: node
-  linkType: hard
-
-"commander@npm:~6.1.0":
-  version: 6.1.0
-  resolution: "commander@npm:6.1.0"
-  checksum: 658d4d650a409805c6eed772857f84df10e1a800178ebc1dc1cd2228fbd063a5ce478b6cf2e484d50ae51c125bca8526a794b45f1563225e702dd11a5b3dd146
   languageName: node
   linkType: hard
 
@@ -13627,7 +13620,7 @@ __metadata:
     pg: 8.7.1
     react: 17.0.2
     react-dom: 17.0.2
-    reload: 3.1.1
+    reload: 3.2.0
     saslprep: 1.0.3
     sqlite3: 5.0.2
     style-loader: 3.3.1
@@ -15421,7 +15414,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"open@npm:^8.0.9":
+"open@npm:^8.0.0, open@npm:^8.0.9":
   version: 8.3.0
   resolution: "open@npm:8.3.0"
   dependencies:
@@ -17813,22 +17806,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"reload@npm:3.1.1":
-  version: 3.1.1
-  resolution: "reload@npm:3.1.1"
+"reload@npm:3.2.0":
+  version: 3.2.0
+  resolution: "reload@npm:3.2.0"
   dependencies:
     cli-color: ~2.0.0
-    commander: ~6.1.0
+    commander: ~7.2.0
     finalhandler: ~1.1.1
     minimist: ~1.2.0
-    open: ^7.0.0
+    open: ^8.0.0
     serve-static: ~1.14.0
     supervisor: ~0.12.0
-    url-parse: ~1.4.4
-    ws: ~7.3.0
+    url-parse: ~1.5.0
+    ws: ~7.4.0
   bin:
     reload: bin/reload
-  checksum: 517b5796641b48a8cd9ff435dfcd3650874807440e01017d4291302da495db6fbb1abcb4fd4be0871bf7689e57e498f4ecb9e32ac8d4480243fe0401eb3a6278
+  checksum: 3f3e14b3d8bf93b452364b468073397d78208f6607b4bef586c3de788bfb386b1de6fa16760f643e8da9fa549fab8b9535d80bdf8419878c7f4ce8fa4a529e18
   languageName: node
   linkType: hard
 
@@ -20408,13 +20401,13 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"url-parse@npm:~1.4.4":
-  version: 1.4.7
-  resolution: "url-parse@npm:1.4.7"
+"url-parse@npm:~1.5.0":
+  version: 1.5.3
+  resolution: "url-parse@npm:1.5.3"
   dependencies:
     querystringify: ^2.1.1
     requires-port: ^1.0.0
-  checksum: 3ede937508436c9685a60c90634894aaf745d75160c0092c7f36335c79563effedf1a9fe0181f98e9c5165af73ba5f8fe1dc6e274c6556ae170be01f6e54c67f
+  checksum: c6b32fff835e43f3b1b4150239f459744f0ab1a908841dbfecbfc79bf67f4d6c8d9af1841d0c6d814d45bfa08525cc29312a0bef31db7aa894306b3db07e4ee0
   languageName: node
   linkType: hard
 
@@ -21083,9 +21076,9 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"ws@npm:~7.3.0":
-  version: 7.3.1
-  resolution: "ws@npm:7.3.1"
+"ws@npm:~7.4.0":
+  version: 7.4.6
+  resolution: "ws@npm:7.4.6"
   peerDependencies:
     bufferutil: ^4.0.1
     utf-8-validate: ^5.0.2
@@ -21094,7 +21087,7 @@ resolve@^2.0.0-next.3:
       optional: true
     utf-8-validate:
       optional: true
-  checksum: 4dc06da11813b7d7f2b2a662ed372418a0d28846b5ee5bda6cdf45402dbe00d8744e27080acfd4e8a31af093719be55f34a9c6878aa0a76ac4d22e4a3a7c3537
+  checksum: 3a990b32ed08c72070d5e8913e14dfcd831919205be52a3ff0b4cdd998c8d554f167c9df3841605cde8b11d607768cacab3e823c58c96a5c08c987e093eb767a
   languageName: node
   linkType: hard
 
