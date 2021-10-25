@@ -6,7 +6,7 @@ module.exports = {
   entry: './demo/index.js',
   mode: 'development',
   devServer: {
-    contentBase: path.join(__dirname, 'dist'),
+    static: path.join(__dirname, 'dist'),
     port: 3001,
   },
   // webpack 5 support polyfills

@@ -195,8 +195,26 @@ test('page id is not a string', async () => {
     ],
   };
   await expect(buildPages({ components, context })).rejects.toThrow(
-    'Page id is not a string at at page 0. Received true.'
+    'Page id is not a string at page 0. Received true.'
   );
+});
+
+test('Throw on duplicate page ids', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+      },
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+      },
+    ],
+  };
+  await expect(buildPages({ components, context })).rejects.toThrow('Duplicate pageId "page_1".');
 });
 
 test('block does not have an id', async () => {
