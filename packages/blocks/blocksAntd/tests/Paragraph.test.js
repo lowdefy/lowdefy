@@ -20,19 +20,5 @@ import Paragraph from '../src/blocks/Paragraph/Paragraph';
 import examples from '../demo/examples/Paragraph.yaml';
 import meta from '../src/blocks/Paragraph/Paragraph.json';
 
-jest.mock('@lowdefy/block-tools', () => {
-  const originalModule = jest.requireActual('@lowdefy/block-tools');
-  return {
-    ...originalModule,
-    blockDefaultProps: {
-      ...originalModule.blockDefaultProps,
-      methods: {
-        ...originalModule.blockDefaultProps.methods,
-        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
-      },
-    },
-  };
-});
-
 runRenderTests({ examples, Block: Paragraph, meta });
 runBlockSchemaTests({ examples, meta });

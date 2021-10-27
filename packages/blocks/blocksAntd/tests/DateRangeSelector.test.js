@@ -21,19 +21,5 @@ import DateRangeSelector from '../src/blocks/DateRangeSelector/DateRangeSelector
 import examples from '../demo/examples/DateRangeSelector.yaml';
 import meta from '../src/blocks/DateRangeSelector/DateRangeSelector.json';
 
-jest.mock('@lowdefy/block-tools', () => {
-  const originalModule = jest.requireActual('@lowdefy/block-tools');
-  return {
-    ...originalModule,
-    blockDefaultProps: {
-      ...originalModule.blockDefaultProps,
-      methods: {
-        ...originalModule.blockDefaultProps.methods,
-        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
-      },
-    },
-  };
-});
-
 runRenderTests({ examples, Block: DateRangeSelector, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta });

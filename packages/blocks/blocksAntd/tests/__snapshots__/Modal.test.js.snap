@@ -1,11 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - default - value[0] - default 1`] = `
+<div
+  id="default"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - default - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -24,7 +32,7 @@ Array [
       "id": "default_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -33,7 +41,7 @@ Array [
       "title": undefined,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -41,7 +49,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -60,7 +68,7 @@ Array [
       "id": "default_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -69,7 +77,7 @@ Array [
       "title": undefined,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -78,11 +86,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.title - value[0] - default 1`] = `
+<div
+  id="properties.title"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.title - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -101,7 +117,7 @@ Array [
       "id": "properties.title_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -111,66 +127,7 @@ Array [
         html="Modal title"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "pushItem": [MockFunction],
@@ -201,7 +158,7 @@ Array [
       />,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -209,7 +166,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -228,7 +185,7 @@ Array [
       "id": "properties.title_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -238,66 +195,7 @@ Array [
         html="Modal title"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "pushItem": [MockFunction],
@@ -328,7 +226,7 @@ Array [
       />,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -337,11 +235,21 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: bodyStyle: border: 10px solid blue - value[0] - default 1`] = `
+<div
+  id="properties: bodyStyle: border: 10px solid blue"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: bodyStyle: border: 10px solid blue - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"style\\":{\\"border\\":\\"10px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": Object {
+        "border": "10px solid blue",
+      },
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -360,7 +268,7 @@ Array [
       "id": "properties: bodyStyle: border: 10px solid blue_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -369,7 +277,7 @@ Array [
       "title": undefined,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -377,7 +285,9 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"style\\":{\\"border\\":\\"10px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": Object {
+        "border": "10px solid blue",
+      },
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -396,7 +306,7 @@ Array [
       "id": "properties: bodyStyle: border: 10px solid blue_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -405,7 +315,7 @@ Array [
       "title": undefined,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -414,11 +324,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: cancelText: Text of the Cancel button - value[0] - default 1`] = `
+<div
+  id="properties: cancelText: Text of the Cancel button"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: cancelText: Text of the Cancel button - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Text of the Cancel button",
       "centered": false,
@@ -437,7 +355,7 @@ Array [
       "id": "properties: cancelText: Text of the Cancel button_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -446,7 +364,7 @@ Array [
       "title": undefined,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -454,7 +372,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Text of the Cancel button",
       "centered": false,
@@ -473,7 +391,7 @@ Array [
       "id": "properties: cancelText: Text of the Cancel button_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -482,7 +400,7 @@ Array [
       "title": undefined,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -491,11 +409,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: centered: true - value[0] - default 1`] = `
+<div
+  id="properties: centered: true"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: centered: true - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": true,
@@ -514,7 +440,7 @@ Array [
       "id": "properties: centered: true_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -523,7 +449,7 @@ Array [
       "title": undefined,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -531,7 +457,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": true,
@@ -550,7 +476,7 @@ Array [
       "id": "properties: centered: true_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -559,7 +485,7 @@ Array [
       "title": undefined,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -568,11 +494,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: closable: false - value[0] - default 1`] = `
+<div
+  id="properties: closable: false"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: closable: false - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -591,7 +525,7 @@ Array [
       "id": "properties: closable: false_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -600,7 +534,7 @@ Array [
       "title": undefined,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -608,7 +542,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -627,7 +561,7 @@ Array [
       "id": "properties: closable: false_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -636,7 +570,7 @@ Array [
       "title": undefined,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -645,11 +579,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: footer: false - value[0] - default 1`] = `
+<div
+  id="properties: footer: false"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: footer: false - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -669,7 +611,7 @@ Array [
       "id": "properties: footer: false_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -678,7 +620,7 @@ Array [
       "title": undefined,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -686,7 +628,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -706,7 +648,7 @@ Array [
       "id": "properties: footer: false_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -715,7 +657,7 @@ Array [
       "title": undefined,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -724,11 +666,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: mask: false - value[0] - default 1`] = `
+<div
+  id="properties: mask: false"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: mask: false - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -747,7 +697,7 @@ Array [
       "id": "properties: mask: false_modal",
       "mask": false,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -756,7 +706,7 @@ Array [
       "title": undefined,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -764,7 +714,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -783,7 +733,7 @@ Array [
       "id": "properties: mask: false_modal",
       "mask": false,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -792,7 +742,7 @@ Array [
       "title": undefined,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -801,11 +751,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: maskClosable: false - value[0] - default 1`] = `
+<div
+  id="properties: maskClosable: false"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: maskClosable: false - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -824,7 +782,7 @@ Array [
       "id": "properties: maskClosable: false_modal",
       "mask": true,
       "maskClosable": false,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -833,7 +791,7 @@ Array [
       "title": undefined,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -841,7 +799,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -860,7 +818,7 @@ Array [
       "id": "properties: maskClosable: false_modal",
       "mask": true,
       "maskClosable": false,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -869,7 +827,7 @@ Array [
       "title": undefined,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -878,11 +836,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: maskStyle: border: 10px solid blue - value[0] - default 1`] = `
+<div
+  id="properties: maskStyle: border: 10px solid blue"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: maskStyle: border: 10px solid blue - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -901,7 +867,9 @@ Array [
       "id": "properties: maskStyle: border: 10px solid blue_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"style\\":{\\"border\\":\\"10px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": Object {
+        "border": "10px solid blue",
+      },
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -910,7 +878,7 @@ Array [
       "title": undefined,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -918,7 +886,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -937,7 +905,9 @@ Array [
       "id": "properties: maskStyle: border: 10px solid blue_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"style\\":{\\"border\\":\\"10px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": Object {
+        "border": "10px solid blue",
+      },
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -946,7 +916,7 @@ Array [
       "title": undefined,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -955,11 +925,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: okText: Text of the OK button - value[0] - default 1`] = `
+<div
+  id="properties: okText: Text of the OK button"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: okText: Text of the OK button - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -978,7 +956,7 @@ Array [
       "id": "properties: okText: Text of the OK button_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Text of the OK button",
       "okType": "primary",
@@ -987,7 +965,7 @@ Array [
       "title": undefined,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -995,7 +973,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -1014,7 +992,7 @@ Array [
       "id": "properties: okText: Text of the OK button_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Text of the OK button",
       "okType": "primary",
@@ -1023,7 +1001,7 @@ Array [
       "title": undefined,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -1032,11 +1010,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: width: 350px - 520px is default - value[0] - default 1`] = `
+<div
+  id="properties: width: 350px - 520px is default"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: width: 350px - 520px is default - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -1055,7 +1041,7 @@ Array [
       "id": "properties: width: 350px - 520px is default_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -1064,7 +1050,7 @@ Array [
       "title": undefined,
       "visible": false,
       "width": 350,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -1072,7 +1058,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -1091,7 +1077,7 @@ Array [
       "id": "properties: width: 350px - 520px is default_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -1100,7 +1086,7 @@ Array [
       "title": undefined,
       "visible": true,
       "width": 350,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -1109,11 +1095,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: wrapperStyle: border: 10px solid blue - value[0] - default 1`] = `
+<div
+  id="properties: wrapperStyle: border: 10px solid blue"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: wrapperStyle: border: 10px solid blue - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -1132,7 +1126,7 @@ Array [
       "id": "properties: wrapperStyle: border: 10px solid blue_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -1141,7 +1135,7 @@ Array [
       "title": undefined,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{\\"style\\":{\\"border\\":\\"10px solid blue\\"}}",
+      "wrapClassName": "css-hzhgt3",
       "zIndex": undefined,
     },
     Object {},
@@ -1149,7 +1143,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -1168,7 +1162,7 @@ Array [
       "id": "properties: wrapperStyle: border: 10px solid blue_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -1177,7 +1171,7 @@ Array [
       "title": undefined,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{\\"style\\":{\\"border\\":\\"10px solid blue\\"}}",
+      "wrapClassName": "css-hzhgt3",
       "zIndex": undefined,
     },
     Object {},
@@ -1186,11 +1180,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: zIndex: 1200 - 1000 is the default - value[0] - default 1`] = `
+<div
+  id="properties: zIndex: 1200 - 1000 is the default"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: zIndex: 1200 - 1000 is the default - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -1209,7 +1211,7 @@ Array [
       "id": "properties: zIndex: 1200 - 1000 is the default_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -1218,7 +1220,7 @@ Array [
       "title": undefined,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": 1200,
     },
     Object {},
@@ -1226,7 +1228,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -1245,7 +1247,7 @@ Array [
       "id": "properties: zIndex: 1200 - 1000 is the default_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -1254,7 +1256,7 @@ Array [
       "title": undefined,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": 1200,
     },
     Object {},
@@ -1263,11 +1265,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - with html in title - value[0] - default 1`] = `
+<div
+  id="with html in title"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - with html in title - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -1286,7 +1296,7 @@ Array [
       "id": "with html in title_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -1298,66 +1308,7 @@ Array [
 </div>
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "pushItem": [MockFunction],
@@ -1388,7 +1339,7 @@ Array [
       />,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -1396,7 +1347,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -1415,7 +1366,7 @@ Array [
       "id": "with html in title_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -1427,66 +1378,7 @@ Array [
 </div>
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "pushItem": [MockFunction],
@@ -1517,7 +1409,7 @@ Array [
       />,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -1526,11 +1418,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"toggleOpen","args":{}} - default - value[0] - default 1`] = `
+<div
+  id="default"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - default - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -1549,7 +1449,7 @@ Array [
       "id": "default_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -1558,7 +1458,7 @@ Array [
       "title": undefined,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -1566,7 +1466,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -1585,7 +1485,7 @@ Array [
       "id": "default_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -1594,7 +1494,7 @@ Array [
       "title": undefined,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -1603,11 +1503,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.title - value[0] - default 1`] = `
+<div
+  id="properties.title"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.title - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -1626,7 +1534,7 @@ Array [
       "id": "properties.title_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -1636,66 +1544,7 @@ Array [
         html="Modal title"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "pushItem": [MockFunction],
@@ -1726,7 +1575,7 @@ Array [
       />,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -1734,7 +1583,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -1753,7 +1602,7 @@ Array [
       "id": "properties.title_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -1763,66 +1612,7 @@ Array [
         html="Modal title"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "pushItem": [MockFunction],
@@ -1853,7 +1643,7 @@ Array [
       />,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -1862,11 +1652,21 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: bodyStyle: border: 10px solid blue - value[0] - default 1`] = `
+<div
+  id="properties: bodyStyle: border: 10px solid blue"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: bodyStyle: border: 10px solid blue - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"style\\":{\\"border\\":\\"10px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": Object {
+        "border": "10px solid blue",
+      },
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -1885,7 +1685,7 @@ Array [
       "id": "properties: bodyStyle: border: 10px solid blue_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -1894,7 +1694,7 @@ Array [
       "title": undefined,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -1902,7 +1702,9 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"style\\":{\\"border\\":\\"10px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": Object {
+        "border": "10px solid blue",
+      },
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -1921,7 +1723,7 @@ Array [
       "id": "properties: bodyStyle: border: 10px solid blue_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -1930,7 +1732,7 @@ Array [
       "title": undefined,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -1939,11 +1741,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: cancelText: Text of the Cancel button - value[0] - default 1`] = `
+<div
+  id="properties: cancelText: Text of the Cancel button"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: cancelText: Text of the Cancel button - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Text of the Cancel button",
       "centered": false,
@@ -1962,7 +1772,7 @@ Array [
       "id": "properties: cancelText: Text of the Cancel button_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -1971,7 +1781,7 @@ Array [
       "title": undefined,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -1979,7 +1789,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Text of the Cancel button",
       "centered": false,
@@ -1998,7 +1808,7 @@ Array [
       "id": "properties: cancelText: Text of the Cancel button_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -2007,7 +1817,7 @@ Array [
       "title": undefined,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -2016,11 +1826,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: centered: true - value[0] - default 1`] = `
+<div
+  id="properties: centered: true"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: centered: true - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": true,
@@ -2039,7 +1857,7 @@ Array [
       "id": "properties: centered: true_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -2048,7 +1866,7 @@ Array [
       "title": undefined,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -2056,7 +1874,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": true,
@@ -2075,7 +1893,7 @@ Array [
       "id": "properties: centered: true_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -2084,7 +1902,7 @@ Array [
       "title": undefined,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -2093,11 +1911,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: closable: false - value[0] - default 1`] = `
+<div
+  id="properties: closable: false"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: closable: false - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -2116,7 +1942,7 @@ Array [
       "id": "properties: closable: false_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -2125,7 +1951,7 @@ Array [
       "title": undefined,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -2133,7 +1959,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -2152,7 +1978,7 @@ Array [
       "id": "properties: closable: false_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -2161,7 +1987,7 @@ Array [
       "title": undefined,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -2170,11 +1996,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: footer: false - value[0] - default 1`] = `
+<div
+  id="properties: footer: false"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: footer: false - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -2194,7 +2028,7 @@ Array [
       "id": "properties: footer: false_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -2203,7 +2037,7 @@ Array [
       "title": undefined,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -2211,7 +2045,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -2231,7 +2065,7 @@ Array [
       "id": "properties: footer: false_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -2240,7 +2074,7 @@ Array [
       "title": undefined,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -2249,11 +2083,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: mask: false - value[0] - default 1`] = `
+<div
+  id="properties: mask: false"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: mask: false - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -2272,7 +2114,7 @@ Array [
       "id": "properties: mask: false_modal",
       "mask": false,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -2281,7 +2123,7 @@ Array [
       "title": undefined,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -2289,7 +2131,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -2308,7 +2150,7 @@ Array [
       "id": "properties: mask: false_modal",
       "mask": false,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -2317,7 +2159,7 @@ Array [
       "title": undefined,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -2326,11 +2168,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: maskClosable: false - value[0] - default 1`] = `
+<div
+  id="properties: maskClosable: false"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: maskClosable: false - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -2349,7 +2199,7 @@ Array [
       "id": "properties: maskClosable: false_modal",
       "mask": true,
       "maskClosable": false,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -2358,7 +2208,7 @@ Array [
       "title": undefined,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -2366,7 +2216,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -2385,7 +2235,7 @@ Array [
       "id": "properties: maskClosable: false_modal",
       "mask": true,
       "maskClosable": false,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -2394,7 +2244,7 @@ Array [
       "title": undefined,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -2403,11 +2253,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: maskStyle: border: 10px solid blue - value[0] - default 1`] = `
+<div
+  id="properties: maskStyle: border: 10px solid blue"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: maskStyle: border: 10px solid blue - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -2426,7 +2284,9 @@ Array [
       "id": "properties: maskStyle: border: 10px solid blue_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"style\\":{\\"border\\":\\"10px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": Object {
+        "border": "10px solid blue",
+      },
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -2435,7 +2295,7 @@ Array [
       "title": undefined,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -2443,7 +2303,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -2462,7 +2322,9 @@ Array [
       "id": "properties: maskStyle: border: 10px solid blue_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"style\\":{\\"border\\":\\"10px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": Object {
+        "border": "10px solid blue",
+      },
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -2471,7 +2333,7 @@ Array [
       "title": undefined,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -2480,11 +2342,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: okText: Text of the OK button - value[0] - default 1`] = `
+<div
+  id="properties: okText: Text of the OK button"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: okText: Text of the OK button - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -2503,7 +2373,7 @@ Array [
       "id": "properties: okText: Text of the OK button_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Text of the OK button",
       "okType": "primary",
@@ -2512,7 +2382,7 @@ Array [
       "title": undefined,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -2520,7 +2390,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -2539,7 +2409,7 @@ Array [
       "id": "properties: okText: Text of the OK button_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Text of the OK button",
       "okType": "primary",
@@ -2548,7 +2418,7 @@ Array [
       "title": undefined,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -2557,11 +2427,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: width: 350px - 520px is default - value[0] - default 1`] = `
+<div
+  id="properties: width: 350px - 520px is default"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: width: 350px - 520px is default - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -2580,7 +2458,7 @@ Array [
       "id": "properties: width: 350px - 520px is default_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -2589,7 +2467,7 @@ Array [
       "title": undefined,
       "visible": false,
       "width": 350,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -2597,7 +2475,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -2616,7 +2494,7 @@ Array [
       "id": "properties: width: 350px - 520px is default_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -2625,7 +2503,7 @@ Array [
       "title": undefined,
       "visible": true,
       "width": 350,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -2634,11 +2512,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: wrapperStyle: border: 10px solid blue - value[0] - default 1`] = `
+<div
+  id="properties: wrapperStyle: border: 10px solid blue"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: wrapperStyle: border: 10px solid blue - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -2657,7 +2543,7 @@ Array [
       "id": "properties: wrapperStyle: border: 10px solid blue_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -2666,7 +2552,7 @@ Array [
       "title": undefined,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{\\"style\\":{\\"border\\":\\"10px solid blue\\"}}",
+      "wrapClassName": "css-hzhgt3",
       "zIndex": undefined,
     },
     Object {},
@@ -2674,7 +2560,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -2693,7 +2579,7 @@ Array [
       "id": "properties: wrapperStyle: border: 10px solid blue_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -2702,7 +2588,7 @@ Array [
       "title": undefined,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{\\"style\\":{\\"border\\":\\"10px solid blue\\"}}",
+      "wrapClassName": "css-hzhgt3",
       "zIndex": undefined,
     },
     Object {},
@@ -2711,11 +2597,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: zIndex: 1200 - 1000 is the default - value[0] - default 1`] = `
+<div
+  id="properties: zIndex: 1200 - 1000 is the default"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: zIndex: 1200 - 1000 is the default - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -2734,7 +2628,7 @@ Array [
       "id": "properties: zIndex: 1200 - 1000 is the default_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -2743,7 +2637,7 @@ Array [
       "title": undefined,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": 1200,
     },
     Object {},
@@ -2751,7 +2645,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -2770,7 +2664,7 @@ Array [
       "id": "properties: zIndex: 1200 - 1000 is the default_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -2779,7 +2673,7 @@ Array [
       "title": undefined,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": 1200,
     },
     Object {},
@@ -2788,11 +2682,19 @@ Array [
 `;
 
 exports[`Mock for method: {"name":"toggleOpen","args":{}} - with html in title - value[0] - default 1`] = `
+<div
+  id="with html in title"
+>
+  mocked
+</div>
+`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - with html in title - value[0] - default 2`] = `
 Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -2811,7 +2713,7 @@ Array [
       "id": "with html in title_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -2823,66 +2725,7 @@ Array [
 </div>
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "pushItem": [MockFunction],
@@ -2913,7 +2756,7 @@ Array [
       />,
       "visible": false,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},
@@ -2921,7 +2764,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -2940,7 +2783,7 @@ Array [
       "id": "with html in title_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -2952,66 +2795,7 @@ Array [
 </div>
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
-                ],
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "pushItem": [MockFunction],
@@ -3042,7 +2826,7 @@ Array [
       />,
       "visible": true,
       "width": undefined,
-      "wrapClassName": "{}",
+      "wrapClassName": "css-0",
       "zIndex": undefined,
     },
     Object {},

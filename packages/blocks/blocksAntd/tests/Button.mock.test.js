@@ -15,11 +15,8 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { Button } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import ButtonBlock from '../src/blocks/Button/Button';
 import examples from '../demo/examples/Button.yaml';
 import meta from '../src/blocks/Button/Button.json';
@@ -35,4 +32,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: ButtonBlock, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: ButtonBlock, meta, mocks });

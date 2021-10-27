@@ -15,11 +15,8 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { Radio } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import ButtonSelectorBlock from '../src/blocks/ButtonSelector/ButtonSelector';
 import examples from '../demo/examples/ButtonSelector.yaml';
 import meta from '../src/blocks/ButtonSelector/ButtonSelector.json';
@@ -38,4 +35,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: ButtonSelectorBlock, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: ButtonSelectorBlock, meta, mocks });

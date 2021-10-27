@@ -82,7 +82,7 @@ const AutoCompleteInput = ({
                   className={methods.makeCssClass(properties.optionsStyle)}
                   id={`${blockId}_${i}`}
                   key={i}
-                  value={i}
+                  value={`${i}`}
                 >
                   {renderHtml({ html: `${opt}`, methods })}
                 </Option>
@@ -93,7 +93,7 @@ const AutoCompleteInput = ({
                   filterstring={opt.filterString}
                   id={`${blockId}_${i}`}
                   key={i}
-                  value={i}
+                  value={`${i}`}
                 >
                   {type.isNone(opt.label)
                     ? renderHtml({ html: `${opt.value}`, methods })

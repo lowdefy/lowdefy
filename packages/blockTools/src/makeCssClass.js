@@ -19,8 +19,7 @@ import { mergeObjects } from '@lowdefy/helpers';
 
 import mediaToCssObject from './mediaToCssObject';
 
-const makeCssClass = (styles, options = {}) => {
-  return options.styleObjectOnly ? mergeObjects(styles) : css(mediaToCssObject(styles, options));
-};
+const makeCssClass = (styles, styleObjectOnly) =>
+  styleObjectOnly ? mediaToCssObject(mergeObjects(styles), true)[0] : css(mediaToCssObject(styles));
 
 export default makeCssClass;

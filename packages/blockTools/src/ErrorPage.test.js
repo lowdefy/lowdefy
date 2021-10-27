@@ -15,85 +15,39 @@
 */
 
 import React from 'react';
-import { create, act } from 'react-test-renderer';
+import { render } from '@testing-library/react';
+
 import ErrorPage from './ErrorPage';
 
 test('default', () => {
-  let comp;
-  act(() => {
-    comp = create(<ErrorPage />);
-  });
-  act(() => {
-    comp.update(<ErrorPage />);
-  });
-  expect(comp.toJSON()).toMatchInlineSnapshot(`
+  const { container } = render(<ErrorPage />);
+  expect(container.firstChild).toMatchInlineSnapshot(`
     <div
-      style={
-        Object {
-          "alignItems": "center",
-          "display": "flex",
-          "fontFamily": "system-ui",
-          "height": "100%",
-          "justifyContent": "center",
-          "margin": 0,
-        }
-      }
+      style="height: 100%; font-family: system-ui; margin: 0px; display: flex; justify-content: center; align-items: center;"
     >
       <div
-        style={
-          Object {
-            "flex": "0 1 auto",
-            "fontSize": "4.3em",
-            "fontWeight": "100",
-            "paddingRight": 30,
-          }
-        }
+        style="flex: 0 1 auto; font-size: 4.3em; font-weight: 100; padding-right: 30px;"
       >
         500
       </div>
       <div
-        style={
-          Object {
-            "borderLeft": "1px solid #aeaeae",
-            "flex": "0 1 auto",
-            "maxWidth": 400,
-            "paddingLeft": 30,
-          }
-        }
+        style="flex: 0 1 auto; padding-left: 30px; max-width: 400px; border-left: 1px solid #aeaeae;"
       >
         <div
-          style={
-            Object {
-              "fontSize": "1.3em",
-              "fontWeight": "300",
-              "paddingBottom": 10,
-            }
-          }
+          style="font-size: 1.3em; font-weight: 300; padding-bottom: 10px;"
         >
           Error
         </div>
         <div
-          style={
-            Object {
-              "fontSize": "0.9em",
-            }
-          }
+          style="font-size: 0.9em;"
         >
           An error has occurred.
         </div>
         <div
-          style={
-            Object {
-              "fontSize": "0.9em",
-            }
-          }
+          style="font-size: 0.9em;"
         />
         <div
-          style={
-            Object {
-              "paddingTop": 20,
-            }
-          }
+          style="padding-top: 20px;"
         >
           <a
             href="/"
@@ -107,97 +61,43 @@ test('default', () => {
 });
 
 test('custom props', () => {
-  let comp;
-  act(() => {
-    comp = create(
-      <ErrorPage
-        code={301}
-        description={'Error description'}
-        message={'Error message'}
-        name={'Error name'}
-      />
-    );
-  });
-  act(() => {
-    comp.update(
-      <ErrorPage
-        code={301}
-        description={'Error description'}
-        message={'Error message'}
-        name={'Error name'}
-      />
-    );
-  });
-  expect(comp.toJSON()).toMatchInlineSnapshot(`
+  const { container } = render(
+    <ErrorPage
+      code={301}
+      description={'Error description'}
+      message={'Error message'}
+      name={'Error name'}
+    />
+  );
+  expect(container.firstChild).toMatchInlineSnapshot(`
     <div
-      style={
-        Object {
-          "alignItems": "center",
-          "display": "flex",
-          "fontFamily": "system-ui",
-          "height": "100%",
-          "justifyContent": "center",
-          "margin": 0,
-        }
-      }
+      style="height: 100%; font-family: system-ui; margin: 0px; display: flex; justify-content: center; align-items: center;"
     >
       <div
-        style={
-          Object {
-            "flex": "0 1 auto",
-            "fontSize": "4.3em",
-            "fontWeight": "100",
-            "paddingRight": 30,
-          }
-        }
+        style="flex: 0 1 auto; font-size: 4.3em; font-weight: 100; padding-right: 30px;"
       >
         301
       </div>
       <div
-        style={
-          Object {
-            "borderLeft": "1px solid #aeaeae",
-            "flex": "0 1 auto",
-            "maxWidth": 400,
-            "paddingLeft": 30,
-          }
-        }
+        style="flex: 0 1 auto; padding-left: 30px; max-width: 400px; border-left: 1px solid #aeaeae;"
       >
         <div
-          style={
-            Object {
-              "fontSize": "1.3em",
-              "fontWeight": "300",
-              "paddingBottom": 10,
-            }
-          }
+          style="font-size: 1.3em; font-weight: 300; padding-bottom: 10px;"
         >
           Error name
         </div>
         <div
-          style={
-            Object {
-              "fontSize": "0.9em",
-            }
-          }
+          style="font-size: 0.9em;"
         >
           Error message
         </div>
         <div
-          style={
-            Object {
-              "fontSize": "0.9em",
-            }
-          }
+          style="font-size: 0.9em;"
         >
           Error description
         </div>
         <div
-          style={
-            Object {
-              "paddingTop": 20,
-            }
-          }
+          style="padding-top: 20px;"
         >
           <a
             href="/"

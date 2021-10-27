@@ -15,11 +15,8 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { Spin } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import SpinBlock from '../src/blocks/Spin/Spin';
 import examples from '../demo/examples/Spin.yaml';
 import meta from '../src/blocks/Spin/Spin.json';
@@ -35,4 +32,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: SpinBlock, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: SpinBlock, meta, mocks });

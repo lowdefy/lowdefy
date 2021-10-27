@@ -31,7 +31,7 @@ const StatisticBlock = ({ blockId, events, properties, methods }) => (
     precision={properties.precision}
     title={renderHtml({ html: properties.title, methods })}
     value={type.isNone(properties.value) ? '' : properties.value}
-    valueStyle={methods.makeCssClass(properties.valueStyle, { styleObjectOnly: true })}
+    valueStyle={methods.makeCssClass(properties.valueStyle, true)}
     prefix={
       properties.prefixIcon ? (
         <Icon

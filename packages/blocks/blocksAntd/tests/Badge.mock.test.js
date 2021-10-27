@@ -15,11 +15,8 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { Badge } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import BadgeBlock from '../src/blocks/Badge/Badge';
 import examples from '../demo/examples/Badge.yaml';
 import meta from '../src/blocks/Badge/Badge.json';
@@ -35,4 +32,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: BadgeBlock, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: BadgeBlock, meta, mocks });

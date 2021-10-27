@@ -16,10 +16,12 @@
 
 import React from 'react';
 import { type } from '@lowdefy/helpers';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import mockBlock from './mockBlock';
 
-const runMockMethodTests = ({ Block, enzyme, examples, logger, meta, mocks }) => {
+const runMockMethodTests = ({ Block, examples, logger, meta, mocks }) => {
   const { before, methods, getProps } = mockBlock({ meta, logger });
 
   beforeEach(() => {
@@ -53,8 +55,9 @@ const runMockMethodTests = ({ Block, enzyme, examples, logger, meta, mocks }) =>
                   </>
                 );
               };
-              const wrapper = enzyme.mount(<Shell />);
-              wrapper.find('[data-testid="btn_method"]').simulate('click');
+              const { container } = render(<Shell />);
+              expect(container.firstChild).toMatchSnapshot();
+              userEvent.click(screen.getByTestId('btn_method'));
               expect(mock.fn.mock.calls).toMatchSnapshot();
             });
           });

@@ -15,11 +15,8 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { DatePicker } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import DateSelectorBlock from '../src/blocks/DateSelector/DateSelector';
 import examples from '../demo/examples/DateSelector.yaml';
 import meta from '../src/blocks/DateSelector/DateSelector.json';
@@ -36,4 +33,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: DateSelectorBlock, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: DateSelectorBlock, meta, mocks });

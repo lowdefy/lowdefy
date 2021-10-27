@@ -15,11 +15,8 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { List } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import ControlledList from '../src/blocks/ControlledList/ControlledList';
 import examples from '../demo/examples/ControlledList.yaml';
 import meta from '../src/blocks/ControlledList/ControlledList.json';
@@ -35,4 +32,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: ControlledList, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: ControlledList, meta, mocks });

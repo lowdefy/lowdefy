@@ -15,11 +15,8 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { Layout } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import PageHCF from '../src/blocks/PageHCF/PageHCF';
 import examples from '../demo/examples/PageHCF.yaml';
 import meta from '../src/blocks/PageHCF/PageHCF.json';
@@ -35,4 +32,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: PageHCF, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: PageHCF, meta, mocks });

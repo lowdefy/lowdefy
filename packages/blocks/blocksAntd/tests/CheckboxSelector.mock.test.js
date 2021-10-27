@@ -15,11 +15,8 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { Checkbox } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import CheckboxSelectorBlock from '../src/blocks/CheckboxSelector/CheckboxSelector';
 import examples from '../demo/examples/CheckboxSelector.yaml';
 import meta from '../src/blocks/CheckboxSelector/CheckboxSelector.json';
@@ -37,4 +34,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: CheckboxSelectorBlock, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: CheckboxSelectorBlock, meta, mocks });

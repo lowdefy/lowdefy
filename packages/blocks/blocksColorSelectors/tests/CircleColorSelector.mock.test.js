@@ -15,11 +15,8 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { CirclePicker } from 'react-color';
 
-Enzyme.configure({ adapter: new Adapter() });
 import CircleColorSelector from '../src/blocks/CircleColorSelector/CircleColorSelector';
 import examples from '../demo/examples/CircleColorSelector.yaml';
 import meta from '../src/blocks/CircleColorSelector/CircleColorSelector.json';
@@ -38,4 +35,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: CircleColorSelector, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: CircleColorSelector, meta, mocks });

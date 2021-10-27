@@ -2,14 +2,14 @@
 
 exports[`Render areas.extra - value[0] 1`] = `
 <div
-  className="ant-result ant-result-info"
+  class="ant-result ant-result-info"
 >
   <div
-    className="ant-result-icon"
+    class="ant-result-icon"
   >
     <span
       aria-label="exclamation-circle"
-      className="anticon anticon-exclamation-circle"
+      class="anticon anticon-exclamation-circle"
       role="img"
     >
       <svg
@@ -28,32 +28,22 @@ exports[`Render areas.extra - value[0] 1`] = `
     </span>
   </div>
   <div
-    className="ant-result-title"
+    class="ant-result-title"
   />
   <div
-    className="ant-result-extra"
+    class="ant-result-extra"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       extra
     </div>
   </div>
   <div
-    className="ant-result-content"
+    class="ant-result-content"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -63,14 +53,14 @@ exports[`Render areas.extra - value[0] 1`] = `
 
 exports[`Render default - value[0] 1`] = `
 <div
-  className="ant-result ant-result-info"
+  class="ant-result ant-result-info"
 >
   <div
-    className="ant-result-icon"
+    class="ant-result-icon"
   >
     <span
       aria-label="exclamation-circle"
-      className="anticon anticon-exclamation-circle"
+      class="anticon anticon-exclamation-circle"
       role="img"
     >
       <svg
@@ -89,18 +79,13 @@ exports[`Render default - value[0] 1`] = `
     </span>
   </div>
   <div
-    className="ant-result-title"
+    class="ant-result-title"
   />
   <div
-    className="ant-result-content"
+    class="ant-result-content"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -110,17 +95,15 @@ exports[`Render default - value[0] 1`] = `
 
 exports[`Render properties. icon: ApiFilled - value[0] 1`] = `
 <div
-  className="ant-result ant-result-info"
+  class="ant-result ant-result-info"
 >
   <div
-    className="ant-result-icon"
+    class="ant-result-icon"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-0"
       id="properties. icon: ApiFilled_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -139,18 +122,13 @@ exports[`Render properties. icon: ApiFilled - value[0] 1`] = `
     </span>
   </div>
   <div
-    className="ant-result-title"
+    class="ant-result-title"
   />
   <div
-    className="ant-result-content"
+    class="ant-result-content"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -160,10 +138,10 @@ exports[`Render properties. icon: ApiFilled - value[0] 1`] = `
 
 exports[`Render properties. status: 403 - value[0] 1`] = `
 <div
-  className="ant-result ant-result-403"
+  class="ant-result ant-result-403"
 >
   <div
-    className="ant-result-icon ant-result-image"
+    class="ant-result-icon ant-result-image"
   >
     <svg
       height="294"
@@ -171,7 +149,7 @@ exports[`Render properties. status: 403 - value[0] 1`] = `
     >
       <g
         fill="none"
-        fillRule="evenodd"
+        fill-rule="evenodd"
       >
         <path
           d="M0 129.023v-2.084C0 58.364 55.591 2.774 124.165 2.774h2.085c68.574 0 124.165 55.59 124.165 124.165v2.084c0 68.575-55.59 124.166-124.165 124.166h-2.085C55.591 253.189 0 197.598 0 129.023"
@@ -184,7 +162,7 @@ exports[`Render properties. status: 403 - value[0] 1`] = `
         <path
           d="M38.652 136.36l10.425 5.91M49.989 148.505l-12.58 10.73"
           stroke="#FFF"
-          strokeWidth="2"
+          stroke-width="2"
         />
         <path
           d="M41.536 161.28a5.636 5.636 0 1 1-11.216-1.13 5.636 5.636 0 0 1 11.216 1.13M59.154 145.261a5.677 5.677 0 1 1-11.297-1.138 5.677 5.677 0 0 1 11.297 1.138M100.36 29.516l29.66-.013a4.562 4.562 0 1 0-.004-9.126l-29.66.013a4.563 4.563 0 0 0 .005 9.126M111.705 47.754l29.659-.013a4.563 4.563 0 1 0-.004-9.126l-29.66.013a4.563 4.563 0 1 0 .005 9.126"
@@ -197,7 +175,7 @@ exports[`Render properties. status: 403 - value[0] 1`] = `
         <path
           d="M180.17 143.772l12.572 7.129M193.841 158.42L178.67 171.36"
           stroke="#FFF"
-          strokeWidth="2"
+          stroke-width="2"
         />
         <path
           d="M185.55 171.926a6.798 6.798 0 1 1-13.528-1.363 6.798 6.798 0 0 1 13.527 1.363M204.12 155.285a6.848 6.848 0 1 1-13.627-1.375 6.848 6.848 0 0 1 13.626 1.375"
@@ -206,12 +184,12 @@ exports[`Render properties. status: 403 - value[0] 1`] = `
         <path
           d="M152.988 194.074a2.21 2.21 0 1 1-4.42 0 2.21 2.21 0 0 1 4.42 0zM225.931 118.217a2.21 2.21 0 1 1-4.421 0 2.21 2.21 0 0 1 4.421 0zM217.09 153.051a2.21 2.21 0 1 1-4.421 0 2.21 2.21 0 0 1 4.42 0zM177.84 109.842a2.21 2.21 0 1 1-4.422 0 2.21 2.21 0 0 1 4.421 0zM196.114 94.454a2.21 2.21 0 1 1-4.421 0 2.21 2.21 0 0 1 4.421 0zM202.844 182.523a2.21 2.21 0 1 1-4.42 0 2.21 2.21 0 0 1 4.42 0z"
           stroke="#FFF"
-          strokeWidth="2"
+          stroke-width="2"
         />
         <path
           d="M215.125 155.262l-1.902 20.075-10.87 5.958M174.601 176.636l-6.322 9.761H156.98l-4.484 6.449M175.874 127.28V111.56M221.51 119.404l-12.77 7.859-15.228-7.86V96.668"
           stroke="#FFF"
-          strokeWidth="2"
+          stroke-width="2"
         />
         <path
           d="M180.68 29.32C180.68 13.128 193.806 0 210 0c16.193 0 29.32 13.127 29.32 29.32 0 16.194-13.127 29.322-29.32 29.322-16.193 0-29.32-13.128-29.32-29.321"
@@ -260,16 +238,16 @@ exports[`Render properties. status: 403 - value[0] 1`] = `
         <path
           d="M78.18 94.656s.911 7.41-4.914 13.078"
           stroke="#E4EBF7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.051"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.051"
         />
         <path
           d="M87.397 94.68s3.124 2.572 10.263 2.572c7.14 0 9.074-3.437 9.074-3.437"
           stroke="#E4EBF7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth=".932"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width=".932"
         />
         <path
           d="M117.184 68.639l-6.781-6.177s-5.355-4.314-9.223-.893c-3.867 3.422 4.463 2.083 5.653 4.165 1.19 2.082.848 1.143-2.083.446-5.603-1.331-2.082.893 2.975 5.355 2.091 1.845 6.992.955 6.992.955l2.467-3.851z"
@@ -290,9 +268,9 @@ exports[`Render properties. status: 403 - value[0] 1`] = `
         <path
           d="M100.843 77.099l1.701-.928-1.015-4.324.674-1.406"
           stroke="#DB836E"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.145"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.145"
         />
         <path
           d="M105.546 74.092c-.022.713-.452 1.279-.96 1.263-.51-.016-.904-.607-.882-1.32.021-.713.452-1.278.96-1.263.51.016.904.607.882 1.32M97.592 74.349c-.022.713-.452 1.278-.961 1.263-.509-.016-.904-.607-.882-1.32.022-.713.452-1.279.961-1.263.51.016.904.606.882 1.32"
@@ -301,9 +279,9 @@ exports[`Render properties. status: 403 - value[0] 1`] = `
         <path
           d="M91.132 86.786s5.269 4.957 12.679 2.327"
           stroke="#DB836E"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.145"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.145"
         />
         <path
           d="M99.776 81.903s-3.592.232-1.44-2.79c1.59-1.496 4.897-.46 4.897-.46s1.156 3.906-3.457 3.25"
@@ -312,44 +290,44 @@ exports[`Render properties. status: 403 - value[0] 1`] = `
         <path
           d="M102.88 70.6s2.483.84 3.402.715M93.883 71.975s2.492-1.144 4.778-1.073"
           stroke="#5C2552"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.526"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.526"
         />
         <path
           d="M86.32 77.374s.961.879 1.458 2.106c-.377.48-1.033 1.152-.236 1.809M99.337 83.719s1.911.151 2.509-.254"
           stroke="#DB836E"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.145"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.145"
         />
         <path
           d="M87.782 115.821l15.73-3.012M100.165 115.821l10.04-2.008"
           stroke="#E4EBF7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.051"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.051"
         />
         <path
           d="M66.508 86.763s-1.598 8.83-6.697 14.078"
           stroke="#E4EBF7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.114"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.114"
         />
         <path
           d="M128.31 87.934s3.013 4.121 4.06 11.785"
           stroke="#E4EBF7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.051"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.051"
         />
         <path
           d="M64.09 84.816s-6.03 9.912-13.607 9.903"
           stroke="#DB836E"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth=".795"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width=".795"
         />
         <path
           d="M112.366 65.909l-.142 5.32s5.993 4.472 11.945 9.202c4.482 3.562 8.888 7.455 10.985 8.662 4.804 2.766 8.9 3.355 11.076 1.808 4.071-2.894 4.373-9.878-8.136-15.263-4.271-1.838-16.144-6.36-25.728-9.73"
@@ -358,23 +336,23 @@ exports[`Render properties. status: 403 - value[0] 1`] = `
         <path
           d="M130.532 85.488s4.588 5.757 11.619 6.214"
           stroke="#DB836E"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth=".75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width=".75"
         />
         <path
           d="M121.708 105.73s-.393 8.564-1.34 13.612"
           stroke="#E4EBF7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.051"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.051"
         />
         <path
           d="M115.784 161.512s-3.57-1.488-2.678-7.14"
           stroke="#648BD8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.051"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.051"
         />
         <path
           d="M101.52 290.246s4.326 2.057 7.408 1.03c2.842-.948 4.564.673 7.132 1.186 2.57.514 6.925 1.108 11.772-1.269-.104-5.551-6.939-4.01-12.048-6.763-2.582-1.39-3.812-4.757-3.625-8.863h-9.471s-1.402 10.596-1.169 14.68"
@@ -407,22 +385,22 @@ exports[`Render properties. status: 403 - value[0] 1`] = `
         <path
           d="M77.438 220.434c1.146.094 4.016-2.008 6.916-4.91M107.55 223.931s2.758-1.103 6.069-3.862"
           stroke="#648BD8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.051"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.051"
         />
         <path
           d="M108.459 220.905s2.759-1.104 6.07-3.863"
           stroke="#648BD8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+          stroke-linecap="round"
+          stroke-linejoin="round"
         />
         <path
           d="M76.099 223.557s2.608-.587 6.47-3.346M87.33 150.82c-.27 3.088.297 8.478-4.315 9.073M104.829 149.075s.11 13.936-1.286 14.983c-2.207 1.655-2.975 1.934-2.975 1.934M101.014 149.63s.035 12.81-1.19 24.245M94.93 174.965s7.174-1.655 9.38-1.655M75.671 204.754c-.316 1.55-.64 3.067-.973 4.535 0 0-1.45 1.822-1.003 3.756.446 1.934-.943 2.034-4.96 15.273-1.686 5.559-4.464 18.49-6.313 27.447-.078.38-4.018 18.06-4.093 18.423M77.043 196.743a313.269 313.269 0 0 1-.877 4.729M83.908 151.414l-1.19 10.413s-1.091.148-.496 2.23c.111 1.34-2.66 15.692-5.153 30.267M57.58 272.94h13.238"
           stroke="#648BD8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.051"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.051"
         />
         <path
           d="M117.377 147.423s-16.955-3.087-35.7.199c.157 2.501-.002 4.128-.002 4.128s14.607-2.802 35.476-.31c.251-2.342.226-4.017.226-4.017"
@@ -439,26 +417,21 @@ exports[`Render properties. status: 403 - value[0] 1`] = `
         <path
           d="M101.485 273.933h12.272M102.652 269.075c.006 3.368.04 5.759.11 6.47M102.667 263.125c-.009 1.53-.015 2.98-.016 4.313M102.204 174.024l.893 44.402s.669 1.561-.224 2.677c-.892 1.116 2.455.67.893 2.231-1.562 1.562.893 1.116 0 3.347-.592 1.48-.988 20.987-1.09 34.956"
           stroke="#648BD8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.051"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.051"
         />
       </g>
     </svg>
   </div>
   <div
-    className="ant-result-title"
+    class="ant-result-title"
   />
   <div
-    className="ant-result-content"
+    class="ant-result-content"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -468,10 +441,10 @@ exports[`Render properties. status: 403 - value[0] 1`] = `
 
 exports[`Render properties. status: 404 - value[0] 1`] = `
 <div
-  className="ant-result ant-result-404"
+  class="ant-result ant-result-404"
 >
   <div
-    className="ant-result-icon ant-result-image"
+    class="ant-result-icon ant-result-image"
   >
     <svg
       height="294"
@@ -484,7 +457,7 @@ exports[`Render properties. status: 404 - value[0] 1`] = `
       </defs>
       <g
         fill="none"
-        fillRule="evenodd"
+        fill-rule="evenodd"
       >
         <g
           transform="translate(0 .012)"
@@ -505,7 +478,7 @@ exports[`Render properties. status: 404 - value[0] 1`] = `
         <path
           d="M36.975 134.297l10.482 5.943M48.373 146.508l-12.648 10.788"
           stroke="#FFF"
-          strokeWidth="2"
+          stroke-width="2"
         />
         <path
           d="M39.875 159.352a5.667 5.667 0 1 1-11.277-1.136 5.667 5.667 0 0 1 11.277 1.136M57.588 143.247a5.708 5.708 0 1 1-11.358-1.145 5.708 5.708 0 0 1 11.358 1.145M99.018 26.875l29.82-.014a4.587 4.587 0 1 0-.003-9.175l-29.82.013a4.587 4.587 0 1 0 .003 9.176M110.424 45.211l29.82-.013a4.588 4.588 0 0 0-.004-9.175l-29.82.013a4.587 4.587 0 1 0 .004 9.175"
@@ -518,7 +491,7 @@ exports[`Render properties. status: 404 - value[0] 1`] = `
         <path
           d="M179.26 141.75l12.64 7.167M193.006 156.477l-15.255 13.011"
           stroke="#FFF"
-          strokeWidth="2"
+          stroke-width="2"
         />
         <path
           d="M184.668 170.057a6.835 6.835 0 1 1-13.6-1.372 6.835 6.835 0 0 1 13.6 1.372M203.34 153.325a6.885 6.885 0 1 1-13.7-1.382 6.885 6.885 0 0 1 13.7 1.382"
@@ -527,12 +500,12 @@ exports[`Render properties. status: 404 - value[0] 1`] = `
         <path
           d="M151.931 192.324a2.222 2.222 0 1 1-4.444 0 2.222 2.222 0 0 1 4.444 0zM225.27 116.056a2.222 2.222 0 1 1-4.445 0 2.222 2.222 0 0 1 4.444 0zM216.38 151.08a2.223 2.223 0 1 1-4.446-.001 2.223 2.223 0 0 1 4.446 0zM176.917 107.636a2.223 2.223 0 1 1-4.445 0 2.223 2.223 0 0 1 4.445 0zM195.291 92.165a2.223 2.223 0 1 1-4.445 0 2.223 2.223 0 0 1 4.445 0zM202.058 180.711a2.223 2.223 0 1 1-4.446 0 2.223 2.223 0 0 1 4.446 0z"
           stroke="#FFF"
-          strokeWidth="2"
+          stroke-width="2"
         />
         <path
           d="M214.404 153.302l-1.912 20.184-10.928 5.99M173.661 174.792l-6.356 9.814h-11.36l-4.508 6.484M174.941 125.168v-15.804M220.824 117.25l-12.84 7.901-15.31-7.902V94.39"
           stroke="#FFF"
-          strokeWidth="2"
+          stroke-width="2"
         />
         <path
           d="M166.588 65.936h-3.951a4.756 4.756 0 0 1-4.743-4.742 4.756 4.756 0 0 1 4.743-4.743h3.951a4.756 4.756 0 0 1 4.743 4.743 4.756 4.756 0 0 1-4.743 4.742"
@@ -589,22 +562,22 @@ exports[`Render properties. status: 404 - value[0] 1`] = `
         <path
           d="M76.085 221.626c1.153.094 4.038-2.019 6.955-4.935M106.36 225.142s2.774-1.11 6.103-3.883"
           stroke="#648BD8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.051"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.051"
         />
         <path
           d="M107.275 222.1s2.773-1.11 6.102-3.884"
           stroke="#648BD8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+          stroke-linecap="round"
+          stroke-linejoin="round"
         />
         <path
           d="M74.74 224.767s2.622-.591 6.505-3.365M86.03 151.634c-.27 3.106.3 8.525-4.336 9.123M103.625 149.88s.11 14.012-1.293 15.065c-2.219 1.664-2.99 1.944-2.99 1.944M99.79 150.438s.035 12.88-1.196 24.377M93.673 175.911s7.212-1.664 9.431-1.664M74.31 205.861a212.013 212.013 0 0 1-.979 4.56s-1.458 1.832-1.009 3.776c.449 1.944-.947 2.045-4.985 15.355-1.696 5.59-4.49 18.591-6.348 27.597l-.231 1.12M75.689 197.807a320.934 320.934 0 0 1-.882 4.754M82.591 152.233L81.395 162.7s-1.097.15-.5 2.244c.113 1.346-2.674 15.775-5.18 30.43M56.12 274.418h13.31"
           stroke="#648BD8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.051"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.051"
         />
         <path
           d="M116.241 148.22s-17.047-3.104-35.893.2c.158 2.514-.003 4.15-.003 4.15s14.687-2.818 35.67-.312c.252-2.355.226-4.038.226-4.038"
@@ -621,9 +594,9 @@ exports[`Render properties. status: 404 - value[0] 1`] = `
         <path
           d="M100.263 275.415h12.338M101.436 270.53c.006 3.387.042 5.79.111 6.506M101.451 264.548a915.75 915.75 0 0 0-.015 4.337M100.986 174.965l.898 44.642s.673 1.57-.225 2.692c-.897 1.122 2.468.673.898 2.243-1.57 1.57.897 1.122 0 3.365-.596 1.489-.994 21.1-1.096 35.146"
           stroke="#648BD8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.051"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.051"
         />
         <path
           d="M46.876 83.427s-.516 6.045 7.223 5.552c11.2-.712 9.218-9.345 31.54-21.655-.786-2.708-2.447-4.744-2.447-4.744s-11.068 3.11-22.584 8.046c-6.766 2.9-13.395 6.352-13.732 12.801M104.46 91.057l.941-5.372-8.884-11.43-5.037 5.372-1.74 7.834a.321.321 0 0 0 .108.32c.965.8 6.5 5.013 14.347 3.544a.332.332 0 0 0 .264-.268"
@@ -644,58 +617,58 @@ exports[`Render properties. status: 404 - value[0] 1`] = `
         <path
           d="M110.13 74.84l-.896 1.61-.298 4.357h-2.228"
           stroke="#DB836E"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.118"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.118"
         />
         <path
           d="M110.846 74.481s1.79-.716 2.506.537"
           stroke="#5C2552"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.118"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.118"
         />
         <path
           d="M92.386 74.282s.477-1.114 1.113-.716c.637.398 1.274 1.433.558 1.99-.717.556.159 1.67.159 1.67"
           stroke="#DB836E"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.118"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.118"
         />
         <path
           d="M103.287 72.93s1.83 1.113 4.137.954"
           stroke="#5C2552"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.118"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.118"
         />
         <path
           d="M103.685 81.762s2.227 1.193 4.376 1.193M104.64 84.308s.954.398 1.511.318M94.693 81.205s2.308 7.4 10.424 7.639"
           stroke="#DB836E"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.118"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.118"
         />
         <path
           d="M81.45 89.384s.45 5.647-4.935 12.787M69 82.654s-.726 9.282-8.204 14.206"
           stroke="#E4EBF7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.101"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.101"
         />
         <path
           d="M129.405 122.865s-5.272 7.403-9.422 10.768"
           stroke="#E4EBF7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.051"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.051"
         />
         <path
           d="M119.306 107.329s.452 4.366-2.127 32.062"
           stroke="#E4EBF7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.101"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.101"
         />
         <path
           d="M150.028 151.232h-49.837a1.01 1.01 0 0 1-1.01-1.01v-31.688c0-.557.452-1.01 1.01-1.01h49.837c.558 0 1.01.453 1.01 1.01v31.688a1.01 1.01 0 0 1-1.01 1.01"
@@ -732,23 +705,23 @@ exports[`Render properties. status: 404 - value[0] 1`] = `
         <path
           d="M153.686 133.577s-6.522.47-8.36.372c-1.836-.098-1.904 2.19 2.359 2.264 3.739.15 5.451-.044 5.451-.044"
           stroke="#DB836E"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.051"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.051"
         />
         <path
           d="M145.16 135.877c-1.85 1.346.561 2.355.561 2.355s3.478.898 6.73.617"
           stroke="#DB836E"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.051"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.051"
         />
         <path
           d="M151.89 141.71s-6.28.111-6.73-2.132c-.223-1.346.45-1.402.45-1.402M146.114 140.868s-1.103 3.16 5.44 3.533M151.202 129.932v3.477M52.838 89.286c3.533-.337 8.423-1.248 13.582-7.754"
           stroke="#DB836E"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.051"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.051"
         />
         <path
           d="M168.567 248.318a6.647 6.647 0 0 1-6.647-6.647v-66.466a6.647 6.647 0 1 1 13.294 0v66.466a6.647 6.647 0 0 1-6.647 6.647"
@@ -765,26 +738,21 @@ exports[`Render properties. status: 404 - value[0] 1`] = `
         <path
           d="M88.979 89.48s7.776 5.384 16.6 2.842"
           stroke="#E4EBF7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.101"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.101"
         />
       </g>
     </svg>
   </div>
   <div
-    className="ant-result-title"
+    class="ant-result-title"
   />
   <div
-    className="ant-result-content"
+    class="ant-result-content"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -794,10 +762,10 @@ exports[`Render properties. status: 404 - value[0] 1`] = `
 
 exports[`Render properties. status: 500 - value[0] 1`] = `
 <div
-  className="ant-result ant-result-500"
+  class="ant-result ant-result-500"
 >
   <div
-    className="ant-result-icon ant-result-image"
+    class="ant-result-icon ant-result-image"
   >
     <svg
       height="294"
@@ -813,7 +781,7 @@ exports[`Render properties. status: 500 - value[0] 1`] = `
       </defs>
       <g
         fill="none"
-        fillRule="evenodd"
+        fill-rule="evenodd"
       >
         <g
           transform="translate(0 .067)"
@@ -834,7 +802,7 @@ exports[`Render properties. status: 500 - value[0] 1`] = `
         <path
           d="M37.19 135.59l10.553 5.983M48.665 147.884l-12.734 10.861"
           stroke="#FFF"
-          strokeWidth="2"
+          stroke-width="2"
         />
         <path
           d="M40.11 160.816a5.706 5.706 0 1 1-11.354-1.145 5.706 5.706 0 0 1 11.354 1.145M57.943 144.6a5.747 5.747 0 1 1-11.436-1.152 5.747 5.747 0 0 1 11.436 1.153M99.656 27.434l30.024-.013a4.619 4.619 0 1 0-.004-9.238l-30.024.013a4.62 4.62 0 0 0 .004 9.238M111.14 45.896l30.023-.013a4.62 4.62 0 1 0-.004-9.238l-30.024.013a4.619 4.619 0 1 0 .004 9.238"
@@ -879,44 +847,44 @@ exports[`Render properties. status: 500 - value[0] 1`] = `
         <path
           d="M99.206 73.644l-.9 1.62-.3 4.38h-2.24"
           stroke="#DB836E"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.063"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.063"
         />
         <path
           d="M99.926 73.284s1.8-.72 2.52.54"
           stroke="#5C2552"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.117"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.117"
         />
         <path
           d="M81.367 73.084s.48-1.12 1.12-.72c.64.4 1.28 1.44.56 2s.16 1.68.16 1.68"
           stroke="#DB836E"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.117"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.117"
         />
         <path
           d="M92.326 71.724s1.84 1.12 4.16.96"
           stroke="#5C2552"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.117"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.117"
         />
         <path
           d="M92.726 80.604s2.24 1.2 4.4 1.2M93.686 83.164s.96.4 1.52.32M83.687 80.044s1.786 6.547 9.262 7.954"
           stroke="#DB836E"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.063"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.063"
         />
         <path
           d="M95.548 91.663s-1.068 2.821-8.298 2.105c-7.23-.717-10.29-5.044-10.29-5.044"
           stroke="#E4EBF7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.136"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.136"
         />
         <path
           d="M78.126 87.478s6.526 4.972 16.47 2.486c0 0 9.577 1.02 11.536 5.322 5.36 11.77.543 36.835 0 39.962 3.496 4.055-.466 8.483-.466 8.483-15.624-3.548-35.81-.6-35.81-.6-4.849-3.546-1.223-9.044-1.223-9.044L62.38 110.32c-2.485-15.227.833-19.803 3.549-20.743 3.03-1.049 8.04-1.282 8.04-1.282.496-.058 1.08-.076 1.37-.233 2.36-1.282 2.787-.583 2.787-.583"
@@ -933,9 +901,9 @@ exports[`Render properties. status: 500 - value[0] 1`] = `
         <path
           d="M108.463 105.191s1.747 2.724-2.331 30.535c2.376 2.216 1.053 6.012-.233 7.51"
           stroke="#E4EBF7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.085"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.085"
         />
         <path
           d="M123.262 131.527s-.427 2.732-11.77 1.981c-15.187-1.006-25.326-3.25-25.326-3.25l.933-5.8s.723.215 9.71-.068c11.887-.373 18.714-6.07 24.964-1.022 4.039 3.263 1.489 8.16 1.489 8.16"
@@ -976,23 +944,23 @@ exports[`Render properties. status: 500 - value[0] 1`] = `
         <path
           d="M64.57 218.881c1.197.099 4.195-2.097 7.225-5.127M96.024 222.534s2.881-1.152 6.34-4.034"
           stroke="#648BD8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.085"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.085"
         />
         <path
           d="M96.973 219.373s2.882-1.153 6.34-4.034"
           stroke="#648BD8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.032"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.032"
         />
         <path
           d="M63.172 222.144s2.724-.614 6.759-3.496M74.903 146.166c-.281 3.226.31 8.856-4.506 9.478M93.182 144.344s.115 14.557-1.344 15.65c-2.305 1.73-3.107 2.02-3.107 2.02M89.197 144.923s.269 13.144-1.01 25.088M83.525 170.71s6.81-1.051 9.116-1.051M46.026 270.045l-.892 4.538M46.937 263.289l-.815 4.157M62.725 202.503c-.33 1.618-.102 1.904-.449 3.438 0 0-2.756 1.903-2.29 3.923.466 2.02-.31 3.424-4.505 17.252-1.762 5.807-4.233 18.922-6.165 28.278-.03.144-.521 2.646-1.14 5.8M64.158 194.136c-.295 1.658-.6 3.31-.917 4.938M71.33 146.787l-1.244 10.877s-1.14.155-.519 2.33c.117 1.399-2.778 16.39-5.382 31.615M44.242 273.727H58.07"
           stroke="#648BD8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.085"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.085"
         />
         <path
           d="M106.18 142.117c-3.028-.489-18.825-2.744-36.219.2a.625.625 0 0 0-.518.644c.063 1.307.044 2.343.015 2.995a.617.617 0 0 0 .716.636c3.303-.534 17.037-2.412 35.664-.266.347.04.66-.214.692-.56.124-1.347.16-2.425.17-3.029a.616.616 0 0 0-.52-.62"
@@ -1009,16 +977,16 @@ exports[`Render properties. status: 500 - value[0] 1`] = `
         <path
           d="M90.102 273.522h12.819M91.216 269.761c.006 3.519-.072 5.55 0 6.292M90.923 263.474c-.009 1.599-.016 2.558-.016 4.505M90.44 170.404l.932 46.38s.7 1.631-.233 2.796c-.932 1.166 2.564.7.932 2.33-1.63 1.633.933 1.166 0 3.497-.618 1.546-1.031 21.921-1.138 36.513"
           stroke="#648BD8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.085"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.085"
         />
         <path
           d="M73.736 98.665l2.214 4.312s2.098.816 1.865 2.68l.816 2.214M64.297 116.611c.233-.932 2.176-7.147 12.585-10.488M77.598 90.042s7.691 6.137 16.547 2.72"
           stroke="#E4EBF7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.085"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.085"
         />
         <path
           d="M91.974 86.954s5.476-.816 7.574-4.545c1.297-.345.72 2.212-.33 3.671-.7.971-1.01 1.554-1.01 1.554s.194.31.155.816c-.053.697-.175.653-.272 1.048-.081.335.108.657 0 1.049-.046.17-.198.5-.382.878-.12.249-.072.687-.2.948-.231.469-1.562 1.87-2.622 2.855-3.826 3.554-5.018 1.644-6.001-.408-.894-1.865-.661-5.127-.874-6.875-.35-2.914-2.622-3.03-1.923-4.429.343-.685 2.87.69 3.263 1.748.757 2.04 2.952 1.807 2.622 1.69"
@@ -1027,16 +995,16 @@ exports[`Render properties. status: 500 - value[0] 1`] = `
         <path
           d="M99.8 82.429c-.465.077-.35.272-.97 1.243-.622.971-4.817 2.932-6.39 3.224-2.589.48-2.278-1.56-4.254-2.855-1.69-1.107-3.562-.638-1.398 1.398.99.932.932 1.107 1.398 3.205.335 1.506-.64 3.67.7 5.593"
           stroke="#DB836E"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth=".774"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width=".774"
         />
         <path
           d="M79.543 108.673c-2.1 2.926-4.266 6.175-5.557 8.762"
           stroke="#E59788"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth=".774"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width=".774"
         />
         <path
           d="M87.72 124.768s-2.098-1.942-5.127-2.719c-3.03-.777-3.574-.155-5.516.078-1.942.233-3.885-.932-3.652.7.233 1.63 5.05 1.01 5.206 2.097.155 1.087-6.37 2.796-8.313 2.175-.777.777.466 1.864 2.02 2.175.233 1.554 2.253 1.554 2.253 1.554s.699 1.01 2.641 1.088c2.486 1.32 8.934-.7 10.954-1.554 2.02-.855-.466-5.594-.466-5.594"
@@ -1045,30 +1013,30 @@ exports[`Render properties. status: 500 - value[0] 1`] = `
         <path
           d="M73.425 122.826s.66 1.127 3.167 1.418c2.315.27 2.563.583 2.563.583s-2.545 2.894-9.07 2.272M72.416 129.274s3.826.097 4.933-.718M74.98 130.75s1.961.136 3.36-.505M77.232 131.916s1.748.019 2.914-.505M73.328 122.321s-.595-1.032 1.262-.427c1.671.544 2.833.055 5.128.155 1.389.061 3.067-.297 3.982.15 1.606.784 3.632 2.181 3.632 2.181s10.526 1.204 19.033-1.127M78.864 108.104s-8.39 2.758-13.168 12.12"
           stroke="#E59788"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth=".774"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width=".774"
         />
         <path
           d="M109.278 112.533s3.38-3.613 7.575-4.662"
           stroke="#E4EBF7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.085"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.085"
         />
         <path
           d="M107.375 123.006s9.697-2.745 11.445-.88"
           stroke="#E59788"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth=".774"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width=".774"
         />
         <path
           d="M194.605 83.656l3.971-3.886M187.166 90.933l3.736-3.655M191.752 84.207l-4.462-4.56M198.453 91.057l-4.133-4.225M129.256 163.074l3.718-3.718M122.291 170.039l3.498-3.498M126.561 163.626l-4.27-4.27M132.975 170.039l-3.955-3.955"
           stroke="#BFCDDD"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
         />
         <path
           d="M190.156 211.779h-1.604a4.023 4.023 0 0 1-4.011-4.011V175.68a4.023 4.023 0 0 1 4.01-4.01h1.605a4.023 4.023 0 0 1 4.011 4.01v32.088a4.023 4.023 0 0 1-4.01 4.01"
@@ -1105,9 +1073,9 @@ exports[`Render properties. status: 500 - value[0] 1`] = `
           d="M173.455 130.832h49.301M164.984 130.832h6.089M155.952 130.832h6.75M173.837 160.613h49.3M165.365 160.613h6.089M155.57 160.613h6.751"
           mask="url(#d)"
           stroke="#7C90A5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.124"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.124"
         />
         <path
           d="M159.563 151.038a2.407 2.407 0 1 1 0-4.814 2.407 2.407 0 0 1 0 4.814M166.98 151.038a2.407 2.407 0 1 1 0-4.814 2.407 2.407 0 0 1 0 4.814M174.397 151.038a2.407 2.407 0 1 1 .001-4.814 2.407 2.407 0 0 1 0 4.814M222.539 151.038h-22.461a.802.802 0 0 1-.802-.802v-3.209c0-.443.359-.802.802-.802h22.46c.444 0 .803.36.803.802v3.209c0 .443-.36.802-.802.802M159.563 179.987a2.407 2.407 0 1 1 0-4.813 2.407 2.407 0 0 1 0 4.813M166.98 179.987a2.407 2.407 0 1 1 0-4.813 2.407 2.407 0 0 1 0 4.813M174.397 179.987a2.407 2.407 0 1 1 0-4.813 2.407 2.407 0 0 1 0 4.813M222.539 179.987h-22.461a.802.802 0 0 1-.802-.802v-3.209c0-.443.359-.802.802-.802h22.46c.444 0 .803.36.803.802v3.209c0 .443-.36.802-.802.802"
@@ -1123,9 +1091,9 @@ exports[`Render properties. status: 500 - value[0] 1`] = `
           d="M177.259 207.217v11.52M201.05 207.217v11.52"
           mask="url(#d)"
           stroke="#A3B4C6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.124"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.124"
         />
         <path
           d="M162.873 267.894a9.422 9.422 0 0 1-9.422-9.422v-14.82a9.423 9.423 0 0 1 18.845 0v14.82a9.423 9.423 0 0 1-9.423 9.422"
@@ -1146,18 +1114,13 @@ exports[`Render properties. status: 500 - value[0] 1`] = `
     </svg>
   </div>
   <div
-    className="ant-result-title"
+    class="ant-result-title"
   />
   <div
-    className="ant-result-content"
+    class="ant-result-content"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -1167,14 +1130,14 @@ exports[`Render properties. status: 500 - value[0] 1`] = `
 
 exports[`Render properties. status: error - value[0] 1`] = `
 <div
-  className="ant-result ant-result-error"
+  class="ant-result ant-result-error"
 >
   <div
-    className="ant-result-icon"
+    class="ant-result-icon"
   >
     <span
       aria-label="close-circle"
-      className="anticon anticon-close-circle"
+      class="anticon anticon-close-circle"
       role="img"
     >
       <svg
@@ -1193,18 +1156,13 @@ exports[`Render properties. status: error - value[0] 1`] = `
     </span>
   </div>
   <div
-    className="ant-result-title"
+    class="ant-result-title"
   />
   <div
-    className="ant-result-content"
+    class="ant-result-content"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -1214,14 +1172,14 @@ exports[`Render properties. status: error - value[0] 1`] = `
 
 exports[`Render properties. status: info - value[0] 1`] = `
 <div
-  className="ant-result ant-result-info"
+  class="ant-result ant-result-info"
 >
   <div
-    className="ant-result-icon"
+    class="ant-result-icon"
   >
     <span
       aria-label="exclamation-circle"
-      className="anticon anticon-exclamation-circle"
+      class="anticon anticon-exclamation-circle"
       role="img"
     >
       <svg
@@ -1240,18 +1198,13 @@ exports[`Render properties. status: info - value[0] 1`] = `
     </span>
   </div>
   <div
-    className="ant-result-title"
+    class="ant-result-title"
   />
   <div
-    className="ant-result-content"
+    class="ant-result-content"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -1261,14 +1214,14 @@ exports[`Render properties. status: info - value[0] 1`] = `
 
 exports[`Render properties. status: success  default is info - value[0] 1`] = `
 <div
-  className="ant-result ant-result-success"
+  class="ant-result ant-result-success"
 >
   <div
-    className="ant-result-icon"
+    class="ant-result-icon"
   >
     <span
       aria-label="check-circle"
-      className="anticon anticon-check-circle"
+      class="anticon anticon-check-circle"
       role="img"
     >
       <svg
@@ -1287,18 +1240,13 @@ exports[`Render properties. status: success  default is info - value[0] 1`] = `
     </span>
   </div>
   <div
-    className="ant-result-title"
+    class="ant-result-title"
   />
   <div
-    className="ant-result-content"
+    class="ant-result-content"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -1308,14 +1256,14 @@ exports[`Render properties. status: success  default is info - value[0] 1`] = `
 
 exports[`Render properties. status: warning - value[0] 1`] = `
 <div
-  className="ant-result ant-result-warning"
+  class="ant-result ant-result-warning"
 >
   <div
-    className="ant-result-icon"
+    class="ant-result-icon"
   >
     <span
       aria-label="warning"
-      className="anticon anticon-warning"
+      class="anticon anticon-warning"
       role="img"
     >
       <svg
@@ -1334,18 +1282,13 @@ exports[`Render properties. status: warning - value[0] 1`] = `
     </span>
   </div>
   <div
-    className="ant-result-title"
+    class="ant-result-title"
   />
   <div
-    className="ant-result-content"
+    class="ant-result-content"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -1355,14 +1298,14 @@ exports[`Render properties. status: warning - value[0] 1`] = `
 
 exports[`Render properties.subTitle: subTitle text - value[0] 1`] = `
 <div
-  className="ant-result ant-result-info"
+  class="ant-result ant-result-info"
 >
   <div
-    className="ant-result-icon"
+    class="ant-result-icon"
   >
     <span
       aria-label="exclamation-circle"
-      className="anticon anticon-exclamation-circle"
+      class="anticon anticon-exclamation-circle"
       role="img"
     >
       <svg
@@ -1381,25 +1324,22 @@ exports[`Render properties.subTitle: subTitle text - value[0] 1`] = `
     </span>
   </div>
   <div
-    className="ant-result-title"
+    class="ant-result-title"
   />
   <div
-    className="ant-result-subtitle"
+    class="ant-result-subtitle"
   >
     <span
-      className="{}"
-    />
+      class="emotion-0"
+    >
+      subTitle text
+    </span>
   </div>
   <div
-    className="ant-result-content"
+    class="ant-result-content"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -1409,14 +1349,14 @@ exports[`Render properties.subTitle: subTitle text - value[0] 1`] = `
 
 exports[`Render properties.title - value[0] 1`] = `
 <div
-  className="ant-result ant-result-info"
+  class="ant-result ant-result-info"
 >
   <div
-    className="ant-result-icon"
+    class="ant-result-icon"
   >
     <span
       aria-label="exclamation-circle"
-      className="anticon anticon-exclamation-circle"
+      class="anticon anticon-exclamation-circle"
       role="img"
     >
       <svg
@@ -1435,22 +1375,19 @@ exports[`Render properties.title - value[0] 1`] = `
     </span>
   </div>
   <div
-    className="ant-result-title"
+    class="ant-result-title"
   >
     <span
-      className="{}"
-    />
+      class="emotion-0"
+    >
+      Result title
+    </span>
   </div>
   <div
-    className="ant-result-content"
+    class="ant-result-content"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -1460,14 +1397,14 @@ exports[`Render properties.title - value[0] 1`] = `
 
 exports[`Render with properties.subTitle in html - value[0] 1`] = `
 <div
-  className="ant-result ant-result-info"
+  class="ant-result ant-result-info"
 >
   <div
-    className="ant-result-icon"
+    class="ant-result-icon"
   >
     <span
       aria-label="exclamation-circle"
-      className="anticon anticon-exclamation-circle"
+      class="anticon anticon-exclamation-circle"
       role="img"
     >
       <svg
@@ -1486,25 +1423,26 @@ exports[`Render with properties.subTitle in html - value[0] 1`] = `
     </span>
   </div>
   <div
-    className="ant-result-title"
+    class="ant-result-title"
   />
   <div
-    className="ant-result-subtitle"
+    class="ant-result-subtitle"
   >
     <span
-      className="{}"
-    />
+      class="emotion-0"
+    >
+      <div
+        style="color:green;"
+      >
+        Html Subtitle
+      </div>
+    </span>
   </div>
   <div
-    className="ant-result-content"
+    class="ant-result-content"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -1514,14 +1452,14 @@ exports[`Render with properties.subTitle in html - value[0] 1`] = `
 
 exports[`Render with properties.title in html - value[0] 1`] = `
 <div
-  className="ant-result ant-result-info"
+  class="ant-result ant-result-info"
 >
   <div
-    className="ant-result-icon"
+    class="ant-result-icon"
   >
     <span
       aria-label="exclamation-circle"
-      className="anticon anticon-exclamation-circle"
+      class="anticon anticon-exclamation-circle"
       role="img"
     >
       <svg
@@ -1540,22 +1478,23 @@ exports[`Render with properties.title in html - value[0] 1`] = `
     </span>
   </div>
   <div
-    className="ant-result-title"
+    class="ant-result-title"
   >
     <span
-      className="{}"
-    />
+      class="emotion-0"
+    >
+      <div
+        style="color:red;"
+      >
+        Html Title
+      </div>
+    </span>
   </div>
   <div
-    className="ant-result-content"
+    class="ant-result-content"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>

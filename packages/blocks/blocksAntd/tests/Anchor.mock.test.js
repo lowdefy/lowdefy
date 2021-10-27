@@ -15,11 +15,8 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { Anchor } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import AnchorBlock from '../src/blocks/Anchor/Anchor';
 import examples from '../demo/examples/Anchor.yaml';
 import meta from '../src/blocks/Anchor/Anchor.json';
@@ -35,4 +32,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: AnchorBlock, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: AnchorBlock, meta, mocks });

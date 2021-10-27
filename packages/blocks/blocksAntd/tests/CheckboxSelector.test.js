@@ -21,19 +21,5 @@ import CheckboxSelector from '../src/blocks/CheckboxSelector/CheckboxSelector';
 import examples from '../demo/examples/CheckboxSelector.yaml';
 import meta from '../src/blocks/CheckboxSelector/CheckboxSelector.json';
 
-jest.mock('@lowdefy/block-tools', () => {
-  const originalModule = jest.requireActual('@lowdefy/block-tools');
-  return {
-    ...originalModule,
-    blockDefaultProps: {
-      ...originalModule.blockDefaultProps,
-      methods: {
-        ...originalModule.blockDefaultProps.methods,
-        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
-      },
-    },
-  };
-});
-
 runRenderTests({ examples, Block: CheckboxSelector, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta });

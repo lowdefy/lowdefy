@@ -20,19 +20,5 @@ import { CompactColorSelector } from '../src';
 import examples from '../demo/examples/CompactColorSelector.yaml';
 import meta from '../src/blocks/CompactColorSelector/CompactColorSelector.json';
 
-jest.mock('@lowdefy/block-tools', () => {
-  const originalModule = jest.requireActual('@lowdefy/block-tools');
-  return {
-    ...originalModule,
-    blockDefaultProps: {
-      ...originalModule.blockDefaultProps,
-      methods: {
-        ...originalModule.blockDefaultProps.methods,
-        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
-      },
-    },
-  };
-});
-
 runRenderTests({ examples, Block: CompactColorSelector, meta });
 runBlockSchemaTests({ examples, meta });

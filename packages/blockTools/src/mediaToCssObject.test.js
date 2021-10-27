@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import mediaToCssObject from '../src/mediaToCssObject';
+import mediaToCssObject from './mediaToCssObject';
 
 test('no object', () => {
   expect(mediaToCssObject()).toEqual([]);
@@ -101,7 +101,7 @@ test('object with all media', () => {
   `);
 });
 
-test('object with all media with react option', () => {
+test('object with all media with styleObjectOnly option', () => {
   const obj = {
     a: 'a',
     xs: { a: 'xs' },
@@ -111,7 +111,7 @@ test('object with all media with react option', () => {
     xl: { a: 'xl' },
     xxl: { a: 'xxl' },
   };
-  expect(mediaToCssObject(obj, { react: true })).toMatchInlineSnapshot(`
+  expect(mediaToCssObject(obj, true)).toMatchInlineSnapshot(`
     Array [
       Object {
         "@media screen and (maxWidth: 576px)": Object {

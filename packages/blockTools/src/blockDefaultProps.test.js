@@ -15,19 +15,6 @@
 */
 
 import blockDefaultProps from './blockDefaultProps';
-import makeCssClass from './makeCssClass';
-
-const makeCssImp = (style, op) => JSON.stringify({ style, options: op });
-
-jest.mock('./makeCssClass', () => {
-  const makeCssClass = jest.fn();
-  return { default: makeCssClass, __esModule: true };
-});
-
-beforeEach(() => {
-  makeCssClass.mockReset();
-  makeCssClass.mockImplementation(makeCssImp);
-});
 
 test('default', () => {
   expect(blockDefaultProps).toMatchInlineSnapshot(`
@@ -39,7 +26,7 @@ test('default', () => {
       "list": Array [],
       "menus": Array [],
       "methods": Object {
-        "makeCssClass": [MockFunction],
+        "makeCssClass": [Function],
         "registerEvent": [Function],
         "registerMethod": [Function],
         "triggerEvent": [Function],
@@ -57,7 +44,7 @@ test('default', () => {
 });
 
 test('call default methods', () => {
-  expect(blockDefaultProps.methods.makeCssClass({ a: 1 })).toEqual('{"style":{"a":1}}');
+  expect(blockDefaultProps.methods.makeCssClass({ a: 1 })).toMatchInlineSnapshot(`"css-1iomdgj"`);
   expect(blockDefaultProps.methods.registerEvent()).toEqual(undefined);
   expect(blockDefaultProps.methods.registerMethod()).toEqual(undefined);
   expect(blockDefaultProps.methods.triggerEvent()).toEqual(undefined);

@@ -10,15 +10,6 @@ module.exports = {
     static: path.join(__dirname, 'dist'),
     port: 3001,
   },
-  // webpack 5 support polyfills
-  resolve: {
-    alias: {
-      path: require.resolve('path-browserify'),
-      process: require.resolve('process/browser'),
-      buffer: require.resolve('buffer'),
-    },
-    fallback: { buffer: false },
-  },
   module: {
     rules: [
       {
@@ -74,8 +65,6 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(),
-    new webpack.ProvidePlugin({ Buffer: ['buffer', 'Buffer'] }),
-    new webpack.ProvidePlugin({ process: ['process'] }),
     new HtmlWebpackPlugin({
       template: './public/index.html',
     }),

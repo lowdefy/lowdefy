@@ -15,11 +15,8 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { ChromePicker } from 'react-color';
 
-Enzyme.configure({ adapter: new Adapter() });
 import ChromeColorSelector from '../src/blocks/ChromeColorSelector/ChromeColorSelector';
 import examples from '../demo/examples/ChromeColorSelector.yaml';
 import meta from '../src/blocks/ChromeColorSelector/ChromeColorSelector.json';
@@ -38,4 +35,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: ChromeColorSelector, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: ChromeColorSelector, meta, mocks });

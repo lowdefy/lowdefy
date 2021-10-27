@@ -32,9 +32,9 @@ const DescriptionsBlock = ({ blockId, content, properties, methods }) => {
       bordered={properties.bordered}
       colon={properties.colon}
       column={properties.column}
-      contentStyle={methods.makeCssClass(properties.contentStyle, { styleObjectOnly: true })}
+      contentStyle={methods.makeCssClass(properties.contentStyle, true)}
       extra={content.extra && content.extra()}
-      labelStyle={methods.makeCssClass(properties.labelStyle, { styleObjectOnly: true })}
+      labelStyle={methods.makeCssClass(properties.labelStyle, true)}
       layout={properties.layout}
       size={properties.size}
       title={renderHtml({ html: properties.title, methods })}

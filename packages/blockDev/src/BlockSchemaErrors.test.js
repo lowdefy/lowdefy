@@ -1,55 +1,37 @@
 import React from 'react';
-import { create, act } from 'react-test-renderer';
+import { render } from '@testing-library/react';
 
 import BlockSchemaErrors from './BlockSchemaErrors';
 
 test('default', () => {
-  let comp;
-  act(() => {
-    comp = create(<BlockSchemaErrors />);
-  });
-  expect(comp.toJSON()).toMatchInlineSnapshot(`""`);
-  act(() => {
-    comp = create(<BlockSchemaErrors schemaErrors={[]} />);
-  });
-  expect(comp.toJSON()).toMatchInlineSnapshot(`""`);
+  const { container } = render(<BlockSchemaErrors />);
+  expect(container.firstChild).toMatchInlineSnapshot(``);
 });
 
 test('with schema errors', () => {
-  let comp;
-  act(() => {
-    comp = create(
-      <BlockSchemaErrors
-        schemaErrors={[
-          {
-            keyword: 'keyword-one',
-            message: 'message-one',
-            params: { params: 'one' },
-            dataPath: 'dataPath-one',
-            schemaPath: 'schemaPath-one',
-          },
-          {
-            keyword: 'keyword-two',
-            message: 'message-twp',
-            params: { params: 'two' },
-            dataPath: 'dataPath-twp',
-            schemaPath: 'schemaPath-two',
-          },
-        ]}
-      />
-    );
-  });
-  expect(comp.toJSON()).toMatchInlineSnapshot(`
+  const { container } = render(
+    <BlockSchemaErrors
+      schemaErrors={[
+        {
+          keyword: 'keyword-one',
+          message: 'message-one',
+          params: { params: 'one' },
+          dataPath: 'dataPath-one',
+          schemaPath: 'schemaPath-one',
+        },
+        {
+          keyword: 'keyword-two',
+          message: 'message-twp',
+          params: { params: 'two' },
+          dataPath: 'dataPath-twp',
+          schemaPath: 'schemaPath-two',
+        },
+      ]}
+    />
+  );
+  expect(container.firstChild).toMatchInlineSnapshot(`
     <div
-      style={
-        Object {
-          "background": "#fBB",
-          "border": "1px solid red",
-          "fontSize": "0.8rem",
-          "padding": 10,
-          "width": "100%",
-        }
-      }
+      style="padding: 10px; font-size: 0.8rem; border: 1px solid red; background: rgb(255, 187, 187); width: 100%;"
     >
       <div>
         <b>

@@ -171,7 +171,7 @@ const MenuComp = ({ basePath, blockId, events, methods, menus, pageId, propertie
           case 'MenuDivider':
             return (
               <Menu.Divider
-                key={link.id || i}
+                key={`${link.id}_${i}`}
                 className={methods.makeCssClass([link.style])}
                 dashed={link.properties && link.properties.dashed}
               />
@@ -202,11 +202,11 @@ const MenuComp = ({ basePath, blockId, events, methods, menus, pageId, propertie
                         nestedColorsBg,
                     },
                 ])}
-                key={link.pageId || link.id}
+                key={`${link.pageId || link.id}_${i}`}
                 title={
                   <MenuTitle
                     basePath={basePath}
-                    linkStyle={methods.makeCssClass(link.style, { styleObjectOnly: true })}
+                    linkStyle={methods.makeCssClass(link.style, true)}
                     id={link.id}
                     makeCssClass={methods.makeCssClass}
                     properties={link.properties}
@@ -223,12 +223,12 @@ const MenuComp = ({ basePath, blockId, events, methods, menus, pageId, propertie
                   )
                 }
               >
-                {get(link, 'links', { default: [] }).map((subLink) => {
+                {get(link, 'links', { default: [] }).map((subLink, j) => {
                   switch (subLink.type) {
                     case 'MenuDivider':
                       return (
                         <Menu.Divider
-                          key={subLink.id || i}
+                          key={`${subLink.id || i}_${j}`}
                           className={methods.makeCssClass([subLink.style])}
                           dashed={subLink.properties && subLink.properties.dashed}
                         />
@@ -236,24 +236,22 @@ const MenuComp = ({ basePath, blockId, events, methods, menus, pageId, propertie
                     case 'MenuGroup':
                       return (
                         <Menu.ItemGroup
-                          key={subLink.pageId || subLink.id}
+                          key={`${subLink.pageId || subLink.id}_${j}`}
                           title={
                             <MenuTitle
                               basePath={basePath}
-                              linkStyle={methods.makeCssClass(subLink.style, {
-                                styleObjectOnly: true,
-                              })}
+                              linkStyle={methods.makeCssClass(subLink.style, true)}
                               id={subLink.id}
                               makeCssClass={methods.makeCssClass}
                               properties={subLink.properties}
                             />
                           }
                         >
-                          {subLink.links.map((subLinkGroup) => {
+                          {subLink.links.map((subLinkGroup, k) => {
                             if (subLinkGroup.type === 'MenuDivider') {
                               return (
                                 <Menu.Divider
-                                  key={subLink.id || i}
+                                  key={`${subLink.id}_${k}`}
                                   className={methods.makeCssClass([subLink.style])}
                                   dashed={subLink.properties && subLink.properties.dashed}
                                 />
@@ -261,7 +259,7 @@ const MenuComp = ({ basePath, blockId, events, methods, menus, pageId, propertie
                             }
                             return (
                               <Menu.Item
-                                key={subLinkGroup.pageId || subLinkGroup.id}
+                                key={`${subLinkGroup.pageId || subLinkGroup.id}_${k}`}
                                 danger={get(subLinkGroup, 'properties.danger')}
                                 icon={
                                   subLinkGroup.properties &&
@@ -276,9 +274,7 @@ const MenuComp = ({ basePath, blockId, events, methods, menus, pageId, propertie
                               >
                                 <MenuTitle
                                   basePath={basePath}
-                                  linkStyle={methods.makeCssClass(subLinkGroup.style, {
-                                    styleObjectOnly: true,
-                                  })}
+                                  linkStyle={methods.makeCssClass(subLinkGroup.style, true)}
                                   id={subLinkGroup.id}
                                   makeCssClass={methods.makeCssClass}
                                   pageId={subLinkGroup.pageId}
@@ -294,7 +290,7 @@ const MenuComp = ({ basePath, blockId, events, methods, menus, pageId, propertie
                     default:
                       return (
                         <Menu.Item
-                          key={subLink.pageId || subLink.id}
+                          key={`${subLink.pageId || subLink.id}_${j}`}
                           danger={get(subLink, 'properties.danger')}
                           icon={
                             subLink.properties &&
@@ -309,9 +305,7 @@ const MenuComp = ({ basePath, blockId, events, methods, menus, pageId, propertie
                         >
                           <MenuTitle
                             basePath={basePath}
-                            linkStyle={methods.makeCssClass(subLink.style, {
-                              styleObjectOnly: true,
-                            })}
+                            linkStyle={methods.makeCssClass(subLink.style, true)}
                             id={subLink.id}
                             makeCssClass={methods.makeCssClass}
                             pageId={subLink.pageId}
@@ -328,7 +322,7 @@ const MenuComp = ({ basePath, blockId, events, methods, menus, pageId, propertie
           default:
             return (
               <Menu.Item
-                key={link.pageId || link.id}
+                key={`${link.pageId || link.id}_${i}`}
                 danger={get(link, 'properties.danger')}
                 icon={
                   link.properties &&
@@ -343,7 +337,7 @@ const MenuComp = ({ basePath, blockId, events, methods, menus, pageId, propertie
               >
                 <MenuTitle
                   basePath={basePath}
-                  linkStyle={methods.makeCssClass(link.style, { styleObjectOnly: true })}
+                  linkStyle={methods.makeCssClass(link.style, true)}
                   id={link.id}
                   makeCssClass={methods.makeCssClass}
                   pageId={link.pageId}

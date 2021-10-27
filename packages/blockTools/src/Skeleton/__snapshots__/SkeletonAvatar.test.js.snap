@@ -1,61 +1,56 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render default - value[0] 1`] = `
+.emotion-0 {
+  border-radius: 16px;
+}
+
 <div
-  className="skeleton {\\"style\\":{\\"borderRadius\\":16}}"
-  style={
-    Object {
-      "height": 32,
-      "width": 32,
-    }
-  }
+  class="skeleton emotion-0"
+  style="width: 32px; height: 32px;"
 />
 `;
 
 exports[`Render shapesquare - value[0] 1`] = `
+.emotion-0 {
+  border-radius: 0;
+}
+
 <div
-  className="skeleton {\\"style\\":{\\"borderRadius\\":\\"0\\"}}"
-  style={
-    Object {
-      "height": 32,
-      "width": 32,
-    }
-  }
+  class="skeleton emotion-0"
+  style="width: 32px; height: 32px;"
 />
 `;
 
 exports[`Render sizedefault - value[0] 1`] = `
+.emotion-0 {
+  border-radius: 16px;
+}
+
 <div
-  className="skeleton {\\"style\\":{\\"borderRadius\\":16}}"
-  style={
-    Object {
-      "height": 32,
-      "width": 32,
-    }
-  }
+  class="skeleton emotion-0"
+  style="width: 32px; height: 32px;"
 />
 `;
 
 exports[`Render sizelarge - value[0] 1`] = `
+.emotion-0 {
+  border-radius: 20px;
+}
+
 <div
-  className="skeleton {\\"style\\":{\\"borderRadius\\":20}}"
-  style={
-    Object {
-      "height": 40,
-      "width": 40,
-    }
-  }
+  class="skeleton emotion-0"
+  style="width: 40px; height: 40px;"
 />
 `;
 
 exports[`Render sizesmall - value[0] 1`] = `
+.emotion-0 {
+  border-radius: 12px;
+}
+
 <div
-  className="skeleton {\\"style\\":{\\"borderRadius\\":12}}"
-  style={
-    Object {
-      "height": 24,
-      "width": 24,
-    }
-  }
+  class="skeleton emotion-0"
+  style="width: 24px; height: 24px;"
 />
 `;

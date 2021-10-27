@@ -15,11 +15,8 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { Layout } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import PageSiderMenu from '../src/blocks/PageSiderMenu/PageSiderMenu';
 import examples from '../demo/examples/PageSiderMenu.yaml';
 import meta from '../src/blocks/PageSiderMenu/PageSiderMenu.json';
@@ -35,4 +32,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: PageSiderMenu, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: PageSiderMenu, meta, mocks });

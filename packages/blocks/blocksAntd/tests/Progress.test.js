@@ -19,19 +19,5 @@ import ProgressBlock from '../src/blocks/Progress/Progress';
 import examples from '../demo/examples/Progress.yaml';
 import meta from '../src/blocks/Progress/Progress.json';
 
-jest.mock('@lowdefy/block-tools', () => {
-  const originalModule = jest.requireActual('@lowdefy/block-tools');
-  return {
-    ...originalModule,
-    blockDefaultProps: {
-      ...originalModule.blockDefaultProps,
-      methods: {
-        ...originalModule.blockDefaultProps.methods,
-        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
-      },
-    },
-  };
-});
-
 runRenderTests({ examples, Block: ProgressBlock, meta });
 runBlockSchemaTests({ examples, meta });

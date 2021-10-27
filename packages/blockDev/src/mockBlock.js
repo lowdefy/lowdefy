@@ -14,13 +14,14 @@
   limitations under the License.
 */
 
+import { makeCssClass } from '@lowdefy/block-tools';
+
 import stubBlockProps from './stubBlockProps';
 
 const mockBlock = ({ meta, logger }) => {
   const mockMath = Object.create(global.Math);
   mockMath.random = () => 0.5;
   global.Math = mockMath;
-  const makeCssClass = jest.fn();
   const moveItemDown = jest.fn();
   const moveItemUp = jest.fn();
   const pushItem = jest.fn();
@@ -42,11 +43,8 @@ const mockBlock = ({ meta, logger }) => {
     triggerEvent,
     unshiftItem,
   };
-  const makeCssImp = (style, op) => JSON.stringify({ style, options: op });
   const before = () => {
     triggerEvent.mockReset();
-    makeCssClass.mockReset();
-    makeCssClass.mockImplementation(makeCssImp);
     moveItemDown.mockReset();
     moveItemUp.mockReset();
     pushItem.mockReset();

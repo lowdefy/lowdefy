@@ -15,11 +15,8 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { SliderPicker } from 'react-color';
 
-Enzyme.configure({ adapter: new Adapter() });
 import SliderColorSelector from '../src/blocks/SliderColorSelector/SliderColorSelector';
 import examples from '../demo/examples/SliderColorSelector.yaml';
 import meta from '../src/blocks/SliderColorSelector/SliderColorSelector.json';
@@ -38,4 +35,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: SliderColorSelector, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: SliderColorSelector, meta, mocks });

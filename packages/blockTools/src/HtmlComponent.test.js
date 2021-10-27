@@ -15,130 +15,252 @@
 */
 
 import React from 'react';
+import { render } from '@testing-library/react';
 
-import { HtmlComponent } from '../src';
-
-import { configure, mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-configure({ adapter: new Adapter() });
-
-const mockCMakeCssClass = jest.fn(() => 'test-class');
+import HtmlComponent from './HtmlComponent';
+import makeCssClass from './makeCssClass';
 const methods = {
-  makeCssClass: mockCMakeCssClass,
+  makeCssClass,
 };
 
-beforeEach(() => {
-  mockCMakeCssClass.mockReset();
-  mockCMakeCssClass.mockImplementation((obj) => JSON.stringify(obj));
+test('Render default', () => {
+  const { container } = render(<HtmlComponent methods={methods} />);
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    <span
+      class="emotion-0"
+    />
+  `);
 });
 
-test('Render default', async () => {
-  const wrapper = await mount(<HtmlComponent methods={methods} />);
-  await wrapper.instance().componentDidMount();
-  await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`"<span></span>"`);
-  await wrapper.instance().componentDidUpdate();
-  await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`"<span></span>"`);
+test('Render default and id', () => {
+  const { container } = render(<HtmlComponent id="test-id" methods={methods} />);
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    <span
+      class="emotion-0"
+      data-testid="test-id"
+      id="test-id"
+    />
+  `);
 });
 
-test('Render default and id', async () => {
-  const wrapper = await mount(<HtmlComponent id="test-id" methods={methods} />);
-  await wrapper.instance().componentDidMount();
-  await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(
-    `"<span id=\\"test-id\\" data-testid=\\"test-id\\"></span>"`
-  );
+test('Render string and update', () => {
+  const { container, rerender } = render(<HtmlComponent html="A string value" methods={methods} />);
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    <span
+      class="emotion-0"
+    >
+      A string value
+    </span>
+  `);
+  rerender(<HtmlComponent html="A string value updated" methods={methods} />);
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    <span
+      class="emotion-0"
+    >
+      A string value updated
+    </span>
+  `);
 });
 
-test('Render string', async () => {
-  const wrapper = await mount(<HtmlComponent html="A string value" methods={methods} />);
-  await wrapper.instance().componentDidMount();
-  await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`"<span>A string value</span>"`);
+test('Render number', () => {
+  const { container, rerender } = render(<HtmlComponent html={123} methods={methods} />);
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    <span
+      class="emotion-0"
+    >
+      123
+    </span>
+  `);
+  rerender(<HtmlComponent html={1000} methods={methods} />);
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    <span
+      class="emotion-0"
+    >
+      1000
+    </span>
+  `);
 });
 
-test('Render number', async () => {
-  const wrapper = await mount(<HtmlComponent html={123} methods={methods} />);
-  await wrapper.instance().componentDidMount();
-  await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`"<span>123</span>"`);
+test('Render number 0 1', () => {
+  const { container, rerender } = render(<HtmlComponent html={0} methods={methods} />);
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    <span
+      class="emotion-0"
+    >
+      0
+    </span>
+  `);
+  rerender(<HtmlComponent html={1} methods={methods} />);
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    <span
+      class="emotion-0"
+    >
+      1
+    </span>
+  `);
 });
 
-test('Render number 0', async () => {
-  const wrapper = await mount(<HtmlComponent html={0} methods={methods} />);
-  await wrapper.instance().componentDidMount();
-  await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`"<span>0</span>"`);
+test('Render boolean true false', () => {
+  const { container, rerender } = render(<HtmlComponent html={true} methods={methods} />);
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    <span
+      class="emotion-0"
+    >
+      true
+    </span>
+  `);
+  rerender(<HtmlComponent html={false} methods={methods} />);
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    <span
+      class="emotion-0"
+    >
+      false
+    </span>
+  `);
 });
 
-test('Render boolean true', async () => {
-  const wrapper = await mount(<HtmlComponent html={true} methods={methods} />);
-  await wrapper.instance().componentDidMount();
-  await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`"<span>true</span>"`);
+test('Render null, undefined', () => {
+  const { container, rerender } = render(<HtmlComponent html={null} methods={methods} />);
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    <span
+      class="emotion-0"
+    />
+  `);
+  rerender(<HtmlComponent html={undefined} methods={methods} />);
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    <span
+      class="emotion-0"
+    />
+  `);
 });
 
-test('Render boolean false', async () => {
-  const wrapper = await mount(<HtmlComponent html={false} methods={methods} />);
-  await wrapper.instance().componentDidMount();
-  await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`"<span>false</span>"`);
-});
-
-test('Render null', async () => {
-  const wrapper = await mount(<HtmlComponent html={null} methods={methods} />);
-  await wrapper.instance().componentDidMount();
-  await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`"<span></span>"`);
-});
-
-test('Render html', async () => {
-  const wrapper = await mount(
+test('Render html', () => {
+  const { container, rerender } = render(
     <HtmlComponent
       html={'<div style="background: green; padding: 10px;">Content green background</div>'}
       methods={methods}
     />
   );
-  await wrapper.instance().componentDidMount();
-  await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(
-    `"<span><div style=\\"background: green; padding: 10px;\\">Content green background</div></span>"`
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    <span
+      class="emotion-0"
+    >
+      <div
+        style="background: green; padding: 10px;"
+      >
+        Content green background
+      </div>
+    </span>
+  `);
+  rerender(
+    <HtmlComponent
+      html={'<div style="background: green; padding: 10px;">Content green background updated</div>'}
+      methods={methods}
+    />
   );
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    <span
+      class="emotion-0"
+    >
+      <div
+        style="background: green; padding: 10px;"
+      >
+        Content green background updated
+      </div>
+    </span>
+  `);
 });
 
-test('Render html div', async () => {
-  const wrapper = await mount(
+test('Render html div', () => {
+  const { container, rerender } = render(
     <HtmlComponent
       html={'<div style="background: green; padding: 10px;">Content green background</div>'}
       methods={methods}
       div={true}
     />
   );
-  await wrapper.instance().componentDidMount();
-  await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(
-    `"<div><div style=\\"background: green; padding: 10px;\\">Content green background</div></div>"`
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    <div
+      class="emotion-0"
+    >
+      <div
+        style="background: green; padding: 10px;"
+      >
+        Content green background
+      </div>
+    </div>
+  `);
+  rerender(
+    <HtmlComponent
+      html={'<div style="background: green; padding: 10px;">Content green background updated</div>'}
+      methods={methods}
+      div={true}
+    />
   );
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    <div
+      class="emotion-0"
+    >
+      <div
+        style="background: green; padding: 10px;"
+      >
+        Content green background updated
+      </div>
+    </div>
+  `);
 });
 
-test('Render html and style', async () => {
-  const wrapper = await mount(
+test('Render html and style', () => {
+  const { container, rerender } = render(
     <HtmlComponent
       html={'<div style="background: green; padding: 10px;">Content green background</div>'}
       methods={methods}
       style={{ color: 'red' }}
     />
   );
-  await wrapper.instance().componentDidMount();
-  await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(
-    `"<span class=\\"{&quot;color&quot;:&quot;red&quot;}\\"><div style=\\"background: green; padding: 10px;\\">Content green background</div></span>"`
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    .emotion-0 {
+      color: red;
+    }
+
+    <span
+      class="emotion-0"
+    >
+      <div
+        style="background: green; padding: 10px;"
+      >
+        Content green background
+      </div>
+    </span>
+  `);
+  rerender(
+    <HtmlComponent
+      html={
+        '<div style="background: green; padding: 10px; updated: true;">Content green background</div>'
+      }
+      methods={methods}
+      style={{ color: 'red updated' }}
+    />
   );
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    .emotion-0 {
+      color: red updated;
+    }
+
+    <span
+      class="emotion-0"
+    >
+      <div
+        style="background: green; padding: 10px; updated: true;"
+      >
+        Content green background
+      </div>
+    </span>
+  `);
 });
 
-test('Render html iframe', async () => {
-  const wrapper = await mount(
+test('Render html iframe', () => {
+  const { container } = render(
     <HtmlComponent
       html={
         '<iframe width="560" height="315" src="https://www.youtube.com/embed/7N7GWdlQJlU" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
@@ -146,13 +268,15 @@ test('Render html iframe', async () => {
       methods={methods}
     />
   );
-  await wrapper.instance().componentDidMount();
-  await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`"<span></span>"`);
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    <span
+      class="emotion-0"
+    />
+  `);
 });
 
 test('Render bad html', async () => {
-  const wrapper = await mount(
+  const { container } = render(
     <HtmlComponent
       html={`
       <h1>Link<h1>
@@ -168,19 +292,59 @@ test('Render bad html', async () => {
       methods={methods}
     />
   );
-  await wrapper.instance().componentDidMount();
-  await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`
-    "<span>
-          <h1>Link</h1><h1>
-          <a href=\\"https://lowdefy.com\\">Lowdefy link</a>
-          <font size=\\"+10\\">Description</font>
-          </h1><h1>Bad HTML</h1>
-          <div>
-            <a>delta</a>
-            <img src=\\"x\\">
-            <math><mi></mi></math>
-          </div>
-          </span>"
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    <span
+      class="emotion-0"
+    >
+      
+          
+      <h1>
+        Link
+      </h1>
+      <h1>
+        
+          
+        <a
+          href="https://lowdefy.com"
+        >
+          Lowdefy link
+        </a>
+        
+          
+        <font
+          size="+10"
+        >
+          Description
+        </font>
+        
+          
+      </h1>
+      <h1>
+        Bad HTML
+      </h1>
+      
+          
+      <div>
+        
+            
+        <a>
+          delta
+        </a>
+        
+            
+        <img
+          src="x"
+        />
+        
+            
+        <math>
+          <mi />
+        </math>
+        
+          
+      </div>
+      
+          
+    </span>
   `);
 });

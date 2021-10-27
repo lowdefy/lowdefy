@@ -15,11 +15,8 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { Statistic } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import StatisticBlock from '../src/blocks/Statistic/Statistic';
 import examples from '../demo/examples/Statistic.yaml';
 import meta from '../src/blocks/Statistic/Statistic.json';
@@ -35,4 +32,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: StatisticBlock, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: StatisticBlock, meta, mocks });

@@ -2,13 +2,8 @@
 
 exports[`Render default - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="default"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
 </div>
@@ -16,93 +11,70 @@ exports[`Render default - value[0] 1`] = `
 
 exports[`Render properties.code: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.code: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <code>
     <span
-      className="{}"
-    />
+      class="emotion-0"
+    >
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+    </span>
   </code>
 </div>
 `;
 
 exports[`Render properties.content - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.content"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <span
-    className="{}"
-  />
+    class="emotion-0"
+  >
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+  </span>
 </div>
 `;
 
 exports[`Render properties.content short - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.content short"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <span
-    className="{}"
-  />
+    class="emotion-0"
+  >
+    This is a paragraph. It is a text component, and part of the 'Display Blocks' elements available.
+
+  </span>
 </div>
 `;
 
 exports[`Render properties.copyable: icon - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: icon"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <span
-    className="{}"
-  />
+    class="emotion-0"
+  >
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+  </span>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-0"
       id="properties.copyable: icon_copyable_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -125,43 +97,26 @@ exports[`Render properties.copyable: icon - value[0] 1`] = `
 
 exports[`Render properties.copyable: icon: [] - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: icon: []"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <span
-    className="{}"
-  />
+    class="emotion-0"
+  >
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+  </span>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-0"
       id="properties.copyable: icon: []_copyable_before_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -184,40 +139,25 @@ exports[`Render properties.copyable: icon: [] - value[0] 1`] = `
 
 exports[`Render properties.copyable: text: one - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: text: one"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <span
-    className="{}"
-  />
+    class="emotion-0"
+  >
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+  </span>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="copy"
-      className="anticon anticon-copy"
+      class="anticon anticon-copy"
       role="img"
     >
       <svg
@@ -240,40 +180,25 @@ exports[`Render properties.copyable: text: one - value[0] 1`] = `
 
 exports[`Render properties.copyable: tooltips: [] - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: tooltips: []"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <span
-    className="{}"
-  />
+    class="emotion-0"
+  >
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+  </span>
   <div
     aria-label="Click to copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="copy"
-      className="anticon anticon-copy"
+      class="anticon anticon-copy"
       role="img"
     >
       <svg
@@ -296,40 +221,25 @@ exports[`Render properties.copyable: tooltips: [] - value[0] 1`] = `
 
 exports[`Render properties.copyable: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <span
-    className="{}"
-  />
+    class="emotion-0"
+  >
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+  </span>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="copy"
-      className="anticon anticon-copy"
+      class="anticon anticon-copy"
       role="img"
     >
       <svg
@@ -352,236 +262,213 @@ exports[`Render properties.copyable: true - value[0] 1`] = `
 
 exports[`Render properties.delete: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.delete: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <del>
     <span
-      className="{}"
-    />
+      class="emotion-0"
+    >
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+    </span>
   </del>
 </div>
 `;
 
 exports[`Render properties.disabled: true - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-disabled {}"
+  class="ant-typography ant-typography-disabled emotion-0"
   id="properties.disabled: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <span
-    className="{}"
-  />
+    class="emotion-0"
+  >
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+  </span>
 </div>
 `;
 
 exports[`Render properties.ellipsis: expandable, rows - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis {}"
+  class="ant-typography ant-typography-ellipsis emotion-0"
   id="properties.ellipsis: expandable, rows"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <span
-    className="{}"
-  />
+    class="emotion-0"
+  >
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+  </span>
 </div>
 `;
 
 exports[`Render properties.ellipsis: rows - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis ant-typography-ellipsis-multiple-line {}"
+  class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-multiple-line emotion-0"
   id="properties.ellipsis: rows"
-  style={
-    Object {
-      "WebkitLineClamp": 3,
-    }
-  }
 >
   <span
-    className="{}"
-  />
+    class="emotion-0"
+  >
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+  </span>
 </div>
 `;
 
 exports[`Render properties.ellipsis: rows, suffix - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis {}"
+  class="ant-typography ant-typography-ellipsis emotion-0"
   id="properties.ellipsis: rows, suffix"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <span
-    className="{}"
-  />
+    class="emotion-0"
+  >
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+  </span>
   and other
 </div>
 `;
 
 exports[`Render properties.ellipsis: true - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis ant-typography-single-line ant-typography-ellipsis-single-line {}"
+  class="ant-typography ant-typography-ellipsis ant-typography-single-line ant-typography-ellipsis-single-line emotion-0"
   id="properties.ellipsis: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <span
-    className="{}"
-  />
+    class="emotion-0"
+  >
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+  </span>
 </div>
 `;
 
 exports[`Render properties.italic: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.italic: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <i>
     <span
-      className="{}"
-    />
+      class="emotion-0"
+    >
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+    </span>
   </i>
 </div>
 `;
 
 exports[`Render properties.mark: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.mark: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <mark>
     <span
-      className="{}"
-    />
+      class="emotion-0"
+    >
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+    </span>
   </mark>
 </div>
 `;
 
 exports[`Render properties.strong: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.strong: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <strong>
     <span
-      className="{}"
-    />
+      class="emotion-0"
+    >
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+    </span>
   </strong>
 </div>
 `;
 
 exports[`Render properties.type: danger - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-danger {}"
+  class="ant-typography ant-typography-danger emotion-0"
   id="properties.type: danger"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <span
-    className="{}"
-  />
+    class="emotion-0"
+  >
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+  </span>
 </div>
 `;
 
 exports[`Render properties.type: secondary - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-secondary {}"
+  class="ant-typography ant-typography-secondary emotion-0"
   id="properties.type: secondary"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <span
-    className="{}"
-  />
+    class="emotion-0"
+  >
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+  </span>
 </div>
 `;
 
 exports[`Render properties.type: warning - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-warning {}"
+  class="ant-typography ant-typography-warning emotion-0"
   id="properties.type: warning"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <span
-    className="{}"
-  />
+    class="emotion-0"
+  >
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+  </span>
 </div>
 `;
 
 exports[`Render properties.underline: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.underline: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <u>
     <span
-      className="{}"
-    />
+      class="emotion-0"
+    >
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+    </span>
   </u>
 </div>
 `;
 
 exports[`Render with html content - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="with html content"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <span
-    className="{}"
-  />
+    class="emotion-0"
+  >
+    <div
+      style="background-color:blue;color:white;"
+    >
+      Lorem ipsum dolor sit amet...
+    </div>
+    
+
+  </span>
 </div>
 `;
 

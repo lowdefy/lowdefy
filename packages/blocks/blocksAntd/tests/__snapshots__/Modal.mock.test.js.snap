@@ -5,7 +5,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"options\\":true}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -24,7 +24,7 @@ Array [
       "id": "default_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -46,7 +46,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"options\\":true}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -65,7 +65,7 @@ Array [
       "id": "properties.title_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -79,15 +79,11 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   undefined,
@@ -96,11 +92,11 @@ Array [
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
@@ -129,7 +125,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"style\\":{\\"border\\":\\"10px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"style\\":{\\"border\\":\\"10px solid blue\\"},\\"options\\":true}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -148,7 +144,7 @@ Array [
       "id": "properties: bodyStyle: border: 10px solid blue_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -170,7 +166,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"options\\":true}",
       "cancelButtonProps": undefined,
       "cancelText": "Text of the Cancel button",
       "centered": false,
@@ -189,7 +185,7 @@ Array [
       "id": "properties: cancelText: Text of the Cancel button_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -211,7 +207,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"options\\":true}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": true,
@@ -230,7 +226,7 @@ Array [
       "id": "properties: centered: true_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -252,7 +248,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"options\\":true}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -271,7 +267,7 @@ Array [
       "id": "properties: closable: false_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -293,7 +289,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"options\\":true}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -313,7 +309,7 @@ Array [
       "id": "properties: footer: false_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -335,7 +331,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"options\\":true}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -354,7 +350,7 @@ Array [
       "id": "properties: mask: false_modal",
       "mask": false,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -376,7 +372,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"options\\":true}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -395,7 +391,7 @@ Array [
       "id": "properties: maskClosable: false_modal",
       "mask": true,
       "maskClosable": false,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -417,7 +413,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"options\\":true}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -436,7 +432,7 @@ Array [
       "id": "properties: maskStyle: border: 10px solid blue_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"style\\":{\\"border\\":\\"10px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"style\\":{\\"border\\":\\"10px solid blue\\"},\\"options\\":true}",
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -458,7 +454,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"options\\":true}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -477,7 +473,7 @@ Array [
       "id": "properties: okText: Text of the OK button_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "okButtonProps": undefined,
       "okText": "Text of the OK button",
       "okType": "primary",
@@ -499,7 +495,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"options\\":true}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -518,7 +514,7 @@ Array [
       "id": "properties: width: 350px - 520px is default_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -540,7 +536,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"options\\":true}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -559,7 +555,7 @@ Array [
       "id": "properties: wrapperStyle: border: 10px solid blue_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -581,7 +577,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"options\\":true}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -600,7 +596,7 @@ Array [
       "id": "properties: zIndex: 1200 - 1000 is the default_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -622,7 +618,7 @@ Array [
   Array [
     Object {
       "afterClose": [Function],
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"options\\":true}",
       "cancelButtonProps": undefined,
       "cancelText": "Cancel",
       "centered": false,
@@ -641,7 +637,7 @@ Array [
       "id": "with html in title_modal",
       "mask": true,
       "maskClosable": true,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "okButtonProps": undefined,
       "okText": "Ok",
       "okType": "primary",
@@ -657,15 +653,11 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   undefined,
@@ -674,11 +666,11 @@ Array [
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",

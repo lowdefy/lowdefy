@@ -1,35 +1,34 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render areas.extra: - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
 <div
-  className="ant-card ant-card-bordered {\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
+  class="ant-card ant-card-bordered emotion-0"
   id="areas.extra:"
-  onClick={[Function]}
 >
   <div
-    className="ant-card-head"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-card-head"
   >
     <div
-      className="ant-card-head-wrapper"
+      class="ant-card-head-wrapper"
     >
       <div
-        className="ant-card-head-title"
+        class="ant-card-head-title"
       >
         <span
-          className="{}"
-        />
+          class="emotion-1"
+        >
+          Card block
+        </span>
       </div>
       <div
-        className="ant-card-extra"
+        class="ant-card-extra"
       >
         <div
-          style={
-            Object {
-              "border": "1px solid red",
-              "padding": 10,
-            }
-          }
+          style="border: 1px solid red; padding: 10px;"
         >
           extra
         </div>
@@ -37,16 +36,10 @@ exports[`Render areas.extra: - value[0] 1`] = `
     </div>
   </div>
   <div
-    className="ant-card-body"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-card-body"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -55,22 +48,19 @@ exports[`Render areas.extra: - value[0] 1`] = `
 `;
 
 exports[`Render default - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
 <div
-  className="ant-card ant-card-bordered {\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
+  class="ant-card ant-card-bordered emotion-0"
   id="default"
-  onClick={[Function]}
 >
   <div
-    className="ant-card-body"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-card-body"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -79,38 +69,37 @@ exports[`Render default - value[0] 1`] = `
 `;
 
 exports[`Render properties.bodyStyle: border: 5px solid blue - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
 <div
-  className="ant-card ant-card-bordered {\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
+  class="ant-card ant-card-bordered emotion-0"
   id="properties.bodyStyle: border: 5px solid blue"
-  onClick={[Function]}
 >
   <div
-    className="ant-card-head"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-card-head"
   >
     <div
-      className="ant-card-head-wrapper"
+      class="ant-card-head-wrapper"
     >
       <div
-        className="ant-card-head-title"
+        class="ant-card-head-title"
       >
         <span
-          className="{}"
-        />
+          class="emotion-1"
+        >
+          Card block
+        </span>
       </div>
     </div>
   </div>
   <div
-    className="ant-card-body"
-    style="{\\"style\\":{\\"border\\":\\"5px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-card-body"
+    style="border: 5px solid blue;"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -119,38 +108,36 @@ exports[`Render properties.bodyStyle: border: 5px solid blue - value[0] 1`] = `
 `;
 
 exports[`Render properties.bordered: false - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
 <div
-  className="ant-card {\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
+  class="ant-card emotion-0"
   id="properties.bordered: false"
-  onClick={[Function]}
 >
   <div
-    className="ant-card-head"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-card-head"
   >
     <div
-      className="ant-card-head-wrapper"
+      class="ant-card-head-wrapper"
     >
       <div
-        className="ant-card-head-title"
+        class="ant-card-head-title"
       >
         <span
-          className="{}"
-        />
+          class="emotion-1"
+        >
+          Card block
+        </span>
       </div>
     </div>
   </div>
   <div
-    className="ant-card-body"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-card-body"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -159,38 +146,37 @@ exports[`Render properties.bordered: false - value[0] 1`] = `
 `;
 
 exports[`Render properties.headerStyle: border: 5px solid blue - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
 <div
-  className="ant-card ant-card-bordered {\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
+  class="ant-card ant-card-bordered emotion-0"
   id="properties.headerStyle: border: 5px solid blue"
-  onClick={[Function]}
 >
   <div
-    className="ant-card-head"
-    style="{\\"style\\":{\\"border\\":\\"5px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-card-head"
+    style="border: 5px solid blue;"
   >
     <div
-      className="ant-card-head-wrapper"
+      class="ant-card-head-wrapper"
     >
       <div
-        className="ant-card-head-title"
+        class="ant-card-head-title"
       >
         <span
-          className="{}"
-        />
+          class="emotion-1"
+        >
+          Card block
+        </span>
       </div>
     </div>
   </div>
   <div
-    className="ant-card-body"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-card-body"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -199,38 +185,36 @@ exports[`Render properties.headerStyle: border: 5px solid blue - value[0] 1`] = 
 `;
 
 exports[`Render properties.hoverable: true - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
 <div
-  className="ant-card ant-card-bordered ant-card-hoverable {\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
+  class="ant-card ant-card-bordered ant-card-hoverable emotion-0"
   id="properties.hoverable: true"
-  onClick={[Function]}
 >
   <div
-    className="ant-card-head"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-card-head"
   >
     <div
-      className="ant-card-head-wrapper"
+      class="ant-card-head-wrapper"
     >
       <div
-        className="ant-card-head-title"
+        class="ant-card-head-title"
       >
         <span
-          className="{}"
-        />
+          class="emotion-1"
+        >
+          Card block
+        </span>
       </div>
     </div>
   </div>
   <div
-    className="ant-card-body"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-card-body"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -239,38 +223,36 @@ exports[`Render properties.hoverable: true - value[0] 1`] = `
 `;
 
 exports[`Render properties.inner: true - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
 <div
-  className="ant-card ant-card-bordered ant-card-type-inner {\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
+  class="ant-card ant-card-bordered ant-card-type-inner emotion-0"
   id="properties.inner: true"
-  onClick={[Function]}
 >
   <div
-    className="ant-card-head"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-card-head"
   >
     <div
-      className="ant-card-head-wrapper"
+      class="ant-card-head-wrapper"
     >
       <div
-        className="ant-card-head-title"
+        class="ant-card-head-title"
       >
         <span
-          className="{}"
-        />
+          class="emotion-1"
+        >
+          Card block
+        </span>
       </div>
     </div>
   </div>
   <div
-    className="ant-card-body"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-card-body"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -279,38 +261,36 @@ exports[`Render properties.inner: true - value[0] 1`] = `
 `;
 
 exports[`Render properties.size: small - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
 <div
-  className="ant-card ant-card-bordered ant-card-small {\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
+  class="ant-card ant-card-bordered ant-card-small emotion-0"
   id="properties.size: small"
-  onClick={[Function]}
 >
   <div
-    className="ant-card-head"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-card-head"
   >
     <div
-      className="ant-card-head-wrapper"
+      class="ant-card-head-wrapper"
     >
       <div
-        className="ant-card-head-title"
+        class="ant-card-head-title"
       >
         <span
-          className="{}"
-        />
+          class="emotion-1"
+        >
+          Card block small
+        </span>
       </div>
     </div>
   </div>
   <div
-    className="ant-card-body"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-card-body"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -319,38 +299,36 @@ exports[`Render properties.size: small - value[0] 1`] = `
 `;
 
 exports[`Render properties.title - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
 <div
-  className="ant-card ant-card-bordered {\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
+  class="ant-card ant-card-bordered emotion-0"
   id="properties.title"
-  onClick={[Function]}
 >
   <div
-    className="ant-card-head"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-card-head"
   >
     <div
-      className="ant-card-head-wrapper"
+      class="ant-card-head-wrapper"
     >
       <div
-        className="ant-card-head-title"
+        class="ant-card-head-title"
       >
         <span
-          className="{}"
-        />
+          class="emotion-1"
+        >
+          Card block
+        </span>
       </div>
     </div>
   </div>
   <div
-    className="ant-card-body"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-card-body"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -359,38 +337,40 @@ exports[`Render properties.title - value[0] 1`] = `
 `;
 
 exports[`Render with html in title - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
 <div
-  className="ant-card ant-card-bordered {\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
+  class="ant-card ant-card-bordered emotion-0"
   id="with html in title"
-  onClick={[Function]}
 >
   <div
-    className="ant-card-head"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-card-head"
   >
     <div
-      className="ant-card-head-wrapper"
+      class="ant-card-head-wrapper"
     >
       <div
-        className="ant-card-head-title"
+        class="ant-card-head-title"
       >
         <span
-          className="{}"
-        />
+          class="emotion-1"
+        >
+          <div
+            style="color:green"
+          >
+            Card Title
+          </div>
+        </span>
       </div>
     </div>
   </div>
   <div
-    className="ant-card-body"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-card-body"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -399,38 +379,37 @@ exports[`Render with html in title - value[0] 1`] = `
 `;
 
 exports[`Render with onClick event - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+  cursor: pointer;
+}
+
 <div
-  className="ant-card ant-card-bordered {\\"style\\":[{\\"outline\\":\\"none\\",\\"cursor\\":\\"pointer\\"},null]}"
+  class="ant-card ant-card-bordered emotion-0"
   id="with onClick event"
-  onClick={[Function]}
 >
   <div
-    className="ant-card-head"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-card-head"
   >
     <div
-      className="ant-card-head-wrapper"
+      class="ant-card-head-wrapper"
     >
       <div
-        className="ant-card-head-title"
+        class="ant-card-head-title"
       >
         <span
-          className="{}"
-        />
+          class="emotion-1"
+        >
+          Card block
+        </span>
       </div>
     </div>
   </div>
   <div
-    className="ant-card-body"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-card-body"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>

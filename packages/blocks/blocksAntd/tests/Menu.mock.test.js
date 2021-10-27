@@ -15,17 +15,15 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { Menu } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import Block from '../src/blocks/Menu/Menu';
 import examples from '../demo/examples/Menu.yaml';
 import meta from '../src/blocks/Menu/Menu.json';
 
 jest.mock('antd/lib/menu', () => {
   const comp = jest.fn(() => 'mocked');
+  comp.Divider = jest.fn(() => 'mocked');
   comp.SubMenu = jest.fn(() => 'mocked');
   comp.ItemGroup = jest.fn(() => 'mocked');
   comp.Item = jest.fn(() => 'mocked');
@@ -39,4 +37,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block, meta, mocks });

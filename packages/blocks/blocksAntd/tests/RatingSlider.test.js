@@ -21,20 +21,5 @@ import RatingSlider from '../src/blocks/RatingSlider/RatingSlider';
 import examples from '../demo/examples/RatingSlider.yaml';
 import meta from '../src/blocks/RatingSlider/RatingSlider.json';
 
-jest.mock('@lowdefy/block-tools', () => {
-  const originalModule = jest.requireActual('@lowdefy/block-tools');
-  return {
-    ...originalModule,
-    blockDefaultProps: {
-      ...originalModule.blockDefaultProps,
-      methods: {
-        ...originalModule.blockDefaultProps.methods,
-        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
-      },
-    },
-  };
-});
-
-// FIX: for properties.autoFocus - TypeError: Cannot read property 'focus' of null
 runRenderTests({ examples, Block: RatingSlider, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta });

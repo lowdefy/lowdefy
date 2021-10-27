@@ -1,21 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render areas.content - value[0] 1`] = `
+.emotion-0 {
+  min-height: 100vh;
+}
+
 <section
-  className="ant-layout {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
+  class="ant-layout emotion-0"
   id="areas.content"
 >
   <main
-    className="ant-layout-content {}"
+    class="ant-layout-content emotion-1"
     id="areas.content_content"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -24,36 +23,34 @@ exports[`Render areas.content - value[0] 1`] = `
 `;
 
 exports[`Render areas.footer - value[0] 1`] = `
+.emotion-0 {
+  min-height: 100vh;
+}
+
+.emotion-2 {
+  margin: auto;
+}
+
 <section
-  className="ant-layout {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
+  class="ant-layout emotion-0"
   id="areas.footer"
 >
   <main
-    className="ant-layout-content {}"
+    class="ant-layout-content emotion-1"
     id="areas.footer_content"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
   </main>
   <footer
-    className="ant-layout-footer {\\"style\\":[{\\"margin\\":\\"auto\\"},null]} hide-on-print"
+    class="ant-layout-footer emotion-2 hide-on-print"
     id="areas.footer_footer"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       footer
     </div>
@@ -62,36 +59,30 @@ exports[`Render areas.footer - value[0] 1`] = `
 `;
 
 exports[`Render areas.header - value[0] 1`] = `
+.emotion-0 {
+  min-height: 100vh;
+}
+
 <section
-  className="ant-layout {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
+  class="ant-layout emotion-0"
   id="areas.header"
 >
   <header
-    className="ant-layout-header {\\"style\\":[{\\"backgroundColor\\":false},null,null]} hide-on-print"
+    class="ant-layout-header emotion-1 hide-on-print"
     id="areas.header_header"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       header
     </div>
   </header>
   <main
-    className="ant-layout-content {}"
+    class="ant-layout-content emotion-2"
     id="areas.header_content"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -100,21 +91,20 @@ exports[`Render areas.header - value[0] 1`] = `
 `;
 
 exports[`Render default - value[0] 1`] = `
+.emotion-0 {
+  min-height: 100vh;
+}
+
 <section
-  className="ant-layout {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
+  class="ant-layout emotion-0"
   id="default"
 >
   <main
-    className="ant-layout-content {}"
+    class="ant-layout-content emotion-1"
     id="default_content"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -123,51 +113,48 @@ exports[`Render default - value[0] 1`] = `
 `;
 
 exports[`Render properties.content.style: border: 5px solid blue - value[0] 1`] = `
+.emotion-0 {
+  min-height: 100vh;
+}
+
+.emotion-2 {
+  border: 5px solid blue;
+}
+
+.emotion-3 {
+  margin: auto;
+}
+
 <section
-  className="ant-layout {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
+  class="ant-layout emotion-0"
   id="properties.content.style: border: 5px solid blue"
 >
   <header
-    className="ant-layout-header {\\"style\\":[{\\"backgroundColor\\":false},null,null]} hide-on-print"
+    class="ant-layout-header emotion-1 hide-on-print"
     id="properties.content.style: border: 5px solid blue_header"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       header
     </div>
   </header>
   <main
-    className="ant-layout-content {\\"style\\":{\\"border\\":\\"5px solid blue\\"}}"
+    class="ant-layout-content emotion-2"
     id="properties.content.style: border: 5px solid blue_content"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
   </main>
   <footer
-    className="ant-layout-footer {\\"style\\":[{\\"margin\\":\\"auto\\"},null]} hide-on-print"
+    class="ant-layout-footer emotion-3 hide-on-print"
     id="properties.content.style: border: 5px solid blue_footer"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       footer
     </div>
@@ -176,51 +163,45 @@ exports[`Render properties.content.style: border: 5px solid blue - value[0] 1`] 
 `;
 
 exports[`Render properties.footer.style: border: 5px solid blue - value[0] 1`] = `
+.emotion-0 {
+  min-height: 100vh;
+}
+
+.emotion-3 {
+  margin: auto;
+  border: 5px solid blue;
+}
+
 <section
-  className="ant-layout {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
+  class="ant-layout emotion-0"
   id="properties.footer.style: border: 5px solid blue"
 >
   <header
-    className="ant-layout-header {\\"style\\":[{\\"backgroundColor\\":false},null,null]} hide-on-print"
+    class="ant-layout-header emotion-1 hide-on-print"
     id="properties.footer.style: border: 5px solid blue_header"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       header
     </div>
   </header>
   <main
-    className="ant-layout-content {}"
+    class="ant-layout-content emotion-2"
     id="properties.footer.style: border: 5px solid blue_content"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
   </main>
   <footer
-    className="ant-layout-footer {\\"style\\":[{\\"margin\\":\\"auto\\"},{\\"border\\":\\"5px solid blue\\"}]} hide-on-print"
+    class="ant-layout-footer emotion-3 hide-on-print"
     id="properties.footer.style: border: 5px solid blue_footer"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       footer
     </div>
@@ -229,51 +210,48 @@ exports[`Render properties.footer.style: border: 5px solid blue - value[0] 1`] =
 `;
 
 exports[`Render properties.header.color: #4432a8  - value[0] 1`] = `
+.emotion-0 {
+  min-height: 100vh;
+}
+
+.emotion-1 {
+  background-color: #4432a8;
+}
+
+.emotion-3 {
+  margin: auto;
+}
+
 <section
-  className="ant-layout {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
+  class="ant-layout emotion-0"
   id="properties.header.color: #4432a8 "
 >
   <header
-    className="ant-layout-header {\\"style\\":[{\\"backgroundColor\\":false},{\\"backgroundColor\\":\\"#4432a8\\"},null]} hide-on-print"
+    class="ant-layout-header emotion-1 hide-on-print"
     id="properties.header.color: #4432a8 _header"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       header
     </div>
   </header>
   <main
-    className="ant-layout-content {}"
+    class="ant-layout-content emotion-2"
     id="properties.header.color: #4432a8 _content"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
   </main>
   <footer
-    className="ant-layout-footer {\\"style\\":[{\\"margin\\":\\"auto\\"},null]} hide-on-print"
+    class="ant-layout-footer emotion-3 hide-on-print"
     id="properties.header.color: #4432a8 _footer"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       footer
     </div>
@@ -282,51 +260,48 @@ exports[`Render properties.header.color: #4432a8  - value[0] 1`] = `
 `;
 
 exports[`Render properties.header.style: border: 5px solid blue - value[0] 1`] = `
+.emotion-0 {
+  min-height: 100vh;
+}
+
+.emotion-1 {
+  border: 5px solid blue;
+}
+
+.emotion-3 {
+  margin: auto;
+}
+
 <section
-  className="ant-layout {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
+  class="ant-layout emotion-0"
   id="properties.header.style: border: 5px solid blue"
 >
   <header
-    className="ant-layout-header {\\"style\\":[{\\"backgroundColor\\":false},null,{\\"border\\":\\"5px solid blue\\"}]} hide-on-print"
+    class="ant-layout-header emotion-1 hide-on-print"
     id="properties.header.style: border: 5px solid blue_header"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       header
     </div>
   </header>
   <main
-    className="ant-layout-content {}"
+    class="ant-layout-content emotion-2"
     id="properties.header.style: border: 5px solid blue_content"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
   </main>
   <footer
-    className="ant-layout-footer {\\"style\\":[{\\"margin\\":\\"auto\\"},null]} hide-on-print"
+    class="ant-layout-footer emotion-3 hide-on-print"
     id="properties.header.style: border: 5px solid blue_footer"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       footer
     </div>
@@ -335,51 +310,48 @@ exports[`Render properties.header.style: border: 5px solid blue - value[0] 1`] =
 `;
 
 exports[`Render properties.header.theme: light - dark is default - value[0] 1`] = `
+.emotion-0 {
+  min-height: 100vh;
+}
+
+.emotion-1 {
+  background-color: #fff;
+}
+
+.emotion-3 {
+  margin: auto;
+}
+
 <section
-  className="ant-layout {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
+  class="ant-layout emotion-0"
   id="properties.header.theme: light - dark is default"
 >
   <header
-    className="ant-layout-header {\\"style\\":[{\\"backgroundColor\\":\\"#fff\\"},null,null]} hide-on-print"
+    class="ant-layout-header emotion-1 hide-on-print"
     id="properties.header.theme: light - dark is default_header"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       header
     </div>
   </header>
   <main
-    className="ant-layout-content {}"
+    class="ant-layout-content emotion-2"
     id="properties.header.theme: light - dark is default_content"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
   </main>
   <footer
-    className="ant-layout-footer {\\"style\\":[{\\"margin\\":\\"auto\\"},null]} hide-on-print"
+    class="ant-layout-footer emotion-3 hide-on-print"
     id="properties.header.theme: light - dark is default_footer"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       footer
     </div>
@@ -388,51 +360,45 @@ exports[`Render properties.header.theme: light - dark is default - value[0] 1`] 
 `;
 
 exports[`Render properties.style: border: 5px solid blue - value[0] 1`] = `
+.emotion-0 {
+  min-height: 100vh;
+  border: 5px solid blue;
+}
+
+.emotion-3 {
+  margin: auto;
+}
+
 <section
-  className="ant-layout {\\"style\\":{\\"minHeight\\":\\"100vh\\",\\"border\\":\\"5px solid blue\\"}}"
+  class="ant-layout emotion-0"
   id="properties.style: border: 5px solid blue"
 >
   <header
-    className="ant-layout-header {\\"style\\":[{\\"backgroundColor\\":false},null,null]} hide-on-print"
+    class="ant-layout-header emotion-1 hide-on-print"
     id="properties.style: border: 5px solid blue_header"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       header
     </div>
   </header>
   <main
-    className="ant-layout-content {}"
+    class="ant-layout-content emotion-2"
     id="properties.style: border: 5px solid blue_content"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
   </main>
   <footer
-    className="ant-layout-footer {\\"style\\":[{\\"margin\\":\\"auto\\"},null]} hide-on-print"
+    class="ant-layout-footer emotion-3 hide-on-print"
     id="properties.style: border: 5px solid blue_footer"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       footer
     </div>

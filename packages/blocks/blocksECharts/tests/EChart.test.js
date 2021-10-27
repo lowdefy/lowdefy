@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
+// import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
+import { runBlockSchemaTests } from '@lowdefy/block-dev';
 
 // import { EChart } from '../src';
 import examples from '../demo/examples/EChart.yaml';

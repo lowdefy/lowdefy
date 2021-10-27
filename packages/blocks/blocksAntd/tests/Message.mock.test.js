@@ -15,11 +15,8 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { message } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import Block from '../src/blocks/Message/Message';
 import examples from '../demo/examples/Message.yaml';
 import meta from '../src/blocks/Message/Message.json';
@@ -41,4 +38,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block, meta, mocks });

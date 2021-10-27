@@ -44,8 +44,8 @@
     "@babel/core": "7.15.8",
     "@babel/preset-env": "7.15.8",
     "babel-jest": "27.3.1",
-    "jest": "26.6.3",
-    "jest-diff": "26.6.2"
+    "jest": "27.3.1",
+    "jest-diff": "27.3.1"
   },
   "publishConfig": {
     "access": "public"

@@ -15,11 +15,8 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { Upload } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import S3UploadButton from '../src/blocks/S3UploadButton/S3UploadButton';
 import examples from '../demo/examples/S3UploadButton.yaml';
 import meta from '../src/blocks/S3UploadButton/S3UploadButton.json';
@@ -35,4 +32,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: S3UploadButton, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: S3UploadButton, meta, mocks });

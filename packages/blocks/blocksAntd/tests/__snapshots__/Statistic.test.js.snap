@@ -2,18 +2,17 @@
 
 exports[`Render default - value[0] 1`] = `
 <div
-  className="ant-statistic {}"
+  class="ant-statistic emotion-0"
 >
   <div
-    className="ant-statistic-content"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-statistic-content"
   >
     
     <span
-      className="ant-statistic-content-value"
+      class="ant-statistic-content-value"
     >
       <span
-        className="ant-statistic-content-value-int"
+        class="ant-statistic-content-value-int"
       >
         
         0
@@ -27,24 +26,23 @@ exports[`Render default - value[0] 1`] = `
 
 exports[`Render properties.decimalSeparator: ',' - value[0] 1`] = `
 <div
-  className="ant-statistic {}"
+  class="ant-statistic emotion-0"
 >
   <div
-    className="ant-statistic-content"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-statistic-content"
   >
     
     <span
-      className="ant-statistic-content-value"
+      class="ant-statistic-content-value"
     >
       <span
-        className="ant-statistic-content-value-int"
+        class="ant-statistic-content-value-int"
       >
         
         3
       </span>
       <span
-        className="ant-statistic-content-value-decimal"
+        class="ant-statistic-content-value-decimal"
       >
         ,45
       </span>
@@ -56,24 +54,23 @@ exports[`Render properties.decimalSeparator: ',' - value[0] 1`] = `
 
 exports[`Render properties.groupSeparator: ',' - value[0] 1`] = `
 <div
-  className="ant-statistic {}"
+  class="ant-statistic emotion-0"
 >
   <div
-    className="ant-statistic-content"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-statistic-content"
   >
     
     <span
-      className="ant-statistic-content-value"
+      class="ant-statistic-content-value"
     >
       <span
-        className="ant-statistic-content-value-int"
+        class="ant-statistic-content-value-int"
       >
         
         3.565.542
       </span>
       <span
-        className="ant-statistic-content-value-decimal"
+        class="ant-statistic-content-value-decimal"
       >
         ,45
       </span>
@@ -85,28 +82,25 @@ exports[`Render properties.groupSeparator: ',' - value[0] 1`] = `
 
 exports[`Render properties.loading: true - value[0] 1`] = `
 <div
-  className="ant-statistic {}"
+  class="ant-statistic emotion-0"
 >
   <div
-    className="ant-statistic-title"
+    class="ant-statistic-title"
   >
     <span
-      className="{}"
-    />
+      class="emotion-0"
+    >
+      Statistic title
+    </span>
   </div>
   <div
-    className="ant-skeleton"
+    class="ant-skeleton"
   >
     <div
-      className="ant-skeleton-content"
+      class="ant-skeleton-content"
     >
       <h3
-        className="ant-skeleton-title"
-        style={
-          Object {
-            "width": undefined,
-          }
-        }
+        class="ant-skeleton-title"
       />
     </div>
   </div>
@@ -115,24 +109,23 @@ exports[`Render properties.loading: true - value[0] 1`] = `
 
 exports[`Render properties.precision: 2 - value[0] 1`] = `
 <div
-  className="ant-statistic {}"
+  class="ant-statistic emotion-0"
 >
   <div
-    className="ant-statistic-content"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-statistic-content"
   >
     
     <span
-      className="ant-statistic-content-value"
+      class="ant-statistic-content-value"
     >
       <span
-        className="ant-statistic-content-value-int"
+        class="ant-statistic-content-value-int"
       >
         
         3
       </span>
       <span
-        className="ant-statistic-content-value-decimal"
+        class="ant-statistic-content-value-decimal"
       >
         .45
       </span>
@@ -144,28 +137,27 @@ exports[`Render properties.precision: 2 - value[0] 1`] = `
 
 exports[`Render properties.prefix: R - value[0] 1`] = `
 <div
-  className="ant-statistic {}"
+  class="ant-statistic emotion-0"
 >
   <div
-    className="ant-statistic-content"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-statistic-content"
   >
     <span
-      className="ant-statistic-content-prefix"
+      class="ant-statistic-content-prefix"
     >
       R
     </span>
     <span
-      className="ant-statistic-content-value"
+      class="ant-statistic-content-value"
     >
       <span
-        className="ant-statistic-content-value-int"
+        class="ant-statistic-content-value-int"
       >
         
         3
       </span>
       <span
-        className="ant-statistic-content-value-decimal"
+        class="ant-statistic-content-value-decimal"
       >
         .45
       </span>
@@ -177,21 +169,18 @@ exports[`Render properties.prefix: R - value[0] 1`] = `
 
 exports[`Render properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
 <div
-  className="ant-statistic {}"
+  class="ant-statistic emotion-0"
 >
   <div
-    className="ant-statistic-content"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-statistic-content"
   >
     <span
-      className="ant-statistic-content-prefix"
+      class="ant-statistic-content-prefix"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-0"
         id="properties.prefixIcon: AccountBookFilled_prefixIcon"
-        required={false}
         role="img"
       >
         <svg
@@ -210,16 +199,16 @@ exports[`Render properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
       </span>
     </span>
     <span
-      className="ant-statistic-content-value"
+      class="ant-statistic-content-value"
     >
       <span
-        className="ant-statistic-content-value-int"
+        class="ant-statistic-content-value-int"
       >
         
         3
       </span>
       <span
-        className="ant-statistic-content-value-decimal"
+        class="ant-statistic-content-value-decimal"
       >
         .45
       </span>
@@ -231,30 +220,29 @@ exports[`Render properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
 
 exports[`Render properties.suffix: Rand - value[0] 1`] = `
 <div
-  className="ant-statistic {}"
+  class="ant-statistic emotion-0"
 >
   <div
-    className="ant-statistic-content"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-statistic-content"
   >
     
     <span
-      className="ant-statistic-content-value"
+      class="ant-statistic-content-value"
     >
       <span
-        className="ant-statistic-content-value-int"
+        class="ant-statistic-content-value-int"
       >
         
         3
       </span>
       <span
-        className="ant-statistic-content-value-decimal"
+        class="ant-statistic-content-value-decimal"
       >
         .45
       </span>
     </span>
     <span
-      className="ant-statistic-content-suffix"
+      class="ant-statistic-content-suffix"
     >
       Rand
     </span>
@@ -264,37 +252,34 @@ exports[`Render properties.suffix: Rand - value[0] 1`] = `
 
 exports[`Render properties.suffixIcon: AccountBookFilled - value[0] 1`] = `
 <div
-  className="ant-statistic {}"
+  class="ant-statistic emotion-0"
 >
   <div
-    className="ant-statistic-content"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-statistic-content"
   >
     
     <span
-      className="ant-statistic-content-value"
+      class="ant-statistic-content-value"
     >
       <span
-        className="ant-statistic-content-value-int"
+        class="ant-statistic-content-value-int"
       >
         
         3
       </span>
       <span
-        className="ant-statistic-content-value-decimal"
+        class="ant-statistic-content-value-decimal"
       >
         .45
       </span>
     </span>
     <span
-      className="ant-statistic-content-suffix"
+      class="ant-statistic-content-suffix"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-0"
         id="properties.suffixIcon: AccountBookFilled_suffixIcon"
-        required={false}
         role="img"
       >
         <svg
@@ -318,25 +303,26 @@ exports[`Render properties.suffixIcon: AccountBookFilled - value[0] 1`] = `
 
 exports[`Render properties.title - value[0] 1`] = `
 <div
-  className="ant-statistic {}"
+  class="ant-statistic emotion-0"
 >
   <div
-    className="ant-statistic-title"
+    class="ant-statistic-title"
   >
     <span
-      className="{}"
-    />
+      class="emotion-0"
+    >
+      Statistic title
+    </span>
   </div>
   <div
-    className="ant-statistic-content"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-statistic-content"
   >
     
     <span
-      className="ant-statistic-content-value"
+      class="ant-statistic-content-value"
     >
       <span
-        className="ant-statistic-content-value-int"
+        class="ant-statistic-content-value-int"
       >
         
         0
@@ -350,25 +336,30 @@ exports[`Render properties.title - value[0] 1`] = `
 
 exports[`Render properties.title with html - value[0] 1`] = `
 <div
-  className="ant-statistic {}"
+  class="ant-statistic emotion-0"
 >
   <div
-    className="ant-statistic-title"
+    class="ant-statistic-title"
   >
     <span
-      className="{}"
-    />
+      class="emotion-0"
+    >
+      <div
+        style="color:blue;"
+      >
+        Very Html
+      </div>
+    </span>
   </div>
   <div
-    className="ant-statistic-content"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-statistic-content"
   >
     
     <span
-      className="ant-statistic-content-value"
+      class="ant-statistic-content-value"
     >
       <span
-        className="ant-statistic-content-value-int"
+        class="ant-statistic-content-value-int"
       >
         
         100
@@ -376,7 +367,7 @@ exports[`Render properties.title with html - value[0] 1`] = `
       
     </span>
     <span
-      className="ant-statistic-content-suffix"
+      class="ant-statistic-content-suffix"
     >
       %
     </span>
@@ -386,24 +377,23 @@ exports[`Render properties.title with html - value[0] 1`] = `
 
 exports[`Render properties.value: '3.45' as string - value[0] 1`] = `
 <div
-  className="ant-statistic {}"
+  class="ant-statistic emotion-0"
 >
   <div
-    className="ant-statistic-content"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-statistic-content"
   >
     
     <span
-      className="ant-statistic-content-value"
+      class="ant-statistic-content-value"
     >
       <span
-        className="ant-statistic-content-value-int"
+        class="ant-statistic-content-value-int"
       >
         
         3
       </span>
       <span
-        className="ant-statistic-content-value-decimal"
+        class="ant-statistic-content-value-decimal"
       >
         .45
       </span>
@@ -415,24 +405,23 @@ exports[`Render properties.value: '3.45' as string - value[0] 1`] = `
 
 exports[`Render properties.value: 3.45 as number - value[0] 1`] = `
 <div
-  className="ant-statistic {}"
+  class="ant-statistic emotion-0"
 >
   <div
-    className="ant-statistic-content"
-    style="{\\"options\\":{\\"styleObjectOnly\\":true}}"
+    class="ant-statistic-content"
   >
     
     <span
-      className="ant-statistic-content-value"
+      class="ant-statistic-content-value"
     >
       <span
-        className="ant-statistic-content-value-int"
+        class="ant-statistic-content-value-int"
       >
         
         3
       </span>
       <span
-        className="ant-statistic-content-value-decimal"
+        class="ant-statistic-content-value-decimal"
       >
         .45
       </span>

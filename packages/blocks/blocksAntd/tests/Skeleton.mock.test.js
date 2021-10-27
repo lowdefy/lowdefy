@@ -15,11 +15,8 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { Skeleton } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import SkeletonBlock from '../src/blocks/Skeleton/Skeleton';
 import examples from '../demo/examples/Skeleton.yaml';
 import meta from '../src/blocks/Skeleton/Skeleton.json';
@@ -51,4 +48,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: SkeletonBlock, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: SkeletonBlock, meta, mocks });

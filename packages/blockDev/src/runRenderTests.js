@@ -15,9 +15,9 @@
 */
 
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render, waitFor } from '@testing-library/react';
 import { type } from '@lowdefy/helpers';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import mockBlock from './mockBlock';
 
@@ -45,50 +45,44 @@ const runRenderTests = ({
       values.push(...meta.values);
     }
     values.forEach((value, v) => {
-      test(`Render ${ex.id} - value[${v}]`, () => {
+      test(`Render ${ex.id} - value[${v}]`, async () => {
         // create shell to setup react hooks with getProps before render;
         const Shell = () => <Block {...getProps(ex)} value={value} methods={methods} />;
-        const comp = renderer.create(
+        const { container } = render(
           <MemoryRouter>
             <Shell />
           </MemoryRouter>
         );
-        const tree = comp.toJSON();
-        expect(tree).toMatchSnapshot();
-        comp.unmount();
+        await waitFor(() => expect(container.firstChild).toMatchSnapshot());
       });
 
       if (meta.test && meta.test.validation) {
         (validationsExamples || []).map((validationEx) => {
-          test(`Render validation.status = ${validationEx.status} ${ex.id} - value[${v}]`, () => {
+          test(`Render validation.status = ${validationEx.status} ${ex.id} - value[${v}]`, async () => {
             // create shell to setup react hooks with getProps before render;
             const Shell = () => (
               <Block {...getProps(ex)} value={value} methods={methods} validation={validationEx} />
             );
-            const comp = renderer.create(
+            const { container } = render(
               <MemoryRouter>
                 <Shell />
               </MemoryRouter>
             );
-            const tree = comp.toJSON();
-            expect(tree).toMatchSnapshot();
-            comp.unmount();
+            await waitFor(() => expect(container.firstChild).toMatchSnapshot());
           });
         });
       }
 
       if (meta.test && meta.test.required) {
-        test(`Render required = true ${ex.id} - value[${v}]`, () => {
+        test(`Render required = true ${ex.id} - value[${v}]`, async () => {
           // create shell to setup react hooks with getProps before render;
           const Shell = () => <Block {...getProps(ex)} value={value} methods={methods} required />;
-          const comp = renderer.create(
+          const { container } = render(
             <MemoryRouter>
               <Shell />
             </MemoryRouter>
           );
-          const tree = comp.toJSON();
-          expect(tree).toMatchSnapshot();
-          comp.unmount();
+          await waitFor(() => expect(container.firstChild).toMatchSnapshot());
         });
       }
     });

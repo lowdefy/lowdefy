@@ -1,15 +1,15 @@
 - id: default
   type: Affix
-- id: "properties.offsetTop"
+- id: 'properties.offsetTop'
   type: Affix
   properties:
     offsetTop: 15
-- id: "properties.offsetBottom"
+- id: 'properties.offsetBottom'
   type: Affix
   properties:
     offsetBottom: 15
-- id: "properties.style"
+- id: 'properties.style'
   type: Affix
   properties:
-    style: 
+    style:
       border: 5px solid blue

@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-
 import BlockSchemaErrors from './BlockSchemaErrors';
 import mockBlock from './mockBlock';
 import runBlockSchemaTests from './runBlockSchemaTests';

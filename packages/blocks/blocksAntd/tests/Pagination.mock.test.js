@@ -15,11 +15,8 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { Pagination } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import Block from '../src/blocks/Pagination/Pagination';
 import examples from '../demo/examples/Pagination.yaml';
 import meta from '../src/blocks/Pagination/Pagination.json';
@@ -36,4 +33,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block, meta, mocks });

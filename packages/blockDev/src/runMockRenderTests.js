@@ -16,24 +16,22 @@
 
 import React from 'react';
 import { type } from '@lowdefy/helpers';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
+import { render } from '@testing-library/react';
 
 import mockBlock from './mockBlock';
 
-const runMockRenderTests = ({
-  Block,
-  enzyme,
-  examples,
-  logger,
-  meta,
-  mocks,
-  reset = () => null,
-}) => {
-  const { before, methods, getProps } = mockBlock({ meta, logger });
+const runMockRenderTests = ({ Block, examples, logger, meta, mocks, reset = () => null }) => {
+  const { before, getProps } = mockBlock({ meta, logger });
+
+  const makeCssClass = jest.fn();
+  const makeCssImp = (style, op) => JSON.stringify({ style, options: op });
 
   beforeEach(() => {
     reset();
     before();
+    makeCssClass.mockReset();
+    makeCssClass.mockImplementation(makeCssImp);
   });
   const values = meta.values
     ? [type.enforceType(meta.valueType, null), ...meta.values]
@@ -45,15 +43,9 @@ const runMockRenderTests = ({
         test(`Mock render - ${ex.id} - value[${v}] - ${mock.name}`, () => {
           const Shell = () => {
             const props = getProps(ex);
-            return (
-              <Block
-                {...props}
-                methods={{ ...props.methods, makeCssClass: methods.makeCssClass }}
-                value={value}
-              />
-            );
+            return <Block {...props} methods={{ ...props.methods, makeCssClass }} value={value} />;
           };
-          enzyme.mount(
+          render(
             <MemoryRouter>
               <Shell />
             </MemoryRouter>

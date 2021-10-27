@@ -21,19 +21,5 @@ import Switch from '../src/blocks/Switch/Switch';
 import examples from '../demo/examples/Switch.yaml';
 import meta from '../src/blocks/Switch/Switch.json';
 
-jest.mock('@lowdefy/block-tools', () => {
-  const originalModule = jest.requireActual('@lowdefy/block-tools');
-  return {
-    ...originalModule,
-    blockDefaultProps: {
-      ...originalModule.blockDefaultProps,
-      methods: {
-        ...originalModule.blockDefaultProps.methods,
-        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
-      },
-    },
-  };
-});
-
 runRenderTests({ examples, Block: Switch, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta });

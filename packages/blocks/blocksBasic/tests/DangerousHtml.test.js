@@ -16,27 +16,11 @@
 
 import React from 'react';
 import { mockBlock, runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
-import { configure, mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-configure({ adapter: new Adapter() });
+import { render } from '@testing-library/react';
 
 import { DangerousHtml } from '../src';
 import examples from '../demo/examples/Html.yaml';
 import meta from '../src/blocks/Html/Html.json';
-
-jest.mock('@lowdefy/block-tools', () => {
-  const originalModule = jest.requireActual('@lowdefy/block-tools');
-  return {
-    ...originalModule,
-    blockDefaultProps: {
-      ...originalModule.blockDefaultProps,
-      methods: {
-        ...originalModule.blockDefaultProps.methods,
-        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
-      },
-    },
-  };
-});
 
 runRenderTests({ examples, Block: DangerousHtml, meta });
 runBlockSchemaTests({ examples, meta });
@@ -55,13 +39,8 @@ test('update on properties.html change', () => {
   const Shell = ({ properties }) => (
     <DangerousHtml {...getProps(config)} methods={methods} properties={properties} />
   );
-  const wrapper = mount(<Shell properties={config.properties} />);
-  expect(wrapper.html()).toMatchInlineSnapshot(
-    `"<div id=\\"update\\" data-testid=\\"update\\" class=\\"{}\\"><div>one</div></div>"`
-  );
-  wrapper.setProps({ properties: { html: '<div>two</div>' } });
-  wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(
-    `"<div id=\\"update\\" data-testid=\\"update\\" class=\\"{}\\"><div>two</div></div>"`
-  );
+  const { container, rerender } = render(<Shell properties={config.properties} />);
+  expect(container.firstChild).toMatchSnapshot();
+  rerender(<Shell properties={{ html: '<div>two</div>' }} />);
+  expect(container.firstChild).toMatchSnapshot();
 });

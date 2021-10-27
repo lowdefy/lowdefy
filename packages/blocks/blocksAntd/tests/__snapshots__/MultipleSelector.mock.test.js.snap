@@ -40,7 +40,7 @@ Array [
         <mockConstructor
           className="{}"
           id="properties.allowClear: false_0"
-          value={0}
+          value="0"
         >
           <HtmlComponent
             html="Option 1"
@@ -98,7 +98,7 @@ Array [
         <mockConstructor
           className="{}"
           id="properties.allowClear: false_1"
-          value={1}
+          value="1"
         >
           <HtmlComponent
             html="Option 2"
@@ -186,7 +186,7 @@ Array [
         <mockConstructor
           className="{}"
           id="properties.autoFocus: true_0"
-          value={0}
+          value="0"
         >
           <HtmlComponent
             html="Option 1"
@@ -244,7 +244,7 @@ Array [
         <mockConstructor
           className="{}"
           id="properties.autoFocus: true_1"
-          value={1}
+          value="1"
         >
           <HtmlComponent
             html="Option 2"
@@ -332,7 +332,7 @@ Array [
         <mockConstructor
           className="{}"
           id="properties.clearIcon: ChromeFilled_0"
-          value={0}
+          value="0"
         >
           <HtmlComponent
             html="Option 1"
@@ -390,7 +390,7 @@ Array [
         <mockConstructor
           className="{}"
           id="properties.clearIcon: ChromeFilled_1"
-          value={1}
+          value="1"
         >
           <HtmlComponent
             html="Option 2"
@@ -503,7 +503,7 @@ Array [
         <mockConstructor
           className="{}"
           id="properties.clearIcon-object: ChromeFilled_0"
-          value={0}
+          value="0"
         >
           <HtmlComponent
             html="Option 1"
@@ -561,7 +561,7 @@ Array [
         <mockConstructor
           className="{}"
           id="properties.clearIcon-object: ChromeFilled_1"
-          value={1}
+          value="1"
         >
           <HtmlComponent
             html="Option 2"
@@ -940,7 +940,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[null,null]}"
           id="properties.options.label: html_0"
-          value={0}
+          value="0"
         >
           <HtmlComponent
             html=<div>
@@ -1019,7 +1019,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[null,null]}"
           id="properties.options.label: html_1"
-          value={1}
+          value="1"
         >
           <HtmlComponent
             html=<div style="color: green;">
@@ -1095,7 +1095,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[null,null]}"
           id="properties.options.label: html_2"
-          value={2}
+          value="2"
         >
           <HtmlComponent
             html="Option 3"
@@ -1200,7 +1200,7 @@ Array [
           className="{\\"style\\":[null,null]}"
           filterstring="Some main text"
           id="properties.options.label: html and properties.options.filterString_0"
-          value={0}
+          value="0"
         >
           <HtmlComponent
             html=<div>
@@ -1280,7 +1280,7 @@ Array [
           className="{\\"style\\":[null,null]}"
           filterstring="Option green"
           id="properties.options.label: html and properties.options.filterString_1"
-          value={1}
+          value="1"
         >
           <HtmlComponent
             html=<div style="color: green;">
@@ -1356,7 +1356,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[null,null]}"
           id="properties.options.label: html and properties.options.filterString_2"
-          value={2}
+          value="2"
         >
           <HtmlComponent
             html="Option 3"
@@ -1460,7 +1460,7 @@ Array [
         <mockConstructor
           className="{}"
           id="properties.options: html_0"
-          value={0}
+          value="0"
         >
           <HtmlComponent
             html=<div>
@@ -1530,7 +1530,7 @@ Array [
         <mockConstructor
           className="{}"
           id="properties.options: html_1"
-          value={1}
+          value="1"
         >
           <HtmlComponent
             html=<div style="color: green;">
@@ -1597,7 +1597,7 @@ Array [
         <mockConstructor
           className="{}"
           id="properties.options: html_2"
-          value={2}
+          value="2"
         >
           <HtmlComponent
             html="Option 3"
@@ -1692,7 +1692,7 @@ Array [
         <mockConstructor
           className="{}"
           id="properties.options-boolean_0"
-          value={0}
+          value="0"
         >
           <HtmlComponent
             html="true"
@@ -1750,7 +1750,7 @@ Array [
         <mockConstructor
           className="{}"
           id="properties.options-boolean_1"
-          value={1}
+          value="1"
         >
           <HtmlComponent
             html="false"
@@ -1838,7 +1838,7 @@ Array [
         <mockConstructor
           className="{}"
           id="properties.options-number_0"
-          value={0}
+          value="0"
         >
           <HtmlComponent
             html="10"
@@ -1896,7 +1896,7 @@ Array [
         <mockConstructor
           className="{}"
           id="properties.options-number_1"
-          value={1}
+          value="1"
         >
           <HtmlComponent
             html="12"
@@ -1984,7 +1984,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[null,null]}"
           id="properties.options-object_0"
-          value={0}
+          value="0"
         >
           <HtmlComponent
             html="one"
@@ -2048,7 +2048,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[null,null]}"
           id="properties.options-object_1"
-          value={1}
+          value="1"
         >
           <HtmlComponent
             html="two"
@@ -2142,7 +2142,7 @@ Array [
         <mockConstructor
           className="{}"
           id="properties.options-string_0"
-          value={0}
+          value="0"
         >
           <HtmlComponent
             html="Option 1"
@@ -2200,7 +2200,7 @@ Array [
         <mockConstructor
           className="{}"
           id="properties.options-string_1"
-          value={1}
+          value="1"
         >
           <HtmlComponent
             html="Option 2"
@@ -2288,7 +2288,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[null,{\\"color\\":\\"red\\"}]}"
           id="properties.options-style_0"
-          value={0}
+          value="0"
         >
           <HtmlComponent
             html="one"
@@ -2354,7 +2354,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":[null,null]}"
           id="properties.options-style_1"
-          value={1}
+          value="1"
         >
           <HtmlComponent
             html="two"
@@ -2450,7 +2450,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":{\\"color\\":\\"blue\\"}}"
           id="properties.optionsStyle: CSS style applied_0"
-          value={0}
+          value="0"
         >
           <HtmlComponent
             html="Option 1"
@@ -2512,7 +2512,7 @@ Array [
         <mockConstructor
           className="{\\"style\\":{\\"color\\":\\"blue\\"}}"
           id="properties.optionsStyle: CSS style applied_1"
-          value={1}
+          value="1"
         >
           <HtmlComponent
             html="Option 2"
@@ -2832,7 +2832,7 @@ Array [
         <mockConstructor
           className="{}"
           id="property.bordered: false_0"
-          value={0}
+          value="0"
         >
           <HtmlComponent
             html="Option 1"
@@ -2890,7 +2890,7 @@ Array [
         <mockConstructor
           className="{}"
           id="property.bordered: false_1"
-          value={1}
+          value="1"
         >
           <HtmlComponent
             html="Option 2"

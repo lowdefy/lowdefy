@@ -43,7 +43,7 @@ const media = {
 const mediaRegex = /@media\s+(xs|sm|md|lg|xl|xxl)\s*{/gm;
 const setReplacer = (_, group) => media[group] + ' {';
 
-const mediaToCssObject = (styles, options = {}) => {
+const mediaToCssObject = (styles, styleObjectOnly) => {
   if (type.isString(styles)) {
     return styles.replace(mediaRegex, setReplacer);
   }
@@ -62,7 +62,7 @@ const mediaToCssObject = (styles, options = {}) => {
       return {};
     }
     let mq = media;
-    if (options.react) {
+    if (styleObjectOnly) {
       mq = mediaReact;
     }
     const { xs, sm, md, lg, xl, xxl, ...others } = style;

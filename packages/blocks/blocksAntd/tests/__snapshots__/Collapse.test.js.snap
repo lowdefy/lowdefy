@@ -2,24 +2,21 @@
 
 exports[`Render default - value[0] 1`] = `
 <div
-  className="ant-collapse ant-collapse-icon-position-left"
-  role={null}
+  class="ant-collapse ant-collapse-icon-position-left"
 >
   <div
-    className="ant-collapse-item ant-collapse-item-active"
+    class="ant-collapse-item ant-collapse-item-active"
   >
     <div
-      aria-expanded={true}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="true"
+      class="ant-collapse-header"
       role="button"
-      tabIndex={0}
+      tabindex="0"
     >
       <div>
         <span
           aria-label="right"
-          className="anticon anticon-right ant-collapse-arrow"
+          class="anticon anticon-right ant-collapse-arrow"
           role="img"
         >
           <svg
@@ -28,12 +25,7 @@ exports[`Render default - value[0] 1`] = `
             fill="currentColor"
             focusable="false"
             height="1em"
-            style={
-              Object {
-                "msTransform": "rotate(90deg)",
-                "transform": "rotate(90deg)",
-              }
-            }
+            style="transform: rotate(90deg);"
             viewBox="64 64 896 896"
             width="1em"
           >
@@ -44,23 +36,19 @@ exports[`Render default - value[0] 1`] = `
         </span>
       </div>
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        content
+      </span>
     </div>
     <div
-      className="ant-collapse-content ant-collapse-content-active"
-      role={null}
+      class="ant-collapse-content ant-collapse-content-active"
     >
       <div
-        className="ant-collapse-content-box"
+        class="ant-collapse-content-box"
       >
         <div
-          style={
-            Object {
-              "border": "1px solid red",
-              "padding": 10,
-            }
-          }
+          style="border: 1px solid red; padding: 10px;"
         >
           content
         </div>
@@ -72,24 +60,22 @@ exports[`Render default - value[0] 1`] = `
 
 exports[`Render properties.accordion: true - value[0] 1`] = `
 <div
-  className="ant-collapse ant-collapse-icon-position-left"
+  class="ant-collapse ant-collapse-icon-position-left"
   role="tablist"
 >
   <div
-    className="ant-collapse-item ant-collapse-item-active"
+    class="ant-collapse-item ant-collapse-item-active"
   >
     <div
-      aria-expanded={true}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="true"
+      class="ant-collapse-header"
       role="tab"
-      tabIndex={0}
+      tabindex="0"
     >
       <div>
         <span
           aria-label="right"
-          className="anticon anticon-right ant-collapse-arrow"
+          class="anticon anticon-right ant-collapse-arrow"
           role="img"
         >
           <svg
@@ -98,12 +84,7 @@ exports[`Render properties.accordion: true - value[0] 1`] = `
             fill="currentColor"
             focusable="false"
             height="1em"
-            style={
-              Object {
-                "msTransform": "rotate(90deg)",
-                "transform": "rotate(90deg)",
-              }
-            }
+            style="transform: rotate(90deg);"
             viewBox="64 64 896 896"
             width="1em"
           >
@@ -114,23 +95,20 @@ exports[`Render properties.accordion: true - value[0] 1`] = `
         </span>
       </div>
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        Title One
+      </span>
     </div>
     <div
-      className="ant-collapse-content ant-collapse-content-active"
+      class="ant-collapse-content ant-collapse-content-active"
       role="tabpanel"
     >
       <div
-        className="ant-collapse-content-box"
+        class="ant-collapse-content-box"
       >
         <div
-          style={
-            Object {
-              "border": "1px solid red",
-              "padding": 10,
-            }
-          }
+          style="border: 1px solid red; padding: 10px;"
         >
           content_one
         </div>
@@ -138,20 +116,18 @@ exports[`Render properties.accordion: true - value[0] 1`] = `
     </div>
   </div>
   <div
-    className="ant-collapse-item"
+    class="ant-collapse-item"
   >
     <div
-      aria-expanded={false}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="false"
+      class="ant-collapse-header"
       role="tab"
-      tabIndex={0}
+      tabindex="0"
     >
       <div>
         <span
           aria-label="right"
-          className="anticon anticon-right ant-collapse-arrow"
+          class="anticon anticon-right ant-collapse-arrow"
           role="img"
         >
           <svg
@@ -170,8 +146,10 @@ exports[`Render properties.accordion: true - value[0] 1`] = `
         </span>
       </div>
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        Title Two
+      </span>
     </div>
   </div>
 </div>
@@ -179,24 +157,21 @@ exports[`Render properties.accordion: true - value[0] 1`] = `
 
 exports[`Render properties.activeKey: content_two - value[0] 1`] = `
 <div
-  className="ant-collapse ant-collapse-icon-position-left"
-  role={null}
+  class="ant-collapse ant-collapse-icon-position-left"
 >
   <div
-    className="ant-collapse-item"
+    class="ant-collapse-item"
   >
     <div
-      aria-expanded={false}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="false"
+      class="ant-collapse-header"
       role="button"
-      tabIndex={0}
+      tabindex="0"
     >
       <div>
         <span
           aria-label="right"
-          className="anticon anticon-right ant-collapse-arrow"
+          class="anticon anticon-right ant-collapse-arrow"
           role="img"
         >
           <svg
@@ -215,25 +190,25 @@ exports[`Render properties.activeKey: content_two - value[0] 1`] = `
         </span>
       </div>
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        Title One
+      </span>
     </div>
   </div>
   <div
-    className="ant-collapse-item ant-collapse-item-active"
+    class="ant-collapse-item ant-collapse-item-active"
   >
     <div
-      aria-expanded={true}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="true"
+      class="ant-collapse-header"
       role="button"
-      tabIndex={0}
+      tabindex="0"
     >
       <div>
         <span
           aria-label="right"
-          className="anticon anticon-right ant-collapse-arrow"
+          class="anticon anticon-right ant-collapse-arrow"
           role="img"
         >
           <svg
@@ -242,12 +217,7 @@ exports[`Render properties.activeKey: content_two - value[0] 1`] = `
             fill="currentColor"
             focusable="false"
             height="1em"
-            style={
-              Object {
-                "msTransform": "rotate(90deg)",
-                "transform": "rotate(90deg)",
-              }
-            }
+            style="transform: rotate(90deg);"
             viewBox="64 64 896 896"
             width="1em"
           >
@@ -258,23 +228,19 @@ exports[`Render properties.activeKey: content_two - value[0] 1`] = `
         </span>
       </div>
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        Title Two
+      </span>
     </div>
     <div
-      className="ant-collapse-content ant-collapse-content-active"
-      role={null}
+      class="ant-collapse-content ant-collapse-content-active"
     >
       <div
-        className="ant-collapse-content-box"
+        class="ant-collapse-content-box"
       >
         <div
-          style={
-            Object {
-              "border": "1px solid red",
-              "padding": 10,
-            }
-          }
+          style="border: 1px solid red; padding: 10px;"
         >
           content_two
         </div>
@@ -286,24 +252,21 @@ exports[`Render properties.activeKey: content_two - value[0] 1`] = `
 
 exports[`Render properties.bordered: false - value[0] 1`] = `
 <div
-  className="ant-collapse ant-collapse-borderless ant-collapse-icon-position-left"
-  role={null}
+  class="ant-collapse ant-collapse-borderless ant-collapse-icon-position-left"
 >
   <div
-    className="ant-collapse-item ant-collapse-item-active"
+    class="ant-collapse-item ant-collapse-item-active"
   >
     <div
-      aria-expanded={true}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="true"
+      class="ant-collapse-header"
       role="button"
-      tabIndex={0}
+      tabindex="0"
     >
       <div>
         <span
           aria-label="right"
-          className="anticon anticon-right ant-collapse-arrow"
+          class="anticon anticon-right ant-collapse-arrow"
           role="img"
         >
           <svg
@@ -312,12 +275,7 @@ exports[`Render properties.bordered: false - value[0] 1`] = `
             fill="currentColor"
             focusable="false"
             height="1em"
-            style={
-              Object {
-                "msTransform": "rotate(90deg)",
-                "transform": "rotate(90deg)",
-              }
-            }
+            style="transform: rotate(90deg);"
             viewBox="64 64 896 896"
             width="1em"
           >
@@ -328,23 +286,19 @@ exports[`Render properties.bordered: false - value[0] 1`] = `
         </span>
       </div>
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        Title One
+      </span>
     </div>
     <div
-      className="ant-collapse-content ant-collapse-content-active"
-      role={null}
+      class="ant-collapse-content ant-collapse-content-active"
     >
       <div
-        className="ant-collapse-content-box"
+        class="ant-collapse-content-box"
       >
         <div
-          style={
-            Object {
-              "border": "1px solid red",
-              "padding": 10,
-            }
-          }
+          style="border: 1px solid red; padding: 10px;"
         >
           content_one
         </div>
@@ -352,20 +306,18 @@ exports[`Render properties.bordered: false - value[0] 1`] = `
     </div>
   </div>
   <div
-    className="ant-collapse-item"
+    class="ant-collapse-item"
   >
     <div
-      aria-expanded={false}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="false"
+      class="ant-collapse-header"
       role="button"
-      tabIndex={0}
+      tabindex="0"
     >
       <div>
         <span
           aria-label="right"
-          className="anticon anticon-right ant-collapse-arrow"
+          class="anticon anticon-right ant-collapse-arrow"
           role="img"
         >
           <svg
@@ -384,8 +336,10 @@ exports[`Render properties.bordered: false - value[0] 1`] = `
         </span>
       </div>
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        Title Two
+      </span>
     </div>
   </div>
 </div>
@@ -393,24 +347,21 @@ exports[`Render properties.bordered: false - value[0] 1`] = `
 
 exports[`Render properties.defaultActiveKey: content_two - value[0] 1`] = `
 <div
-  className="ant-collapse ant-collapse-icon-position-left"
-  role={null}
+  class="ant-collapse ant-collapse-icon-position-left"
 >
   <div
-    className="ant-collapse-item"
+    class="ant-collapse-item"
   >
     <div
-      aria-expanded={false}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="false"
+      class="ant-collapse-header"
       role="button"
-      tabIndex={0}
+      tabindex="0"
     >
       <div>
         <span
           aria-label="right"
-          className="anticon anticon-right ant-collapse-arrow"
+          class="anticon anticon-right ant-collapse-arrow"
           role="img"
         >
           <svg
@@ -429,25 +380,25 @@ exports[`Render properties.defaultActiveKey: content_two - value[0] 1`] = `
         </span>
       </div>
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        Title One
+      </span>
     </div>
   </div>
   <div
-    className="ant-collapse-item ant-collapse-item-active"
+    class="ant-collapse-item ant-collapse-item-active"
   >
     <div
-      aria-expanded={true}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="true"
+      class="ant-collapse-header"
       role="button"
-      tabIndex={0}
+      tabindex="0"
     >
       <div>
         <span
           aria-label="right"
-          className="anticon anticon-right ant-collapse-arrow"
+          class="anticon anticon-right ant-collapse-arrow"
           role="img"
         >
           <svg
@@ -456,12 +407,7 @@ exports[`Render properties.defaultActiveKey: content_two - value[0] 1`] = `
             fill="currentColor"
             focusable="false"
             height="1em"
-            style={
-              Object {
-                "msTransform": "rotate(90deg)",
-                "transform": "rotate(90deg)",
-              }
-            }
+            style="transform: rotate(90deg);"
             viewBox="64 64 896 896"
             width="1em"
           >
@@ -472,23 +418,19 @@ exports[`Render properties.defaultActiveKey: content_two - value[0] 1`] = `
         </span>
       </div>
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        Title Two
+      </span>
     </div>
     <div
-      className="ant-collapse-content ant-collapse-content-active"
-      role={null}
+      class="ant-collapse-content ant-collapse-content-active"
     >
       <div
-        className="ant-collapse-content-box"
+        class="ant-collapse-content-box"
       >
         <div
-          style={
-            Object {
-              "border": "1px solid red",
-              "padding": 10,
-            }
-          }
+          style="border: 1px solid red; padding: 10px;"
         >
           content_two
         </div>
@@ -500,24 +442,21 @@ exports[`Render properties.defaultActiveKey: content_two - value[0] 1`] = `
 
 exports[`Render properties.destroyInactivePanel: true - value[0] 1`] = `
 <div
-  className="ant-collapse ant-collapse-icon-position-left"
-  role={null}
+  class="ant-collapse ant-collapse-icon-position-left"
 >
   <div
-    className="ant-collapse-item ant-collapse-item-active"
+    class="ant-collapse-item ant-collapse-item-active"
   >
     <div
-      aria-expanded={true}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="true"
+      class="ant-collapse-header"
       role="button"
-      tabIndex={0}
+      tabindex="0"
     >
       <div>
         <span
           aria-label="right"
-          className="anticon anticon-right ant-collapse-arrow"
+          class="anticon anticon-right ant-collapse-arrow"
           role="img"
         >
           <svg
@@ -526,12 +465,7 @@ exports[`Render properties.destroyInactivePanel: true - value[0] 1`] = `
             fill="currentColor"
             focusable="false"
             height="1em"
-            style={
-              Object {
-                "msTransform": "rotate(90deg)",
-                "transform": "rotate(90deg)",
-              }
-            }
+            style="transform: rotate(90deg);"
             viewBox="64 64 896 896"
             width="1em"
           >
@@ -542,23 +476,19 @@ exports[`Render properties.destroyInactivePanel: true - value[0] 1`] = `
         </span>
       </div>
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        Title One
+      </span>
     </div>
     <div
-      className="ant-collapse-content ant-collapse-content-active"
-      role={null}
+      class="ant-collapse-content ant-collapse-content-active"
     >
       <div
-        className="ant-collapse-content-box"
+        class="ant-collapse-content-box"
       >
         <div
-          style={
-            Object {
-              "border": "1px solid red",
-              "padding": 10,
-            }
-          }
+          style="border: 1px solid red; padding: 10px;"
         >
           content_one
         </div>
@@ -566,20 +496,18 @@ exports[`Render properties.destroyInactivePanel: true - value[0] 1`] = `
     </div>
   </div>
   <div
-    className="ant-collapse-item"
+    class="ant-collapse-item"
   >
     <div
-      aria-expanded={false}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="false"
+      class="ant-collapse-header"
       role="button"
-      tabIndex={0}
+      tabindex="0"
     >
       <div>
         <span
           aria-label="right"
-          className="anticon anticon-right ant-collapse-arrow"
+          class="anticon anticon-right ant-collapse-arrow"
           role="img"
         >
           <svg
@@ -598,8 +526,10 @@ exports[`Render properties.destroyInactivePanel: true - value[0] 1`] = `
         </span>
       </div>
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        Title Two
+      </span>
     </div>
   </div>
 </div>
@@ -607,27 +537,22 @@ exports[`Render properties.destroyInactivePanel: true - value[0] 1`] = `
 
 exports[`Render properties.expandIcon: ArrowRightOutlined - value[0] 1`] = `
 <div
-  className="ant-collapse ant-collapse-icon-position-left"
-  role={null}
+  class="ant-collapse ant-collapse-icon-position-left"
 >
   <div
-    className="ant-collapse-item ant-collapse-item-active"
+    class="ant-collapse-item ant-collapse-item-active"
   >
     <div
-      aria-expanded={true}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="true"
+      class="ant-collapse-header"
       role="button"
-      tabIndex={0}
+      tabindex="0"
     >
       <div>
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin ant-collapse-arrow"
+          class="anticon anticon-loading-3-quarters anticon-spin ant-collapse-arrow"
           id="properties.expandIcon: ArrowRightOutlined_expandIcon"
-          required={false}
           role="img"
         >
           <svg
@@ -636,12 +561,7 @@ exports[`Render properties.expandIcon: ArrowRightOutlined - value[0] 1`] = `
             fill="currentColor"
             focusable="false"
             height="1em"
-            style={
-              Object {
-                "msTransform": "rotate(90deg)",
-                "transform": "rotate(90deg)",
-              }
-            }
+            style="transform: rotate(90deg);"
             viewBox="0 0 1024 1024"
             width="1em"
           >
@@ -652,23 +572,19 @@ exports[`Render properties.expandIcon: ArrowRightOutlined - value[0] 1`] = `
         </span>
       </div>
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        Title One
+      </span>
     </div>
     <div
-      className="ant-collapse-content ant-collapse-content-active"
-      role={null}
+      class="ant-collapse-content ant-collapse-content-active"
     >
       <div
-        className="ant-collapse-content-box"
+        class="ant-collapse-content-box"
       >
         <div
-          style={
-            Object {
-              "border": "1px solid red",
-              "padding": 10,
-            }
-          }
+          style="border: 1px solid red; padding: 10px;"
         >
           content_one
         </div>
@@ -676,23 +592,19 @@ exports[`Render properties.expandIcon: ArrowRightOutlined - value[0] 1`] = `
     </div>
   </div>
   <div
-    className="ant-collapse-item"
+    class="ant-collapse-item"
   >
     <div
-      aria-expanded={false}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="false"
+      class="ant-collapse-header"
       role="button"
-      tabIndex={0}
+      tabindex="0"
     >
       <div>
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin ant-collapse-arrow"
+          class="anticon anticon-loading-3-quarters anticon-spin ant-collapse-arrow"
           id="properties.expandIcon: ArrowRightOutlined_expandIcon"
-          required={false}
           role="img"
         >
           <svg
@@ -711,8 +623,10 @@ exports[`Render properties.expandIcon: ArrowRightOutlined - value[0] 1`] = `
         </span>
       </div>
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        Title Two
+      </span>
     </div>
   </div>
 </div>
@@ -720,24 +634,21 @@ exports[`Render properties.expandIcon: ArrowRightOutlined - value[0] 1`] = `
 
 exports[`Render properties.expandIconPosition: right - value[0] 1`] = `
 <div
-  className="ant-collapse ant-collapse-icon-position-right"
-  role={null}
+  class="ant-collapse ant-collapse-icon-position-right"
 >
   <div
-    className="ant-collapse-item ant-collapse-item-active"
+    class="ant-collapse-item ant-collapse-item-active"
   >
     <div
-      aria-expanded={true}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="true"
+      class="ant-collapse-header"
       role="button"
-      tabIndex={0}
+      tabindex="0"
     >
       <div>
         <span
           aria-label="right"
-          className="anticon anticon-right ant-collapse-arrow"
+          class="anticon anticon-right ant-collapse-arrow"
           role="img"
         >
           <svg
@@ -746,12 +657,7 @@ exports[`Render properties.expandIconPosition: right - value[0] 1`] = `
             fill="currentColor"
             focusable="false"
             height="1em"
-            style={
-              Object {
-                "msTransform": "rotate(90deg)",
-                "transform": "rotate(90deg)",
-              }
-            }
+            style="transform: rotate(90deg);"
             viewBox="64 64 896 896"
             width="1em"
           >
@@ -762,23 +668,19 @@ exports[`Render properties.expandIconPosition: right - value[0] 1`] = `
         </span>
       </div>
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        Title One
+      </span>
     </div>
     <div
-      className="ant-collapse-content ant-collapse-content-active"
-      role={null}
+      class="ant-collapse-content ant-collapse-content-active"
     >
       <div
-        className="ant-collapse-content-box"
+        class="ant-collapse-content-box"
       >
         <div
-          style={
-            Object {
-              "border": "1px solid red",
-              "padding": 10,
-            }
-          }
+          style="border: 1px solid red; padding: 10px;"
         >
           content_one
         </div>
@@ -786,20 +688,18 @@ exports[`Render properties.expandIconPosition: right - value[0] 1`] = `
     </div>
   </div>
   <div
-    className="ant-collapse-item"
+    class="ant-collapse-item"
   >
     <div
-      aria-expanded={false}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="false"
+      class="ant-collapse-header"
       role="button"
-      tabIndex={0}
+      tabindex="0"
     >
       <div>
         <span
           aria-label="right"
-          className="anticon anticon-right ant-collapse-arrow"
+          class="anticon anticon-right ant-collapse-arrow"
           role="img"
         >
           <svg
@@ -818,8 +718,10 @@ exports[`Render properties.expandIconPosition: right - value[0] 1`] = `
         </span>
       </div>
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        Title Two
+      </span>
     </div>
   </div>
 </div>
@@ -827,24 +729,21 @@ exports[`Render properties.expandIconPosition: right - value[0] 1`] = `
 
 exports[`Render properties.forceRender: true - value[0] 1`] = `
 <div
-  className="ant-collapse ant-collapse-icon-position-left"
-  role={null}
+  class="ant-collapse ant-collapse-icon-position-left"
 >
   <div
-    className="ant-collapse-item ant-collapse-item-active"
+    class="ant-collapse-item ant-collapse-item-active"
   >
     <div
-      aria-expanded={true}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="true"
+      class="ant-collapse-header"
       role="button"
-      tabIndex={0}
+      tabindex="0"
     >
       <div>
         <span
           aria-label="right"
-          className="anticon anticon-right ant-collapse-arrow"
+          class="anticon anticon-right ant-collapse-arrow"
           role="img"
         >
           <svg
@@ -853,12 +752,7 @@ exports[`Render properties.forceRender: true - value[0] 1`] = `
             fill="currentColor"
             focusable="false"
             height="1em"
-            style={
-              Object {
-                "msTransform": "rotate(90deg)",
-                "transform": "rotate(90deg)",
-              }
-            }
+            style="transform: rotate(90deg);"
             viewBox="64 64 896 896"
             width="1em"
           >
@@ -869,23 +763,19 @@ exports[`Render properties.forceRender: true - value[0] 1`] = `
         </span>
       </div>
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        Title One
+      </span>
     </div>
     <div
-      className="ant-collapse-content ant-collapse-content-active"
-      role={null}
+      class="ant-collapse-content ant-collapse-content-active"
     >
       <div
-        className="ant-collapse-content-box"
+        class="ant-collapse-content-box"
       >
         <div
-          style={
-            Object {
-              "border": "1px solid red",
-              "padding": 10,
-            }
-          }
+          style="border: 1px solid red; padding: 10px;"
         >
           content_one
         </div>
@@ -893,20 +783,18 @@ exports[`Render properties.forceRender: true - value[0] 1`] = `
     </div>
   </div>
   <div
-    className="ant-collapse-item"
+    class="ant-collapse-item"
   >
     <div
-      aria-expanded={false}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="false"
+      class="ant-collapse-header"
       role="button"
-      tabIndex={0}
+      tabindex="0"
     >
       <div>
         <span
           aria-label="right"
-          className="anticon anticon-right ant-collapse-arrow"
+          class="anticon anticon-right ant-collapse-arrow"
           role="img"
         >
           <svg
@@ -925,28 +813,20 @@ exports[`Render properties.forceRender: true - value[0] 1`] = `
         </span>
       </div>
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        Title Two
+      </span>
     </div>
     <div
-      className="ant-collapse-content ant-collapse-content-inactive"
-      role={null}
-      style={
-        Object {
-          "display": "none",
-        }
-      }
+      class="ant-collapse-content ant-collapse-content-inactive"
+      style="display: none;"
     >
       <div
-        className="ant-collapse-content-box"
+        class="ant-collapse-content-box"
       >
         <div
-          style={
-            Object {
-              "border": "1px solid red",
-              "padding": 10,
-            }
-          }
+          style="border: 1px solid red; padding: 10px;"
         >
           content_two
         </div>
@@ -958,24 +838,21 @@ exports[`Render properties.forceRender: true - value[0] 1`] = `
 
 exports[`Render properties.panels - value[0] 1`] = `
 <div
-  className="ant-collapse ant-collapse-icon-position-left"
-  role={null}
+  class="ant-collapse ant-collapse-icon-position-left"
 >
   <div
-    className="ant-collapse-item ant-collapse-item-active"
+    class="ant-collapse-item ant-collapse-item-active"
   >
     <div
-      aria-expanded={true}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="true"
+      class="ant-collapse-header"
       role="button"
-      tabIndex={0}
+      tabindex="0"
     >
       <div>
         <span
           aria-label="right"
-          className="anticon anticon-right ant-collapse-arrow"
+          class="anticon anticon-right ant-collapse-arrow"
           role="img"
         >
           <svg
@@ -984,12 +861,7 @@ exports[`Render properties.panels - value[0] 1`] = `
             fill="currentColor"
             focusable="false"
             height="1em"
-            style={
-              Object {
-                "msTransform": "rotate(90deg)",
-                "transform": "rotate(90deg)",
-              }
-            }
+            style="transform: rotate(90deg);"
             viewBox="64 64 896 896"
             width="1em"
           >
@@ -1001,19 +873,13 @@ exports[`Render properties.panels - value[0] 1`] = `
       </div>
     </div>
     <div
-      className="ant-collapse-content ant-collapse-content-active"
-      role={null}
+      class="ant-collapse-content ant-collapse-content-active"
     >
       <div
-        className="ant-collapse-content-box"
+        class="ant-collapse-content-box"
       >
         <div
-          style={
-            Object {
-              "border": "1px solid red",
-              "padding": 10,
-            }
-          }
+          style="border: 1px solid red; padding: 10px;"
         >
           content_one
         </div>
@@ -1021,20 +887,18 @@ exports[`Render properties.panels - value[0] 1`] = `
     </div>
   </div>
   <div
-    className="ant-collapse-item"
+    class="ant-collapse-item"
   >
     <div
-      aria-expanded={false}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="false"
+      class="ant-collapse-header"
       role="button"
-      tabIndex={0}
+      tabindex="0"
     >
       <div>
         <span
           aria-label="right"
-          className="anticon anticon-right ant-collapse-arrow"
+          class="anticon anticon-right ant-collapse-arrow"
           role="img"
         >
           <svg
@@ -1059,24 +923,21 @@ exports[`Render properties.panels - value[0] 1`] = `
 
 exports[`Render properties.panels.disabled - value[0] 1`] = `
 <div
-  className="ant-collapse ant-collapse-icon-position-left"
-  role={null}
+  class="ant-collapse ant-collapse-icon-position-left"
 >
   <div
-    className="ant-collapse-item ant-collapse-item-active ant-collapse-item-disabled"
+    class="ant-collapse-item ant-collapse-item-active ant-collapse-item-disabled"
   >
     <div
-      aria-expanded={true}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="true"
+      class="ant-collapse-header"
       role="button"
-      tabIndex={-1}
+      tabindex="-1"
     >
       <div>
         <span
           aria-label="right"
-          className="anticon anticon-right ant-collapse-arrow"
+          class="anticon anticon-right ant-collapse-arrow"
           role="img"
         >
           <svg
@@ -1085,12 +946,7 @@ exports[`Render properties.panels.disabled - value[0] 1`] = `
             fill="currentColor"
             focusable="false"
             height="1em"
-            style={
-              Object {
-                "msTransform": "rotate(90deg)",
-                "transform": "rotate(90deg)",
-              }
-            }
+            style="transform: rotate(90deg);"
             viewBox="64 64 896 896"
             width="1em"
           >
@@ -1101,23 +957,19 @@ exports[`Render properties.panels.disabled - value[0] 1`] = `
         </span>
       </div>
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        Title One
+      </span>
     </div>
     <div
-      className="ant-collapse-content ant-collapse-content-active"
-      role={null}
+      class="ant-collapse-content ant-collapse-content-active"
     >
       <div
-        className="ant-collapse-content-box"
+        class="ant-collapse-content-box"
       >
         <div
-          style={
-            Object {
-              "border": "1px solid red",
-              "padding": 10,
-            }
-          }
+          style="border: 1px solid red; padding: 10px;"
         >
           content_one
         </div>
@@ -1125,20 +977,18 @@ exports[`Render properties.panels.disabled - value[0] 1`] = `
     </div>
   </div>
   <div
-    className="ant-collapse-item ant-collapse-item-disabled"
+    class="ant-collapse-item ant-collapse-item-disabled"
   >
     <div
-      aria-expanded={false}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="false"
+      class="ant-collapse-header"
       role="button"
-      tabIndex={-1}
+      tabindex="-1"
     >
       <div>
         <span
           aria-label="right"
-          className="anticon anticon-right ant-collapse-arrow"
+          class="anticon anticon-right ant-collapse-arrow"
           role="img"
         >
           <svg
@@ -1157,8 +1007,10 @@ exports[`Render properties.panels.disabled - value[0] 1`] = `
         </span>
       </div>
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        Title Two
+      </span>
     </div>
   </div>
 </div>
@@ -1166,24 +1018,22 @@ exports[`Render properties.panels.disabled - value[0] 1`] = `
 
 exports[`Render properties.panels.extraKey - value[0] 1`] = `
 <div
-  className="ant-collapse ant-collapse-icon-position-left"
+  class="ant-collapse ant-collapse-icon-position-left"
   role="tablist"
 >
   <div
-    className="ant-collapse-item ant-collapse-item-active"
+    class="ant-collapse-item ant-collapse-item-active"
   >
     <div
-      aria-expanded={true}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="true"
+      class="ant-collapse-header"
       role="tab"
-      tabIndex={0}
+      tabindex="0"
     >
       <div>
         <span
           aria-label="right"
-          className="anticon anticon-right ant-collapse-arrow"
+          class="anticon anticon-right ant-collapse-arrow"
           role="img"
         >
           <svg
@@ -1192,12 +1042,7 @@ exports[`Render properties.panels.extraKey - value[0] 1`] = `
             fill="currentColor"
             focusable="false"
             height="1em"
-            style={
-              Object {
-                "msTransform": "rotate(90deg)",
-                "transform": "rotate(90deg)",
-              }
-            }
+            style="transform: rotate(90deg);"
             viewBox="64 64 896 896"
             width="1em"
           >
@@ -1208,37 +1053,29 @@ exports[`Render properties.panels.extraKey - value[0] 1`] = `
         </span>
       </div>
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        Title One
+      </span>
       <div
-        className="ant-collapse-extra"
+        class="ant-collapse-extra"
       >
         <div
-          style={
-            Object {
-              "border": "1px solid red",
-              "padding": 10,
-            }
-          }
+          style="border: 1px solid red; padding: 10px;"
         >
           content_one_extra
         </div>
       </div>
     </div>
     <div
-      className="ant-collapse-content ant-collapse-content-active"
+      class="ant-collapse-content ant-collapse-content-active"
       role="tabpanel"
     >
       <div
-        className="ant-collapse-content-box"
+        class="ant-collapse-content-box"
       >
         <div
-          style={
-            Object {
-              "border": "1px solid red",
-              "padding": 10,
-            }
-          }
+          style="border: 1px solid red; padding: 10px;"
         >
           content_one
         </div>
@@ -1246,20 +1083,18 @@ exports[`Render properties.panels.extraKey - value[0] 1`] = `
     </div>
   </div>
   <div
-    className="ant-collapse-item"
+    class="ant-collapse-item"
   >
     <div
-      aria-expanded={false}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="false"
+      class="ant-collapse-header"
       role="tab"
-      tabIndex={0}
+      tabindex="0"
     >
       <div>
         <span
           aria-label="right"
-          className="anticon anticon-right ant-collapse-arrow"
+          class="anticon anticon-right ant-collapse-arrow"
           role="img"
         >
           <svg
@@ -1278,18 +1113,15 @@ exports[`Render properties.panels.extraKey - value[0] 1`] = `
         </span>
       </div>
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        Title Two
+      </span>
       <div
-        className="ant-collapse-extra"
+        class="ant-collapse-extra"
       >
         <div
-          style={
-            Object {
-              "border": "1px solid red",
-              "padding": 10,
-            }
-          }
+          style="border: 1px solid red; padding: 10px;"
         >
           content_two_extra
         </div>
@@ -1301,24 +1133,21 @@ exports[`Render properties.panels.extraKey - value[0] 1`] = `
 
 exports[`Render properties.panels.title - value[0] 1`] = `
 <div
-  className="ant-collapse ant-collapse-icon-position-left"
-  role={null}
+  class="ant-collapse ant-collapse-icon-position-left"
 >
   <div
-    className="ant-collapse-item ant-collapse-item-active"
+    class="ant-collapse-item ant-collapse-item-active"
   >
     <div
-      aria-expanded={true}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="true"
+      class="ant-collapse-header"
       role="button"
-      tabIndex={0}
+      tabindex="0"
     >
       <div>
         <span
           aria-label="right"
-          className="anticon anticon-right ant-collapse-arrow"
+          class="anticon anticon-right ant-collapse-arrow"
           role="img"
         >
           <svg
@@ -1327,12 +1156,7 @@ exports[`Render properties.panels.title - value[0] 1`] = `
             fill="currentColor"
             focusable="false"
             height="1em"
-            style={
-              Object {
-                "msTransform": "rotate(90deg)",
-                "transform": "rotate(90deg)",
-              }
-            }
+            style="transform: rotate(90deg);"
             viewBox="64 64 896 896"
             width="1em"
           >
@@ -1343,23 +1167,19 @@ exports[`Render properties.panels.title - value[0] 1`] = `
         </span>
       </div>
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        Title One
+      </span>
     </div>
     <div
-      className="ant-collapse-content ant-collapse-content-active"
-      role={null}
+      class="ant-collapse-content ant-collapse-content-active"
     >
       <div
-        className="ant-collapse-content-box"
+        class="ant-collapse-content-box"
       >
         <div
-          style={
-            Object {
-              "border": "1px solid red",
-              "padding": 10,
-            }
-          }
+          style="border: 1px solid red; padding: 10px;"
         >
           content_one
         </div>
@@ -1367,20 +1187,18 @@ exports[`Render properties.panels.title - value[0] 1`] = `
     </div>
   </div>
   <div
-    className="ant-collapse-item"
+    class="ant-collapse-item"
   >
     <div
-      aria-expanded={false}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="false"
+      class="ant-collapse-header"
       role="button"
-      tabIndex={0}
+      tabindex="0"
     >
       <div>
         <span
           aria-label="right"
-          className="anticon anticon-right ant-collapse-arrow"
+          class="anticon anticon-right ant-collapse-arrow"
           role="img"
         >
           <svg
@@ -1399,8 +1217,10 @@ exports[`Render properties.panels.title - value[0] 1`] = `
         </span>
       </div>
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        Title Two
+      </span>
     </div>
   </div>
 </div>
@@ -1408,38 +1228,31 @@ exports[`Render properties.panels.title - value[0] 1`] = `
 
 exports[`Render properties.showArrow: false - value[0] 1`] = `
 <div
-  className="ant-collapse ant-collapse-icon-position-left"
-  role={null}
+  class="ant-collapse ant-collapse-icon-position-left"
 >
   <div
-    className="ant-collapse-item ant-collapse-item-active ant-collapse-no-arrow"
+    class="ant-collapse-item ant-collapse-item-active ant-collapse-no-arrow"
   >
     <div
-      aria-expanded={true}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="true"
+      class="ant-collapse-header"
       role="button"
-      tabIndex={0}
+      tabindex="0"
     >
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        Title One
+      </span>
     </div>
     <div
-      className="ant-collapse-content ant-collapse-content-active"
-      role={null}
+      class="ant-collapse-content ant-collapse-content-active"
     >
       <div
-        className="ant-collapse-content-box"
+        class="ant-collapse-content-box"
       >
         <div
-          style={
-            Object {
-              "border": "1px solid red",
-              "padding": 10,
-            }
-          }
+          style="border: 1px solid red; padding: 10px;"
         >
           content_one
         </div>
@@ -1447,19 +1260,19 @@ exports[`Render properties.showArrow: false - value[0] 1`] = `
     </div>
   </div>
   <div
-    className="ant-collapse-item ant-collapse-no-arrow"
+    class="ant-collapse-item ant-collapse-no-arrow"
   >
     <div
-      aria-expanded={false}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="false"
+      class="ant-collapse-header"
       role="button"
-      tabIndex={0}
+      tabindex="0"
     >
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        Title Two
+      </span>
     </div>
   </div>
 </div>
@@ -1467,24 +1280,21 @@ exports[`Render properties.showArrow: false - value[0] 1`] = `
 
 exports[`Render with html in panel title - value[0] 1`] = `
 <div
-  className="ant-collapse ant-collapse-icon-position-left"
-  role={null}
+  class="ant-collapse ant-collapse-icon-position-left"
 >
   <div
-    className="ant-collapse-item ant-collapse-item-active"
+    class="ant-collapse-item ant-collapse-item-active"
   >
     <div
-      aria-expanded={true}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="true"
+      class="ant-collapse-header"
       role="button"
-      tabIndex={0}
+      tabindex="0"
     >
       <div>
         <span
           aria-label="right"
-          className="anticon anticon-right ant-collapse-arrow"
+          class="anticon anticon-right ant-collapse-arrow"
           role="img"
         >
           <svg
@@ -1493,12 +1303,7 @@ exports[`Render with html in panel title - value[0] 1`] = `
             fill="currentColor"
             focusable="false"
             height="1em"
-            style={
-              Object {
-                "msTransform": "rotate(90deg)",
-                "transform": "rotate(90deg)",
-              }
-            }
+            style="transform: rotate(90deg);"
             viewBox="64 64 896 896"
             width="1em"
           >
@@ -1509,33 +1314,36 @@ exports[`Render with html in panel title - value[0] 1`] = `
         </span>
       </div>
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        <div
+          style="color:blue"
+        >
+          Panel 1 Title
+        </div>
+      </span>
     </div>
     <div
-      className="ant-collapse-content ant-collapse-content-active"
-      role={null}
+      class="ant-collapse-content ant-collapse-content-active"
     >
       <div
-        className="ant-collapse-content-box"
+        class="ant-collapse-content-box"
       />
     </div>
   </div>
   <div
-    className="ant-collapse-item"
+    class="ant-collapse-item"
   >
     <div
-      aria-expanded={false}
-      className="ant-collapse-header"
-      onClick={[Function]}
-      onKeyPress={[Function]}
+      aria-expanded="false"
+      class="ant-collapse-header"
       role="button"
-      tabIndex={0}
+      tabindex="0"
     >
       <div>
         <span
           aria-label="right"
-          className="anticon anticon-right ant-collapse-arrow"
+          class="anticon anticon-right ant-collapse-arrow"
           role="img"
         >
           <svg
@@ -1554,8 +1362,14 @@ exports[`Render with html in panel title - value[0] 1`] = `
         </span>
       </div>
       <span
-        className="{}"
-      />
+        class="emotion-0"
+      >
+        <div
+          style="color:green"
+        >
+          Panel 2 Title
+        </div>
+      </span>
     </div>
   </div>
 </div>

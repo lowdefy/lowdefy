@@ -26,7 +26,7 @@ Array [
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": undefined,
       "onVisibleChange": [Function],
-      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "overlayStyle": "{\\"options\\":true}",
       "placement": undefined,
       "title": <HtmlComponent
         html="Tooltip block"
@@ -36,15 +36,13 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
               ],
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
               ],
             },
@@ -88,7 +86,7 @@ Array [
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": undefined,
       "onVisibleChange": [Function],
-      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "overlayStyle": "{\\"options\\":true}",
       "placement": undefined,
       "title": undefined,
       "trigger": "hover",
@@ -125,7 +123,7 @@ Array [
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": undefined,
       "onVisibleChange": [Function],
-      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "overlayStyle": "{\\"options\\":true}",
       "placement": "topLeft",
       "title": <HtmlComponent
         html="arrowPointAtCenter true"
@@ -135,15 +133,13 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
               ],
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
               ],
             },
@@ -187,7 +183,7 @@ Array [
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": undefined,
       "onVisibleChange": [Function],
-      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "overlayStyle": "{\\"options\\":true}",
       "placement": "right",
       "title": <HtmlComponent
         html="autoAdjustOverflow false"
@@ -197,15 +193,13 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
               ],
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
               ],
             },
@@ -249,7 +243,7 @@ Array [
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": undefined,
       "onVisibleChange": [Function],
-      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "overlayStyle": "{\\"options\\":true}",
       "placement": "right",
       "title": <HtmlComponent
         html="autoAdjustOverflow true"
@@ -259,15 +253,13 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
               ],
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
               ],
             },
@@ -311,7 +303,7 @@ Array [
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": undefined,
       "onVisibleChange": [Function],
-      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "overlayStyle": "{\\"options\\":true}",
       "placement": undefined,
       "title": <HtmlComponent
         html="color blue"
@@ -321,15 +313,13 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
               ],
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
               ],
             },
@@ -373,7 +363,7 @@ Array [
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": undefined,
       "onVisibleChange": [Function],
-      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "overlayStyle": "{\\"options\\":true}",
       "placement": undefined,
       "title": <HtmlComponent
         html="defaultVisible true"
@@ -383,15 +373,13 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
               ],
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
               ],
             },
@@ -435,7 +423,7 @@ Array [
       "mouseEnterDelay": 1,
       "mouseLeaveDelay": undefined,
       "onVisibleChange": [Function],
-      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "overlayStyle": "{\\"options\\":true}",
       "placement": undefined,
       "title": <HtmlComponent
         html="mouseEnterDelay 1"
@@ -445,15 +433,13 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
               ],
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
               ],
             },
@@ -497,7 +483,7 @@ Array [
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": 1,
       "onVisibleChange": [Function],
-      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "overlayStyle": "{\\"options\\":true}",
       "placement": undefined,
       "title": <HtmlComponent
         html="mouseLeaveDelay 1"
@@ -507,15 +493,13 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
               ],
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
               ],
             },
@@ -559,7 +543,7 @@ Array [
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": undefined,
       "onVisibleChange": [Function],
-      "overlayStyle": "{\\"style\\":{\\"border\\":\\"5px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "overlayStyle": "{\\"style\\":{\\"border\\":\\"5px solid blue\\"},\\"options\\":true}",
       "placement": undefined,
       "title": <HtmlComponent
         html="Tooltip block"
@@ -571,15 +555,13 @@ Array [
                   Object {
                     "border": "5px solid blue",
                   },
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
               ],
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"style\\":{\\"border\\":\\"5px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"style\\":{\\"border\\":\\"5px solid blue\\"},\\"options\\":true}",
                 },
               ],
             },
@@ -623,7 +605,7 @@ Array [
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": undefined,
       "onVisibleChange": [Function],
-      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "overlayStyle": "{\\"options\\":true}",
       "placement": "topLeft",
       "title": <HtmlComponent
         html="placement topLeft"
@@ -633,15 +615,13 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
               ],
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
               ],
             },
@@ -685,7 +665,7 @@ Array [
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": undefined,
       "onVisibleChange": [Function],
-      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "overlayStyle": "{\\"options\\":true}",
       "placement": undefined,
       "title": <HtmlComponent
         html="Tooltip block"
@@ -695,15 +675,13 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
               ],
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
               ],
             },
@@ -747,7 +725,7 @@ Array [
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": undefined,
       "onVisibleChange": [Function],
-      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "overlayStyle": "{\\"options\\":true}",
       "placement": undefined,
       "title": <HtmlComponent
         html=<div style="background-color:orange;">
@@ -759,15 +737,13 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
               ],
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
               ],
             },
@@ -811,7 +787,7 @@ Array [
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": undefined,
       "onVisibleChange": [Function],
-      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "overlayStyle": "{\\"options\\":true}",
       "placement": undefined,
       "title": <HtmlComponent
         html="trigger click"
@@ -821,15 +797,13 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
               ],
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
               ],
             },
@@ -873,7 +847,7 @@ Array [
       "mouseEnterDelay": undefined,
       "mouseLeaveDelay": undefined,
       "onVisibleChange": [Function],
-      "overlayStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "overlayStyle": "{\\"options\\":true}",
       "placement": undefined,
       "title": <HtmlComponent
         html="zIndex 1000"
@@ -883,15 +857,13 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
               ],
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
               ],
             },

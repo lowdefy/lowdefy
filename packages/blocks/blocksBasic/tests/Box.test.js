@@ -16,27 +16,12 @@
 
 import React from 'react';
 import { mockBlock, runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
-import { configure, mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-configure({ adapter: new Adapter() });
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { Box } from '../src';
 import examples from '../demo/examples/Box.yaml';
 import meta from '../src/blocks/Box/Box.json';
-
-jest.mock('@lowdefy/block-tools', () => {
-  const originalModule = jest.requireActual('@lowdefy/block-tools');
-  return {
-    ...originalModule,
-    blockDefaultProps: {
-      ...originalModule.blockDefaultProps,
-      methods: {
-        ...originalModule.blockDefaultProps.methods,
-        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
-      },
-    },
-  };
-});
 
 runRenderTests({ examples, Block: Box, meta });
 runBlockSchemaTests({ examples, meta });
@@ -50,7 +35,24 @@ test('triggerEvent onClick', () => {
     type: 'Box',
   };
   const Shell = () => <Box {...getProps(block)} methods={methods} />;
-  const wrapper = mount(<Shell />);
-  wrapper.find('[data-testid="one"]').simulate('click');
+  const { container } = render(<Shell />);
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    .emotion-0 {
+      outline: none;
+    }
+
+    <div
+      class="emotion-0"
+      data-testid="one"
+      id="one"
+    >
+      <div
+        style="border: 1px solid red; padding: 10px;"
+      >
+        content
+      </div>
+    </div>
+  `);
+  userEvent.click(screen.getByTestId('one'));
   expect(methods.triggerEvent).toHaveBeenCalledWith({ name: 'onClick' });
 });

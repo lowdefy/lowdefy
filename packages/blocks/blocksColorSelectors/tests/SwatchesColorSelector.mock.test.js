@@ -15,11 +15,8 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { SwatchesPicker } from 'react-color';
 
-Enzyme.configure({ adapter: new Adapter() });
 import SwatchesColorSelector from '../src/blocks/SwatchesColorSelector/SwatchesColorSelector';
 import examples from '../demo/examples/SwatchesColorSelector.yaml';
 import meta from '../src/blocks/SwatchesColorSelector/SwatchesColorSelector.json';
@@ -38,4 +35,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: SwatchesColorSelector, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: SwatchesColorSelector, meta, mocks });

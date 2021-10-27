@@ -22,7 +22,7 @@ const TooltipBlock = ({ blockId, content, properties, methods }) => (
   <Tooltip
     id={blockId}
     title={renderHtml({ html: properties.title, methods })}
-    overlayStyle={methods.makeCssClass(properties.overlayStyle, { styleObjectOnly: true })}
+    overlayStyle={methods.makeCssClass(properties.overlayStyle, true)}
     arrowPointAtCenter={properties.arrowPointAtCenter}
     autoAdjustOverflow={properties.autoAdjustOverflow}
     color={properties.color}
