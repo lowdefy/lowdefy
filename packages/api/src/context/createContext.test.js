@@ -29,7 +29,10 @@ getSecrets.mockImplementation(() => ({ secret: true }));
 
 createAuthorize.mockImplementation(({ authenticated, roles = [] }) => ({ authenticated, roles }));
 
-createReadConfigFile.mockImplementation(({ configDirectory }) => () => ({ configDirectory }));
+createReadConfigFile.mockImplementation(({ configDirectory }) => (path) => ({
+  configDirectory,
+  path,
+}));
 
 verifyAuthorizationHeader.mockImplementation(() => ({
   authenticated: true,
@@ -42,6 +45,7 @@ test('createContext', async () => {
   const context = contextFn({
     headers: { header: 'header' },
     host: 'host',
+    logger: 'logger',
     protocol: 'https',
     setHeader: 'setHeaderFunction',
   });
@@ -56,11 +60,17 @@ test('createContext', async () => {
       },
       "config": Object {
         "configDirectory": "configDirectory",
+        "path": "config.json",
+      },
+      "connectionTypes": Object {
+        "configDirectory": "configDirectory",
+        "path": "connectionTypes.json",
       },
       "headers": Object {
         "header": "header",
       },
       "host": "host",
+      "logger": "logger",
       "protocol": "https",
       "readConfigFile": [Function],
       "secrets": Object {
@@ -85,11 +95,17 @@ test('createContext', async () => {
           },
           "config": Object {
             "configDirectory": "configDirectory",
+            "path": "config.json",
+          },
+          "connectionTypes": Object {
+            "configDirectory": "configDirectory",
+            "path": "connectionTypes.json",
           },
           "headers": Object {
             "header": "header",
           },
           "host": "host",
+          "logger": "logger",
           "protocol": "https",
           "readConfigFile": [Function],
           "secrets": Object {

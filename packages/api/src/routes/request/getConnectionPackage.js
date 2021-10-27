@@ -13,28 +13,26 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { createRequire } from 'module';
 import { ConfigurationError } from '../../context/errors';
 
 async function getConnectionPackage({ connectionTypes, logger }, { connection, request }) {
-  const connectionTypeDefinition = connectionTypes[connection.type];
-  if (!connectionTypeDefinition) {
-    throw new ConfigurationError(
-      `Request "${request.requestId}" has undefined connection type "${connection.type}".`
-    );
-  }
+  // const connectionTypeDefinition = connectionTypes[connection.type];
+  // if (!connectionTypeDefinition) {
+  //   throw new ConfigurationError(
+  //     `Request "${request.requestId}" has undefined connection type "${connection.type}".`
+  //   );
+  // }
 
-  const require = createRequire(import.meta.url);
-  const connectionPackage = require(connectionTypeDefinition.package);
+  // const connectionPackage = await import(connectionTypeDefinition.package);
 
-  logger.info(connectionPackage);
+  // logger.info(connectionPackage);
 
-  if (!connectionPackage) {
-    throw new ConfigurationError(
-      `Connection package "${connectionTypeDefinition.package}" could not be imported.`
-    );
-  }
-  return connectionPackage;
+  // if (!connectionPackage) {
+  //   throw new ConfigurationError(
+  //     `Connection package "${connectionTypeDefinition.package}" could not be imported.`
+  //   );
+  // }
+  return null;
 }
 
 export default getConnectionPackage;
