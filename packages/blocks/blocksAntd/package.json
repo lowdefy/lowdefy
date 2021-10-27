@@ -74,6 +74,7 @@
     "jest": "27.3.1",
     "jest-serializer-html": "7.1.0",
     "jest-transform-yaml": "0.1.2",
+    "js-yaml": "4.1.0",
     "less": "4.1.2",
     "less-loader": "10.2.0",
     "react-syntax-highlighter": "15.4.4",

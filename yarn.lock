@@ -3242,22 +3242,12 @@ __metadata:
     ajv: 6.12.6
     ajv-errors: 1.0.1
     babel-jest: 27.3.1
-    babel-loader: 8.2.3
-    clean-webpack-plugin: 4.0.0
-    css-loader: 6.4.0
-    html-webpack-plugin: 5.4.0
     jest: 27.3.1
     jest-serializer-html: 7.1.0
     jest-transform-yaml: 0.1.2
-    process: 0.11.10
     react: 17.0.2
     react-dom: 17.0.2
     react-router: 5.2.1
-    react-syntax-highlight: 15.3.1
-    style-loader: 3.3.1
-    webpack: 5.59.1
-    webpack-cli: 4.9.1
-    webpack-dev-server: 4.3.1
     yaml-loader: 0.6.0
   languageName: unknown
   linkType: soft
@@ -3284,6 +3274,7 @@ __metadata:
     jest: 27.3.1
     jest-serializer-html: 7.1.0
     jest-transform-yaml: 0.1.2
+    js-yaml: 4.1.0
     process: 0.11.10
     react: 17.0.2
     react-dom: 17.0.2
@@ -3322,6 +3313,7 @@ __metadata:
     jest: 27.3.1
     jest-serializer-html: 7.1.0
     jest-transform-yaml: 0.1.2
+    js-yaml: 4.1.0
     less: 4.1.2
     less-loader: 10.2.0
     moment: 2.29.1
