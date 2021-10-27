@@ -402,6 +402,140 @@ Array [
 ]
 `;
 
+exports[`Mock render - property.autoFocus: true - value[0] - Checkbox 1`] = `Array []`;
+
+exports[`Mock render - property.autoFocus: true - value[0] - Slider 1`] = `
+Array [
+  Array [
+    Object {
+      "autoFocus": true,
+      "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
+      "disabled": false,
+      "dots": true,
+      "events": Object {},
+      "id": "property.autoFocus: true_input",
+      "marks": Object {
+        "-1": Object {
+          "label": <span />,
+          "style": Object {
+            "fontSize": 12,
+            "marginTop": 2,
+          },
+        },
+        "0": Object {
+          "label": <strong>
+            0
+          </strong>,
+          "style": Object {
+            "fontSize": 12,
+            "marginTop": 2,
+          },
+        },
+        "1": Object {
+          "label": <strong>
+            1
+          </strong>,
+          "style": Object {
+            "fontSize": 12,
+            "marginTop": 2,
+          },
+        },
+        "10": Object {
+          "label": <strong>
+            10
+          </strong>,
+          "style": Object {
+            "fontSize": 12,
+            "marginTop": 2,
+          },
+        },
+        "2": Object {
+          "label": <strong>
+            2
+          </strong>,
+          "style": Object {
+            "fontSize": 12,
+            "marginTop": 2,
+          },
+        },
+        "3": Object {
+          "label": <strong>
+            3
+          </strong>,
+          "style": Object {
+            "fontSize": 12,
+            "marginTop": 2,
+          },
+        },
+        "4": Object {
+          "label": <strong>
+            4
+          </strong>,
+          "style": Object {
+            "fontSize": 12,
+            "marginTop": 2,
+          },
+        },
+        "5": Object {
+          "label": <strong>
+            5
+          </strong>,
+          "style": Object {
+            "fontSize": 12,
+            "marginTop": 2,
+          },
+        },
+        "6": Object {
+          "label": <strong>
+            6
+          </strong>,
+          "style": Object {
+            "fontSize": 12,
+            "marginTop": 2,
+          },
+        },
+        "7": Object {
+          "label": <strong>
+            7
+          </strong>,
+          "style": Object {
+            "fontSize": 12,
+            "marginTop": 2,
+          },
+        },
+        "8": Object {
+          "label": <strong>
+            8
+          </strong>,
+          "style": Object {
+            "fontSize": 12,
+            "marginTop": 2,
+          },
+        },
+        "9": Object {
+          "label": <strong>
+            9
+          </strong>,
+          "style": Object {
+            "fontSize": 12,
+            "marginTop": 2,
+          },
+        },
+      },
+      "max": 10,
+      "min": -1,
+      "onChange": [Function],
+      "range": false,
+      "step": 1,
+      "tipFormatter": [Function],
+      "tooltipVisible": false,
+      "value": -1,
+    },
+    Object {},
+  ],
+]
+`;
+
 exports[`Mock render - property.color: # - value[0] - Checkbox 1`] = `Array []`;
 
 exports[`Mock render - property.color: # - value[0] - Slider 1`] = `

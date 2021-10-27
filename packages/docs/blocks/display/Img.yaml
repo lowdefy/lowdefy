@@ -36,5 +36,5 @@ _ref:
           type: Img
           properties:
             src: https://docs.lowdefy.com/public/logo-light-theme.png
-            srcset: https://docs.lowdefy.com/public/logo-square-light-theme.png 40w, https://docs.lowdefy.com/public/logo-light-theme.png 577w
+            srcSet: https://docs.lowdefy.com/public/logo-square-light-theme.png 40w, https://docs.lowdefy.com/public/logo-light-theme.png 577w
             sizes: '(max-width: 576px) 40px, 577px'

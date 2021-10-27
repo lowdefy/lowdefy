@@ -14,12 +14,9 @@
   limitations under the License.
 */
 
-import { runMockRenderTests } from '@lowdefy/block-tools';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { runMockRenderTests } from '@lowdefy/block-dev';
 import ReactMarkdown from 'react-markdown';
 
-Enzyme.configure({ adapter: new Adapter() });
 import DangerousMarkdown from '../src/blocks/DangerousMarkdown/DangerousMarkdown';
 import examples from '../demo/examples/DangerousMarkdown.yaml';
 import meta from '../src/blocks/DangerousMarkdown/DangerousMarkdown.json';
@@ -35,4 +32,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: DangerousMarkdown, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: DangerousMarkdown, meta, mocks });

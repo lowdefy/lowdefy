@@ -13,9 +13,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { runRenderTests } from '@lowdefy/block-dev';
 
 import examples from '../../demo/examples/SkeletonParagraph.yaml';
-import runRenderTests from '../runRenderTests';
 import SkeletonParagraph from './SkeletonParagraph';
 
 runRenderTests({ examples, Block: SkeletonParagraph, meta: {} });

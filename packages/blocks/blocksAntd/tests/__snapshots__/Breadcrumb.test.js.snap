@@ -2,29 +2,31 @@
 
 exports[`Render default - value[0] 1`] = `
 <div
-  className="ant-breadcrumb {}"
+  class="ant-breadcrumb emotion-0"
   id="default"
 />
 `;
 
 exports[`Render properties.list.icon - value[0] 1`] = `
+.emotion-2 {
+  padding-right: 8px;
+}
+
 <div
-  className="ant-breadcrumb {}"
+  class="ant-breadcrumb emotion-0"
   id="properties.list.icon"
 >
   <span>
     <span
-      className="ant-breadcrumb-link"
+      class="ant-breadcrumb-link"
     >
       <span
-        className="{\\"style\\":[{},null]}"
+        class="emotion-1"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{\\"paddingRight\\":8}}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.list.icon_0_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -45,24 +47,22 @@ exports[`Render properties.list.icon - value[0] 1`] = `
       </span>
     </span>
     <span
-      className="ant-breadcrumb-separator"
+      class="ant-breadcrumb-separator"
     >
       /
     </span>
   </span>
   <span>
     <span
-      className="ant-breadcrumb-link"
+      class="ant-breadcrumb-link"
     >
       <span
-        className="{\\"style\\":[{},null]}"
+        class="emotion-1"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{\\"paddingRight\\":8}}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.list.icon_1_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -83,7 +83,7 @@ exports[`Render properties.list.icon - value[0] 1`] = `
       </span>
     </span>
     <span
-      className="ant-breadcrumb-separator"
+      class="ant-breadcrumb-separator"
     >
       /
     </span>
@@ -92,24 +92,29 @@ exports[`Render properties.list.icon - value[0] 1`] = `
 `;
 
 exports[`Render properties.list.icon with onClick - value[0] 1`] = `
+.emotion-1 {
+  cursor: pointer;
+}
+
+.emotion-2 {
+  padding-right: 8px;
+}
+
 <div
-  className="ant-breadcrumb {}"
+  class="ant-breadcrumb emotion-0"
   id="properties.list.icon with onClick"
 >
   <span>
     <span
-      className="ant-breadcrumb-link"
-      onClick={[Function]}
+      class="ant-breadcrumb-link"
     >
       <span
-        className="{\\"style\\":[{\\"cursor\\":\\"pointer\\"},null]}"
+        class="emotion-1"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{\\"paddingRight\\":8}}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.list.icon with onClick_0_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -130,25 +135,22 @@ exports[`Render properties.list.icon with onClick - value[0] 1`] = `
       </span>
     </span>
     <span
-      className="ant-breadcrumb-separator"
+      class="ant-breadcrumb-separator"
     >
       /
     </span>
   </span>
   <span>
     <span
-      className="ant-breadcrumb-link"
-      onClick={[Function]}
+      class="ant-breadcrumb-link"
     >
       <span
-        className="{\\"style\\":[{\\"cursor\\":\\"pointer\\"},null]}"
+        class="emotion-1"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{\\"paddingRight\\":8}}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.list.icon with onClick_1_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -169,7 +171,7 @@ exports[`Render properties.list.icon with onClick - value[0] 1`] = `
       </span>
     </span>
     <span
-      className="ant-breadcrumb-separator"
+      class="ant-breadcrumb-separator"
     >
       /
     </span>
@@ -179,37 +181,37 @@ exports[`Render properties.list.icon with onClick - value[0] 1`] = `
 
 exports[`Render properties.list.label strings - value[0] 1`] = `
 <div
-  className="ant-breadcrumb {}"
+  class="ant-breadcrumb emotion-0"
   id="properties.list.label strings"
 >
   <span>
     <span
-      className="ant-breadcrumb-link"
+      class="ant-breadcrumb-link"
     >
       <span
-        className="{\\"style\\":[{},null]}"
+        class="emotion-1"
       >
         Page One
       </span>
     </span>
     <span
-      className="ant-breadcrumb-separator"
+      class="ant-breadcrumb-separator"
     >
       /
     </span>
   </span>
   <span>
     <span
-      className="ant-breadcrumb-link"
+      class="ant-breadcrumb-link"
     >
       <span
-        className="{\\"style\\":[{},null]}"
+        class="emotion-1"
       >
         Page two
       </span>
     </span>
     <span
-      className="ant-breadcrumb-separator"
+      class="ant-breadcrumb-separator"
     >
       /
     </span>
@@ -219,41 +221,39 @@ exports[`Render properties.list.label strings - value[0] 1`] = `
 
 exports[`Render properties.list.pageId - value[0] 1`] = `
 <div
-  className="ant-breadcrumb {}"
+  class="ant-breadcrumb emotion-0"
   id="properties.list.pageId"
 >
   <span>
     <span
-      className="ant-breadcrumb-link"
+      class="ant-breadcrumb-link"
     >
       <a
-        className="{\\"style\\":[{},null]}"
+        class="emotion-1"
         href="/page1"
-        onClick={[Function]}
       >
         page1
       </a>
     </span>
     <span
-      className="ant-breadcrumb-separator"
+      class="ant-breadcrumb-separator"
     >
       /
     </span>
   </span>
   <span>
     <span
-      className="ant-breadcrumb-link"
+      class="ant-breadcrumb-link"
     >
       <a
-        className="{\\"style\\":[{},null]}"
+        class="emotion-1"
         href="/page2"
-        onClick={[Function]}
       >
         page2
       </a>
     </span>
     <span
-      className="ant-breadcrumb-separator"
+      class="ant-breadcrumb-separator"
     >
       /
     </span>
@@ -263,92 +263,89 @@ exports[`Render properties.list.pageId - value[0] 1`] = `
 
 exports[`Render properties.list.pageId label and url - value[0] 1`] = `
 <div
-  className="ant-breadcrumb {}"
+  class="ant-breadcrumb emotion-0"
   id="properties.list.pageId label and url"
 >
   <span>
     <span
-      className="ant-breadcrumb-link"
+      class="ant-breadcrumb-link"
     >
       <a
-        className="{\\"style\\":[{},null]}"
+        class="emotion-1"
         href="/page1"
-        onClick={[Function]}
       >
         page1
       </a>
     </span>
     <span
-      className="ant-breadcrumb-separator"
+      class="ant-breadcrumb-separator"
     >
       /
     </span>
   </span>
   <span>
     <span
-      className="ant-breadcrumb-link"
+      class="ant-breadcrumb-link"
     >
       <a
-        className="{\\"style\\":[{},null]}"
+        class="emotion-1"
         href="https://www.url.com"
       >
         label url
       </a>
     </span>
     <span
-      className="ant-breadcrumb-separator"
+      class="ant-breadcrumb-separator"
     >
       /
     </span>
   </span>
   <span>
     <span
-      className="ant-breadcrumb-link"
+      class="ant-breadcrumb-link"
     >
       <a
-        className="{\\"style\\":[{},null]}"
+        class="emotion-1"
         href="/page2"
-        onClick={[Function]}
       >
         label pageId
       </a>
     </span>
     <span
-      className="ant-breadcrumb-separator"
+      class="ant-breadcrumb-separator"
     >
       /
     </span>
   </span>
   <span>
     <span
-      className="ant-breadcrumb-link"
+      class="ant-breadcrumb-link"
     >
       <a
-        className="{\\"style\\":[{},null]}"
+        class="emotion-1"
         href="/page3"
-        onClick={[Function]}
       >
         page3
       </a>
     </span>
     <span
-      className="ant-breadcrumb-separator"
+      class="ant-breadcrumb-separator"
     >
       /
     </span>
   </span>
   <span>
     <span
-      className="ant-breadcrumb-link"
+      class="ant-breadcrumb-link"
     >
       <span
-        className="{\\"style\\":[{},null]}"
+        class="emotion-1"
       >
         label4
       </span>
     </span>
     <span
-      className="ant-breadcrumb-separator"
+      class="ant-breadcrumb-separator"
     >
       /
     </span>
@@ -357,38 +354,46 @@ exports[`Render properties.list.pageId label and url - value[0] 1`] = `
 `;
 
 exports[`Render properties.list.style - value[0] 1`] = `
+.emotion-1 {
+  color: blue;
+}
+
+.emotion-2 {
+  color: red;
+}
+
 <div
-  className="ant-breadcrumb {}"
+  class="ant-breadcrumb emotion-0"
   id="properties.list.style"
 >
   <span>
     <span
-      className="ant-breadcrumb-link"
+      class="ant-breadcrumb-link"
     >
       <span
-        className="{\\"style\\":[{},{\\"color\\":\\"blue\\"}]}"
+        class="emotion-1"
       >
         Page One
       </span>
     </span>
     <span
-      className="ant-breadcrumb-separator"
+      class="ant-breadcrumb-separator"
     >
       /
     </span>
   </span>
   <span>
     <span
-      className="ant-breadcrumb-link"
+      class="ant-breadcrumb-link"
     >
       <span
-        className="{\\"style\\":[{},{\\"color\\":\\"red\\"}]}"
+        class="emotion-2"
       >
         Page two
       </span>
     </span>
     <span
-      className="ant-breadcrumb-separator"
+      class="ant-breadcrumb-separator"
     >
       /
     </span>
@@ -398,39 +403,39 @@ exports[`Render properties.list.style - value[0] 1`] = `
 
 exports[`Render properties.list.url - value[0] 1`] = `
 <div
-  className="ant-breadcrumb {}"
+  class="ant-breadcrumb emotion-0"
   id="properties.list.url"
 >
   <span>
     <span
-      className="ant-breadcrumb-link"
+      class="ant-breadcrumb-link"
     >
       <a
-        className="{\\"style\\":[{},null]}"
+        class="emotion-1"
         href="https://www.url.com"
       >
         https://www.url.com
       </a>
     </span>
     <span
-      className="ant-breadcrumb-separator"
+      class="ant-breadcrumb-separator"
     >
       /
     </span>
   </span>
   <span>
     <span
-      className="ant-breadcrumb-link"
+      class="ant-breadcrumb-link"
     >
       <a
-        className="{\\"style\\":[{},null]}"
+        class="emotion-1"
         href="https://docs.url.com"
       >
         https://docs.url.com
       </a>
     </span>
     <span
-      className="ant-breadcrumb-separator"
+      class="ant-breadcrumb-separator"
     >
       /
     </span>
@@ -440,37 +445,37 @@ exports[`Render properties.list.url - value[0] 1`] = `
 
 exports[`Render properties.separator - value[0] 1`] = `
 <div
-  className="ant-breadcrumb {}"
+  class="ant-breadcrumb emotion-0"
   id="properties.separator"
 >
   <span>
     <span
-      className="ant-breadcrumb-link"
+      class="ant-breadcrumb-link"
     >
       <span
-        className="{\\"style\\":[{},null]}"
+        class="emotion-1"
       >
         Page One
       </span>
     </span>
     <span
-      className="ant-breadcrumb-separator"
+      class="ant-breadcrumb-separator"
     >
       -&gt;
     </span>
   </span>
   <span>
     <span
-      className="ant-breadcrumb-link"
+      class="ant-breadcrumb-link"
     >
       <span
-        className="{\\"style\\":[{},null]}"
+        class="emotion-1"
       >
         Page two
       </span>
     </span>
     <span
-      className="ant-breadcrumb-separator"
+      class="ant-breadcrumb-separator"
     >
       -&gt;
     </span>
@@ -479,38 +484,42 @@ exports[`Render properties.separator - value[0] 1`] = `
 `;
 
 exports[`Render properties.style: fontSize: 18 - value[0] 1`] = `
+.emotion-0 {
+  font-size: 18px;
+}
+
 <div
-  className="ant-breadcrumb {\\"style\\":{\\"fontSize\\":18}}"
+  class="ant-breadcrumb emotion-0"
   id="properties.style: fontSize: 18"
 >
   <span>
     <span
-      className="ant-breadcrumb-link"
+      class="ant-breadcrumb-link"
     >
       <span
-        className="{\\"style\\":[{},null]}"
+        class="emotion-1"
       >
         Page One
       </span>
     </span>
     <span
-      className="ant-breadcrumb-separator"
+      class="ant-breadcrumb-separator"
     >
       /
     </span>
   </span>
   <span>
     <span
-      className="ant-breadcrumb-link"
+      class="ant-breadcrumb-link"
     >
       <span
-        className="{\\"style\\":[{},null]}"
+        class="emotion-1"
       >
         Page two
       </span>
     </span>
     <span
-      className="ant-breadcrumb-separator"
+      class="ant-breadcrumb-separator"
     >
       /
     </span>

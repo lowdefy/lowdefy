@@ -1,0 +1,65 @@
+{
+  "name": "@lowdefy/block-dev",
+  "version": "3.22.0",
+  "licence": "Apache-2.0",
+  "description": "Lowdefy Block Development Tools",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "utils"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Sam Tolmay",
+      "url": "https://github.com/SamTolmay"
+    },
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "build": "babel src --copy-files --out-dir dist",
+    "clean": "rm -rf dist",
+    "prepare": "yarn build",
+    "test": "jest --coverage"
+  },
+  "dependencies": {
+    "@emotion/jest": "11.5.0",
+    "@lowdefy/block-tools": "3.22.0",
+    "@lowdefy/helpers": "3.22.0",
+    "@testing-library/dom": "8.10.1",
+    "@testing-library/react": "12.1.2",
+    "@testing-library/user-event": "13.5.0",
+    "ajv": "6.12.6",
+    "ajv-errors": "1.0.1",
+    "jest": "27.3.1",
+    "jest-serializer-html": "7.1.0",
+    "jest-transform-yaml": "0.1.2",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-router": "5.2.1",
+    "yaml-loader": "0.6.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.15.7",
+    "@babel/core": "7.15.8",
+    "@babel/preset-env": "7.15.8",
+    "@babel/preset-react": "7.14.5",
+    "babel-jest": "27.3.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

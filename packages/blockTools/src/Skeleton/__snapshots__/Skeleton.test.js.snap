@@ -2,36 +2,21 @@
 
 exports[`Render default - value[0] 1`] = `
 <div
-  className="skeleton {}"
-  style={
-    Object {
-      "height": "100%",
-      "width": "100%",
-    }
-  }
+  class="skeleton emotion-0"
+  style="width: 100%; height: 100%;"
 />
 `;
 
 exports[`Render sizedefault - value[0] 1`] = `
 <div
-  className="skeleton {}"
-  style={
-    Object {
-      "height": "100%",
-      "width": "100%",
-    }
-  }
+  class="skeleton emotion-0"
+  style="width: 100%; height: 100%;"
 />
 `;
 
 exports[`Render sizesmall - value[0] 1`] = `
 <div
-  className="skeleton {}"
-  style={
-    Object {
-      "height": "100%",
-      "width": "100%",
-    }
-  }
+  class="skeleton emotion-0"
+  style="width: 100%; height: 100%;"
 />
 `;

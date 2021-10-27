@@ -14,29 +14,12 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runMockMethodTests } from '@lowdefy/block-tools';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { runBlockSchemaTests, runMockMethodTests } from '@lowdefy/block-dev';
 import { Modal } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import ConfirmModal from '../src/blocks/ConfirmModal/ConfirmModal';
 import examples from '../demo/examples/ConfirmModal.yaml';
 import meta from '../src/blocks/ConfirmModal/ConfirmModal.json';
-
-jest.mock('@lowdefy/block-tools', () => {
-  const originalModule = jest.requireActual('@lowdefy/block-tools');
-  return {
-    ...originalModule,
-    blockDefaultProps: {
-      ...originalModule.blockDefaultProps,
-      methods: {
-        ...originalModule.blockDefaultProps.methods,
-        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
-      },
-    },
-  };
-});
 
 jest.mock('antd/lib/modal', () => {
   return {
@@ -71,5 +54,5 @@ const mocks = [
   },
 ];
 
-runMockMethodTests({ examples, Block: ConfirmModal, mocks, meta, enzyme: { mount } });
+runMockMethodTests({ examples, Block: ConfirmModal, mocks, meta });
 runBlockSchemaTests({ examples, meta });

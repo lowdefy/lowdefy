@@ -31,6 +31,7 @@ enabled = true
     "packages/blocks/blocksColorSelectors/package.json",
     "packages/blocks/blocksECharts/package.json",
     "packages/blocks/blocksMarkdown/package.json",
+    "packages/blockDev/package.json",
     "packages/blockTools/package.json",
     "packages/build/package.json",
     "packages/cli/package.json",

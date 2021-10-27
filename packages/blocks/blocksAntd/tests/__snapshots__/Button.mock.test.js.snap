@@ -1192,7 +1192,7 @@ Array [
 ]
 `;
 
-exports[`Mock render - with html in title - value[0] - default 2`] = `
+exports[`Mock render - with html in title and icon - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -1237,7 +1237,7 @@ Array [
       "href": undefined,
       "icon": <IconBlock
         basePath=""
-        blockId="with html in title_icon"
+        blockId="with html in title and icon_icon"
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -1261,7 +1261,7 @@ Array [
           }
         }
       />,
-      "id": "with html in title",
+      "id": "with html in title and icon",
       "loading": undefined,
       "onClick": [Function],
       "shape": undefined,

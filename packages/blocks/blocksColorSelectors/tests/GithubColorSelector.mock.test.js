@@ -14,12 +14,9 @@
   limitations under the License.
 */
 
-import { runMockRenderTests } from '@lowdefy/block-tools';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { runMockRenderTests } from '@lowdefy/block-dev';
 import { GithubPicker } from 'react-color';
 
-Enzyme.configure({ adapter: new Adapter() });
 import GithubColorSelector from '../src/blocks/GithubColorSelector/GithubColorSelector';
 import examples from '../demo/examples/GithubColorSelector.yaml';
 import meta from '../src/blocks/GithubColorSelector/GithubColorSelector.json';
@@ -38,4 +35,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: GithubColorSelector, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: GithubColorSelector, meta, mocks });

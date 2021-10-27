@@ -2,42 +2,22 @@
 
 exports[`Render default - value[0] 1`] = `
 <div
-  className="ant-skeleton {}"
+  class="ant-skeleton emotion-0"
 >
   <div
-    className="ant-skeleton-content"
+    class="ant-skeleton-content"
   >
     <h3
-      className="ant-skeleton-title"
-      style={
-        Object {
-          "width": "38%",
-        }
-      }
+      class="ant-skeleton-title"
+      style="width: 38%;"
     />
     <ul
-      className="ant-skeleton-paragraph"
+      class="ant-skeleton-paragraph"
     >
+      <li />
+      <li />
       <li
-        style={
-          Object {
-            "width": undefined,
-          }
-        }
-      />
-      <li
-        style={
-          Object {
-            "width": undefined,
-          }
-        }
-      />
-      <li
-        style={
-          Object {
-            "width": "61%",
-          }
-        }
+        style="width: 61%;"
       />
     </ul>
   </div>
@@ -46,42 +26,22 @@ exports[`Render default - value[0] 1`] = `
 
 exports[`Render properties.active - value[0] 1`] = `
 <div
-  className="ant-skeleton ant-skeleton-active {}"
+  class="ant-skeleton ant-skeleton-active emotion-0"
 >
   <div
-    className="ant-skeleton-content"
+    class="ant-skeleton-content"
   >
     <h3
-      className="ant-skeleton-title"
-      style={
-        Object {
-          "width": "38%",
-        }
-      }
+      class="ant-skeleton-title"
+      style="width: 38%;"
     />
     <ul
-      className="ant-skeleton-paragraph"
+      class="ant-skeleton-paragraph"
     >
+      <li />
+      <li />
       <li
-        style={
-          Object {
-            "width": undefined,
-          }
-        }
-      />
-      <li
-        style={
-          Object {
-            "width": undefined,
-          }
-        }
-      />
-      <li
-        style={
-          Object {
-            "width": "61%",
-          }
-        }
+        style="width: 61%;"
       />
     </ul>
   </div>
@@ -90,84 +50,73 @@ exports[`Render properties.active - value[0] 1`] = `
 
 exports[`Render properties.avatar boolean - value[0] 1`] = `
 <div
-  className="ant-skeleton ant-skeleton-element {}"
+  class="ant-skeleton ant-skeleton-element emotion-0"
 >
   <span
-    className="ant-skeleton-avatar ant-skeleton-avatar-circle"
-    style={Object {}}
+    class="ant-skeleton-avatar ant-skeleton-avatar-circle"
   />
 </div>
 `;
 
 exports[`Render properties.avatar object circle - value[0] 1`] = `
 <div
-  className="ant-skeleton ant-skeleton-element {}"
+  class="ant-skeleton ant-skeleton-element emotion-0"
 >
   <span
-    className="ant-skeleton-avatar ant-skeleton-avatar-lg ant-skeleton-avatar-circle"
-    style={Object {}}
+    class="ant-skeleton-avatar ant-skeleton-avatar-lg ant-skeleton-avatar-circle"
   />
 </div>
 `;
 
 exports[`Render properties.avatar object square - value[0] 1`] = `
 <div
-  className="ant-skeleton ant-skeleton-element {}"
+  class="ant-skeleton ant-skeleton-element emotion-0"
 >
   <span
-    className="ant-skeleton-avatar ant-skeleton-avatar-sm ant-skeleton-avatar-square"
-    style={Object {}}
+    class="ant-skeleton-avatar ant-skeleton-avatar-sm ant-skeleton-avatar-square"
   />
 </div>
 `;
 
 exports[`Render properties.block block true - value[0] 1`] = `
 <div
-  className="ant-skeleton ant-skeleton-element ant-skeleton-block {}"
+  class="ant-skeleton ant-skeleton-element ant-skeleton-block emotion-0"
 >
   <span
-    className="ant-skeleton-button {}"
-    style={Object {}}
+    class="ant-skeleton-button emotion-0"
   />
 </div>
 `;
 
 exports[`Render properties.button object circle - value[0] 1`] = `
 <div
-  className="ant-skeleton ant-skeleton-element {}"
+  class="ant-skeleton ant-skeleton-element emotion-0"
 >
   <span
-    className="ant-skeleton-button ant-skeleton-button-lg ant-skeleton-button-circle {}"
-    style={Object {}}
+    class="ant-skeleton-button ant-skeleton-button-lg ant-skeleton-button-circle emotion-0"
   />
 </div>
 `;
 
 exports[`Render properties.button object round - value[0] 1`] = `
 <div
-  className="ant-skeleton ant-skeleton-element {}"
+  class="ant-skeleton ant-skeleton-element emotion-0"
 >
   <span
-    className="ant-skeleton-button ant-skeleton-button-sm ant-skeleton-button-round {}"
-    style={Object {}}
+    class="ant-skeleton-button ant-skeleton-button-sm ant-skeleton-button-round emotion-0"
   />
 </div>
 `;
 
 exports[`Render properties.paragraph boolean - value[0] 1`] = `
 <div
-  className="ant-skeleton {}"
+  class="ant-skeleton emotion-0"
 >
   <div
-    className="ant-skeleton-content"
+    class="ant-skeleton-content"
   >
     <h3
-      className="ant-skeleton-title"
-      style={
-        Object {
-          "width": undefined,
-        }
-      }
+      class="ant-skeleton-title"
     />
   </div>
 </div>
@@ -175,42 +124,22 @@ exports[`Render properties.paragraph boolean - value[0] 1`] = `
 
 exports[`Render properties.paragraph object width all - value[0] 1`] = `
 <div
-  className="ant-skeleton {}"
+  class="ant-skeleton emotion-0"
 >
   <div
-    className="ant-skeleton-content"
+    class="ant-skeleton-content"
   >
     <h3
-      className="ant-skeleton-title"
-      style={
-        Object {
-          "width": "38%",
-        }
-      }
+      class="ant-skeleton-title"
+      style="width: 38%;"
     />
     <ul
-      className="ant-skeleton-paragraph"
+      class="ant-skeleton-paragraph"
     >
+      <li />
+      <li />
       <li
-        style={
-          Object {
-            "width": undefined,
-          }
-        }
-      />
-      <li
-        style={
-          Object {
-            "width": undefined,
-          }
-        }
-      />
-      <li
-        style={
-          Object {
-            "width": 300,
-          }
-        }
+        style="width: 300px;"
       />
     </ul>
   </div>
@@ -219,42 +148,26 @@ exports[`Render properties.paragraph object width all - value[0] 1`] = `
 
 exports[`Render properties.paragraph object width array - value[0] 1`] = `
 <div
-  className="ant-skeleton {}"
+  class="ant-skeleton emotion-0"
 >
   <div
-    className="ant-skeleton-content"
+    class="ant-skeleton-content"
   >
     <h3
-      className="ant-skeleton-title"
-      style={
-        Object {
-          "width": "38%",
-        }
-      }
+      class="ant-skeleton-title"
+      style="width: 38%;"
     />
     <ul
-      className="ant-skeleton-paragraph"
+      class="ant-skeleton-paragraph"
     >
       <li
-        style={
-          Object {
-            "width": 700,
-          }
-        }
+        style="width: 700px;"
       />
       <li
-        style={
-          Object {
-            "width": 250,
-          }
-        }
+        style="width: 250px;"
       />
       <li
-        style={
-          Object {
-            "width": 500,
-          }
-        }
+        style="width: 500px;"
       />
     </ul>
   </div>
@@ -263,27 +176,17 @@ exports[`Render properties.paragraph object width array - value[0] 1`] = `
 
 exports[`Render properties.title boolean - value[0] 1`] = `
 <div
-  className="ant-skeleton {}"
+  class="ant-skeleton emotion-0"
 >
   <div
-    className="ant-skeleton-content"
+    class="ant-skeleton-content"
   >
     <ul
-      className="ant-skeleton-paragraph"
+      class="ant-skeleton-paragraph"
     >
+      <li />
       <li
-        style={
-          Object {
-            "width": undefined,
-          }
-        }
-      />
-      <li
-        style={
-          Object {
-            "width": "61%",
-          }
-        }
+        style="width: 61%;"
       />
     </ul>
   </div>
@@ -292,42 +195,22 @@ exports[`Render properties.title boolean - value[0] 1`] = `
 
 exports[`Render properties.title object - value[0] 1`] = `
 <div
-  className="ant-skeleton {}"
+  class="ant-skeleton emotion-0"
 >
   <div
-    className="ant-skeleton-content"
+    class="ant-skeleton-content"
   >
     <h3
-      className="ant-skeleton-title"
-      style={
-        Object {
-          "width": 250,
-        }
-      }
+      class="ant-skeleton-title"
+      style="width: 250px;"
     />
     <ul
-      className="ant-skeleton-paragraph"
+      class="ant-skeleton-paragraph"
     >
+      <li />
+      <li />
       <li
-        style={
-          Object {
-            "width": undefined,
-          }
-        }
-      />
-      <li
-        style={
-          Object {
-            "width": undefined,
-          }
-        }
-      />
-      <li
-        style={
-          Object {
-            "width": "61%",
-          }
-        }
+        style="width: 61%;"
       />
     </ul>
   </div>

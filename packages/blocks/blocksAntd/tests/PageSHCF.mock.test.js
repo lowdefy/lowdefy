@@ -14,12 +14,9 @@
   limitations under the License.
 */
 
-import { runMockRenderTests } from '@lowdefy/block-tools';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Layout } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import PageSHCF from '../src/blocks/PageSHCF/PageSHCF';
 import examples from '../demo/examples/PageSHCF.yaml';
 import meta from '../src/blocks/PageSHCF/PageSHCF.json';
@@ -35,4 +32,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: PageSHCF, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: PageSHCF, meta, mocks });

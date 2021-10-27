@@ -30,7 +30,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
   },
-  resolve: { fallback: { buffer: require.resolve('buffer/'), tslib: require.resolve('tslib/') } },
+  resolve: { fallback: { tslib: require.resolve('tslib/') } },
   module: {
     rules: [
       {

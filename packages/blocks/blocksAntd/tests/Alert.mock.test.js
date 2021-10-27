@@ -14,12 +14,9 @@
   limitations under the License.
 */
 
-import { runMockRenderTests } from '@lowdefy/block-tools';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Alert } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import AlertBlock from '../src/blocks/Alert/Alert';
 import examples from '../demo/examples/Alert.yaml';
 import meta from '../src/blocks/Alert/Alert.json';
@@ -35,4 +32,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: AlertBlock, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: AlertBlock, meta, mocks });

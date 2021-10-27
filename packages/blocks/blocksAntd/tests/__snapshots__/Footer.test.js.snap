@@ -1,17 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render areas.content - value[0] 1`] = `
+.emotion-0 {
+  margin: auto;
+}
+
 <footer
-  className="ant-layout-footer {\\"style\\":[{\\"margin\\":\\"auto\\"},null]} hide-on-print"
+  class="ant-layout-footer emotion-0 hide-on-print"
   id="areas.content"
 >
   <div
-    style={
-      Object {
-        "border": "1px solid red",
-        "padding": 10,
-      }
-    }
+    style="border: 1px solid red; padding: 10px;"
   >
     content
   </div>
@@ -19,17 +18,16 @@ exports[`Render areas.content - value[0] 1`] = `
 `;
 
 exports[`Render default - value[0] 1`] = `
+.emotion-0 {
+  margin: auto;
+}
+
 <footer
-  className="ant-layout-footer {\\"style\\":[{\\"margin\\":\\"auto\\"},null]} hide-on-print"
+  class="ant-layout-footer emotion-0 hide-on-print"
   id="default"
 >
   <div
-    style={
-      Object {
-        "border": "1px solid red",
-        "padding": 10,
-      }
-    }
+    style="border: 1px solid red; padding: 10px;"
   >
     content
   </div>
@@ -37,17 +35,17 @@ exports[`Render default - value[0] 1`] = `
 `;
 
 exports[`Render properties.style - value[0] 1`] = `
+.emotion-0 {
+  margin: auto;
+  border: 1px solid blue;
+}
+
 <footer
-  className="ant-layout-footer {\\"style\\":[{\\"margin\\":\\"auto\\"},{\\"border\\":\\"1px solid blue\\"}]} hide-on-print"
+  class="ant-layout-footer emotion-0 hide-on-print"
   id="properties.style"
 >
   <div
-    style={
-      Object {
-        "border": "1px solid red",
-        "padding": 10,
-      }
-    }
+    style="border: 1px solid red; padding: 10px;"
   >
     content
   </div>

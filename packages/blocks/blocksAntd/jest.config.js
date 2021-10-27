@@ -12,15 +12,16 @@ module.exports = {
   ],
   coverageReporters: [['lcov', { projectRoot: '../../..' }], 'text', 'clover'],
   errorOnDeprecated: true,
+  testEnvironment: 'jsdom',
   testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/es/', '<rootDir>/src/test'],
   moduleNameMapper: {
     '\\.(css|less)$': '<rootDir>/tests/__mocks__/styleMock.js',
     '^antd/.*/style$': '<rootDir>/tests/__mocks__/styleMock.js',
   },
   transform: {
-    '\\.yaml$': 'yaml-jest',
     '\\.js?$': 'babel-jest',
+    '\\.yaml$': 'jest-transform-yaml',
   },
   moduleFileExtensions: ['js', 'json', 'jsx', 'ts', 'tsx', 'node', 'yaml', 'css'],
-  snapshotSerializers: ['jest-serializer-html'],
+  snapshotSerializers: ['jest-serializer-html', '@emotion/jest/serializer'],
 };

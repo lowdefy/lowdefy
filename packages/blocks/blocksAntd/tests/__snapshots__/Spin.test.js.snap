@@ -1,38 +1,34 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render areas.indicator - value[0] 1`] = `
+.emotion-1 {
+  text-align: center;
+  width: 100%;
+  padding: 80px 0;
+}
+
 <div
-  className="ant-spin-nested-loading {}"
+  class="ant-spin-nested-loading emotion-0"
   id="areas.indicator"
 >
   <div>
     <div
-      className="ant-spin ant-spin-spinning {\\"style\\":[{\\"textAlign\\":\\"center\\",\\"width\\":\\"100%\\",\\"padding\\":\\"80px 0\\"},null]}"
+      class="ant-spin ant-spin-spinning emotion-1"
       id="areas.indicator"
     >
       <div
-        className="ant-spin-dot"
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        class="ant-spin-dot"
+        style="border: 1px solid red; padding: 10px;"
       >
         indicator
       </div>
     </div>
   </div>
   <div
-    className="ant-spin-container ant-spin-blur"
+    class="ant-spin-container ant-spin-blur"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -41,43 +37,44 @@ exports[`Render areas.indicator - value[0] 1`] = `
 `;
 
 exports[`Render default - value[0] 1`] = `
+.emotion-1 {
+  text-align: center;
+  width: 100%;
+  padding: 80px 0;
+}
+
 <div
-  className="ant-spin-nested-loading {}"
+  class="ant-spin-nested-loading emotion-0"
   id="default"
 >
   <div>
     <div
-      className="ant-spin ant-spin-spinning {\\"style\\":[{\\"textAlign\\":\\"center\\",\\"width\\":\\"100%\\",\\"padding\\":\\"80px 0\\"},null]}"
+      class="ant-spin ant-spin-spinning emotion-1"
       id="default"
     >
       <span
-        className="ant-spin-dot ant-spin-dot-spin"
+        class="ant-spin-dot ant-spin-dot-spin"
       >
         <i
-          className="ant-spin-dot-item"
+          class="ant-spin-dot-item"
         />
         <i
-          className="ant-spin-dot-item"
+          class="ant-spin-dot-item"
         />
         <i
-          className="ant-spin-dot-item"
+          class="ant-spin-dot-item"
         />
         <i
-          className="ant-spin-dot-item"
+          class="ant-spin-dot-item"
         />
       </span>
     </div>
   </div>
   <div
-    className="ant-spin-container ant-spin-blur"
+    class="ant-spin-container ant-spin-blur"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -87,19 +84,14 @@ exports[`Render default - value[0] 1`] = `
 
 exports[`Render properties.delay - value[0] 1`] = `
 <div
-  className="ant-spin-nested-loading {}"
+  class="ant-spin-nested-loading emotion-0"
   id="properties.delay"
 >
   <div
-    className="ant-spin-container"
+    class="ant-spin-container"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -108,43 +100,44 @@ exports[`Render properties.delay - value[0] 1`] = `
 `;
 
 exports[`Render properties.size: large - value[0] 1`] = `
+.emotion-1 {
+  text-align: center;
+  width: 100%;
+  padding: 80px 0;
+}
+
 <div
-  className="ant-spin-nested-loading {}"
+  class="ant-spin-nested-loading emotion-0"
   id="properties.size: large"
 >
   <div>
     <div
-      className="ant-spin ant-spin-lg ant-spin-spinning {\\"style\\":[{\\"textAlign\\":\\"center\\",\\"width\\":\\"100%\\",\\"padding\\":\\"80px 0\\"},null]}"
+      class="ant-spin ant-spin-lg ant-spin-spinning emotion-1"
       id="properties.size: large"
     >
       <span
-        className="ant-spin-dot ant-spin-dot-spin"
+        class="ant-spin-dot ant-spin-dot-spin"
       >
         <i
-          className="ant-spin-dot-item"
+          class="ant-spin-dot-item"
         />
         <i
-          className="ant-spin-dot-item"
+          class="ant-spin-dot-item"
         />
         <i
-          className="ant-spin-dot-item"
+          class="ant-spin-dot-item"
         />
         <i
-          className="ant-spin-dot-item"
+          class="ant-spin-dot-item"
         />
       </span>
     </div>
   </div>
   <div
-    className="ant-spin-container ant-spin-blur"
+    class="ant-spin-container ant-spin-blur"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -153,43 +146,44 @@ exports[`Render properties.size: large - value[0] 1`] = `
 `;
 
 exports[`Render properties.size: small - value[0] 1`] = `
+.emotion-1 {
+  text-align: center;
+  width: 100%;
+  padding: 80px 0;
+}
+
 <div
-  className="ant-spin-nested-loading {}"
+  class="ant-spin-nested-loading emotion-0"
   id="properties.size: small"
 >
   <div>
     <div
-      className="ant-spin ant-spin-sm ant-spin-spinning {\\"style\\":[{\\"textAlign\\":\\"center\\",\\"width\\":\\"100%\\",\\"padding\\":\\"80px 0\\"},null]}"
+      class="ant-spin ant-spin-sm ant-spin-spinning emotion-1"
       id="properties.size: small"
     >
       <span
-        className="ant-spin-dot ant-spin-dot-spin"
+        class="ant-spin-dot ant-spin-dot-spin"
       >
         <i
-          className="ant-spin-dot-item"
+          class="ant-spin-dot-item"
         />
         <i
-          className="ant-spin-dot-item"
+          class="ant-spin-dot-item"
         />
         <i
-          className="ant-spin-dot-item"
+          class="ant-spin-dot-item"
         />
         <i
-          className="ant-spin-dot-item"
+          class="ant-spin-dot-item"
         />
       </span>
     </div>
   </div>
   <div
-    className="ant-spin-container ant-spin-blur"
+    class="ant-spin-container ant-spin-blur"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -199,19 +193,14 @@ exports[`Render properties.size: small - value[0] 1`] = `
 
 exports[`Render properties.spinning - value[0] 1`] = `
 <div
-  className="ant-spin-nested-loading {}"
+  class="ant-spin-nested-loading emotion-0"
   id="properties.spinning"
 >
   <div
-    className="ant-spin-container"
+    class="ant-spin-container"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -220,43 +209,45 @@ exports[`Render properties.spinning - value[0] 1`] = `
 `;
 
 exports[`Render properties.style: border: 5px solid blue - value[0] 1`] = `
+.emotion-1 {
+  text-align: center;
+  width: 100%;
+  padding: 80px 0;
+  border: 5px solid blue;
+}
+
 <div
-  className="ant-spin-nested-loading {}"
+  class="ant-spin-nested-loading emotion-0"
   id="properties.style: border: 5px solid blue"
 >
   <div>
     <div
-      className="ant-spin ant-spin-spinning {\\"style\\":[{\\"textAlign\\":\\"center\\",\\"width\\":\\"100%\\",\\"padding\\":\\"80px 0\\"},{\\"border\\":\\"5px solid blue\\"}]}"
+      class="ant-spin ant-spin-spinning emotion-1"
       id="properties.style: border: 5px solid blue"
     >
       <span
-        className="ant-spin-dot ant-spin-dot-spin"
+        class="ant-spin-dot ant-spin-dot-spin"
       >
         <i
-          className="ant-spin-dot-item"
+          class="ant-spin-dot-item"
         />
         <i
-          className="ant-spin-dot-item"
+          class="ant-spin-dot-item"
         />
         <i
-          className="ant-spin-dot-item"
+          class="ant-spin-dot-item"
         />
         <i
-          className="ant-spin-dot-item"
+          class="ant-spin-dot-item"
         />
       </span>
     </div>
   </div>
   <div
-    className="ant-spin-container ant-spin-blur"
+    class="ant-spin-container ant-spin-blur"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -265,48 +256,49 @@ exports[`Render properties.style: border: 5px solid blue - value[0] 1`] = `
 `;
 
 exports[`Render properties.tip - value[0] 1`] = `
+.emotion-1 {
+  text-align: center;
+  width: 100%;
+  padding: 80px 0;
+}
+
 <div
-  className="ant-spin-nested-loading {}"
+  class="ant-spin-nested-loading emotion-0"
   id="properties.tip"
 >
   <div>
     <div
-      className="ant-spin ant-spin-spinning ant-spin-show-text {\\"style\\":[{\\"textAlign\\":\\"center\\",\\"width\\":\\"100%\\",\\"padding\\":\\"80px 0\\"},null]}"
+      class="ant-spin ant-spin-spinning ant-spin-show-text emotion-1"
       id="properties.tip"
     >
       <span
-        className="ant-spin-dot ant-spin-dot-spin"
+        class="ant-spin-dot ant-spin-dot-spin"
       >
         <i
-          className="ant-spin-dot-item"
+          class="ant-spin-dot-item"
         />
         <i
-          className="ant-spin-dot-item"
+          class="ant-spin-dot-item"
         />
         <i
-          className="ant-spin-dot-item"
+          class="ant-spin-dot-item"
         />
         <i
-          className="ant-spin-dot-item"
+          class="ant-spin-dot-item"
         />
       </span>
       <div
-        className="ant-spin-text"
+        class="ant-spin-text"
       >
         Loading spinner
       </div>
     </div>
   </div>
   <div
-    className="ant-spin-container ant-spin-blur"
+    class="ant-spin-container ant-spin-blur"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -315,43 +307,48 @@ exports[`Render properties.tip - value[0] 1`] = `
 `;
 
 exports[`Render properties.wrapperStyle: border: 5px solid blue - value[0] 1`] = `
+.emotion-0 {
+  border: 5px solid blue;
+}
+
+.emotion-1 {
+  text-align: center;
+  width: 100%;
+  padding: 80px 0;
+}
+
 <div
-  className="ant-spin-nested-loading {\\"style\\":{\\"border\\":\\"5px solid blue\\"}}"
+  class="ant-spin-nested-loading emotion-0"
   id="properties.wrapperStyle: border: 5px solid blue"
 >
   <div>
     <div
-      className="ant-spin ant-spin-spinning {\\"style\\":[{\\"textAlign\\":\\"center\\",\\"width\\":\\"100%\\",\\"padding\\":\\"80px 0\\"},null]}"
+      class="ant-spin ant-spin-spinning emotion-1"
       id="properties.wrapperStyle: border: 5px solid blue"
     >
       <span
-        className="ant-spin-dot ant-spin-dot-spin"
+        class="ant-spin-dot ant-spin-dot-spin"
       >
         <i
-          className="ant-spin-dot-item"
+          class="ant-spin-dot-item"
         />
         <i
-          className="ant-spin-dot-item"
+          class="ant-spin-dot-item"
         />
         <i
-          className="ant-spin-dot-item"
+          class="ant-spin-dot-item"
         />
         <i
-          className="ant-spin-dot-item"
+          class="ant-spin-dot-item"
         />
       </span>
     </div>
   </div>
   <div
-    className="ant-spin-container ant-spin-blur"
+    class="ant-spin-container ant-spin-blur"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>

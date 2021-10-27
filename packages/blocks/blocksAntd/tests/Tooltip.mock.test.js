@@ -14,12 +14,9 @@
   limitations under the License.
 */
 
-import { runMockRenderTests } from '@lowdefy/block-tools';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Tooltip } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import TooltipBlock from '../src/blocks/Tooltip/Tooltip';
 import examples from '../demo/examples/Tooltip.yaml';
 import meta from '../src/blocks/Tooltip/Tooltip.json';
@@ -35,4 +32,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: TooltipBlock, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: TooltipBlock, meta, mocks });

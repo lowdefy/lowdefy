@@ -15,7 +15,7 @@
           "type": "string",
           "description": "Alternative text description of the image."
         },
-        "crossorigin": {
+        "crossOrigin": {
           "type": "string",
           "enum": ["anonymous", "use-credentials"],
           "description": "Indicates if the fetching of the image must be done using a CORS request."
@@ -38,7 +38,7 @@
           "type": "string",
           "description": "Indicating a set of source sizes of strings separated by commas."
         },
-        "srcset": {
+        "srcSet": {
           "type": "string",
           "description": "Possible image sources for the user agent to use, strings separated by commas.",
           "docs": {

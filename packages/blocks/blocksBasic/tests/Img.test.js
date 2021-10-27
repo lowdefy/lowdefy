@@ -15,28 +15,13 @@
 */
 
 import React from 'react';
-import { mockBlock, runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
-import { configure, mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-configure({ adapter: new Adapter() });
+import { mockBlock, runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { Img } from '../src';
 import examples from '../demo/examples/Img.yaml';
 import meta from '../src/blocks/Img/Img.json';
-
-jest.mock('@lowdefy/block-tools', () => {
-  const originalModule = jest.requireActual('@lowdefy/block-tools');
-  return {
-    ...originalModule,
-    blockDefaultProps: {
-      ...originalModule.blockDefaultProps,
-      methods: {
-        ...originalModule.blockDefaultProps.methods,
-        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
-      },
-    },
-  };
-});
 
 runRenderTests({ examples, Block: Img, meta });
 runBlockSchemaTests({ examples, meta });
@@ -50,7 +35,8 @@ test('triggerEvent onClick', () => {
     type: 'Img',
   };
   const Shell = () => <Img {...getProps(block)} methods={methods} />;
-  const wrapper = mount(<Shell />);
-  wrapper.find('[data-testid="one"]').simulate('click');
+  const { container } = render(<Shell />);
+  expect(container.firstChild).toMatchSnapshot();
+  userEvent.click(screen.getByTestId('one'));
   expect(methods.triggerEvent).toHaveBeenCalledWith({ name: 'onClick' });
 });

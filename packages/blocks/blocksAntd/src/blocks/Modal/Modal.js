@@ -51,7 +51,7 @@ const ModalBlock = ({ blockId, content, properties, events, methods }) => {
       <Modal
         id={`${blockId}_modal`}
         title={renderHtml({ html: properties.title, methods })}
-        bodyStyle={methods.makeCssClass(properties.bodyStyle, { styleObjectOnly: true })}
+        bodyStyle={methods.makeCssClass(properties.bodyStyle, true)}
         visible={openState}
         onOk={async () => {
           const response = await methods.triggerEvent({ name: 'onOk' });
@@ -76,7 +76,7 @@ const ModalBlock = ({ blockId, content, properties, events, methods }) => {
         closable={properties.closable !== undefined ? properties.closable : true}
         mask={properties.mask !== undefined ? properties.mask : true}
         maskClosable={properties.maskClosable !== undefined ? properties.maskClosable : true}
-        maskStyle={methods.makeCssClass(properties.maskStyle, { styleObjectOnly: true })}
+        maskStyle={methods.makeCssClass(properties.maskStyle, true)}
         okType={properties.okButtonType || 'primary'}
         okButtonProps={properties.okButtonProps}
         cancelButtonProps={properties.cancelButtonProps}

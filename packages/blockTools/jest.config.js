@@ -6,21 +6,19 @@ module.exports = {
   coveragePathIgnorePatterns: [
     '<rootDir>/dist/',
     '<rootDir>/tests/',
-    'runRenderTests.js',
-    'runMockRenderTests.js',
-    'runMockMethodTests.js',
-    'runBlockSchemaTests.js',
-    'mockBlock.js',
+    'loadWebpackFederatedModule.js',
   ],
   coverageReporters: [['lcov', { projectRoot: '../..' }], 'text', 'clover'],
   errorOnDeprecated: true,
+  testEnvironment: 'jsdom',
   testPathIgnorePatterns: ['<rootDir>/dist/'],
   moduleFileExtensions: ['js', 'json', 'jsx', 'ts', 'tsx', 'node', 'yaml', 'css'],
   moduleNameMapper: {
     '\\.(css|less)$': '<rootDir>/tests/__mocks__/styleMock.js',
   },
   transform: {
-    '\\.yaml$': 'yaml-jest',
     '\\.js?$': 'babel-jest',
+    '\\.yaml$': 'jest-transform-yaml',
   },
+  snapshotSerializers: ['@emotion/jest/serializer', 'jest-serializer-html'],
 };

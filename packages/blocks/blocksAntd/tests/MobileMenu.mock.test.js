@@ -14,12 +14,9 @@
   limitations under the License.
 */
 
-import { runMockRenderTests } from '@lowdefy/block-tools';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Button, Drawer } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import MobileMenuBlock from '../src/blocks/MobileMenu/MobileMenu';
 import examples from '../demo/examples/MobileMenu.yaml';
 import meta from '../src/blocks/MobileMenu/MobileMenu.json';
@@ -42,4 +39,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: MobileMenuBlock, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: MobileMenuBlock, meta, mocks });

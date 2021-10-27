@@ -14,12 +14,9 @@
   limitations under the License.
 */
 
-import { runMockRenderTests } from '@lowdefy/block-tools';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { runMockRenderTests } from '@lowdefy/block-dev';
 import { TwitterPicker } from 'react-color';
 
-Enzyme.configure({ adapter: new Adapter() });
 import TwitterColorSelector from '../src/blocks/TwitterColorSelector/TwitterColorSelector';
 import examples from '../demo/examples/TwitterColorSelector.yaml';
 import meta from '../src/blocks/TwitterColorSelector/TwitterColorSelector.json';
@@ -38,4 +35,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: TwitterColorSelector, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: TwitterColorSelector, meta, mocks });

@@ -14,40 +14,31 @@
   limitations under the License.
 */
 
-import makeCssClass from '../src/makeCssClass';
-
-const mockCss = jest.fn();
-const mockCssImp = (obj) => ({
-  emotionClassFor: obj,
-});
-
-jest.mock('create-emotion', () => () => ({
-  css: (obj) => mockCss(obj),
-}));
-
-beforeEach(() => {
-  mockCss.mockReset();
-  mockCss.mockImplementation(mockCssImp);
-});
+import React from 'react';
+import makeCssClass from './makeCssClass';
+import { render } from '@testing-library/react';
 
 test('object with no media', () => {
-  const obj = {
+  const cls = makeCssClass({
     a: 'a',
     b: 1,
     c: { a: 'b' },
-  };
-  expect(makeCssClass(obj)).toMatchInlineSnapshot(`
-    Object {
-      "emotionClassFor": Object {
-        "a": "a",
-        "b": 1,
-        "c": Object {
-          "a": "b",
-        },
-      },
+  });
+  const { container } = render(<div className={cls} />);
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    .emotion-0 {
+      a: a;
+      b: 1px;
     }
+
+    .emotion-0 c {
+      a: b;
+    }
+
+    <div
+      class="emotion-0"
+    />
   `);
-  expect(mockCss).toHaveBeenCalled();
 });
 
 test('objects with no media', () => {
@@ -58,18 +49,25 @@ test('objects with no media', () => {
   const obj2 = {
     c: { a: 'c' },
   };
-  expect(makeCssClass([obj1, obj2])).toMatchInlineSnapshot(`
-    Object {
-      "emotionClassFor": Object {
-        "a": "a",
-        "c": Object {
-          "a": "c",
-          "d": 1,
-        },
-      },
+  const { container } = render(<div className={makeCssClass([obj1, obj2])} />);
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    .emotion-0 {
+      a: a;
     }
+
+    .emotion-0 c {
+      a: b;
+      d: 1px;
+    }
+
+    .emotion-0 c {
+      a: c;
+    }
+
+    <div
+      class="emotion-0"
+    />
   `);
-  expect(mockCss).toHaveBeenCalled();
 });
 
 test('objects with media', () => {
@@ -80,27 +78,41 @@ test('objects with media', () => {
     lg: { a: 'lg' },
     xl: { a: 'xl' },
   };
-  expect(makeCssClass(obj)).toMatchInlineSnapshot(`
-    Object {
-      "emotionClassFor": Object {
-        "@media screen and (max-width: 576px)": Object {
-          "a": "sm",
-          "c": 1,
-        },
-        "@media screen and (min-width: 576px)": Object {
-          "a": "md",
-        },
-        "@media screen and (min-width: 768px)": Object {
-          "a": "lg",
-        },
-        "@media screen and (min-width: 992px)": Object {
-          "a": "xl",
-        },
-        "a": "a",
-      },
+  const { container } = render(<div className={makeCssClass(obj)} />);
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    .emotion-0 {
+      a: a;
     }
+
+    @media screen and (min-width: 576px) {
+      .emotion-0 {
+        a: sm;
+        c: 1px;
+      }
+    }
+
+    @media screen and (min-width: 768px) {
+      .emotion-0 {
+        a: md;
+      }
+    }
+
+    @media screen and (min-width: 992px) {
+      .emotion-0 {
+        a: lg;
+      }
+    }
+
+    @media screen and (min-width: 1200px) {
+      .emotion-0 {
+        a: xl;
+      }
+    }
+
+    <div
+      class="emotion-0"
+    />
   `);
-  expect(mockCss).toHaveBeenCalled();
 });
 
 test('objects with media', () => {
@@ -118,148 +130,70 @@ test('objects with media', () => {
     lg: { a: 'lg', c: { sm: { a: '1' } } },
     xl: { a: 'xl' },
   };
-  expect(makeCssClass([obj1, obj2])).toMatchInlineSnapshot(`
-    Object {
-      "emotionClassFor": Object {
-        "@media screen and (max-width: 576px)": Object {
-          "a": "smsm",
-          "c": 1,
-        },
-        "@media screen and (min-width: 576px)": Object {
-          "a": "md",
-        },
-        "@media screen and (min-width: 768px)": Object {
-          "a": "lg",
-          "c": Object {
-            "sm": Object {
-              "a": "1",
-            },
-          },
-        },
-        "@media screen and (min-width: 992px)": Object {
-          "a": "xl",
-        },
-        "a": "x",
-      },
+  const { container } = render(<div className={makeCssClass([obj1, obj2])} />);
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    .emotion-0 {
+      a: a;
+      a: x;
     }
-  `);
-  expect(mockCss).toHaveBeenCalled();
-});
 
-test('object with no media, react', () => {
-  const obj = {
-    a: 'a',
-    b: 1,
-    c: { a: 'b' },
-  };
-  expect(makeCssClass(obj, { react: true })).toMatchInlineSnapshot(`
-    Object {
-      "emotionClassFor": Object {
-        "a": "a",
-        "b": 1,
-        "c": Object {
-          "a": "b",
-        },
-      },
+    @media screen and (min-width: 576px) {
+      .emotion-0 {
+        a: sm;
+        c: 1px;
+      }
     }
-  `);
-  expect(mockCss).toHaveBeenCalled();
-});
 
-test('objects with no media, react', () => {
-  const obj1 = {
-    a: 'a',
-    c: { a: 'b', d: 1 },
-  };
-  const obj2 = {
-    c: { a: 'c' },
-  };
-  expect(makeCssClass([obj1, obj2], { react: true })).toMatchInlineSnapshot(`
-    Object {
-      "emotionClassFor": Object {
-        "a": "a",
-        "c": Object {
-          "a": "c",
-          "d": 1,
-        },
-      },
+    @media screen and (min-width: 768px) {
+      .emotion-0 {
+        a: md;
+      }
     }
-  `);
-  expect(mockCss).toHaveBeenCalled();
-});
 
-test('objects with media, react', () => {
-  const obj = {
-    a: 'a',
-    sm: { a: 'sm', c: 1 },
-    md: { a: 'md' },
-    lg: { a: 'lg' },
-    xl: { a: 'xl' },
-  };
-  expect(makeCssClass(obj, { react: true })).toMatchInlineSnapshot(`
-    Object {
-      "emotionClassFor": Object {
-        "@media screen and (maxWidth: 576px)": Object {
-          "a": "sm",
-          "c": 1,
-        },
-        "@media screen and (minWidth: 576px)": Object {
-          "a": "md",
-        },
-        "@media screen and (minWidth: 768px)": Object {
-          "a": "lg",
-        },
-        "@media screen and (minWidth: 992px)": Object {
-          "a": "xl",
-        },
-        "a": "a",
-      },
+    @media screen and (min-width: 992px) {
+      .emotion-0 {
+        a: lg;
+      }
     }
-  `);
-  expect(mockCss).toHaveBeenCalled();
-});
 
-test('objects with media, react', () => {
-  const obj1 = {
-    a: 'a',
-    sm: { a: 'sm', c: 1 },
-    md: { a: 'md' },
-    lg: { a: 'lg' },
-    xl: { a: 'xl' },
-  };
-  const obj2 = {
-    a: 'x',
-    sm: { a: 'smsm' },
-    md: { a: 'md' },
-    lg: { a: 'lg', c: { sm: { a: '1' } } },
-    xl: { a: 'xl' },
-  };
-  expect(makeCssClass([obj1, obj2], { react: true })).toMatchInlineSnapshot(`
-    Object {
-      "emotionClassFor": Object {
-        "@media screen and (maxWidth: 576px)": Object {
-          "a": "smsm",
-          "c": 1,
-        },
-        "@media screen and (minWidth: 576px)": Object {
-          "a": "md",
-        },
-        "@media screen and (minWidth: 768px)": Object {
-          "a": "lg",
-          "c": Object {
-            "sm": Object {
-              "a": "1",
-            },
-          },
-        },
-        "@media screen and (minWidth: 992px)": Object {
-          "a": "xl",
-        },
-        "a": "x",
-      },
+    @media screen and (min-width: 1200px) {
+      .emotion-0 {
+        a: xl;
+      }
     }
+
+    @media screen and (min-width: 576px) {
+      .emotion-0 {
+        a: smsm;
+      }
+    }
+
+    @media screen and (min-width: 768px) {
+      .emotion-0 {
+        a: md;
+      }
+    }
+
+    @media screen and (min-width: 992px) {
+      .emotion-0 {
+        a: lg;
+      }
+
+      .emotion-0 c sm {
+        a: 1;
+      }
+    }
+
+    @media screen and (min-width: 1200px) {
+      .emotion-0 {
+        a: xl;
+      }
+    }
+
+    <div
+      class="emotion-0"
+    />
   `);
-  expect(mockCss).toHaveBeenCalled();
 });
 
 test('object with no media, styleObjectOnly', () => {
@@ -277,7 +211,6 @@ test('object with no media, styleObjectOnly', () => {
       },
     }
   `);
-  expect(mockCss).not.toHaveBeenCalled();
 });
 
 test('objects with no media, styleObjectOnly', () => {
@@ -297,7 +230,6 @@ test('objects with no media, styleObjectOnly', () => {
       },
     }
   `);
-  expect(mockCss).not.toHaveBeenCalled();
 });
 
 test('objects with media, styleObjectOnly', () => {
@@ -310,23 +242,22 @@ test('objects with media, styleObjectOnly', () => {
   };
   expect(makeCssClass(obj, { styleObjectOnly: true })).toMatchInlineSnapshot(`
     Object {
-      "@media screen and (max-width: 576px)": Object {
+      "@media screen and (minWidth: 1200px)": Object {
+        "a": "xl",
+      },
+      "@media screen and (minWidth: 576px)": Object {
         "a": "sm",
         "c": 1,
       },
-      "@media screen and (min-width: 576px)": Object {
+      "@media screen and (minWidth: 768px)": Object {
         "a": "md",
       },
-      "@media screen and (min-width: 768px)": Object {
+      "@media screen and (minWidth: 992px)": Object {
         "a": "lg",
-      },
-      "@media screen and (min-width: 992px)": Object {
-        "a": "xl",
       },
       "a": "a",
     }
   `);
-  expect(mockCss).not.toHaveBeenCalled();
 });
 
 test('objects with media, styleObjectOnly', () => {
@@ -346,14 +277,17 @@ test('objects with media, styleObjectOnly', () => {
   };
   expect(makeCssClass([obj1, obj2], { styleObjectOnly: true })).toMatchInlineSnapshot(`
     Object {
-      "@media screen and (max-width: 576px)": Object {
+      "@media screen and (minWidth: 1200px)": Object {
+        "a": "xl",
+      },
+      "@media screen and (minWidth: 576px)": Object {
         "a": "smsm",
         "c": 1,
       },
-      "@media screen and (min-width: 576px)": Object {
+      "@media screen and (minWidth: 768px)": Object {
         "a": "md",
       },
-      "@media screen and (min-width: 768px)": Object {
+      "@media screen and (minWidth: 992px)": Object {
         "a": "lg",
         "c": Object {
           "sm": Object {
@@ -361,11 +295,7 @@ test('objects with media, styleObjectOnly', () => {
           },
         },
       },
-      "@media screen and (min-width: 992px)": Object {
-        "a": "xl",
-      },
       "a": "x",
     }
   `);
-  expect(mockCss).not.toHaveBeenCalled();
 });

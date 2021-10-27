@@ -14,29 +14,12 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runMockMethodTests } from '@lowdefy/block-tools';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { runBlockSchemaTests, runMockMethodTests } from '@lowdefy/block-dev';
 import { message } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import Message from '../src/blocks/Message/Message';
 import examples from '../demo/examples/Message.yaml';
 import meta from '../src/blocks/Message/Message.json';
-
-jest.mock('@lowdefy/block-tools', () => {
-  const originalModule = jest.requireActual('@lowdefy/block-tools');
-  return {
-    ...originalModule,
-    blockDefaultProps: {
-      ...originalModule.blockDefaultProps,
-      methods: {
-        ...originalModule.blockDefaultProps.methods,
-        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
-      },
-    },
-  };
-});
 
 jest.mock('antd/lib/message', () => {
   return {
@@ -71,5 +54,5 @@ const mocks = [
   },
 ];
 
-runMockMethodTests({ examples, Block: Message, meta, mocks, enzyme: { mount } });
+runMockMethodTests({ examples, Block: Message, meta, mocks });
 runBlockSchemaTests({ examples, meta });

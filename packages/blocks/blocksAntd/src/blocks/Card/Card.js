@@ -22,8 +22,8 @@ const CardBlock = ({ blockId, content, properties, methods, events }) => (
   <Card
     id={blockId}
     title={content.title ? content.title() : renderHtml({ html: properties.title, methods })}
-    headStyle={methods.makeCssClass(properties.headerStyle, { styleObjectOnly: true })}
-    bodyStyle={methods.makeCssClass(properties.bodyStyle, { styleObjectOnly: true })}
+    headStyle={methods.makeCssClass(properties.headerStyle, true)}
+    bodyStyle={methods.makeCssClass(properties.bodyStyle, true)}
     bordered={properties.bordered}
     extra={content.extra && content.extra()}
     hoverable={properties.hoverable}

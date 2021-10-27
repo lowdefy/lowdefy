@@ -641,426 +641,424 @@
           title: Title Menu Item 3
           icon: VideoCameraFilled
 
-# FIX: react-test-rendered error: TypeError: Cannot read property 'split' of undefined
-# https://github.com/react-component/menu/issues/232
 # mode horizontal
-# - id: 'mode: horizontal, theme: light'
-#   type: Menu
-#   properties:
-#     mode: horizontal
-#     theme: light
-#     selectedKeys:
-#       - menu_item_1_1
-#       - menu_item_3
-#       - menu_item_1_2_2
-#     links:
-#       - id: menu_group_1
-#         type: MenuGroup
-#         properties:
-#           title: Menu Group 1
-#         links:
-#           - id: menu_item_1_1
-#             type: MenuLink
-#             pageId: page_1_1
-#             properties:
-#               title: Menu Item one
-#           - id: menu_item_1_2
-#             type: MenuGroup
-#             properties:
-#               title: Menu Group
-#             links:
-#               - id: menu_item_1_2_1
-#                 type: MenuLink
-#                 pageId: page_1_2_1
-#                 properties:
-#                   title: Menu Group one
-#               - id: menu_item_1_2_2
-#                 type: MenuLink
-#                 pageId: page_1_2_2
-#                 properties:
-#                   title: Menu Group two
-#       - id: menu_item_2
-#         type: MenuLink
-#         pageId: page_2
-#         properties:
-#           title: Title Menu Item 2
-#           icon: VideoCameraFilled
-#       - id: menu_item_3
-#         type: MenuLink
-#         pageId: page_3
-#         properties:
-#           title: Title Menu Item 3
-#           icon: VideoCameraFilled
-# - id: 'mode: horizontal, pageId: page_1_2_2'
-#   type: Menu
-#   pageId: page_1_2_2
-#   properties:
-#     mode: horizontal
-#     links:
-#       - id: menu_group_1
-#         type: MenuGroup
-#         properties:
-#           title: Menu Group 1
-#         links:
-#           - id: menu_item_1_1
-#             type: MenuLink
-#             pageId: page_1_1
-#             properties:
-#               title: Menu Item one
-#           - id: menu_item_1_2
-#             type: MenuGroup
-#             properties:
-#               title: Menu Group
-#             links:
-#               - id: menu_item_1_2_1
-#                 type: MenuLink
-#                 pageId: page_1_2_1
-#                 properties:
-#                   title: Menu Group one
-#               - id: menu_item_1_2_2
-#                 type: MenuLink
-#                 pageId: page_1_2_2
-#                 properties:
-#                   title: Menu Group two
-#       - id: menu_item_2
-#         type: MenuLink
-#         pageId: page_2
-#         properties:
-#           title: Title Menu Item 2
-#           icon: VideoCameraFilled
-#       - id: menu_item_3
-#         type: MenuLink
-#         pageId: page_3
-#         properties:
-#           title: Title Menu Item 3
-#           icon: VideoCameraFilled
-# - id: 'mode: horizontal, selectedKeys: [page_2, page_3]'
-#   type: Menu
-#   properties:
-#     mode: horizontal
-#     selectedKeys:
-#       - page_2
-#       - page_3
-#     links:
-#       - id: menu_group_1
-#         type: MenuGroup
-#         properties:
-#           title: Menu Group 1
-#         links:
-#           - id: menu_item_1_1
-#             type: MenuLink
-#             pageId: page_1_1
-#             properties:
-#               title: Menu Item one
-#           - id: menu_item_1_2
-#             type: MenuGroup
-#             properties:
-#               title: Menu Group
-#             links:
-#               - id: menu_item_1_2_1
-#                 type: MenuLink
-#                 pageId: page_1_2_1
-#                 properties:
-#                   title: Menu Group one
-#               - id: menu_item_1_2_2
-#                 type: MenuLink
-#                 pageId: page_1_2_2
-#                 properties:
-#                   title: Menu Group two
-#       - id: menu_item_2
-#         type: MenuLink
-#         pageId: page_2
-#         properties:
-#           title: Title Menu Item 2
-#           icon: VideoCameraFilled
-#       - id: menu_item_3
-#         type: MenuLink
-#         pageId: page_3
-#         properties:
-#           title: Title Menu Item 3
-#           icon: VideoCameraFilled
-# - id: 'mode: horizontal, selectedKeys: [page_2, page_3], pageId: page_1_2_2'
-#   type: Menu
-#   pageId: page_1_2_2
-#   properties:
-#     mode: horizontal
-#     selectedKeys:
-#       - page_2
-#       - page_3
-#     links:
-#       - id: menu_group_1
-#         type: MenuGroup
-#         properties:
-#           title: Menu Group 1
-#         links:
-#           - id: menu_item_1_1
-#             type: MenuLink
-#             pageId: page_1_1
-#             properties:
-#               title: Menu Item one
-#           - id: menu_item_1_2
-#             type: MenuGroup
-#             properties:
-#               title: Menu Group
-#             links:
-#               - id: menu_item_1_2_1
-#                 type: MenuLink
-#                 pageId: page_1_2_1
-#                 properties:
-#                   title: Menu Group one
-#               - id: menu_item_1_2_2
-#                 type: MenuLink
-#                 pageId: page_1_2_2
-#                 properties:
-#                   title: Menu Group two
-#       - id: menu_item_2
-#         type: MenuLink
-#         pageId: page_2
-#         properties:
-#           title: Title Menu Item 2
-#           icon: VideoCameraFilled
-#       - id: menu_item_3
-#         type: MenuLink
-#         pageId: page_3
-#         properties:
-#           title: Title Menu Item 3
-#           icon: VideoCameraFilled
+- id: 'mode: horizontal, theme: light'
+  type: Menu
+  properties:
+    mode: horizontal
+    theme: light
+    selectedKeys:
+      - menu_item_1_1
+      - menu_item_3
+      - menu_item_1_2_2
+    links:
+      - id: menu_group_1
+        type: MenuGroup
+        properties:
+          title: Menu Group 1
+        links:
+          - id: menu_item_1_1
+            type: MenuLink
+            pageId: page_1_1
+            properties:
+              title: Menu Item one
+          - id: menu_item_1_2
+            type: MenuGroup
+            properties:
+              title: Menu Group
+            links:
+              - id: menu_item_1_2_1
+                type: MenuLink
+                pageId: page_1_2_1
+                properties:
+                  title: Menu Group one
+              - id: menu_item_1_2_2
+                type: MenuLink
+                pageId: page_1_2_2
+                properties:
+                  title: Menu Group two
+      - id: menu_item_2
+        type: MenuLink
+        pageId: page_2
+        properties:
+          title: Title Menu Item 2
+          icon: VideoCameraFilled
+      - id: menu_item_3
+        type: MenuLink
+        pageId: page_3
+        properties:
+          title: Title Menu Item 3
+          icon: VideoCameraFilled
+- id: 'mode: horizontal, pageId: page_1_2_2'
+  type: Menu
+  pageId: page_1_2_2
+  properties:
+    mode: horizontal
+    links:
+      - id: menu_group_1
+        type: MenuGroup
+        properties:
+          title: Menu Group 1
+        links:
+          - id: menu_item_1_1
+            type: MenuLink
+            pageId: page_1_1
+            properties:
+              title: Menu Item one
+          - id: menu_item_1_2
+            type: MenuGroup
+            properties:
+              title: Menu Group
+            links:
+              - id: menu_item_1_2_1
+                type: MenuLink
+                pageId: page_1_2_1
+                properties:
+                  title: Menu Group one
+              - id: menu_item_1_2_2
+                type: MenuLink
+                pageId: page_1_2_2
+                properties:
+                  title: Menu Group two
+      - id: menu_item_2
+        type: MenuLink
+        pageId: page_2
+        properties:
+          title: Title Menu Item 2
+          icon: VideoCameraFilled
+      - id: menu_item_3
+        type: MenuLink
+        pageId: page_3
+        properties:
+          title: Title Menu Item 3
+          icon: VideoCameraFilled
+- id: 'mode: horizontal, selectedKeys: [page_2, page_3]'
+  type: Menu
+  properties:
+    mode: horizontal
+    selectedKeys:
+      - page_2
+      - page_3
+    links:
+      - id: menu_group_1
+        type: MenuGroup
+        properties:
+          title: Menu Group 1
+        links:
+          - id: menu_item_1_1
+            type: MenuLink
+            pageId: page_1_1
+            properties:
+              title: Menu Item one
+          - id: menu_item_1_2
+            type: MenuGroup
+            properties:
+              title: Menu Group
+            links:
+              - id: menu_item_1_2_1
+                type: MenuLink
+                pageId: page_1_2_1
+                properties:
+                  title: Menu Group one
+              - id: menu_item_1_2_2
+                type: MenuLink
+                pageId: page_1_2_2
+                properties:
+                  title: Menu Group two
+      - id: menu_item_2
+        type: MenuLink
+        pageId: page_2
+        properties:
+          title: Title Menu Item 2
+          icon: VideoCameraFilled
+      - id: menu_item_3
+        type: MenuLink
+        pageId: page_3
+        properties:
+          title: Title Menu Item 3
+          icon: VideoCameraFilled
+- id: 'mode: horizontal, selectedKeys: [page_2, page_3], pageId: page_1_2_2'
+  type: Menu
+  pageId: page_1_2_2
+  properties:
+    mode: horizontal
+    selectedKeys:
+      - page_2
+      - page_3
+    links:
+      - id: menu_group_1
+        type: MenuGroup
+        properties:
+          title: Menu Group 1
+        links:
+          - id: menu_item_1_1
+            type: MenuLink
+            pageId: page_1_1
+            properties:
+              title: Menu Item one
+          - id: menu_item_1_2
+            type: MenuGroup
+            properties:
+              title: Menu Group
+            links:
+              - id: menu_item_1_2_1
+                type: MenuLink
+                pageId: page_1_2_1
+                properties:
+                  title: Menu Group one
+              - id: menu_item_1_2_2
+                type: MenuLink
+                pageId: page_1_2_2
+                properties:
+                  title: Menu Group two
+      - id: menu_item_2
+        type: MenuLink
+        pageId: page_2
+        properties:
+          title: Title Menu Item 2
+          icon: VideoCameraFilled
+      - id: menu_item_3
+        type: MenuLink
+        pageId: page_3
+        properties:
+          title: Title Menu Item 3
+          icon: VideoCameraFilled
 
-# - id: 'mode: horizontal, defaultOpenKeys: page_1_2_2'
-#   type: Menu
-#   properties:
-#     mode: horizontal
-#     defaultOpenKeys:
-#       - menu_group_1
-#     links:
-#       - id: menu_group_1
-#         type: MenuGroup
-#         properties:
-#           title: Menu Group 1
-#         links:
-#           - id: menu_item_1_1
-#             type: MenuLink
-#             pageId: page_1_1
-#             properties:
-#               title: Menu Item one
-#           - id: menu_item_1_2
-#             type: MenuGroup
-#             properties:
-#               title: Menu Group
-#             links:
-#               - id: menu_item_1_2_1
-#                 type: MenuLink
-#                 pageId: page_1_2_1
-#                 properties:
-#                   title: Menu Group one
-#               - id: menu_item_1_2_2
-#                 type: MenuLink
-#                 pageId: page_1_2_2
-#                 properties:
-#                   title: Menu Group two
-#       - id: menu_item_2
-#         type: MenuLink
-#         pageId: page_2
-#         properties:
-#           title: Title Menu Item 2
-#           icon: VideoCameraFilled
-#       - id: menu_item_3
-#         type: MenuLink
-#         pageId: page_3
-#         properties:
-#           title: Title Menu Item 3
-#           icon: VideoCameraFilled
-# - id: 'mode: horizontal, backgroundColor: #016e1e'
-#   type: Menu
-#   properties:
-#     mode: horizontal
-#     backgroundColor: '#016e1e'
-#     selectedKeys:
-#       - menu_item_1_1
-#       - menu_item_3
-#       - menu_item_1_2_2
-#     links:
-#       - id: menu_group_1
-#         type: MenuGroup
-#         properties:
-#           title: Menu Group 1
-#         links:
-#           - id: menu_item_1_1
-#             type: MenuLink
-#             pageId: page_1_1
-#             properties:
-#               title: Menu Item one
-#           - id: menu_item_1_2
-#             type: MenuGroup
-#             properties:
-#               title: Menu Group
-#             links:
-#               - id: menu_item_1_2_1
-#                 type: MenuLink
-#                 pageId: page_1_2_1
-#                 properties:
-#                   title: Menu Group one
-#               - id: menu_item_1_2_2
-#                 type: MenuLink
-#                 pageId: page_1_2_2
-#                 properties:
-#                   title: Menu Group two
-#       - id: menu_item_2
-#         type: MenuLink
-#         pageId: page_2
-#         properties:
-#           title: Title Menu Item 2
-#           icon: VideoCameraFilled
-#       - id: menu_item_3
-#         type: MenuLink
-#         pageId: page_3
-#         properties:
-#           title: Title Menu Item 3
-#           icon: VideoCameraFilled
-# - id: 'mode: horizontal, selectedColor: #f16e1e'
-#   type: Menu
-#   properties:
-#     mode: horizontal
-#     selectedColor: '#f16e1e'
-#     selectedKeys:
-#       - menu_item_1_1
-#       - menu_item_3
-#       - menu_item_1_2_2
-#     links:
-#       - id: menu_group_1
-#         type: MenuGroup
-#         properties:
-#           title: Menu Group 1
-#         links:
-#           - id: menu_item_1_1
-#             type: MenuLink
-#             pageId: page_1_1
-#             properties:
-#               title: Menu Item one
-#           - id: menu_item_1_2
-#             type: MenuGroup
-#             properties:
-#               title: Menu Group
-#             links:
-#               - id: menu_item_1_2_1
-#                 type: MenuLink
-#                 pageId: page_1_2_1
-#                 properties:
-#                   title: Menu Group one
-#               - id: menu_item_1_2_2
-#                 type: MenuLink
-#                 pageId: page_1_2_2
-#                 properties:
-#                   title: Menu Group two
-#       - id: menu_item_2
-#         type: MenuLink
-#         pageId: page_2
-#         properties:
-#           title: Title Menu Item 2
-#           icon: VideoCameraFilled
-#       - id: menu_item_3
-#         type: MenuLink
-#         pageId: page_3
-#         properties:
-#           title: Title Menu Item 3
-#           icon: VideoCameraFilled
-# - id: 'mode: horizontal, selectedColor: #f16e1e, backgroundColor: #016e1e'
-#   type: Menu
-#   properties:
-#     mode: horizontal
-#     selectedColor: '#f16e1e'
-#     backgroundColor: '#016e1e'
-#     selectedKeys:
-#       - menu_item_1_1
-#       - menu_item_3
-#       - menu_item_1_2_2
-#     links:
-#       - id: menu_group_1
-#         type: MenuGroup
-#         properties:
-#           title: Menu Group 1
-#         links:
-#           - id: menu_item_1_1
-#             type: MenuLink
-#             pageId: page_1_1
-#             properties:
-#               title: Menu Item one
-#           - id: menu_item_1_2
-#             type: MenuGroup
-#             properties:
-#               title: Menu Group
-#             links:
-#               - id: menu_item_1_2_1
-#                 type: MenuLink
-#                 pageId: page_1_2_1
-#                 properties:
-#                   title: Menu Group one
-#               - id: menu_item_1_2_2
-#                 type: MenuLink
-#                 pageId: page_1_2_2
-#                 properties:
-#                   title: Menu Group two
-#       - id: menu_item_2
-#         type: MenuLink
-#         pageId: page_2
-#         properties:
-#           title: Title Menu Item 2
-#           icon: VideoCameraFilled
-#       - id: menu_item_3
-#         type: MenuLink
-#         pageId: page_3
-#         properties:
-#           title: Title Menu Item 3
-#           icon: VideoCameraFilled
-# - id: 'mode: horizontal, theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e'
-#   type: Menu
-#   properties:
-#     theme: light
-#     mode: horizontal
-#     selectedColor: '#f16e1e'
-#     backgroundColor: '#016e1e'
-#     selectedKeys:
-#       - menu_item_1_1
-#       - menu_item_3
-#       - menu_item_1_2_2
-#     links:
-#       - id: menu_group_1
-#         type: MenuGroup
-#         properties:
-#           title: Menu Group 1
-#         links:
-#           - id: menu_item_1_1
-#             type: MenuLink
-#             pageId: page_1_1
-#             properties:
-#               title: Menu Item one
-#           - id: menu_item_1_2
-#             type: MenuGroup
-#             properties:
-#               title: Menu Group
-#             links:
-#               - id: menu_item_1_2_1
-#                 type: MenuLink
-#                 pageId: page_1_2_1
-#                 properties:
-#                   title: Menu Group one
-#               - id: menu_item_1_2_2
-#                 type: MenuLink
-#                 pageId: page_1_2_2
-#                 properties:
-#                   title: Menu Group two
-#       - id: menu_item_2
-#         type: MenuLink
-#         pageId: page_2
-#         properties:
-#           title: Title Menu Item 2
-#           icon: VideoCameraFilled
-#       - id: menu_item_3
-#         type: MenuLink
-#         pageId: page_3
-#         properties:
-#           title: Title Menu Item 3
-#           icon: VideoCameraFilled
+- id: 'mode: horizontal, defaultOpenKeys: page_1_2_2'
+  type: Menu
+  properties:
+    mode: horizontal
+    defaultOpenKeys:
+      - menu_group_1
+    links:
+      - id: menu_group_1
+        type: MenuGroup
+        properties:
+          title: Menu Group 1
+        links:
+          - id: menu_item_1_1
+            type: MenuLink
+            pageId: page_1_1
+            properties:
+              title: Menu Item one
+          - id: menu_item_1_2
+            type: MenuGroup
+            properties:
+              title: Menu Group
+            links:
+              - id: menu_item_1_2_1
+                type: MenuLink
+                pageId: page_1_2_1
+                properties:
+                  title: Menu Group one
+              - id: menu_item_1_2_2
+                type: MenuLink
+                pageId: page_1_2_2
+                properties:
+                  title: Menu Group two
+      - id: menu_item_2
+        type: MenuLink
+        pageId: page_2
+        properties:
+          title: Title Menu Item 2
+          icon: VideoCameraFilled
+      - id: menu_item_3
+        type: MenuLink
+        pageId: page_3
+        properties:
+          title: Title Menu Item 3
+          icon: VideoCameraFilled
+- id: 'mode: horizontal, backgroundColor: #016e1e'
+  type: Menu
+  properties:
+    mode: horizontal
+    backgroundColor: '#016e1e'
+    selectedKeys:
+      - menu_item_1_1
+      - menu_item_3
+      - menu_item_1_2_2
+    links:
+      - id: menu_group_1
+        type: MenuGroup
+        properties:
+          title: Menu Group 1
+        links:
+          - id: menu_item_1_1
+            type: MenuLink
+            pageId: page_1_1
+            properties:
+              title: Menu Item one
+          - id: menu_item_1_2
+            type: MenuGroup
+            properties:
+              title: Menu Group
+            links:
+              - id: menu_item_1_2_1
+                type: MenuLink
+                pageId: page_1_2_1
+                properties:
+                  title: Menu Group one
+              - id: menu_item_1_2_2
+                type: MenuLink
+                pageId: page_1_2_2
+                properties:
+                  title: Menu Group two
+      - id: menu_item_2
+        type: MenuLink
+        pageId: page_2
+        properties:
+          title: Title Menu Item 2
+          icon: VideoCameraFilled
+      - id: menu_item_3
+        type: MenuLink
+        pageId: page_3
+        properties:
+          title: Title Menu Item 3
+          icon: VideoCameraFilled
+- id: 'mode: horizontal, selectedColor: #f16e1e'
+  type: Menu
+  properties:
+    mode: horizontal
+    selectedColor: '#f16e1e'
+    selectedKeys:
+      - menu_item_1_1
+      - menu_item_3
+      - menu_item_1_2_2
+    links:
+      - id: menu_group_1
+        type: MenuGroup
+        properties:
+          title: Menu Group 1
+        links:
+          - id: menu_item_1_1
+            type: MenuLink
+            pageId: page_1_1
+            properties:
+              title: Menu Item one
+          - id: menu_item_1_2
+            type: MenuGroup
+            properties:
+              title: Menu Group
+            links:
+              - id: menu_item_1_2_1
+                type: MenuLink
+                pageId: page_1_2_1
+                properties:
+                  title: Menu Group one
+              - id: menu_item_1_2_2
+                type: MenuLink
+                pageId: page_1_2_2
+                properties:
+                  title: Menu Group two
+      - id: menu_item_2
+        type: MenuLink
+        pageId: page_2
+        properties:
+          title: Title Menu Item 2
+          icon: VideoCameraFilled
+      - id: menu_item_3
+        type: MenuLink
+        pageId: page_3
+        properties:
+          title: Title Menu Item 3
+          icon: VideoCameraFilled
+- id: 'mode: horizontal, selectedColor: #f16e1e, backgroundColor: #016e1e'
+  type: Menu
+  properties:
+    mode: horizontal
+    selectedColor: '#f16e1e'
+    backgroundColor: '#016e1e'
+    selectedKeys:
+      - menu_item_1_1
+      - menu_item_3
+      - menu_item_1_2_2
+    links:
+      - id: menu_group_1
+        type: MenuGroup
+        properties:
+          title: Menu Group 1
+        links:
+          - id: menu_item_1_1
+            type: MenuLink
+            pageId: page_1_1
+            properties:
+              title: Menu Item one
+          - id: menu_item_1_2
+            type: MenuGroup
+            properties:
+              title: Menu Group
+            links:
+              - id: menu_item_1_2_1
+                type: MenuLink
+                pageId: page_1_2_1
+                properties:
+                  title: Menu Group one
+              - id: menu_item_1_2_2
+                type: MenuLink
+                pageId: page_1_2_2
+                properties:
+                  title: Menu Group two
+      - id: menu_item_2
+        type: MenuLink
+        pageId: page_2
+        properties:
+          title: Title Menu Item 2
+          icon: VideoCameraFilled
+      - id: menu_item_3
+        type: MenuLink
+        pageId: page_3
+        properties:
+          title: Title Menu Item 3
+          icon: VideoCameraFilled
+- id: 'mode: horizontal, theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e'
+  type: Menu
+  properties:
+    theme: light
+    mode: horizontal
+    selectedColor: '#f16e1e'
+    backgroundColor: '#016e1e'
+    selectedKeys:
+      - menu_item_1_1
+      - menu_item_3
+      - menu_item_1_2_2
+    links:
+      - id: menu_group_1
+        type: MenuGroup
+        properties:
+          title: Menu Group 1
+        links:
+          - id: menu_item_1_1
+            type: MenuLink
+            pageId: page_1_1
+            properties:
+              title: Menu Item one
+          - id: menu_item_1_2
+            type: MenuGroup
+            properties:
+              title: Menu Group
+            links:
+              - id: menu_item_1_2_1
+                type: MenuLink
+                pageId: page_1_2_1
+                properties:
+                  title: Menu Group one
+              - id: menu_item_1_2_2
+                type: MenuLink
+                pageId: page_1_2_2
+                properties:
+                  title: Menu Group two
+      - id: menu_item_2
+        type: MenuLink
+        pageId: page_2
+        properties:
+          title: Title Menu Item 2
+          icon: VideoCameraFilled
+      - id: menu_item_3
+        type: MenuLink
+        pageId: page_3
+        properties:
+          title: Title Menu Item 3
+          icon: VideoCameraFilled
 
 # mode inline
 - id: 'mode: inline, theme: light'

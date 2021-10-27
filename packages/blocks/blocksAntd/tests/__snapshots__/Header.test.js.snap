@@ -2,16 +2,11 @@
 
 exports[`Render areas.content - value[0] 1`] = `
 <header
-  className="ant-layout-header {\\"style\\":[{\\"backgroundColor\\":false},null,null]} hide-on-print"
+  class="ant-layout-header emotion-0 hide-on-print"
   id="areas.content"
 >
   <div
-    style={
-      Object {
-        "border": "1px solid red",
-        "padding": 10,
-      }
-    }
+    style="border: 1px solid red; padding: 10px;"
   >
     content
   </div>
@@ -20,16 +15,11 @@ exports[`Render areas.content - value[0] 1`] = `
 
 exports[`Render default - value[0] 1`] = `
 <header
-  className="ant-layout-header {\\"style\\":[{\\"backgroundColor\\":false},null,null]} hide-on-print"
+  class="ant-layout-header emotion-0 hide-on-print"
   id="default"
 >
   <div
-    style={
-      Object {
-        "border": "1px solid red",
-        "padding": 10,
-      }
-    }
+    style="border: 1px solid red; padding: 10px;"
   >
     content
   </div>
@@ -37,17 +27,16 @@ exports[`Render default - value[0] 1`] = `
 `;
 
 exports[`Render properties.style - value[0] 1`] = `
+.emotion-0 {
+  border: 1px solid blue;
+}
+
 <header
-  className="ant-layout-header {\\"style\\":[{\\"backgroundColor\\":false},null,{\\"border\\":\\"1px solid blue\\"}]} hide-on-print"
+  class="ant-layout-header emotion-0 hide-on-print"
   id="properties.style"
 >
   <div
-    style={
-      Object {
-        "border": "1px solid red",
-        "padding": 10,
-      }
-    }
+    style="border: 1px solid red; padding: 10px;"
   >
     content
   </div>
@@ -56,16 +45,11 @@ exports[`Render properties.style - value[0] 1`] = `
 
 exports[`Render properties.theme-dark - value[0] 1`] = `
 <header
-  className="ant-layout-header {\\"style\\":[{\\"backgroundColor\\":false},null,null]} hide-on-print"
+  class="ant-layout-header emotion-0 hide-on-print"
   id="properties.theme-dark"
 >
   <div
-    style={
-      Object {
-        "border": "1px solid red",
-        "padding": 10,
-      }
-    }
+    style="border: 1px solid red; padding: 10px;"
   >
     content
   </div>
@@ -73,17 +57,16 @@ exports[`Render properties.theme-dark - value[0] 1`] = `
 `;
 
 exports[`Render properties.theme-light - value[0] 1`] = `
+.emotion-0 {
+  background-color: #fff;
+}
+
 <header
-  className="ant-layout-header {\\"style\\":[{\\"backgroundColor\\":\\"#fff\\"},null,null]} hide-on-print"
+  class="ant-layout-header emotion-0 hide-on-print"
   id="properties.theme-light"
 >
   <div
-    style={
-      Object {
-        "border": "1px solid red",
-        "padding": 10,
-      }
-    }
+    style="border: 1px solid red; padding: 10px;"
   >
     content
   </div>

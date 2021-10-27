@@ -2,16 +2,11 @@
 
 exports[`Render areas.content - value[0] 1`] = `
 <section
-  className="ant-layout {}"
+  class="ant-layout emotion-0"
   id="areas.content"
 >
   <div
-    style={
-      Object {
-        "border": "1px solid red",
-        "padding": 10,
-      }
-    }
+    style="border: 1px solid red; padding: 10px;"
   >
     content
   </div>
@@ -20,16 +15,11 @@ exports[`Render areas.content - value[0] 1`] = `
 
 exports[`Render default - value[0] 1`] = `
 <section
-  className="ant-layout {}"
+  class="ant-layout emotion-0"
   id="default"
 >
   <div
-    style={
-      Object {
-        "border": "1px solid red",
-        "padding": 10,
-      }
-    }
+    style="border: 1px solid red; padding: 10px;"
   >
     content
   </div>
@@ -37,17 +27,16 @@ exports[`Render default - value[0] 1`] = `
 `;
 
 exports[`Render properties.style - value[0] 1`] = `
+.emotion-0 {
+  border: 1px solid blue;
+}
+
 <section
-  className="ant-layout {\\"style\\":{\\"border\\":\\"1px solid blue\\"}}"
+  class="ant-layout emotion-0"
   id="properties.style"
 >
   <div
-    style={
-      Object {
-        "border": "1px solid red",
-        "padding": 10,
-      }
-    }
+    style="border: 1px solid red; padding: 10px;"
   >
     content
   </div>

@@ -14,12 +14,9 @@
   limitations under the License.
 */
 
-import { runMockRenderTests } from '@lowdefy/block-tools';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { runMockRenderTests } from '@lowdefy/block-dev';
 import { InputNumber } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import Block from '../src/blocks/NumberInput/NumberInput';
 import examples from '../demo/examples/NumberInput.yaml';
 import meta from '../src/blocks/NumberInput/NumberInput.json';
@@ -36,4 +33,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block, meta, mocks });

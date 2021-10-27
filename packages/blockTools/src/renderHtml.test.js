@@ -14,15 +14,12 @@
   limitations under the License.
 */
 
-import { renderHtml } from '../src';
+import { render } from '@testing-library/react';
 
-import { configure, mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-configure({ adapter: new Adapter() });
-
-const mockCMakeCssClass = jest.fn(() => 'test-class');
+import renderHtml from './renderHtml';
+import makeCssClass from './makeCssClass';
 const methods = {
-  makeCssClass: mockCMakeCssClass,
+  makeCssClass,
 };
 
 test('renderHtml html is undefined', () => {
@@ -30,39 +27,59 @@ test('renderHtml html is undefined', () => {
   expect(renderHtml({ html: undefined, methods })).toBe(undefined);
 });
 
-test('renderHtml html string', async () => {
-  const wrapper = await mount(renderHtml({ html: '<p>Hello</p>', methods }));
-  await wrapper.instance().componentDidMount();
-  await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(
-    `"<span class=\\"test-class\\"><p>Hello</p></span>"`
-  );
+test('renderHtml html string', () => {
+  const { container } = render(renderHtml({ html: '<p>Hello</p>', methods }));
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    <span
+      class="emotion-0"
+    >
+      <p>
+        Hello
+      </p>
+    </span>
+  `);
 });
 
-test('renderHtml html number 0', async () => {
-  const wrapper = await mount(renderHtml({ html: 0, methods }));
-  await wrapper.instance().componentDidMount();
-  await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`"<span class=\\"test-class\\">0</span>"`);
+test('renderHtml html number 0', () => {
+  const { container } = render(renderHtml({ html: 0, methods }));
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    <span
+      class="emotion-0"
+    >
+      0
+    </span>
+  `);
 });
 
-test('renderHtml html number 123', async () => {
-  const wrapper = await mount(renderHtml({ html: 123, methods }));
-  await wrapper.instance().componentDidMount();
-  await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`"<span class=\\"test-class\\">123</span>"`);
+test('renderHtml html number 123', () => {
+  const { container } = render(renderHtml({ html: 123, methods }));
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    <span
+      class="emotion-0"
+    >
+      123
+    </span>
+  `);
 });
 
-test('renderHtml html boolean false', async () => {
-  const wrapper = await mount(renderHtml({ html: false, methods }));
-  await wrapper.instance().componentDidMount();
-  await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`"<span class=\\"test-class\\">false</span>"`);
+test('renderHtml html boolean false', () => {
+  const { container } = render(renderHtml({ html: false, methods }));
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    <span
+      class="emotion-0"
+    >
+      false
+    </span>
+  `);
 });
 
-test('renderHtml html boolean true', async () => {
-  const wrapper = await mount(renderHtml({ html: true, methods }));
-  await wrapper.instance().componentDidMount();
-  await wrapper.update();
-  expect(wrapper.html()).toMatchInlineSnapshot(`"<span class=\\"test-class\\">true</span>"`);
+test('renderHtml html boolean true', () => {
+  const { container } = render(renderHtml({ html: true, methods }));
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    <span
+      class="emotion-0"
+    >
+      true
+    </span>
+  `);
 });

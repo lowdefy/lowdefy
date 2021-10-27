@@ -21,6 +21,7 @@ import { omit, type } from '@lowdefy/helpers';
 
 const lowdefyProps = [
   'actionLog',
+  'basePath',
   'content',
   'eventLog',
   'homePageId',

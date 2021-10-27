@@ -13,9 +13,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { runRenderTests } from '@lowdefy/block-dev';
 
 import examples from '../../demo/examples/IconSpinner.yaml';
-import runRenderTests from '../runRenderTests';
 import IconSpinner from './IconSpinner';
 
 runRenderTests({ examples, Block: IconSpinner, meta: {} });

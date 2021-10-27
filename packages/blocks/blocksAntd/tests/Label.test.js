@@ -14,26 +14,12 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import validationsExamples from '../demo/validationExamples.json';
 import Label from '../src/blocks/Label/Label';
 import examples from '../demo/examples/Label.yaml';
 import meta from '../src/blocks/Label/Label.json';
-
-jest.mock('@lowdefy/block-tools', () => {
-  const originalModule = jest.requireActual('@lowdefy/block-tools');
-  return {
-    ...originalModule,
-    blockDefaultProps: {
-      ...originalModule.blockDefaultProps,
-      methods: {
-        ...originalModule.blockDefaultProps.methods,
-        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
-      },
-    },
-  };
-});
 
 runRenderTests({ examples, Block: Label, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta });

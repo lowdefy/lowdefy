@@ -21,14 +21,14 @@ const getIndex = (value, options, key = 'value') => {
   // eslint-disable-next-line no-plusplus
   for (let i = 0; i < options.length; i++) {
     if (type.isPrimitive(options[i]) && options[i] === value) {
-      return i;
+      return `${i}`;
     }
     if (
       type.isObject(options[i]) &&
       serializer.serializeToString(options[i][key], { stable: true }) ===
         serializer.serializeToString(value, { stable: true })
     ) {
-      return i;
+      return `${i}`;
     }
   }
 };

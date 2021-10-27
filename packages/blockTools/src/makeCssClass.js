@@ -14,16 +14,12 @@
   limitations under the License.
 */
 
+import { css } from '@emotion/css';
 import { mergeObjects } from '@lowdefy/helpers';
 
 import mediaToCssObject from './mediaToCssObject';
-import getEmotionCss from './getEmotionCss';
 
-const makeCssClass = (styles, options = {}) => {
-  const css = getEmotionCss();
-  return options.styleObjectOnly
-    ? mediaToCssObject(mergeObjects(styles), options)
-    : css(mediaToCssObject(mergeObjects(styles), options));
-};
+const makeCssClass = (styles, styleObjectOnly) =>
+  styleObjectOnly ? mediaToCssObject(mergeObjects(styles), true)[0] : css(mediaToCssObject(styles));
 
 export default makeCssClass;
