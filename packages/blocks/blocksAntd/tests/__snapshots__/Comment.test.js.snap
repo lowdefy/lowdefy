@@ -2,66 +2,55 @@
 
 exports[`Render areas.actions - value[0] 1`] = `
 <div
-  className="ant-comment"
+  class="ant-comment"
   id="areas.actions"
 >
   <div
-    className="ant-comment-inner"
+    class="ant-comment-inner"
   >
     <div
-      className="ant-comment-avatar"
+      class="ant-comment-avatar"
     >
       <span
-        className="ant-avatar ant-avatar-circle {\\"style\\":[{},null]}"
+        class="ant-avatar ant-avatar-circle emotion-0"
         id="undefined_id"
-        onClick={[Function]}
-        style={Object {}}
       >
         <span
-          className="ant-avatar-string"
-          style={
-            Object {
-              "opacity": 0,
-            }
-          }
+          class="ant-avatar-string"
+          style="transform: scale(1) translateX(-50%);"
         >
           Co
         </span>
       </span>
     </div>
     <div
-      className="ant-comment-content"
+      class="ant-comment-content"
     >
       <div
-        className="ant-comment-content-author"
+        class="ant-comment-content-author"
       >
         <span
-          className="ant-comment-content-author-name"
+          class="ant-comment-content-author-name"
         >
           Comment author
         </span>
         <span
-          className="ant-comment-content-author-time"
+          class="ant-comment-content-author-time"
         >
           This is not the time
         </span>
       </div>
       <div
-        className="ant-comment-content-detail"
+        class="ant-comment-content-detail"
       >
         Comment content for user
       </div>
       <ul
-        className="ant-comment-actions"
+        class="ant-comment-actions"
       >
         <li>
           <div
-            style={
-              Object {
-                "border": "1px solid red",
-                "padding": 10,
-              }
-            }
+            style="border: 1px solid red; padding: 10px;"
           >
             actions
           </div>
@@ -74,50 +63,39 @@ exports[`Render areas.actions - value[0] 1`] = `
 
 exports[`Render default - value[0] 1`] = `
 <div
-  className="ant-comment"
+  class="ant-comment"
   id="default"
 >
   <div
-    className="ant-comment-inner"
+    class="ant-comment-inner"
   >
     <div
-      className="ant-comment-avatar"
+      class="ant-comment-avatar"
     >
       <span
-        className="ant-avatar ant-avatar-circle {\\"style\\":[{},null]}"
+        class="ant-avatar ant-avatar-circle emotion-0"
         id="undefined_id"
-        onClick={[Function]}
-        style={Object {}}
       >
         <span
-          className="ant-avatar-string"
-          style={
-            Object {
-              "opacity": 0,
-            }
-          }
+          class="ant-avatar-string"
+          style="transform: scale(1) translateX(-50%);"
         />
       </span>
     </div>
     <div
-      className="ant-comment-content"
+      class="ant-comment-content"
     >
       <div
-        className="ant-comment-content-detail"
+        class="ant-comment-content-detail"
       >
         <div
-          style={
-            Object {
-              "border": "1px solid red",
-              "padding": 10,
-            }
-          }
+          style="border: 1px solid red; padding: 10px;"
         >
           content
         </div>
       </div>
       <ul
-        className="ant-comment-actions"
+        class="ant-comment-actions"
       >
         <li />
       </ul>
@@ -128,61 +106,50 @@ exports[`Render default - value[0] 1`] = `
 
 exports[`Render properties.author - value[0] 1`] = `
 <div
-  className="ant-comment"
+  class="ant-comment"
   id="properties.author"
 >
   <div
-    className="ant-comment-inner"
+    class="ant-comment-inner"
   >
     <div
-      className="ant-comment-avatar"
+      class="ant-comment-avatar"
     >
       <span
-        className="ant-avatar ant-avatar-circle {\\"style\\":[{},null]}"
+        class="ant-avatar ant-avatar-circle emotion-0"
         id="undefined_id"
-        onClick={[Function]}
-        style={Object {}}
       >
         <span
-          className="ant-avatar-string"
-          style={
-            Object {
-              "opacity": 0,
-            }
-          }
+          class="ant-avatar-string"
+          style="transform: scale(1) translateX(-50%);"
         >
           Co
         </span>
       </span>
     </div>
     <div
-      className="ant-comment-content"
+      class="ant-comment-content"
     >
       <div
-        className="ant-comment-content-author"
+        class="ant-comment-content-author"
       >
         <span
-          className="ant-comment-content-author-name"
+          class="ant-comment-content-author-name"
         >
           Comment author
         </span>
       </div>
       <div
-        className="ant-comment-content-detail"
+        class="ant-comment-content-detail"
       >
         <div
-          style={
-            Object {
-              "border": "1px solid red",
-              "padding": 10,
-            }
-          }
+          style="border: 1px solid red; padding: 10px;"
         >
           content
         </div>
       </div>
       <ul
-        className="ant-comment-actions"
+        class="ant-comment-actions"
       >
         <li />
       </ul>
@@ -193,52 +160,46 @@ exports[`Render properties.author - value[0] 1`] = `
 
 exports[`Render properties.content - value[0] 1`] = `
 <div
-  className="ant-comment"
+  class="ant-comment"
   id="properties.content"
 >
   <div
-    className="ant-comment-inner"
+    class="ant-comment-inner"
   >
     <div
-      className="ant-comment-avatar"
+      class="ant-comment-avatar"
     >
       <span
-        className="ant-avatar ant-avatar-circle {\\"style\\":[{},null]}"
+        class="ant-avatar ant-avatar-circle emotion-0"
         id="undefined_id"
-        onClick={[Function]}
-        style={Object {}}
       >
         <span
-          className="ant-avatar-string"
-          style={
-            Object {
-              "opacity": 0,
-            }
-          }
+          class="ant-avatar-string"
+          style="transform: scale(1) translateX(-50%);"
         >
           Co
         </span>
       </span>
     </div>
     <div
-      className="ant-comment-content"
+      class="ant-comment-content"
     >
       <div
-        className="ant-comment-content-author"
+        class="ant-comment-content-author"
       >
         <span
-          className="ant-comment-content-author-name"
+          class="ant-comment-content-author-name"
         >
           Comment author
         </span>
       </div>
       <div
-        className="ant-comment-content-detail"
+        class="ant-comment-content-detail"
       >
         Comment content for user
       </div>
       <ul
-        className="ant-comment-actions"
+        class="ant-comment-actions"
       >
         <li />
       </ul>
@@ -249,57 +210,51 @@ exports[`Render properties.content - value[0] 1`] = `
 
 exports[`Render properties.datetime - value[0] 1`] = `
 <div
-  className="ant-comment"
+  class="ant-comment"
   id="properties.datetime"
 >
   <div
-    className="ant-comment-inner"
+    class="ant-comment-inner"
   >
     <div
-      className="ant-comment-avatar"
+      class="ant-comment-avatar"
     >
       <span
-        className="ant-avatar ant-avatar-circle {\\"style\\":[{},null]}"
+        class="ant-avatar ant-avatar-circle emotion-0"
         id="undefined_id"
-        onClick={[Function]}
-        style={Object {}}
       >
         <span
-          className="ant-avatar-string"
-          style={
-            Object {
-              "opacity": 0,
-            }
-          }
+          class="ant-avatar-string"
+          style="transform: scale(1) translateX(-50%);"
         >
           Co
         </span>
       </span>
     </div>
     <div
-      className="ant-comment-content"
+      class="ant-comment-content"
     >
       <div
-        className="ant-comment-content-author"
+        class="ant-comment-content-author"
       >
         <span
-          className="ant-comment-content-author-name"
+          class="ant-comment-content-author-name"
         >
           Comment author
         </span>
         <span
-          className="ant-comment-content-author-time"
+          class="ant-comment-content-author-time"
         >
           2020-01-20T00:00:00.000Z
         </span>
       </div>
       <div
-        className="ant-comment-content-detail"
+        class="ant-comment-content-detail"
       >
         Comment content for user
       </div>
       <ul
-        className="ant-comment-actions"
+        class="ant-comment-actions"
       >
         <li />
       </ul>

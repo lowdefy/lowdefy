@@ -53,7 +53,7 @@
     "@babel/preset-env": "7.15.8",
     "@lowdefy/block-tools": "3.22.0",
     "babel-jest": "27.3.1",
-    "jest": "26.6.3",
+    "jest": "27.3.1",
     "lowdefy": "3.22.0"
   },
   "publishConfig": {

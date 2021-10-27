@@ -27,7 +27,7 @@ const ImgBlock = ({ blockId, events, properties, methods }) => {
       onClick={() => methods.triggerEvent({ name: 'onClick' })}
       className={methods.makeCssClass([
         { outline: 'none', cursor: events.onClick && 'pointer' },
-        properties.style,
+        style,
       ])}
     />
   );

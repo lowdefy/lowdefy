@@ -71,14 +71,14 @@ const ButtonSelector = ({
           >
             {uniqueValueOptions.map((opt, i) =>
               type.isPrimitive(opt) ? (
-                <Radio.Button id={`${blockId}_${i}`} key={i} value={i}>
+                <Radio.Button id={`${blockId}_${i}`} key={i} value={`${i}`}>
                   {renderHtml({ html: `${opt}`, methods })}
                 </Radio.Button>
               ) : (
                 <Radio.Button
                   id={`${blockId}_${i}`}
                   key={i}
-                  value={i}
+                  value={`${i}`}
                   disabled={opt.disabled}
                   className={methods.makeCssClass(opt.style)}
                 >

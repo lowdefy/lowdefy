@@ -4,11 +4,11 @@
   type: Img
   properties:
     src: https://docs.lowdefy.com/public/logo-light-theme.png
-- id: srcset
+- id: srcSet
   type: Img
   properties:
     src: https://docs.lowdefy.com/public/logo-light-theme.png
-    srcset: https://docs.lowdefy.com/public/logo-dark-theme.png
+    srcSet: https://docs.lowdefy.com/public/logo-dark-theme.png
 - id: alt
   type: Img
   properties:
@@ -18,7 +18,7 @@
   type: Img
   properties:
     src: https://docs.lowdefy.com/public/logo-light-theme.png
-    crossorigin: anonymous
+    crossOrigin: anonymous
 - id: decoding
   type: Img
   properties:

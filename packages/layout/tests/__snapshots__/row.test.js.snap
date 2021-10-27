@@ -1,63 +1,55 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`align bottom 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-align bottom23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-1 {
+  height: 200px;
+}
+
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="align bottom23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-align bottom23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row ant-row-bottom {\\"style\\":[null,{\\"height\\":200}]}"
-      id="align bottom-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="align bottom23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row ant-row-bottom emotion-1"
+        id="align bottom-content23456"
+        style="border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-Two23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -66,63 +58,51 @@ exports[`align bottom 1`] = `
 `;
 
 exports[`align bottom 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-align bottom23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-1 {
+  height: 200px;
+}
+
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="align bottom23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-align bottom23456"
   >
     <div
-      className="ant-row ant-row-bottom {\\"style\\":[null,{\\"height\\":200}]}"
-      id="align bottom-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="align bottom23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
+        class="ant-row ant-row-bottom emotion-1"
+        id="align bottom-content23456"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-One23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-Two23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -131,63 +111,55 @@ exports[`align bottom 2`] = `
 `;
 
 exports[`align bottom wrap behavior 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-align bottom wrap behavior23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-1 {
+  height: 200px;
+}
+
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="align bottom wrap behavior23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-align bottom wrap behavior23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row ant-row-bottom {\\"style\\":[null,{\\"height\\":200}]}"
-      id="align bottom wrap behavior-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="align bottom wrap behavior23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row ant-row-bottom emotion-1"
+        id="align bottom wrap behavior-content23456"
+        style="border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+          id="bl-Two23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -196,63 +168,51 @@ exports[`align bottom wrap behavior 1`] = `
 `;
 
 exports[`align bottom wrap behavior 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-align bottom wrap behavior23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-1 {
+  height: 200px;
+}
+
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="align bottom wrap behavior23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-align bottom wrap behavior23456"
   >
     <div
-      className="ant-row ant-row-bottom {\\"style\\":[null,{\\"height\\":200}]}"
-      id="align bottom wrap behavior-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="align bottom wrap behavior23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
+        class="ant-row ant-row-bottom emotion-1"
+        id="align bottom wrap behavior-content23456"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+          id="bl-One23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+          id="bl-Two23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -261,63 +221,55 @@ exports[`align bottom wrap behavior 2`] = `
 `;
 
 exports[`align middle 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-align middle23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-1 {
+  height: 200px;
+}
+
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="align middle23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-align middle23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row ant-row-middle {\\"style\\":[null,{\\"height\\":200}]}"
-      id="align middle-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="align middle23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row ant-row-middle emotion-1"
+        id="align middle-content23456"
+        style="border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-Two23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -326,63 +278,51 @@ exports[`align middle 1`] = `
 `;
 
 exports[`align middle 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-align middle23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-1 {
+  height: 200px;
+}
+
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="align middle23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-align middle23456"
   >
     <div
-      className="ant-row ant-row-middle {\\"style\\":[null,{\\"height\\":200}]}"
-      id="align middle-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="align middle23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
+        class="ant-row ant-row-middle emotion-1"
+        id="align middle-content23456"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-One23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-Two23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -391,63 +331,55 @@ exports[`align middle 2`] = `
 `;
 
 exports[`align middle wrap behavior 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-align middle wrap behavior23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-1 {
+  height: 200px;
+}
+
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="align middle wrap behavior23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-align middle wrap behavior23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row ant-row-middle {\\"style\\":[null,{\\"height\\":200}]}"
-      id="align middle wrap behavior-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="align middle wrap behavior23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row ant-row-middle emotion-1"
+        id="align middle wrap behavior-content23456"
+        style="border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+          id="bl-Two23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -456,63 +388,51 @@ exports[`align middle wrap behavior 1`] = `
 `;
 
 exports[`align middle wrap behavior 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-align middle wrap behavior23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-1 {
+  height: 200px;
+}
+
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="align middle wrap behavior23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-align middle wrap behavior23456"
   >
     <div
-      className="ant-row ant-row-middle {\\"style\\":[null,{\\"height\\":200}]}"
-      id="align middle wrap behavior-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="align middle wrap behavior23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
+        class="ant-row ant-row-middle emotion-1"
+        id="align middle wrap behavior-content23456"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+          id="bl-One23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+          id="bl-Two23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -521,63 +441,55 @@ exports[`align middle wrap behavior 2`] = `
 `;
 
 exports[`align top 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-align top23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-1 {
+  height: 200px;
+}
+
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="align top23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-align top23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row ant-row-top {\\"style\\":[null,{\\"height\\":200}]}"
-      id="align top-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="align top23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row ant-row-top emotion-1"
+        id="align top-content23456"
+        style="border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-Two23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -586,63 +498,51 @@ exports[`align top 1`] = `
 `;
 
 exports[`align top 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-align top23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-1 {
+  height: 200px;
+}
+
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="align top23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-align top23456"
   >
     <div
-      className="ant-row ant-row-top {\\"style\\":[null,{\\"height\\":200}]}"
-      id="align top-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="align top23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
+        class="ant-row ant-row-top emotion-1"
+        id="align top-content23456"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-One23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-Two23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -651,63 +551,55 @@ exports[`align top 2`] = `
 `;
 
 exports[`align top wrap behavior 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-align top wrap behavior23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-1 {
+  height: 200px;
+}
+
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="align top wrap behavior23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-align top wrap behavior23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row ant-row-top {\\"style\\":[null,{\\"height\\":200}]}"
-      id="align top wrap behavior-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="align top wrap behavior23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row ant-row-top emotion-1"
+        id="align top wrap behavior-content23456"
+        style="border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+          id="bl-Two23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -716,63 +608,51 @@ exports[`align top wrap behavior 1`] = `
 `;
 
 exports[`align top wrap behavior 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-align top wrap behavior23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-1 {
+  height: 200px;
+}
+
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="align top wrap behavior23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-align top wrap behavior23456"
   >
     <div
-      className="ant-row ant-row-top {\\"style\\":[null,{\\"height\\":200}]}"
-      id="align top wrap behavior-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="align top wrap behavior23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
+        class="ant-row ant-row-top emotion-1"
+        id="align top wrap behavior-content23456"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+          id="bl-One23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+          id="bl-Two23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -781,80 +661,67 @@ exports[`align top wrap behavior 2`] = `
 `;
 
 exports[`direction column 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-direction column23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="direction column23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-direction column23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="direction column-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": "column",
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="direction column23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row emotion-1"
+        id="direction column-content23456"
+        style="flex-direction: column; border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          id="bl-Two23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          id="bl-Three23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -863,80 +730,63 @@ exports[`direction column 1`] = `
 `;
 
 exports[`direction column 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-direction column23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="direction column23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-direction column23456"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="direction column-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": "column",
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="direction column23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
+        class="ant-row emotion-1"
+        id="direction column-content23456"
+        style="flex-direction: column;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          id="bl-One23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          id="bl-Two23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          id="bl-Three23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -945,80 +795,67 @@ exports[`direction column 2`] = `
 `;
 
 exports[`direction column-reverse 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-direction column-reverse23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="direction column-reverse23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-direction column-reverse23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="direction column-reverse-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": "column-reverse",
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="direction column-reverse23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row emotion-1"
+        id="direction column-reverse-content23456"
+        style="flex-direction: column-reverse; border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          id="bl-Two23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          id="bl-Three23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -1027,80 +864,63 @@ exports[`direction column-reverse 1`] = `
 `;
 
 exports[`direction column-reverse 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-direction column-reverse23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="direction column-reverse23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-direction column-reverse23456"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="direction column-reverse-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": "column-reverse",
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="direction column-reverse23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
+        class="ant-row emotion-1"
+        id="direction column-reverse-content23456"
+        style="flex-direction: column-reverse;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          id="bl-One23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          id="bl-Two23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          id="bl-Three23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -1109,80 +929,67 @@ exports[`direction column-reverse 2`] = `
 `;
 
 exports[`direction row 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-direction row23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="direction row23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-direction row23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="direction row-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": "row",
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="direction row23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row emotion-1"
+        id="direction row-content23456"
+        style="flex-direction: row; border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Two23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Three23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -1191,80 +998,63 @@ exports[`direction row 1`] = `
 `;
 
 exports[`direction row 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-direction row23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="direction row23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-direction row23456"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="direction row-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": "row",
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="direction row23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
+        class="ant-row emotion-1"
+        id="direction row-content23456"
+        style="flex-direction: row;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-One23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Two23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Three23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -1273,80 +1063,67 @@ exports[`direction row 2`] = `
 `;
 
 exports[`direction row-reverse 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-direction row-reverse23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="direction row-reverse23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-direction row-reverse23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="direction row-reverse-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": "row-reverse",
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="direction row-reverse23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row emotion-1"
+        id="direction row-reverse-content23456"
+        style="flex-direction: row-reverse; border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Two23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Three23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -1355,80 +1132,63 @@ exports[`direction row-reverse 1`] = `
 `;
 
 exports[`direction row-reverse 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-direction row-reverse23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="direction row-reverse23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-direction row-reverse23456"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="direction row-reverse-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": "row-reverse",
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="direction row-reverse23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
+        class="ant-row emotion-1"
+        id="direction row-reverse-content23456"
+        style="flex-direction: row-reverse;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-One23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Two23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Three23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -1437,117 +1197,75 @@ exports[`direction row-reverse 2`] = `
 `;
 
 exports[`gutter as integer 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-gutter as integer23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2>* {
+  background: #40a0FF;
+}
+
+.emotion-3>* {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="gutter as integer23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-gutter as integer23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="gutter as integer-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "marginBottom": -15,
-          "marginLeft": -15,
-          "marginRight": -15,
-          "marginTop": -15,
-          "overflow": undefined,
-        }
-      }
+      id="gutter as integer23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"& > *\\":{\\"background\\":\\"#40a0FF\\"}}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-            "paddingBottom": 15,
-            "paddingLeft": 15,
-            "paddingRight": 15,
-            "paddingTop": 15,
-          }
-        }
+        class="ant-row emotion-1"
+        id="gutter as integer-content23456"
+        style="margin: -15px -15px -15px -15px; border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          id="bl-One23456"
+          style="padding: 15px 15px 15px 15px; border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"& > *\\":{\\"background\\":\\"#FF4FaF\\"}}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-            "paddingBottom": 15,
-            "paddingLeft": 15,
-            "paddingRight": 15,
-            "paddingTop": 15,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          id="bl-Two23456"
+          style="padding: 15px 15px 15px 15px; border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"& > *\\":{\\"background\\":\\"#FF4FaF\\"}}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-            "paddingBottom": 15,
-            "paddingLeft": 15,
-            "paddingRight": 15,
-            "paddingTop": 15,
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-Three23456"
+          style="padding: 15px 15px 15px 15px; border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"& > *\\":{\\"background\\":\\"#40a0FF\\"}}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-Four23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-            "paddingBottom": 15,
-            "paddingLeft": 15,
-            "paddingRight": 15,
-            "paddingTop": 15,
-          }
-        }
-      >
         <div
-          id="Four23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-Four23456"
+          style="padding: 15px 15px 15px 15px; border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Four23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -1556,117 +1274,74 @@ exports[`gutter as integer 1`] = `
 `;
 
 exports[`gutter as integer 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-gutter as integer23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2>* {
+  background: #40a0FF;
+}
+
+.emotion-3>* {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="gutter as integer23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-gutter as integer23456"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="gutter as integer-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "marginBottom": -15,
-          "marginLeft": -15,
-          "marginRight": -15,
-          "marginTop": -15,
-          "overflow": undefined,
-        }
-      }
+      id="gutter as integer23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"& > *\\":{\\"background\\":\\"#40a0FF\\"}}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-            "paddingBottom": 15,
-            "paddingLeft": 15,
-            "paddingRight": 15,
-            "paddingTop": 15,
-          }
-        }
+        class="ant-row emotion-1"
+        id="gutter as integer-content23456"
+        style="margin: -15px -15px -15px -15px;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          id="bl-One23456"
+          style="padding: 15px 15px 15px 15px;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"& > *\\":{\\"background\\":\\"#FF4FaF\\"}}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-            "paddingBottom": 15,
-            "paddingLeft": 15,
-            "paddingRight": 15,
-            "paddingTop": 15,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          id="bl-Two23456"
+          style="padding: 15px 15px 15px 15px;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"& > *\\":{\\"background\\":\\"#FF4FaF\\"}}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-            "paddingBottom": 15,
-            "paddingLeft": 15,
-            "paddingRight": 15,
-            "paddingTop": 15,
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-Three23456"
+          style="padding: 15px 15px 15px 15px;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"& > *\\":{\\"background\\":\\"#40a0FF\\"}}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-Four23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-            "paddingBottom": 15,
-            "paddingLeft": 15,
-            "paddingRight": 15,
-            "paddingTop": 15,
-          }
-        }
-      >
         <div
-          id="Four23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-Four23456"
+          style="padding: 15px 15px 15px 15px;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Four23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -1675,117 +1350,75 @@ exports[`gutter as integer 2`] = `
 `;
 
 exports[`gutter for col and row 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-gutter for col and row23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="gutter for col and row23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-gutter for col and row23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="gutter for col and row-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "marginBottom": -10,
-          "marginLeft": -25,
-          "marginRight": -25,
-          "marginTop": -10,
-          "overflow": undefined,
-        }
-      }
+      id="gutter for col and row23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-            "paddingBottom": 10,
-            "paddingLeft": 25,
-            "paddingRight": 25,
-            "paddingTop": 10,
-          }
-        }
+        class="ant-row emotion-1"
+        id="gutter for col and row-content23456"
+        style="margin: -10px -25px -10px -25px; border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          id="bl-One23456"
+          style="padding: 10px 25px 10px 25px; border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-            "paddingBottom": 10,
-            "paddingLeft": 25,
-            "paddingRight": 25,
-            "paddingTop": 10,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          id="bl-Two23456"
+          style="padding: 10px 25px 10px 25px; border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-            "paddingBottom": 10,
-            "paddingLeft": 25,
-            "paddingRight": 25,
-            "paddingTop": 10,
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-Three23456"
+          style="padding: 10px 25px 10px 25px; border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-Four23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-            "paddingBottom": 10,
-            "paddingLeft": 25,
-            "paddingRight": 25,
-            "paddingTop": 10,
-          }
-        }
-      >
         <div
-          id="Four23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-Four23456"
+          style="padding: 10px 25px 10px 25px; border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Four23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -1794,117 +1427,74 @@ exports[`gutter for col and row 1`] = `
 `;
 
 exports[`gutter for col and row 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-gutter for col and row23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="gutter for col and row23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-gutter for col and row23456"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="gutter for col and row-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "marginBottom": -10,
-          "marginLeft": -25,
-          "marginRight": -25,
-          "marginTop": -10,
-          "overflow": undefined,
-        }
-      }
+      id="gutter for col and row23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-            "paddingBottom": 10,
-            "paddingLeft": 25,
-            "paddingRight": 25,
-            "paddingTop": 10,
-          }
-        }
+        class="ant-row emotion-1"
+        id="gutter for col and row-content23456"
+        style="margin: -10px -25px -10px -25px;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          id="bl-One23456"
+          style="padding: 10px 25px 10px 25px;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-            "paddingBottom": 10,
-            "paddingLeft": 25,
-            "paddingRight": 25,
-            "paddingTop": 10,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          id="bl-Two23456"
+          style="padding: 10px 25px 10px 25px;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-            "paddingBottom": 10,
-            "paddingLeft": 25,
-            "paddingRight": 25,
-            "paddingTop": 10,
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-Three23456"
+          style="padding: 10px 25px 10px 25px;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-Four23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-            "paddingBottom": 10,
-            "paddingLeft": 25,
-            "paddingRight": 25,
-            "paddingTop": 10,
-          }
-        }
-      >
         <div
-          id="Four23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-Four23456"
+          style="padding: 10px 25px 10px 25px;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Four23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -1913,117 +1503,75 @@ exports[`gutter for col and row 2`] = `
 `;
 
 exports[`gutter is object 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-gutter is object23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="gutter is object23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-gutter is object23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="gutter is object-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "marginBottom": -30,
-          "marginLeft": -30,
-          "marginRight": -30,
-          "marginTop": -30,
-          "overflow": undefined,
-        }
-      }
+      id="gutter is object23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-            "paddingBottom": 30,
-            "paddingLeft": 30,
-            "paddingRight": 30,
-            "paddingTop": 30,
-          }
-        }
+        class="ant-row emotion-1"
+        id="gutter is object-content23456"
+        style="margin: -30px -30px -30px -30px; border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          id="bl-One23456"
+          style="padding: 30px 30px 30px 30px; border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-            "paddingBottom": 30,
-            "paddingLeft": 30,
-            "paddingRight": 30,
-            "paddingTop": 30,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          id="bl-Two23456"
+          style="padding: 30px 30px 30px 30px; border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-            "paddingBottom": 30,
-            "paddingLeft": 30,
-            "paddingRight": 30,
-            "paddingTop": 30,
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-Three23456"
+          style="padding: 30px 30px 30px 30px; border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-Four23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-            "paddingBottom": 30,
-            "paddingLeft": 30,
-            "paddingRight": 30,
-            "paddingTop": 30,
-          }
-        }
-      >
         <div
-          id="Four23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-Four23456"
+          style="padding: 30px 30px 30px 30px; border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Four23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -2032,117 +1580,74 @@ exports[`gutter is object 1`] = `
 `;
 
 exports[`gutter is object 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-gutter is object23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="gutter is object23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-gutter is object23456"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="gutter is object-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "marginBottom": -30,
-          "marginLeft": -30,
-          "marginRight": -30,
-          "marginTop": -30,
-          "overflow": undefined,
-        }
-      }
+      id="gutter is object23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-            "paddingBottom": 30,
-            "paddingLeft": 30,
-            "paddingRight": 30,
-            "paddingTop": 30,
-          }
-        }
+        class="ant-row emotion-1"
+        id="gutter is object-content23456"
+        style="margin: -30px -30px -30px -30px;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          id="bl-One23456"
+          style="padding: 30px 30px 30px 30px;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-            "paddingBottom": 30,
-            "paddingLeft": 30,
-            "paddingRight": 30,
-            "paddingTop": 30,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          id="bl-Two23456"
+          style="padding: 30px 30px 30px 30px;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-            "paddingBottom": 30,
-            "paddingLeft": 30,
-            "paddingRight": 30,
-            "paddingTop": 30,
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-Three23456"
+          style="padding: 30px 30px 30px 30px;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-Four23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-            "paddingBottom": 30,
-            "paddingLeft": 30,
-            "paddingRight": 30,
-            "paddingTop": 30,
-          }
-        }
-      >
         <div
-          id="Four23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-Four23456"
+          style="padding: 30px 30px 30px 30px;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Four23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -2151,80 +1656,67 @@ exports[`gutter is object 2`] = `
 `;
 
 exports[`justify center 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-justify center23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="justify center23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-justify center23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row ant-row-center {\\"style\\":[null,null]}"
-      id="justify center-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="justify center23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row ant-row-center emotion-1"
+        id="justify center-content23456"
+        style="border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Two23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Three23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -2233,80 +1725,62 @@ exports[`justify center 1`] = `
 `;
 
 exports[`justify center 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-justify center23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="justify center23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-justify center23456"
   >
     <div
-      className="ant-row ant-row-center {\\"style\\":[null,null]}"
-      id="justify center-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="justify center23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
+        class="ant-row ant-row-center emotion-1"
+        id="justify center-content23456"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-One23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Two23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Three23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -2315,80 +1789,67 @@ exports[`justify center 2`] = `
 `;
 
 exports[`justify end 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-justify end23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="justify end23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-justify end23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row ant-row-end {\\"style\\":[null,null]}"
-      id="justify end-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="justify end23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row ant-row-end emotion-1"
+        id="justify end-content23456"
+        style="border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Two23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Three23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -2397,80 +1858,62 @@ exports[`justify end 1`] = `
 `;
 
 exports[`justify end 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-justify end23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="justify end23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-justify end23456"
   >
     <div
-      className="ant-row ant-row-end {\\"style\\":[null,null]}"
-      id="justify end-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="justify end23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
+        class="ant-row ant-row-end emotion-1"
+        id="justify end-content23456"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-One23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Two23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Three23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -2479,80 +1922,67 @@ exports[`justify end 2`] = `
 `;
 
 exports[`justify space-around 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-justify space-around23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="justify space-around23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-justify space-around23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row ant-row-space-around {\\"style\\":[null,null]}"
-      id="justify space-around-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="justify space-around23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row ant-row-space-around emotion-1"
+        id="justify space-around-content23456"
+        style="border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Two23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Three23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -2561,80 +1991,62 @@ exports[`justify space-around 1`] = `
 `;
 
 exports[`justify space-around 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-justify space-around23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="justify space-around23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-justify space-around23456"
   >
     <div
-      className="ant-row ant-row-space-around {\\"style\\":[null,null]}"
-      id="justify space-around-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="justify space-around23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
+        class="ant-row ant-row-space-around emotion-1"
+        id="justify space-around-content23456"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-One23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Two23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Three23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -2643,80 +2055,67 @@ exports[`justify space-around 2`] = `
 `;
 
 exports[`justify space-between 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-justify space-between23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="justify space-between23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-justify space-between23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row ant-row-space-between {\\"style\\":[null,null]}"
-      id="justify space-between-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="justify space-between23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row ant-row-space-between emotion-1"
+        id="justify space-between-content23456"
+        style="border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Two23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Three23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -2725,80 +2124,62 @@ exports[`justify space-between 1`] = `
 `;
 
 exports[`justify space-between 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-justify space-between23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="justify space-between23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-justify space-between23456"
   >
     <div
-      className="ant-row ant-row-space-between {\\"style\\":[null,null]}"
-      id="justify space-between-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="justify space-between23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
+        class="ant-row ant-row-space-between emotion-1"
+        id="justify space-between-content23456"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-One23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Two23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Three23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -2807,80 +2188,67 @@ exports[`justify space-between 2`] = `
 `;
 
 exports[`justify start 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-justify start23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="justify start23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-justify start23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row ant-row-start {\\"style\\":[null,null]}"
-      id="justify start-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="justify start23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row ant-row-start emotion-1"
+        id="justify start-content23456"
+        style="border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Two23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Three23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -2889,80 +2257,62 @@ exports[`justify start 1`] = `
 `;
 
 exports[`justify start 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-justify start23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="justify start23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-justify start23456"
   >
     <div
-      className="ant-row ant-row-start {\\"style\\":[null,null]}"
-      id="justify start-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="justify start23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
+        class="ant-row ant-row-start emotion-1"
+        id="justify start-content23456"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-One23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Two23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Three23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -2971,80 +2321,67 @@ exports[`justify start 2`] = `
 `;
 
 exports[`overflow hidden 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-overflow hidden23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="overflow hidden23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-overflow hidden23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="overflow hidden-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": "nowrap",
-          "overflow": "hidden",
-        }
-      }
+      id="overflow hidden23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row emotion-1"
+        id="overflow hidden-content23456"
+        style="flex-wrap: nowrap; overflow: hidden; border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          id="bl-Two23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
+          id="bl-Three23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -3053,80 +2390,63 @@ exports[`overflow hidden 1`] = `
 `;
 
 exports[`overflow hidden 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-overflow hidden23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="overflow hidden23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-overflow hidden23456"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="overflow hidden-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": "nowrap",
-          "overflow": "hidden",
-        }
-      }
+      id="overflow hidden23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
+        class="ant-row emotion-1"
+        id="overflow hidden-content23456"
+        style="flex-wrap: nowrap; overflow: hidden;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          id="bl-One23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          id="bl-Two23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
+          id="bl-Three23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -3135,80 +2455,67 @@ exports[`overflow hidden 2`] = `
 `;
 
 exports[`overflow scroll 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-overflow scroll23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="overflow scroll23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-overflow scroll23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="overflow scroll-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": "nowrap",
-          "overflow": "scroll",
-        }
-      }
+      id="overflow scroll23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row emotion-1"
+        id="overflow scroll-content23456"
+        style="flex-wrap: nowrap; overflow: scroll; border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          id="bl-Two23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
+          id="bl-Three23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -3217,80 +2524,63 @@ exports[`overflow scroll 1`] = `
 `;
 
 exports[`overflow scroll 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-overflow scroll23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="overflow scroll23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-overflow scroll23456"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="overflow scroll-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": "nowrap",
-          "overflow": "scroll",
-        }
-      }
+      id="overflow scroll23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
+        class="ant-row emotion-1"
+        id="overflow scroll-content23456"
+        style="flex-wrap: nowrap; overflow: scroll;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          id="bl-One23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          id="bl-Two23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
+          id="bl-Three23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -3299,80 +2589,67 @@ exports[`overflow scroll 2`] = `
 `;
 
 exports[`overflow visible 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-overflow visible23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="overflow visible23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-overflow visible23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="overflow visible-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": "nowrap",
-          "overflow": "visible",
-        }
-      }
+      id="overflow visible23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row emotion-1"
+        id="overflow visible-content23456"
+        style="flex-wrap: nowrap; overflow: visible; border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          id="bl-Two23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
+          id="bl-Three23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -3381,80 +2658,63 @@ exports[`overflow visible 1`] = `
 `;
 
 exports[`overflow visible 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-overflow visible23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="overflow visible23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-overflow visible23456"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="overflow visible-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": "nowrap",
-          "overflow": "visible",
-        }
-      }
+      id="overflow visible23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
+        class="ant-row emotion-1"
+        id="overflow visible-content23456"
+        style="flex-wrap: nowrap; overflow: visible;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          id="bl-One23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          id="bl-Two23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
+          id="bl-Three23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -3463,80 +2723,67 @@ exports[`overflow visible 2`] = `
 `;
 
 exports[`wrap nowrap 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-wrap nowrap23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="wrap nowrap23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-wrap nowrap23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="wrap nowrap-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": "nowrap",
-          "overflow": undefined,
-        }
-      }
+      id="wrap nowrap23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row emotion-1"
+        id="wrap nowrap-content23456"
+        style="flex-wrap: nowrap; border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-Two23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-Three23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -3545,80 +2792,63 @@ exports[`wrap nowrap 1`] = `
 `;
 
 exports[`wrap nowrap 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-wrap nowrap23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="wrap nowrap23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-wrap nowrap23456"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="wrap nowrap-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": "nowrap",
-          "overflow": undefined,
-        }
-      }
+      id="wrap nowrap23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
+        class="ant-row emotion-1"
+        id="wrap nowrap-content23456"
+        style="flex-wrap: nowrap;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-One23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-Two23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-Three23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -3627,80 +2857,67 @@ exports[`wrap nowrap 2`] = `
 `;
 
 exports[`wrap wrap-reverse 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-wrap wrap-reverse23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="wrap wrap-reverse23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-wrap wrap-reverse23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="wrap wrap-reverse-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": "wrap-reverse",
-          "overflow": undefined,
-        }
-      }
+      id="wrap wrap-reverse23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row emotion-1"
+        id="wrap wrap-reverse-content23456"
+        style="flex-wrap: wrap-reverse; border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          id="bl-Two23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
+          id="bl-Three23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -3709,80 +2926,63 @@ exports[`wrap wrap-reverse 1`] = `
 `;
 
 exports[`wrap wrap-reverse 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-wrap wrap-reverse23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="wrap wrap-reverse23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-wrap wrap-reverse23456"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="wrap wrap-reverse-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": "wrap-reverse",
-          "overflow": undefined,
-        }
-      }
+      id="wrap wrap-reverse23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
+        class="ant-row emotion-1"
+        id="wrap wrap-reverse-content23456"
+        style="flex-wrap: wrap-reverse;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          id="bl-One23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          id="bl-Two23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
+          id="bl-Three23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>

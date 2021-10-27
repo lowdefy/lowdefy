@@ -1,42 +1,56 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render default - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="default"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="default_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="default_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -54,8 +68,10 @@ exports[`Render default - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -63,42 +79,56 @@ exports[`Render default - value[0] 1`] = `
 `;
 
 exports[`Render properties.addItemButton: title: Add new Item - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.addItemButton: title: Add new Item"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="properties.addItemButton: title: Add new Item_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.addItemButton: title: Add new Item_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -116,8 +146,10 @@ exports[`Render properties.addItemButton: title: Add new Item - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add new Item
+        </span>
       </button>
     </div>
   </div>
@@ -125,29 +157,43 @@ exports[`Render properties.addItemButton: title: Add new Item - value[0] 1`] = `
 `;
 
 exports[`Render properties.addToFront: true - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered"
+  class="ant-list ant-list-split ant-list-bordered"
   id="properties.addToFront: true"
 >
   <div
-    className="ant-list-header"
+    class="ant-list-header"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]}"
+        class="ant-btn emotion-1"
         id="properties.addToFront: true_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.addToFront: true_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -165,19 +211,21 @@ exports[`Render properties.addToFront: true - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
@@ -188,17 +236,17 @@ exports[`Render properties.addToFront: true - value[0] 1`] = `
 
 exports[`Render properties.hideAddButton: true - value[0] 1`] = `
 <div
-  className="ant-list ant-list-split ant-list-bordered"
+  class="ant-list ant-list-split ant-list-bordered"
   id="properties.hideAddButton: true"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
@@ -208,42 +256,56 @@ exports[`Render properties.hideAddButton: true - value[0] 1`] = `
 `;
 
 exports[`Render properties.noDataTitle: No title display - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.noDataTitle: No title display"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No title display
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="properties.noDataTitle: No title display_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.noDataTitle: No title display_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -261,8 +323,10 @@ exports[`Render properties.noDataTitle: No title display - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -270,42 +334,56 @@ exports[`Render properties.noDataTitle: No title display - value[0] 1`] = `
 `;
 
 exports[`Render properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.removeItemIcon: DeleteOutlined"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="properties.removeItemIcon: DeleteOutlined_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.removeItemIcon: DeleteOutlined_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -323,8 +401,10 @@ exports[`Render properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -332,42 +412,56 @@ exports[`Render properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
 `;
 
 exports[`Render properties.removeItemIcon: name: DeleteOutlined - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.removeItemIcon: name: DeleteOutlined"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="properties.removeItemIcon: name: DeleteOutlined_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.removeItemIcon: name: DeleteOutlined_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -385,8 +479,10 @@ exports[`Render properties.removeItemIcon: name: DeleteOutlined - value[0] 1`] =
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -394,42 +490,56 @@ exports[`Render properties.removeItemIcon: name: DeleteOutlined - value[0] 1`] =
 `;
 
 exports[`Render properties.size: large - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-lg ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-lg ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.size: large"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed ant-btn-lg {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed ant-btn-lg emotion-1"
         id="properties.size: large_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.size: large_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -447,8 +557,10 @@ exports[`Render properties.size: large - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -456,42 +568,56 @@ exports[`Render properties.size: large - value[0] 1`] = `
 `;
 
 exports[`Render properties.size: small - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-sm ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-sm ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.size: small"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed ant-btn-sm {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed ant-btn-sm emotion-1"
         id="properties.size: small_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.size: small_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -509,8 +635,10 @@ exports[`Render properties.size: small - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -518,23 +646,35 @@ exports[`Render properties.size: small - value[0] 1`] = `
 `;
 
 exports[`Render properties.title - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.title"
 >
   <div
-    className="ant-list-header"
+    class="ant-list-header"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <span
-        className="ant-typography"
-        style={
-          Object {
-            "WebkitLineClamp": undefined,
-          }
-        }
+        class="ant-typography"
       >
         <strong>
           ControlledList block
@@ -543,37 +683,34 @@ exports[`Render properties.title - value[0] 1`] = `
     </div>
   </div>
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-2"
         id="properties.title_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-3"
           id="properties.title_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -591,8 +728,10 @@ exports[`Render properties.title - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-3"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -600,42 +739,56 @@ exports[`Render properties.title - value[0] 1`] = `
 `;
 
 exports[`Render required = true default - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="default"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="default_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="default_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -653,8 +806,10 @@ exports[`Render required = true default - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -662,42 +817,56 @@ exports[`Render required = true default - value[0] 1`] = `
 `;
 
 exports[`Render required = true properties.addItemButton: title: Add new Item - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.addItemButton: title: Add new Item"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="properties.addItemButton: title: Add new Item_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.addItemButton: title: Add new Item_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -715,8 +884,10 @@ exports[`Render required = true properties.addItemButton: title: Add new Item - 
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add new Item
+        </span>
       </button>
     </div>
   </div>
@@ -724,29 +895,43 @@ exports[`Render required = true properties.addItemButton: title: Add new Item - 
 `;
 
 exports[`Render required = true properties.addToFront: true - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered"
+  class="ant-list ant-list-split ant-list-bordered"
   id="properties.addToFront: true"
 >
   <div
-    className="ant-list-header"
+    class="ant-list-header"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]}"
+        class="ant-btn emotion-1"
         id="properties.addToFront: true_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.addToFront: true_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -764,19 +949,21 @@ exports[`Render required = true properties.addToFront: true - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
@@ -787,17 +974,17 @@ exports[`Render required = true properties.addToFront: true - value[0] 1`] = `
 
 exports[`Render required = true properties.hideAddButton: true - value[0] 1`] = `
 <div
-  className="ant-list ant-list-split ant-list-bordered"
+  class="ant-list ant-list-split ant-list-bordered"
   id="properties.hideAddButton: true"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
@@ -807,42 +994,56 @@ exports[`Render required = true properties.hideAddButton: true - value[0] 1`] = 
 `;
 
 exports[`Render required = true properties.noDataTitle: No title display - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.noDataTitle: No title display"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No title display
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="properties.noDataTitle: No title display_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.noDataTitle: No title display_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -860,8 +1061,10 @@ exports[`Render required = true properties.noDataTitle: No title display - value
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -869,42 +1072,56 @@ exports[`Render required = true properties.noDataTitle: No title display - value
 `;
 
 exports[`Render required = true properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.removeItemIcon: DeleteOutlined"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="properties.removeItemIcon: DeleteOutlined_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.removeItemIcon: DeleteOutlined_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -922,8 +1139,10 @@ exports[`Render required = true properties.removeItemIcon: DeleteOutlined - valu
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -931,42 +1150,56 @@ exports[`Render required = true properties.removeItemIcon: DeleteOutlined - valu
 `;
 
 exports[`Render required = true properties.removeItemIcon: name: DeleteOutlined - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.removeItemIcon: name: DeleteOutlined"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="properties.removeItemIcon: name: DeleteOutlined_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.removeItemIcon: name: DeleteOutlined_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -984,8 +1217,10 @@ exports[`Render required = true properties.removeItemIcon: name: DeleteOutlined 
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -993,42 +1228,56 @@ exports[`Render required = true properties.removeItemIcon: name: DeleteOutlined 
 `;
 
 exports[`Render required = true properties.size: large - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-lg ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-lg ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.size: large"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed ant-btn-lg {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed ant-btn-lg emotion-1"
         id="properties.size: large_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.size: large_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -1046,8 +1295,10 @@ exports[`Render required = true properties.size: large - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -1055,42 +1306,56 @@ exports[`Render required = true properties.size: large - value[0] 1`] = `
 `;
 
 exports[`Render required = true properties.size: small - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-sm ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-sm ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.size: small"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed ant-btn-sm {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed ant-btn-sm emotion-1"
         id="properties.size: small_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.size: small_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -1108,8 +1373,10 @@ exports[`Render required = true properties.size: small - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -1117,23 +1384,35 @@ exports[`Render required = true properties.size: small - value[0] 1`] = `
 `;
 
 exports[`Render required = true properties.title - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.title"
 >
   <div
-    className="ant-list-header"
+    class="ant-list-header"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <span
-        className="ant-typography"
-        style={
-          Object {
-            "WebkitLineClamp": undefined,
-          }
-        }
+        class="ant-typography"
       >
         <strong>
           ControlledList block
@@ -1142,37 +1421,34 @@ exports[`Render required = true properties.title - value[0] 1`] = `
     </div>
   </div>
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-2"
         id="properties.title_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-3"
           id="properties.title_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -1190,8 +1466,10 @@ exports[`Render required = true properties.title - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-3"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -1199,42 +1477,56 @@ exports[`Render required = true properties.title - value[0] 1`] = `
 `;
 
 exports[`Render validation.status = error default - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="default"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="default_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="default_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -1252,8 +1544,10 @@ exports[`Render validation.status = error default - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -1261,42 +1555,56 @@ exports[`Render validation.status = error default - value[0] 1`] = `
 `;
 
 exports[`Render validation.status = error properties.addItemButton: title: Add new Item - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.addItemButton: title: Add new Item"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="properties.addItemButton: title: Add new Item_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.addItemButton: title: Add new Item_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -1314,8 +1622,10 @@ exports[`Render validation.status = error properties.addItemButton: title: Add n
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add new Item
+        </span>
       </button>
     </div>
   </div>
@@ -1323,29 +1633,43 @@ exports[`Render validation.status = error properties.addItemButton: title: Add n
 `;
 
 exports[`Render validation.status = error properties.addToFront: true - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered"
+  class="ant-list ant-list-split ant-list-bordered"
   id="properties.addToFront: true"
 >
   <div
-    className="ant-list-header"
+    class="ant-list-header"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]}"
+        class="ant-btn emotion-1"
         id="properties.addToFront: true_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.addToFront: true_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -1363,19 +1687,21 @@ exports[`Render validation.status = error properties.addToFront: true - value[0]
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
@@ -1386,17 +1712,17 @@ exports[`Render validation.status = error properties.addToFront: true - value[0]
 
 exports[`Render validation.status = error properties.hideAddButton: true - value[0] 1`] = `
 <div
-  className="ant-list ant-list-split ant-list-bordered"
+  class="ant-list ant-list-split ant-list-bordered"
   id="properties.hideAddButton: true"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
@@ -1406,42 +1732,56 @@ exports[`Render validation.status = error properties.hideAddButton: true - value
 `;
 
 exports[`Render validation.status = error properties.noDataTitle: No title display - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.noDataTitle: No title display"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No title display
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="properties.noDataTitle: No title display_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.noDataTitle: No title display_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -1459,8 +1799,10 @@ exports[`Render validation.status = error properties.noDataTitle: No title displ
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -1468,42 +1810,56 @@ exports[`Render validation.status = error properties.noDataTitle: No title displ
 `;
 
 exports[`Render validation.status = error properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.removeItemIcon: DeleteOutlined"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="properties.removeItemIcon: DeleteOutlined_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.removeItemIcon: DeleteOutlined_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -1521,8 +1877,10 @@ exports[`Render validation.status = error properties.removeItemIcon: DeleteOutli
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -1530,42 +1888,56 @@ exports[`Render validation.status = error properties.removeItemIcon: DeleteOutli
 `;
 
 exports[`Render validation.status = error properties.removeItemIcon: name: DeleteOutlined - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.removeItemIcon: name: DeleteOutlined"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="properties.removeItemIcon: name: DeleteOutlined_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.removeItemIcon: name: DeleteOutlined_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -1583,8 +1955,10 @@ exports[`Render validation.status = error properties.removeItemIcon: name: Delet
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -1592,42 +1966,56 @@ exports[`Render validation.status = error properties.removeItemIcon: name: Delet
 `;
 
 exports[`Render validation.status = error properties.size: large - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-lg ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-lg ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.size: large"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed ant-btn-lg {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed ant-btn-lg emotion-1"
         id="properties.size: large_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.size: large_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -1645,8 +2033,10 @@ exports[`Render validation.status = error properties.size: large - value[0] 1`] 
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -1654,42 +2044,56 @@ exports[`Render validation.status = error properties.size: large - value[0] 1`] 
 `;
 
 exports[`Render validation.status = error properties.size: small - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-sm ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-sm ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.size: small"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed ant-btn-sm {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed ant-btn-sm emotion-1"
         id="properties.size: small_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.size: small_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -1707,8 +2111,10 @@ exports[`Render validation.status = error properties.size: small - value[0] 1`] 
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -1716,23 +2122,35 @@ exports[`Render validation.status = error properties.size: small - value[0] 1`] 
 `;
 
 exports[`Render validation.status = error properties.title - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.title"
 >
   <div
-    className="ant-list-header"
+    class="ant-list-header"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <span
-        className="ant-typography"
-        style={
-          Object {
-            "WebkitLineClamp": undefined,
-          }
-        }
+        class="ant-typography"
       >
         <strong>
           ControlledList block
@@ -1741,37 +2159,34 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
     </div>
   </div>
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-2"
         id="properties.title_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-3"
           id="properties.title_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -1789,8 +2204,10 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-3"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -1798,42 +2215,56 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
 `;
 
 exports[`Render validation.status = null default - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="default"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="default_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="default_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -1851,8 +2282,10 @@ exports[`Render validation.status = null default - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -1860,42 +2293,56 @@ exports[`Render validation.status = null default - value[0] 1`] = `
 `;
 
 exports[`Render validation.status = null properties.addItemButton: title: Add new Item - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.addItemButton: title: Add new Item"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="properties.addItemButton: title: Add new Item_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.addItemButton: title: Add new Item_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -1913,8 +2360,10 @@ exports[`Render validation.status = null properties.addItemButton: title: Add ne
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add new Item
+        </span>
       </button>
     </div>
   </div>
@@ -1922,29 +2371,43 @@ exports[`Render validation.status = null properties.addItemButton: title: Add ne
 `;
 
 exports[`Render validation.status = null properties.addToFront: true - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered"
+  class="ant-list ant-list-split ant-list-bordered"
   id="properties.addToFront: true"
 >
   <div
-    className="ant-list-header"
+    class="ant-list-header"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]}"
+        class="ant-btn emotion-1"
         id="properties.addToFront: true_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.addToFront: true_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -1962,19 +2425,21 @@ exports[`Render validation.status = null properties.addToFront: true - value[0] 
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
@@ -1985,17 +2450,17 @@ exports[`Render validation.status = null properties.addToFront: true - value[0] 
 
 exports[`Render validation.status = null properties.hideAddButton: true - value[0] 1`] = `
 <div
-  className="ant-list ant-list-split ant-list-bordered"
+  class="ant-list ant-list-split ant-list-bordered"
   id="properties.hideAddButton: true"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
@@ -2005,42 +2470,56 @@ exports[`Render validation.status = null properties.hideAddButton: true - value[
 `;
 
 exports[`Render validation.status = null properties.noDataTitle: No title display - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.noDataTitle: No title display"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No title display
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="properties.noDataTitle: No title display_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.noDataTitle: No title display_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -2058,8 +2537,10 @@ exports[`Render validation.status = null properties.noDataTitle: No title displa
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -2067,42 +2548,56 @@ exports[`Render validation.status = null properties.noDataTitle: No title displa
 `;
 
 exports[`Render validation.status = null properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.removeItemIcon: DeleteOutlined"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="properties.removeItemIcon: DeleteOutlined_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.removeItemIcon: DeleteOutlined_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -2120,8 +2615,10 @@ exports[`Render validation.status = null properties.removeItemIcon: DeleteOutlin
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -2129,42 +2626,56 @@ exports[`Render validation.status = null properties.removeItemIcon: DeleteOutlin
 `;
 
 exports[`Render validation.status = null properties.removeItemIcon: name: DeleteOutlined - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.removeItemIcon: name: DeleteOutlined"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="properties.removeItemIcon: name: DeleteOutlined_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.removeItemIcon: name: DeleteOutlined_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -2182,8 +2693,10 @@ exports[`Render validation.status = null properties.removeItemIcon: name: Delete
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -2191,42 +2704,56 @@ exports[`Render validation.status = null properties.removeItemIcon: name: Delete
 `;
 
 exports[`Render validation.status = null properties.size: large - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-lg ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-lg ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.size: large"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed ant-btn-lg {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed ant-btn-lg emotion-1"
         id="properties.size: large_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.size: large_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -2244,8 +2771,10 @@ exports[`Render validation.status = null properties.size: large - value[0] 1`] =
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -2253,42 +2782,56 @@ exports[`Render validation.status = null properties.size: large - value[0] 1`] =
 `;
 
 exports[`Render validation.status = null properties.size: small - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-sm ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-sm ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.size: small"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed ant-btn-sm {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed ant-btn-sm emotion-1"
         id="properties.size: small_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.size: small_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -2306,8 +2849,10 @@ exports[`Render validation.status = null properties.size: small - value[0] 1`] =
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -2315,23 +2860,35 @@ exports[`Render validation.status = null properties.size: small - value[0] 1`] =
 `;
 
 exports[`Render validation.status = null properties.title - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.title"
 >
   <div
-    className="ant-list-header"
+    class="ant-list-header"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <span
-        className="ant-typography"
-        style={
-          Object {
-            "WebkitLineClamp": undefined,
-          }
-        }
+        class="ant-typography"
       >
         <strong>
           ControlledList block
@@ -2340,37 +2897,34 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
     </div>
   </div>
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-2"
         id="properties.title_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-3"
           id="properties.title_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -2388,8 +2942,10 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-3"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -2397,42 +2953,56 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
 `;
 
 exports[`Render validation.status = success default - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="default"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="default_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="default_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -2450,8 +3020,10 @@ exports[`Render validation.status = success default - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -2459,42 +3031,56 @@ exports[`Render validation.status = success default - value[0] 1`] = `
 `;
 
 exports[`Render validation.status = success properties.addItemButton: title: Add new Item - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.addItemButton: title: Add new Item"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="properties.addItemButton: title: Add new Item_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.addItemButton: title: Add new Item_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -2512,8 +3098,10 @@ exports[`Render validation.status = success properties.addItemButton: title: Add
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add new Item
+        </span>
       </button>
     </div>
   </div>
@@ -2521,29 +3109,43 @@ exports[`Render validation.status = success properties.addItemButton: title: Add
 `;
 
 exports[`Render validation.status = success properties.addToFront: true - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered"
+  class="ant-list ant-list-split ant-list-bordered"
   id="properties.addToFront: true"
 >
   <div
-    className="ant-list-header"
+    class="ant-list-header"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]}"
+        class="ant-btn emotion-1"
         id="properties.addToFront: true_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.addToFront: true_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -2561,19 +3163,21 @@ exports[`Render validation.status = success properties.addToFront: true - value[
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
@@ -2584,17 +3188,17 @@ exports[`Render validation.status = success properties.addToFront: true - value[
 
 exports[`Render validation.status = success properties.hideAddButton: true - value[0] 1`] = `
 <div
-  className="ant-list ant-list-split ant-list-bordered"
+  class="ant-list ant-list-split ant-list-bordered"
   id="properties.hideAddButton: true"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
@@ -2604,42 +3208,56 @@ exports[`Render validation.status = success properties.hideAddButton: true - val
 `;
 
 exports[`Render validation.status = success properties.noDataTitle: No title display - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.noDataTitle: No title display"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No title display
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="properties.noDataTitle: No title display_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.noDataTitle: No title display_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -2657,8 +3275,10 @@ exports[`Render validation.status = success properties.noDataTitle: No title dis
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -2666,42 +3286,56 @@ exports[`Render validation.status = success properties.noDataTitle: No title dis
 `;
 
 exports[`Render validation.status = success properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.removeItemIcon: DeleteOutlined"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="properties.removeItemIcon: DeleteOutlined_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.removeItemIcon: DeleteOutlined_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -2719,8 +3353,10 @@ exports[`Render validation.status = success properties.removeItemIcon: DeleteOut
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -2728,42 +3364,56 @@ exports[`Render validation.status = success properties.removeItemIcon: DeleteOut
 `;
 
 exports[`Render validation.status = success properties.removeItemIcon: name: DeleteOutlined - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.removeItemIcon: name: DeleteOutlined"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="properties.removeItemIcon: name: DeleteOutlined_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.removeItemIcon: name: DeleteOutlined_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -2781,8 +3431,10 @@ exports[`Render validation.status = success properties.removeItemIcon: name: Del
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -2790,42 +3442,56 @@ exports[`Render validation.status = success properties.removeItemIcon: name: Del
 `;
 
 exports[`Render validation.status = success properties.size: large - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-lg ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-lg ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.size: large"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed ant-btn-lg {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed ant-btn-lg emotion-1"
         id="properties.size: large_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.size: large_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -2843,8 +3509,10 @@ exports[`Render validation.status = success properties.size: large - value[0] 1`
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -2852,42 +3520,56 @@ exports[`Render validation.status = success properties.size: large - value[0] 1`
 `;
 
 exports[`Render validation.status = success properties.size: small - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-sm ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-sm ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.size: small"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed ant-btn-sm {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed ant-btn-sm emotion-1"
         id="properties.size: small_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.size: small_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -2905,8 +3587,10 @@ exports[`Render validation.status = success properties.size: small - value[0] 1`
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -2914,23 +3598,35 @@ exports[`Render validation.status = success properties.size: small - value[0] 1`
 `;
 
 exports[`Render validation.status = success properties.title - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.title"
 >
   <div
-    className="ant-list-header"
+    class="ant-list-header"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <span
-        className="ant-typography"
-        style={
-          Object {
-            "WebkitLineClamp": undefined,
-          }
-        }
+        class="ant-typography"
       >
         <strong>
           ControlledList block
@@ -2939,37 +3635,34 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
     </div>
   </div>
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-2"
         id="properties.title_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-3"
           id="properties.title_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -2987,8 +3680,10 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-3"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -2996,42 +3691,56 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
 `;
 
 exports[`Render validation.status = warning default - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="default"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="default_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="default_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -3049,8 +3758,10 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -3058,42 +3769,56 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
 `;
 
 exports[`Render validation.status = warning properties.addItemButton: title: Add new Item - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.addItemButton: title: Add new Item"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="properties.addItemButton: title: Add new Item_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.addItemButton: title: Add new Item_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -3111,8 +3836,10 @@ exports[`Render validation.status = warning properties.addItemButton: title: Add
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add new Item
+        </span>
       </button>
     </div>
   </div>
@@ -3120,29 +3847,43 @@ exports[`Render validation.status = warning properties.addItemButton: title: Add
 `;
 
 exports[`Render validation.status = warning properties.addToFront: true - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered"
+  class="ant-list ant-list-split ant-list-bordered"
   id="properties.addToFront: true"
 >
   <div
-    className="ant-list-header"
+    class="ant-list-header"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]}"
+        class="ant-btn emotion-1"
         id="properties.addToFront: true_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.addToFront: true_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -3160,19 +3901,21 @@ exports[`Render validation.status = warning properties.addToFront: true - value[
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
@@ -3183,17 +3926,17 @@ exports[`Render validation.status = warning properties.addToFront: true - value[
 
 exports[`Render validation.status = warning properties.hideAddButton: true - value[0] 1`] = `
 <div
-  className="ant-list ant-list-split ant-list-bordered"
+  class="ant-list ant-list-split ant-list-bordered"
   id="properties.hideAddButton: true"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
@@ -3203,42 +3946,56 @@ exports[`Render validation.status = warning properties.hideAddButton: true - val
 `;
 
 exports[`Render validation.status = warning properties.noDataTitle: No title display - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.noDataTitle: No title display"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No title display
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="properties.noDataTitle: No title display_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.noDataTitle: No title display_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -3256,8 +4013,10 @@ exports[`Render validation.status = warning properties.noDataTitle: No title dis
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -3265,42 +4024,56 @@ exports[`Render validation.status = warning properties.noDataTitle: No title dis
 `;
 
 exports[`Render validation.status = warning properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.removeItemIcon: DeleteOutlined"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="properties.removeItemIcon: DeleteOutlined_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.removeItemIcon: DeleteOutlined_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -3318,8 +4091,10 @@ exports[`Render validation.status = warning properties.removeItemIcon: DeleteOut
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -3327,42 +4102,56 @@ exports[`Render validation.status = warning properties.removeItemIcon: DeleteOut
 `;
 
 exports[`Render validation.status = warning properties.removeItemIcon: name: DeleteOutlined - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.removeItemIcon: name: DeleteOutlined"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-1"
         id="properties.removeItemIcon: name: DeleteOutlined_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.removeItemIcon: name: DeleteOutlined_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -3380,8 +4169,10 @@ exports[`Render validation.status = warning properties.removeItemIcon: name: Del
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -3389,42 +4180,56 @@ exports[`Render validation.status = warning properties.removeItemIcon: name: Del
 `;
 
 exports[`Render validation.status = warning properties.size: large - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-lg ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-lg ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.size: large"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed ant-btn-lg {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed ant-btn-lg emotion-1"
         id="properties.size: large_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.size: large_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -3442,8 +4247,10 @@ exports[`Render validation.status = warning properties.size: large - value[0] 1`
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -3451,42 +4258,56 @@ exports[`Render validation.status = warning properties.size: large - value[0] 1`
 `;
 
 exports[`Render validation.status = warning properties.size: small - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-sm ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-sm ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.size: small"
 >
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed ant-btn-sm {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed ant-btn-sm emotion-1"
         id="properties.size: small_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-2"
           id="properties.size: small_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -3504,8 +4325,10 @@ exports[`Render validation.status = warning properties.size: small - value[0] 1`
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-2"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>
@@ -3513,23 +4336,35 @@ exports[`Render validation.status = warning properties.size: small - value[0] 1`
 `;
 
 exports[`Render validation.status = warning properties.title - value[0] 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
 <div
-  className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
+  class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.title"
 >
   <div
-    className="ant-list-header"
+    class="ant-list-header"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <span
-        className="ant-typography"
-        style={
-          Object {
-            "WebkitLineClamp": undefined,
-          }
-        }
+        class="ant-typography"
       >
         <strong>
           ControlledList block
@@ -3538,37 +4373,34 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
     </div>
   </div>
   <div
-    className="ant-spin-nested-loading"
+    class="ant-spin-nested-loading"
   >
     <div
-      className="ant-spin-container"
+      class="ant-spin-container"
     >
       <div
-        className="ant-list-empty-text"
+        class="ant-list-empty-text"
       >
         No Items
       </div>
     </div>
   </div>
   <div
-    className="ant-list-footer"
+    class="ant-list-footer"
   >
     <div
-      className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
+      class="emotion-0"
     >
       <br />
       <button
-        className="ant-btn ant-btn-dashed {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-dashed emotion-2"
         id="properties.title_add_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-3"
           id="properties.title_add_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -3586,8 +4418,10 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-3"
+        >
+          Add Item
+        </span>
       </button>
     </div>
   </div>

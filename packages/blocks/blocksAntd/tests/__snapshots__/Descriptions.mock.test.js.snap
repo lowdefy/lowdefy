@@ -17,15 +17,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -58,11 +54,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -94,15 +90,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -135,11 +127,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -173,15 +165,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -214,11 +202,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -250,15 +238,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -291,11 +275,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -329,15 +313,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -370,11 +350,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -406,15 +386,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -447,11 +423,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -477,7 +453,7 @@ Array [
       ],
       "colon": undefined,
       "column": undefined,
-      "contentStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentStyle": "{\\"options\\":true}",
       "extra": <div
         style={
           Object {
@@ -489,7 +465,7 @@ Array [
         extra
       </div>,
       "id": "areas.extra:",
-      "labelStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "labelStyle": "{\\"options\\":true}",
       "layout": undefined,
       "size": undefined,
       "title": <HtmlComponent
@@ -500,15 +476,11 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   Array [
@@ -541,11 +513,11 @@ Array [
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
@@ -592,15 +564,11 @@ Array [
                         Object {
                           "color": "red",
                         },
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -633,11 +601,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"style\\":{\\"color\\":\\"red\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"style\\":{\\"color\\":\\"red\\"},\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -671,15 +639,11 @@ Array [
                       Object {
                         "color": "red",
                       },
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -712,11 +676,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"style\\":{\\"color\\":\\"red\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"style\\":{\\"color\\":\\"red\\"},\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -752,15 +716,11 @@ Array [
                         Object {
                           "color": "red",
                         },
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -793,11 +753,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"style\\":{\\"color\\":\\"red\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"style\\":{\\"color\\":\\"red\\"},\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -831,15 +791,11 @@ Array [
                       Object {
                         "color": "red",
                       },
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -872,11 +828,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"style\\":{\\"color\\":\\"red\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"style\\":{\\"color\\":\\"red\\"},\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -912,15 +868,11 @@ Array [
                         Object {
                           "color": "red",
                         },
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -953,11 +905,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"style\\":{\\"color\\":\\"red\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"style\\":{\\"color\\":\\"red\\"},\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -991,15 +943,11 @@ Array [
                       Object {
                         "color": "red",
                       },
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -1032,11 +980,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"style\\":{\\"color\\":\\"red\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"style\\":{\\"color\\":\\"red\\"},\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -1062,10 +1010,10 @@ Array [
       ],
       "colon": undefined,
       "column": undefined,
-      "contentStyle": "{\\"style\\":{\\"color\\":\\"red\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentStyle": "{\\"style\\":{\\"color\\":\\"red\\"},\\"options\\":true}",
       "extra": undefined,
       "id": "contentStyle: color: red",
-      "labelStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "labelStyle": "{\\"options\\":true}",
       "layout": undefined,
       "size": undefined,
       "title": undefined,
@@ -1083,10 +1031,10 @@ Array [
       "children": Array [],
       "colon": undefined,
       "column": undefined,
-      "contentStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentStyle": "{\\"options\\":true}",
       "extra": undefined,
       "id": "default",
-      "labelStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "labelStyle": "{\\"options\\":true}",
       "layout": undefined,
       "size": undefined,
       "title": undefined,
@@ -1104,10 +1052,10 @@ Array [
       "children": Array [],
       "colon": undefined,
       "column": undefined,
-      "contentStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentStyle": "{\\"options\\":true}",
       "extra": undefined,
       "id": "default title",
-      "labelStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "labelStyle": "{\\"options\\":true}",
       "layout": undefined,
       "size": undefined,
       "title": <HtmlComponent
@@ -1118,25 +1066,21 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
               ],
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
               ],
             },
@@ -1169,17 +1113,13 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Object {
                           "color": "blue",
                         },
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -1212,11 +1152,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"style\\":{\\"color\\":\\"blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"style\\":{\\"color\\":\\"blue\\"},\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -1248,17 +1188,13 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Object {
                         "color": "blue",
                       },
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -1291,11 +1227,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"style\\":{\\"color\\":\\"blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"style\\":{\\"color\\":\\"blue\\"},\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -1329,17 +1265,13 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Object {
                           "color": "blue",
                         },
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -1372,11 +1304,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"style\\":{\\"color\\":\\"blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"style\\":{\\"color\\":\\"blue\\"},\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -1408,17 +1340,13 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Object {
                         "color": "blue",
                       },
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -1451,11 +1379,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"style\\":{\\"color\\":\\"blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"style\\":{\\"color\\":\\"blue\\"},\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -1489,17 +1417,13 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Object {
                           "color": "blue",
                         },
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -1532,11 +1456,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"style\\":{\\"color\\":\\"blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"style\\":{\\"color\\":\\"blue\\"},\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -1568,17 +1492,13 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Object {
                         "color": "blue",
                       },
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -1611,11 +1531,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"style\\":{\\"color\\":\\"blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"style\\":{\\"color\\":\\"blue\\"},\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -1641,10 +1561,10 @@ Array [
       ],
       "colon": undefined,
       "column": undefined,
-      "contentStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentStyle": "{\\"options\\":true}",
       "extra": undefined,
       "id": "labelStyle: color: blue",
-      "labelStyle": "{\\"style\\":{\\"color\\":\\"blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "labelStyle": "{\\"style\\":{\\"color\\":\\"blue\\"},\\"options\\":true}",
       "layout": undefined,
       "size": undefined,
       "title": undefined,
@@ -1671,15 +1591,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -1712,11 +1628,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -1748,15 +1664,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -1789,11 +1701,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -1827,15 +1739,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -1868,11 +1776,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -1904,15 +1812,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -1945,11 +1849,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -1983,15 +1887,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -2024,11 +1924,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -2060,15 +1960,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -2101,11 +1997,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -2131,10 +2027,10 @@ Array [
       ],
       "colon": undefined,
       "column": undefined,
-      "contentStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentStyle": "{\\"options\\":true}",
       "extra": undefined,
       "id": "properties.bordered: true",
-      "labelStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "labelStyle": "{\\"options\\":true}",
       "layout": undefined,
       "size": undefined,
       "title": undefined,
@@ -2161,15 +2057,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -2202,11 +2094,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -2238,15 +2130,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -2279,11 +2167,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -2317,15 +2205,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -2358,11 +2242,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -2394,15 +2278,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -2435,11 +2315,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -2473,15 +2353,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -2514,11 +2390,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -2550,15 +2426,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -2591,11 +2463,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -2621,10 +2493,10 @@ Array [
       ],
       "colon": false,
       "column": undefined,
-      "contentStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentStyle": "{\\"options\\":true}",
       "extra": undefined,
       "id": "properties.colon: false",
-      "labelStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "labelStyle": "{\\"options\\":true}",
       "layout": undefined,
       "size": undefined,
       "title": undefined,
@@ -2651,15 +2523,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -2692,11 +2560,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -2728,15 +2596,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -2769,11 +2633,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -2807,15 +2671,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -2848,11 +2708,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -2884,15 +2744,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -2925,11 +2781,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -2963,15 +2819,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -3004,11 +2856,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -3040,15 +2892,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -3081,11 +2929,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -3111,10 +2959,10 @@ Array [
       ],
       "colon": undefined,
       "column": 2,
-      "contentStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentStyle": "{\\"options\\":true}",
       "extra": undefined,
       "id": "properties.column: 2",
-      "labelStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "labelStyle": "{\\"options\\":true}",
       "layout": undefined,
       "size": undefined,
       "title": undefined,
@@ -3141,15 +2989,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -3191,11 +3035,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -3231,15 +3075,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -3281,11 +3121,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -3323,15 +3163,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -3373,11 +3209,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -3414,15 +3250,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -3464,11 +3296,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -3506,15 +3338,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -3556,11 +3384,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -3596,15 +3424,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -3646,11 +3470,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -3688,15 +3512,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -3738,11 +3558,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -3778,15 +3598,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -3828,11 +3644,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -3862,10 +3678,10 @@ Array [
       ],
       "colon": undefined,
       "column": undefined,
-      "contentStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentStyle": "{\\"options\\":true}",
       "extra": undefined,
       "id": "properties.itemOptions.span",
-      "labelStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "labelStyle": "{\\"options\\":true}",
       "layout": undefined,
       "size": undefined,
       "title": undefined,
@@ -3892,15 +3708,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -3944,11 +3756,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -3984,15 +3796,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -4036,11 +3844,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -4078,15 +3886,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -4130,11 +3934,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -4170,15 +3974,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -4222,11 +4022,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -4264,15 +4064,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -4316,11 +4112,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -4356,15 +4152,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -4408,11 +4200,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -4450,15 +4242,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -4502,11 +4290,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -4542,15 +4330,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -4594,11 +4378,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -4628,10 +4412,10 @@ Array [
       ],
       "colon": undefined,
       "column": undefined,
-      "contentStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentStyle": "{\\"options\\":true}",
       "extra": undefined,
       "id": "properties.itemOptions.style",
-      "labelStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "labelStyle": "{\\"options\\":true}",
       "layout": undefined,
       "size": undefined,
       "title": undefined,
@@ -4660,15 +4444,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -4710,11 +4490,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -4750,15 +4530,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -4800,11 +4576,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -4842,15 +4618,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -4892,11 +4664,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -4934,15 +4706,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -4984,11 +4752,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -5026,15 +4794,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -5076,11 +4840,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -5116,15 +4880,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -5166,11 +4926,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -5208,15 +4968,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -5258,11 +5014,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -5300,15 +5056,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -5350,11 +5102,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -5384,10 +5136,10 @@ Array [
       ],
       "colon": undefined,
       "column": undefined,
-      "contentStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentStyle": "{\\"options\\":true}",
       "extra": undefined,
       "id": "properties.items html values",
-      "labelStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "labelStyle": "{\\"options\\":true}",
       "layout": undefined,
       "size": undefined,
       "title": undefined,
@@ -5419,15 +5171,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -5451,11 +5199,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -5483,15 +5231,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -5515,11 +5259,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -5554,15 +5298,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -5586,11 +5326,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -5618,15 +5358,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -5650,11 +5386,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -5676,10 +5412,10 @@ Array [
       ],
       "colon": undefined,
       "column": undefined,
-      "contentStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentStyle": "{\\"options\\":true}",
       "extra": undefined,
       "id": "properties.items.contentStyle",
-      "labelStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "labelStyle": "{\\"options\\":true}",
       "layout": undefined,
       "size": undefined,
       "title": undefined,
@@ -5706,15 +5442,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -5738,11 +5470,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -5775,15 +5507,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -5807,11 +5535,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -5841,15 +5569,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -5873,11 +5597,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -5910,15 +5634,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -5942,11 +5662,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -5968,10 +5688,10 @@ Array [
       ],
       "colon": undefined,
       "column": undefined,
-      "contentStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentStyle": "{\\"options\\":true}",
       "extra": undefined,
       "id": "properties.items.labelStyle",
-      "labelStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "labelStyle": "{\\"options\\":true}",
       "layout": undefined,
       "size": undefined,
       "title": undefined,
@@ -5998,15 +5718,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -6066,11 +5782,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -6117,15 +5833,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -6185,11 +5897,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -6233,15 +5945,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -6301,11 +6009,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -6351,15 +6059,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -6419,11 +6123,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -6467,15 +6171,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -6535,11 +6235,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -6585,15 +6285,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -6653,11 +6349,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -6701,15 +6397,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -6769,11 +6461,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -6819,15 +6511,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -6887,11 +6575,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -6935,15 +6623,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -7003,11 +6687,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -7053,15 +6737,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -7121,11 +6801,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -7169,15 +6849,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -7237,11 +6913,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -7279,10 +6955,10 @@ Array [
       ],
       "colon": undefined,
       "column": undefined,
-      "contentStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentStyle": "{\\"options\\":true}",
       "extra": undefined,
       "id": "properties.items-falseish-values",
-      "labelStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "labelStyle": "{\\"options\\":true}",
       "layout": undefined,
       "size": undefined,
       "title": <HtmlComponent
@@ -7293,15 +6969,11 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   Array [
@@ -7361,11 +7033,11 @@ Array [
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
@@ -7422,15 +7094,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -7463,11 +7131,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -7500,15 +7168,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -7541,11 +7205,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -7579,15 +7243,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -7620,11 +7280,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -7657,15 +7317,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -7698,11 +7354,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -7736,15 +7392,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -7777,11 +7429,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -7814,15 +7466,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -7855,11 +7503,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -7885,10 +7533,10 @@ Array [
       ],
       "colon": undefined,
       "column": 2,
-      "contentStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentStyle": "{\\"options\\":true}",
       "extra": undefined,
       "id": "properties.items-list",
-      "labelStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "labelStyle": "{\\"options\\":true}",
       "layout": undefined,
       "size": undefined,
       "title": <HtmlComponent
@@ -7899,15 +7547,11 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   Array [
@@ -7940,11 +7584,11 @@ Array [
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
@@ -7989,15 +7633,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -8021,11 +7661,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -8056,15 +7696,11 @@ new line 	 helps
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -8088,11 +7724,11 @@ new line 	 helps
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -8122,15 +7758,11 @@ new line 	 helps
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -8154,11 +7786,11 @@ new line 	 helps
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -8189,15 +7821,11 @@ new line 	 helps
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -8221,11 +7849,11 @@ new line 	 helps
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -8247,10 +7875,10 @@ new line 	 helps
       ],
       "colon": undefined,
       "column": 2,
-      "contentStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentStyle": "{\\"options\\":true}",
       "extra": undefined,
       "id": "properties.items-list with new lines",
-      "labelStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "labelStyle": "{\\"options\\":true}",
       "layout": undefined,
       "size": undefined,
       "title": <HtmlComponent
@@ -8261,15 +7889,11 @@ new line 	 helps
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   Array [
@@ -8293,11 +7917,11 @@ new line 	 helps
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
@@ -8338,15 +7962,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -8379,11 +7999,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -8415,15 +8035,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -8456,11 +8072,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -8494,15 +8110,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -8535,11 +8147,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -8571,15 +8183,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -8612,11 +8220,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -8650,15 +8258,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -8691,11 +8295,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -8727,15 +8331,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -8768,11 +8368,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -8798,10 +8398,10 @@ Array [
       ],
       "colon": undefined,
       "column": undefined,
-      "contentStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentStyle": "{\\"options\\":true}",
       "extra": undefined,
       "id": "properties.items-object",
-      "labelStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "labelStyle": "{\\"options\\":true}",
       "layout": undefined,
       "size": undefined,
       "title": <HtmlComponent
@@ -8812,15 +8412,11 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   Array [
@@ -8853,11 +8449,11 @@ Array [
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
@@ -8902,15 +8498,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -8934,11 +8526,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -8968,15 +8560,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -9000,11 +8588,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -9034,15 +8622,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -9066,11 +8650,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -9100,15 +8684,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -9132,11 +8712,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -9158,10 +8738,10 @@ Array [
       ],
       "colon": undefined,
       "column": 2,
-      "contentStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentStyle": "{\\"options\\":true}",
       "extra": undefined,
       "id": "properties.items-object with new lines",
-      "labelStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "labelStyle": "{\\"options\\":true}",
       "layout": undefined,
       "size": undefined,
       "title": <HtmlComponent
@@ -9172,15 +8752,11 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   Array [
@@ -9204,11 +8780,11 @@ Array [
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
@@ -9249,15 +8825,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -9290,11 +8862,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -9330,15 +8902,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -9371,11 +8939,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -9409,15 +8977,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -9450,11 +9014,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -9490,15 +9054,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -9531,11 +9091,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -9569,15 +9129,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -9610,11 +9166,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -9653,15 +9209,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -9694,11 +9246,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -9724,10 +9276,10 @@ Array [
       ],
       "colon": undefined,
       "column": undefined,
-      "contentStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentStyle": "{\\"options\\":true}",
       "extra": undefined,
       "id": "properties.items-object-object",
-      "labelStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "labelStyle": "{\\"options\\":true}",
       "layout": undefined,
       "size": undefined,
       "title": <HtmlComponent
@@ -9738,15 +9290,11 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   Array [
@@ -9779,11 +9327,11 @@ Array [
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
@@ -9828,15 +9376,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -9869,11 +9413,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -9905,15 +9449,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -9946,11 +9486,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -9984,15 +9524,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -10025,11 +9561,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -10061,15 +9597,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -10102,11 +9634,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -10140,15 +9672,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -10181,11 +9709,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -10217,15 +9745,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -10258,11 +9782,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -10288,10 +9812,10 @@ Array [
       ],
       "colon": undefined,
       "column": undefined,
-      "contentStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentStyle": "{\\"options\\":true}",
       "extra": undefined,
       "id": "properties.layout: vertical",
-      "labelStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "labelStyle": "{\\"options\\":true}",
       "layout": "vertical",
       "size": undefined,
       "title": undefined,
@@ -10318,15 +9842,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -10359,11 +9879,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -10395,15 +9915,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -10436,11 +9952,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -10474,15 +9990,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -10515,11 +10027,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -10551,15 +10063,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -10592,11 +10100,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -10630,15 +10138,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -10671,11 +10175,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -10707,15 +10211,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -10748,11 +10248,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -10778,10 +10278,10 @@ Array [
       ],
       "colon": undefined,
       "column": undefined,
-      "contentStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentStyle": "{\\"options\\":true}",
       "extra": undefined,
       "id": "properties.size: default",
-      "labelStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "labelStyle": "{\\"options\\":true}",
       "layout": undefined,
       "size": "default",
       "title": undefined,
@@ -10808,15 +10308,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -10849,11 +10345,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -10885,15 +10381,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -10926,11 +10418,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -10964,15 +10456,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -11005,11 +10493,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -11041,15 +10529,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -11082,11 +10566,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -11120,15 +10604,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -11161,11 +10641,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -11197,15 +10677,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -11238,11 +10714,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -11268,10 +10744,10 @@ Array [
       ],
       "colon": undefined,
       "column": undefined,
-      "contentStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentStyle": "{\\"options\\":true}",
       "extra": undefined,
       "id": "properties.size: small",
-      "labelStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "labelStyle": "{\\"options\\":true}",
       "layout": undefined,
       "size": "small",
       "title": undefined,
@@ -11298,15 +10774,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -11366,11 +10838,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -11414,15 +10886,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -11482,11 +10950,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -11532,15 +11000,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -11600,11 +11064,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -11648,15 +11112,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -11716,11 +11176,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -11766,15 +11226,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -11834,11 +11290,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -11882,15 +11338,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -11950,11 +11402,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -12000,15 +11452,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -12068,11 +11516,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -12116,15 +11564,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -12184,11 +11628,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -12234,15 +11678,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -12302,11 +11742,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -12350,15 +11790,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -12418,11 +11854,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -12468,15 +11904,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -12536,11 +11968,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -12584,15 +12016,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -12652,11 +12080,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -12694,10 +12122,10 @@ Array [
       ],
       "colon": undefined,
       "column": undefined,
-      "contentStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentStyle": "{\\"options\\":true}",
       "extra": undefined,
       "id": "properties.size: small, properties.bordered: true",
-      "labelStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "labelStyle": "{\\"options\\":true}",
       "layout": undefined,
       "size": "small",
       "title": undefined,
@@ -12724,15 +12152,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -12774,11 +12198,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -12814,15 +12238,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -12864,11 +12284,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -12906,15 +12326,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -12956,11 +12372,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -12996,15 +12412,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -13046,11 +12458,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -13088,15 +12500,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -13138,11 +12546,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -13178,15 +12586,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -13228,11 +12632,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -13270,15 +12674,11 @@ Array [
                     "calls": Array [
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         undefined,
-                        Object {
-                          "styleObjectOnly": true,
-                        },
+                        true,
                       ],
                       Array [
                         Array [
@@ -13320,11 +12720,11 @@ Array [
                     "results": Array [
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
-                        "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        "value": "{\\"options\\":true}",
                       },
                       Object {
                         "type": "return",
@@ -13365,15 +12765,11 @@ Array [
                   "calls": Array [
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       undefined,
-                      Object {
-                        "styleObjectOnly": true,
-                      },
+                      true,
                     ],
                     Array [
                       Array [
@@ -13415,11 +12811,11 @@ Array [
                   "results": Array [
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
-                      "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                      "value": "{\\"options\\":true}",
                     },
                     Object {
                       "type": "return",
@@ -13449,10 +12845,10 @@ Array [
       ],
       "colon": undefined,
       "column": undefined,
-      "contentStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentStyle": "{\\"options\\":true}",
       "extra": undefined,
       "id": "properties.title html value",
-      "labelStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "labelStyle": "{\\"options\\":true}",
       "layout": undefined,
       "size": undefined,
       "title": <HtmlComponent
@@ -13465,15 +12861,11 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   Array [
@@ -13515,11 +12907,11 @@ Array [
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",

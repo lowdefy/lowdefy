@@ -1,28 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render default - value[0] 1`] = `
+.emotion-0 {
+  overflow: auto;
+}
+
 <aside
-  className="ant-layout-sider ant-layout-sider-dark {\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print"
+  class="ant-layout-sider ant-layout-sider-dark emotion-0 hide-on-print"
   id="default"
-  style={
-    Object {
-      "flex": "0 0 200px",
-      "maxWidth": "200px",
-      "minWidth": "200px",
-      "width": "200px",
-    }
-  }
+  style="flex: 0 0 200px; max-width: 200px; min-width: 200px; width: 200px;"
 >
   <div
-    className="ant-layout-sider-children"
+    class="ant-layout-sider-children"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -31,28 +23,20 @@ exports[`Render default - value[0] 1`] = `
 `;
 
 exports[`Render properties.theme - value[0] 1`] = `
+.emotion-0 {
+  overflow: auto;
+}
+
 <aside
-  className="ant-layout-sider ant-layout-sider-dark {\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print"
+  class="ant-layout-sider ant-layout-sider-dark emotion-0 hide-on-print"
   id="properties.theme"
-  style={
-    Object {
-      "flex": "0 0 200px",
-      "maxWidth": "200px",
-      "minWidth": "200px",
-      "width": "200px",
-    }
-  }
+  style="flex: 0 0 200px; max-width: 200px; min-width: 200px; width: 200px;"
 >
   <div
-    className="ant-layout-sider-children"
+    class="ant-layout-sider-children"
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>

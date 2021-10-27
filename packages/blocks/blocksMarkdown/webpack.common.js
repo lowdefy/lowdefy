@@ -30,14 +30,6 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
   },
-
-  resolve: {
-    fallback: {
-      path: require.resolve('path-browserify'),
-      buffer: require.resolve('buffer/'),
-      process: require.resolve('process/browser'),
-    },
-  },
   module: {
     rules: [
       {

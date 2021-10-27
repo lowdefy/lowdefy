@@ -1,128 +1,166 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render alt - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
 <img
   alt="This is the alt"
-  className="{\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
+  class="emotion-0"
   data-testid="alt"
   id="alt"
-  onClick={[Function]}
   src="https://docs.lowdefy.com/public/logo-light-theme.png"
 />
 `;
 
 exports[`Render alt - value[0] 2`] = `
+.emotion-0 {
+  outline: none;
+}
+
 <img
-  className="{\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
+  class="emotion-0"
   crossorigin="anonymous"
   data-testid="alt"
   id="alt"
-  onClick={[Function]}
   src="https://docs.lowdefy.com/public/logo-light-theme.png"
 />
 `;
 
 exports[`Render decoding - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
 <img
-  className="{\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
+  class="emotion-0"
   data-testid="decoding"
   decoding="sync"
   id="decoding"
-  onClick={[Function]}
   src="https://docs.lowdefy.com/public/logo-light-theme.png"
 />
 `;
 
 exports[`Render default - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
 <img
-  className="{\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
+  class="emotion-0"
   data-testid="default"
   id="default"
-  onClick={[Function]}
 />
 `;
 
 exports[`Render height - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
 <img
-  className="{\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
+  class="emotion-0"
   data-testid="height"
-  height={30}
+  height="30"
   id="height"
-  onClick={[Function]}
   src="https://docs.lowdefy.com/public/logo-light-theme.png"
 />
 `;
 
 exports[`Render loading - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
 <img
-  className="{\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
+  class="emotion-0"
   data-testid="loading"
   id="loading"
   loading="lazy"
-  onClick={[Function]}
   src="https://docs.lowdefy.com/public/logo-light-theme.png"
 />
 `;
 
 exports[`Render onClick - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+  cursor: pointer;
+}
+
 <img
-  className="{\\"style\\":[{\\"outline\\":\\"none\\",\\"cursor\\":\\"pointer\\"},null]}"
+  class="emotion-0"
   data-testid="onClick"
   id="onClick"
-  onClick={[Function]}
   src="https://docs.lowdefy.com/public/logo-light-theme.png"
 />
 `;
 
 exports[`Render sizes - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
 <img
-  className="{\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
+  class="emotion-0"
   data-testid="sizes"
   id="sizes"
-  onClick={[Function]}
   sizes="20px"
   src="https://docs.lowdefy.com/public/logo-light-theme.png"
 />
 `;
 
 exports[`Render src - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
 <img
-  className="{\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
+  class="emotion-0"
   data-testid="src"
   id="src"
-  onClick={[Function]}
   src="https://docs.lowdefy.com/public/logo-light-theme.png"
 />
 `;
 
-exports[`Render srcset - value[0] 1`] = `
+exports[`Render srcSet - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
 <img
-  className="{\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
-  data-testid="srcset"
-  id="srcset"
-  onClick={[Function]}
+  class="emotion-0"
+  data-testid="srcSet"
+  id="srcSet"
   src="https://docs.lowdefy.com/public/logo-light-theme.png"
   srcset="https://docs.lowdefy.com/public/logo-dark-theme.png"
 />
 `;
 
 exports[`Render style - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+  border: 1px solid red;
+}
+
 <img
-  className="{\\"style\\":[{\\"outline\\":\\"none\\"},{\\"border\\":\\"1px solid red\\"}]}"
+  class="emotion-0"
   data-testid="style"
   id="style"
-  onClick={[Function]}
   src="https://docs.lowdefy.com/public/logo-light-theme.png"
 />
 `;
 
 exports[`Render width - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
 <img
-  className="{\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
+  class="emotion-0"
   data-testid="width"
-  height={10}
+  height="10"
   id="width"
-  onClick={[Function]}
   src="https://docs.lowdefy.com/public/logo-light-theme.png"
 />
 `;
@@ -163,9 +201,9 @@ exports[`Test Schema src 1`] = `true`;
 
 exports[`Test Schema src 2`] = `null`;
 
-exports[`Test Schema srcset 1`] = `true`;
+exports[`Test Schema srcSet 1`] = `true`;
 
-exports[`Test Schema srcset 2`] = `null`;
+exports[`Test Schema srcSet 2`] = `null`;
 
 exports[`Test Schema style 1`] = `true`;
 
@@ -174,3 +212,15 @@ exports[`Test Schema style 2`] = `null`;
 exports[`Test Schema width 1`] = `true`;
 
 exports[`Test Schema width 2`] = `null`;
+
+exports[`triggerEvent onClick 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
+<img
+  class="emotion-0"
+  data-testid="one"
+  id="one"
+/>
+`;

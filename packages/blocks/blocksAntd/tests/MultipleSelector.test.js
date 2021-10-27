@@ -14,27 +14,12 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import validationsExamples from '../demo/validationExamples.json';
 import MultipleSelector from '../src/blocks/MultipleSelector/MultipleSelector';
 import examples from '../demo/examples/MultipleSelector.yaml';
 import meta from '../src/blocks/MultipleSelector/MultipleSelector.json';
 
-jest.mock('@lowdefy/block-tools', () => {
-  const originalModule = jest.requireActual('@lowdefy/block-tools');
-  return {
-    ...originalModule,
-    blockDefaultProps: {
-      ...originalModule.blockDefaultProps,
-      methods: {
-        ...originalModule.blockDefaultProps.methods,
-        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
-      },
-    },
-  };
-});
-
-// FIX Jest: TypeError: Cannot read property 'scrollWidth' of null
-// runRenderTests({ examples, Block: MultipleSelector, meta, validationsExamples });
+runRenderTests({ examples, Block: MultipleSelector, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta });

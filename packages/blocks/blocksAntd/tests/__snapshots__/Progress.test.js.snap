@@ -2,30 +2,23 @@
 
 exports[`Render default - value[0] 1`] = `
 <div
-  className="ant-progress ant-progress-line ant-progress-status-normal ant-progress-show-info ant-progress-default"
+  class="ant-progress ant-progress-line ant-progress-status-normal ant-progress-show-info ant-progress-default"
   id="default"
 >
   <div
-    className="ant-progress-outer"
+    class="ant-progress-outer"
   >
     <div
-      className="ant-progress-inner"
+      class="ant-progress-inner"
     >
       <div
-        className="ant-progress-bg"
-        style={
-          Object {
-            "background": undefined,
-            "borderRadius": "",
-            "height": 8,
-            "width": "0%",
-          }
-        }
+        class="ant-progress-bg"
+        style="width: 0%; height: 8px;"
       />
     </div>
   </div>
   <span
-    className="ant-progress-text"
+    class="ant-progress-text"
     title="0%"
   >
     0%
@@ -35,83 +28,54 @@ exports[`Render default - value[0] 1`] = `
 
 exports[`Render properties.gapDegree: 60 - value[0] 1`] = `
 <div
-  className="ant-progress ant-progress-circle ant-progress-status-normal ant-progress-show-info ant-progress-default"
+  class="ant-progress ant-progress-circle ant-progress-status-normal ant-progress-show-info ant-progress-default"
   id="properties.gapDegree: 60"
 >
   <div
-    className="ant-progress-inner"
-    style={
-      Object {
-        "fontSize": 24,
-        "height": 120,
-        "width": 120,
-      }
-    }
+    class="ant-progress-inner"
+    style="width: 120px; height: 120px; font-size: 24px;"
   >
     <svg
-      className="ant-progress-circle"
-      style={Object {}}
+      class="ant-progress-circle"
       viewBox="0 0 100 100"
     >
       <path
-        className="ant-progress-circle-trail"
+        class="ant-progress-circle-trail"
         d="M 50,50 m 0,-47
    a 47,47 0 1 1 0,94
    a 47,47 0 1 1 0,-94"
-        fillOpacity="0"
-        stroke={null}
-        strokeLinecap="round"
-        strokeWidth={6}
-        style={
-          Object {
-            "stroke": undefined,
-            "strokeDasharray": "235.30970943744057px 295.3097094374406px",
-            "strokeDashoffset": "-30px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
-          }
-        }
+        fill-opacity="0"
+        stroke-linecap="round"
+        stroke-width="6"
+        style="stroke-dasharray: 235.30970943744057px 295.3097094374406px; stroke-dashoffset: -30px; transition: stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s;"
       />
       <path
-        className="ant-progress-circle-path"
+        class="ant-progress-circle-path"
         d="M 50,50 m 0,-47
    a 47,47 0 1 1 0,94
    a 47,47 0 1 1 0,-94"
-        fillOpacity="0"
-        opacity={1}
+        fill-opacity="0"
+        opacity="1"
         stroke=""
-        strokeLinecap="round"
-        strokeWidth={6}
-        style={
-          Object {
-            "stroke": undefined,
-            "strokeDasharray": "70.59291283123217px 295.3097094374406px",
-            "strokeDashoffset": "-30px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
-          }
-        }
+        stroke-linecap="round"
+        stroke-width="6"
+        style="stroke-dasharray: 70.59291283123217px 295.3097094374406px; stroke-dashoffset: -30px; transition: stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s; transition-duration: .3s, .3s, .3s, .06s;"
       />
       <path
-        className="ant-progress-circle-path"
+        class="ant-progress-circle-path"
         d="M 50,50 m 0,-47
    a 47,47 0 1 1 0,94
    a 47,47 0 1 1 0,-94"
-        fillOpacity="0"
-        opacity={0}
+        fill-opacity="0"
+        opacity="0"
         stroke=""
-        strokeLinecap="round"
-        strokeWidth={6}
-        style={
-          Object {
-            "stroke": "#52C41A",
-            "strokeDasharray": "0px 295.3097094374406px",
-            "strokeDashoffset": "-30px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
-          }
-        }
+        stroke-linecap="round"
+        stroke-width="6"
+        style="stroke: #52C41A; stroke-dasharray: 0px 295.3097094374406px; stroke-dashoffset: -30px; transition: stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s; transition-duration: .3s, .3s, .3s, .06s;"
       />
     </svg>
     <span
-      className="ant-progress-text"
+      class="ant-progress-text"
       title="30%"
     >
       30%
@@ -122,83 +86,54 @@ exports[`Render properties.gapDegree: 60 - value[0] 1`] = `
 
 exports[`Render properties.gapPosition: bottom - value[0] 1`] = `
 <div
-  className="ant-progress ant-progress-circle ant-progress-status-normal ant-progress-show-info ant-progress-default"
+  class="ant-progress ant-progress-circle ant-progress-status-normal ant-progress-show-info ant-progress-default"
   id="properties.gapPosition: bottom"
 >
   <div
-    className="ant-progress-inner"
-    style={
-      Object {
-        "fontSize": 24,
-        "height": 120,
-        "width": 120,
-      }
-    }
+    class="ant-progress-inner"
+    style="width: 120px; height: 120px; font-size: 24px;"
   >
     <svg
-      className="ant-progress-circle"
-      style={Object {}}
+      class="ant-progress-circle"
       viewBox="0 0 100 100"
     >
       <path
-        className="ant-progress-circle-trail"
+        class="ant-progress-circle-trail"
         d="M 50,50 m 0,47
    a 47,47 0 1 1 0,-94
    a 47,47 0 1 1 0,94"
-        fillOpacity="0"
-        stroke={null}
-        strokeLinecap="round"
-        strokeWidth={6}
-        style={
-          Object {
-            "stroke": undefined,
-            "strokeDasharray": "235.30970943744057px 295.3097094374406px",
-            "strokeDashoffset": "-30px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
-          }
-        }
+        fill-opacity="0"
+        stroke-linecap="round"
+        stroke-width="6"
+        style="stroke-dasharray: 235.30970943744057px 295.3097094374406px; stroke-dashoffset: -30px; transition: stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s;"
       />
       <path
-        className="ant-progress-circle-path"
+        class="ant-progress-circle-path"
         d="M 50,50 m 0,47
    a 47,47 0 1 1 0,-94
    a 47,47 0 1 1 0,94"
-        fillOpacity="0"
-        opacity={1}
+        fill-opacity="0"
+        opacity="1"
         stroke=""
-        strokeLinecap="round"
-        strokeWidth={6}
-        style={
-          Object {
-            "stroke": undefined,
-            "strokeDasharray": "70.59291283123217px 295.3097094374406px",
-            "strokeDashoffset": "-30px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
-          }
-        }
+        stroke-linecap="round"
+        stroke-width="6"
+        style="stroke-dasharray: 70.59291283123217px 295.3097094374406px; stroke-dashoffset: -30px; transition: stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s; transition-duration: .3s, .3s, .3s, .06s;"
       />
       <path
-        className="ant-progress-circle-path"
+        class="ant-progress-circle-path"
         d="M 50,50 m 0,47
    a 47,47 0 1 1 0,-94
    a 47,47 0 1 1 0,94"
-        fillOpacity="0"
-        opacity={0}
+        fill-opacity="0"
+        opacity="0"
         stroke=""
-        strokeLinecap="round"
-        strokeWidth={6}
-        style={
-          Object {
-            "stroke": "#52C41A",
-            "strokeDasharray": "0px 295.3097094374406px",
-            "strokeDashoffset": "-30px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
-          }
-        }
+        stroke-linecap="round"
+        stroke-width="6"
+        style="stroke: #52C41A; stroke-dasharray: 0px 295.3097094374406px; stroke-dashoffset: -30px; transition: stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s; transition-duration: .3s, .3s, .3s, .06s;"
       />
     </svg>
     <span
-      className="ant-progress-text"
+      class="ant-progress-text"
       title="30%"
     >
       30%
@@ -209,83 +144,54 @@ exports[`Render properties.gapPosition: bottom - value[0] 1`] = `
 
 exports[`Render properties.gapPosition: left - value[0] 1`] = `
 <div
-  className="ant-progress ant-progress-circle ant-progress-status-normal ant-progress-show-info ant-progress-default"
+  class="ant-progress ant-progress-circle ant-progress-status-normal ant-progress-show-info ant-progress-default"
   id="properties.gapPosition: left"
 >
   <div
-    className="ant-progress-inner"
-    style={
-      Object {
-        "fontSize": 24,
-        "height": 120,
-        "width": 120,
-      }
-    }
+    class="ant-progress-inner"
+    style="width: 120px; height: 120px; font-size: 24px;"
   >
     <svg
-      className="ant-progress-circle"
-      style={Object {}}
+      class="ant-progress-circle"
       viewBox="0 0 100 100"
     >
       <path
-        className="ant-progress-circle-trail"
+        class="ant-progress-circle-trail"
         d="M 50,50 m -47,0
    a 47,47 0 1 1 94,0
    a 47,47 0 1 1 -94,0"
-        fillOpacity="0"
-        stroke={null}
-        strokeLinecap="round"
-        strokeWidth={6}
-        style={
-          Object {
-            "stroke": undefined,
-            "strokeDasharray": "235.30970943744057px 295.3097094374406px",
-            "strokeDashoffset": "-30px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
-          }
-        }
+        fill-opacity="0"
+        stroke-linecap="round"
+        stroke-width="6"
+        style="stroke-dasharray: 235.30970943744057px 295.3097094374406px; stroke-dashoffset: -30px; transition: stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s;"
       />
       <path
-        className="ant-progress-circle-path"
+        class="ant-progress-circle-path"
         d="M 50,50 m -47,0
    a 47,47 0 1 1 94,0
    a 47,47 0 1 1 -94,0"
-        fillOpacity="0"
-        opacity={1}
+        fill-opacity="0"
+        opacity="1"
         stroke=""
-        strokeLinecap="round"
-        strokeWidth={6}
-        style={
-          Object {
-            "stroke": undefined,
-            "strokeDasharray": "70.59291283123217px 295.3097094374406px",
-            "strokeDashoffset": "-30px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
-          }
-        }
+        stroke-linecap="round"
+        stroke-width="6"
+        style="stroke-dasharray: 70.59291283123217px 295.3097094374406px; stroke-dashoffset: -30px; transition: stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s; transition-duration: .3s, .3s, .3s, .06s;"
       />
       <path
-        className="ant-progress-circle-path"
+        class="ant-progress-circle-path"
         d="M 50,50 m -47,0
    a 47,47 0 1 1 94,0
    a 47,47 0 1 1 -94,0"
-        fillOpacity="0"
-        opacity={0}
+        fill-opacity="0"
+        opacity="0"
         stroke=""
-        strokeLinecap="round"
-        strokeWidth={6}
-        style={
-          Object {
-            "stroke": "#52C41A",
-            "strokeDasharray": "0px 295.3097094374406px",
-            "strokeDashoffset": "-30px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
-          }
-        }
+        stroke-linecap="round"
+        stroke-width="6"
+        style="stroke: #52C41A; stroke-dasharray: 0px 295.3097094374406px; stroke-dashoffset: -30px; transition: stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s; transition-duration: .3s, .3s, .3s, .06s;"
       />
     </svg>
     <span
-      className="ant-progress-text"
+      class="ant-progress-text"
       title="30%"
     >
       30%
@@ -296,83 +202,54 @@ exports[`Render properties.gapPosition: left - value[0] 1`] = `
 
 exports[`Render properties.gapPosition: right - value[0] 1`] = `
 <div
-  className="ant-progress ant-progress-circle ant-progress-status-normal ant-progress-show-info ant-progress-default"
+  class="ant-progress ant-progress-circle ant-progress-status-normal ant-progress-show-info ant-progress-default"
   id="properties.gapPosition: right"
 >
   <div
-    className="ant-progress-inner"
-    style={
-      Object {
-        "fontSize": 24,
-        "height": 120,
-        "width": 120,
-      }
-    }
+    class="ant-progress-inner"
+    style="width: 120px; height: 120px; font-size: 24px;"
   >
     <svg
-      className="ant-progress-circle"
-      style={Object {}}
+      class="ant-progress-circle"
       viewBox="0 0 100 100"
     >
       <path
-        className="ant-progress-circle-trail"
+        class="ant-progress-circle-trail"
         d="M 50,50 m 47,0
    a 47,47 0 1 1 -94,0
    a 47,47 0 1 1 94,0"
-        fillOpacity="0"
-        stroke={null}
-        strokeLinecap="round"
-        strokeWidth={6}
-        style={
-          Object {
-            "stroke": undefined,
-            "strokeDasharray": "235.30970943744057px 295.3097094374406px",
-            "strokeDashoffset": "-30px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
-          }
-        }
+        fill-opacity="0"
+        stroke-linecap="round"
+        stroke-width="6"
+        style="stroke-dasharray: 235.30970943744057px 295.3097094374406px; stroke-dashoffset: -30px; transition: stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s;"
       />
       <path
-        className="ant-progress-circle-path"
+        class="ant-progress-circle-path"
         d="M 50,50 m 47,0
    a 47,47 0 1 1 -94,0
    a 47,47 0 1 1 94,0"
-        fillOpacity="0"
-        opacity={1}
+        fill-opacity="0"
+        opacity="1"
         stroke=""
-        strokeLinecap="round"
-        strokeWidth={6}
-        style={
-          Object {
-            "stroke": undefined,
-            "strokeDasharray": "70.59291283123217px 295.3097094374406px",
-            "strokeDashoffset": "-30px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
-          }
-        }
+        stroke-linecap="round"
+        stroke-width="6"
+        style="stroke-dasharray: 70.59291283123217px 295.3097094374406px; stroke-dashoffset: -30px; transition: stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s; transition-duration: .3s, .3s, .3s, .06s;"
       />
       <path
-        className="ant-progress-circle-path"
+        class="ant-progress-circle-path"
         d="M 50,50 m 47,0
    a 47,47 0 1 1 -94,0
    a 47,47 0 1 1 94,0"
-        fillOpacity="0"
-        opacity={0}
+        fill-opacity="0"
+        opacity="0"
         stroke=""
-        strokeLinecap="round"
-        strokeWidth={6}
-        style={
-          Object {
-            "stroke": "#52C41A",
-            "strokeDasharray": "0px 295.3097094374406px",
-            "strokeDashoffset": "-30px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
-          }
-        }
+        stroke-linecap="round"
+        stroke-width="6"
+        style="stroke: #52C41A; stroke-dasharray: 0px 295.3097094374406px; stroke-dashoffset: -30px; transition: stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s; transition-duration: .3s, .3s, .3s, .06s;"
       />
     </svg>
     <span
-      className="ant-progress-text"
+      class="ant-progress-text"
       title="30%"
     >
       30%
@@ -383,30 +260,23 @@ exports[`Render properties.gapPosition: right - value[0] 1`] = `
 
 exports[`Render properties.percent - value[0] 1`] = `
 <div
-  className="ant-progress ant-progress-line ant-progress-status-normal ant-progress-show-info ant-progress-default"
+  class="ant-progress ant-progress-line ant-progress-status-normal ant-progress-show-info ant-progress-default"
   id="properties.percent"
 >
   <div
-    className="ant-progress-outer"
+    class="ant-progress-outer"
   >
     <div
-      className="ant-progress-inner"
+      class="ant-progress-inner"
     >
       <div
-        className="ant-progress-bg"
-        style={
-          Object {
-            "background": undefined,
-            "borderRadius": "",
-            "height": 8,
-            "width": "30%",
-          }
-        }
+        class="ant-progress-bg"
+        style="width: 30%; height: 8px;"
       />
     </div>
   </div>
   <span
-    className="ant-progress-text"
+    class="ant-progress-text"
     title="30%"
   >
     30%
@@ -416,25 +286,18 @@ exports[`Render properties.percent - value[0] 1`] = `
 
 exports[`Render properties.showInfo: false - value[0] 1`] = `
 <div
-  className="ant-progress ant-progress-line ant-progress-status-normal ant-progress-default"
+  class="ant-progress ant-progress-line ant-progress-status-normal ant-progress-default"
   id="properties.showInfo: false"
 >
   <div
-    className="ant-progress-outer"
+    class="ant-progress-outer"
   >
     <div
-      className="ant-progress-inner"
+      class="ant-progress-inner"
     >
       <div
-        className="ant-progress-bg"
-        style={
-          Object {
-            "background": undefined,
-            "borderRadius": "",
-            "height": 8,
-            "width": "30%",
-          }
-        }
+        class="ant-progress-bg"
+        style="width: 30%; height: 8px;"
       />
     </div>
   </div>
@@ -443,30 +306,23 @@ exports[`Render properties.showInfo: false - value[0] 1`] = `
 
 exports[`Render properties.status: active - value[0] 1`] = `
 <div
-  className="ant-progress ant-progress-line ant-progress-status-active ant-progress-show-info ant-progress-default"
+  class="ant-progress ant-progress-line ant-progress-status-active ant-progress-show-info ant-progress-default"
   id="properties.status: active"
 >
   <div
-    className="ant-progress-outer"
+    class="ant-progress-outer"
   >
     <div
-      className="ant-progress-inner"
+      class="ant-progress-inner"
     >
       <div
-        className="ant-progress-bg"
-        style={
-          Object {
-            "background": undefined,
-            "borderRadius": "",
-            "height": 8,
-            "width": "30%",
-          }
-        }
+        class="ant-progress-bg"
+        style="width: 30%; height: 8px;"
       />
     </div>
   </div>
   <span
-    className="ant-progress-text"
+    class="ant-progress-text"
     title="30%"
   >
     30%
@@ -476,34 +332,27 @@ exports[`Render properties.status: active - value[0] 1`] = `
 
 exports[`Render properties.status: exception - value[0] 1`] = `
 <div
-  className="ant-progress ant-progress-line ant-progress-status-exception ant-progress-show-info ant-progress-default"
+  class="ant-progress ant-progress-line ant-progress-status-exception ant-progress-show-info ant-progress-default"
   id="properties.status: exception"
 >
   <div
-    className="ant-progress-outer"
+    class="ant-progress-outer"
   >
     <div
-      className="ant-progress-inner"
+      class="ant-progress-inner"
     >
       <div
-        className="ant-progress-bg"
-        style={
-          Object {
-            "background": undefined,
-            "borderRadius": "",
-            "height": 8,
-            "width": "30%",
-          }
-        }
+        class="ant-progress-bg"
+        style="width: 30%; height: 8px;"
       />
     </div>
   </div>
   <span
-    className="ant-progress-text"
+    class="ant-progress-text"
   >
     <span
       aria-label="close-circle"
-      className="anticon anticon-close-circle"
+      class="anticon anticon-close-circle"
       role="img"
     >
       <svg
@@ -526,30 +375,23 @@ exports[`Render properties.status: exception - value[0] 1`] = `
 
 exports[`Render properties.status: normal - value[0] 1`] = `
 <div
-  className="ant-progress ant-progress-line ant-progress-status-normal ant-progress-show-info ant-progress-default"
+  class="ant-progress ant-progress-line ant-progress-status-normal ant-progress-show-info ant-progress-default"
   id="properties.status: normal"
 >
   <div
-    className="ant-progress-outer"
+    class="ant-progress-outer"
   >
     <div
-      className="ant-progress-inner"
+      class="ant-progress-inner"
     >
       <div
-        className="ant-progress-bg"
-        style={
-          Object {
-            "background": undefined,
-            "borderRadius": "",
-            "height": 8,
-            "width": "30%",
-          }
-        }
+        class="ant-progress-bg"
+        style="width: 30%; height: 8px;"
       />
     </div>
   </div>
   <span
-    className="ant-progress-text"
+    class="ant-progress-text"
     title="30%"
   >
     30%
@@ -559,34 +401,27 @@ exports[`Render properties.status: normal - value[0] 1`] = `
 
 exports[`Render properties.status: success - value[0] 1`] = `
 <div
-  className="ant-progress ant-progress-line ant-progress-status-success ant-progress-show-info ant-progress-default"
+  class="ant-progress ant-progress-line ant-progress-status-success ant-progress-show-info ant-progress-default"
   id="properties.status: success"
 >
   <div
-    className="ant-progress-outer"
+    class="ant-progress-outer"
   >
     <div
-      className="ant-progress-inner"
+      class="ant-progress-inner"
     >
       <div
-        className="ant-progress-bg"
-        style={
-          Object {
-            "background": undefined,
-            "borderRadius": "",
-            "height": 8,
-            "width": "30%",
-          }
-        }
+        class="ant-progress-bg"
+        style="width: 30%; height: 8px;"
       />
     </div>
   </div>
   <span
-    className="ant-progress-text"
+    class="ant-progress-text"
   >
     <span
       aria-label="check-circle"
-      className="anticon anticon-check-circle"
+      class="anticon anticon-check-circle"
       role="img"
     >
       <svg
@@ -609,35 +444,24 @@ exports[`Render properties.status: success - value[0] 1`] = `
 
 exports[`Render properties.strokeColor: '#e91e63'  trailColor: '#ff9800' - value[0] 1`] = `
 <div
-  className="ant-progress ant-progress-line ant-progress-status-normal ant-progress-show-info ant-progress-default"
+  class="ant-progress ant-progress-line ant-progress-status-normal ant-progress-show-info ant-progress-default"
   id="properties.strokeColor: '#e91e63'  trailColor: '#ff9800'"
 >
   <div
-    className="ant-progress-outer"
+    class="ant-progress-outer"
   >
     <div
-      className="ant-progress-inner"
-      style={
-        Object {
-          "backgroundColor": "#ff9800",
-        }
-      }
+      class="ant-progress-inner"
+      style="background-color: rgb(255, 152, 0);"
     >
       <div
-        className="ant-progress-bg"
-        style={
-          Object {
-            "background": "#e91e63",
-            "borderRadius": "",
-            "height": 8,
-            "width": "30%",
-          }
-        }
+        class="ant-progress-bg"
+        style="width: 30%; height: 8px; background: rgb(233, 30, 99);"
       />
     </div>
   </div>
   <span
-    className="ant-progress-text"
+    class="ant-progress-text"
     title="30%"
   >
     30%
@@ -647,30 +471,23 @@ exports[`Render properties.strokeColor: '#e91e63'  trailColor: '#ff9800' - value
 
 exports[`Render properties.strokeColor: '#e91e63' - value[0] 1`] = `
 <div
-  className="ant-progress ant-progress-line ant-progress-status-normal ant-progress-show-info ant-progress-default"
+  class="ant-progress ant-progress-line ant-progress-status-normal ant-progress-show-info ant-progress-default"
   id="properties.strokeColor: '#e91e63'"
 >
   <div
-    className="ant-progress-outer"
+    class="ant-progress-outer"
   >
     <div
-      className="ant-progress-inner"
+      class="ant-progress-inner"
     >
       <div
-        className="ant-progress-bg"
-        style={
-          Object {
-            "background": "#e91e63",
-            "borderRadius": "",
-            "height": 8,
-            "width": "30%",
-          }
-        }
+        class="ant-progress-bg"
+        style="width: 30%; height: 8px; background: rgb(233, 30, 99);"
       />
     </div>
   </div>
   <span
-    className="ant-progress-text"
+    class="ant-progress-text"
     title="30%"
   >
     30%
@@ -680,30 +497,23 @@ exports[`Render properties.strokeColor: '#e91e63' - value[0] 1`] = `
 
 exports[`Render properties.strokeLinecap: square  - value[0] 1`] = `
 <div
-  className="ant-progress ant-progress-line ant-progress-status-normal ant-progress-show-info ant-progress-default"
+  class="ant-progress ant-progress-line ant-progress-status-normal ant-progress-show-info ant-progress-default"
   id="properties.strokeLinecap: square "
 >
   <div
-    className="ant-progress-outer"
+    class="ant-progress-outer"
   >
     <div
-      className="ant-progress-inner"
+      class="ant-progress-inner"
     >
       <div
-        className="ant-progress-bg"
-        style={
-          Object {
-            "background": undefined,
-            "borderRadius": 0,
-            "height": 8,
-            "width": "30%",
-          }
-        }
+        class="ant-progress-bg"
+        style="width: 30%; height: 8px; border-radius: 0;"
       />
     </div>
   </div>
   <span
-    className="ant-progress-text"
+    class="ant-progress-text"
     title="30%"
   >
     30%
@@ -713,30 +523,23 @@ exports[`Render properties.strokeLinecap: square  - value[0] 1`] = `
 
 exports[`Render properties.strokeWidth: 18 - value[0] 1`] = `
 <div
-  className="ant-progress ant-progress-line ant-progress-status-normal ant-progress-show-info ant-progress-default"
+  class="ant-progress ant-progress-line ant-progress-status-normal ant-progress-show-info ant-progress-default"
   id="properties.strokeWidth: 18"
 >
   <div
-    className="ant-progress-outer"
+    class="ant-progress-outer"
   >
     <div
-      className="ant-progress-inner"
+      class="ant-progress-inner"
     >
       <div
-        className="ant-progress-bg"
-        style={
-          Object {
-            "background": undefined,
-            "borderRadius": "",
-            "height": 18,
-            "width": "30%",
-          }
-        }
+        class="ant-progress-bg"
+        style="width: 30%; height: 18px;"
       />
     </div>
   </div>
   <span
-    className="ant-progress-text"
+    class="ant-progress-text"
     title="30%"
   >
     30%
@@ -746,35 +549,24 @@ exports[`Render properties.strokeWidth: 18 - value[0] 1`] = `
 
 exports[`Render properties.trailColor: '#ff9800' - value[0] 1`] = `
 <div
-  className="ant-progress ant-progress-line ant-progress-status-normal ant-progress-show-info ant-progress-default"
+  class="ant-progress ant-progress-line ant-progress-status-normal ant-progress-show-info ant-progress-default"
   id="properties.trailColor: '#ff9800'"
 >
   <div
-    className="ant-progress-outer"
+    class="ant-progress-outer"
   >
     <div
-      className="ant-progress-inner"
-      style={
-        Object {
-          "backgroundColor": "#ff9800",
-        }
-      }
+      class="ant-progress-inner"
+      style="background-color: rgb(255, 152, 0);"
     >
       <div
-        className="ant-progress-bg"
-        style={
-          Object {
-            "background": undefined,
-            "borderRadius": "",
-            "height": 8,
-            "width": "30%",
-          }
-        }
+        class="ant-progress-bg"
+        style="width: 30%; height: 8px;"
       />
     </div>
   </div>
   <span
-    className="ant-progress-text"
+    class="ant-progress-text"
     title="30%"
   >
     30%
@@ -784,83 +576,54 @@ exports[`Render properties.trailColor: '#ff9800' - value[0] 1`] = `
 
 exports[`Render properties.type: circle - value[0] 1`] = `
 <div
-  className="ant-progress ant-progress-circle ant-progress-status-normal ant-progress-show-info ant-progress-default"
+  class="ant-progress ant-progress-circle ant-progress-status-normal ant-progress-show-info ant-progress-default"
   id="properties.type: circle"
 >
   <div
-    className="ant-progress-inner"
-    style={
-      Object {
-        "fontSize": 24,
-        "height": 120,
-        "width": 120,
-      }
-    }
+    class="ant-progress-inner"
+    style="width: 120px; height: 120px; font-size: 24px;"
   >
     <svg
-      className="ant-progress-circle"
-      style={Object {}}
+      class="ant-progress-circle"
       viewBox="0 0 100 100"
     >
       <path
-        className="ant-progress-circle-trail"
+        class="ant-progress-circle-trail"
         d="M 50,50 m 0,-47
    a 47,47 0 1 1 0,94
    a 47,47 0 1 1 0,-94"
-        fillOpacity="0"
-        stroke={null}
-        strokeLinecap="round"
-        strokeWidth={6}
-        style={
-          Object {
-            "stroke": undefined,
-            "strokeDasharray": "295.3097094374406px 295.3097094374406px",
-            "strokeDashoffset": "-0px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
-          }
-        }
+        fill-opacity="0"
+        stroke-linecap="round"
+        stroke-width="6"
+        style="stroke-dasharray: 295.3097094374406px 295.3097094374406px; stroke-dashoffset: -0px; transition: stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s;"
       />
       <path
-        className="ant-progress-circle-path"
+        class="ant-progress-circle-path"
         d="M 50,50 m 0,-47
    a 47,47 0 1 1 0,94
    a 47,47 0 1 1 0,-94"
-        fillOpacity="0"
-        opacity={1}
+        fill-opacity="0"
+        opacity="1"
         stroke=""
-        strokeLinecap="round"
-        strokeWidth={6}
-        style={
-          Object {
-            "stroke": undefined,
-            "strokeDasharray": "88.59291283123217px 295.3097094374406px",
-            "strokeDashoffset": "-0px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
-          }
-        }
+        stroke-linecap="round"
+        stroke-width="6"
+        style="stroke-dasharray: 88.59291283123217px 295.3097094374406px; stroke-dashoffset: -0px; transition: stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s; transition-duration: .3s, .3s, .3s, .06s;"
       />
       <path
-        className="ant-progress-circle-path"
+        class="ant-progress-circle-path"
         d="M 50,50 m 0,-47
    a 47,47 0 1 1 0,94
    a 47,47 0 1 1 0,-94"
-        fillOpacity="0"
-        opacity={0}
+        fill-opacity="0"
+        opacity="0"
         stroke=""
-        strokeLinecap="round"
-        strokeWidth={6}
-        style={
-          Object {
-            "stroke": "#52C41A",
-            "strokeDasharray": "0px 295.3097094374406px",
-            "strokeDashoffset": "-0px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
-          }
-        }
+        stroke-linecap="round"
+        stroke-width="6"
+        style="stroke: #52C41A; stroke-dasharray: 0px 295.3097094374406px; stroke-dashoffset: -0px; transition: stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s; transition-duration: .3s, .3s, .3s, .06s;"
       />
     </svg>
     <span
-      className="ant-progress-text"
+      class="ant-progress-text"
       title="30%"
     >
       30%
@@ -871,83 +634,54 @@ exports[`Render properties.type: circle - value[0] 1`] = `
 
 exports[`Render properties.type: dashboard - value[0] 1`] = `
 <div
-  className="ant-progress ant-progress-circle ant-progress-status-normal ant-progress-show-info ant-progress-default"
+  class="ant-progress ant-progress-circle ant-progress-status-normal ant-progress-show-info ant-progress-default"
   id="properties.type: dashboard"
 >
   <div
-    className="ant-progress-inner"
-    style={
-      Object {
-        "fontSize": 24,
-        "height": 120,
-        "width": 120,
-      }
-    }
+    class="ant-progress-inner"
+    style="width: 120px; height: 120px; font-size: 24px;"
   >
     <svg
-      className="ant-progress-circle"
-      style={Object {}}
+      class="ant-progress-circle"
       viewBox="0 0 100 100"
     >
       <path
-        className="ant-progress-circle-trail"
+        class="ant-progress-circle-trail"
         d="M 50,50 m 0,47
    a 47,47 0 1 1 0,-94
    a 47,47 0 1 1 0,94"
-        fillOpacity="0"
-        stroke={null}
-        strokeLinecap="round"
-        strokeWidth={6}
-        style={
-          Object {
-            "stroke": undefined,
-            "strokeDasharray": "220.30970943744057px 295.3097094374406px",
-            "strokeDashoffset": "-37.5px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
-          }
-        }
+        fill-opacity="0"
+        stroke-linecap="round"
+        stroke-width="6"
+        style="stroke-dasharray: 220.30970943744057px 295.3097094374406px; stroke-dashoffset: -37.5px; transition: stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s;"
       />
       <path
-        className="ant-progress-circle-path"
+        class="ant-progress-circle-path"
         d="M 50,50 m 0,47
    a 47,47 0 1 1 0,-94
    a 47,47 0 1 1 0,94"
-        fillOpacity="0"
-        opacity={1}
+        fill-opacity="0"
+        opacity="1"
         stroke=""
-        strokeLinecap="round"
-        strokeWidth={6}
-        style={
-          Object {
-            "stroke": undefined,
-            "strokeDasharray": "66.09291283123217px 295.3097094374406px",
-            "strokeDashoffset": "-37.5px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
-          }
-        }
+        stroke-linecap="round"
+        stroke-width="6"
+        style="stroke-dasharray: 66.09291283123217px 295.3097094374406px; stroke-dashoffset: -37.5px; transition: stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s; transition-duration: .3s, .3s, .3s, .06s;"
       />
       <path
-        className="ant-progress-circle-path"
+        class="ant-progress-circle-path"
         d="M 50,50 m 0,47
    a 47,47 0 1 1 0,-94
    a 47,47 0 1 1 0,94"
-        fillOpacity="0"
-        opacity={0}
+        fill-opacity="0"
+        opacity="0"
         stroke=""
-        strokeLinecap="round"
-        strokeWidth={6}
-        style={
-          Object {
-            "stroke": "#52C41A",
-            "strokeDasharray": "0px 295.3097094374406px",
-            "strokeDashoffset": "-37.5px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
-          }
-        }
+        stroke-linecap="round"
+        stroke-width="6"
+        style="stroke: #52C41A; stroke-dasharray: 0px 295.3097094374406px; stroke-dashoffset: -37.5px; transition: stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s; transition-duration: .3s, .3s, .3s, .06s;"
       />
     </svg>
     <span
-      className="ant-progress-text"
+      class="ant-progress-text"
       title="30%"
     >
       30%
@@ -958,83 +692,54 @@ exports[`Render properties.type: dashboard - value[0] 1`] = `
 
 exports[`Render properties.width: 180 - value[0] 1`] = `
 <div
-  className="ant-progress ant-progress-circle ant-progress-status-normal ant-progress-show-info ant-progress-default"
+  class="ant-progress ant-progress-circle ant-progress-status-normal ant-progress-show-info ant-progress-default"
   id="properties.width: 180"
 >
   <div
-    className="ant-progress-inner"
-    style={
-      Object {
-        "fontSize": 33,
-        "height": 180,
-        "width": 180,
-      }
-    }
+    class="ant-progress-inner"
+    style="width: 180px; height: 180px; font-size: 33px;"
   >
     <svg
-      className="ant-progress-circle"
-      style={Object {}}
+      class="ant-progress-circle"
       viewBox="0 0 100 100"
     >
       <path
-        className="ant-progress-circle-trail"
+        class="ant-progress-circle-trail"
         d="M 50,50 m 0,-47
    a 47,47 0 1 1 0,94
    a 47,47 0 1 1 0,-94"
-        fillOpacity="0"
-        stroke={null}
-        strokeLinecap="round"
-        strokeWidth={6}
-        style={
-          Object {
-            "stroke": undefined,
-            "strokeDasharray": "295.3097094374406px 295.3097094374406px",
-            "strokeDashoffset": "-0px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
-          }
-        }
+        fill-opacity="0"
+        stroke-linecap="round"
+        stroke-width="6"
+        style="stroke-dasharray: 295.3097094374406px 295.3097094374406px; stroke-dashoffset: -0px; transition: stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s;"
       />
       <path
-        className="ant-progress-circle-path"
+        class="ant-progress-circle-path"
         d="M 50,50 m 0,-47
    a 47,47 0 1 1 0,94
    a 47,47 0 1 1 0,-94"
-        fillOpacity="0"
-        opacity={1}
+        fill-opacity="0"
+        opacity="1"
         stroke=""
-        strokeLinecap="round"
-        strokeWidth={6}
-        style={
-          Object {
-            "stroke": undefined,
-            "strokeDasharray": "88.59291283123217px 295.3097094374406px",
-            "strokeDashoffset": "-0px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
-          }
-        }
+        stroke-linecap="round"
+        stroke-width="6"
+        style="stroke-dasharray: 88.59291283123217px 295.3097094374406px; stroke-dashoffset: -0px; transition: stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s; transition-duration: .3s, .3s, .3s, .06s;"
       />
       <path
-        className="ant-progress-circle-path"
+        class="ant-progress-circle-path"
         d="M 50,50 m 0,-47
    a 47,47 0 1 1 0,94
    a 47,47 0 1 1 0,-94"
-        fillOpacity="0"
-        opacity={0}
+        fill-opacity="0"
+        opacity="0"
         stroke=""
-        strokeLinecap="round"
-        strokeWidth={6}
-        style={
-          Object {
-            "stroke": "#52C41A",
-            "strokeDasharray": "0px 295.3097094374406px",
-            "strokeDashoffset": "-0px",
-            "transition": "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
-          }
-        }
+        stroke-linecap="round"
+        stroke-width="6"
+        style="stroke: #52C41A; stroke-dasharray: 0px 295.3097094374406px; stroke-dashoffset: -0px; transition: stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s; transition-duration: .3s, .3s, .3s, .06s;"
       />
     </svg>
     <span
-      className="ant-progress-text"
+      class="ant-progress-text"
       title="30%"
     >
       30%

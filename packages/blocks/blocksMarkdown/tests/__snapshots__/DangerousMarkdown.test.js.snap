@@ -2,22 +2,22 @@
 
 exports[`Render default - value[0] 1`] = `
 <div
-  className="{}"
+  class="emotion-0"
   id="default"
 >
   <div
-    className="markdown-body"
+    class="markdown-body"
   />
 </div>
 `;
 
 exports[`Render properties.content = table - value[0] 1`] = `
 <div
-  className="{}"
+  class="emotion-0"
   id="properties.content = table"
 >
   <div
-    className="markdown-body"
+    class="markdown-body"
   >
     <h3>
       Table
@@ -26,29 +26,17 @@ exports[`Render properties.content = table - value[0] 1`] = `
       <thead>
         <tr>
           <th
-            style={
-              Object {
-                "textAlign": "right",
-              }
-            }
+            style="text-align: right;"
           >
             A
           </th>
           <th
-            style={
-              Object {
-                "textAlign": "center",
-              }
-            }
+            style="text-align: center;"
           >
             B
           </th>
           <th
-            style={
-              Object {
-                "textAlign": "left",
-              }
-            }
+            style="text-align: left;"
           >
             C
           </th>
@@ -57,87 +45,51 @@ exports[`Render properties.content = table - value[0] 1`] = `
       <tbody>
         <tr>
           <td
-            style={
-              Object {
-                "textAlign": "right",
-              }
-            }
+            style="text-align: right;"
           >
             one
           </td>
           <td
-            style={
-              Object {
-                "textAlign": "center",
-              }
-            }
+            style="text-align: center;"
           >
             two
           </td>
           <td
-            style={
-              Object {
-                "textAlign": "left",
-              }
-            }
+            style="text-align: left;"
           >
             three
           </td>
         </tr>
         <tr>
           <td
-            style={
-              Object {
-                "textAlign": "right",
-              }
-            }
+            style="text-align: right;"
           >
             123
           </td>
           <td
-            style={
-              Object {
-                "textAlign": "center",
-              }
-            }
+            style="text-align: center;"
           >
             345
           </td>
           <td
-            style={
-              Object {
-                "textAlign": "left",
-              }
-            }
+            style="text-align: left;"
           >
             34892
           </td>
         </tr>
         <tr>
           <td
-            style={
-              Object {
-                "textAlign": "right",
-              }
-            }
+            style="text-align: right;"
           >
             true
           </td>
           <td
-            style={
-              Object {
-                "textAlign": "center",
-              }
-            }
+            style="text-align: center;"
           >
             false
           </td>
           <td
-            style={
-              Object {
-                "textAlign": "left",
-              }
-            }
+            style="text-align: left;"
           >
             none
           </td>
@@ -150,11 +102,11 @@ exports[`Render properties.content = table - value[0] 1`] = `
 
 exports[`Render properties.content - value[0] 1`] = `
 <div
-  className="{}"
+  class="emotion-0"
   id="properties.content"
 >
   <div
-    className="markdown-body"
+    class="markdown-body"
   >
     <h1>
       One Heading
@@ -204,16 +156,15 @@ exports[`Render properties.content - value[0] 1`] = `
       </li>
       <li>
         <input
-          checked={false}
-          readOnly={true}
+          readonly=""
           type="checkbox"
         />
         todo
       </li>
       <li>
         <input
-          checked={true}
-          readOnly={true}
+          checked=""
+          readonly=""
           type="checkbox"
         />
         done
@@ -240,82 +191,73 @@ exports[`Render properties.content - value[0] 1`] = `
 
 exports[`Render properties.content DangerousHtml - value[0] 1`] = `
 <div
-  className="{}"
+  class="emotion-0"
   id="properties.content DangerousHtml"
 >
   <div
-    className="markdown-body"
+    class="markdown-body"
   >
     <h3>
       Link
     </h3>
     <p>
-      <span
-        dangerouslySetInnerHTML={
-          Object {
-            "__html": "<a href=\\"https://lowdefy.com\\">",
-          }
-        }
-      />
+      <span>
+        <a
+          href="https://lowdefy.com"
+        />
+      </span>
       Lowdefy link
-      <span
-        dangerouslySetInnerHTML={
-          Object {
-            "__html": "</a>",
-          }
-        }
-      />
+      <span />
     </p>
     <p>
-      <span
-        dangerouslySetInnerHTML={
-          Object {
-            "__html": "<font size=\\"+10\\">",
-          }
-        }
-      />
+      <span>
+        <font
+          size="+10"
+        />
+      </span>
       Description
-      <span
-        dangerouslySetInnerHTML={
-          Object {
-            "__html": "</font>",
-          }
-        }
-      />
+      <span />
     </p>
     <h3>
       Bad HTML
     </h3>
-    <div
-      dangerouslySetInnerHTML={
-        Object {
-          "__html": "<div>
-  <a>delta</a>
-  <img src=\\"x\\">",
-        }
-      }
-    />
-    <div
-      dangerouslySetInnerHTML={
-        Object {
-          "__html": "  <math>
-    <mi></mi>
-  </math>
-</div>",
-        }
-      }
-    />
+    <div>
+      <div>
+        
+  
+        <a>
+          delta
+        </a>
+        
+  
+        <img
+          src="x"
+        />
+      </div>
+    </div>
+    <div>
+        
+      <math>
+        
+    
+        <mi />
+        
+  
+      </math>
+      
+
+    </div>
   </div>
 </div>
 `;
 
 exports[`Render properties.content with code - value[0] 1`] = `
 <div
-  className="{}"
+  class="emotion-0"
   id="properties.content with code"
 >
   <div
-    className="markdown-body"
+    class="markdown-body"
   >
     <h3>
       Code
@@ -333,7 +275,7 @@ exports[`Render properties.content with code - value[0] 1`] = `
     </p>
     <pre>
       <code
-        className="language-html"
+        class="language-html"
       >
           &lt;a href=""&gt;html style&lt;/a&gt;
   
@@ -344,7 +286,7 @@ exports[`Render properties.content with code - value[0] 1`] = `
     </p>
     <pre>
       <code
-        className="language-json"
+        class="language-json"
       >
           {
     "obj": "one",
@@ -360,7 +302,7 @@ exports[`Render properties.content with code - value[0] 1`] = `
     </p>
     <pre>
       <code
-        className="language-html"
+        class="language-html"
       >
         &lt;div&gt;
   &lt;a&gt;delta&lt;/a&gt;
@@ -379,33 +321,33 @@ exports[`Render properties.content with code - value[0] 1`] = `
 
 exports[`Render properties.html-DOMPurifyOptions.ADD_TAGS-iframe - value[0] 1`] = `
 <div
-  className="{}"
+  class="emotion-0"
   id="properties.html-DOMPurifyOptions.ADD_TAGS-iframe"
 >
   <div
-    className="markdown-body"
+    class="markdown-body"
   >
     <h2>
       With iframe ADD_TAGS:
     </h2>
-    <span
-      dangerouslySetInnerHTML={
-        Object {
-          "__html": "<iframe src=\\"https://www.youtube.com/embed/7N7GWdlQJlU\\" height=\\"315\\" width=\\"560\\"></iframe>",
-        }
-      }
-    />
+    <span>
+      <iframe
+        height="315"
+        src="https://www.youtube.com/embed/7N7GWdlQJlU"
+        width="560"
+      />
+    </span>
   </div>
 </div>
 `;
 
 exports[`Render properties.html-iframe - value[0] 1`] = `
 <div
-  className="{}"
+  class="emotion-0"
   id="properties.html-iframe"
 >
   <div
-    className="markdown-body"
+    class="markdown-body"
   >
     <p>
       No additional ADD_TAGS:
@@ -415,12 +357,16 @@ exports[`Render properties.html-iframe - value[0] 1`] = `
 `;
 
 exports[`Render properties.style and headings - value[0] 1`] = `
+.emotion-0 {
+  border: 1px solid blue;
+}
+
 <div
-  className="{\\"style\\":{\\"border\\":\\"1px solid blue\\"}}"
+  class="emotion-0"
   id="properties.style and headings"
 >
   <div
-    className="markdown-body"
+    class="markdown-body"
   >
     <h1>
       One

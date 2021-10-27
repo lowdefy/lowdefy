@@ -2,9 +2,8 @@
 
 exports[`Render default - value[0] 1`] = `
 <a
-  className="{\\"style\\":[null,null]}"
+  class="emotion-0"
   id="default"
-  onClick={[Function]}
   rel="noopener noreferrer"
   target="_self"
 >
@@ -13,8 +12,13 @@ exports[`Render default - value[0] 1`] = `
 `;
 
 exports[`Render properties.disabled - value[0] 1`] = `
+.emotion-0 {
+  color: #BEBEBE;
+  cursor: not-allowed;
+}
+
 <span
-  className="{\\"style\\":[null,{\\"color\\":\\"#BEBEBE\\",\\"cursor\\":\\"not-allowed\\"}]}"
+  class="emotion-0"
   id="properties.disabled"
 >
    disabled
@@ -23,10 +27,9 @@ exports[`Render properties.disabled - value[0] 1`] = `
 
 exports[`Render properties.href - value[0] 1`] = `
 <a
-  className="{\\"style\\":[null,null]}"
+  class="emotion-0"
   href="https://lowdefy.com"
   id="properties.href"
-  onClick={[Function]}
   rel="noopener noreferrer"
   target="_self"
 >
@@ -36,10 +39,9 @@ exports[`Render properties.href - value[0] 1`] = `
 
 exports[`Render properties.href and rel - value[0] 1`] = `
 <a
-  className="{\\"style\\":[null,null]}"
+  class="emotion-0"
   href="https://lowdefy.com"
   id="properties.href and rel"
-  onClick={[Function]}
   rel="noopener"
   target="_self"
 >
@@ -49,10 +51,9 @@ exports[`Render properties.href and rel - value[0] 1`] = `
 
 exports[`Render properties.href and target - value[0] 1`] = `
 <a
-  className="{\\"style\\":[null,null]}"
+  class="emotion-0"
   href="/Button"
   id="properties.href and target"
-  onClick={[Function]}
   rel="noopener noreferrer"
   target="_blank"
 >
@@ -62,10 +63,9 @@ exports[`Render properties.href and target - value[0] 1`] = `
 
 exports[`Render properties.href, title and target - value[0] 1`] = `
 <a
-  className="{\\"style\\":[null,null]}"
+  class="emotion-0"
   href="https://lowdefy.com"
   id="properties.href, title and target"
-  onClick={[Function]}
   rel="noopener noreferrer"
   target="_blank"
 >
@@ -75,18 +75,15 @@ exports[`Render properties.href, title and target - value[0] 1`] = `
 
 exports[`Render properties.icon and properties.title - value[0] 1`] = `
 <a
-  className="{\\"style\\":[null,null]}"
+  class="emotion-0"
   id="properties.icon and properties.title"
-  onClick={[Function]}
   rel="noopener noreferrer"
   target="_self"
 >
   <span
     aria-label="loading-3-quarters"
-    basePath=""
-    className="anticon anticon-loading-3-quarters anticon-spin {}"
+    class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
     id="properties.icon and properties.title_icon"
-    required={false}
     role="img"
   >
     <svg
@@ -109,18 +106,15 @@ exports[`Render properties.icon and properties.title - value[0] 1`] = `
 
 exports[`Render properties.icon object - value[0] 1`] = `
 <a
-  className="{\\"style\\":[null,null]}"
+  class="emotion-0"
   id="properties.icon object"
-  onClick={[Function]}
   rel="noopener noreferrer"
   target="_self"
 >
   <span
     aria-label="loading-3-quarters"
-    basePath=""
-    className="anticon anticon-loading-3-quarters anticon-spin {}"
+    class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
     id="properties.icon object_icon"
-    required={false}
     role="img"
   >
     <svg
@@ -143,18 +137,15 @@ exports[`Render properties.icon object - value[0] 1`] = `
 
 exports[`Render properties.icon string - value[0] 1`] = `
 <a
-  className="{\\"style\\":[null,null]}"
+  class="emotion-0"
   id="properties.icon string"
-  onClick={[Function]}
   rel="noopener noreferrer"
   target="_self"
 >
   <span
     aria-label="loading-3-quarters"
-    basePath=""
-    className="anticon anticon-loading-3-quarters anticon-spin {}"
+    class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
     id="properties.icon string_icon"
-    required={false}
     role="img"
   >
     <svg
@@ -176,16 +167,19 @@ exports[`Render properties.icon string - value[0] 1`] = `
 `;
 
 exports[`Render properties.icon, properties.title and properties.disabled - value[0] 1`] = `
+.emotion-0 {
+  color: #BEBEBE;
+  cursor: not-allowed;
+}
+
 <span
-  className="{\\"style\\":[null,{\\"color\\":\\"#BEBEBE\\",\\"cursor\\":\\"not-allowed\\"}]}"
+  class="emotion-0"
   id="properties.icon, properties.title and properties.disabled"
 >
   <span
     aria-label="loading-3-quarters"
-    basePath=""
-    className="anticon anticon-loading-3-quarters anticon-spin {}"
+    class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
     id="properties.icon, properties.title and properties.disabled_icon"
-    required={false}
     role="img"
   >
     <svg
@@ -208,9 +202,8 @@ exports[`Render properties.icon, properties.title and properties.disabled - valu
 
 exports[`Render properties.strong - value[0] 1`] = `
 <a
-  className="{\\"style\\":[null,null]}"
+  class="emotion-0"
   id="properties.strong"
-  onClick={[Function]}
   rel="noopener noreferrer"
   target="_self"
 >
@@ -221,10 +214,14 @@ exports[`Render properties.strong - value[0] 1`] = `
 `;
 
 exports[`Render properties.style - value[0] 1`] = `
+.emotion-0 {
+  color: green!important;
+  font-size: 18px;
+}
+
 <a
-  className="{\\"style\\":[{\\"color\\":\\"green !important\\",\\"fontSize\\":18},null]}"
+  class="emotion-0"
   id="properties.style"
-  onClick={[Function]}
   rel="noopener noreferrer"
   target="_self"
 >
@@ -233,19 +230,21 @@ exports[`Render properties.style - value[0] 1`] = `
 `;
 
 exports[`Render properties.style with icon - value[0] 1`] = `
+.emotion-0 {
+  color: green!important;
+  font-size: 8px;
+}
+
 <a
-  className="{\\"style\\":[{\\"color\\":\\"green !important\\",\\"fontSize\\":8},null]}"
+  class="emotion-0"
   id="properties.style with icon"
-  onClick={[Function]}
   rel="noopener noreferrer"
   target="_self"
 >
   <span
     aria-label="loading-3-quarters"
-    basePath=""
-    className="anticon anticon-loading-3-quarters anticon-spin {}"
+    class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
     id="properties.style with icon_icon"
-    required={false}
     role="img"
   >
     <svg
@@ -268,9 +267,8 @@ exports[`Render properties.style with icon - value[0] 1`] = `
 
 exports[`Render properties.title - value[0] 1`] = `
 <a
-  className="{\\"style\\":[null,null]}"
+  class="emotion-0"
   id="properties.title"
-  onClick={[Function]}
   rel="noopener noreferrer"
   target="_self"
 >

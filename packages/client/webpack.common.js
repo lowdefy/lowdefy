@@ -14,10 +14,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist/client'),
   },
   resolve: {
-    alias: {
-      buffer: require.resolve('buffer'),
-    },
-    fallback: { buffer: false, path: false, fs: false, crypto: false },
+    fallback: { crypto: false },
   },
   module: {
     rules: [
@@ -68,7 +65,6 @@ module.exports = {
         },
       },
     }),
-    new webpack.ProvidePlugin({ Buffer: ['buffer', 'Buffer'] }),
     // new CopyPlugin({
     //   patterns: [
     //     {

@@ -1,216 +1,101 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render colors - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  margin-bottom: 0px!important;
+}
+
 <div
-  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  class="ant-row ant-form-item emotion-0"
   id="colors"
-  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="colors_input"
+      class="emotion-2"
+      for="colors_input"
       title="colors"
     >
       <span
-        className="{}"
-      />
+        class="emotion-3"
+      >
+        colors
+      </span>
     </label>
   </div>
   <div
-    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
   >
     <div
-      className="ant-form-item-control-input"
+      class="ant-form-item-control-input"
     >
       <div
-        className="ant-form-item-control-input-content"
+        class="ant-form-item-control-input-content"
       >
         <div
-          className="block-picker {\\"style\\":[{\\"marginBottom\\":\\"0px !important\\"},null]}"
-          style={
-            Object {
-              "MozBorderRadius": "6px",
-              "MozBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "OBorderRadius": "6px",
-              "OBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "WebkitBorderRadius": "6px",
-              "WebkitBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "background": "#fff",
-              "borderRadius": "6px",
-              "boxShadow": "0 1px rgba(0,0,0,.1)",
-              "msBorderRadius": "6px",
-              "msBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "position": "relative",
-              "width": "100%",
-            }
-          }
+          class="block-picker emotion-4"
+          style="width: 100%; background: rgb(255, 255, 255); box-shadow: 0 1px rgba(0,0,0,.1); border-radius: 6px; position: relative;"
         >
           <div
-            style={
-              Object {
-                "borderColor": "transparent transparent #000000 transparent",
-                "borderStyle": "solid",
-                "borderWidth": "0 10px 10px 10px",
-                "display": "none",
-                "height": "0px",
-                "left": "50%",
-                "marginLeft": "-10px",
-                "position": "absolute",
-                "top": "-10px",
-                "width": "0px",
-              }
-            }
+            style="width: 0px; height: 0px; border-style: solid; border-width: 0px 10px 10px 10px; border-color: transparent transparent #000000 transparent; position: absolute; top: -10px; left: 50%; margin-left: -10px; display: none;"
           />
           <div
-            style={
-              Object {
-                "MozBorderRadius": "6px 6px 0 0",
-                "OBorderRadius": "6px 6px 0 0",
-                "WebkitBorderRadius": "6px 6px 0 0",
-                "WebkitJustifyContent": "center",
-                "alignItems": "center",
-                "background": "#000000",
-                "borderRadius": "6px 6px 0 0",
-                "display": "flex",
-                "height": "110px",
-                "justifyContent": "center",
-                "msBorderRadius": "6px 6px 0 0",
-                "position": "relative",
-              }
-            }
+            style="height: 110px; background: rgb(0, 0, 0); border-radius: 6px 6px 0 0; display: flex; align-items: center; justify-content: center; position: relative;"
           >
             <div
-              style={
-                Object {
-                  "color": "#fff",
-                  "fontSize": "18px",
-                  "position": "relative",
-                }
-              }
+              style="font-size: 18px; color: rgb(255, 255, 255); position: relative;"
             >
               #000000
             </div>
           </div>
           <div
-            style={
-              Object {
-                "padding": "10px",
-              }
-            }
+            style="padding: 10px;"
           >
             <div
-              style={
-                Object {
-                  "marginRight": "-10px",
-                }
-              }
+              style="margin-right: -10px;"
             >
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#123456",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(18, 52, 86); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#123456"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#abc345",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(171, 195, 69); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#abc345"
                 />
               </span>
               <div
-                style={
-                  Object {
-                    "clear": "both",
-                  }
-                }
+                style="clear: both;"
               />
             </div>
             <div
-              style={
-                Object {
-                  "position": "relative",
-                }
-              }
+              style="position: relative;"
             >
               <input
                 id="rc-editable-input-3"
-                onBlur={[Function]}
-                onChange={[Function]}
-                onKeyDown={[Function]}
-                spellCheck="false"
-                style={
-                  Object {
-                    "MozBorderRadius": "4px",
-                    "MozBoxShadow": "inset 0 0 0 1px #ddd",
-                    "OBorderRadius": "4px",
-                    "OBoxShadow": "inset 0 0 0 1px #ddd",
-                    "WebkitBorderRadius": "4px",
-                    "WebkitBoxShadow": "inset 0 0 0 1px #ddd",
-                    "border": "0px",
-                    "borderRadius": "4px",
-                    "boxShadow": "inset 0 0 0 1px #ddd",
-                    "boxSizing": "border-box",
-                    "color": "#666",
-                    "fontSize": "12px",
-                    "height": "22px",
-                    "msBorderRadius": "4px",
-                    "msBoxShadow": "inset 0 0 0 1px #ddd",
-                    "outline": "none",
-                    "padding": "0 7px",
-                    "width": "100%",
-                  }
-                }
+                spellcheck="false"
+                style="width: 100%; font-size: 12px; color: rgb(102, 102, 102); border: 0px; outline: none; height: 22px; box-shadow: inset 0 0 0 1px #ddd; border-radius: 4px; padding: 0px 7px; box-sizing: border-box;"
                 value="#000000"
               />
             </div>
@@ -223,419 +108,150 @@ exports[`Render colors - value[0] 1`] = `
 `;
 
 exports[`Render default - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  margin-bottom: 0px!important;
+}
+
 <div
-  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  class="ant-row ant-form-item emotion-0"
   id="default"
-  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="default_input"
+      class="emotion-2"
+      for="default_input"
       title="default"
     >
       <span
-        className="{}"
-      />
+        class="emotion-3"
+      >
+        default
+      </span>
     </label>
   </div>
   <div
-    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
   >
     <div
-      className="ant-form-item-control-input"
+      class="ant-form-item-control-input"
     >
       <div
-        className="ant-form-item-control-input-content"
+        class="ant-form-item-control-input-content"
       >
         <div
-          className="block-picker {\\"style\\":[{\\"marginBottom\\":\\"0px !important\\"},null]}"
-          style={
-            Object {
-              "MozBorderRadius": "6px",
-              "MozBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "OBorderRadius": "6px",
-              "OBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "WebkitBorderRadius": "6px",
-              "WebkitBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "background": "#fff",
-              "borderRadius": "6px",
-              "boxShadow": "0 1px rgba(0,0,0,.1)",
-              "msBorderRadius": "6px",
-              "msBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "position": "relative",
-              "width": "100%",
-            }
-          }
+          class="block-picker emotion-4"
+          style="width: 100%; background: rgb(255, 255, 255); box-shadow: 0 1px rgba(0,0,0,.1); border-radius: 6px; position: relative;"
         >
           <div
-            style={
-              Object {
-                "borderColor": "transparent transparent #000000 transparent",
-                "borderStyle": "solid",
-                "borderWidth": "0 10px 10px 10px",
-                "display": "none",
-                "height": "0px",
-                "left": "50%",
-                "marginLeft": "-10px",
-                "position": "absolute",
-                "top": "-10px",
-                "width": "0px",
-              }
-            }
+            style="width: 0px; height: 0px; border-style: solid; border-width: 0px 10px 10px 10px; border-color: transparent transparent #000000 transparent; position: absolute; top: -10px; left: 50%; margin-left: -10px; display: none;"
           />
           <div
-            style={
-              Object {
-                "MozBorderRadius": "6px 6px 0 0",
-                "OBorderRadius": "6px 6px 0 0",
-                "WebkitBorderRadius": "6px 6px 0 0",
-                "WebkitJustifyContent": "center",
-                "alignItems": "center",
-                "background": "#000000",
-                "borderRadius": "6px 6px 0 0",
-                "display": "flex",
-                "height": "110px",
-                "justifyContent": "center",
-                "msBorderRadius": "6px 6px 0 0",
-                "position": "relative",
-              }
-            }
+            style="height: 110px; background: rgb(0, 0, 0); border-radius: 6px 6px 0 0; display: flex; align-items: center; justify-content: center; position: relative;"
           >
             <div
-              style={
-                Object {
-                  "color": "#fff",
-                  "fontSize": "18px",
-                  "position": "relative",
-                }
-              }
+              style="font-size: 18px; color: rgb(255, 255, 255); position: relative;"
             >
               #000000
             </div>
           </div>
           <div
-            style={
-              Object {
-                "padding": "10px",
-              }
-            }
+            style="padding: 10px;"
           >
             <div
-              style={
-                Object {
-                  "marginRight": "-10px",
-                }
-              }
+              style="margin-right: -10px;"
             >
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#D9E3F0",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(217, 227, 240); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#D9E3F0"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#F47373",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(244, 115, 115); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#F47373"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#697689",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(105, 118, 137); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#697689"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#37D67A",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(55, 214, 122); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#37D67A"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#2CCCE4",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(44, 204, 228); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#2CCCE4"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#555555",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(85, 85, 85); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#555555"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#dce775",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(220, 231, 117); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#dce775"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#ff8a65",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(255, 138, 101); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#ff8a65"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#ba68c8",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(186, 104, 200); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#ba68c8"
                 />
               </span>
               <div
-                style={
-                  Object {
-                    "clear": "both",
-                  }
-                }
+                style="clear: both;"
               />
             </div>
             <div
-              style={
-                Object {
-                  "position": "relative",
-                }
-              }
+              style="position: relative;"
             >
               <input
                 id="rc-editable-input-1"
-                onBlur={[Function]}
-                onChange={[Function]}
-                onKeyDown={[Function]}
-                spellCheck="false"
-                style={
-                  Object {
-                    "MozBorderRadius": "4px",
-                    "MozBoxShadow": "inset 0 0 0 1px #ddd",
-                    "OBorderRadius": "4px",
-                    "OBoxShadow": "inset 0 0 0 1px #ddd",
-                    "WebkitBorderRadius": "4px",
-                    "WebkitBoxShadow": "inset 0 0 0 1px #ddd",
-                    "border": "0px",
-                    "borderRadius": "4px",
-                    "boxShadow": "inset 0 0 0 1px #ddd",
-                    "boxSizing": "border-box",
-                    "color": "#666",
-                    "fontSize": "12px",
-                    "height": "22px",
-                    "msBorderRadius": "4px",
-                    "msBoxShadow": "inset 0 0 0 1px #ddd",
-                    "outline": "none",
-                    "padding": "0 7px",
-                    "width": "100%",
-                  }
-                }
+                spellcheck="false"
+                style="width: 100%; font-size: 12px; color: rgb(102, 102, 102); border: 0px; outline: none; height: 22px; box-shadow: inset 0 0 0 1px #ddd; border-radius: 4px; padding: 0px 7px; box-sizing: border-box;"
                 value="#000000"
               />
             </div>
@@ -648,419 +264,150 @@ exports[`Render default - value[0] 1`] = `
 `;
 
 exports[`Render defaultColor - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  margin-bottom: 0px!important;
+}
+
 <div
-  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  class="ant-row ant-form-item emotion-0"
   id="defaultColor"
-  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="defaultColor_input"
+      class="emotion-2"
+      for="defaultColor_input"
       title="defaultColor"
     >
       <span
-        className="{}"
-      />
+        class="emotion-3"
+      >
+        defaultColor
+      </span>
     </label>
   </div>
   <div
-    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
   >
     <div
-      className="ant-form-item-control-input"
+      class="ant-form-item-control-input"
     >
       <div
-        className="ant-form-item-control-input-content"
+        class="ant-form-item-control-input-content"
       >
         <div
-          className="block-picker {\\"style\\":[{\\"marginBottom\\":\\"0px !important\\"},null]}"
-          style={
-            Object {
-              "MozBorderRadius": "6px",
-              "MozBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "OBorderRadius": "6px",
-              "OBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "WebkitBorderRadius": "6px",
-              "WebkitBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "background": "#fff",
-              "borderRadius": "6px",
-              "boxShadow": "0 1px rgba(0,0,0,.1)",
-              "msBorderRadius": "6px",
-              "msBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "position": "relative",
-              "width": "100%",
-            }
-          }
+          class="block-picker emotion-4"
+          style="width: 100%; background: rgb(255, 255, 255); box-shadow: 0 1px rgba(0,0,0,.1); border-radius: 6px; position: relative;"
         >
           <div
-            style={
-              Object {
-                "borderColor": "transparent transparent #ff0000 transparent",
-                "borderStyle": "solid",
-                "borderWidth": "0 10px 10px 10px",
-                "display": "none",
-                "height": "0px",
-                "left": "50%",
-                "marginLeft": "-10px",
-                "position": "absolute",
-                "top": "-10px",
-                "width": "0px",
-              }
-            }
+            style="width: 0px; height: 0px; border-style: solid; border-width: 0px 10px 10px 10px; border-color: transparent transparent #ff0000 transparent; position: absolute; top: -10px; left: 50%; margin-left: -10px; display: none;"
           />
           <div
-            style={
-              Object {
-                "MozBorderRadius": "6px 6px 0 0",
-                "OBorderRadius": "6px 6px 0 0",
-                "WebkitBorderRadius": "6px 6px 0 0",
-                "WebkitJustifyContent": "center",
-                "alignItems": "center",
-                "background": "#ff0000",
-                "borderRadius": "6px 6px 0 0",
-                "display": "flex",
-                "height": "110px",
-                "justifyContent": "center",
-                "msBorderRadius": "6px 6px 0 0",
-                "position": "relative",
-              }
-            }
+            style="height: 110px; background: rgb(255, 0, 0); border-radius: 6px 6px 0 0; display: flex; align-items: center; justify-content: center; position: relative;"
           >
             <div
-              style={
-                Object {
-                  "color": "#fff",
-                  "fontSize": "18px",
-                  "position": "relative",
-                }
-              }
+              style="font-size: 18px; color: rgb(255, 255, 255); position: relative;"
             >
               #ff0000
             </div>
           </div>
           <div
-            style={
-              Object {
-                "padding": "10px",
-              }
-            }
+            style="padding: 10px;"
           >
             <div
-              style={
-                Object {
-                  "marginRight": "-10px",
-                }
-              }
+              style="margin-right: -10px;"
             >
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#D9E3F0",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(217, 227, 240); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#D9E3F0"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#F47373",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(244, 115, 115); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#F47373"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#697689",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(105, 118, 137); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#697689"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#37D67A",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(55, 214, 122); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#37D67A"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#2CCCE4",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(44, 204, 228); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#2CCCE4"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#555555",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(85, 85, 85); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#555555"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#dce775",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(220, 231, 117); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#dce775"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#ff8a65",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(255, 138, 101); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#ff8a65"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#ba68c8",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(186, 104, 200); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#ba68c8"
                 />
               </span>
               <div
-                style={
-                  Object {
-                    "clear": "both",
-                  }
-                }
+                style="clear: both;"
               />
             </div>
             <div
-              style={
-                Object {
-                  "position": "relative",
-                }
-              }
+              style="position: relative;"
             >
               <input
                 id="rc-editable-input-4"
-                onBlur={[Function]}
-                onChange={[Function]}
-                onKeyDown={[Function]}
-                spellCheck="false"
-                style={
-                  Object {
-                    "MozBorderRadius": "4px",
-                    "MozBoxShadow": "inset 0 0 0 1px #ddd",
-                    "OBorderRadius": "4px",
-                    "OBoxShadow": "inset 0 0 0 1px #ddd",
-                    "WebkitBorderRadius": "4px",
-                    "WebkitBoxShadow": "inset 0 0 0 1px #ddd",
-                    "border": "0px",
-                    "borderRadius": "4px",
-                    "boxShadow": "inset 0 0 0 1px #ddd",
-                    "boxSizing": "border-box",
-                    "color": "#666",
-                    "fontSize": "12px",
-                    "height": "22px",
-                    "msBorderRadius": "4px",
-                    "msBoxShadow": "inset 0 0 0 1px #ddd",
-                    "outline": "none",
-                    "padding": "0 7px",
-                    "width": "100%",
-                  }
-                }
+                spellcheck="false"
+                style="width: 100%; font-size: 12px; color: rgb(102, 102, 102); border: 0px; outline: none; height: 22px; box-shadow: inset 0 0 0 1px #ddd; border-radius: 4px; padding: 0px 7px; box-sizing: border-box;"
                 value="#FF0000"
               />
             </div>
@@ -1073,419 +420,151 @@ exports[`Render defaultColor - value[0] 1`] = `
 `;
 
 exports[`Render inputStyle - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  margin-bottom: 0px!important;
+  border: 3px solid blue;
+}
+
 <div
-  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  class="ant-row ant-form-item emotion-0"
   id="inputStyle"
-  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="inputStyle_input"
+      class="emotion-2"
+      for="inputStyle_input"
       title="inputStyle"
     >
       <span
-        className="{}"
-      />
+        class="emotion-3"
+      >
+        inputStyle
+      </span>
     </label>
   </div>
   <div
-    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
   >
     <div
-      className="ant-form-item-control-input"
+      class="ant-form-item-control-input"
     >
       <div
-        className="ant-form-item-control-input-content"
+        class="ant-form-item-control-input-content"
       >
         <div
-          className="block-picker {\\"style\\":[{\\"marginBottom\\":\\"0px !important\\"},{\\"border\\":\\"3px solid blue\\"}]}"
-          style={
-            Object {
-              "MozBorderRadius": "6px",
-              "MozBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "OBorderRadius": "6px",
-              "OBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "WebkitBorderRadius": "6px",
-              "WebkitBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "background": "#fff",
-              "borderRadius": "6px",
-              "boxShadow": "0 1px rgba(0,0,0,.1)",
-              "msBorderRadius": "6px",
-              "msBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "position": "relative",
-              "width": "100%",
-            }
-          }
+          class="block-picker emotion-4"
+          style="width: 100%; background: rgb(255, 255, 255); box-shadow: 0 1px rgba(0,0,0,.1); border-radius: 6px; position: relative;"
         >
           <div
-            style={
-              Object {
-                "borderColor": "transparent transparent #000000 transparent",
-                "borderStyle": "solid",
-                "borderWidth": "0 10px 10px 10px",
-                "display": "none",
-                "height": "0px",
-                "left": "50%",
-                "marginLeft": "-10px",
-                "position": "absolute",
-                "top": "-10px",
-                "width": "0px",
-              }
-            }
+            style="width: 0px; height: 0px; border-style: solid; border-width: 0px 10px 10px 10px; border-color: transparent transparent #000000 transparent; position: absolute; top: -10px; left: 50%; margin-left: -10px; display: none;"
           />
           <div
-            style={
-              Object {
-                "MozBorderRadius": "6px 6px 0 0",
-                "OBorderRadius": "6px 6px 0 0",
-                "WebkitBorderRadius": "6px 6px 0 0",
-                "WebkitJustifyContent": "center",
-                "alignItems": "center",
-                "background": "#000000",
-                "borderRadius": "6px 6px 0 0",
-                "display": "flex",
-                "height": "110px",
-                "justifyContent": "center",
-                "msBorderRadius": "6px 6px 0 0",
-                "position": "relative",
-              }
-            }
+            style="height: 110px; background: rgb(0, 0, 0); border-radius: 6px 6px 0 0; display: flex; align-items: center; justify-content: center; position: relative;"
           >
             <div
-              style={
-                Object {
-                  "color": "#fff",
-                  "fontSize": "18px",
-                  "position": "relative",
-                }
-              }
+              style="font-size: 18px; color: rgb(255, 255, 255); position: relative;"
             >
               #000000
             </div>
           </div>
           <div
-            style={
-              Object {
-                "padding": "10px",
-              }
-            }
+            style="padding: 10px;"
           >
             <div
-              style={
-                Object {
-                  "marginRight": "-10px",
-                }
-              }
+              style="margin-right: -10px;"
             >
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#D9E3F0",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(217, 227, 240); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#D9E3F0"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#F47373",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(244, 115, 115); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#F47373"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#697689",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(105, 118, 137); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#697689"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#37D67A",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(55, 214, 122); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#37D67A"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#2CCCE4",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(44, 204, 228); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#2CCCE4"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#555555",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(85, 85, 85); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#555555"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#dce775",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(220, 231, 117); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#dce775"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#ff8a65",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(255, 138, 101); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#ff8a65"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#ba68c8",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(186, 104, 200); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#ba68c8"
                 />
               </span>
               <div
-                style={
-                  Object {
-                    "clear": "both",
-                  }
-                }
+                style="clear: both;"
               />
             </div>
             <div
-              style={
-                Object {
-                  "position": "relative",
-                }
-              }
+              style="position: relative;"
             >
               <input
                 id="rc-editable-input-5"
-                onBlur={[Function]}
-                onChange={[Function]}
-                onKeyDown={[Function]}
-                spellCheck="false"
-                style={
-                  Object {
-                    "MozBorderRadius": "4px",
-                    "MozBoxShadow": "inset 0 0 0 1px #ddd",
-                    "OBorderRadius": "4px",
-                    "OBoxShadow": "inset 0 0 0 1px #ddd",
-                    "WebkitBorderRadius": "4px",
-                    "WebkitBoxShadow": "inset 0 0 0 1px #ddd",
-                    "border": "0px",
-                    "borderRadius": "4px",
-                    "boxShadow": "inset 0 0 0 1px #ddd",
-                    "boxSizing": "border-box",
-                    "color": "#666",
-                    "fontSize": "12px",
-                    "height": "22px",
-                    "msBorderRadius": "4px",
-                    "msBoxShadow": "inset 0 0 0 1px #ddd",
-                    "outline": "none",
-                    "padding": "0 7px",
-                    "width": "100%",
-                  }
-                }
+                spellcheck="false"
+                style="width: 100%; font-size: 12px; color: rgb(102, 102, 102); border: 0px; outline: none; height: 22px; box-shadow: inset 0 0 0 1px #ddd; border-radius: 4px; padding: 0px 7px; box-sizing: border-box;"
                 value="#000000"
               />
             </div>
@@ -1498,405 +577,123 @@ exports[`Render inputStyle - value[0] 1`] = `
 `;
 
 exports[`Render label-disabled - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  margin-bottom: 0px!important;
+}
+
 <div
-  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  class="ant-row ant-form-item emotion-0"
   id="label-disabled"
-  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
   >
     <div
-      className="ant-form-item-control-input"
+      class="ant-form-item-control-input"
     >
       <div
-        className="ant-form-item-control-input-content"
+        class="ant-form-item-control-input-content"
       >
         <div
-          className="block-picker {\\"style\\":[{\\"marginBottom\\":\\"0px !important\\"},null]}"
-          style={
-            Object {
-              "MozBorderRadius": "6px",
-              "MozBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "OBorderRadius": "6px",
-              "OBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "WebkitBorderRadius": "6px",
-              "WebkitBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "background": "#fff",
-              "borderRadius": "6px",
-              "boxShadow": "0 1px rgba(0,0,0,.1)",
-              "msBorderRadius": "6px",
-              "msBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "position": "relative",
-              "width": "100%",
-            }
-          }
+          class="block-picker emotion-1"
+          style="width: 100%; background: rgb(255, 255, 255); box-shadow: 0 1px rgba(0,0,0,.1); border-radius: 6px; position: relative;"
         >
           <div
-            style={
-              Object {
-                "borderColor": "transparent transparent #000000 transparent",
-                "borderStyle": "solid",
-                "borderWidth": "0 10px 10px 10px",
-                "display": "none",
-                "height": "0px",
-                "left": "50%",
-                "marginLeft": "-10px",
-                "position": "absolute",
-                "top": "-10px",
-                "width": "0px",
-              }
-            }
+            style="width: 0px; height: 0px; border-style: solid; border-width: 0px 10px 10px 10px; border-color: transparent transparent #000000 transparent; position: absolute; top: -10px; left: 50%; margin-left: -10px; display: none;"
           />
           <div
-            style={
-              Object {
-                "MozBorderRadius": "6px 6px 0 0",
-                "OBorderRadius": "6px 6px 0 0",
-                "WebkitBorderRadius": "6px 6px 0 0",
-                "WebkitJustifyContent": "center",
-                "alignItems": "center",
-                "background": "#000000",
-                "borderRadius": "6px 6px 0 0",
-                "display": "flex",
-                "height": "110px",
-                "justifyContent": "center",
-                "msBorderRadius": "6px 6px 0 0",
-                "position": "relative",
-              }
-            }
+            style="height: 110px; background: rgb(0, 0, 0); border-radius: 6px 6px 0 0; display: flex; align-items: center; justify-content: center; position: relative;"
           >
             <div
-              style={
-                Object {
-                  "color": "#fff",
-                  "fontSize": "18px",
-                  "position": "relative",
-                }
-              }
+              style="font-size: 18px; color: rgb(255, 255, 255); position: relative;"
             >
               #000000
             </div>
           </div>
           <div
-            style={
-              Object {
-                "padding": "10px",
-              }
-            }
+            style="padding: 10px;"
           >
             <div
-              style={
-                Object {
-                  "marginRight": "-10px",
-                }
-              }
+              style="margin-right: -10px;"
             >
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#D9E3F0",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(217, 227, 240); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#D9E3F0"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#F47373",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(244, 115, 115); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#F47373"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#697689",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(105, 118, 137); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#697689"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#37D67A",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(55, 214, 122); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#37D67A"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#2CCCE4",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(44, 204, 228); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#2CCCE4"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#555555",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(85, 85, 85); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#555555"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#dce775",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(220, 231, 117); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#dce775"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#ff8a65",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(255, 138, 101); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#ff8a65"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#ba68c8",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(186, 104, 200); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#ba68c8"
                 />
               </span>
               <div
-                style={
-                  Object {
-                    "clear": "both",
-                  }
-                }
+                style="clear: both;"
               />
             </div>
             <div
-              style={
-                Object {
-                  "position": "relative",
-                }
-              }
+              style="position: relative;"
             >
               <input
                 id="rc-editable-input-7"
-                onBlur={[Function]}
-                onChange={[Function]}
-                onKeyDown={[Function]}
-                spellCheck="false"
-                style={
-                  Object {
-                    "MozBorderRadius": "4px",
-                    "MozBoxShadow": "inset 0 0 0 1px #ddd",
-                    "OBorderRadius": "4px",
-                    "OBoxShadow": "inset 0 0 0 1px #ddd",
-                    "WebkitBorderRadius": "4px",
-                    "WebkitBoxShadow": "inset 0 0 0 1px #ddd",
-                    "border": "0px",
-                    "borderRadius": "4px",
-                    "boxShadow": "inset 0 0 0 1px #ddd",
-                    "boxSizing": "border-box",
-                    "color": "#666",
-                    "fontSize": "12px",
-                    "height": "22px",
-                    "msBorderRadius": "4px",
-                    "msBoxShadow": "inset 0 0 0 1px #ddd",
-                    "outline": "none",
-                    "padding": "0 7px",
-                    "width": "100%",
-                  }
-                }
+                spellcheck="false"
+                style="width: 100%; font-size: 12px; color: rgb(102, 102, 102); border: 0px; outline: none; height: 22px; box-shadow: inset 0 0 0 1px #ddd; border-radius: 4px; padding: 0px 7px; box-sizing: border-box;"
                 value="#000000"
               />
             </div>
@@ -1909,419 +706,150 @@ exports[`Render label-disabled - value[0] 1`] = `
 `;
 
 exports[`Render title - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  margin-bottom: 0px!important;
+}
+
 <div
-  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  class="ant-row ant-form-item emotion-0"
   id="title"
-  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="title_input"
+      class="emotion-2"
+      for="title_input"
       title="The color selector"
     >
       <span
-        className="{}"
-      />
+        class="emotion-3"
+      >
+        The color selector
+      </span>
     </label>
   </div>
   <div
-    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
   >
     <div
-      className="ant-form-item-control-input"
+      class="ant-form-item-control-input"
     >
       <div
-        className="ant-form-item-control-input-content"
+        class="ant-form-item-control-input-content"
       >
         <div
-          className="block-picker {\\"style\\":[{\\"marginBottom\\":\\"0px !important\\"},null]}"
-          style={
-            Object {
-              "MozBorderRadius": "6px",
-              "MozBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "OBorderRadius": "6px",
-              "OBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "WebkitBorderRadius": "6px",
-              "WebkitBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "background": "#fff",
-              "borderRadius": "6px",
-              "boxShadow": "0 1px rgba(0,0,0,.1)",
-              "msBorderRadius": "6px",
-              "msBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "position": "relative",
-              "width": "100%",
-            }
-          }
+          class="block-picker emotion-4"
+          style="width: 100%; background: rgb(255, 255, 255); box-shadow: 0 1px rgba(0,0,0,.1); border-radius: 6px; position: relative;"
         >
           <div
-            style={
-              Object {
-                "borderColor": "transparent transparent #000000 transparent",
-                "borderStyle": "solid",
-                "borderWidth": "0 10px 10px 10px",
-                "display": "none",
-                "height": "0px",
-                "left": "50%",
-                "marginLeft": "-10px",
-                "position": "absolute",
-                "top": "-10px",
-                "width": "0px",
-              }
-            }
+            style="width: 0px; height: 0px; border-style: solid; border-width: 0px 10px 10px 10px; border-color: transparent transparent #000000 transparent; position: absolute; top: -10px; left: 50%; margin-left: -10px; display: none;"
           />
           <div
-            style={
-              Object {
-                "MozBorderRadius": "6px 6px 0 0",
-                "OBorderRadius": "6px 6px 0 0",
-                "WebkitBorderRadius": "6px 6px 0 0",
-                "WebkitJustifyContent": "center",
-                "alignItems": "center",
-                "background": "#000000",
-                "borderRadius": "6px 6px 0 0",
-                "display": "flex",
-                "height": "110px",
-                "justifyContent": "center",
-                "msBorderRadius": "6px 6px 0 0",
-                "position": "relative",
-              }
-            }
+            style="height: 110px; background: rgb(0, 0, 0); border-radius: 6px 6px 0 0; display: flex; align-items: center; justify-content: center; position: relative;"
           >
             <div
-              style={
-                Object {
-                  "color": "#fff",
-                  "fontSize": "18px",
-                  "position": "relative",
-                }
-              }
+              style="font-size: 18px; color: rgb(255, 255, 255); position: relative;"
             >
               #000000
             </div>
           </div>
           <div
-            style={
-              Object {
-                "padding": "10px",
-              }
-            }
+            style="padding: 10px;"
           >
             <div
-              style={
-                Object {
-                  "marginRight": "-10px",
-                }
-              }
+              style="margin-right: -10px;"
             >
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#D9E3F0",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(217, 227, 240); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#D9E3F0"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#F47373",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(244, 115, 115); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#F47373"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#697689",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(105, 118, 137); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#697689"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#37D67A",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(55, 214, 122); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#37D67A"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#2CCCE4",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(44, 204, 228); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#2CCCE4"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#555555",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(85, 85, 85); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#555555"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#dce775",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(220, 231, 117); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#dce775"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#ff8a65",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(255, 138, 101); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#ff8a65"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#ba68c8",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(186, 104, 200); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#ba68c8"
                 />
               </span>
               <div
-                style={
-                  Object {
-                    "clear": "both",
-                  }
-                }
+                style="clear: both;"
               />
             </div>
             <div
-              style={
-                Object {
-                  "position": "relative",
-                }
-              }
+              style="position: relative;"
             >
               <input
                 id="rc-editable-input-2"
-                onBlur={[Function]}
-                onChange={[Function]}
-                onKeyDown={[Function]}
-                spellCheck="false"
-                style={
-                  Object {
-                    "MozBorderRadius": "4px",
-                    "MozBoxShadow": "inset 0 0 0 1px #ddd",
-                    "OBorderRadius": "4px",
-                    "OBoxShadow": "inset 0 0 0 1px #ddd",
-                    "WebkitBorderRadius": "4px",
-                    "WebkitBoxShadow": "inset 0 0 0 1px #ddd",
-                    "border": "0px",
-                    "borderRadius": "4px",
-                    "boxShadow": "inset 0 0 0 1px #ddd",
-                    "boxSizing": "border-box",
-                    "color": "#666",
-                    "fontSize": "12px",
-                    "height": "22px",
-                    "msBorderRadius": "4px",
-                    "msBoxShadow": "inset 0 0 0 1px #ddd",
-                    "outline": "none",
-                    "padding": "0 7px",
-                    "width": "100%",
-                  }
-                }
+                spellcheck="false"
+                style="width: 100%; font-size: 12px; color: rgb(102, 102, 102); border: 0px; outline: none; height: 22px; box-shadow: inset 0 0 0 1px #ddd; border-radius: 4px; padding: 0px 7px; box-sizing: border-box;"
                 value="#000000"
               />
             </div>
@@ -2334,419 +862,150 @@ exports[`Render title - value[0] 1`] = `
 `;
 
 exports[`Render width - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  margin-bottom: 0px!important;
+}
+
 <div
-  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  class="ant-row ant-form-item emotion-0"
   id="width"
-  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="width_input"
+      class="emotion-2"
+      for="width_input"
       title="width"
     >
       <span
-        className="{}"
-      />
+        class="emotion-3"
+      >
+        width
+      </span>
     </label>
   </div>
   <div
-    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
   >
     <div
-      className="ant-form-item-control-input"
+      class="ant-form-item-control-input"
     >
       <div
-        className="ant-form-item-control-input-content"
+        class="ant-form-item-control-input-content"
       >
         <div
-          className="block-picker {\\"style\\":[{\\"marginBottom\\":\\"0px !important\\"},null]}"
-          style={
-            Object {
-              "MozBorderRadius": "6px",
-              "MozBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "OBorderRadius": "6px",
-              "OBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "WebkitBorderRadius": "6px",
-              "WebkitBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "background": "#fff",
-              "borderRadius": "6px",
-              "boxShadow": "0 1px rgba(0,0,0,.1)",
-              "msBorderRadius": "6px",
-              "msBoxShadow": "0 1px rgba(0,0,0,.1)",
-              "position": "relative",
-              "width": 200,
-            }
-          }
+          class="block-picker emotion-4"
+          style="width: 200px; background: rgb(255, 255, 255); box-shadow: 0 1px rgba(0,0,0,.1); border-radius: 6px; position: relative;"
         >
           <div
-            style={
-              Object {
-                "borderColor": "transparent transparent #000000 transparent",
-                "borderStyle": "solid",
-                "borderWidth": "0 10px 10px 10px",
-                "display": "none",
-                "height": "0px",
-                "left": "50%",
-                "marginLeft": "-10px",
-                "position": "absolute",
-                "top": "-10px",
-                "width": "0px",
-              }
-            }
+            style="width: 0px; height: 0px; border-style: solid; border-width: 0px 10px 10px 10px; border-color: transparent transparent #000000 transparent; position: absolute; top: -10px; left: 50%; margin-left: -10px; display: none;"
           />
           <div
-            style={
-              Object {
-                "MozBorderRadius": "6px 6px 0 0",
-                "OBorderRadius": "6px 6px 0 0",
-                "WebkitBorderRadius": "6px 6px 0 0",
-                "WebkitJustifyContent": "center",
-                "alignItems": "center",
-                "background": "#000000",
-                "borderRadius": "6px 6px 0 0",
-                "display": "flex",
-                "height": "110px",
-                "justifyContent": "center",
-                "msBorderRadius": "6px 6px 0 0",
-                "position": "relative",
-              }
-            }
+            style="height: 110px; background: rgb(0, 0, 0); border-radius: 6px 6px 0 0; display: flex; align-items: center; justify-content: center; position: relative;"
           >
             <div
-              style={
-                Object {
-                  "color": "#fff",
-                  "fontSize": "18px",
-                  "position": "relative",
-                }
-              }
+              style="font-size: 18px; color: rgb(255, 255, 255); position: relative;"
             >
               #000000
             </div>
           </div>
           <div
-            style={
-              Object {
-                "padding": "10px",
-              }
-            }
+            style="padding: 10px;"
           >
             <div
-              style={
-                Object {
-                  "marginRight": "-10px",
-                }
-              }
+              style="margin-right: -10px;"
             >
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#D9E3F0",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(217, 227, 240); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#D9E3F0"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#F47373",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(244, 115, 115); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#F47373"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#697689",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(105, 118, 137); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#697689"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#37D67A",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(55, 214, 122); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#37D67A"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#2CCCE4",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(44, 204, 228); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#2CCCE4"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#555555",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(85, 85, 85); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#555555"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#dce775",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(220, 231, 117); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#dce775"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#ff8a65",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(255, 138, 101); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#ff8a65"
                 />
               </span>
-              <span
-                onBlur={[Function]}
-                onFocus={[Function]}
-              >
+              <span>
                 <div
-                  onClick={[Function]}
-                  onKeyDown={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "4px",
-                      "OBorderRadius": "4px",
-                      "WebkitBorderRadius": "4px",
-                      "background": "#ba68c8",
-                      "borderRadius": "4px",
-                      "cursor": "pointer",
-                      "float": "left",
-                      "height": "22px",
-                      "marginBottom": "10px",
-                      "marginRight": "10px",
-                      "msBorderRadius": "4px",
-                      "outline": "none",
-                      "position": "relative",
-                      "width": "22px",
-                    }
-                  }
-                  tabIndex={0}
+                  style="background: rgb(186, 104, 200); height: 22px; width: 22px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 10px; margin-bottom: 10px; border-radius: 4px;"
+                  tabindex="0"
                   title="#ba68c8"
                 />
               </span>
               <div
-                style={
-                  Object {
-                    "clear": "both",
-                  }
-                }
+                style="clear: both;"
               />
             </div>
             <div
-              style={
-                Object {
-                  "position": "relative",
-                }
-              }
+              style="position: relative;"
             >
               <input
                 id="rc-editable-input-6"
-                onBlur={[Function]}
-                onChange={[Function]}
-                onKeyDown={[Function]}
-                spellCheck="false"
-                style={
-                  Object {
-                    "MozBorderRadius": "4px",
-                    "MozBoxShadow": "inset 0 0 0 1px #ddd",
-                    "OBorderRadius": "4px",
-                    "OBoxShadow": "inset 0 0 0 1px #ddd",
-                    "WebkitBorderRadius": "4px",
-                    "WebkitBoxShadow": "inset 0 0 0 1px #ddd",
-                    "border": "0px",
-                    "borderRadius": "4px",
-                    "boxShadow": "inset 0 0 0 1px #ddd",
-                    "boxSizing": "border-box",
-                    "color": "#666",
-                    "fontSize": "12px",
-                    "height": "22px",
-                    "msBorderRadius": "4px",
-                    "msBoxShadow": "inset 0 0 0 1px #ddd",
-                    "outline": "none",
-                    "padding": "0 7px",
-                    "width": "100%",
-                  }
-                }
+                spellcheck="false"
+                style="width: 100%; font-size: 12px; color: rgb(102, 102, 102); border: 0px; outline: none; height: 22px; box-shadow: inset 0 0 0 1px #ddd; border-radius: 4px; padding: 0px 7px; box-sizing: border-box;"
                 value="#000000"
               />
             </div>

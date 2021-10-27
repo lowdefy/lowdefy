@@ -14,9 +14,7 @@ module.exports = {
     alias: {
       path: require.resolve('path-browserify'),
       process: require.resolve('process/browser'),
-      buffer: require.resolve('buffer'),
     },
-    fallback: { buffer: false },
   },
 
   module: {

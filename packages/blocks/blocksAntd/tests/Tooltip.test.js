@@ -14,26 +14,11 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import Tooltip from '../src/blocks/Tooltip/Tooltip';
 import examples from '../demo/examples/Tooltip.yaml';
 import meta from '../src/blocks/Tooltip/Tooltip.json';
 
-jest.mock('@lowdefy/block-tools', () => {
-  const originalModule = jest.requireActual('@lowdefy/block-tools');
-  return {
-    ...originalModule,
-    blockDefaultProps: {
-      ...originalModule.blockDefaultProps,
-      methods: {
-        ...originalModule.blockDefaultProps.methods,
-        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
-      },
-    },
-  };
-});
-
-// FIX Jest: Error: Uncaught [TypeError: parentInstance.children.indexOf is not a function]
-// runRenderTests({ examples, Block: Tooltip, meta });
+runRenderTests({ examples, Block: Tooltip, meta });
 runBlockSchemaTests({ examples, meta });

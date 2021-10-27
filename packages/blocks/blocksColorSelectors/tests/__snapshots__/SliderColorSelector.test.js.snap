@@ -1,85 +1,66 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render colors - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  margin-bottom: 0px!important;
+}
+
 <div
-  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  class="ant-row ant-form-item emotion-0"
   id="colors"
-  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="colors_input"
+      class="emotion-2"
+      for="colors_input"
       title="colors"
     >
       <span
-        className="{}"
-      />
+        class="emotion-3"
+      >
+        colors
+      </span>
     </label>
   </div>
   <div
-    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
   >
     <div
-      className="ant-form-item-control-input"
+      class="ant-form-item-control-input"
     >
       <div
-        className="ant-form-item-control-input-content"
+        class="ant-form-item-control-input-content"
       >
         <div
-          className="slider-picker {\\"style\\":[{\\"marginBottom\\":\\"0px !important\\"},null]}"
-          style={Object {}}
+          class="slider-picker emotion-4"
         >
           <div
-            style={
-              Object {
-                "height": "12px",
-                "position": "relative",
-              }
-            }
+            style="height: 12px; position: relative;"
           >
             <div
-              style={
-                Object {
-                  "MozBorderRadius": undefined,
-                  "MozBoxShadow": undefined,
-                  "OBorderRadius": undefined,
-                  "OBoxShadow": undefined,
-                  "WebkitBorderRadius": undefined,
-                  "WebkitBoxShadow": undefined,
-                  "borderRadius": undefined,
-                  "bottom": "0px",
-                  "boxShadow": undefined,
-                  "left": "0px",
-                  "msBorderRadius": undefined,
-                  "msBoxShadow": undefined,
-                  "position": "absolute",
-                  "right": "0px",
-                  "top": "0px",
-                }
-              }
+              style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
             >
               <div
-                className="hue-horizontal"
-                onMouseDown={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                style={
-                  Object {
-                    "MozBorderRadius": undefined,
-                    "OBorderRadius": undefined,
-                    "WebkitBorderRadius": undefined,
-                    "borderRadius": undefined,
-                    "height": "100%",
-                    "msBorderRadius": undefined,
-                    "padding": "0 2px",
-                    "position": "relative",
-                  }
-                }
+                class="hue-horizontal"
+                style="padding: 0px 2px; position: relative; height: 100%;"
               >
                 <style>
                   
@@ -99,36 +80,10 @@ exports[`Render colors - value[0] 1`] = `
           
                 </style>
                 <div
-                  style={
-                    Object {
-                      "left": "0%",
-                      "position": "absolute",
-                    }
-                  }
+                  style="position: absolute; left: 0%;"
                 >
                   <div
-                    style={
-                      Object {
-                        "MozBorderRadius": "6px",
-                        "MozBoxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "MozTransform": "translate(-7px, -1px)",
-                        "OBorderRadius": "6px",
-                        "OBoxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "OTransform": "translate(-7px, -1px)",
-                        "WebkitBorderRadius": "6px",
-                        "WebkitBoxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "WebkitTransform": "translate(-7px, -1px)",
-                        "backgroundColor": "rgb(248, 248, 248)",
-                        "borderRadius": "6px",
-                        "boxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "height": "14px",
-                        "msBorderRadius": "6px",
-                        "msBoxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "msTransform": "translate(-7px, -1px)",
-                        "transform": "translate(-7px, -1px)",
-                        "width": "14px",
-                      }
-                    }
+                    style="width: 14px; height: 14px; border-radius: 6px; transform: translate(-7px, -1px); background-color: rgb(248, 248, 248); box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);"
                   />
                 </div>
               </div>
@@ -136,133 +91,45 @@ exports[`Render colors - value[0] 1`] = `
           </div>
           <div>
             <div
-              style={
-                Object {
-                  "marginTop": "20px",
-                }
-              }
+              style="margin-top: 20px;"
             >
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "2px 0 0 2px",
-                      "OBorderRadius": "2px 0 0 2px",
-                      "WebkitBorderRadius": "2px 0 0 2px",
-                      "background": "hsl(0, 50%, 80%)",
-                      "borderRadius": "2px 0 0 2px",
-                      "cursor": "pointer",
-                      "height": "12px",
-                      "msBorderRadius": "2px 0 0 2px",
-                    }
-                  }
+                  style="height: 12px; background: rgb(230, 179, 179); cursor: pointer; border-radius: 2px 0 0 2px;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "background": "hsl(0, 50%, 65%)",
-                      "cursor": "pointer",
-                      "height": "12px",
-                    }
-                  }
+                  style="height: 12px; background: rgb(210, 121, 121); cursor: pointer;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "background": "hsl(0, 50%, 50%)",
-                      "cursor": "pointer",
-                      "height": "12px",
-                    }
-                  }
+                  style="height: 12px; background: rgb(191, 64, 64); cursor: pointer;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "background": "hsl(0, 50%, 35%)",
-                      "cursor": "pointer",
-                      "height": "12px",
-                    }
-                  }
+                  style="height: 12px; background: rgb(134, 45, 45); cursor: pointer;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "0 2px 2px 0",
-                      "OBorderRadius": "0 2px 2px 0",
-                      "WebkitBorderRadius": "0 2px 2px 0",
-                      "background": "hsl(0, 50%, 20%)",
-                      "borderRadius": "0 2px 2px 0",
-                      "cursor": "pointer",
-                      "height": "12px",
-                      "msBorderRadius": "0 2px 2px 0",
-                    }
-                  }
+                  style="height: 12px; background: rgb(77, 25, 25); cursor: pointer; border-radius: 0 2px 2px 0;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "clear": "both",
-                  }
-                }
+                style="clear: both;"
               />
             </div>
           </div>
@@ -274,85 +141,66 @@ exports[`Render colors - value[0] 1`] = `
 `;
 
 exports[`Render default - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  margin-bottom: 0px!important;
+}
+
 <div
-  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  class="ant-row ant-form-item emotion-0"
   id="default"
-  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="default_input"
+      class="emotion-2"
+      for="default_input"
       title="default"
     >
       <span
-        className="{}"
-      />
+        class="emotion-3"
+      >
+        default
+      </span>
     </label>
   </div>
   <div
-    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
   >
     <div
-      className="ant-form-item-control-input"
+      class="ant-form-item-control-input"
     >
       <div
-        className="ant-form-item-control-input-content"
+        class="ant-form-item-control-input-content"
       >
         <div
-          className="slider-picker {\\"style\\":[{\\"marginBottom\\":\\"0px !important\\"},null]}"
-          style={Object {}}
+          class="slider-picker emotion-4"
         >
           <div
-            style={
-              Object {
-                "height": "12px",
-                "position": "relative",
-              }
-            }
+            style="height: 12px; position: relative;"
           >
             <div
-              style={
-                Object {
-                  "MozBorderRadius": undefined,
-                  "MozBoxShadow": undefined,
-                  "OBorderRadius": undefined,
-                  "OBoxShadow": undefined,
-                  "WebkitBorderRadius": undefined,
-                  "WebkitBoxShadow": undefined,
-                  "borderRadius": undefined,
-                  "bottom": "0px",
-                  "boxShadow": undefined,
-                  "left": "0px",
-                  "msBorderRadius": undefined,
-                  "msBoxShadow": undefined,
-                  "position": "absolute",
-                  "right": "0px",
-                  "top": "0px",
-                }
-              }
+              style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
             >
               <div
-                className="hue-horizontal"
-                onMouseDown={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                style={
-                  Object {
-                    "MozBorderRadius": undefined,
-                    "OBorderRadius": undefined,
-                    "WebkitBorderRadius": undefined,
-                    "borderRadius": undefined,
-                    "height": "100%",
-                    "msBorderRadius": undefined,
-                    "padding": "0 2px",
-                    "position": "relative",
-                  }
-                }
+                class="hue-horizontal"
+                style="padding: 0px 2px; position: relative; height: 100%;"
               >
                 <style>
                   
@@ -372,36 +220,10 @@ exports[`Render default - value[0] 1`] = `
           
                 </style>
                 <div
-                  style={
-                    Object {
-                      "left": "0%",
-                      "position": "absolute",
-                    }
-                  }
+                  style="position: absolute; left: 0%;"
                 >
                   <div
-                    style={
-                      Object {
-                        "MozBorderRadius": "6px",
-                        "MozBoxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "MozTransform": "translate(-7px, -1px)",
-                        "OBorderRadius": "6px",
-                        "OBoxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "OTransform": "translate(-7px, -1px)",
-                        "WebkitBorderRadius": "6px",
-                        "WebkitBoxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "WebkitTransform": "translate(-7px, -1px)",
-                        "backgroundColor": "rgb(248, 248, 248)",
-                        "borderRadius": "6px",
-                        "boxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "height": "14px",
-                        "msBorderRadius": "6px",
-                        "msBoxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "msTransform": "translate(-7px, -1px)",
-                        "transform": "translate(-7px, -1px)",
-                        "width": "14px",
-                      }
-                    }
+                    style="width: 14px; height: 14px; border-radius: 6px; transform: translate(-7px, -1px); background-color: rgb(248, 248, 248); box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);"
                   />
                 </div>
               </div>
@@ -409,133 +231,45 @@ exports[`Render default - value[0] 1`] = `
           </div>
           <div>
             <div
-              style={
-                Object {
-                  "marginTop": "20px",
-                }
-              }
+              style="margin-top: 20px;"
             >
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "2px 0 0 2px",
-                      "OBorderRadius": "2px 0 0 2px",
-                      "WebkitBorderRadius": "2px 0 0 2px",
-                      "background": "hsl(0, 50%, 80%)",
-                      "borderRadius": "2px 0 0 2px",
-                      "cursor": "pointer",
-                      "height": "12px",
-                      "msBorderRadius": "2px 0 0 2px",
-                    }
-                  }
+                  style="height: 12px; background: rgb(230, 179, 179); cursor: pointer; border-radius: 2px 0 0 2px;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "background": "hsl(0, 50%, 65%)",
-                      "cursor": "pointer",
-                      "height": "12px",
-                    }
-                  }
+                  style="height: 12px; background: rgb(210, 121, 121); cursor: pointer;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "background": "hsl(0, 50%, 50%)",
-                      "cursor": "pointer",
-                      "height": "12px",
-                    }
-                  }
+                  style="height: 12px; background: rgb(191, 64, 64); cursor: pointer;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "background": "hsl(0, 50%, 35%)",
-                      "cursor": "pointer",
-                      "height": "12px",
-                    }
-                  }
+                  style="height: 12px; background: rgb(134, 45, 45); cursor: pointer;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "0 2px 2px 0",
-                      "OBorderRadius": "0 2px 2px 0",
-                      "WebkitBorderRadius": "0 2px 2px 0",
-                      "background": "hsl(0, 50%, 20%)",
-                      "borderRadius": "0 2px 2px 0",
-                      "cursor": "pointer",
-                      "height": "12px",
-                      "msBorderRadius": "0 2px 2px 0",
-                    }
-                  }
+                  style="height: 12px; background: rgb(77, 25, 25); cursor: pointer; border-radius: 0 2px 2px 0;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "clear": "both",
-                  }
-                }
+                style="clear: both;"
               />
             </div>
           </div>
@@ -547,85 +281,66 @@ exports[`Render default - value[0] 1`] = `
 `;
 
 exports[`Render defaultColor - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  margin-bottom: 0px!important;
+}
+
 <div
-  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  class="ant-row ant-form-item emotion-0"
   id="defaultColor"
-  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="defaultColor_input"
+      class="emotion-2"
+      for="defaultColor_input"
       title="defaultColor"
     >
       <span
-        className="{}"
-      />
+        class="emotion-3"
+      >
+        defaultColor
+      </span>
     </label>
   </div>
   <div
-    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
   >
     <div
-      className="ant-form-item-control-input"
+      class="ant-form-item-control-input"
     >
       <div
-        className="ant-form-item-control-input-content"
+        class="ant-form-item-control-input-content"
       >
         <div
-          className="slider-picker {\\"style\\":[{\\"marginBottom\\":\\"0px !important\\"},null]}"
-          style={Object {}}
+          class="slider-picker emotion-4"
         >
           <div
-            style={
-              Object {
-                "height": "12px",
-                "position": "relative",
-              }
-            }
+            style="height: 12px; position: relative;"
           >
             <div
-              style={
-                Object {
-                  "MozBorderRadius": undefined,
-                  "MozBoxShadow": undefined,
-                  "OBorderRadius": undefined,
-                  "OBoxShadow": undefined,
-                  "WebkitBorderRadius": undefined,
-                  "WebkitBoxShadow": undefined,
-                  "borderRadius": undefined,
-                  "bottom": "0px",
-                  "boxShadow": undefined,
-                  "left": "0px",
-                  "msBorderRadius": undefined,
-                  "msBoxShadow": undefined,
-                  "position": "absolute",
-                  "right": "0px",
-                  "top": "0px",
-                }
-              }
+              style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
             >
               <div
-                className="hue-horizontal"
-                onMouseDown={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                style={
-                  Object {
-                    "MozBorderRadius": undefined,
-                    "OBorderRadius": undefined,
-                    "WebkitBorderRadius": undefined,
-                    "borderRadius": undefined,
-                    "height": "100%",
-                    "msBorderRadius": undefined,
-                    "padding": "0 2px",
-                    "position": "relative",
-                  }
-                }
+                class="hue-horizontal"
+                style="padding: 0px 2px; position: relative; height: 100%;"
               >
                 <style>
                   
@@ -645,36 +360,10 @@ exports[`Render defaultColor - value[0] 1`] = `
           
                 </style>
                 <div
-                  style={
-                    Object {
-                      "left": "32.22222222222223%",
-                      "position": "absolute",
-                    }
-                  }
+                  style="position: absolute; left: 32.22222222222223%;"
                 >
                   <div
-                    style={
-                      Object {
-                        "MozBorderRadius": "6px",
-                        "MozBoxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "MozTransform": "translate(-7px, -1px)",
-                        "OBorderRadius": "6px",
-                        "OBoxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "OTransform": "translate(-7px, -1px)",
-                        "WebkitBorderRadius": "6px",
-                        "WebkitBoxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "WebkitTransform": "translate(-7px, -1px)",
-                        "backgroundColor": "rgb(248, 248, 248)",
-                        "borderRadius": "6px",
-                        "boxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "height": "14px",
-                        "msBorderRadius": "6px",
-                        "msBoxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "msTransform": "translate(-7px, -1px)",
-                        "transform": "translate(-7px, -1px)",
-                        "width": "14px",
-                      }
-                    }
+                    style="width: 14px; height: 14px; border-radius: 6px; transform: translate(-7px, -1px); background-color: rgb(248, 248, 248); box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);"
                   />
                 </div>
               </div>
@@ -682,133 +371,45 @@ exports[`Render defaultColor - value[0] 1`] = `
           </div>
           <div>
             <div
-              style={
-                Object {
-                  "marginTop": "20px",
-                }
-              }
+              style="margin-top: 20px;"
             >
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "2px 0 0 2px",
-                      "OBorderRadius": "2px 0 0 2px",
-                      "WebkitBorderRadius": "2px 0 0 2px",
-                      "background": "hsl(116.00000000000001, 50%, 80%)",
-                      "borderRadius": "2px 0 0 2px",
-                      "cursor": "pointer",
-                      "height": "12px",
-                      "msBorderRadius": "2px 0 0 2px",
-                    }
-                  }
+                  style="height: 12px; background: rgb(179, 179, 179); cursor: pointer; border-radius: 2px 0 0 2px;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "background": "hsl(116.00000000000001, 50%, 65%)",
-                      "cursor": "pointer",
-                      "height": "12px",
-                    }
-                  }
+                  style="height: 12px; background: rgb(121, 121, 121); cursor: pointer;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "background": "hsl(116.00000000000001, 50%, 50%)",
-                      "cursor": "pointer",
-                      "height": "12px",
-                    }
-                  }
+                  style="height: 12px; background: rgb(64, 64, 64); cursor: pointer;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "background": "hsl(116.00000000000001, 50%, 35%)",
-                      "cursor": "pointer",
-                      "height": "12px",
-                    }
-                  }
+                  style="height: 12px; background: rgb(45, 45, 45); cursor: pointer;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "0 2px 2px 0",
-                      "OBorderRadius": "0 2px 2px 0",
-                      "WebkitBorderRadius": "0 2px 2px 0",
-                      "background": "hsl(116.00000000000001, 50%, 20%)",
-                      "borderRadius": "0 2px 2px 0",
-                      "cursor": "pointer",
-                      "height": "12px",
-                      "msBorderRadius": "0 2px 2px 0",
-                    }
-                  }
+                  style="height: 12px; background: rgb(25, 25, 25); cursor: pointer; border-radius: 0 2px 2px 0;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "clear": "both",
-                  }
-                }
+                style="clear: both;"
               />
             </div>
           </div>
@@ -820,85 +421,67 @@ exports[`Render defaultColor - value[0] 1`] = `
 `;
 
 exports[`Render inputStyle - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  margin-bottom: 0px!important;
+  border: 3px solid blue;
+}
+
 <div
-  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  class="ant-row ant-form-item emotion-0"
   id="inputStyle"
-  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="inputStyle_input"
+      class="emotion-2"
+      for="inputStyle_input"
       title="inputStyle"
     >
       <span
-        className="{}"
-      />
+        class="emotion-3"
+      >
+        inputStyle
+      </span>
     </label>
   </div>
   <div
-    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
   >
     <div
-      className="ant-form-item-control-input"
+      class="ant-form-item-control-input"
     >
       <div
-        className="ant-form-item-control-input-content"
+        class="ant-form-item-control-input-content"
       >
         <div
-          className="slider-picker {\\"style\\":[{\\"marginBottom\\":\\"0px !important\\"},{\\"border\\":\\"3px solid blue\\"}]}"
-          style={Object {}}
+          class="slider-picker emotion-4"
         >
           <div
-            style={
-              Object {
-                "height": "12px",
-                "position": "relative",
-              }
-            }
+            style="height: 12px; position: relative;"
           >
             <div
-              style={
-                Object {
-                  "MozBorderRadius": undefined,
-                  "MozBoxShadow": undefined,
-                  "OBorderRadius": undefined,
-                  "OBoxShadow": undefined,
-                  "WebkitBorderRadius": undefined,
-                  "WebkitBoxShadow": undefined,
-                  "borderRadius": undefined,
-                  "bottom": "0px",
-                  "boxShadow": undefined,
-                  "left": "0px",
-                  "msBorderRadius": undefined,
-                  "msBoxShadow": undefined,
-                  "position": "absolute",
-                  "right": "0px",
-                  "top": "0px",
-                }
-              }
+              style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
             >
               <div
-                className="hue-horizontal"
-                onMouseDown={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                style={
-                  Object {
-                    "MozBorderRadius": undefined,
-                    "OBorderRadius": undefined,
-                    "WebkitBorderRadius": undefined,
-                    "borderRadius": undefined,
-                    "height": "100%",
-                    "msBorderRadius": undefined,
-                    "padding": "0 2px",
-                    "position": "relative",
-                  }
-                }
+                class="hue-horizontal"
+                style="padding: 0px 2px; position: relative; height: 100%;"
               >
                 <style>
                   
@@ -918,36 +501,10 @@ exports[`Render inputStyle - value[0] 1`] = `
           
                 </style>
                 <div
-                  style={
-                    Object {
-                      "left": "0%",
-                      "position": "absolute",
-                    }
-                  }
+                  style="position: absolute; left: 0%;"
                 >
                   <div
-                    style={
-                      Object {
-                        "MozBorderRadius": "6px",
-                        "MozBoxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "MozTransform": "translate(-7px, -1px)",
-                        "OBorderRadius": "6px",
-                        "OBoxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "OTransform": "translate(-7px, -1px)",
-                        "WebkitBorderRadius": "6px",
-                        "WebkitBoxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "WebkitTransform": "translate(-7px, -1px)",
-                        "backgroundColor": "rgb(248, 248, 248)",
-                        "borderRadius": "6px",
-                        "boxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "height": "14px",
-                        "msBorderRadius": "6px",
-                        "msBoxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "msTransform": "translate(-7px, -1px)",
-                        "transform": "translate(-7px, -1px)",
-                        "width": "14px",
-                      }
-                    }
+                    style="width: 14px; height: 14px; border-radius: 6px; transform: translate(-7px, -1px); background-color: rgb(248, 248, 248); box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);"
                   />
                 </div>
               </div>
@@ -955,133 +512,45 @@ exports[`Render inputStyle - value[0] 1`] = `
           </div>
           <div>
             <div
-              style={
-                Object {
-                  "marginTop": "20px",
-                }
-              }
+              style="margin-top: 20px;"
             >
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "2px 0 0 2px",
-                      "OBorderRadius": "2px 0 0 2px",
-                      "WebkitBorderRadius": "2px 0 0 2px",
-                      "background": "hsl(0, 50%, 80%)",
-                      "borderRadius": "2px 0 0 2px",
-                      "cursor": "pointer",
-                      "height": "12px",
-                      "msBorderRadius": "2px 0 0 2px",
-                    }
-                  }
+                  style="height: 12px; background: rgb(230, 179, 179); cursor: pointer; border-radius: 2px 0 0 2px;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "background": "hsl(0, 50%, 65%)",
-                      "cursor": "pointer",
-                      "height": "12px",
-                    }
-                  }
+                  style="height: 12px; background: rgb(210, 121, 121); cursor: pointer;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "background": "hsl(0, 50%, 50%)",
-                      "cursor": "pointer",
-                      "height": "12px",
-                    }
-                  }
+                  style="height: 12px; background: rgb(191, 64, 64); cursor: pointer;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "background": "hsl(0, 50%, 35%)",
-                      "cursor": "pointer",
-                      "height": "12px",
-                    }
-                  }
+                  style="height: 12px; background: rgb(134, 45, 45); cursor: pointer;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "0 2px 2px 0",
-                      "OBorderRadius": "0 2px 2px 0",
-                      "WebkitBorderRadius": "0 2px 2px 0",
-                      "background": "hsl(0, 50%, 20%)",
-                      "borderRadius": "0 2px 2px 0",
-                      "cursor": "pointer",
-                      "height": "12px",
-                      "msBorderRadius": "0 2px 2px 0",
-                    }
-                  }
+                  style="height: 12px; background: rgb(77, 25, 25); cursor: pointer; border-radius: 0 2px 2px 0;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "clear": "both",
-                  }
-                }
+                style="clear: both;"
               />
             </div>
           </div>
@@ -1093,71 +562,39 @@ exports[`Render inputStyle - value[0] 1`] = `
 `;
 
 exports[`Render label-disabled - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  margin-bottom: 0px!important;
+}
+
 <div
-  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  class="ant-row ant-form-item emotion-0"
   id="label-disabled"
-  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
   >
     <div
-      className="ant-form-item-control-input"
+      class="ant-form-item-control-input"
     >
       <div
-        className="ant-form-item-control-input-content"
+        class="ant-form-item-control-input-content"
       >
         <div
-          className="slider-picker {\\"style\\":[{\\"marginBottom\\":\\"0px !important\\"},null]}"
-          style={Object {}}
+          class="slider-picker emotion-1"
         >
           <div
-            style={
-              Object {
-                "height": "12px",
-                "position": "relative",
-              }
-            }
+            style="height: 12px; position: relative;"
           >
             <div
-              style={
-                Object {
-                  "MozBorderRadius": undefined,
-                  "MozBoxShadow": undefined,
-                  "OBorderRadius": undefined,
-                  "OBoxShadow": undefined,
-                  "WebkitBorderRadius": undefined,
-                  "WebkitBoxShadow": undefined,
-                  "borderRadius": undefined,
-                  "bottom": "0px",
-                  "boxShadow": undefined,
-                  "left": "0px",
-                  "msBorderRadius": undefined,
-                  "msBoxShadow": undefined,
-                  "position": "absolute",
-                  "right": "0px",
-                  "top": "0px",
-                }
-              }
+              style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
             >
               <div
-                className="hue-horizontal"
-                onMouseDown={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                style={
-                  Object {
-                    "MozBorderRadius": undefined,
-                    "OBorderRadius": undefined,
-                    "WebkitBorderRadius": undefined,
-                    "borderRadius": undefined,
-                    "height": "100%",
-                    "msBorderRadius": undefined,
-                    "padding": "0 2px",
-                    "position": "relative",
-                  }
-                }
+                class="hue-horizontal"
+                style="padding: 0px 2px; position: relative; height: 100%;"
               >
                 <style>
                   
@@ -1177,36 +614,10 @@ exports[`Render label-disabled - value[0] 1`] = `
           
                 </style>
                 <div
-                  style={
-                    Object {
-                      "left": "0%",
-                      "position": "absolute",
-                    }
-                  }
+                  style="position: absolute; left: 0%;"
                 >
                   <div
-                    style={
-                      Object {
-                        "MozBorderRadius": "6px",
-                        "MozBoxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "MozTransform": "translate(-7px, -1px)",
-                        "OBorderRadius": "6px",
-                        "OBoxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "OTransform": "translate(-7px, -1px)",
-                        "WebkitBorderRadius": "6px",
-                        "WebkitBoxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "WebkitTransform": "translate(-7px, -1px)",
-                        "backgroundColor": "rgb(248, 248, 248)",
-                        "borderRadius": "6px",
-                        "boxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "height": "14px",
-                        "msBorderRadius": "6px",
-                        "msBoxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "msTransform": "translate(-7px, -1px)",
-                        "transform": "translate(-7px, -1px)",
-                        "width": "14px",
-                      }
-                    }
+                    style="width: 14px; height: 14px; border-radius: 6px; transform: translate(-7px, -1px); background-color: rgb(248, 248, 248); box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);"
                   />
                 </div>
               </div>
@@ -1214,133 +625,45 @@ exports[`Render label-disabled - value[0] 1`] = `
           </div>
           <div>
             <div
-              style={
-                Object {
-                  "marginTop": "20px",
-                }
-              }
+              style="margin-top: 20px;"
             >
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "2px 0 0 2px",
-                      "OBorderRadius": "2px 0 0 2px",
-                      "WebkitBorderRadius": "2px 0 0 2px",
-                      "background": "hsl(0, 50%, 80%)",
-                      "borderRadius": "2px 0 0 2px",
-                      "cursor": "pointer",
-                      "height": "12px",
-                      "msBorderRadius": "2px 0 0 2px",
-                    }
-                  }
+                  style="height: 12px; background: rgb(230, 179, 179); cursor: pointer; border-radius: 2px 0 0 2px;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "background": "hsl(0, 50%, 65%)",
-                      "cursor": "pointer",
-                      "height": "12px",
-                    }
-                  }
+                  style="height: 12px; background: rgb(210, 121, 121); cursor: pointer;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "background": "hsl(0, 50%, 50%)",
-                      "cursor": "pointer",
-                      "height": "12px",
-                    }
-                  }
+                  style="height: 12px; background: rgb(191, 64, 64); cursor: pointer;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "background": "hsl(0, 50%, 35%)",
-                      "cursor": "pointer",
-                      "height": "12px",
-                    }
-                  }
+                  style="height: 12px; background: rgb(134, 45, 45); cursor: pointer;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "0 2px 2px 0",
-                      "OBorderRadius": "0 2px 2px 0",
-                      "WebkitBorderRadius": "0 2px 2px 0",
-                      "background": "hsl(0, 50%, 20%)",
-                      "borderRadius": "0 2px 2px 0",
-                      "cursor": "pointer",
-                      "height": "12px",
-                      "msBorderRadius": "0 2px 2px 0",
-                    }
-                  }
+                  style="height: 12px; background: rgb(77, 25, 25); cursor: pointer; border-radius: 0 2px 2px 0;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "clear": "both",
-                  }
-                }
+                style="clear: both;"
               />
             </div>
           </div>
@@ -1352,85 +675,66 @@ exports[`Render label-disabled - value[0] 1`] = `
 `;
 
 exports[`Render title - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  margin-bottom: 0px!important;
+}
+
 <div
-  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  class="ant-row ant-form-item emotion-0"
   id="title"
-  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="title_input"
+      class="emotion-2"
+      for="title_input"
       title="The color selector"
     >
       <span
-        className="{}"
-      />
+        class="emotion-3"
+      >
+        The color selector
+      </span>
     </label>
   </div>
   <div
-    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
-    style={Object {}}
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
   >
     <div
-      className="ant-form-item-control-input"
+      class="ant-form-item-control-input"
     >
       <div
-        className="ant-form-item-control-input-content"
+        class="ant-form-item-control-input-content"
       >
         <div
-          className="slider-picker {\\"style\\":[{\\"marginBottom\\":\\"0px !important\\"},null]}"
-          style={Object {}}
+          class="slider-picker emotion-4"
         >
           <div
-            style={
-              Object {
-                "height": "12px",
-                "position": "relative",
-              }
-            }
+            style="height: 12px; position: relative;"
           >
             <div
-              style={
-                Object {
-                  "MozBorderRadius": undefined,
-                  "MozBoxShadow": undefined,
-                  "OBorderRadius": undefined,
-                  "OBoxShadow": undefined,
-                  "WebkitBorderRadius": undefined,
-                  "WebkitBoxShadow": undefined,
-                  "borderRadius": undefined,
-                  "bottom": "0px",
-                  "boxShadow": undefined,
-                  "left": "0px",
-                  "msBorderRadius": undefined,
-                  "msBoxShadow": undefined,
-                  "position": "absolute",
-                  "right": "0px",
-                  "top": "0px",
-                }
-              }
+              style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
             >
               <div
-                className="hue-horizontal"
-                onMouseDown={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                style={
-                  Object {
-                    "MozBorderRadius": undefined,
-                    "OBorderRadius": undefined,
-                    "WebkitBorderRadius": undefined,
-                    "borderRadius": undefined,
-                    "height": "100%",
-                    "msBorderRadius": undefined,
-                    "padding": "0 2px",
-                    "position": "relative",
-                  }
-                }
+                class="hue-horizontal"
+                style="padding: 0px 2px; position: relative; height: 100%;"
               >
                 <style>
                   
@@ -1450,36 +754,10 @@ exports[`Render title - value[0] 1`] = `
           
                 </style>
                 <div
-                  style={
-                    Object {
-                      "left": "0%",
-                      "position": "absolute",
-                    }
-                  }
+                  style="position: absolute; left: 0%;"
                 >
                   <div
-                    style={
-                      Object {
-                        "MozBorderRadius": "6px",
-                        "MozBoxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "MozTransform": "translate(-7px, -1px)",
-                        "OBorderRadius": "6px",
-                        "OBoxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "OTransform": "translate(-7px, -1px)",
-                        "WebkitBorderRadius": "6px",
-                        "WebkitBoxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "WebkitTransform": "translate(-7px, -1px)",
-                        "backgroundColor": "rgb(248, 248, 248)",
-                        "borderRadius": "6px",
-                        "boxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "height": "14px",
-                        "msBorderRadius": "6px",
-                        "msBoxShadow": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-                        "msTransform": "translate(-7px, -1px)",
-                        "transform": "translate(-7px, -1px)",
-                        "width": "14px",
-                      }
-                    }
+                    style="width: 14px; height: 14px; border-radius: 6px; transform: translate(-7px, -1px); background-color: rgb(248, 248, 248); box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);"
                   />
                 </div>
               </div>
@@ -1487,133 +765,45 @@ exports[`Render title - value[0] 1`] = `
           </div>
           <div>
             <div
-              style={
-                Object {
-                  "marginTop": "20px",
-                }
-              }
+              style="margin-top: 20px;"
             >
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "2px 0 0 2px",
-                      "OBorderRadius": "2px 0 0 2px",
-                      "WebkitBorderRadius": "2px 0 0 2px",
-                      "background": "hsl(0, 50%, 80%)",
-                      "borderRadius": "2px 0 0 2px",
-                      "cursor": "pointer",
-                      "height": "12px",
-                      "msBorderRadius": "2px 0 0 2px",
-                    }
-                  }
+                  style="height: 12px; background: rgb(230, 179, 179); cursor: pointer; border-radius: 2px 0 0 2px;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "background": "hsl(0, 50%, 65%)",
-                      "cursor": "pointer",
-                      "height": "12px",
-                    }
-                  }
+                  style="height: 12px; background: rgb(210, 121, 121); cursor: pointer;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "background": "hsl(0, 50%, 50%)",
-                      "cursor": "pointer",
-                      "height": "12px",
-                    }
-                  }
+                  style="height: 12px; background: rgb(191, 64, 64); cursor: pointer;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "background": "hsl(0, 50%, 35%)",
-                      "cursor": "pointer",
-                      "height": "12px",
-                    }
-                  }
+                  style="height: 12px; background: rgb(134, 45, 45); cursor: pointer;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "boxSizing": "border-box",
-                    "float": "left",
-                    "paddingRight": "1px",
-                    "width": "20%",
-                  }
-                }
+                style="box-sizing: border-box; width: 20%; padding-right: 1px; float: left;"
               >
                 <div
-                  onClick={[Function]}
-                  style={
-                    Object {
-                      "MozBorderRadius": "0 2px 2px 0",
-                      "OBorderRadius": "0 2px 2px 0",
-                      "WebkitBorderRadius": "0 2px 2px 0",
-                      "background": "hsl(0, 50%, 20%)",
-                      "borderRadius": "0 2px 2px 0",
-                      "cursor": "pointer",
-                      "height": "12px",
-                      "msBorderRadius": "0 2px 2px 0",
-                    }
-                  }
+                  style="height: 12px; background: rgb(77, 25, 25); cursor: pointer; border-radius: 0 2px 2px 0;"
                 />
               </div>
               <div
-                style={
-                  Object {
-                    "clear": "both",
-                  }
-                }
+                style="clear: both;"
               />
             </div>
           </div>

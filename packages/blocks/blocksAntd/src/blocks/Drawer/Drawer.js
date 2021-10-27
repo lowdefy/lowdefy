@@ -65,13 +65,11 @@ const DrawerBlock = ({ blockId, content, properties, methods, rename, onClose })
           }
         })
       }
-      drawerStyle={methods.makeCssClass(properties.drawerStyle, { styleObjectOnly: true })}
-      headerStyle={methods.makeCssClass(properties.headerStyle, { styleObjectOnly: true })}
-      bodyStyle={methods.makeCssClass(properties.bodyStyle, { styleObjectOnly: true })}
-      maskStyle={methods.makeCssClass(properties.maskStyle, { styleObjectOnly: true })}
-      contentWrapperStyle={methods.makeCssClass(properties.contentWrapperStyle, {
-        styleObjectOnly: true,
-      })}
+      drawerStyle={methods.makeCssClass(properties.drawerStyle, true)}
+      headerStyle={methods.makeCssClass(properties.headerStyle, true)}
+      bodyStyle={methods.makeCssClass(properties.bodyStyle, true)}
+      maskStyle={methods.makeCssClass(properties.maskStyle, true)}
+      contentWrapperStyle={methods.makeCssClass(properties.contentWrapperStyle, true)}
     >
       {content.content && content.content()}
     </Drawer>

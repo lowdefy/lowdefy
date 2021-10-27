@@ -53,7 +53,7 @@ const TabsBlock = ({ blockId, events, content, methods, properties }) => {
       id={blockId}
       onChange={(activeKey) => methods.triggerEvent({ name: 'onChange', event: { activeKey } })}
       size={properties.size || 'default'}
-      tabBarStyle={methods.makeCssClass(properties.tabBarStyle, { styleObjectOnly: true })}
+      tabBarStyle={methods.makeCssClass(properties.tabBarStyle, true)}
       tabPosition={properties.tabPosition || 'top'}
       type={properties.tabType || 'line'}
       onTabScroll={({ direction }) =>

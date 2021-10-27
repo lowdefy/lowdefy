@@ -14,26 +14,12 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import validationsExamples from '../demo/validationExamples.json';
 import DateTimeSelector from '../src/blocks/DateTimeSelector/DateTimeSelector';
 import examples from '../demo/examples/DateTimeSelector.yaml';
 import meta from '../src/blocks/DateTimeSelector/DateTimeSelector.json';
-
-jest.mock('@lowdefy/block-tools', () => {
-  const originalModule = jest.requireActual('@lowdefy/block-tools');
-  return {
-    ...originalModule,
-    blockDefaultProps: {
-      ...originalModule.blockDefaultProps,
-      methods: {
-        ...originalModule.blockDefaultProps.methods,
-        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
-      },
-    },
-  };
-});
 
 runRenderTests({ examples, Block: DateTimeSelector, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta });

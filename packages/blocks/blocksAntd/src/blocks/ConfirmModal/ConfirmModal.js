@@ -32,7 +32,7 @@ const ConfirmModal = ({ blockId, events, content, methods, properties }) => {
       Modal[args.status || properties.status || 'confirm']({
         id: `${blockId}_confirm_modal`,
         title: renderHtml({ html: properties.title, methods }),
-        bodyStyle: methods.makeCssClass(properties.bodyStyle, { styleObjectOnly: true }),
+        bodyStyle: methods.makeCssClass(properties.bodyStyle, true),
         content:
           (content.content && content.content()) ||
           renderHtml({ html: properties.content, methods }),

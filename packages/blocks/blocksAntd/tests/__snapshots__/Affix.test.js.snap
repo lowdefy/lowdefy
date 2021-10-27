@@ -2,19 +2,14 @@
 
 exports[`Render default - value[0] 1`] = `
 <div
-  className="{}"
+  class="emotion-0"
   id="default"
 >
   <div
-    className=""
+    class=""
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -24,19 +19,14 @@ exports[`Render default - value[0] 1`] = `
 
 exports[`Render properties.offsetBottom - value[0] 1`] = `
 <div
-  className="{}"
+  class="emotion-0"
   id="properties.offsetBottom"
 >
   <div
-    className=""
+    class=""
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -46,19 +36,14 @@ exports[`Render properties.offsetBottom - value[0] 1`] = `
 
 exports[`Render properties.offsetTop - value[0] 1`] = `
 <div
-  className="{}"
+  class="emotion-0"
   id="properties.offsetTop"
 >
   <div
-    className=""
+    class=""
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>
@@ -67,20 +52,19 @@ exports[`Render properties.offsetTop - value[0] 1`] = `
 `;
 
 exports[`Render properties.style - value[0] 1`] = `
+.emotion-0 {
+  border: 5px solid blue;
+}
+
 <div
-  className="{\\"style\\":{\\"border\\":\\"5px solid blue\\"}}"
+  class="emotion-0"
   id="properties.style"
 >
   <div
-    className=""
+    class=""
   >
     <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-        }
-      }
+      style="border: 1px solid red; padding: 10px;"
     >
       content
     </div>

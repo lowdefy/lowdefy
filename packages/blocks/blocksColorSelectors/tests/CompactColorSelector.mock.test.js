@@ -14,12 +14,9 @@
   limitations under the License.
 */
 
-import { runMockRenderTests } from '@lowdefy/block-tools';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { runMockRenderTests } from '@lowdefy/block-dev';
 import { CompactPicker } from 'react-color';
 
-Enzyme.configure({ adapter: new Adapter() });
 import CompactColorSelector from '../src/blocks/CompactColorSelector/CompactColorSelector';
 import examples from '../demo/examples/CompactColorSelector.yaml';
 import meta from '../src/blocks/CompactColorSelector/CompactColorSelector.json';
@@ -38,4 +35,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: CompactColorSelector, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: CompactColorSelector, meta, mocks });

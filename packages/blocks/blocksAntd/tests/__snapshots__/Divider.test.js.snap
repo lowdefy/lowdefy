@@ -2,7 +2,7 @@
 
 exports[`Render default - value[0] 1`] = `
 <div
-  className="ant-divider ant-divider-horizontal"
+  class="ant-divider ant-divider-horizontal"
   id="default"
   role="separator"
 />
@@ -10,7 +10,7 @@ exports[`Render default - value[0] 1`] = `
 
 exports[`Render properties.dashed: true - value[0] 1`] = `
 <div
-  className="ant-divider ant-divider-horizontal ant-divider-dashed"
+  class="ant-divider ant-divider-horizontal ant-divider-dashed"
   id="properties.dashed: true"
   role="separator"
 />
@@ -18,128 +18,148 @@ exports[`Render properties.dashed: true - value[0] 1`] = `
 
 exports[`Render properties.orientation: center - value[0] 1`] = `
 <div
-  className="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-center"
+  class="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-center"
   id="properties.orientation: center"
   role="separator"
 >
   <span
-    className="ant-divider-inner-text"
+    class="ant-divider-inner-text"
   >
     <span
-      className="{}"
-    />
+      class="emotion-0"
+    >
+      Divider title
+    </span>
   </span>
 </div>
 `;
 
 exports[`Render properties.orientation: left - value[0] 1`] = `
 <div
-  className="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-left"
+  class="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-left"
   id="properties.orientation: left"
   role="separator"
 >
   <span
-    className="ant-divider-inner-text"
+    class="ant-divider-inner-text"
   >
     <span
-      className="{}"
-    />
+      class="emotion-0"
+    >
+      Divider title
+    </span>
   </span>
 </div>
 `;
 
 exports[`Render properties.orientation: right - value[0] 1`] = `
 <div
-  className="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-right"
+  class="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-right"
   id="properties.orientation: right"
   role="separator"
 >
   <span
-    className="ant-divider-inner-text"
+    class="ant-divider-inner-text"
   >
     <span
-      className="{}"
-    />
+      class="emotion-0"
+    >
+      Divider title
+    </span>
   </span>
 </div>
 `;
 
 exports[`Render properties.title - value[0] 1`] = `
 <div
-  className="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-center"
+  class="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-center"
   id="properties.title"
   role="separator"
 >
   <span
-    className="ant-divider-inner-text"
+    class="ant-divider-inner-text"
   >
     <span
-      className="{}"
-    />
+      class="emotion-0"
+    >
+      Divider title
+    </span>
   </span>
 </div>
 `;
 
 exports[`Render properties.type: horizontal - value[0] 1`] = `
 <div
-  className="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-center"
+  class="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-center"
   id="properties.type: horizontal"
   role="separator"
 >
   <span
-    className="ant-divider-inner-text"
+    class="ant-divider-inner-text"
   >
     <span
-      className="{}"
-    />
+      class="emotion-0"
+    >
+      Divider title
+    </span>
   </span>
 </div>
 `;
 
 exports[`Render properties.type: true - value[0] 1`] = `
 <div
-  className="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-center ant-divider-plain"
+  class="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-center ant-divider-plain"
   id="properties.type: true"
   role="separator"
 >
   <span
-    className="ant-divider-inner-text"
+    class="ant-divider-inner-text"
   >
     <span
-      className="{}"
-    />
+      class="emotion-0"
+    >
+      Divider title
+    </span>
   </span>
 </div>
 `;
 
 exports[`Render properties.type: vertical - value[0] 1`] = `
 <div
-  className="ant-divider ant-divider-vertical ant-divider-with-text ant-divider-with-text-center"
+  class="ant-divider ant-divider-vertical ant-divider-with-text ant-divider-with-text-center"
   id="properties.type: vertical"
   role="separator"
 >
   <span
-    className="ant-divider-inner-text"
+    class="ant-divider-inner-text"
   >
     <span
-      className="{}"
-    />
+      class="emotion-0"
+    >
+      Divider title
+    </span>
   </span>
 </div>
 `;
 
 exports[`Render with html in title - value[0] 1`] = `
 <div
-  className="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-center"
+  class="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-center"
   id="with html in title"
   role="separator"
 >
   <span
-    className="ant-divider-inner-text"
+    class="ant-divider-inner-text"
   >
     <span
-      className="{}"
-    />
+      class="emotion-0"
+    >
+      <div
+        style="background-color:yellow"
+      >
+        Html Title
+      </div>
+    </span>
   </span>
 </div>
 `;

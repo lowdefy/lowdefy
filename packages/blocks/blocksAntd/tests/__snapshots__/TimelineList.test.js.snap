@@ -1,37 +1,38 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render default - value[0] 1`] = `
+.emotion-0 {
+  padding: 5px 0px 0px 5px;
+}
+
 <ul
-  className="ant-timeline {\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}"
+  class="ant-timeline emotion-0"
   id="default"
 />
 `;
 
 exports[`Render properties.mode: alternate - value[0] 1`] = `
+.emotion-0 {
+  padding: 5px 0px 0px 5px;
+}
+
 <ul
-  className="ant-timeline ant-timeline-alternate {\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}"
+  class="ant-timeline ant-timeline-alternate emotion-0"
   id="properties.mode: alternate"
 >
   <li
-    className="ant-timeline-item ant-timeline-item-left"
+    class="ant-timeline-item ant-timeline-item-left"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.mode: alternate_0_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -50,40 +51,28 @@ exports[`Render properties.mode: alternate - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Title 1
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-right"
+    class="ant-timeline-item ant-timeline-item-right"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.mode: alternate_1_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -102,40 +91,28 @@ exports[`Render properties.mode: alternate - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Text 2
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-last ant-timeline-item-left"
+    class="ant-timeline-item ant-timeline-item-last ant-timeline-item-left"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.mode: alternate_2_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -154,15 +131,10 @@ exports[`Render properties.mode: alternate - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Text 3
       </div>
@@ -172,30 +144,27 @@ exports[`Render properties.mode: alternate - value[0] 1`] = `
 `;
 
 exports[`Render properties.mode: alternate - value[1] 1`] = `
+.emotion-0 {
+  padding: 5px 0px 0px 5px;
+}
+
 <ul
-  className="ant-timeline ant-timeline-alternate {\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}"
+  class="ant-timeline ant-timeline-alternate emotion-0"
   id="properties.mode: alternate"
 >
   <li
-    className="ant-timeline-item ant-timeline-item-left"
+    class="ant-timeline-item ant-timeline-item-left"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.mode: alternate_0_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -214,40 +183,28 @@ exports[`Render properties.mode: alternate - value[1] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Title 1
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-right"
+    class="ant-timeline-item ant-timeline-item-right"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.mode: alternate_1_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -266,40 +223,28 @@ exports[`Render properties.mode: alternate - value[1] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Text 2
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-last ant-timeline-item-left"
+    class="ant-timeline-item ant-timeline-item-last ant-timeline-item-left"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.mode: alternate_2_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -318,15 +263,10 @@ exports[`Render properties.mode: alternate - value[1] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Text 3
       </div>
@@ -336,30 +276,27 @@ exports[`Render properties.mode: alternate - value[1] 1`] = `
 `;
 
 exports[`Render properties.mode: left - value[0] 1`] = `
+.emotion-0 {
+  padding: 5px 0px 0px 5px;
+}
+
 <ul
-  className="ant-timeline ant-timeline-left {\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}"
+  class="ant-timeline ant-timeline-left emotion-0"
   id="properties.mode: left"
 >
   <li
-    className="ant-timeline-item ant-timeline-item-left"
+    class="ant-timeline-item ant-timeline-item-left"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.mode: left_0_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -378,40 +315,28 @@ exports[`Render properties.mode: left - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Title 1
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-left"
+    class="ant-timeline-item ant-timeline-item-left"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.mode: left_1_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -430,40 +355,28 @@ exports[`Render properties.mode: left - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Text 2
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-last ant-timeline-item-left"
+    class="ant-timeline-item ant-timeline-item-last ant-timeline-item-left"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.mode: left_2_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -482,15 +395,10 @@ exports[`Render properties.mode: left - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Text 3
       </div>
@@ -500,30 +408,27 @@ exports[`Render properties.mode: left - value[0] 1`] = `
 `;
 
 exports[`Render properties.mode: left - value[1] 1`] = `
+.emotion-0 {
+  padding: 5px 0px 0px 5px;
+}
+
 <ul
-  className="ant-timeline ant-timeline-left {\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}"
+  class="ant-timeline ant-timeline-left emotion-0"
   id="properties.mode: left"
 >
   <li
-    className="ant-timeline-item ant-timeline-item-left"
+    class="ant-timeline-item ant-timeline-item-left"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.mode: left_0_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -542,40 +447,28 @@ exports[`Render properties.mode: left - value[1] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Title 1
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-left"
+    class="ant-timeline-item ant-timeline-item-left"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.mode: left_1_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -594,40 +487,28 @@ exports[`Render properties.mode: left - value[1] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Text 2
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-last ant-timeline-item-left"
+    class="ant-timeline-item ant-timeline-item-last ant-timeline-item-left"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.mode: left_2_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -646,15 +527,10 @@ exports[`Render properties.mode: left - value[1] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Text 3
       </div>
@@ -664,30 +540,27 @@ exports[`Render properties.mode: left - value[1] 1`] = `
 `;
 
 exports[`Render properties.mode: right - value[0] 1`] = `
+.emotion-0 {
+  padding: 5px 0px 0px 5px;
+}
+
 <ul
-  className="ant-timeline ant-timeline-right {\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}"
+  class="ant-timeline ant-timeline-right emotion-0"
   id="properties.mode: right"
 >
   <li
-    className="ant-timeline-item ant-timeline-item-right"
+    class="ant-timeline-item ant-timeline-item-right"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.mode: right_0_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -706,40 +579,28 @@ exports[`Render properties.mode: right - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Title 1
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-right"
+    class="ant-timeline-item ant-timeline-item-right"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.mode: right_1_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -758,40 +619,28 @@ exports[`Render properties.mode: right - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Text 2
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-last ant-timeline-item-right"
+    class="ant-timeline-item ant-timeline-item-last ant-timeline-item-right"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.mode: right_2_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -810,15 +659,10 @@ exports[`Render properties.mode: right - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Text 3
       </div>
@@ -828,30 +672,27 @@ exports[`Render properties.mode: right - value[0] 1`] = `
 `;
 
 exports[`Render properties.mode: right - value[1] 1`] = `
+.emotion-0 {
+  padding: 5px 0px 0px 5px;
+}
+
 <ul
-  className="ant-timeline ant-timeline-right {\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}"
+  class="ant-timeline ant-timeline-right emotion-0"
   id="properties.mode: right"
 >
   <li
-    className="ant-timeline-item ant-timeline-item-right"
+    class="ant-timeline-item ant-timeline-item-right"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.mode: right_0_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -870,40 +711,28 @@ exports[`Render properties.mode: right - value[1] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Title 1
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-right"
+    class="ant-timeline-item ant-timeline-item-right"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.mode: right_1_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -922,40 +751,28 @@ exports[`Render properties.mode: right - value[1] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Text 2
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-last ant-timeline-item-right"
+    class="ant-timeline-item ant-timeline-item-last ant-timeline-item-right"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.mode: right_2_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -974,15 +791,10 @@ exports[`Render properties.mode: right - value[1] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Text 3
       </div>
@@ -992,30 +804,27 @@ exports[`Render properties.mode: right - value[1] 1`] = `
 `;
 
 exports[`Render properties.pending: true - value[0] 1`] = `
+.emotion-0 {
+  padding: 5px 0px 0px 5px;
+}
+
 <ul
-  className="ant-timeline ant-timeline-pending {\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}"
+  class="ant-timeline ant-timeline-pending emotion-0"
   id="properties.pending: true"
 >
   <li
-    className="ant-timeline-item"
+    class="ant-timeline-item"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.pending: true_0_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -1034,40 +843,28 @@ exports[`Render properties.pending: true - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Title 1
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-right"
+    class="ant-timeline-item ant-timeline-item-right"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.pending: true_1_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -1086,40 +883,28 @@ exports[`Render properties.pending: true - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Text 2
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-last"
+    class="ant-timeline-item ant-timeline-item-last"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.pending: true_2_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -1138,37 +923,27 @@ exports[`Render properties.pending: true - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Text 3
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-pending"
+    class="ant-timeline-item ant-timeline-item-pending"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
       <span
         aria-label="loading"
-        className="anticon anticon-loading anticon-spin"
+        class="anticon anticon-loading anticon-spin"
         role="img"
       >
         <svg
@@ -1187,37 +962,34 @@ exports[`Render properties.pending: true - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     />
   </li>
 </ul>
 `;
 
 exports[`Render properties.pending: true - value[1] 1`] = `
+.emotion-0 {
+  padding: 5px 0px 0px 5px;
+}
+
 <ul
-  className="ant-timeline ant-timeline-pending {\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}"
+  class="ant-timeline ant-timeline-pending emotion-0"
   id="properties.pending: true"
 >
   <li
-    className="ant-timeline-item"
+    class="ant-timeline-item"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.pending: true_0_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -1236,40 +1008,28 @@ exports[`Render properties.pending: true - value[1] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Title 1
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-right"
+    class="ant-timeline-item ant-timeline-item-right"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.pending: true_1_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -1288,40 +1048,28 @@ exports[`Render properties.pending: true - value[1] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Text 2
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-last"
+    class="ant-timeline-item ant-timeline-item-last"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.pending: true_2_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -1340,37 +1088,27 @@ exports[`Render properties.pending: true - value[1] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Text 3
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-pending"
+    class="ant-timeline-item ant-timeline-item-pending"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
       <span
         aria-label="loading"
-        className="anticon anticon-loading anticon-spin"
+        class="anticon anticon-loading anticon-spin"
         role="img"
       >
         <svg
@@ -1389,37 +1127,38 @@ exports[`Render properties.pending: true - value[1] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     />
   </li>
 </ul>
 `;
 
 exports[`Render properties.pendingDotIcon:  - value[0] 1`] = `
+.emotion-0 {
+  padding: 5px 0px 0px 5px;
+}
+
+.emotion-4 {
+  font-size: 16px;
+}
+
 <ul
-  className="ant-timeline ant-timeline-pending {\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}"
+  class="ant-timeline ant-timeline-pending emotion-0"
   id="properties.pendingDotIcon: "
 >
   <li
-    className="ant-timeline-item"
+    class="ant-timeline-item"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.pendingDotIcon: _0_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -1438,40 +1177,28 @@ exports[`Render properties.pendingDotIcon:  - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Title 1
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-right"
+    class="ant-timeline-item ant-timeline-item-right"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.pendingDotIcon: _1_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -1490,40 +1217,28 @@ exports[`Render properties.pendingDotIcon:  - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Text 2
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-last"
+    class="ant-timeline-item ant-timeline-item-last"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.pendingDotIcon: _2_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -1542,40 +1257,28 @@ exports[`Render properties.pendingDotIcon:  - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Text 3
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-pending"
+    class="ant-timeline-item ant-timeline-item-pending"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{\\"fontSize\\":16}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-4"
         id="properties.pendingDotIcon: _pendingDotIcon"
-        required={false}
         role="img"
       >
         <svg
@@ -1594,37 +1297,38 @@ exports[`Render properties.pendingDotIcon:  - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     />
   </li>
 </ul>
 `;
 
 exports[`Render properties.pendingDotIcon:  - value[1] 1`] = `
+.emotion-0 {
+  padding: 5px 0px 0px 5px;
+}
+
+.emotion-4 {
+  font-size: 16px;
+}
+
 <ul
-  className="ant-timeline ant-timeline-pending {\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}"
+  class="ant-timeline ant-timeline-pending emotion-0"
   id="properties.pendingDotIcon: "
 >
   <li
-    className="ant-timeline-item"
+    class="ant-timeline-item"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.pendingDotIcon: _0_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -1643,40 +1347,28 @@ exports[`Render properties.pendingDotIcon:  - value[1] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Title 1
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-right"
+    class="ant-timeline-item ant-timeline-item-right"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.pendingDotIcon: _1_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -1695,40 +1387,28 @@ exports[`Render properties.pendingDotIcon:  - value[1] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Text 2
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-last"
+    class="ant-timeline-item ant-timeline-item-last"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.pendingDotIcon: _2_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -1747,40 +1427,28 @@ exports[`Render properties.pendingDotIcon:  - value[1] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Text 3
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-pending"
+    class="ant-timeline-item ant-timeline-item-pending"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{\\"fontSize\\":16}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-4"
         id="properties.pendingDotIcon: _pendingDotIcon"
-        required={false}
         role="img"
       >
         <svg
@@ -1799,37 +1467,34 @@ exports[`Render properties.pendingDotIcon:  - value[1] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     />
   </li>
 </ul>
 `;
 
 exports[`Render properties.reverse: true - value[0] 1`] = `
+.emotion-0 {
+  padding: 5px 0px 0px 5px;
+}
+
 <ul
-  className="ant-timeline ant-timeline-reverse {\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}"
+  class="ant-timeline ant-timeline-reverse emotion-0"
   id="properties.reverse: true"
 >
   <li
-    className="ant-timeline-item"
+    class="ant-timeline-item"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.reverse: true_2_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -1848,40 +1513,28 @@ exports[`Render properties.reverse: true - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Text 3
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-right"
+    class="ant-timeline-item ant-timeline-item-right"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.reverse: true_1_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -1900,40 +1553,28 @@ exports[`Render properties.reverse: true - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Text 2
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-last"
+    class="ant-timeline-item ant-timeline-item-last"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.reverse: true_0_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -1952,15 +1593,10 @@ exports[`Render properties.reverse: true - value[0] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Title 1
       </div>
@@ -1970,30 +1606,27 @@ exports[`Render properties.reverse: true - value[0] 1`] = `
 `;
 
 exports[`Render properties.reverse: true - value[1] 1`] = `
+.emotion-0 {
+  padding: 5px 0px 0px 5px;
+}
+
 <ul
-  className="ant-timeline ant-timeline-reverse {\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}"
+  class="ant-timeline ant-timeline-reverse emotion-0"
   id="properties.reverse: true"
 >
   <li
-    className="ant-timeline-item"
+    class="ant-timeline-item"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.reverse: true_2_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -2012,40 +1645,28 @@ exports[`Render properties.reverse: true - value[1] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Text 3
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-right"
+    class="ant-timeline-item ant-timeline-item-right"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.reverse: true_1_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -2064,40 +1685,28 @@ exports[`Render properties.reverse: true - value[1] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Text 2
       </div>
     </div>
   </li>
   <li
-    className="ant-timeline-item ant-timeline-item-last"
+    class="ant-timeline-item ant-timeline-item-last"
   >
     <div
-      className="ant-timeline-item-tail"
+      class="ant-timeline-item-tail"
     />
     <div
-      className="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
-      style={
-        Object {
-          "borderColor": undefined,
-        }
-      }
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
     >
       <span
         aria-label="loading-3-quarters"
-        basePath=""
-        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":{}}"
+        class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
         id="properties.reverse: true_0_icon"
-        required={false}
         role="img"
       >
         <svg
@@ -2116,15 +1725,10 @@ exports[`Render properties.reverse: true - value[1] 1`] = `
       </span>
     </div>
     <div
-      className="ant-timeline-item-content"
+      class="ant-timeline-item-content"
     >
       <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-          }
-        }
+        style="border: 1px solid red; padding: 10px;"
       >
         Title 1
       </div>

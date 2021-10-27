@@ -2,22 +2,22 @@
 
 exports[`Render default - value[0] 1`] = `
 <div
-  className="{}"
+  class="emotion-0"
   id="default"
 >
   <div
-    className="markdown-body"
+    class="markdown-body"
   />
 </div>
 `;
 
 exports[`Render properties.content = table - value[0] 1`] = `
 <div
-  className="{}"
+  class="emotion-0"
   id="properties.content = table"
 >
   <div
-    className="markdown-body"
+    class="markdown-body"
   >
     <h3>
       Table
@@ -26,29 +26,17 @@ exports[`Render properties.content = table - value[0] 1`] = `
       <thead>
         <tr>
           <th
-            style={
-              Object {
-                "textAlign": "right",
-              }
-            }
+            style="text-align: right;"
           >
             A
           </th>
           <th
-            style={
-              Object {
-                "textAlign": "center",
-              }
-            }
+            style="text-align: center;"
           >
             B
           </th>
           <th
-            style={
-              Object {
-                "textAlign": "left",
-              }
-            }
+            style="text-align: left;"
           >
             C
           </th>
@@ -57,87 +45,51 @@ exports[`Render properties.content = table - value[0] 1`] = `
       <tbody>
         <tr>
           <td
-            style={
-              Object {
-                "textAlign": "right",
-              }
-            }
+            style="text-align: right;"
           >
             one
           </td>
           <td
-            style={
-              Object {
-                "textAlign": "center",
-              }
-            }
+            style="text-align: center;"
           >
             two
           </td>
           <td
-            style={
-              Object {
-                "textAlign": "left",
-              }
-            }
+            style="text-align: left;"
           >
             three
           </td>
         </tr>
         <tr>
           <td
-            style={
-              Object {
-                "textAlign": "right",
-              }
-            }
+            style="text-align: right;"
           >
             123
           </td>
           <td
-            style={
-              Object {
-                "textAlign": "center",
-              }
-            }
+            style="text-align: center;"
           >
             345
           </td>
           <td
-            style={
-              Object {
-                "textAlign": "left",
-              }
-            }
+            style="text-align: left;"
           >
             34892
           </td>
         </tr>
         <tr>
           <td
-            style={
-              Object {
-                "textAlign": "right",
-              }
-            }
+            style="text-align: right;"
           >
             true
           </td>
           <td
-            style={
-              Object {
-                "textAlign": "center",
-              }
-            }
+            style="text-align: center;"
           >
             false
           </td>
           <td
-            style={
-              Object {
-                "textAlign": "left",
-              }
-            }
+            style="text-align: left;"
           >
             none
           </td>
@@ -150,11 +102,11 @@ exports[`Render properties.content = table - value[0] 1`] = `
 
 exports[`Render properties.content - value[0] 1`] = `
 <div
-  className="{}"
+  class="emotion-0"
   id="properties.content"
 >
   <div
-    className="markdown-body"
+    class="markdown-body"
   >
     <h1>
       One Heading
@@ -204,16 +156,15 @@ exports[`Render properties.content - value[0] 1`] = `
       </li>
       <li>
         <input
-          checked={false}
-          readOnly={true}
+          readonly=""
           type="checkbox"
         />
         todo
       </li>
       <li>
         <input
-          checked={true}
-          readOnly={true}
+          checked=""
+          readonly=""
           type="checkbox"
         />
         done
@@ -240,11 +191,11 @@ exports[`Render properties.content - value[0] 1`] = `
 
 exports[`Render properties.content with code - value[0] 1`] = `
 <div
-  className="{}"
+  class="emotion-0"
   id="properties.content with code"
 >
   <div
-    className="markdown-body"
+    class="markdown-body"
   >
     <h3>
       Code
@@ -262,7 +213,7 @@ exports[`Render properties.content with code - value[0] 1`] = `
     </p>
     <pre>
       <code
-        className="language-html"
+        class="language-html"
       >
           &lt;a href=""&gt;html style&lt;/a&gt;
       </code>
@@ -272,7 +223,7 @@ exports[`Render properties.content with code - value[0] 1`] = `
     </p>
     <pre>
       <code
-        className="language-json"
+        class="language-json"
       >
           {
     "obj": "one",
@@ -288,7 +239,7 @@ exports[`Render properties.content with code - value[0] 1`] = `
     </p>
     <pre>
       <code
-        className="language-html"
+        class="language-html"
       >
         &lt;div onmouseover="alert('alpha')"&gt;
   &lt;a href="javascript:alert('bravo')"&gt;delta&lt;/a&gt;
@@ -309,11 +260,11 @@ exports[`Render properties.content with code - value[0] 1`] = `
 
 exports[`Render properties.html-iframe - value[0] 1`] = `
 <div
-  className="{}"
+  class="emotion-0"
   id="properties.html-iframe"
 >
   <div
-    className="markdown-body"
+    class="markdown-body"
   >
     <p>
       No additional ADD_TAGS:
@@ -325,11 +276,11 @@ exports[`Render properties.html-iframe - value[0] 1`] = `
 
 exports[`Render properties.skipHtml = false - value[0] 1`] = `
 <div
-  className="{}"
+  class="emotion-0"
   id="properties.skipHtml = false"
 >
   <div
-    className="markdown-body"
+    class="markdown-body"
   >
     <h3>
       Link
@@ -364,11 +315,11 @@ exports[`Render properties.skipHtml = false - value[0] 1`] = `
 
 exports[`Render properties.skipHtml = true - value[0] 1`] = `
 <div
-  className="{}"
+  class="emotion-0"
   id="properties.skipHtml = true"
 >
   <div
-    className="markdown-body"
+    class="markdown-body"
   >
     <h3>
       Link
@@ -387,12 +338,16 @@ exports[`Render properties.skipHtml = true - value[0] 1`] = `
 `;
 
 exports[`Render properties.style and headings - value[0] 1`] = `
+.emotion-0 {
+  border: 1px solid blue;
+}
+
 <div
-  className="{\\"style\\":{\\"border\\":\\"1px solid blue\\"}}"
+  class="emotion-0"
   id="properties.style and headings"
 >
   <div
-    className="markdown-body"
+    class="markdown-body"
   >
     <h1>
       One

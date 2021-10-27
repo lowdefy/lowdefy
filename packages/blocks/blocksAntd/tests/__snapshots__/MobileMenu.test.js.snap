@@ -5,17 +5,14 @@ exports[`Render backgroundColor: #016e1e - value[0] 1`] = `
   id="backgroundColor: #016e1e"
 >
   <button
-    className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
     id="backgroundColor: #016e1e_button"
-    onClick={[Function]}
     type="button"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
       id="backgroundColor: #016e1e_button_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -41,17 +38,14 @@ exports[`Render default - value[0] 1`] = `
   id="default"
 >
   <button
-    className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
     id="default_button"
-    onClick={[Function]}
     type="button"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
       id="default_button_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -77,17 +71,14 @@ exports[`Render menus: default - value[0] 1`] = `
   id="menus: default"
 >
   <button
-    className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
     id="menus: default_button"
-    onClick={[Function]}
     type="button"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
       id="menus: default_button_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -113,17 +104,14 @@ exports[`Render menus: links[0] - value[0] 1`] = `
   id="menus: links[0]"
 >
   <button
-    className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
     id="menus: links[0]_button"
-    onClick={[Function]}
     type="button"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
       id="menus: links[0]_button_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -149,17 +137,14 @@ exports[`Render menus: properties.menuId: menu_one - value[0] 1`] = `
   id="menus: properties.menuId: menu_one"
 >
   <button
-    className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
     id="menus: properties.menuId: menu_one_button"
-    onClick={[Function]}
     type="button"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
       id="menus: properties.menuId: menu_one_button_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -185,17 +170,14 @@ exports[`Render menusTitle pageId - value[0] 1`] = `
   id="menusTitle pageId"
 >
   <button
-    className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
     id="menusTitle pageId_button"
-    onClick={[Function]}
     type="button"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
       id="menusTitle pageId_button_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -221,17 +203,14 @@ exports[`Render menusTitle properties.title - value[0] 1`] = `
   id="menusTitle properties.title"
 >
   <button
-    className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
     id="menusTitle properties.title_button"
-    onClick={[Function]}
     type="button"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
       id="menusTitle properties.title_button_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -257,17 +236,14 @@ exports[`Render menusTitle url - value[0] 1`] = `
   id="menusTitle url"
 >
   <button
-    className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
     id="menusTitle url_button"
-    onClick={[Function]}
     type="button"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
       id="menusTitle url_button_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -293,17 +269,14 @@ exports[`Render properties.MenuGroup with MenuLInks - value[0] 1`] = `
   id="properties.MenuGroup with MenuLInks"
 >
   <button
-    className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
     id="properties.MenuGroup with MenuLInks_button"
-    onClick={[Function]}
     type="button"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
       id="properties.MenuGroup with MenuLInks_button_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -329,17 +302,14 @@ exports[`Render properties.danger: true - value[0] 1`] = `
   id="properties.danger: true"
 >
   <button
-    className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
     id="properties.danger: true_button"
-    onClick={[Function]}
     type="button"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
       id="properties.danger: true_button_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -365,17 +335,14 @@ exports[`Render properties.icon - value[0] 1`] = `
   id="properties.icon"
 >
   <button
-    className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
     id="properties.icon_button"
-    onClick={[Function]}
     type="button"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
       id="properties.icon_button_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -401,17 +368,14 @@ exports[`Render properties.links - value[0] 1`] = `
   id="properties.links"
 >
   <button
-    className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
     id="properties.links_button"
-    onClick={[Function]}
     type="button"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
       id="properties.links_button_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -437,17 +401,14 @@ exports[`Render properties.subMenuCloseDelay: 3 - value[0] 1`] = `
   id="properties.subMenuCloseDelay: 3"
 >
   <button
-    className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
     id="properties.subMenuCloseDelay: 3_button"
-    onClick={[Function]}
     type="button"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
       id="properties.subMenuCloseDelay: 3_button_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -473,17 +434,14 @@ exports[`Render properties.subMenuOpenDelay: 3 - value[0] 1`] = `
   id="properties.subMenuOpenDelay: 3"
 >
   <button
-    className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
     id="properties.subMenuOpenDelay: 3_button"
-    onClick={[Function]}
     type="button"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
       id="properties.subMenuOpenDelay: 3_button_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -509,17 +467,14 @@ exports[`Render properties.title - value[0] 1`] = `
   id="properties.title"
 >
   <button
-    className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
     id="properties.title_button"
-    onClick={[Function]}
     type="button"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
       id="properties.title_button_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -545,17 +500,14 @@ exports[`Render selectedColor: #f16e1e - value[0] 1`] = `
   id="selectedColor: #f16e1e"
 >
   <button
-    className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
     id="selectedColor: #f16e1e_button"
-    onClick={[Function]}
     type="button"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
       id="selectedColor: #f16e1e_button_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -581,17 +533,14 @@ exports[`Render selectedColor: #f16e1e, backgroundColor: #016e1e - value[0] 1`] 
   id="selectedColor: #f16e1e, backgroundColor: #016e1e"
 >
   <button
-    className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
     id="selectedColor: #f16e1e, backgroundColor: #016e1e_button"
-    onClick={[Function]}
     type="button"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
       id="selectedColor: #f16e1e, backgroundColor: #016e1e_button_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -617,17 +566,14 @@ exports[`Render theme: light - value[0] 1`] = `
   id="theme: light"
 >
   <button
-    className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
     id="theme: light_button"
-    onClick={[Function]}
     type="button"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
       id="theme: light_button_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -653,17 +599,14 @@ exports[`Render theme: light, selectedColor: #6C2ACB - value[0] 1`] = `
   id="theme: light, selectedColor: #6C2ACB"
 >
   <button
-    className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
     id="theme: light, selectedColor: #6C2ACB_button"
-    onClick={[Function]}
     type="button"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
       id="theme: light, selectedColor: #6C2ACB_button_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -689,17 +632,14 @@ exports[`Render theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e -
   id="theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e"
 >
   <button
-    className="ant-btn ant-btn-primary ant-btn-icon-only {\\"style\\":[{},null]}"
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
     id="theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e_button"
-    onClick={[Function]}
     type="button"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
       id="theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e_button_icon"
-      required={false}
       role="img"
     >
       <svg

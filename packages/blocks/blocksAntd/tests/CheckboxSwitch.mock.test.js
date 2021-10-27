@@ -14,12 +14,9 @@
   limitations under the License.
 */
 
-import { runMockRenderTests } from '@lowdefy/block-tools';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Checkbox } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import CheckboxSwitchBlock from '../src/blocks/CheckboxSwitch/CheckboxSwitch';
 import examples from '../demo/examples/CheckboxSwitch.yaml';
 import meta from '../src/blocks/CheckboxSwitch/CheckboxSwitch.json';
@@ -36,4 +33,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: CheckboxSwitchBlock, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: CheckboxSwitchBlock, meta, mocks });

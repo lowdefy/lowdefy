@@ -14,12 +14,9 @@
   limitations under the License.
 */
 
-import { runMockRenderTests } from '@lowdefy/block-tools';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Affix } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import AffixBlock from '../src/blocks/Affix/Affix';
 import examples from '../demo/examples/Affix.yaml';
 import meta from '../src/blocks/Affix/Affix.json';
@@ -35,4 +32,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: AffixBlock, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: AffixBlock, meta, mocks });

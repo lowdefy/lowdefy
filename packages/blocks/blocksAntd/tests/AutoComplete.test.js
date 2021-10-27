@@ -14,28 +14,12 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import validationsExamples from '../demo/validationExamples.json';
 import AutoComplete from '../src/blocks/AutoComplete/AutoComplete';
 import examples from '../demo/examples/AutoComplete.yaml';
 import meta from '../src/blocks/AutoComplete/AutoComplete.json';
 
-jest.mock('@lowdefy/block-tools', () => {
-  const originalModule = jest.requireActual('@lowdefy/block-tools');
-  return {
-    ...originalModule,
-    blockDefaultProps: {
-      ...originalModule.blockDefaultProps,
-      methods: {
-        ...originalModule.blockDefaultProps.methods,
-        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
-      },
-    },
-  };
-});
-
-// FIX Jest: TypeError: parentInstance.children.indexOf is not a function
-// FIX Jest: TypeError: Cannot read property 'removeEventListener' of null
 runRenderTests({ examples, Block: AutoComplete, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta });

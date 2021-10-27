@@ -57,7 +57,7 @@ exports[`Mock render - backgroundColor: #016e1e - value[0] - Drawer 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#016e1e\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#016e1e\\"},\\"options\\":true}",
       "children": <React.Fragment>
         <MenuComp
           basePath=""
@@ -83,36 +83,26 @@ Array [
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     Object {
                       "backgroundColor": "#016e1e",
                       "padding": "3.1em 0 0 0",
                     },
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                 ],
                 "results": Array [
@@ -122,23 +112,23 @@ Array [
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#016e1e\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#016e1e\\"},\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                 ],
               },
@@ -242,17 +232,17 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": "{\\"options\\":true}",
+      "drawerStyle": "{\\"options\\":true}",
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": "{\\"options\\":true}",
       "height": undefined,
       "id": "backgroundColor: #016e1e_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -322,7 +312,7 @@ exports[`Mock render - default - value[0] - Drawer 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
       "children": <React.Fragment>
         <MenuComp
           basePath=""
@@ -348,36 +338,26 @@ Array [
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     Object {
                       "backgroundColor": undefined,
                       "padding": "3.1em 0 0 0",
                     },
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                 ],
                 "results": Array [
@@ -387,23 +367,23 @@ Array [
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                 ],
               },
@@ -439,17 +419,17 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": "{\\"options\\":true}",
+      "drawerStyle": "{\\"options\\":true}",
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": "{\\"options\\":true}",
       "height": undefined,
       "id": "default_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -519,7 +499,7 @@ exports[`Mock render - menus: default - value[0] - Drawer 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
       "children": <React.Fragment>
         <MenuComp
           basePath=""
@@ -603,36 +583,26 @@ Array [
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     Object {
                       "backgroundColor": undefined,
                       "padding": "3.1em 0 0 0",
                     },
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                 ],
                 "results": Array [
@@ -642,23 +612,23 @@ Array [
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                 ],
               },
@@ -694,17 +664,17 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": "{\\"options\\":true}",
+      "drawerStyle": "{\\"options\\":true}",
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": "{\\"options\\":true}",
       "height": undefined,
       "id": "menus: default_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -774,7 +744,7 @@ exports[`Mock render - menus: links[0] - value[0] - Drawer 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
       "children": <React.Fragment>
         <MenuComp
           basePath=""
@@ -835,36 +805,26 @@ Array [
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     Object {
                       "backgroundColor": undefined,
                       "padding": "3.1em 0 0 0",
                     },
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                 ],
                 "results": Array [
@@ -874,23 +834,23 @@ Array [
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                 ],
               },
@@ -926,17 +886,17 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": "{\\"options\\":true}",
+      "drawerStyle": "{\\"options\\":true}",
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": "{\\"options\\":true}",
       "height": undefined,
       "id": "menus: links[0]_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1006,7 +966,7 @@ exports[`Mock render - menus: properties.menuId: menu_one - value[0] - Drawer 1`
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
       "children": <React.Fragment>
         <MenuComp
           basePath=""
@@ -1090,36 +1050,26 @@ Array [
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     Object {
                       "backgroundColor": undefined,
                       "padding": "3.1em 0 0 0",
                     },
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                 ],
                 "results": Array [
@@ -1129,23 +1079,23 @@ Array [
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                 ],
               },
@@ -1182,17 +1132,17 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": "{\\"options\\":true}",
+      "drawerStyle": "{\\"options\\":true}",
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": "{\\"options\\":true}",
       "height": undefined,
       "id": "menus: properties.menuId: menu_one_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1262,7 +1212,7 @@ exports[`Mock render - menusTitle pageId - value[0] - Drawer 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
       "children": <React.Fragment>
         <MenuComp
           basePath=""
@@ -1305,36 +1255,26 @@ Array [
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     Object {
                       "backgroundColor": undefined,
                       "padding": "3.1em 0 0 0",
                     },
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                 ],
                 "results": Array [
@@ -1344,23 +1284,23 @@ Array [
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                 ],
               },
@@ -1396,17 +1336,17 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": "{\\"options\\":true}",
+      "drawerStyle": "{\\"options\\":true}",
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": "{\\"options\\":true}",
       "height": undefined,
       "id": "menusTitle pageId_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1476,7 +1416,7 @@ exports[`Mock render - menusTitle properties.title - value[0] - Drawer 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
       "children": <React.Fragment>
         <MenuComp
           basePath=""
@@ -1520,36 +1460,26 @@ Array [
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     Object {
                       "backgroundColor": undefined,
                       "padding": "3.1em 0 0 0",
                     },
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                 ],
                 "results": Array [
@@ -1559,23 +1489,23 @@ Array [
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                 ],
               },
@@ -1611,17 +1541,17 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": "{\\"options\\":true}",
+      "drawerStyle": "{\\"options\\":true}",
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": "{\\"options\\":true}",
       "height": undefined,
       "id": "menusTitle properties.title_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1691,7 +1621,7 @@ exports[`Mock render - menusTitle url - value[0] - Drawer 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
       "children": <React.Fragment>
         <MenuComp
           basePath=""
@@ -1734,36 +1664,26 @@ Array [
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     Object {
                       "backgroundColor": undefined,
                       "padding": "3.1em 0 0 0",
                     },
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                 ],
                 "results": Array [
@@ -1773,23 +1693,23 @@ Array [
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                 ],
               },
@@ -1825,17 +1745,17 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": "{\\"options\\":true}",
+      "drawerStyle": "{\\"options\\":true}",
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": "{\\"options\\":true}",
       "height": undefined,
       "id": "menusTitle url_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1905,7 +1825,7 @@ exports[`Mock render - properties.MenuGroup with MenuLInks - value[0] - Drawer 1
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
       "children": <React.Fragment>
         <MenuComp
           basePath=""
@@ -1931,36 +1851,26 @@ Array [
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     Object {
                       "backgroundColor": undefined,
                       "padding": "3.1em 0 0 0",
                     },
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                 ],
                 "results": Array [
@@ -1970,23 +1880,23 @@ Array [
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                 ],
               },
@@ -2049,17 +1959,17 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": "{\\"options\\":true}",
+      "drawerStyle": "{\\"options\\":true}",
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": "{\\"options\\":true}",
       "height": undefined,
       "id": "properties.MenuGroup with MenuLInks_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -2129,7 +2039,7 @@ exports[`Mock render - properties.danger: true - value[0] - Drawer 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
       "children": <React.Fragment>
         <MenuComp
           basePath=""
@@ -2155,36 +2065,26 @@ Array [
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     Object {
                       "backgroundColor": undefined,
                       "padding": "3.1em 0 0 0",
                     },
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                 ],
                 "results": Array [
@@ -2194,23 +2094,23 @@ Array [
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                 ],
               },
@@ -2283,17 +2183,17 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": "{\\"options\\":true}",
+      "drawerStyle": "{\\"options\\":true}",
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": "{\\"options\\":true}",
       "height": undefined,
       "id": "properties.danger: true_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -2363,7 +2263,7 @@ exports[`Mock render - properties.icon - value[0] - Drawer 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
       "children": <React.Fragment>
         <MenuComp
           basePath=""
@@ -2389,36 +2289,26 @@ Array [
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     Object {
                       "backgroundColor": undefined,
                       "padding": "3.1em 0 0 0",
                     },
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                 ],
                 "results": Array [
@@ -2428,23 +2318,23 @@ Array [
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                 ],
               },
@@ -2498,17 +2388,17 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": "{\\"options\\":true}",
+      "drawerStyle": "{\\"options\\":true}",
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": "{\\"options\\":true}",
       "height": undefined,
       "id": "properties.icon_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -2578,7 +2468,7 @@ exports[`Mock render - properties.links - value[0] - Drawer 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
       "children": <React.Fragment>
         <MenuComp
           basePath=""
@@ -2604,36 +2494,26 @@ Array [
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     Object {
                       "backgroundColor": undefined,
                       "padding": "3.1em 0 0 0",
                     },
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                 ],
                 "results": Array [
@@ -2643,23 +2523,23 @@ Array [
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                 ],
               },
@@ -2707,17 +2587,17 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": "{\\"options\\":true}",
+      "drawerStyle": "{\\"options\\":true}",
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": "{\\"options\\":true}",
       "height": undefined,
       "id": "properties.links_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -2787,7 +2667,7 @@ exports[`Mock render - properties.subMenuCloseDelay: 3 - value[0] - Drawer 1`] =
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
       "children": <React.Fragment>
         <MenuComp
           basePath=""
@@ -2813,36 +2693,26 @@ Array [
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     Object {
                       "backgroundColor": undefined,
                       "padding": "3.1em 0 0 0",
                     },
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                 ],
                 "results": Array [
@@ -2852,23 +2722,23 @@ Array [
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                 ],
               },
@@ -2932,17 +2802,17 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": "{\\"options\\":true}",
+      "drawerStyle": "{\\"options\\":true}",
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": "{\\"options\\":true}",
       "height": undefined,
       "id": "properties.subMenuCloseDelay: 3_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -3012,7 +2882,7 @@ exports[`Mock render - properties.subMenuOpenDelay: 3 - value[0] - Drawer 1`] = 
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
       "children": <React.Fragment>
         <MenuComp
           basePath=""
@@ -3038,36 +2908,26 @@ Array [
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     Object {
                       "backgroundColor": undefined,
                       "padding": "3.1em 0 0 0",
                     },
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                 ],
                 "results": Array [
@@ -3077,23 +2937,23 @@ Array [
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                 ],
               },
@@ -3157,17 +3017,17 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": "{\\"options\\":true}",
+      "drawerStyle": "{\\"options\\":true}",
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": "{\\"options\\":true}",
       "height": undefined,
       "id": "properties.subMenuOpenDelay: 3_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -3237,7 +3097,7 @@ exports[`Mock render - properties.title - value[0] - Drawer 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
       "children": <React.Fragment>
         <MenuComp
           basePath=""
@@ -3263,36 +3123,26 @@ Array [
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     Object {
                       "backgroundColor": undefined,
                       "padding": "3.1em 0 0 0",
                     },
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                 ],
                 "results": Array [
@@ -3302,23 +3152,23 @@ Array [
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                 ],
               },
@@ -3374,17 +3224,17 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": "{\\"options\\":true}",
+      "drawerStyle": "{\\"options\\":true}",
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": "{\\"options\\":true}",
       "height": undefined,
       "id": "properties.title_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -3454,7 +3304,7 @@ exports[`Mock render - selectedColor: #f16e1e - value[0] - Drawer 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
       "children": <React.Fragment>
         <MenuComp
           basePath=""
@@ -3480,36 +3330,26 @@ Array [
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     Object {
                       "backgroundColor": undefined,
                       "padding": "3.1em 0 0 0",
                     },
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                 ],
                 "results": Array [
@@ -3519,23 +3359,23 @@ Array [
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                 ],
               },
@@ -3639,17 +3479,17 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": "{\\"options\\":true}",
+      "drawerStyle": "{\\"options\\":true}",
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": "{\\"options\\":true}",
       "height": undefined,
       "id": "selectedColor: #f16e1e_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -3719,7 +3559,7 @@ exports[`Mock render - selectedColor: #f16e1e, backgroundColor: #016e1e - value[
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#016e1e\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#016e1e\\"},\\"options\\":true}",
       "children": <React.Fragment>
         <MenuComp
           basePath=""
@@ -3745,36 +3585,26 @@ Array [
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     Object {
                       "backgroundColor": "#016e1e",
                       "padding": "3.1em 0 0 0",
                     },
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                 ],
                 "results": Array [
@@ -3784,23 +3614,23 @@ Array [
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#016e1e\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#016e1e\\"},\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                 ],
               },
@@ -3905,17 +3735,17 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": "{\\"options\\":true}",
+      "drawerStyle": "{\\"options\\":true}",
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": "{\\"options\\":true}",
       "height": undefined,
       "id": "selectedColor: #f16e1e, backgroundColor: #016e1e_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -3985,7 +3815,7 @@ exports[`Mock render - theme: light - value[0] - Drawer 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
       "children": <React.Fragment>
         <MenuComp
           basePath=""
@@ -4011,36 +3841,26 @@ Array [
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     Object {
                       "backgroundColor": undefined,
                       "padding": "3.1em 0 0 0",
                     },
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                 ],
                 "results": Array [
@@ -4050,23 +3870,23 @@ Array [
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                 ],
               },
@@ -4169,17 +3989,17 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": "{\\"options\\":true}",
+      "drawerStyle": "{\\"options\\":true}",
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": "{\\"options\\":true}",
       "height": undefined,
       "id": "theme: light_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -4249,7 +4069,7 @@ exports[`Mock render - theme: light, selectedColor: #6C2ACB - value[0] - Drawer 
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
       "children": <React.Fragment>
         <MenuComp
           basePath=""
@@ -4275,36 +4095,26 @@ Array [
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     Object {
                       "backgroundColor": undefined,
                       "padding": "3.1em 0 0 0",
                     },
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                 ],
                 "results": Array [
@@ -4314,23 +4124,23 @@ Array [
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                 ],
               },
@@ -4434,17 +4244,17 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": "{\\"options\\":true}",
+      "drawerStyle": "{\\"options\\":true}",
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": "{\\"options\\":true}",
       "height": undefined,
       "id": "theme: light, selectedColor: #6C2ACB_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -4514,7 +4324,7 @@ exports[`Mock render - theme: light, selectedColor: #f16e1e, backgroundColor: #0
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#91cfcf\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#91cfcf\\"},\\"options\\":true}",
       "children": <React.Fragment>
         <MenuComp
           basePath=""
@@ -4540,36 +4350,26 @@ Array [
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     Object {
                       "backgroundColor": "#91cfcf",
                       "padding": "3.1em 0 0 0",
                     },
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                   Array [
                     undefined,
-                    Object {
-                      "styleObjectOnly": true,
-                    },
+                    true,
                   ],
                 ],
                 "results": Array [
@@ -4579,23 +4379,23 @@ Array [
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#91cfcf\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#91cfcf\\"},\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                   Object {
                     "type": "return",
-                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                    "value": "{\\"options\\":true}",
                   },
                 ],
               },
@@ -4700,17 +4500,17 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": "{\\"options\\":true}",
+      "drawerStyle": "{\\"options\\":true}",
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": "{\\"options\\":true}",
       "height": undefined,
       "id": "theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": "{\\"options\\":true}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,

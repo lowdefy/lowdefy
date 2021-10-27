@@ -1,33 +1,45 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - default - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - default - value[0] - error 1`] = `
+<div
+  id="default"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - default - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - default - value[0] - error 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - default - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - default - value[0] - info 1`] = `
+<div
+  id="default"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - default - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - default - value[0] - loading 1`] = `
+<div
+  id="default"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - default - value[0] - loading 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - default - value[0] - success 1`] = `
+<div
+  id="default"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - default - value[0] - success 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Args message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -50,36 +62,54 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - default - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - default - value[0] - warning 1`] = `
+<div
+  id="default"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.content - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - default - value[0] - warning 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.content - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.content - value[0] - error 1`] = `
+<div
+  id="properties.content"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.content - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.content - value[0] - error 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.content - value[0] - info 1`] = `
+<div
+  id="properties.content"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.content - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.content - value[0] - loading 1`] = `
+<div
+  id="properties.content"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.content - value[0] - loading 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.content - value[0] - success 1`] = `
+<div
+  id="properties.content"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.content - value[0] - success 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Args message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -102,36 +132,54 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.content - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.content - value[0] - warning 1`] = `
+<div
+  id="properties.content"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.duration - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.content - value[0] - warning 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.duration - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.duration - value[0] - error 1`] = `
+<div
+  id="properties.duration"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.duration - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.duration - value[0] - error 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.duration - value[0] - info 1`] = `
+<div
+  id="properties.duration"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.duration - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.duration - value[0] - loading 1`] = `
+<div
+  id="properties.duration"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.duration - value[0] - loading 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.duration - value[0] - success 1`] = `
+<div
+  id="properties.duration"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.duration - value[0] - success 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Args message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -154,36 +202,54 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.duration - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.duration - value[0] - warning 1`] = `
+<div
+  id="properties.duration"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.icon - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.duration - value[0] - warning 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.icon - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.icon - value[0] - error 1`] = `
+<div
+  id="properties.icon"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.icon - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.icon - value[0] - error 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.icon - value[0] - info 1`] = `
+<div
+  id="properties.icon"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.icon - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.icon - value[0] - loading 1`] = `
+<div
+  id="properties.icon"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.icon - value[0] - loading 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.icon - value[0] - success 1`] = `
+<div
+  id="properties.icon"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.icon - value[0] - success 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Args message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -207,7 +273,7 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction],
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
             "triggerEvent": [Function],
@@ -231,30 +297,30 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.icon - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.icon - value[0] - warning 1`] = `
+<div
+  id="properties.icon"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.icon - value[0] - warning 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: error - value[0] - error 1`] = `
+<div
+  id="properties.status: error"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: error - value[0] - error 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Args message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -277,38 +343,62 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: error - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: error - value[0] - info 1`] = `
+<div
+  id="properties.status: error"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: error - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: error - value[0] - info 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: error - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: error - value[0] - loading 1`] = `
+<div
+  id="properties.status: error"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: error - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: error - value[0] - loading 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: info - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: error - value[0] - success 1`] = `
+<div
+  id="properties.status: error"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: error - value[0] - success 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: error - value[0] - warning 1`] = `
+<div
+  id="properties.status: error"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: error - value[0] - warning 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: info - value[0] - error 1`] = `
+<div
+  id="properties.status: info"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: info - value[0] - error 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: info - value[0] - info 1`] = `
+<div
+  id="properties.status: info"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: info - value[0] - info 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Args message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -331,38 +421,62 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: info - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: info - value[0] - loading 1`] = `
+<div
+  id="properties.status: info"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: info - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: info - value[0] - loading 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: info - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: info - value[0] - success 1`] = `
+<div
+  id="properties.status: info"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: loading - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: info - value[0] - success 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: loading - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: info - value[0] - warning 1`] = `
+<div
+  id="properties.status: info"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: info - value[0] - warning 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: loading - value[0] - error 1`] = `
+<div
+  id="properties.status: loading"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: loading - value[0] - error 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: loading - value[0] - info 1`] = `
+<div
+  id="properties.status: loading"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: loading - value[0] - info 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: loading - value[0] - loading 1`] = `
+<div
+  id="properties.status: loading"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: loading - value[0] - loading 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Args message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -385,40 +499,70 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: loading - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: loading - value[0] - success 1`] = `
+<div
+  id="properties.status: loading"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: loading - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: loading - value[0] - success 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: warning - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: loading - value[0] - warning 1`] = `
+<div
+  id="properties.status: loading"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: warning - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: loading - value[0] - warning 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: warning - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: warning - value[0] - error 1`] = `
+<div
+  id="properties.status: warning"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: warning - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: warning - value[0] - error 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: warning - value[0] - info 1`] = `
+<div
+  id="properties.status: warning"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: warning - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: warning - value[0] - loading 1`] = `
+<div
+  id="properties.status: warning"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: warning - value[0] - loading 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: warning - value[0] - success 1`] = `
+<div
+  id="properties.status: warning"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: warning - value[0] - success 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: warning - value[0] - warning 1`] = `
+<div
+  id="properties.status: warning"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: warning - value[0] - warning 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Args message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -441,34 +585,46 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - with html content - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - with html content - value[0] - error 1`] = `
+<div
+  id="with html content"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - with html content - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - with html content - value[0] - error 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - with html content - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - with html content - value[0] - info 1`] = `
+<div
+  id="with html content"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - with html content - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - with html content - value[0] - loading 1`] = `
+<div
+  id="with html content"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - with html content - value[0] - loading 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - with html content - value[0] - success 1`] = `
+<div
+  id="with html content"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - with html content - value[0] - success 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Args message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -491,36 +647,54 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - with html content - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - with html content - value[0] - warning 1`] = `
+<div
+  id="with html content"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"content":"Args message content"}} - with html content - value[0] - warning 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - value[0] - error 1`] = `
+<div
+  id="default"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - value[0] - error 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - value[0] - info 1`] = `
+<div
+  id="default"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - value[0] - loading 1`] = `
+<div
+  id="default"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - value[0] - loading 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - value[0] - success 1`] = `
+<div
+  id="default"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - value[0] - success 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="default"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -543,36 +717,54 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - value[0] - warning 1`] = `
+<div
+  id="default"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - value[0] - warning 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] - error 1`] = `
+<div
+  id="properties.content"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] - error 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] - info 1`] = `
+<div
+  id="properties.content"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] - loading 1`] = `
+<div
+  id="properties.content"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] - loading 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] - success 1`] = `
+<div
+  id="properties.content"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] - success 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -595,36 +787,54 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] - warning 1`] = `
+<div
+  id="properties.content"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.duration - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] - warning 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.duration - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.duration - value[0] - error 1`] = `
+<div
+  id="properties.duration"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.duration - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.duration - value[0] - error 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.duration - value[0] - info 1`] = `
+<div
+  id="properties.duration"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.duration - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.duration - value[0] - loading 1`] = `
+<div
+  id="properties.duration"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.duration - value[0] - loading 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.duration - value[0] - success 1`] = `
+<div
+  id="properties.duration"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.duration - value[0] - success 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -647,36 +857,54 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.duration - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.duration - value[0] - warning 1`] = `
+<div
+  id="properties.duration"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.icon - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.duration - value[0] - warning 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.icon - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.icon - value[0] - error 1`] = `
+<div
+  id="properties.icon"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.icon - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.icon - value[0] - error 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.icon - value[0] - info 1`] = `
+<div
+  id="properties.icon"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.icon - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.icon - value[0] - loading 1`] = `
+<div
+  id="properties.icon"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.icon - value[0] - loading 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.icon - value[0] - success 1`] = `
+<div
+  id="properties.icon"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.icon - value[0] - success 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -700,7 +928,7 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction],
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
             "triggerEvent": [Function],
@@ -724,30 +952,30 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.icon - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.icon - value[0] - warning 1`] = `
+<div
+  id="properties.icon"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.icon - value[0] - warning 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - error 1`] = `
+<div
+  id="properties.status: error"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - error 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -770,38 +998,62 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - info 1`] = `
+<div
+  id="properties.status: error"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - info 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - loading 1`] = `
+<div
+  id="properties.status: error"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - loading 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - success 1`] = `
+<div
+  id="properties.status: error"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - success 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - warning 1`] = `
+<div
+  id="properties.status: error"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - warning 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - error 1`] = `
+<div
+  id="properties.status: info"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - error 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - info 1`] = `
+<div
+  id="properties.status: info"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - info 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -824,38 +1076,62 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - loading 1`] = `
+<div
+  id="properties.status: info"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - loading 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - success 1`] = `
+<div
+  id="properties.status: info"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: loading - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - success 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: loading - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - warning 1`] = `
+<div
+  id="properties.status: info"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - warning 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: loading - value[0] - error 1`] = `
+<div
+  id="properties.status: loading"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: loading - value[0] - error 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: loading - value[0] - info 1`] = `
+<div
+  id="properties.status: loading"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: loading - value[0] - info 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: loading - value[0] - loading 1`] = `
+<div
+  id="properties.status: loading"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: loading - value[0] - loading 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -878,40 +1154,70 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: loading - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: loading - value[0] - success 1`] = `
+<div
+  id="properties.status: loading"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: loading - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: loading - value[0] - success 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: loading - value[0] - warning 1`] = `
+<div
+  id="properties.status: loading"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: loading - value[0] - warning 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - error 1`] = `
+<div
+  id="properties.status: warning"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - error 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - info 1`] = `
+<div
+  id="properties.status: warning"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - loading 1`] = `
+<div
+  id="properties.status: warning"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - loading 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - success 1`] = `
+<div
+  id="properties.status: warning"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - success 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - warning 1`] = `
+<div
+  id="properties.status: warning"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - warning 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -934,17 +1240,41 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - with html content - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - with html content - value[0] - error 1`] = `
+<div
+  id="with html content"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - with html content - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - with html content - value[0] - error 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - with html content - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - with html content - value[0] - info 1`] = `
+<div
+  id="with html content"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - with html content - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - with html content - value[0] - loading 1`] = `
+<div
+  id="with html content"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - with html content - value[0] - loading 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"duration":1}} - with html content - value[0] - success 1`] = `
+<div
+  id="with html content"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - with html content - value[0] - success 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html=<div style="color:pink;">
   <strong>
@@ -953,19 +1283,7 @@ Array [
 </div>
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -988,38 +1306,62 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{"duration":1}} - with html content - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - with html content - value[0] - warning 1`] = `
+<div
+  id="with html content"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - with html content - value[0] - warning 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - error 1`] = `
+<div
+  id="default"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - error 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - info 1`] = `
+<div
+  id="default"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - loading 1`] = `
+<div
+  id="default"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - loading 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - success 1`] = `
+<div
+  id="default"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - success 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - warning 1`] = `
+<div
+  id="default"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - warning 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="default"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -1042,36 +1384,54 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.content - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.content - value[0] - error 1`] = `
+<div
+  id="properties.content"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.content - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.content - value[0] - error 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.content - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.content - value[0] - info 1`] = `
+<div
+  id="properties.content"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.content - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.content - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.content - value[0] - loading 1`] = `
+<div
+  id="properties.content"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.content - value[0] - loading 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.content - value[0] - success 1`] = `
+<div
+  id="properties.content"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.content - value[0] - success 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.content - value[0] - warning 1`] = `
+<div
+  id="properties.content"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.content - value[0] - warning 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -1094,36 +1454,54 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.duration - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.duration - value[0] - error 1`] = `
+<div
+  id="properties.duration"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.duration - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.duration - value[0] - error 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.duration - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.duration - value[0] - info 1`] = `
+<div
+  id="properties.duration"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.duration - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.duration - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.duration - value[0] - loading 1`] = `
+<div
+  id="properties.duration"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.duration - value[0] - loading 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.duration - value[0] - success 1`] = `
+<div
+  id="properties.duration"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.duration - value[0] - success 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.duration - value[0] - warning 1`] = `
+<div
+  id="properties.duration"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.duration - value[0] - warning 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -1146,36 +1524,54 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.icon - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.icon - value[0] - error 1`] = `
+<div
+  id="properties.icon"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.icon - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.icon - value[0] - error 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.icon - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.icon - value[0] - info 1`] = `
+<div
+  id="properties.icon"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.icon - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.icon - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.icon - value[0] - loading 1`] = `
+<div
+  id="properties.icon"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.icon - value[0] - loading 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.icon - value[0] - success 1`] = `
+<div
+  id="properties.icon"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.icon - value[0] - success 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.icon - value[0] - warning 1`] = `
+<div
+  id="properties.icon"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.icon - value[0] - warning 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -1199,7 +1595,7 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction],
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
             "triggerEvent": [Function],
@@ -1223,36 +1619,54 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - error 1`] = `
+<div
+  id="properties.status: error"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - error 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - info 1`] = `
+<div
+  id="properties.status: error"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - loading 1`] = `
+<div
+  id="properties.status: error"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - loading 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - success 1`] = `
+<div
+  id="properties.status: error"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - success 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - warning 1`] = `
+<div
+  id="properties.status: error"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - warning 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -1275,36 +1689,54 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - error 1`] = `
+<div
+  id="properties.status: info"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - error 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - info 1`] = `
+<div
+  id="properties.status: info"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - loading 1`] = `
+<div
+  id="properties.status: info"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - loading 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - success 1`] = `
+<div
+  id="properties.status: info"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - success 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - warning 1`] = `
+<div
+  id="properties.status: info"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - warning 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -1327,36 +1759,54 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: loading - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: loading - value[0] - error 1`] = `
+<div
+  id="properties.status: loading"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: loading - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: loading - value[0] - error 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: loading - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: loading - value[0] - info 1`] = `
+<div
+  id="properties.status: loading"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: loading - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: loading - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: loading - value[0] - loading 1`] = `
+<div
+  id="properties.status: loading"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: loading - value[0] - loading 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: loading - value[0] - success 1`] = `
+<div
+  id="properties.status: loading"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: loading - value[0] - success 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: loading - value[0] - warning 1`] = `
+<div
+  id="properties.status: loading"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: loading - value[0] - warning 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -1379,36 +1829,54 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - error 1`] = `
+<div
+  id="properties.status: warning"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - error 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - info 1`] = `
+<div
+  id="properties.status: warning"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - loading 1`] = `
+<div
+  id="properties.status: warning"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - loading 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - success 1`] = `
+<div
+  id="properties.status: warning"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - success 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - warning 1`] = `
+<div
+  id="properties.status: warning"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - warning 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -1431,19 +1899,49 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - with html content - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - with html content - value[0] - error 1`] = `
+<div
+  id="with html content"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - with html content - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - with html content - value[0] - error 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - with html content - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - with html content - value[0] - info 1`] = `
+<div
+  id="with html content"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - with html content - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - with html content - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - with html content - value[0] - loading 1`] = `
+<div
+  id="with html content"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - with html content - value[0] - loading 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - with html content - value[0] - success 1`] = `
+<div
+  id="with html content"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - with html content - value[0] - success 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - with html content - value[0] - warning 1`] = `
+<div
+  id="with html content"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - with html content - value[0] - warning 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html=<div style="color:pink;">
   <strong>
@@ -1452,19 +1950,7 @@ Array [
 </div>
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -1487,34 +1973,46 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{}} - default - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - default - value[0] - error 1`] = `
+<div
+  id="default"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{}} - default - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - default - value[0] - error 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{}} - default - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - default - value[0] - info 1`] = `
+<div
+  id="default"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - default - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - default - value[0] - loading 1`] = `
+<div
+  id="default"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - default - value[0] - loading 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{}} - default - value[0] - success 1`] = `
+<div
+  id="default"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - default - value[0] - success 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="default"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -1537,36 +2035,54 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{}} - default - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - default - value[0] - warning 1`] = `
+<div
+  id="default"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.content - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - default - value[0] - warning 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.content - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.content - value[0] - error 1`] = `
+<div
+  id="properties.content"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.content - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.content - value[0] - error 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.content - value[0] - info 1`] = `
+<div
+  id="properties.content"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.content - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.content - value[0] - loading 1`] = `
+<div
+  id="properties.content"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.content - value[0] - loading 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{}} - properties.content - value[0] - success 1`] = `
+<div
+  id="properties.content"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.content - value[0] - success 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -1589,36 +2105,54 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.content - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.content - value[0] - warning 1`] = `
+<div
+  id="properties.content"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.duration - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.content - value[0] - warning 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.duration - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.duration - value[0] - error 1`] = `
+<div
+  id="properties.duration"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.duration - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.duration - value[0] - error 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.duration - value[0] - info 1`] = `
+<div
+  id="properties.duration"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.duration - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.duration - value[0] - loading 1`] = `
+<div
+  id="properties.duration"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.duration - value[0] - loading 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{}} - properties.duration - value[0] - success 1`] = `
+<div
+  id="properties.duration"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.duration - value[0] - success 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -1641,36 +2175,54 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.duration - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.duration - value[0] - warning 1`] = `
+<div
+  id="properties.duration"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.icon - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.duration - value[0] - warning 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.icon - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.icon - value[0] - error 1`] = `
+<div
+  id="properties.icon"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.icon - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.icon - value[0] - error 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.icon - value[0] - info 1`] = `
+<div
+  id="properties.icon"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.icon - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.icon - value[0] - loading 1`] = `
+<div
+  id="properties.icon"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.icon - value[0] - loading 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{}} - properties.icon - value[0] - success 1`] = `
+<div
+  id="properties.icon"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.icon - value[0] - success 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -1694,7 +2246,7 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction],
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
             "triggerEvent": [Function],
@@ -1718,30 +2270,30 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.icon - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.icon - value[0] - warning 1`] = `
+<div
+  id="properties.icon"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.icon - value[0] - warning 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{}} - properties.status: error - value[0] - error 1`] = `
+<div
+  id="properties.status: error"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: error - value[0] - error 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -1764,38 +2316,62 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.status: error - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: error - value[0] - info 1`] = `
+<div
+  id="properties.status: error"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.status: error - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: error - value[0] - info 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.status: error - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: error - value[0] - loading 1`] = `
+<div
+  id="properties.status: error"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.status: error - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: error - value[0] - loading 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.status: info - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: error - value[0] - success 1`] = `
+<div
+  id="properties.status: error"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: error - value[0] - success 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: error - value[0] - warning 1`] = `
+<div
+  id="properties.status: error"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: error - value[0] - warning 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: info - value[0] - error 1`] = `
+<div
+  id="properties.status: info"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: info - value[0] - error 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{}} - properties.status: info - value[0] - info 1`] = `
+<div
+  id="properties.status: info"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: info - value[0] - info 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -1818,38 +2394,62 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.status: info - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: info - value[0] - loading 1`] = `
+<div
+  id="properties.status: info"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.status: info - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: info - value[0] - loading 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.status: info - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: info - value[0] - success 1`] = `
+<div
+  id="properties.status: info"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.status: loading - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: info - value[0] - success 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.status: loading - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: info - value[0] - warning 1`] = `
+<div
+  id="properties.status: info"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: info - value[0] - warning 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: loading - value[0] - error 1`] = `
+<div
+  id="properties.status: loading"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: loading - value[0] - error 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: loading - value[0] - info 1`] = `
+<div
+  id="properties.status: loading"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: loading - value[0] - info 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{}} - properties.status: loading - value[0] - loading 1`] = `
+<div
+  id="properties.status: loading"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: loading - value[0] - loading 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -1872,40 +2472,70 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.status: loading - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: loading - value[0] - success 1`] = `
+<div
+  id="properties.status: loading"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.status: loading - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: loading - value[0] - success 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.status: warning - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: loading - value[0] - warning 1`] = `
+<div
+  id="properties.status: loading"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.status: warning - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: loading - value[0] - warning 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.status: warning - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: warning - value[0] - error 1`] = `
+<div
+  id="properties.status: warning"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{}} - properties.status: warning - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: warning - value[0] - error 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: warning - value[0] - info 1`] = `
+<div
+  id="properties.status: warning"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: warning - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: warning - value[0] - loading 1`] = `
+<div
+  id="properties.status: warning"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: warning - value[0] - loading 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: warning - value[0] - success 1`] = `
+<div
+  id="properties.status: warning"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: warning - value[0] - success 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{}} - properties.status: warning - value[0] - warning 1`] = `
+<div
+  id="properties.status: warning"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: warning - value[0] - warning 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html="Message content"
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -1928,17 +2558,41 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{}} - with html content - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - with html content - value[0] - error 1`] = `
+<div
+  id="with html content"
+/>
+`;
 
-exports[`Mock for method: {"name":"open","args":{}} - with html content - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - with html content - value[0] - error 2`] = `Array []`;
 
-exports[`Mock for method: {"name":"open","args":{}} - with html content - value[0] - loading 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - with html content - value[0] - info 1`] = `
+<div
+  id="with html content"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - with html content - value[0] - info 2`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - with html content - value[0] - loading 1`] = `
+<div
+  id="with html content"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - with html content - value[0] - loading 2`] = `Array []`;
 
 exports[`Mock for method: {"name":"open","args":{}} - with html content - value[0] - success 1`] = `
+<div
+  id="with html content"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - with html content - value[0] - success 2`] = `
 Array [
   Array [
     Object {
-      "className": "{}",
+      "className": "css-0",
       "content": <HtmlComponent
         html=<div style="color:pink;">
   <strong>
@@ -1947,19 +2601,7 @@ Array [
 </div>
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "moveItemDown": [MockFunction],
             "moveItemUp": [MockFunction],
             "open": [Function],
@@ -1982,7 +2624,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"open","args":{}} - with html content - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - with html content - value[0] - warning 1`] = `
+<div
+  id="with html content"
+/>
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - with html content - value[0] - warning 2`] = `Array []`;
 
 exports[`Test Schema default 1`] = `true`;
 

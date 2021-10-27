@@ -2,72 +2,52 @@
 
 exports[`Render default - value[0] 1`] = `
 <span
-  className="ant-avatar ant-avatar-circle {\\"style\\":[{},null]}"
+  class="ant-avatar ant-avatar-circle emotion-0"
   id="default"
-  onClick={[Function]}
-  style={Object {}}
 >
   <span
-    className="ant-avatar-string"
-    style={
-      Object {
-        "opacity": 0,
-      }
-    }
+    class="ant-avatar-string"
+    style="transform: scale(1) translateX(-50%);"
   />
 </span>
 `;
 
 exports[`Render properties.alt - value[0] 1`] = `
 <span
-  className="ant-avatar ant-avatar-circle {\\"style\\":[{},null]}"
+  class="ant-avatar ant-avatar-circle emotion-0"
   id="properties.alt"
-  onClick={[Function]}
-  style={Object {}}
 >
   <span
-    className="ant-avatar-string"
-    style={
-      Object {
-        "opacity": 0,
-      }
-    }
+    class="ant-avatar-string"
+    style="transform: scale(1) translateX(-50%);"
   />
 </span>
 `;
 
 exports[`Render properties.color - value[0] 1`] = `
+.emotion-0 {
+  background-color: #f12345;
+}
+
 <span
-  className="ant-avatar ant-avatar-circle {\\"style\\":[{\\"backgroundColor\\":\\"#f12345\\"},null]}"
+  class="ant-avatar ant-avatar-circle emotion-0"
   id="properties.color"
-  onClick={[Function]}
-  style={Object {}}
 >
   <span
-    className="ant-avatar-string"
-    style={
-      Object {
-        "opacity": 0,
-      }
-    }
+    class="ant-avatar-string"
+    style="transform: scale(1) translateX(-50%);"
   />
 </span>
 `;
 
 exports[`Render properties.content - value[0] 1`] = `
 <span
-  className="ant-avatar ant-avatar-circle {\\"style\\":[{},null]}"
+  class="ant-avatar ant-avatar-circle emotion-0"
   id="properties.content"
-  onClick={[Function]}
-  style={Object {}}
 >
   <span
-    className="ant-avatar-string"
-    style={
-      Object {
-        "opacity": 0,
-      }
-    }
+    class="ant-avatar-string"
+    style="transform: scale(1) translateX(-50%);"
   >
     Avatar
   </span>
@@ -75,19 +55,17 @@ exports[`Render properties.content - value[0] 1`] = `
 `;
 
 exports[`Render properties.content - value[0] 2`] = `
+.emotion-0 {
+  border: 1px solid red;
+}
+
 <span
-  className="ant-avatar ant-avatar-circle {\\"style\\":[{},{\\"border\\":\\"1px solid red\\"}]}"
+  class="ant-avatar ant-avatar-circle emotion-0"
   id="properties.content"
-  onClick={[Function]}
-  style={Object {}}
 >
   <span
-    className="ant-avatar-string"
-    style={
-      Object {
-        "opacity": 0,
-      }
-    }
+    class="ant-avatar-string"
+    style="transform: scale(1) translateX(-50%);"
   >
     Avatar
   </span>
@@ -96,18 +74,12 @@ exports[`Render properties.content - value[0] 2`] = `
 
 exports[`Render properties.gap - value[0] 1`] = `
 <span
-  className="ant-avatar ant-avatar-circle {\\"style\\":[{},null]}"
+  class="ant-avatar ant-avatar-circle emotion-0"
   id="properties.gap"
-  onClick={[Function]}
-  style={Object {}}
 >
   <span
-    className="ant-avatar-string"
-    style={
-      Object {
-        "opacity": 0,
-      }
-    }
+    class="ant-avatar-string"
+    style="transform: scale(1) translateX(-50%);"
   >
     Avatar
   </span>
@@ -116,17 +88,13 @@ exports[`Render properties.gap - value[0] 1`] = `
 
 exports[`Render properties.icon object - value[0] 1`] = `
 <span
-  className="ant-avatar ant-avatar-circle ant-avatar-icon {\\"style\\":[{},null]}"
+  class="ant-avatar ant-avatar-circle ant-avatar-icon emotion-0"
   id="properties.icon object"
-  onClick={[Function]}
-  style={Object {}}
 >
   <span
     aria-label="loading-3-quarters"
-    basePath=""
-    className="anticon anticon-loading-3-quarters anticon-spin {}"
+    class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
     id="properties.icon object_icon"
-    required={false}
     role="img"
   >
     <svg
@@ -148,17 +116,13 @@ exports[`Render properties.icon object - value[0] 1`] = `
 
 exports[`Render properties.icon string - value[0] 1`] = `
 <span
-  className="ant-avatar ant-avatar-circle ant-avatar-icon {\\"style\\":[{},null]}"
+  class="ant-avatar ant-avatar-circle ant-avatar-icon emotion-0"
   id="properties.icon string"
-  onClick={[Function]}
-  style={Object {}}
 >
   <span
     aria-label="loading-3-quarters"
-    basePath=""
-    className="anticon anticon-loading-3-quarters anticon-spin {}"
+    class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
     id="properties.icon string_icon"
-    required={false}
     role="img"
   >
     <svg
@@ -180,17 +144,13 @@ exports[`Render properties.icon string - value[0] 1`] = `
 
 exports[`Render properties.icon string properties.shape square - value[0] 1`] = `
 <span
-  className="ant-avatar ant-avatar-square ant-avatar-icon {\\"style\\":[{},null]}"
+  class="ant-avatar ant-avatar-square ant-avatar-icon emotion-0"
   id="properties.icon string properties.shape square"
-  onClick={[Function]}
-  style={Object {}}
 >
   <span
     aria-label="loading-3-quarters"
-    basePath=""
-    className="anticon anticon-loading-3-quarters anticon-spin {}"
+    class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
     id="properties.icon string properties.shape square_icon"
-    required={false}
     role="img"
   >
     <svg
@@ -212,67 +172,46 @@ exports[`Render properties.icon string properties.shape square - value[0] 1`] = 
 
 exports[`Render properties.shape - value[0] 1`] = `
 <span
-  className="ant-avatar ant-avatar-square {\\"style\\":[{},null]}"
+  class="ant-avatar ant-avatar-square emotion-0"
   id="properties.shape"
-  onClick={[Function]}
-  style={Object {}}
 >
   <span
-    className="ant-avatar-string"
-    style={
-      Object {
-        "opacity": 0,
-      }
-    }
+    class="ant-avatar-string"
+    style="transform: scale(1) translateX(-50%);"
   />
 </span>
 `;
 
 exports[`Render properties.size large - value[0] 1`] = `
 <span
-  className="ant-avatar ant-avatar-lg ant-avatar-circle {\\"style\\":[{},null]}"
+  class="ant-avatar ant-avatar-lg ant-avatar-circle emotion-0"
   id="properties.size large"
-  onClick={[Function]}
-  style={Object {}}
 >
   <span
-    className="ant-avatar-string"
-    style={
-      Object {
-        "opacity": 0,
-      }
-    }
+    class="ant-avatar-string"
+    style="transform: scale(1) translateX(-50%);"
   />
 </span>
 `;
 
 exports[`Render properties.size small - value[0] 1`] = `
 <span
-  className="ant-avatar ant-avatar-sm ant-avatar-circle {\\"style\\":[{},null]}"
+  class="ant-avatar ant-avatar-sm ant-avatar-circle emotion-0"
   id="properties.size small"
-  onClick={[Function]}
-  style={Object {}}
 >
   <span
-    className="ant-avatar-string"
-    style={
-      Object {
-        "opacity": 0,
-      }
-    }
+    class="ant-avatar-string"
+    style="transform: scale(1) translateX(-50%);"
   />
 </span>
 `;
 
 exports[`Render properties.src - value[0] 1`] = `
 <span
-  className="ant-avatar ant-avatar-circle ant-avatar-image {\\"style\\":[{\\"backgroundColor\\":false},null]}"
+  class="ant-avatar ant-avatar-circle ant-avatar-image emotion-0"
   id="properties.src"
-  onClick={[Function]}
-  style={Object {}}
 >
   <img
-    onError={[Function]}
     src="https://docs.lowdefy.com/images/favicon.png"
   />
 </span>

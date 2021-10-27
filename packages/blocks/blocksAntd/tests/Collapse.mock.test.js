@@ -14,12 +14,9 @@
   limitations under the License.
 */
 
-import { runMockRenderTests } from '@lowdefy/block-tools';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Collapse } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import CollapseBlock from '../src/blocks/Collapse/Collapse';
 import examples from '../demo/examples/Collapse.yaml';
 import meta from '../src/blocks/Collapse/Collapse.json';
@@ -37,4 +34,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: CollapseBlock, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: CollapseBlock, meta, mocks });

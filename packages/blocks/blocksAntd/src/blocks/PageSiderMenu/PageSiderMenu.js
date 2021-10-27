@@ -240,7 +240,7 @@ const PageSiderMenu = ({
                                   mode: 'inline',
                                   theme: get(properties, 'sider.theme') || 'light',
                                   backgroundColor: get(properties, 'sider.color'),
-                                  collapsed: !openSiderState,
+                                  // collapsed: !openSiderState,
                                 },
                                 properties.menu,
                                 properties.menuLg,

@@ -1,10 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - areas.extra: - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - areas.extra: - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - areas.extra: - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -16,8 +18,8 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": <div
         style={
           Object {
@@ -29,13 +31,13 @@ Array [
         extra
       </div>,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "areas.extra:",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -47,7 +49,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -59,8 +61,8 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": <div
         style={
           Object {
@@ -72,13 +74,13 @@ Array [
         extra
       </div>,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "areas.extra:",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -91,11 +93,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - default - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - default - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - default - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -107,17 +111,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "default",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -129,7 +133,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -141,17 +145,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "default",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -164,11 +168,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.closable: false - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.closable: false - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.closable: false - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -180,17 +186,17 @@ Array [
         content
       </div>,
       "closable": false,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.closable: false",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -202,7 +208,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -214,17 +220,17 @@ Array [
         content
       </div>,
       "closable": false,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.closable: false",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -237,11 +243,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.contentWrapperStyle: border: 10px solid green - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.contentWrapperStyle: border: 10px solid green - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.contentWrapperStyle: border: 10px solid green - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -253,17 +261,19 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"style\\":{\\"border\\":\\"10px solid green\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": Object {
+        "border": "10px solid green",
+      },
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.contentWrapperStyle: border: 10px solid green",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -275,7 +285,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -287,17 +297,19 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"style\\":{\\"border\\":\\"10px solid green\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": Object {
+        "border": "10px solid green",
+      },
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.contentWrapperStyle: border: 10px solid green",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -310,11 +322,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.height: 500 placement: top - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.height: 500 placement: top - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.height: 500 placement: top - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -326,17 +340,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": 500,
       "id": "properties.height: 500 placement: top",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": "top",
       "title": undefined,
@@ -348,7 +362,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -360,17 +374,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": 500,
       "id": "properties.height: 500 placement: top",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": "top",
       "title": undefined,
@@ -383,11 +397,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.keyboard: false - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.keyboard: false - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.keyboard: false - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -399,17 +415,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.keyboard: false",
       "keyboard": false,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -421,7 +437,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -433,17 +449,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.keyboard: false",
       "keyboard": false,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -456,11 +472,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.mask - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.mask - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.mask - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -472,17 +490,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.mask",
       "keyboard": undefined,
       "mask": false,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -494,7 +512,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -506,17 +524,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.mask",
       "keyboard": undefined,
       "mask": false,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -529,11 +547,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.maskClosable: false - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.maskClosable: false - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.maskClosable: false - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -545,17 +565,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.maskClosable: false",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": false,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -567,7 +587,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -579,17 +599,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.maskClosable: false",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": false,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -602,11 +622,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.placement: bottom - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.placement: bottom - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.placement: bottom - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -618,17 +640,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.placement: bottom",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": "bottom",
       "title": undefined,
@@ -640,7 +662,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -652,17 +674,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.placement: bottom",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": "bottom",
       "title": undefined,
@@ -675,11 +697,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.placement: left - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.placement: left - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.placement: left - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -691,17 +715,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.placement: left",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": "left",
       "title": undefined,
@@ -713,7 +737,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -725,17 +749,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.placement: left",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": "left",
       "title": undefined,
@@ -748,11 +772,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.placement: top - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.placement: top - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.placement: top - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -764,17 +790,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.placement: top",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": "top",
       "title": undefined,
@@ -786,7 +812,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -798,17 +824,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.placement: top",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": "top",
       "title": undefined,
@@ -821,11 +847,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.title - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.title - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.title - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -837,17 +865,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.title",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": "Drawer title",
@@ -859,7 +887,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -871,17 +899,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.title",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": "Drawer title",
@@ -894,11 +922,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.width: 500 - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.width: 500 - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.width: 500 - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -910,17 +940,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.width: 500",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -932,7 +962,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -944,17 +974,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.width: 500",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -967,11 +997,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.zIndex: 1100 - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.zIndex: 1100 - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.zIndex: 1100 - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -983,17 +1015,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.zIndex: 1100",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1005,7 +1037,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1017,17 +1049,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.zIndex: 1100",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1040,11 +1072,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"toggleOpen","args":{}} - areas.extra: - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - areas.extra: - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - areas.extra: - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1056,8 +1090,8 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": <div
         style={
           Object {
@@ -1069,13 +1103,13 @@ Array [
         extra
       </div>,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "areas.extra:",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1087,7 +1121,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1099,8 +1133,8 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": <div
         style={
           Object {
@@ -1112,13 +1146,13 @@ Array [
         extra
       </div>,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "areas.extra:",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1131,11 +1165,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"toggleOpen","args":{}} - default - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - default - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - default - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1147,17 +1183,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "default",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1169,7 +1205,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1181,17 +1217,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "default",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1204,11 +1240,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.closable: false - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.closable: false - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.closable: false - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1220,17 +1258,17 @@ Array [
         content
       </div>,
       "closable": false,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.closable: false",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1242,7 +1280,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1254,17 +1292,17 @@ Array [
         content
       </div>,
       "closable": false,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.closable: false",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1277,11 +1315,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.contentWrapperStyle: border: 10px solid green - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.contentWrapperStyle: border: 10px solid green - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.contentWrapperStyle: border: 10px solid green - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1293,17 +1333,19 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"style\\":{\\"border\\":\\"10px solid green\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": Object {
+        "border": "10px solid green",
+      },
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.contentWrapperStyle: border: 10px solid green",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1315,7 +1357,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1327,17 +1369,19 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"style\\":{\\"border\\":\\"10px solid green\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": Object {
+        "border": "10px solid green",
+      },
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.contentWrapperStyle: border: 10px solid green",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1350,11 +1394,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.height: 500 placement: top - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.height: 500 placement: top - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.height: 500 placement: top - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1366,17 +1412,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": 500,
       "id": "properties.height: 500 placement: top",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": "top",
       "title": undefined,
@@ -1388,7 +1434,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1400,17 +1446,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": 500,
       "id": "properties.height: 500 placement: top",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": "top",
       "title": undefined,
@@ -1423,11 +1469,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.keyboard: false - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.keyboard: false - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.keyboard: false - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1439,17 +1487,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.keyboard: false",
       "keyboard": false,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1461,7 +1509,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1473,17 +1521,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.keyboard: false",
       "keyboard": false,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1496,11 +1544,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.mask - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.mask - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.mask - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1512,17 +1562,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.mask",
       "keyboard": undefined,
       "mask": false,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1534,7 +1584,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1546,17 +1596,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.mask",
       "keyboard": undefined,
       "mask": false,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1569,11 +1619,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.maskClosable: false - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.maskClosable: false - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.maskClosable: false - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1585,17 +1637,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.maskClosable: false",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": false,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1607,7 +1659,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1619,17 +1671,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.maskClosable: false",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": false,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1642,11 +1694,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.placement: bottom - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.placement: bottom - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.placement: bottom - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1658,17 +1712,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.placement: bottom",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": "bottom",
       "title": undefined,
@@ -1680,7 +1734,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1692,17 +1746,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.placement: bottom",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": "bottom",
       "title": undefined,
@@ -1715,11 +1769,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.placement: left - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.placement: left - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.placement: left - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1731,17 +1787,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.placement: left",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": "left",
       "title": undefined,
@@ -1753,7 +1809,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1765,17 +1821,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.placement: left",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": "left",
       "title": undefined,
@@ -1788,11 +1844,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.placement: top - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.placement: top - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.placement: top - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1804,17 +1862,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.placement: top",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": "top",
       "title": undefined,
@@ -1826,7 +1884,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1838,17 +1896,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.placement: top",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": "top",
       "title": undefined,
@@ -1861,11 +1919,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.title - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.title - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.title - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1877,17 +1937,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.title",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": "Drawer title",
@@ -1899,7 +1959,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1911,17 +1971,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.title",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": "Drawer title",
@@ -1934,11 +1994,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.width: 500 - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.width: 500 - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.width: 500 - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1950,17 +2012,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.width: 500",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1972,7 +2034,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -1984,17 +2046,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.width: 500",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -2007,11 +2069,13 @@ Array [
 ]
 `;
 
-exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.zIndex: 1100 - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.zIndex: 1100 - value[0] - default 1`] = `mocked`;
+
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.zIndex: 1100 - value[0] - default 2`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -2023,17 +2087,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.zIndex: 1100",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -2045,7 +2109,7 @@ Array [
   ],
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": undefined,
       "children": <div
         style={
           Object {
@@ -2057,17 +2121,17 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "contentWrapperStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
-      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "contentWrapperStyle": undefined,
+      "drawerStyle": undefined,
       "extra": undefined,
       "getContainer": undefined,
-      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headerStyle": undefined,
       "height": undefined,
       "id": "properties.zIndex: 1100",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "maskStyle": undefined,
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,

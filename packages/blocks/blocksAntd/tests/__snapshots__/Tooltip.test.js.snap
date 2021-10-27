@@ -1,5 +1,172 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render areas.content: - value[0] 1`] = `
+<span>
+  <div
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render default - value[0] 1`] = `
+<span>
+  <div
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render properties.arrowPointAtCenter: true - value[0] 1`] = `
+<span>
+  <div
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render properties.autoAdjustOverflow: false - value[0] 1`] = `
+<span>
+  <div
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render properties.autoAdjustOverflow: true - value[0] 1`] = `
+<span>
+  <div
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render properties.color: blue - value[0] 1`] = `
+<span>
+  <div
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render properties.defaultVisible: true - value[0] 1`] = `
+<span
+  class="ant-tooltip-open"
+>
+  <div
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render properties.mouseEnterDelay: 1 - value[0] 1`] = `
+<span>
+  <div
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render properties.mouseLeaveDelay: 1 - value[0] 1`] = `
+<span>
+  <div
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render properties.overlayStyle: border: 5px solid blue - value[0] 1`] = `
+<span>
+  <div
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render properties.placement - value[0] 1`] = `
+<span>
+  <div
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render properties.title - value[0] 1`] = `
+<span>
+  <div
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render properties.title with html - value[0] 1`] = `
+<span>
+  <div
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render properties.trigger: click - value[0] 1`] = `
+<span>
+  <div
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render properties.zIndex: 100 - value[0] 1`] = `
+<span>
+  <div
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
 exports[`Test Schema areas.content: 1`] = `true`;
 
 exports[`Test Schema areas.content: 2`] = `null`;

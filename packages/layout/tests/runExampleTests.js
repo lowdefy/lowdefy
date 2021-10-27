@@ -15,7 +15,9 @@
 */
 
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
+import { makeCssClass } from '@lowdefy/block-tools';
+
 import AutoBlockSim from '../demo/AutoBlockSim';
 
 const mockMath = Object.create(global.Math);
@@ -23,12 +25,7 @@ mockMath.random = () => 0.123456789;
 global.Math = mockMath;
 
 const runExampleTests = (examples, options = { highlightBorders: true }) => {
-  const makeCssClass = jest.fn();
-  const makeCssImp = (style, op) => JSON.stringify({ style, options: op });
-
   beforeEach(() => {
-    makeCssClass.mockReset();
-    makeCssClass.mockImplementation(makeCssImp);
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
       value: jest.fn().mockImplementation((query) => ({
@@ -46,7 +43,7 @@ const runExampleTests = (examples, options = { highlightBorders: true }) => {
 
   examples.forEach((ex) => {
     test(ex.id, () => {
-      const component = renderer.create(
+      const { container } = render(
         <AutoBlockSim
           block={ex}
           state={{}}
@@ -55,8 +52,7 @@ const runExampleTests = (examples, options = { highlightBorders: true }) => {
           highlightBorders={options.highlightBorders}
         />
       );
-      const tree = component.toJSON();
-      expect(tree).toMatchSnapshot();
+      expect(container).toMatchSnapshot();
     });
   });
 };

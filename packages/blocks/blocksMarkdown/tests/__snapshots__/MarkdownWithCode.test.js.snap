@@ -2,22 +2,22 @@
 
 exports[`Render default - value[0] 1`] = `
 <div
-  className="{}"
+  class="emotion-0"
   id="default"
 >
   <div
-    className="markdown-body"
+    class="markdown-body"
   />
 </div>
 `;
 
 exports[`Render properties.content = table - value[0] 1`] = `
 <div
-  className="{}"
+  class="emotion-0"
   id="properties.content = table"
 >
   <div
-    className="markdown-body"
+    class="markdown-body"
   >
     <h3>
       Table
@@ -26,29 +26,17 @@ exports[`Render properties.content = table - value[0] 1`] = `
       <thead>
         <tr>
           <th
-            style={
-              Object {
-                "textAlign": "right",
-              }
-            }
+            style="text-align: right;"
           >
             A
           </th>
           <th
-            style={
-              Object {
-                "textAlign": "center",
-              }
-            }
+            style="text-align: center;"
           >
             B
           </th>
           <th
-            style={
-              Object {
-                "textAlign": "left",
-              }
-            }
+            style="text-align: left;"
           >
             C
           </th>
@@ -57,87 +45,51 @@ exports[`Render properties.content = table - value[0] 1`] = `
       <tbody>
         <tr>
           <td
-            style={
-              Object {
-                "textAlign": "right",
-              }
-            }
+            style="text-align: right;"
           >
             one
           </td>
           <td
-            style={
-              Object {
-                "textAlign": "center",
-              }
-            }
+            style="text-align: center;"
           >
             two
           </td>
           <td
-            style={
-              Object {
-                "textAlign": "left",
-              }
-            }
+            style="text-align: left;"
           >
             three
           </td>
         </tr>
         <tr>
           <td
-            style={
-              Object {
-                "textAlign": "right",
-              }
-            }
+            style="text-align: right;"
           >
             123
           </td>
           <td
-            style={
-              Object {
-                "textAlign": "center",
-              }
-            }
+            style="text-align: center;"
           >
             345
           </td>
           <td
-            style={
-              Object {
-                "textAlign": "left",
-              }
-            }
+            style="text-align: left;"
           >
             34892
           </td>
         </tr>
         <tr>
           <td
-            style={
-              Object {
-                "textAlign": "right",
-              }
-            }
+            style="text-align: right;"
           >
             true
           </td>
           <td
-            style={
-              Object {
-                "textAlign": "center",
-              }
-            }
+            style="text-align: center;"
           >
             false
           </td>
           <td
-            style={
-              Object {
-                "textAlign": "left",
-              }
-            }
+            style="text-align: left;"
           >
             none
           </td>
@@ -150,11 +102,11 @@ exports[`Render properties.content = table - value[0] 1`] = `
 
 exports[`Render properties.content - value[0] 1`] = `
 <div
-  className="{}"
+  class="emotion-0"
   id="properties.content"
 >
   <div
-    className="markdown-body"
+    class="markdown-body"
   >
     <h1>
       One Heading
@@ -204,16 +156,15 @@ exports[`Render properties.content - value[0] 1`] = `
       </li>
       <li>
         <input
-          checked={false}
-          readOnly={true}
+          readonly=""
           type="checkbox"
         />
         todo
       </li>
       <li>
         <input
-          checked={true}
-          readOnly={true}
+          checked=""
+          readonly=""
           type="checkbox"
         />
         done
@@ -240,11 +191,11 @@ exports[`Render properties.content - value[0] 1`] = `
 
 exports[`Render properties.content DangerousHtml - value[0] 1`] = `
 <div
-  className="{}"
+  class="emotion-0"
   id="properties.content DangerousHtml"
 >
   <div
-    className="markdown-body"
+    class="markdown-body"
   >
     <h3>
       Link
@@ -279,11 +230,11 @@ exports[`Render properties.content DangerousHtml - value[0] 1`] = `
 
 exports[`Render properties.content with code - value[0] 1`] = `
 <div
-  className="{}"
+  class="emotion-0"
   id="properties.content with code"
 >
   <div
-    className="markdown-body"
+    class="markdown-body"
   >
     <h3>
       Code
@@ -292,55 +243,28 @@ exports[`Render properties.content with code - value[0] 1`] = `
       Default
     </p>
     <pre
-      style={
-        Object {
-          "background": "#f8f8f8",
-          "color": "#333",
-          "display": "block",
-          "overflowX": "auto",
-          "padding": "0.5em",
-        }
-      }
+      style="display: block; overflow-x: auto; padding: 0.5em; color: rgb(51, 51, 51); background: rgb(248, 248, 248);"
     >
       <code
-        style={
-          Object {
-            "whiteSpace": "pre",
-          }
-        }
+        style="white-space: pre;"
       >
-        <span
-          style={Object {}}
-        >
+        <span>
             &lt;a 
         </span>
         <span
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           href
         </span>
-        <span
-          style={Object {}}
-        >
+        <span>
           =
         </span>
         <span
-          style={
-            Object {
-              "color": "#d14",
-            }
-          }
+          style="color: rgb(221, 17, 68);"
         >
           ""
         </span>
-        <span
-          style={Object {}}
-        >
+        <span>
           &gt;Default style&lt;/a&gt;
         </span>
       </code>
@@ -349,258 +273,154 @@ exports[`Render properties.content with code - value[0] 1`] = `
       Html
     </p>
     <pre
-      style={
-        Object {
-          "background": "#f8f8f8",
-          "color": "#333",
-          "display": "block",
-          "overflowX": "auto",
-          "padding": "0.5em",
-        }
-      }
+      style="display: block; overflow-x: auto; padding: 0.5em; color: rgb(51, 51, 51); background: rgb(248, 248, 248);"
     >
       <code
-        className="language-html"
-        style={
-          Object {
-            "whiteSpace": "pre",
-          }
-        }
+        class="language-html"
+        style="white-space: pre;"
       >
         <span
-          className="xml"
-          style={Object {}}
+          class="xml"
         >
             
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &lt;
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           a
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
            
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           href
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           =
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#d14",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(221, 17, 68); font-weight: normal;"
         >
           ""
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &gt;
         </span>
         <span
-          className="xml"
-          style={Object {}}
+          class="xml"
         >
           html style
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &lt;/
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           a
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &gt;
         </span>
         <span
-          className="xml"
-          style={Object {}}
+          class="xml"
         >
           
 
         </span>
         <span
-          className="xml"
-          style={Object {}}
+          class="xml"
         >
             
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &lt;
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           script
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &gt;
         </span>
         <span
-          className="xml javascript"
-          style={Object {}}
+          class="xml javascript"
         >
           
 
         </span>
         <span
-          className="xml javascript"
-          style={Object {}}
+          class="xml javascript"
         >
               alert(
         </span>
         <span
-          className="xml javascript"
-          style={
-            Object {
-              "color": "#d14",
-            }
-          }
+          class="xml javascript"
+          style="color: rgb(221, 17, 68);"
         >
           'script tag'
         </span>
         <span
-          className="xml javascript"
-          style={Object {}}
+          class="xml javascript"
         >
           );
 
         </span>
         <span
-          className="xml javascript"
-          style={Object {}}
+          class="xml javascript"
         >
             
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &lt;/
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           script
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &gt;
         </span>
@@ -610,113 +430,65 @@ exports[`Render properties.content with code - value[0] 1`] = `
       Json
     </p>
     <pre
-      style={
-        Object {
-          "background": "#f8f8f8",
-          "color": "#333",
-          "display": "block",
-          "overflowX": "auto",
-          "padding": "0.5em",
-        }
-      }
+      style="display: block; overflow-x: auto; padding: 0.5em; color: rgb(51, 51, 51); background: rgb(248, 248, 248);"
     >
       <code
-        className="language-json"
-        style={
-          Object {
-            "whiteSpace": "pre",
-          }
-        }
+        class="language-json"
+        style="white-space: pre;"
       >
-        <span
-          style={Object {}}
-        >
+        <span>
             {
 
         </span>
-        <span
-          style={Object {}}
-        >
+        <span>
               
         </span>
-        <span
-          style={Object {}}
-        >
+        <span>
           "obj"
         </span>
-        <span
-          style={Object {}}
-        >
+        <span>
           : 
         </span>
         <span
-          style={
-            Object {
-              "color": "#d14",
-            }
-          }
+          style="color: rgb(221, 17, 68);"
         >
           "one"
         </span>
-        <span
-          style={Object {}}
-        >
+        <span>
           ,
 
         </span>
-        <span
-          style={Object {}}
-        >
+        <span>
               
         </span>
-        <span
-          style={Object {}}
-        >
+        <span>
           "list"
         </span>
-        <span
-          style={Object {}}
-        >
+        <span>
           : [
 
         </span>
-        <span
-          style={Object {}}
-        >
+        <span>
                 
         </span>
         <span
-          style={
-            Object {
-              "color": "#008080",
-            }
-          }
+          style="color: rgb(0, 128, 128);"
         >
           1
         </span>
-        <span
-          style={Object {}}
-        >
+        <span>
           ,
 
         </span>
-        <span
-          style={Object {}}
-        >
+        <span>
                 
         </span>
         <span
-          style={
-            Object {
-              "color": "#008080",
-            }
-          }
+          style="color: rgb(0, 128, 128);"
         >
           2
         </span>
-        <span
-          style={Object {}}
-        >
+        <span>
           
 
         </span>
@@ -730,860 +502,508 @@ exports[`Render properties.content with code - value[0] 1`] = `
       Bad HTML
     </p>
     <pre
-      style={
-        Object {
-          "background": "#f8f8f8",
-          "color": "#333",
-          "display": "block",
-          "overflowX": "auto",
-          "padding": "0.5em",
-        }
-      }
+      style="display: block; overflow-x: auto; padding: 0.5em; color: rgb(51, 51, 51); background: rgb(248, 248, 248);"
     >
       <code
-        className="language-html"
-        style={
-          Object {
-            "whiteSpace": "pre",
-          }
-        }
+        class="language-html"
+        style="white-space: pre;"
       >
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &lt;
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           div
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
            
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           onmouseover
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           =
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#d14",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(221, 17, 68); font-weight: normal;"
         >
           "alert('alpha')"
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &gt;
         </span>
         <span
-          className="xml"
-          style={Object {}}
+          class="xml"
         >
           
 
         </span>
         <span
-          className="xml"
-          style={Object {}}
+          class="xml"
         >
             
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &lt;
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           a
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
            
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           href
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           =
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#d14",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(221, 17, 68); font-weight: normal;"
         >
           "javascript:alert('bravo')"
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &gt;
         </span>
         <span
-          className="xml"
-          style={Object {}}
+          class="xml"
         >
           delta
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &lt;/
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           a
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &gt;
         </span>
         <span
-          className="xml"
-          style={Object {}}
+          class="xml"
         >
           
 
         </span>
         <span
-          className="xml"
-          style={Object {}}
+          class="xml"
         >
             
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &lt;
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           img
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
            
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           src
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           =
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#d14",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(221, 17, 68); font-weight: normal;"
         >
           "x"
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
            
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           onerror
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           =
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#d14",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(221, 17, 68); font-weight: normal;"
         >
           "alert('charlie')"
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &gt;
         </span>
         <span
-          className="xml"
-          style={Object {}}
+          class="xml"
         >
           
 
         </span>
         <span
-          className="xml"
-          style={Object {}}
+          class="xml"
         >
             
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &lt;
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           iframe
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
            
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           src
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           =
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#d14",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(221, 17, 68); font-weight: normal;"
         >
           "javascript:alert('delta')"
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &gt;
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &lt;/
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           iframe
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &gt;
         </span>
         <span
-          className="xml"
-          style={Object {}}
+          class="xml"
         >
           
 
         </span>
         <span
-          className="xml"
-          style={Object {}}
+          class="xml"
         >
             
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &lt;
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           math
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &gt;
         </span>
         <span
-          className="xml"
-          style={Object {}}
+          class="xml"
         >
           
 
         </span>
         <span
-          className="xml"
-          style={Object {}}
+          class="xml"
         >
               
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &lt;
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           mi
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
            
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           xlink:href
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           =
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#d14",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(221, 17, 68); font-weight: normal;"
         >
           "data:x,&lt;script&gt;alert('echo')&lt;/script&gt;"
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &gt;
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &lt;/
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           mi
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &gt;
         </span>
         <span
-          className="xml"
-          style={Object {}}
+          class="xml"
         >
           
 
         </span>
         <span
-          className="xml"
-          style={Object {}}
+          class="xml"
         >
             
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &lt;/
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           math
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &gt;
         </span>
         <span
-          className="xml"
-          style={Object {}}
+          class="xml"
         >
           
 
         </span>
         <span
-          className="xml"
-          style={Object {}}
+          class="xml"
         >
           
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &lt;/
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           div
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &gt;
         </span>
         <span
-          className="xml"
-          style={Object {}}
+          class="xml"
         >
           
 
         </span>
         <span
-          className="xml"
-          style={Object {}}
+          class="xml"
         >
           
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &lt;
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           script
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &gt;
         </span>
         <span
-          className="xml javascript"
-          style={Object {}}
+          class="xml javascript"
         >
           
 
         </span>
         <span
-          className="xml javascript"
-          style={Object {}}
+          class="xml javascript"
         >
             alert(
         </span>
         <span
-          className="xml javascript"
-          style={
-            Object {
-              "color": "#d14",
-            }
-          }
+          class="xml javascript"
+          style="color: rgb(221, 17, 68);"
         >
           'script tag'
         </span>
         <span
-          className="xml javascript"
-          style={Object {}}
+          class="xml javascript"
         >
           );
 
         </span>
         <span
-          className="xml javascript"
-          style={Object {}}
+          class="xml javascript"
         >
           
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &lt;/
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           script
         </span>
         <span
-          className="xml"
-          style={
-            Object {
-              "color": "#000080",
-              "fontWeight": "normal",
-            }
-          }
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
         >
           &gt;
         </span>
@@ -1595,11 +1015,11 @@ exports[`Render properties.content with code - value[0] 1`] = `
 
 exports[`Render properties.html-iframe - value[0] 1`] = `
 <div
-  className="{}"
+  class="emotion-0"
   id="properties.html-iframe"
 >
   <div
-    className="markdown-body"
+    class="markdown-body"
   >
     <p>
       No additional ADD_TAGS:
@@ -1610,12 +1030,16 @@ exports[`Render properties.html-iframe - value[0] 1`] = `
 `;
 
 exports[`Render properties.style and headings - value[0] 1`] = `
+.emotion-0 {
+  border: 1px solid blue;
+}
+
 <div
-  className="{\\"style\\":{\\"border\\":\\"1px solid blue\\"}}"
+  class="emotion-0"
   id="properties.style and headings"
 >
   <div
-    className="markdown-body"
+    class="markdown-body"
   >
     <h1>
       One

@@ -46,6 +46,7 @@ const NumberInput = ({
             autoFocus={properties.autoFocus}
             bordered={properties.bordered}
             className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
+            controls={properties.controls}
             decimalSeparator={properties.decimalSeparator}
             disabled={properties.disabled}
             formatter={properties.formatter}

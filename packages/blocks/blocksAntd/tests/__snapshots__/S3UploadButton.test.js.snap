@@ -2,45 +2,32 @@
 
 exports[`Render default - value[0] 1`] = `
 <span
-  className=""
+  class=""
 >
   <div
-    className="ant-upload ant-upload-select ant-upload-select-text"
+    class="ant-upload ant-upload-select ant-upload-select-text"
   >
     <span
-      className="ant-upload"
-      onClick={[Function]}
-      onDragOver={[Function]}
-      onDrop={[Function]}
-      onKeyDown={[Function]}
+      class="ant-upload"
       role="button"
-      tabIndex="0"
+      tabindex="0"
     >
       <input
         accept=""
         id="default"
-        multiple={true}
-        onChange={[Function]}
-        onClick={[Function]}
-        style={
-          Object {
-            "display": "none",
-          }
-        }
+        multiple=""
+        style="display: none;"
         type="file"
       />
       <button
-        className="ant-btn {\\"style\\":[{},null]}"
+        class="ant-btn emotion-0"
         id="default_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
           id="default_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -58,58 +45,47 @@ exports[`Render default - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-1"
+        >
+          Upload
+        </span>
       </button>
     </span>
   </div>
   <div
-    className="ant-upload-list ant-upload-list-text"
+    class="ant-upload-list ant-upload-list-text"
   />
 </span>
 `;
 
 exports[`Render properties.accept - value[0] 1`] = `
 <span
-  className=""
+  class=""
 >
   <div
-    className="ant-upload ant-upload-select ant-upload-select-text"
+    class="ant-upload ant-upload-select ant-upload-select-text"
   >
     <span
-      className="ant-upload"
-      onClick={[Function]}
-      onDragOver={[Function]}
-      onDrop={[Function]}
-      onKeyDown={[Function]}
+      class="ant-upload"
       role="button"
-      tabIndex="0"
+      tabindex="0"
     >
       <input
         accept=".png,.jpg"
         id="properties.accept"
-        multiple={true}
-        onChange={[Function]}
-        onClick={[Function]}
-        style={
-          Object {
-            "display": "none",
-          }
-        }
+        multiple=""
+        style="display: none;"
         type="file"
       />
       <button
-        className="ant-btn {\\"style\\":[{},null]}"
+        class="ant-btn emotion-0"
         id="properties.accept_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
           id="properties.accept_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -127,58 +103,47 @@ exports[`Render properties.accept - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-1"
+        >
+          Upload
+        </span>
       </button>
     </span>
   </div>
   <div
-    className="ant-upload-list ant-upload-list-text"
+    class="ant-upload-list ant-upload-list-text"
   />
 </span>
 `;
 
 exports[`Render properties.button - value[0] 1`] = `
 <span
-  className=""
+  class=""
 >
   <div
-    className="ant-upload ant-upload-select ant-upload-select-text"
+    class="ant-upload ant-upload-select ant-upload-select-text"
   >
     <span
-      className="ant-upload"
-      onClick={[Function]}
-      onDragOver={[Function]}
-      onDrop={[Function]}
-      onKeyDown={[Function]}
+      class="ant-upload"
       role="button"
-      tabIndex="0"
+      tabindex="0"
     >
       <input
         accept=""
         id="properties.button"
-        multiple={true}
-        onChange={[Function]}
-        onClick={[Function]}
-        style={
-          Object {
-            "display": "none",
-          }
-        }
+        multiple=""
+        style="display: none;"
         type="file"
       />
       <button
-        className="ant-btn ant-btn-primary {\\"style\\":[{},null]}"
+        class="ant-btn ant-btn-primary emotion-0"
         id="properties.button_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
           id="properties.button_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -196,53 +161,46 @@ exports[`Render properties.button - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-1"
+        >
+          Upload
+        </span>
       </button>
     </span>
   </div>
   <div
-    className="ant-upload-list ant-upload-list-text"
+    class="ant-upload-list ant-upload-list-text"
   />
 </span>
 `;
 
 exports[`Render properties.disabled - value[0] 1`] = `
 <span
-  className=""
+  class=""
 >
   <div
-    className="ant-upload ant-upload-select ant-upload-select-text ant-upload-disabled"
+    class="ant-upload ant-upload-select ant-upload-select-text ant-upload-disabled"
   >
     <span
-      className="ant-upload ant-upload-disabled"
+      class="ant-upload ant-upload-disabled"
       role="button"
     >
       <input
         accept=""
-        multiple={true}
-        onChange={[Function]}
-        onClick={[Function]}
-        style={
-          Object {
-            "display": "none",
-          }
-        }
+        multiple=""
+        style="display: none;"
         type="file"
       />
       <button
-        className="ant-btn {\\"style\\":[{},null]}"
-        disabled={true}
+        class="ant-btn emotion-0"
+        disabled=""
         id="properties.disabled_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
           id="properties.disabled_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -260,58 +218,47 @@ exports[`Render properties.disabled - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-1"
+        >
+          Upload
+        </span>
       </button>
     </span>
   </div>
   <div
-    className="ant-upload-list ant-upload-list-text"
+    class="ant-upload-list ant-upload-list-text"
   />
 </span>
 `;
 
 exports[`Render properties.showUploadList - value[0] 1`] = `
 <span
-  className=""
+  class=""
 >
   <div
-    className="ant-upload ant-upload-select ant-upload-select-text"
+    class="ant-upload ant-upload-select ant-upload-select-text"
   >
     <span
-      className="ant-upload"
-      onClick={[Function]}
-      onDragOver={[Function]}
-      onDrop={[Function]}
-      onKeyDown={[Function]}
+      class="ant-upload"
       role="button"
-      tabIndex="0"
+      tabindex="0"
     >
       <input
         accept=""
         id="properties.showUploadList"
-        multiple={true}
-        onChange={[Function]}
-        onClick={[Function]}
-        style={
-          Object {
-            "display": "none",
-          }
-        }
+        multiple=""
+        style="display: none;"
         type="file"
       />
       <button
-        className="ant-btn {\\"style\\":[{},null]}"
+        class="ant-btn emotion-0"
         id="properties.showUploadList_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
           id="properties.showUploadList_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -329,58 +276,46 @@ exports[`Render properties.showUploadList - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-1"
+        >
+          Upload
+        </span>
       </button>
     </span>
   </div>
   <div
-    className="ant-upload-list ant-upload-list-text"
+    class="ant-upload-list ant-upload-list-text"
   />
 </span>
 `;
 
 exports[`Render properties.singleFile - value[0] 1`] = `
 <span
-  className=""
+  class=""
 >
   <div
-    className="ant-upload ant-upload-select ant-upload-select-text"
+    class="ant-upload ant-upload-select ant-upload-select-text"
   >
     <span
-      className="ant-upload"
-      onClick={[Function]}
-      onDragOver={[Function]}
-      onDrop={[Function]}
-      onKeyDown={[Function]}
+      class="ant-upload"
       role="button"
-      tabIndex="0"
+      tabindex="0"
     >
       <input
         accept=""
         id="properties.singleFile"
-        multiple={false}
-        onChange={[Function]}
-        onClick={[Function]}
-        style={
-          Object {
-            "display": "none",
-          }
-        }
+        style="display: none;"
         type="file"
       />
       <button
-        className="ant-btn {\\"style\\":[{},null]}"
+        class="ant-btn emotion-0"
         id="properties.singleFile_button"
-        onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
-          basePath=""
-          className="anticon anticon-loading-3-quarters anticon-spin {}"
+          class="anticon anticon-loading-3-quarters anticon-spin emotion-1"
           id="properties.singleFile_button_icon"
-          required={false}
           role="img"
         >
           <svg
@@ -398,13 +333,15 @@ exports[`Render properties.singleFile - value[0] 1`] = `
           </svg>
         </span>
         <span
-          className="{}"
-        />
+          class="emotion-1"
+        >
+          Upload
+        </span>
       </button>
     </span>
   </div>
   <div
-    className="ant-upload-list ant-upload-list-text"
+    class="ant-upload-list ant-upload-list-text"
   />
 </span>
 `;

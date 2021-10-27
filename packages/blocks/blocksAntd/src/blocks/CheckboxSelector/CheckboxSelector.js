@@ -77,14 +77,14 @@ const CheckboxSelector = ({
             >
               {uniqueValueOptions.map((opt, i) =>
                 type.isPrimitive(opt) ? (
-                  <Checkbox id={`${blockId}_${i}`} key={i} value={i}>
+                  <Checkbox id={`${blockId}_${i}`} key={i} value={`${i}`}>
                     {renderHtml({ html: `${opt}`, methods })}
                   </Checkbox>
                 ) : (
                   <Checkbox
                     id={`${blockId}_${i}`}
                     key={i}
-                    value={i}
+                    value={`${i}`}
                     disabled={opt.disabled}
                     className={methods.makeCssClass(opt.style)}
                   >

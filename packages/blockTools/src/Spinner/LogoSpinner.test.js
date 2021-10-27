@@ -16,14 +16,11 @@
 
 import React from 'react';
 import LogoSpinner from './LogoSpinner';
-import { create, act } from 'react-test-renderer';
+import { render } from '@testing-library/react';
 
 test('default', () => {
-  let comp;
-  act(() => {
-    comp = create(<LogoSpinner />);
-  });
-  expect(comp.toJSON()).toMatchInlineSnapshot(`
+  const { container } = render(<LogoSpinner />);
+  expect(container.firstChild).toMatchInlineSnapshot(`
     <svg
       height="100%"
       version="1.1"
@@ -33,35 +30,23 @@ test('default', () => {
       <g>
         <path
           d="M94,18.634c0,-10.284 -8.35,-18.634 -18.634,-18.634l-56.732,0c-10.284,0 -18.634,8.35 -18.634,18.634l0,53.732c0,10.284 8.35,18.634 18.634,18.634l56.732,0c10.284,0 18.634,-8.35 18.634,-18.634l0,-53.732Z"
-          style={
-            Object {
-              "fill": "#bfbfbf",
-            }
-          }
+          style="fill: #bfbfbf;"
         />
         <rect
-          className="loading-bar"
-          height={59}
-          style={
-            Object {
-              "fill": "#f1f1f1",
-            }
-          }
-          width={30}
-          x={16}
-          y={15}
+          class="loading-bar"
+          height="59"
+          style="fill: #f1f1f1;"
+          width="30"
+          x="16"
+          y="15"
         />
         <rect
-          className="loading-bar-sm"
-          height={25}
-          style={
-            Object {
-              "fill": "#f1f1f1",
-            }
-          }
-          width={25}
-          x={53}
-          y={52}
+          class="loading-bar-sm"
+          height="25"
+          style="fill: #f1f1f1;"
+          width="25"
+          x="53"
+          y="52"
         />
       </g>
     </svg>
@@ -69,11 +54,8 @@ test('default', () => {
 });
 
 test('color props', () => {
-  let comp;
-  act(() => {
-    comp = create(<LogoSpinner color="red" barColor="green" />);
-  });
-  expect(comp.toJSON()).toMatchInlineSnapshot(`
+  const { container } = render(<LogoSpinner color="red" barColor="green" />);
+  expect(container.firstChild).toMatchInlineSnapshot(`
     <svg
       height="100%"
       version="1.1"
@@ -83,35 +65,23 @@ test('color props', () => {
       <g>
         <path
           d="M94,18.634c0,-10.284 -8.35,-18.634 -18.634,-18.634l-56.732,0c-10.284,0 -18.634,8.35 -18.634,18.634l0,53.732c0,10.284 8.35,18.634 18.634,18.634l56.732,0c10.284,0 18.634,-8.35 18.634,-18.634l0,-53.732Z"
-          style={
-            Object {
-              "fill": "red",
-            }
-          }
+          style="fill: red;"
         />
         <rect
-          className="loading-bar"
-          height={59}
-          style={
-            Object {
-              "fill": "green",
-            }
-          }
-          width={30}
-          x={16}
-          y={15}
+          class="loading-bar"
+          height="59"
+          style="fill: green;"
+          width="30"
+          x="16"
+          y="15"
         />
         <rect
-          className="loading-bar-sm"
-          height={25}
-          style={
-            Object {
-              "fill": "green",
-            }
-          }
-          width={25}
-          x={53}
-          y={52}
+          class="loading-bar-sm"
+          height="25"
+          style="fill: green;"
+          width="25"
+          x="53"
+          y="52"
         />
       </g>
     </svg>

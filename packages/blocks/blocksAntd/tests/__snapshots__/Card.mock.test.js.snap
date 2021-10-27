@@ -4,7 +4,7 @@ exports[`Mock render - areas.extra: - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"options\\":true}",
       "bordered": undefined,
       "children": <div
         style={
@@ -27,7 +27,7 @@ Array [
       >
         extra
       </div>,
-      "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headStyle": "{\\"options\\":true}",
       "hoverable": undefined,
       "id": "areas.extra:",
       "onClick": [Function],
@@ -40,15 +40,11 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   Array [
@@ -63,11 +59,11 @@ Array [
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
@@ -92,7 +88,7 @@ exports[`Mock render - default - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"options\\":true}",
       "bordered": undefined,
       "children": <div
         style={
@@ -106,7 +102,7 @@ Array [
       </div>,
       "className": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
       "extra": undefined,
-      "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headStyle": "{\\"options\\":true}",
       "hoverable": undefined,
       "id": "default",
       "onClick": [Function],
@@ -123,7 +119,7 @@ exports[`Mock render - properties.bodyStyle: border: 5px solid blue - value[0] -
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"style\\":{\\"border\\":\\"5px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"style\\":{\\"border\\":\\"5px solid blue\\"},\\"options\\":true}",
       "bordered": undefined,
       "children": <div
         style={
@@ -137,7 +133,7 @@ Array [
       </div>,
       "className": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
       "extra": undefined,
-      "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headStyle": "{\\"options\\":true}",
       "hoverable": undefined,
       "id": "properties.bodyStyle: border: 5px solid blue",
       "onClick": [Function],
@@ -150,17 +146,13 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   Object {
                     "border": "5px solid blue",
                   },
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   Array [
@@ -175,11 +167,11 @@ Array [
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
-                  "value": "{\\"style\\":{\\"border\\":\\"5px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"style\\":{\\"border\\":\\"5px solid blue\\"},\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
@@ -204,7 +196,7 @@ exports[`Mock render - properties.bordered: false - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"options\\":true}",
       "bordered": false,
       "children": <div
         style={
@@ -218,7 +210,7 @@ Array [
       </div>,
       "className": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
       "extra": undefined,
-      "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headStyle": "{\\"options\\":true}",
       "hoverable": undefined,
       "id": "properties.bordered: false",
       "onClick": [Function],
@@ -231,15 +223,11 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   Array [
@@ -254,11 +242,11 @@ Array [
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
@@ -283,7 +271,7 @@ exports[`Mock render - properties.headerStyle: border: 5px solid blue - value[0]
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"options\\":true}",
       "bordered": undefined,
       "children": <div
         style={
@@ -297,7 +285,7 @@ Array [
       </div>,
       "className": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
       "extra": undefined,
-      "headStyle": "{\\"style\\":{\\"border\\":\\"5px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headStyle": "{\\"style\\":{\\"border\\":\\"5px solid blue\\"},\\"options\\":true}",
       "hoverable": undefined,
       "id": "properties.headerStyle: border: 5px solid blue",
       "onClick": [Function],
@@ -312,15 +300,11 @@ Array [
                   Object {
                     "border": "5px solid blue",
                   },
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   Array [
@@ -335,11 +319,11 @@ Array [
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"style\\":{\\"border\\":\\"5px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"style\\":{\\"border\\":\\"5px solid blue\\"},\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
@@ -364,7 +348,7 @@ exports[`Mock render - properties.hoverable: true - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"options\\":true}",
       "bordered": undefined,
       "children": <div
         style={
@@ -378,7 +362,7 @@ Array [
       </div>,
       "className": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
       "extra": undefined,
-      "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headStyle": "{\\"options\\":true}",
       "hoverable": true,
       "id": "properties.hoverable: true",
       "onClick": [Function],
@@ -391,15 +375,11 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   Array [
@@ -414,11 +394,11 @@ Array [
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
@@ -443,7 +423,7 @@ exports[`Mock render - properties.inner: true - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"options\\":true}",
       "bordered": undefined,
       "children": <div
         style={
@@ -457,7 +437,7 @@ Array [
       </div>,
       "className": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
       "extra": undefined,
-      "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headStyle": "{\\"options\\":true}",
       "hoverable": undefined,
       "id": "properties.inner: true",
       "onClick": [Function],
@@ -470,15 +450,11 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   Array [
@@ -493,11 +469,11 @@ Array [
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
@@ -522,7 +498,7 @@ exports[`Mock render - properties.size: small - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"options\\":true}",
       "bordered": undefined,
       "children": <div
         style={
@@ -536,7 +512,7 @@ Array [
       </div>,
       "className": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
       "extra": undefined,
-      "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headStyle": "{\\"options\\":true}",
       "hoverable": undefined,
       "id": "properties.size: small",
       "onClick": [Function],
@@ -549,15 +525,11 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   Array [
@@ -572,11 +544,11 @@ Array [
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
@@ -601,7 +573,7 @@ exports[`Mock render - properties.title - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"options\\":true}",
       "bordered": undefined,
       "children": <div
         style={
@@ -615,7 +587,7 @@ Array [
       </div>,
       "className": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
       "extra": undefined,
-      "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headStyle": "{\\"options\\":true}",
       "hoverable": undefined,
       "id": "properties.title",
       "onClick": [Function],
@@ -628,15 +600,11 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   Array [
@@ -651,11 +619,11 @@ Array [
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
@@ -680,7 +648,7 @@ exports[`Mock render - with html in title - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"options\\":true}",
       "bordered": undefined,
       "children": <div
         style={
@@ -694,7 +662,7 @@ Array [
       </div>,
       "className": "{\\"style\\":[{\\"outline\\":\\"none\\"},null]}",
       "extra": undefined,
-      "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headStyle": "{\\"options\\":true}",
       "hoverable": undefined,
       "id": "with html in title",
       "onClick": [Function],
@@ -709,15 +677,11 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   Array [
@@ -732,11 +696,11 @@ Array [
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
@@ -761,7 +725,7 @@ exports[`Mock render - with onClick event - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "bodyStyle": "{\\"options\\":true}",
       "bordered": undefined,
       "children": <div
         style={
@@ -775,7 +739,7 @@ Array [
       </div>,
       "className": "{\\"style\\":[{\\"outline\\":\\"none\\",\\"cursor\\":\\"pointer\\"},null]}",
       "extra": undefined,
-      "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+      "headStyle": "{\\"options\\":true}",
       "hoverable": undefined,
       "id": "with onClick event",
       "onClick": [Function],
@@ -788,15 +752,11 @@ Array [
               "calls": Array [
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   undefined,
-                  Object {
-                    "styleObjectOnly": true,
-                  },
+                  true,
                 ],
                 Array [
                   Array [
@@ -811,11 +771,11 @@ Array [
               "results": Array [
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",
-                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  "value": "{\\"options\\":true}",
                 },
                 Object {
                   "type": "return",

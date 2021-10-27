@@ -1,19 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render areas.content - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
 <span
-  className="{\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
+  class="emotion-0"
   data-testid="areas.content"
   id="areas.content"
-  onClick={[Function]}
 >
   <div
-    style={
-      Object {
-        "border": "1px solid red",
-        "padding": 10,
-      }
-    }
+    style="border: 1px solid red; padding: 10px;"
   >
     content
   </div>
@@ -21,19 +19,17 @@ exports[`Render areas.content - value[0] 1`] = `
 `;
 
 exports[`Render default - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
 <span
-  className="{\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
+  class="emotion-0"
   data-testid="default"
   id="default"
-  onClick={[Function]}
 >
   <div
-    style={
-      Object {
-        "border": "1px solid red",
-        "padding": 10,
-      }
-    }
+    style="border: 1px solid red; padding: 10px;"
   >
     content
   </div>
@@ -41,19 +37,18 @@ exports[`Render default - value[0] 1`] = `
 `;
 
 exports[`Render events.onClick - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+  cursor: pointer;
+}
+
 <span
-  className="{\\"style\\":[{\\"outline\\":\\"none\\",\\"cursor\\":\\"pointer\\"},null]}"
+  class="emotion-0"
   data-testid="events.onClick"
   id="events.onClick"
-  onClick={[Function]}
 >
   <div
-    style={
-      Object {
-        "border": "1px solid red",
-        "padding": 10,
-      }
-    }
+    style="border: 1px solid red; padding: 10px;"
   >
     content
   </div>
@@ -61,30 +56,32 @@ exports[`Render events.onClick - value[0] 1`] = `
 `;
 
 exports[`Render properties.content - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
 <span
-  className="{\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
+  class="emotion-0"
   data-testid="properties.content"
   id="properties.content"
-  onClick={[Function]}
 >
   Foo
 </span>
 `;
 
 exports[`Render properties.style - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+  border: 1px solid blue;
+}
+
 <span
-  className="{\\"style\\":[{\\"outline\\":\\"none\\"},{\\"border\\":\\"1px solid blue\\"}]}"
+  class="emotion-0"
   data-testid="properties.style"
   id="properties.style"
-  onClick={[Function]}
 >
   <div
-    style={
-      Object {
-        "border": "1px solid red",
-        "padding": 10,
-      }
-    }
+    style="border: 1px solid red; padding: 10px;"
   >
     content
   </div>
@@ -110,3 +107,21 @@ exports[`Test Schema properties.content 2`] = `null`;
 exports[`Test Schema properties.style 1`] = `true`;
 
 exports[`Test Schema properties.style 2`] = `null`;
+
+exports[`triggerEvent onClick 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
+<span
+  class="emotion-0"
+  data-testid="one"
+  id="one"
+>
+  <div
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+</span>
+`;

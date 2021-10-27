@@ -14,26 +14,11 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import Badge from '../src/blocks/Badge/Badge';
 import examples from '../demo/examples/Badge.yaml';
 import meta from '../src/blocks/Badge/Badge.json';
 
-jest.mock('@lowdefy/block-tools', () => {
-  const originalModule = jest.requireActual('@lowdefy/block-tools');
-  return {
-    ...originalModule,
-    blockDefaultProps: {
-      ...originalModule.blockDefaultProps,
-      methods: {
-        ...originalModule.blockDefaultProps.methods,
-        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
-      },
-    },
-  };
-});
-
-// FIX Jest: TypeError: Cannot read property 'add' of undefined
-// runRenderTests({ examples, Block: Badge, meta });
+runRenderTests({ examples, Block: Badge, meta });
 runBlockSchemaTests({ examples, meta });

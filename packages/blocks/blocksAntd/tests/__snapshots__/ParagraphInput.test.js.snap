@@ -2,38 +2,20 @@
 
 exports[`Render default - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="default"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -56,40 +38,22 @@ exports[`Render default - value[0] 1`] = `
 
 exports[`Render properties.code: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.code: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <code>
     
   </code>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -112,38 +76,20 @@ exports[`Render properties.code: true - value[0] 1`] = `
 
 exports[`Render properties.copyable: icon - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: icon"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -163,30 +109,15 @@ exports[`Render properties.copyable: icon - value[0] 1`] = `
   </div>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-0"
       id="properties.copyable: icon_copyable_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -209,38 +140,20 @@ exports[`Render properties.copyable: icon - value[0] 1`] = `
 
 exports[`Render properties.copyable: icon: [] - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: icon: []"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -260,30 +173,15 @@ exports[`Render properties.copyable: icon: [] - value[0] 1`] = `
   </div>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-0"
       id="properties.copyable: icon: []_copyable_before_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -306,38 +204,20 @@ exports[`Render properties.copyable: icon: [] - value[0] 1`] = `
 
 exports[`Render properties.copyable: text: one - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: text: one"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -357,27 +237,14 @@ exports[`Render properties.copyable: text: one - value[0] 1`] = `
   </div>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="copy"
-      className="anticon anticon-copy"
+      class="anticon anticon-copy"
       role="img"
     >
       <svg
@@ -400,38 +267,20 @@ exports[`Render properties.copyable: text: one - value[0] 1`] = `
 
 exports[`Render properties.copyable: tooltips: [] - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: tooltips: []"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -451,27 +300,14 @@ exports[`Render properties.copyable: tooltips: [] - value[0] 1`] = `
   </div>
   <div
     aria-label="Click to copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="copy"
-      className="anticon anticon-copy"
+      class="anticon anticon-copy"
       role="img"
     >
       <svg
@@ -494,38 +330,20 @@ exports[`Render properties.copyable: tooltips: [] - value[0] 1`] = `
 
 exports[`Render properties.copyable: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -545,27 +363,14 @@ exports[`Render properties.copyable: true - value[0] 1`] = `
   </div>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="copy"
-      className="anticon anticon-copy"
+      class="anticon anticon-copy"
       role="img"
     >
       <svg
@@ -588,40 +393,22 @@ exports[`Render properties.copyable: true - value[0] 1`] = `
 
 exports[`Render properties.delete: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.delete: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <del>
     
   </del>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -644,38 +431,20 @@ exports[`Render properties.delete: true - value[0] 1`] = `
 
 exports[`Render properties.disabled: true - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-disabled {}"
+  class="ant-typography ant-typography-disabled emotion-0"
   id="properties.disabled: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -698,41 +467,21 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
 
 exports[`Render properties.editable.icon - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable.icon"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-0"
       id="properties.editable.icon_editable_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -755,38 +504,20 @@ exports[`Render properties.editable.icon - value[0] 1`] = `
 
 exports[`Render properties.editable.maxLength: 10 - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable.maxLength: 10"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -809,38 +540,20 @@ exports[`Render properties.editable.maxLength: 10 - value[0] 1`] = `
 
 exports[`Render properties.editable.tooltip - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable.tooltip"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Change the value"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -863,13 +576,8 @@ exports[`Render properties.editable.tooltip - value[0] 1`] = `
 
 exports[`Render properties.editable: false - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable: false"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
 </div>
@@ -877,38 +585,20 @@ exports[`Render properties.editable: false - value[0] 1`] = `
 
 exports[`Render properties.editable: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -931,38 +621,20 @@ exports[`Render properties.editable: true - value[0] 1`] = `
 
 exports[`Render properties.ellipsis: expandable, rows - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis {}"
+  class="ant-typography ant-typography-ellipsis emotion-0"
   id="properties.ellipsis: expandable, rows"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -985,38 +657,20 @@ exports[`Render properties.ellipsis: expandable, rows - value[0] 1`] = `
 
 exports[`Render properties.ellipsis: rows - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis {}"
+  class="ant-typography ant-typography-ellipsis emotion-0"
   id="properties.ellipsis: rows"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -1039,39 +693,21 @@ exports[`Render properties.ellipsis: rows - value[0] 1`] = `
 
 exports[`Render properties.ellipsis: rows, suffix - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis {}"
+  class="ant-typography ant-typography-ellipsis emotion-0"
   id="properties.ellipsis: rows, suffix"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   and other
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -1094,38 +730,20 @@ exports[`Render properties.ellipsis: rows, suffix - value[0] 1`] = `
 
 exports[`Render properties.ellipsis: true - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis ant-typography-single-line {}"
+  class="ant-typography ant-typography-ellipsis ant-typography-single-line emotion-0"
   id="properties.ellipsis: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -1148,40 +766,22 @@ exports[`Render properties.ellipsis: true - value[0] 1`] = `
 
 exports[`Render properties.italic: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.italic: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <i>
     
   </i>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -1204,40 +804,22 @@ exports[`Render properties.italic: true - value[0] 1`] = `
 
 exports[`Render properties.mark: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.mark: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <mark>
     
   </mark>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -1260,40 +842,22 @@ exports[`Render properties.mark: true - value[0] 1`] = `
 
 exports[`Render properties.strong: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.strong: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <strong>
     
   </strong>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -1316,38 +880,20 @@ exports[`Render properties.strong: true - value[0] 1`] = `
 
 exports[`Render properties.type: danger - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-danger {}"
+  class="ant-typography ant-typography-danger emotion-0"
   id="properties.type: danger"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -1370,38 +916,20 @@ exports[`Render properties.type: danger - value[0] 1`] = `
 
 exports[`Render properties.type: secondary - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-secondary {}"
+  class="ant-typography ant-typography-secondary emotion-0"
   id="properties.type: secondary"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -1424,38 +952,20 @@ exports[`Render properties.type: secondary - value[0] 1`] = `
 
 exports[`Render properties.type: warning - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-warning {}"
+  class="ant-typography ant-typography-warning emotion-0"
   id="properties.type: warning"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -1478,40 +988,22 @@ exports[`Render properties.type: warning - value[0] 1`] = `
 
 exports[`Render properties.underline: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.underline: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <u>
     
   </u>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -1534,38 +1026,20 @@ exports[`Render properties.underline: true - value[0] 1`] = `
 
 exports[`Render required = true default - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="default"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -1588,40 +1062,22 @@ exports[`Render required = true default - value[0] 1`] = `
 
 exports[`Render required = true properties.code: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.code: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <code>
     
   </code>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -1644,38 +1100,20 @@ exports[`Render required = true properties.code: true - value[0] 1`] = `
 
 exports[`Render required = true properties.copyable: icon - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: icon"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -1695,30 +1133,15 @@ exports[`Render required = true properties.copyable: icon - value[0] 1`] = `
   </div>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-0"
       id="properties.copyable: icon_copyable_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -1741,38 +1164,20 @@ exports[`Render required = true properties.copyable: icon - value[0] 1`] = `
 
 exports[`Render required = true properties.copyable: icon: [] - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: icon: []"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -1792,30 +1197,15 @@ exports[`Render required = true properties.copyable: icon: [] - value[0] 1`] = `
   </div>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-0"
       id="properties.copyable: icon: []_copyable_before_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -1838,38 +1228,20 @@ exports[`Render required = true properties.copyable: icon: [] - value[0] 1`] = `
 
 exports[`Render required = true properties.copyable: text: one - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: text: one"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -1889,27 +1261,14 @@ exports[`Render required = true properties.copyable: text: one - value[0] 1`] = 
   </div>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="copy"
-      className="anticon anticon-copy"
+      class="anticon anticon-copy"
       role="img"
     >
       <svg
@@ -1932,38 +1291,20 @@ exports[`Render required = true properties.copyable: text: one - value[0] 1`] = 
 
 exports[`Render required = true properties.copyable: tooltips: [] - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: tooltips: []"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -1983,27 +1324,14 @@ exports[`Render required = true properties.copyable: tooltips: [] - value[0] 1`]
   </div>
   <div
     aria-label="Click to copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="copy"
-      className="anticon anticon-copy"
+      class="anticon anticon-copy"
       role="img"
     >
       <svg
@@ -2026,38 +1354,20 @@ exports[`Render required = true properties.copyable: tooltips: [] - value[0] 1`]
 
 exports[`Render required = true properties.copyable: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -2077,27 +1387,14 @@ exports[`Render required = true properties.copyable: true - value[0] 1`] = `
   </div>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="copy"
-      className="anticon anticon-copy"
+      class="anticon anticon-copy"
       role="img"
     >
       <svg
@@ -2120,40 +1417,22 @@ exports[`Render required = true properties.copyable: true - value[0] 1`] = `
 
 exports[`Render required = true properties.delete: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.delete: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <del>
     
   </del>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -2176,38 +1455,20 @@ exports[`Render required = true properties.delete: true - value[0] 1`] = `
 
 exports[`Render required = true properties.disabled: true - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-disabled {}"
+  class="ant-typography ant-typography-disabled emotion-0"
   id="properties.disabled: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -2230,41 +1491,21 @@ exports[`Render required = true properties.disabled: true - value[0] 1`] = `
 
 exports[`Render required = true properties.editable.icon - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable.icon"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-0"
       id="properties.editable.icon_editable_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -2287,38 +1528,20 @@ exports[`Render required = true properties.editable.icon - value[0] 1`] = `
 
 exports[`Render required = true properties.editable.maxLength: 10 - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable.maxLength: 10"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -2341,38 +1564,20 @@ exports[`Render required = true properties.editable.maxLength: 10 - value[0] 1`]
 
 exports[`Render required = true properties.editable.tooltip - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable.tooltip"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Change the value"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -2395,13 +1600,8 @@ exports[`Render required = true properties.editable.tooltip - value[0] 1`] = `
 
 exports[`Render required = true properties.editable: false - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable: false"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
 </div>
@@ -2409,38 +1609,20 @@ exports[`Render required = true properties.editable: false - value[0] 1`] = `
 
 exports[`Render required = true properties.editable: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -2463,38 +1645,20 @@ exports[`Render required = true properties.editable: true - value[0] 1`] = `
 
 exports[`Render required = true properties.ellipsis: expandable, rows - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis {}"
+  class="ant-typography ant-typography-ellipsis emotion-0"
   id="properties.ellipsis: expandable, rows"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -2517,38 +1681,20 @@ exports[`Render required = true properties.ellipsis: expandable, rows - value[0]
 
 exports[`Render required = true properties.ellipsis: rows - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis {}"
+  class="ant-typography ant-typography-ellipsis emotion-0"
   id="properties.ellipsis: rows"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -2571,39 +1717,21 @@ exports[`Render required = true properties.ellipsis: rows - value[0] 1`] = `
 
 exports[`Render required = true properties.ellipsis: rows, suffix - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis {}"
+  class="ant-typography ant-typography-ellipsis emotion-0"
   id="properties.ellipsis: rows, suffix"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   and other
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -2626,38 +1754,20 @@ exports[`Render required = true properties.ellipsis: rows, suffix - value[0] 1`]
 
 exports[`Render required = true properties.ellipsis: true - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis ant-typography-single-line {}"
+  class="ant-typography ant-typography-ellipsis ant-typography-single-line emotion-0"
   id="properties.ellipsis: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -2680,40 +1790,22 @@ exports[`Render required = true properties.ellipsis: true - value[0] 1`] = `
 
 exports[`Render required = true properties.italic: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.italic: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <i>
     
   </i>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -2736,40 +1828,22 @@ exports[`Render required = true properties.italic: true - value[0] 1`] = `
 
 exports[`Render required = true properties.mark: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.mark: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <mark>
     
   </mark>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -2792,40 +1866,22 @@ exports[`Render required = true properties.mark: true - value[0] 1`] = `
 
 exports[`Render required = true properties.strong: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.strong: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <strong>
     
   </strong>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -2848,38 +1904,20 @@ exports[`Render required = true properties.strong: true - value[0] 1`] = `
 
 exports[`Render required = true properties.type: danger - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-danger {}"
+  class="ant-typography ant-typography-danger emotion-0"
   id="properties.type: danger"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -2902,38 +1940,20 @@ exports[`Render required = true properties.type: danger - value[0] 1`] = `
 
 exports[`Render required = true properties.type: secondary - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-secondary {}"
+  class="ant-typography ant-typography-secondary emotion-0"
   id="properties.type: secondary"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -2956,38 +1976,20 @@ exports[`Render required = true properties.type: secondary - value[0] 1`] = `
 
 exports[`Render required = true properties.type: warning - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-warning {}"
+  class="ant-typography ant-typography-warning emotion-0"
   id="properties.type: warning"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -3010,40 +2012,22 @@ exports[`Render required = true properties.type: warning - value[0] 1`] = `
 
 exports[`Render required = true properties.underline: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.underline: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <u>
     
   </u>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -3066,38 +2050,20 @@ exports[`Render required = true properties.underline: true - value[0] 1`] = `
 
 exports[`Render validation.status = error default - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="default"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -3120,40 +2086,22 @@ exports[`Render validation.status = error default - value[0] 1`] = `
 
 exports[`Render validation.status = error properties.code: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.code: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <code>
     
   </code>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -3176,38 +2124,20 @@ exports[`Render validation.status = error properties.code: true - value[0] 1`] =
 
 exports[`Render validation.status = error properties.copyable: icon - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: icon"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -3227,30 +2157,15 @@ exports[`Render validation.status = error properties.copyable: icon - value[0] 1
   </div>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-0"
       id="properties.copyable: icon_copyable_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -3273,38 +2188,20 @@ exports[`Render validation.status = error properties.copyable: icon - value[0] 1
 
 exports[`Render validation.status = error properties.copyable: icon: [] - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: icon: []"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -3324,30 +2221,15 @@ exports[`Render validation.status = error properties.copyable: icon: [] - value[
   </div>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-0"
       id="properties.copyable: icon: []_copyable_before_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -3370,38 +2252,20 @@ exports[`Render validation.status = error properties.copyable: icon: [] - value[
 
 exports[`Render validation.status = error properties.copyable: text: one - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: text: one"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -3421,27 +2285,14 @@ exports[`Render validation.status = error properties.copyable: text: one - value
   </div>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="copy"
-      className="anticon anticon-copy"
+      class="anticon anticon-copy"
       role="img"
     >
       <svg
@@ -3464,38 +2315,20 @@ exports[`Render validation.status = error properties.copyable: text: one - value
 
 exports[`Render validation.status = error properties.copyable: tooltips: [] - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: tooltips: []"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -3515,27 +2348,14 @@ exports[`Render validation.status = error properties.copyable: tooltips: [] - va
   </div>
   <div
     aria-label="Click to copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="copy"
-      className="anticon anticon-copy"
+      class="anticon anticon-copy"
       role="img"
     >
       <svg
@@ -3558,38 +2378,20 @@ exports[`Render validation.status = error properties.copyable: tooltips: [] - va
 
 exports[`Render validation.status = error properties.copyable: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -3609,27 +2411,14 @@ exports[`Render validation.status = error properties.copyable: true - value[0] 1
   </div>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="copy"
-      className="anticon anticon-copy"
+      class="anticon anticon-copy"
       role="img"
     >
       <svg
@@ -3652,40 +2441,22 @@ exports[`Render validation.status = error properties.copyable: true - value[0] 1
 
 exports[`Render validation.status = error properties.delete: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.delete: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <del>
     
   </del>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -3708,38 +2479,20 @@ exports[`Render validation.status = error properties.delete: true - value[0] 1`]
 
 exports[`Render validation.status = error properties.disabled: true - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-disabled {}"
+  class="ant-typography ant-typography-disabled emotion-0"
   id="properties.disabled: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -3762,41 +2515,21 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
 
 exports[`Render validation.status = error properties.editable.icon - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable.icon"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-0"
       id="properties.editable.icon_editable_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -3819,38 +2552,20 @@ exports[`Render validation.status = error properties.editable.icon - value[0] 1`
 
 exports[`Render validation.status = error properties.editable.maxLength: 10 - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable.maxLength: 10"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -3873,38 +2588,20 @@ exports[`Render validation.status = error properties.editable.maxLength: 10 - va
 
 exports[`Render validation.status = error properties.editable.tooltip - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable.tooltip"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Change the value"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -3927,13 +2624,8 @@ exports[`Render validation.status = error properties.editable.tooltip - value[0]
 
 exports[`Render validation.status = error properties.editable: false - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable: false"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
 </div>
@@ -3941,38 +2633,20 @@ exports[`Render validation.status = error properties.editable: false - value[0] 
 
 exports[`Render validation.status = error properties.editable: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -3995,38 +2669,20 @@ exports[`Render validation.status = error properties.editable: true - value[0] 1
 
 exports[`Render validation.status = error properties.ellipsis: expandable, rows - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis {}"
+  class="ant-typography ant-typography-ellipsis emotion-0"
   id="properties.ellipsis: expandable, rows"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -4049,38 +2705,20 @@ exports[`Render validation.status = error properties.ellipsis: expandable, rows 
 
 exports[`Render validation.status = error properties.ellipsis: rows - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis {}"
+  class="ant-typography ant-typography-ellipsis emotion-0"
   id="properties.ellipsis: rows"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -4103,39 +2741,21 @@ exports[`Render validation.status = error properties.ellipsis: rows - value[0] 1
 
 exports[`Render validation.status = error properties.ellipsis: rows, suffix - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis {}"
+  class="ant-typography ant-typography-ellipsis emotion-0"
   id="properties.ellipsis: rows, suffix"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   and other
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -4158,38 +2778,20 @@ exports[`Render validation.status = error properties.ellipsis: rows, suffix - va
 
 exports[`Render validation.status = error properties.ellipsis: true - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis ant-typography-single-line {}"
+  class="ant-typography ant-typography-ellipsis ant-typography-single-line emotion-0"
   id="properties.ellipsis: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -4212,40 +2814,22 @@ exports[`Render validation.status = error properties.ellipsis: true - value[0] 1
 
 exports[`Render validation.status = error properties.italic: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.italic: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <i>
     
   </i>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -4268,40 +2852,22 @@ exports[`Render validation.status = error properties.italic: true - value[0] 1`]
 
 exports[`Render validation.status = error properties.mark: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.mark: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <mark>
     
   </mark>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -4324,40 +2890,22 @@ exports[`Render validation.status = error properties.mark: true - value[0] 1`] =
 
 exports[`Render validation.status = error properties.strong: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.strong: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <strong>
     
   </strong>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -4380,38 +2928,20 @@ exports[`Render validation.status = error properties.strong: true - value[0] 1`]
 
 exports[`Render validation.status = error properties.type: danger - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-danger {}"
+  class="ant-typography ant-typography-danger emotion-0"
   id="properties.type: danger"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -4434,38 +2964,20 @@ exports[`Render validation.status = error properties.type: danger - value[0] 1`]
 
 exports[`Render validation.status = error properties.type: secondary - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-secondary {}"
+  class="ant-typography ant-typography-secondary emotion-0"
   id="properties.type: secondary"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -4488,38 +3000,20 @@ exports[`Render validation.status = error properties.type: secondary - value[0] 
 
 exports[`Render validation.status = error properties.type: warning - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-warning {}"
+  class="ant-typography ant-typography-warning emotion-0"
   id="properties.type: warning"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -4542,40 +3036,22 @@ exports[`Render validation.status = error properties.type: warning - value[0] 1`
 
 exports[`Render validation.status = error properties.underline: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.underline: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <u>
     
   </u>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -4598,38 +3074,20 @@ exports[`Render validation.status = error properties.underline: true - value[0] 
 
 exports[`Render validation.status = null default - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="default"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -4652,40 +3110,22 @@ exports[`Render validation.status = null default - value[0] 1`] = `
 
 exports[`Render validation.status = null properties.code: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.code: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <code>
     
   </code>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -4708,38 +3148,20 @@ exports[`Render validation.status = null properties.code: true - value[0] 1`] = 
 
 exports[`Render validation.status = null properties.copyable: icon - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: icon"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -4759,30 +3181,15 @@ exports[`Render validation.status = null properties.copyable: icon - value[0] 1`
   </div>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-0"
       id="properties.copyable: icon_copyable_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -4805,38 +3212,20 @@ exports[`Render validation.status = null properties.copyable: icon - value[0] 1`
 
 exports[`Render validation.status = null properties.copyable: icon: [] - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: icon: []"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -4856,30 +3245,15 @@ exports[`Render validation.status = null properties.copyable: icon: [] - value[0
   </div>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-0"
       id="properties.copyable: icon: []_copyable_before_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -4902,38 +3276,20 @@ exports[`Render validation.status = null properties.copyable: icon: [] - value[0
 
 exports[`Render validation.status = null properties.copyable: text: one - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: text: one"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -4953,27 +3309,14 @@ exports[`Render validation.status = null properties.copyable: text: one - value[
   </div>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="copy"
-      className="anticon anticon-copy"
+      class="anticon anticon-copy"
       role="img"
     >
       <svg
@@ -4996,38 +3339,20 @@ exports[`Render validation.status = null properties.copyable: text: one - value[
 
 exports[`Render validation.status = null properties.copyable: tooltips: [] - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: tooltips: []"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -5047,27 +3372,14 @@ exports[`Render validation.status = null properties.copyable: tooltips: [] - val
   </div>
   <div
     aria-label="Click to copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="copy"
-      className="anticon anticon-copy"
+      class="anticon anticon-copy"
       role="img"
     >
       <svg
@@ -5090,38 +3402,20 @@ exports[`Render validation.status = null properties.copyable: tooltips: [] - val
 
 exports[`Render validation.status = null properties.copyable: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -5141,27 +3435,14 @@ exports[`Render validation.status = null properties.copyable: true - value[0] 1`
   </div>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="copy"
-      className="anticon anticon-copy"
+      class="anticon anticon-copy"
       role="img"
     >
       <svg
@@ -5184,40 +3465,22 @@ exports[`Render validation.status = null properties.copyable: true - value[0] 1`
 
 exports[`Render validation.status = null properties.delete: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.delete: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <del>
     
   </del>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -5240,38 +3503,20 @@ exports[`Render validation.status = null properties.delete: true - value[0] 1`] 
 
 exports[`Render validation.status = null properties.disabled: true - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-disabled {}"
+  class="ant-typography ant-typography-disabled emotion-0"
   id="properties.disabled: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -5294,41 +3539,21 @@ exports[`Render validation.status = null properties.disabled: true - value[0] 1`
 
 exports[`Render validation.status = null properties.editable.icon - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable.icon"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-0"
       id="properties.editable.icon_editable_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -5351,38 +3576,20 @@ exports[`Render validation.status = null properties.editable.icon - value[0] 1`]
 
 exports[`Render validation.status = null properties.editable.maxLength: 10 - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable.maxLength: 10"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -5405,38 +3612,20 @@ exports[`Render validation.status = null properties.editable.maxLength: 10 - val
 
 exports[`Render validation.status = null properties.editable.tooltip - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable.tooltip"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Change the value"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -5459,13 +3648,8 @@ exports[`Render validation.status = null properties.editable.tooltip - value[0] 
 
 exports[`Render validation.status = null properties.editable: false - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable: false"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
 </div>
@@ -5473,38 +3657,20 @@ exports[`Render validation.status = null properties.editable: false - value[0] 1
 
 exports[`Render validation.status = null properties.editable: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -5527,38 +3693,20 @@ exports[`Render validation.status = null properties.editable: true - value[0] 1`
 
 exports[`Render validation.status = null properties.ellipsis: expandable, rows - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis {}"
+  class="ant-typography ant-typography-ellipsis emotion-0"
   id="properties.ellipsis: expandable, rows"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -5581,38 +3729,20 @@ exports[`Render validation.status = null properties.ellipsis: expandable, rows -
 
 exports[`Render validation.status = null properties.ellipsis: rows - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis {}"
+  class="ant-typography ant-typography-ellipsis emotion-0"
   id="properties.ellipsis: rows"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -5635,39 +3765,21 @@ exports[`Render validation.status = null properties.ellipsis: rows - value[0] 1`
 
 exports[`Render validation.status = null properties.ellipsis: rows, suffix - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis {}"
+  class="ant-typography ant-typography-ellipsis emotion-0"
   id="properties.ellipsis: rows, suffix"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   and other
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -5690,38 +3802,20 @@ exports[`Render validation.status = null properties.ellipsis: rows, suffix - val
 
 exports[`Render validation.status = null properties.ellipsis: true - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis ant-typography-single-line {}"
+  class="ant-typography ant-typography-ellipsis ant-typography-single-line emotion-0"
   id="properties.ellipsis: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -5744,40 +3838,22 @@ exports[`Render validation.status = null properties.ellipsis: true - value[0] 1`
 
 exports[`Render validation.status = null properties.italic: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.italic: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <i>
     
   </i>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -5800,40 +3876,22 @@ exports[`Render validation.status = null properties.italic: true - value[0] 1`] 
 
 exports[`Render validation.status = null properties.mark: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.mark: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <mark>
     
   </mark>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -5856,40 +3914,22 @@ exports[`Render validation.status = null properties.mark: true - value[0] 1`] = 
 
 exports[`Render validation.status = null properties.strong: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.strong: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <strong>
     
   </strong>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -5912,38 +3952,20 @@ exports[`Render validation.status = null properties.strong: true - value[0] 1`] 
 
 exports[`Render validation.status = null properties.type: danger - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-danger {}"
+  class="ant-typography ant-typography-danger emotion-0"
   id="properties.type: danger"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -5966,38 +3988,20 @@ exports[`Render validation.status = null properties.type: danger - value[0] 1`] 
 
 exports[`Render validation.status = null properties.type: secondary - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-secondary {}"
+  class="ant-typography ant-typography-secondary emotion-0"
   id="properties.type: secondary"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -6020,38 +4024,20 @@ exports[`Render validation.status = null properties.type: secondary - value[0] 1
 
 exports[`Render validation.status = null properties.type: warning - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-warning {}"
+  class="ant-typography ant-typography-warning emotion-0"
   id="properties.type: warning"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -6074,40 +4060,22 @@ exports[`Render validation.status = null properties.type: warning - value[0] 1`]
 
 exports[`Render validation.status = null properties.underline: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.underline: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <u>
     
   </u>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -6130,38 +4098,20 @@ exports[`Render validation.status = null properties.underline: true - value[0] 1
 
 exports[`Render validation.status = success default - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="default"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -6184,40 +4134,22 @@ exports[`Render validation.status = success default - value[0] 1`] = `
 
 exports[`Render validation.status = success properties.code: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.code: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <code>
     
   </code>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -6240,38 +4172,20 @@ exports[`Render validation.status = success properties.code: true - value[0] 1`]
 
 exports[`Render validation.status = success properties.copyable: icon - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: icon"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -6291,30 +4205,15 @@ exports[`Render validation.status = success properties.copyable: icon - value[0]
   </div>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-0"
       id="properties.copyable: icon_copyable_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -6337,38 +4236,20 @@ exports[`Render validation.status = success properties.copyable: icon - value[0]
 
 exports[`Render validation.status = success properties.copyable: icon: [] - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: icon: []"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -6388,30 +4269,15 @@ exports[`Render validation.status = success properties.copyable: icon: [] - valu
   </div>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-0"
       id="properties.copyable: icon: []_copyable_before_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -6434,38 +4300,20 @@ exports[`Render validation.status = success properties.copyable: icon: [] - valu
 
 exports[`Render validation.status = success properties.copyable: text: one - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: text: one"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -6485,27 +4333,14 @@ exports[`Render validation.status = success properties.copyable: text: one - val
   </div>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="copy"
-      className="anticon anticon-copy"
+      class="anticon anticon-copy"
       role="img"
     >
       <svg
@@ -6528,38 +4363,20 @@ exports[`Render validation.status = success properties.copyable: text: one - val
 
 exports[`Render validation.status = success properties.copyable: tooltips: [] - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: tooltips: []"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -6579,27 +4396,14 @@ exports[`Render validation.status = success properties.copyable: tooltips: [] - 
   </div>
   <div
     aria-label="Click to copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="copy"
-      className="anticon anticon-copy"
+      class="anticon anticon-copy"
       role="img"
     >
       <svg
@@ -6622,38 +4426,20 @@ exports[`Render validation.status = success properties.copyable: tooltips: [] - 
 
 exports[`Render validation.status = success properties.copyable: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -6673,27 +4459,14 @@ exports[`Render validation.status = success properties.copyable: true - value[0]
   </div>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="copy"
-      className="anticon anticon-copy"
+      class="anticon anticon-copy"
       role="img"
     >
       <svg
@@ -6716,40 +4489,22 @@ exports[`Render validation.status = success properties.copyable: true - value[0]
 
 exports[`Render validation.status = success properties.delete: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.delete: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <del>
     
   </del>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -6772,38 +4527,20 @@ exports[`Render validation.status = success properties.delete: true - value[0] 1
 
 exports[`Render validation.status = success properties.disabled: true - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-disabled {}"
+  class="ant-typography ant-typography-disabled emotion-0"
   id="properties.disabled: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -6826,41 +4563,21 @@ exports[`Render validation.status = success properties.disabled: true - value[0]
 
 exports[`Render validation.status = success properties.editable.icon - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable.icon"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-0"
       id="properties.editable.icon_editable_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -6883,38 +4600,20 @@ exports[`Render validation.status = success properties.editable.icon - value[0] 
 
 exports[`Render validation.status = success properties.editable.maxLength: 10 - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable.maxLength: 10"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -6937,38 +4636,20 @@ exports[`Render validation.status = success properties.editable.maxLength: 10 - 
 
 exports[`Render validation.status = success properties.editable.tooltip - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable.tooltip"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Change the value"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -6991,13 +4672,8 @@ exports[`Render validation.status = success properties.editable.tooltip - value[
 
 exports[`Render validation.status = success properties.editable: false - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable: false"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
 </div>
@@ -7005,38 +4681,20 @@ exports[`Render validation.status = success properties.editable: false - value[0
 
 exports[`Render validation.status = success properties.editable: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -7059,38 +4717,20 @@ exports[`Render validation.status = success properties.editable: true - value[0]
 
 exports[`Render validation.status = success properties.ellipsis: expandable, rows - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis {}"
+  class="ant-typography ant-typography-ellipsis emotion-0"
   id="properties.ellipsis: expandable, rows"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -7113,38 +4753,20 @@ exports[`Render validation.status = success properties.ellipsis: expandable, row
 
 exports[`Render validation.status = success properties.ellipsis: rows - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis {}"
+  class="ant-typography ant-typography-ellipsis emotion-0"
   id="properties.ellipsis: rows"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -7167,39 +4789,21 @@ exports[`Render validation.status = success properties.ellipsis: rows - value[0]
 
 exports[`Render validation.status = success properties.ellipsis: rows, suffix - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis {}"
+  class="ant-typography ant-typography-ellipsis emotion-0"
   id="properties.ellipsis: rows, suffix"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   and other
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -7222,38 +4826,20 @@ exports[`Render validation.status = success properties.ellipsis: rows, suffix - 
 
 exports[`Render validation.status = success properties.ellipsis: true - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis ant-typography-single-line {}"
+  class="ant-typography ant-typography-ellipsis ant-typography-single-line emotion-0"
   id="properties.ellipsis: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -7276,40 +4862,22 @@ exports[`Render validation.status = success properties.ellipsis: true - value[0]
 
 exports[`Render validation.status = success properties.italic: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.italic: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <i>
     
   </i>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -7332,40 +4900,22 @@ exports[`Render validation.status = success properties.italic: true - value[0] 1
 
 exports[`Render validation.status = success properties.mark: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.mark: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <mark>
     
   </mark>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -7388,40 +4938,22 @@ exports[`Render validation.status = success properties.mark: true - value[0] 1`]
 
 exports[`Render validation.status = success properties.strong: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.strong: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <strong>
     
   </strong>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -7444,38 +4976,20 @@ exports[`Render validation.status = success properties.strong: true - value[0] 1
 
 exports[`Render validation.status = success properties.type: danger - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-danger {}"
+  class="ant-typography ant-typography-danger emotion-0"
   id="properties.type: danger"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -7498,38 +5012,20 @@ exports[`Render validation.status = success properties.type: danger - value[0] 1
 
 exports[`Render validation.status = success properties.type: secondary - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-secondary {}"
+  class="ant-typography ant-typography-secondary emotion-0"
   id="properties.type: secondary"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -7552,38 +5048,20 @@ exports[`Render validation.status = success properties.type: secondary - value[0
 
 exports[`Render validation.status = success properties.type: warning - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-warning {}"
+  class="ant-typography ant-typography-warning emotion-0"
   id="properties.type: warning"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -7606,40 +5084,22 @@ exports[`Render validation.status = success properties.type: warning - value[0] 
 
 exports[`Render validation.status = success properties.underline: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.underline: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <u>
     
   </u>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -7662,38 +5122,20 @@ exports[`Render validation.status = success properties.underline: true - value[0
 
 exports[`Render validation.status = warning default - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="default"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -7716,40 +5158,22 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
 
 exports[`Render validation.status = warning properties.code: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.code: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <code>
     
   </code>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -7772,38 +5196,20 @@ exports[`Render validation.status = warning properties.code: true - value[0] 1`]
 
 exports[`Render validation.status = warning properties.copyable: icon - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: icon"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -7823,30 +5229,15 @@ exports[`Render validation.status = warning properties.copyable: icon - value[0]
   </div>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-0"
       id="properties.copyable: icon_copyable_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -7869,38 +5260,20 @@ exports[`Render validation.status = warning properties.copyable: icon - value[0]
 
 exports[`Render validation.status = warning properties.copyable: icon: [] - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: icon: []"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -7920,30 +5293,15 @@ exports[`Render validation.status = warning properties.copyable: icon: [] - valu
   </div>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-0"
       id="properties.copyable: icon: []_copyable_before_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -7966,38 +5324,20 @@ exports[`Render validation.status = warning properties.copyable: icon: [] - valu
 
 exports[`Render validation.status = warning properties.copyable: text: one - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: text: one"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -8017,27 +5357,14 @@ exports[`Render validation.status = warning properties.copyable: text: one - val
   </div>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="copy"
-      className="anticon anticon-copy"
+      class="anticon anticon-copy"
       role="img"
     >
       <svg
@@ -8060,38 +5387,20 @@ exports[`Render validation.status = warning properties.copyable: text: one - val
 
 exports[`Render validation.status = warning properties.copyable: tooltips: [] - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: tooltips: []"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -8111,27 +5420,14 @@ exports[`Render validation.status = warning properties.copyable: tooltips: [] - 
   </div>
   <div
     aria-label="Click to copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="copy"
-      className="anticon anticon-copy"
+      class="anticon anticon-copy"
       role="img"
     >
       <svg
@@ -8154,38 +5450,20 @@ exports[`Render validation.status = warning properties.copyable: tooltips: [] - 
 
 exports[`Render validation.status = warning properties.copyable: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.copyable: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -8205,27 +5483,14 @@ exports[`Render validation.status = warning properties.copyable: true - value[0]
   </div>
   <div
     aria-label="Copy"
-    className="ant-typography-copy"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-copy"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="copy"
-      className="anticon anticon-copy"
+      class="anticon anticon-copy"
       role="img"
     >
       <svg
@@ -8248,40 +5513,22 @@ exports[`Render validation.status = warning properties.copyable: true - value[0]
 
 exports[`Render validation.status = warning properties.delete: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.delete: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <del>
     
   </del>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -8304,38 +5551,20 @@ exports[`Render validation.status = warning properties.delete: true - value[0] 1
 
 exports[`Render validation.status = warning properties.disabled: true - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-disabled {}"
+  class="ant-typography ant-typography-disabled emotion-0"
   id="properties.disabled: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -8358,41 +5587,21 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
 
 exports[`Render validation.status = warning properties.editable.icon - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable.icon"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="loading-3-quarters"
-      basePath=""
-      className="anticon anticon-loading-3-quarters anticon-spin {}"
+      class="anticon anticon-loading-3-quarters anticon-spin emotion-0"
       id="properties.editable.icon_editable_icon"
-      required={false}
       role="img"
     >
       <svg
@@ -8415,38 +5624,20 @@ exports[`Render validation.status = warning properties.editable.icon - value[0] 
 
 exports[`Render validation.status = warning properties.editable.maxLength: 10 - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable.maxLength: 10"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -8469,38 +5660,20 @@ exports[`Render validation.status = warning properties.editable.maxLength: 10 - 
 
 exports[`Render validation.status = warning properties.editable.tooltip - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable.tooltip"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Change the value"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -8523,13 +5696,8 @@ exports[`Render validation.status = warning properties.editable.tooltip - value[
 
 exports[`Render validation.status = warning properties.editable: false - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable: false"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
 </div>
@@ -8537,38 +5705,20 @@ exports[`Render validation.status = warning properties.editable: false - value[0
 
 exports[`Render validation.status = warning properties.editable: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.editable: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -8591,38 +5741,20 @@ exports[`Render validation.status = warning properties.editable: true - value[0]
 
 exports[`Render validation.status = warning properties.ellipsis: expandable, rows - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis {}"
+  class="ant-typography ant-typography-ellipsis emotion-0"
   id="properties.ellipsis: expandable, rows"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -8645,38 +5777,20 @@ exports[`Render validation.status = warning properties.ellipsis: expandable, row
 
 exports[`Render validation.status = warning properties.ellipsis: rows - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis {}"
+  class="ant-typography ant-typography-ellipsis emotion-0"
   id="properties.ellipsis: rows"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -8699,39 +5813,21 @@ exports[`Render validation.status = warning properties.ellipsis: rows - value[0]
 
 exports[`Render validation.status = warning properties.ellipsis: rows, suffix - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis {}"
+  class="ant-typography ant-typography-ellipsis emotion-0"
   id="properties.ellipsis: rows, suffix"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   and other
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -8754,38 +5850,20 @@ exports[`Render validation.status = warning properties.ellipsis: rows, suffix - 
 
 exports[`Render validation.status = warning properties.ellipsis: true - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-ellipsis ant-typography-single-line {}"
+  class="ant-typography ant-typography-ellipsis ant-typography-single-line emotion-0"
   id="properties.ellipsis: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -8808,40 +5886,22 @@ exports[`Render validation.status = warning properties.ellipsis: true - value[0]
 
 exports[`Render validation.status = warning properties.italic: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.italic: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <i>
     
   </i>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -8864,40 +5924,22 @@ exports[`Render validation.status = warning properties.italic: true - value[0] 1
 
 exports[`Render validation.status = warning properties.mark: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.mark: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <mark>
     
   </mark>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -8920,40 +5962,22 @@ exports[`Render validation.status = warning properties.mark: true - value[0] 1`]
 
 exports[`Render validation.status = warning properties.strong: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.strong: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <strong>
     
   </strong>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -8976,38 +6000,20 @@ exports[`Render validation.status = warning properties.strong: true - value[0] 1
 
 exports[`Render validation.status = warning properties.type: danger - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-danger {}"
+  class="ant-typography ant-typography-danger emotion-0"
   id="properties.type: danger"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -9030,38 +6036,20 @@ exports[`Render validation.status = warning properties.type: danger - value[0] 1
 
 exports[`Render validation.status = warning properties.type: secondary - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-secondary {}"
+  class="ant-typography ant-typography-secondary emotion-0"
   id="properties.type: secondary"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -9084,38 +6072,20 @@ exports[`Render validation.status = warning properties.type: secondary - value[0
 
 exports[`Render validation.status = warning properties.type: warning - value[0] 1`] = `
 <div
-  className="ant-typography ant-typography-warning {}"
+  class="ant-typography ant-typography-warning emotion-0"
   id="properties.type: warning"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg
@@ -9138,40 +6108,22 @@ exports[`Render validation.status = warning properties.type: warning - value[0] 
 
 exports[`Render validation.status = warning properties.underline: true - value[0] 1`] = `
 <div
-  className="ant-typography {}"
+  class="ant-typography emotion-0"
   id="properties.underline: true"
-  style={
-    Object {
-      "WebkitLineClamp": undefined,
-    }
-  }
 >
   <u>
     
   </u>
   <div
     aria-label="Edit"
-    className="ant-typography-edit"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    class="ant-typography-edit"
     role="button"
-    style={
-      Object {
-        "background": "transparent",
-        "border": 0,
-        "display": "inline-block",
-        "lineHeight": "inherit",
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
+    style="border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;"
+    tabindex="0"
   >
     <span
       aria-label="edit"
-      className="anticon anticon-edit"
+      class="anticon anticon-edit"
       role="button"
     >
       <svg

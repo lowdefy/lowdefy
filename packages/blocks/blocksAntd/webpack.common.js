@@ -30,7 +30,6 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
   },
-  resolve: { fallback: { buffer: require.resolve('buffer/') } },
   module: {
     rules: [
       {

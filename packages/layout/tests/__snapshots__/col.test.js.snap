@@ -1,93 +1,81 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`align 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-align23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-1 {
+  height: 100px;
+}
+
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="align23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-align23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row {\\"style\\":[null,{\\"height\\":100}]}"
-      id="align-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="align23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": "flex-start",
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row emotion-1"
+        id="align-content23456"
+        style="border: 1px dashed red;"
       >
-        <button
-          className="ant-btn"
-          id="One23456"
-          onClick={[Function]}
-          type="button"
+        <div
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-One23456"
+          style="align-self: flex-start; border: 1px dashed #8eccf5;"
         >
-          <span>
-            One23456
-          </span>
-        </button>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": "center",
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
-        <button
-          className="ant-btn"
-          id="Two23456"
-          onClick={[Function]}
-          type="button"
+          <button
+            class="ant-btn"
+            id="One23456"
+            type="button"
+          >
+            <span>
+              One23456
+            </span>
+          </button>
+        </div>
+        <div
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Two23456"
+          style="align-self: center; border: 1px dashed #8eccf5;"
         >
-          <span>
-            Two23456
-          </span>
-        </button>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": "flex-end",
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
-        <button
-          className="ant-btn"
-          id="Three23456"
-          onClick={[Function]}
-          type="button"
+          <button
+            class="ant-btn"
+            id="Two23456"
+            type="button"
+          >
+            <span>
+              Two23456
+            </span>
+          </button>
+        </div>
+        <div
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Three23456"
+          style="align-self: flex-end; border: 1px dashed #8eccf5;"
         >
-          <span>
-            Three23456
-          </span>
-        </button>
+          <button
+            class="ant-btn"
+            id="Three23456"
+            type="button"
+          >
+            <span>
+              Three23456
+            </span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -95,93 +83,79 @@ exports[`align 1`] = `
 `;
 
 exports[`align 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-align23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-1 {
+  height: 100px;
+}
+
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+.emotion-4 {
+  background: #40AA55;
+}
+
+<div>
   <div
-    id="align23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-align23456"
   >
     <div
-      className="ant-row {\\"style\\":[null,{\\"height\\":100}]}"
-      id="align-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="align23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": "flex-start",
-            "border": false,
-          }
-        }
+        class="ant-row emotion-1"
+        id="align-content23456"
       >
-        <button
-          className="ant-btn"
-          id="One23456"
-          onClick={[Function]}
-          type="button"
+        <div
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-One23456"
+          style="align-self: flex-start;"
         >
-          <span>
-            One23456
-          </span>
-        </button>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": "center",
-            "border": false,
-          }
-        }
-      >
-        <button
-          className="ant-btn"
-          id="Two23456"
-          onClick={[Function]}
-          type="button"
+          <button
+            class="ant-btn"
+            id="One23456"
+            type="button"
+          >
+            <span>
+              One23456
+            </span>
+          </button>
+        </div>
+        <div
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Two23456"
+          style="align-self: center;"
         >
-          <span>
-            Two23456
-          </span>
-        </button>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": "flex-end",
-            "border": false,
-          }
-        }
-      >
-        <button
-          className="ant-btn"
-          id="Three23456"
-          onClick={[Function]}
-          type="button"
+          <button
+            class="ant-btn"
+            id="Two23456"
+            type="button"
+          >
+            <span>
+              Two23456
+            </span>
+          </button>
+        </div>
+        <div
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-Three23456"
+          style="align-self: flex-end;"
         >
-          <span>
-            Three23456
-          </span>
-        </button>
+          <button
+            class="ant-btn"
+            id="Three23456"
+            type="button"
+          >
+            <span>
+              Three23456
+            </span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -189,47 +163,35 @@ exports[`align 2`] = `
 `;
 
 exports[`center content 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-center content23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+<div>
   <div
-    id="center content23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-center content23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row ant-row-center {\\"style\\":[null,null]}"
-      id="center content-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="center content23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-            "flex": "0 1 800px",
-          }
-        }
+        class="ant-row ant-row-center emotion-1"
+        id="center content-content23456"
+        style="border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2"
+          id="bl-One23456"
+          style="flex: 0 1 800px; border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -238,47 +200,33 @@ exports[`center content 1`] = `
 `;
 
 exports[`center content 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-center content23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+<div>
   <div
-    id="center content23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-center content23456"
   >
     <div
-      className="ant-row ant-row-center {\\"style\\":[null,null]}"
-      id="center content-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="center content23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-            "flex": "0 1 800px",
-          }
-        }
+        class="ant-row ant-row-center emotion-1"
+        id="center content-content23456"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2"
+          id="bl-One23456"
+          style="flex: 0 1 800px;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -287,65 +235,51 @@ exports[`center content 2`] = `
 `;
 
 exports[`grow 0 0 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-grow 0 023456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="grow 0 023456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-grow 0 023456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="grow 0 0-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="grow 0 023456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-            "flex": "0 1 auto",
-          }
-        }
+        class="ant-row emotion-1"
+        id="grow 0 0-content23456"
+        style="border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2"
+          id="bl-One23456"
+          style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
         >
-          grow: 0 - ONE Lorem ipsum dolor
+          <div
+            id="One23456"
+          >
+            grow: 0 - ONE Lorem ipsum dolor
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-            "flex": "0 1 auto",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3"
+          id="bl-Two23456"
+          style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
         >
-          grow: 0 - TWO Lorem ipsum dolor
+          <div
+            id="Two23456"
+          >
+            grow: 0 - TWO Lorem ipsum dolor
 
+          </div>
         </div>
       </div>
     </div>
@@ -354,65 +288,49 @@ exports[`grow 0 0 1`] = `
 `;
 
 exports[`grow 0 0 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-grow 0 023456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="grow 0 023456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-grow 0 023456"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="grow 0 0-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="grow 0 023456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-            "flex": "0 1 auto",
-          }
-        }
+        class="ant-row emotion-1"
+        id="grow 0 0-content23456"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2"
+          id="bl-One23456"
+          style="flex: 0 1 auto;"
         >
-          grow: 0 - ONE Lorem ipsum dolor
+          <div
+            id="One23456"
+          >
+            grow: 0 - ONE Lorem ipsum dolor
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-            "flex": "0 1 auto",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3"
+          id="bl-Two23456"
+          style="flex: 0 1 auto;"
         >
-          grow: 0 - TWO Lorem ipsum dolor
+          <div
+            id="Two23456"
+          >
+            grow: 0 - TWO Lorem ipsum dolor
 
+          </div>
         </div>
       </div>
     </div>
@@ -421,65 +339,51 @@ exports[`grow 0 0 2`] = `
 `;
 
 exports[`grow 0 1 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-grow 0 123456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="grow 0 123456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-grow 0 123456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="grow 0 1-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="grow 0 123456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-            "flex": "0 1 auto",
-          }
-        }
+        class="ant-row emotion-1"
+        id="grow 0 1-content23456"
+        style="border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2"
+          id="bl-One23456"
+          style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
         >
-          grow: 0 - ONE Lorem ipsum dolor
+          <div
+            id="One23456"
+          >
+            grow: 0 - ONE Lorem ipsum dolor
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-            "flex": "1 1 auto",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3"
+          id="bl-Two23456"
+          style="flex: 1 1 auto; border: 1px dashed #8eccf5;"
         >
-          grow: 1 - TWO Lorem ipsum dolor
+          <div
+            id="Two23456"
+          >
+            grow: 1 - TWO Lorem ipsum dolor
 
+          </div>
         </div>
       </div>
     </div>
@@ -488,65 +392,49 @@ exports[`grow 0 1 1`] = `
 `;
 
 exports[`grow 0 1 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-grow 0 123456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="grow 0 123456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-grow 0 123456"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="grow 0 1-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="grow 0 123456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-            "flex": "0 1 auto",
-          }
-        }
+        class="ant-row emotion-1"
+        id="grow 0 1-content23456"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2"
+          id="bl-One23456"
+          style="flex: 0 1 auto;"
         >
-          grow: 0 - ONE Lorem ipsum dolor
+          <div
+            id="One23456"
+          >
+            grow: 0 - ONE Lorem ipsum dolor
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-            "flex": "1 1 auto",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3"
+          id="bl-Two23456"
+          style="flex: 1 1 auto;"
         >
-          grow: 1 - TWO Lorem ipsum dolor
+          <div
+            id="Two23456"
+          >
+            grow: 1 - TWO Lorem ipsum dolor
 
+          </div>
         </div>
       </div>
     </div>
@@ -555,65 +443,51 @@ exports[`grow 0 1 2`] = `
 `;
 
 exports[`grow 1 0 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-grow 1 023456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="grow 1 023456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-grow 1 023456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="grow 1 0-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="grow 1 023456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-            "flex": "1 1 auto",
-          }
-        }
+        class="ant-row emotion-1"
+        id="grow 1 0-content23456"
+        style="border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2"
+          id="bl-One23456"
+          style="flex: 1 1 auto; border: 1px dashed #8eccf5;"
         >
-          grow: 1 - ONE Lorem ipsum dolor
+          <div
+            id="One23456"
+          >
+            grow: 1 - ONE Lorem ipsum dolor
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-            "flex": "0 1 auto",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3"
+          id="bl-Two23456"
+          style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
         >
-          grow: 0 - TWO Lorem ipsum dolor
+          <div
+            id="Two23456"
+          >
+            grow: 0 - TWO Lorem ipsum dolor
 
+          </div>
         </div>
       </div>
     </div>
@@ -622,65 +496,49 @@ exports[`grow 1 0 1`] = `
 `;
 
 exports[`grow 1 0 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-grow 1 023456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="grow 1 023456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-grow 1 023456"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="grow 1 0-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="grow 1 023456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-            "flex": "1 1 auto",
-          }
-        }
+        class="ant-row emotion-1"
+        id="grow 1 0-content23456"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2"
+          id="bl-One23456"
+          style="flex: 1 1 auto;"
         >
-          grow: 1 - ONE Lorem ipsum dolor
+          <div
+            id="One23456"
+          >
+            grow: 1 - ONE Lorem ipsum dolor
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-            "flex": "0 1 auto",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3"
+          id="bl-Two23456"
+          style="flex: 0 1 auto;"
         >
-          grow: 0 - TWO Lorem ipsum dolor
+          <div
+            id="Two23456"
+          >
+            grow: 0 - TWO Lorem ipsum dolor
 
+          </div>
         </div>
       </div>
     </div>
@@ -689,65 +547,51 @@ exports[`grow 1 0 2`] = `
 `;
 
 exports[`grow 1 1 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-grow 1 123456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="grow 1 123456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-grow 1 123456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="grow 1 1-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="grow 1 123456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-            "flex": "1 1 auto",
-          }
-        }
+        class="ant-row emotion-1"
+        id="grow 1 1-content23456"
+        style="border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2"
+          id="bl-One23456"
+          style="flex: 1 1 auto; border: 1px dashed #8eccf5;"
         >
-          grow: 1 - ONE Lorem ipsum dolor
+          <div
+            id="One23456"
+          >
+            grow: 1 - ONE Lorem ipsum dolor
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-            "flex": "1 1 auto",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3"
+          id="bl-Two23456"
+          style="flex: 1 1 auto; border: 1px dashed #8eccf5;"
         >
-          grow: 1 - TWO Lorem ipsum dolor
+          <div
+            id="Two23456"
+          >
+            grow: 1 - TWO Lorem ipsum dolor
 
+          </div>
         </div>
       </div>
     </div>
@@ -756,65 +600,49 @@ exports[`grow 1 1 1`] = `
 `;
 
 exports[`grow 1 1 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-grow 1 123456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="grow 1 123456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-grow 1 123456"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="grow 1 1-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="grow 1 123456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-            "flex": "1 1 auto",
-          }
-        }
+        class="ant-row emotion-1"
+        id="grow 1 1-content23456"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2"
+          id="bl-One23456"
+          style="flex: 1 1 auto;"
         >
-          grow: 1 - ONE Lorem ipsum dolor
+          <div
+            id="One23456"
+          >
+            grow: 1 - ONE Lorem ipsum dolor
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-            "flex": "1 1 auto",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3"
+          id="bl-Two23456"
+          style="flex: 1 1 auto;"
         >
-          grow: 1 - TWO Lorem ipsum dolor
+          <div
+            id="Two23456"
+          >
+            grow: 1 - TWO Lorem ipsum dolor
 
+          </div>
         </div>
       </div>
     </div>
@@ -823,63 +651,51 @@ exports[`grow 1 1 2`] = `
 `;
 
 exports[`offset 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-offset23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="offset23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-offset23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="offset-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="offset23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-20 ant-col-md-offset-4"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row emotion-1"
+        id="offset-content23456"
+        style="border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-20 ant-col-md-offset-4"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-offset-4"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-offset-4"
+          id="bl-Two23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
+          </div>
         </div>
       </div>
     </div>
@@ -888,63 +704,47 @@ exports[`offset 1`] = `
 `;
 
 exports[`offset 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-offset23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="offset23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-offset23456"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="offset-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="offset23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-20 ant-col-md-offset-4"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
+        class="ant-row emotion-1"
+        id="offset-content23456"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-20 ant-col-md-offset-4"
+          id="bl-One23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-offset-4"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-offset-4"
+          id="bl-Two23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
+          </div>
         </div>
       </div>
     </div>
@@ -953,80 +753,68 @@ exports[`offset 2`] = `
 `;
 
 exports[`offset push pull span 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-offset push pull span23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40AA55;
+}
+
+.emotion-3 {
+  background: #40a0FF;
+}
+
+.emotion-4 {
+  background: #FF4FaF;
+  opacity: 0.5;
+}
+
+<div>
   <div
-    id="offset push pull span23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-offset push pull span23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="offset push pull span-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="offset push pull span23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-offset-2"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row emotion-1"
+        id="offset push pull span-content23456"
+        style="border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-offset-2"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+          <div
+            id="One23456"
+          >
+            ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-push-1"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="One23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-push-1"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+          <div
+            id="One23456"
+          >
+            ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\",\\"opacity\\":0.5}} ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-pull-1"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-pull-1"
+          id="bl-Two23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+          <div
+            id="Two23456"
+          >
+            TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
 
+          </div>
         </div>
       </div>
     </div>
@@ -1035,80 +823,63 @@ exports[`offset push pull span 1`] = `
 `;
 
 exports[`offset push pull span 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-offset push pull span23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40AA55;
+}
+
+.emotion-3 {
+  background: #40a0FF;
+}
+
+.emotion-4 {
+  background: #FF4FaF;
+  opacity: 0.5;
+}
+
+<div>
   <div
-    id="offset push pull span23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-offset push pull span23456"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="offset push pull span-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="offset push pull span23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-offset-2"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
+        class="ant-row emotion-1"
+        id="offset push pull span-content23456"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-offset-2"
+          id="bl-One23456"
         >
-          ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+          <div
+            id="One23456"
+          >
+            ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-push-1"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="One23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-push-1"
+          id="bl-One23456"
         >
-          ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+          <div
+            id="One23456"
+          >
+            ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\",\\"opacity\\":0.5}} ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-pull-1"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-pull-1"
+          id="bl-Two23456"
         >
-          TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+          <div
+            id="Two23456"
+          >
+            TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
 
+          </div>
         </div>
       </div>
     </div>
@@ -1117,63 +888,51 @@ exports[`offset push pull span 2`] = `
 `;
 
 exports[`order 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-order23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="order23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-order23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="order-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="order23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-md-order-1"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row emotion-1"
+        id="order-content23456"
+        style="border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-md-order-1"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          <div
+            id="One23456"
+          >
+            ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-md-order-0"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-md-order-0"
+          id="bl-Two23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          <div
+            id="Two23456"
+          >
+            TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
+          </div>
         </div>
       </div>
     </div>
@@ -1182,63 +941,47 @@ exports[`order 1`] = `
 `;
 
 exports[`order 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-order23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="order23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-order23456"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="order-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="order23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-md-order-1"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
+        class="ant-row emotion-1"
+        id="order-content23456"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-md-order-1"
+          id="bl-One23456"
         >
-          ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          <div
+            id="One23456"
+          >
+            ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-md-order-0"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-md-order-0"
+          id="bl-Two23456"
         >
-          TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          <div
+            id="Two23456"
+          >
+            TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
+          </div>
         </div>
       </div>
     </div>
@@ -1247,63 +990,52 @@ exports[`order 2`] = `
 `;
 
 exports[`pull 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-pull23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+  opacity: 0.5;
+}
+
+<div>
   <div
-    id="pull23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-pull23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="pull-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="pull23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row emotion-1"
+        id="pull-content23456"
+        style="border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          <div
+            id="One23456"
+          >
+            ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\",\\"opacity\\":0.5}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-pull-1"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-pull-1"
+          id="bl-Two23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          <div
+            id="Two23456"
+          >
+            TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
+          </div>
         </div>
       </div>
     </div>
@@ -1312,63 +1044,48 @@ exports[`pull 1`] = `
 `;
 
 exports[`pull 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-pull23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+  opacity: 0.5;
+}
+
+<div>
   <div
-    id="pull23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-pull23456"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="pull-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="pull23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
+        class="ant-row emotion-1"
+        id="pull-content23456"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-One23456"
         >
-          ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          <div
+            id="One23456"
+          >
+            ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\",\\"opacity\\":0.5}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-pull-1"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-pull-1"
+          id="bl-Two23456"
         >
-          TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          <div
+            id="Two23456"
+          >
+            TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
+          </div>
         </div>
       </div>
     </div>
@@ -1377,63 +1094,52 @@ exports[`pull 2`] = `
 `;
 
 exports[`push 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-push23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+  opacity: 0.5;
+}
+
+<div>
   <div
-    id="push23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-push23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="push-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="push23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-push-1"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row emotion-1"
+        id="push-content23456"
+        style="border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-push-1"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          <div
+            id="One23456"
+          >
+            ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\",\\"opacity\\":0.5}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-Two23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          <div
+            id="Two23456"
+          >
+            TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
+          </div>
         </div>
       </div>
     </div>
@@ -1442,63 +1148,48 @@ exports[`push 1`] = `
 `;
 
 exports[`push 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-push23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+  opacity: 0.5;
+}
+
+<div>
   <div
-    id="push23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-push23456"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="push-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="push23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-push-1"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
+        class="ant-row emotion-1"
+        id="push-content23456"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-push-1"
+          id="bl-One23456"
         >
-          ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          <div
+            id="One23456"
+          >
+            ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\",\\"opacity\\":0.5}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          id="bl-Two23456"
         >
-          TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          <div
+            id="Two23456"
+          >
+            TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
+          </div>
         </div>
       </div>
     </div>
@@ -1507,65 +1198,51 @@ exports[`push 2`] = `
 `;
 
 exports[`shrink 1 1 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-shrink 1 123456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="shrink 1 123456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-shrink 1 123456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="shrink 1 1-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="shrink 1 123456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-            "flex": "0 1 auto",
-          }
-        }
+        class="ant-row emotion-1"
+        id="shrink 1 1-content23456"
+        style="border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2"
+          id="bl-One23456"
+          style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
         >
-          shrink: 1 - ONE Lorem ipsum dolor
+          <div
+            id="One23456"
+          >
+            shrink: 1 - ONE Lorem ipsum dolor
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-            "flex": "0 1 auto",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3"
+          id="bl-Two23456"
+          style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
         >
-          shrink: 1 - TWO Lorem ipsum dolor
+          <div
+            id="Two23456"
+          >
+            shrink: 1 - TWO Lorem ipsum dolor
 
+          </div>
         </div>
       </div>
     </div>
@@ -1574,65 +1251,49 @@ exports[`shrink 1 1 1`] = `
 `;
 
 exports[`shrink 1 1 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-shrink 1 123456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="shrink 1 123456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-shrink 1 123456"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="shrink 1 1-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="shrink 1 123456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-            "flex": "0 1 auto",
-          }
-        }
+        class="ant-row emotion-1"
+        id="shrink 1 1-content23456"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2"
+          id="bl-One23456"
+          style="flex: 0 1 auto;"
         >
-          shrink: 1 - ONE Lorem ipsum dolor
+          <div
+            id="One23456"
+          >
+            shrink: 1 - ONE Lorem ipsum dolor
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-            "flex": "0 1 auto",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3"
+          id="bl-Two23456"
+          style="flex: 0 1 auto;"
         >
-          shrink: 1 - TWO Lorem ipsum dolor
+          <div
+            id="Two23456"
+          >
+            shrink: 1 - TWO Lorem ipsum dolor
 
+          </div>
         </div>
       </div>
     </div>
@@ -1641,65 +1302,51 @@ exports[`shrink 1 1 2`] = `
 `;
 
 exports[`size 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-size23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="size23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-size23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="size-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="size23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-            "flex": "0 1 200px",
-          }
-        }
+        class="ant-row emotion-1"
+        id="size-content23456"
+        style="border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2"
+          id="bl-One23456"
+          style="flex: 0 1 200px; border: 1px dashed #8eccf5;"
         >
-          size: 200 - ONE Lorem ipsum dolor
+          <div
+            id="One23456"
+          >
+            size: 200 - ONE Lorem ipsum dolor
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-            "flex": "0 1 400px",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3"
+          id="bl-Two23456"
+          style="flex: 0 1 400px; border: 1px dashed #8eccf5;"
         >
-          size: 400 - TWO Lorem ipsum dolor
+          <div
+            id="Two23456"
+          >
+            size: 400 - TWO Lorem ipsum dolor
 
+          </div>
         </div>
       </div>
     </div>
@@ -1708,65 +1355,49 @@ exports[`size 1`] = `
 `;
 
 exports[`size 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-size23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="size23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-size23456"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="size-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="size23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-            "flex": "0 1 200px",
-          }
-        }
+        class="ant-row emotion-1"
+        id="size-content23456"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2"
+          id="bl-One23456"
+          style="flex: 0 1 200px;"
         >
-          size: 200 - ONE Lorem ipsum dolor
+          <div
+            id="One23456"
+          >
+            size: 200 - ONE Lorem ipsum dolor
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-            "flex": "0 1 400px",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3"
+          id="bl-Two23456"
+          style="flex: 0 1 400px;"
         >
-          size: 400 - TWO Lorem ipsum dolor
+          <div
+            id="Two23456"
+          >
+            size: 400 - TWO Lorem ipsum dolor
 
+          </div>
         </div>
       </div>
     </div>
@@ -1775,80 +1406,63 @@ exports[`size 2`] = `
 `;
 
 exports[`span 1`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-span23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": "1px dashed #8eccf5",
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="span23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-span23456"
+    style="border: 1px dashed #8eccf5;"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="span-content23456"
-      style={
-        Object {
-          "border": "1px dashed red",
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="span23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
+        class="ant-row emotion-1"
+        id="span-content23456"
+        style="border: 1px dashed red;"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-One23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          id="bl-Two23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": "1px dashed #8eccf5",
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
+          id="bl-Three23456"
+          style="border: 1px dashed #8eccf5;"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>
@@ -1857,80 +1471,58 @@ exports[`span 1`] = `
 `;
 
 exports[`span 2`] = `
-<div
-  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-span23456"
-  style={
-    Object {
-      "alignSelf": undefined,
-      "border": false,
-    }
-  }
->
+.emotion-2 {
+  background: #40a0FF;
+}
+
+.emotion-3 {
+  background: #FF4FaF;
+}
+
+<div>
   <div
-    id="span23456"
+    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    id="bl-span23456"
   >
     <div
-      className="ant-row {\\"style\\":[null,null]}"
-      id="span-content23456"
-      style={
-        Object {
-          "border": false,
-          "flexDirection": undefined,
-          "flexWrap": undefined,
-          "overflow": undefined,
-        }
-      }
+      id="span23456"
     >
       <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-One23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
+        class="ant-row emotion-1"
+        id="span-content23456"
       >
         <div
-          id="One23456"
+          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          id="bl-One23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="One23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
-        id="bl-Two23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Two23456"
+          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          id="bl-Two23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Two23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
-      </div>
-      <div
-        className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
-        id="bl-Three23456"
-        style={
-          Object {
-            "alignSelf": undefined,
-            "border": false,
-          }
-        }
-      >
         <div
-          id="Three23456"
+          class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
+          id="bl-Three23456"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          <div
+            id="Three23456"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
+          </div>
         </div>
       </div>
     </div>

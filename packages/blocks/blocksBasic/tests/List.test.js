@@ -15,28 +15,14 @@
 */
 
 import React from 'react';
-import { mockBlock, runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
-import { configure, mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-configure({ adapter: new Adapter() });
+import { mockBlock, runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { List } from '../src';
 import examples from '../demo/examples/List.yaml';
 import meta from '../src/blocks/List/List.json';
 
-jest.mock('@lowdefy/block-tools', () => {
-  const originalModule = jest.requireActual('@lowdefy/block-tools');
-  return {
-    ...originalModule,
-    blockDefaultProps: {
-      ...originalModule.blockDefaultProps,
-      methods: {
-        ...originalModule.blockDefaultProps.methods,
-        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
-      },
-    },
-  };
-});
 runRenderTests({ examples, Block: List, meta });
 runBlockSchemaTests({ examples, meta });
 
@@ -49,8 +35,19 @@ test('triggerEvent onClick', () => {
     type: 'List',
   };
   const Shell = () => <List {...getProps(block)} methods={methods} />;
-  const wrapper = mount(<Shell />);
-  wrapper.find('[data-testid="one"]').simulate('click');
+  const { container } = render(<Shell />);
+  expect(container.firstChild).toMatchInlineSnapshot(`
+    .emotion-0 {
+      outline: none;
+    }
+
+    <div
+      class="emotion-0"
+      data-testid="one"
+      id="one"
+    />
+  `);
+  userEvent.click(screen.getByTestId('one'));
   expect(methods.triggerEvent).toHaveBeenCalledWith({ name: 'onClick' });
 });
 
@@ -71,8 +68,8 @@ test('register list methods on mount', () => {
   const Shell = ({ properties }) => (
     <List {...getProps(block)} methods={methods} properties={properties} />
   );
-  const wrapper = mount(<Shell properties={block.properties} />);
-
+  const { container, rerender } = render(<Shell properties={block.properties} />);
+  expect(container.firstChild).toMatchSnapshot();
   expect(methods.registerMethod).toMatchInlineSnapshot(`
     [MockFunction] {
       "calls": Array [
@@ -123,7 +120,6 @@ test('register list methods on mount', () => {
   `);
   expect(methods.registerMethod).toHaveBeenCalledTimes(5);
   // only on mount
-  wrapper.setProps({ properties: { test: 2 } });
-  wrapper.update();
+  rerender(<Shell properties={{ test: 2 }} />);
   expect(methods.registerMethod).toHaveBeenCalledTimes(5);
 });

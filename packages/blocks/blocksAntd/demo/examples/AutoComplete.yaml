@@ -59,19 +59,17 @@
       - Option 1
       - Option 2
     backfill: true
-# FIX Jest: TypeError: parentInstance.children.indexOf is not a function
-# - id: "properties.defaultOpen: true"
-#   type: AutoComplete
-#   properties:
-#     options:
-#       - Option 1
-#       - Option 2
-#     defaultOpen: true
-# FIX Jest: TypeError: Cannot read property 'removeEventListener' of null
-# - id: "properties.disabled: true"
-#   type: AutoComplete
-#   properties:
-#     disabled: true
+- id: 'properties.defaultOpen: true'
+  type: AutoComplete
+  properties:
+    options:
+      - Option 1
+      - Option 2
+    defaultOpen: true
+- id: 'properties.disabled: true'
+  type: AutoComplete
+  properties:
+    disabled: true
 - id: 'properties.placeholder_Text_inside_block'
   type: AutoComplete"
   properties:

@@ -2,16 +2,11 @@
 
 exports[`Render areas.content - value[0] 1`] = `
 <main
-  className="ant-layout-content {}"
+  class="ant-layout-content emotion-0"
   id="areas.content"
 >
   <div
-    style={
-      Object {
-        "border": "1px solid red",
-        "padding": 10,
-      }
-    }
+    style="border: 1px solid red; padding: 10px;"
   >
     content
   </div>
@@ -20,16 +15,11 @@ exports[`Render areas.content - value[0] 1`] = `
 
 exports[`Render areas.footer - value[0] 1`] = `
 <main
-  className="ant-layout-content {}"
+  class="ant-layout-content emotion-0"
   id="areas.footer"
 >
   <div
-    style={
-      Object {
-        "border": "1px solid red",
-        "padding": 10,
-      }
-    }
+    style="border: 1px solid red; padding: 10px;"
   >
     content
   </div>
@@ -38,16 +28,11 @@ exports[`Render areas.footer - value[0] 1`] = `
 
 exports[`Render areas.header - value[0] 1`] = `
 <main
-  className="ant-layout-content {}"
+  class="ant-layout-content emotion-0"
   id="areas.header"
 >
   <div
-    style={
-      Object {
-        "border": "1px solid red",
-        "padding": 10,
-      }
-    }
+    style="border: 1px solid red; padding: 10px;"
   >
     content
   </div>
@@ -56,16 +41,11 @@ exports[`Render areas.header - value[0] 1`] = `
 
 exports[`Render default - value[0] 1`] = `
 <main
-  className="ant-layout-content {}"
+  class="ant-layout-content emotion-0"
   id="default"
 >
   <div
-    style={
-      Object {
-        "border": "1px solid red",
-        "padding": 10,
-      }
-    }
+    style="border: 1px solid red; padding: 10px;"
   >
     content
   </div>
@@ -73,17 +53,16 @@ exports[`Render default - value[0] 1`] = `
 `;
 
 exports[`Render properties.style - value[0] 1`] = `
+.emotion-0 {
+  border: 1px solid blue;
+}
+
 <main
-  className="ant-layout-content {\\"style\\":{\\"border\\":\\"1px solid blue\\"}}"
+  class="ant-layout-content emotion-0"
   id="properties.style"
 >
   <div
-    style={
-      Object {
-        "border": "1px solid red",
-        "padding": 10,
-      }
-    }
+    style="border: 1px solid red; padding: 10px;"
   >
     content
   </div>

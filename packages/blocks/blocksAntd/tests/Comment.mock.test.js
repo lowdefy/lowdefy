@@ -14,12 +14,9 @@
   limitations under the License.
 */
 
-import { runMockRenderTests } from '@lowdefy/block-tools';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Comment } from 'antd';
 
-Enzyme.configure({ adapter: new Adapter() });
 import CommentBlock from '../src/blocks/Comment/Comment';
 import examples from '../demo/examples/Comment.yaml';
 import meta from '../src/blocks/Comment/Comment.json';
@@ -35,4 +32,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: CommentBlock, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: CommentBlock, meta, mocks });
