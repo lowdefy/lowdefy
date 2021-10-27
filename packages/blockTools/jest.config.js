@@ -7,7 +7,6 @@ module.exports = {
     '<rootDir>/dist/',
     '<rootDir>/tests/',
     'loadWebpackFederatedModule.js',
-    'useDynamicScript.js',
   ],
   coverageReporters: [['lcov', { projectRoot: '../..' }], 'text', 'clover'],
   errorOnDeprecated: true,
