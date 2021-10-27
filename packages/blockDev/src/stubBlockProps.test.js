@@ -19,11 +19,9 @@ import { useState } from 'react';
 import stubBlockProps from './stubBlockProps';
 
 jest.mock('react', () => {
-  const React = {
-    createElement: jest.fn(),
-  };
+  const originalModule = jest.requireActual('react');
   const useState = jest.fn();
-  return { useState, default: React, __esModule: true };
+  return { ...originalModule, useState, __esModule: true, default: originalModule };
 });
 const mockSetState = jest.fn();
 
@@ -312,7 +310,18 @@ test('blocks container', () => {
       "type": "Container",
     }
   `);
-  expect(res.content.content()).toMatchInlineSnapshot(`undefined`);
+  expect(res.content.content()).toMatchInlineSnapshot(`
+    <div
+      style={
+        Object {
+          "border": "1px solid red",
+          "padding": 10,
+        }
+      }
+    >
+      content
+    </div>
+  `);
 });
 
 test('blocks areas container', () => {
@@ -376,7 +385,18 @@ test('blocks areas container', () => {
       "type": "Container",
     }
   `);
-  expect(res.content.content()).toMatchInlineSnapshot(`undefined`);
+  expect(res.content.content()).toMatchInlineSnapshot(`
+    <div
+      style={
+        Object {
+          "border": "1px solid red",
+          "padding": 10,
+        }
+      }
+    >
+      content
+    </div>
+  `);
 });
 
 test('areas container', () => {
@@ -427,7 +447,18 @@ test('areas container', () => {
       "type": "Container",
     }
   `);
-  expect(res.content.content()).toMatchInlineSnapshot(`undefined`);
+  expect(res.content.content()).toMatchInlineSnapshot(`
+    <div
+      style={
+        Object {
+          "border": "1px solid red",
+          "padding": 10,
+        }
+      }
+    >
+      content
+    </div>
+  `);
 });
 
 test('areas context', () => {
@@ -478,7 +509,18 @@ test('areas context', () => {
       "type": "Context",
     }
   `);
-  expect(res.content.content()).toMatchInlineSnapshot(`undefined`);
+  expect(res.content.content()).toMatchInlineSnapshot(`
+    <div
+      style={
+        Object {
+          "border": "1px solid red",
+          "padding": 10,
+        }
+      }
+    >
+      content
+    </div>
+  `);
 });
 
 test('areas list', () => {
@@ -536,7 +578,18 @@ test('areas list', () => {
       "type": "List",
     }
   `);
-  expect(res.list[0].content()).toMatchInlineSnapshot(`undefined`);
+  expect(res.list[0].content()).toMatchInlineSnapshot(`
+    <div
+      style={
+        Object {
+          "border": "1px solid red",
+          "padding": 10,
+        }
+      }
+    >
+      b
+    </div>
+  `);
 });
 
 test('events display', () => {
