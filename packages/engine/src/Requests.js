@@ -14,19 +14,7 @@
   limitations under the License.
 */
 
-import gql from 'graphql-tag';
-import { get, serializer } from '@lowdefy/helpers';
-
-const CALL_REQUEST = gql`
-  query callRequest($input: RequestInput!) {
-    request(input: $input) {
-      id
-      type
-      success
-      response
-    }
-  }
-`;
+import { get, serializer, type } from '@lowdefy/helpers';
 
 class Requests {
   constructor(context) {
@@ -42,14 +30,19 @@ class Requests {
     });
   }
 
-  callRequests({ actions, arrayIndices, event, requestIds } = {}) {
-    if (!requestIds) {
+  callRequests({ actions, arrayIndices, event, params } = {}) {
+    if (params.all === true) {
       return Promise.all(
         Object.keys(this.requestConfig).map((requestId) =>
           this.callRequest({ requestId, event, arrayIndices })
         )
       );
     }
+
+    let requestIds = [];
+    if (type.isString(params)) requestIds = [params];
+    if (type.isArray(params)) requestIds = params;
+
     return Promise.all(
       requestIds.map((requestId) => this.callRequest({ actions, requestId, event, arrayIndices }))
     );
@@ -58,14 +51,13 @@ class Requests {
   callRequest({ actions, arrayIndices, event, requestId }) {
     const request = this.requestConfig[requestId];
     if (!request) {
+      const error = new Error(`Configuration Error: Request ${requestId} not defined on context.`);
       this.context.requests[requestId] = {
         loading: false,
         response: null,
-        error: [new Error(`Configuration Error: Request ${requestId} not defined on context.`)],
+        error: [error],
       };
-      return Promise.reject(
-        new Error(`Configuration Error: Request ${requestId} not defined on context.`)
-      );
+      return Promise.reject(error);
     }
 
     if (!this.context.requests[requestId]) {
@@ -84,6 +76,7 @@ class Requests {
       location: requestId,
     });
 
+    // TODO: We are throwing this error differently to the request does not exist error
     if (parserErrors.length > 0) {
       throw parserErrors[0];
     }
@@ -98,26 +91,22 @@ class Requests {
     }
 
     try {
-      const gqlResponse = await this.context.lowdefy.client.query({
-        query: CALL_REQUEST,
-        fetchPolicy: 'network-only',
-        variables: {
-          input: {
-            requestId,
-            pageId: this.context.pageId,
-            payload: serializer.serialize(payload),
-          },
-        },
+      console.log('calling request', requestId);
+      const response = await this.context.lowdefy.callRequest({
+        pageId: this.context.pageId,
+        payload: serializer.serialize(payload),
+        requestId,
       });
-      const response = serializer.deserialize(
-        get(gqlResponse, 'data.request.response', {
+      console.log(response);
+      const deserializedResponse = serializer.deserialize(
+        get(response, '.response', {
           default: null,
         })
       );
-      this.context.requests[requestId].response = response;
+      this.context.requests[requestId].response = deserializedResponse;
       this.context.requests[requestId].loading = false;
       this.context.update();
-      return response;
+      return deserializedResponse;
     } catch (error) {
       this.context.requests[requestId].error.unshift(error);
       this.context.requests[requestId].loading = false;

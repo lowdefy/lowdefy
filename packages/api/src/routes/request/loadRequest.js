@@ -14,8 +14,14 @@
   limitations under the License.
 */
 
-async function Request({ actions, arrayIndices, context, event, params }) {
-  return context.Requests.callRequests({ actions, arrayIndices, event, params });
+import { ConfigurationError } from '../../context/errors';
+
+async function loadRequest({ readConfigFile }, { pageId, requestId }) {
+  const request = await readConfigFile(`pages/${pageId}/requests/${requestId}.json`);
+  if (!request) {
+    throw new ConfigurationError(`Request "${requestId}" does not exist.`);
+  }
+  return request;
 }
 
-export default Request;
+export default loadRequest;

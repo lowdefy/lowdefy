@@ -31,8 +31,8 @@
   ],
   "scripts": {
     "babel": "babel src --out-dir dist",
-    "build": "rm -rf dist && babel src --out-dir dist",
-    "clean": "rm -rf dist && rm -rf .lowdefy",
+    "build": "yarn clean && yarn babel",
+    "clean": "rm -rf dist",
     "prepare": "yarn build",
     "start": "nodemon dist/server.js"
   },
@@ -51,7 +51,6 @@
     "@babel/preset-react": "7.14.5",
     "@lowdefy/block-tools": "3.22.0",
     "babel-jest": "27.3.1",
-    "babel-loader": "8.2.3",
     "jest": "26.6.3",
     "nodemon": "2.0.14"
   },

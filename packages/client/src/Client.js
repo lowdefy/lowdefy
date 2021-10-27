@@ -29,18 +29,22 @@ const Client = () => (
       <Suspense fallback={<div id="loading-lowdefy-root"></div>}>
         <BrowserRouter>
           <LowdefyContext>
-            <DisplayMessage
-              methods={{
-                registerMethod: (_, method) => {
-                  lowdefy.displayMessage = method;
-                },
-              }}
-            />
-            <Switch>
-              <Route exact path={'/:pageId'}>
-                <Page lowdefy={lowdefy} />
-              </Route>
-            </Switch>
+            {(lowdefy) => (
+              <>
+                <DisplayMessage
+                  methods={{
+                    registerMethod: (_, method) => {
+                      lowdefy.displayMessage = method;
+                    },
+                  }}
+                />
+                <Switch>
+                  <Route exact path={'/:pageId'}>
+                    <Page lowdefy={lowdefy} />
+                  </Route>
+                </Switch>
+              </>
+            )}
           </LowdefyContext>
         </BrowserRouter>
       </Suspense>

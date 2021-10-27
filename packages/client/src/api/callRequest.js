@@ -14,8 +14,16 @@
   limitations under the License.
 */
 
-async function Request({ actions, arrayIndices, context, event, params }) {
-  return context.Requests.callRequests({ actions, arrayIndices, event, params });
+import request from '../utils/request';
+
+// TODO: Handle TokenExpiredError
+
+function callRequest({ pageId, payload, requestId }) {
+  return request({
+    url: `/lowdefy/request/${pageId}/${requestId}`,
+    method: 'POST',
+    body: { payload },
+  });
 }
 
-export default Request;
+export default callRequest;

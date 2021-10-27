@@ -14,8 +14,13 @@
   limitations under the License.
 */
 
-async function Request({ actions, arrayIndices, context, event, params }) {
-  return context.Requests.callRequests({ actions, arrayIndices, event, params });
+import { request as requestFn } from '@lowdefy/api';
+
+async function requestHandler(request, reply) {
+  const { pageId, requestId } = request.params;
+  const { payload } = request.body;
+  const response = await requestFn(request.lowdefyContext, { pageId, payload, requestId });
+  reply.send(response);
 }
 
-export default Request;
+export default requestHandler;

@@ -15,6 +15,7 @@
 */
 
 import dotenv from 'dotenv';
+import pino from 'pino';
 import getServer from '@lowdefy/server';
 import { clientDirectory, publicDirectory as defaultPublicDirectory } from '@lowdefy/client';
 import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
@@ -24,15 +25,25 @@ dotenv.config({ silent: true });
 // TODO: LOWDEFY_SERVER_BUILD_DIRECTORY or LOWDEFY_SERVER_CONFIG_DIRECTORY
 const configDirectory = process.env.LOWDEFY_SERVER_BUILD_DIRECTORY || './.lowdefy/build';
 const publicDirectory = process.env.LOWDEFY_SERVER_PUBLIC_DIRECTORY || defaultPublicDirectory;
+// const publicDirectory = process.env.LOWDEFY_SERVER_PUBLIC_DIRECTORY || defaultPublicDirectory;
 const port = parseInt(process.env.LOWDEFY_SERVER_PORT) || 3000;
 const serverBasePath = process.env.LOWDEFY_SERVER_BASE_PATH || '';
+
+const logger = pino({
+  level: 'debug',
+  transport: {
+    target: 'pino-pretty',
+  },
+});
 
 const server = getServer({
   configDirectory,
   clientDirectory,
   development: true,
   getSecrets: createGetSecretsFromEnv(),
-  publicDirectory,
+  logger,
+  // publicDirectory,
+  publicDirectory: '../../shell/src/public',
   serverBasePath,
 });
 

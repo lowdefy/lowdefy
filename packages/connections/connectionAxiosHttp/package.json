@@ -1,12 +1,12 @@
 {
-  "name": "@lowdefy/server-dev",
+  "name": "@lowdefy/connection-axios-http",
   "version": "3.22.0",
-  "license": "Apache-2.0",
+  "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
   "keywords": [
     "lowdefy",
-    "server"
+    "lowdefy connection"
   ],
   "bugs": {
     "url": "https://github.com/lowdefy/lowdefy/issues"
@@ -25,32 +25,31 @@
     "type": "git",
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
+  "main": "dist/index.js",
   "files": [
     "dist/*"
   ],
   "scripts": {
     "babel": "babel src --out-dir dist",
-    "build": "yarn babel",
-    "clean": "rm -rf dist && rm -rf .lowdefy",
+    "build": "rm -rf dist && yarn babel",
+    "clean": "rm -rf dist",
     "prepare": "yarn build",
-    "start": "nodemon dist/server.js"
+    "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/client": "3.22.0",
-    "@lowdefy/connection-axios-http": "3.22.0",
-    "@lowdefy/node-utils": "3.22.0",
-    "@lowdefy/server": "3.22.0",
-    "dotenv": "10.0.0",
-    "pino": "7.0.5",
-    "pino-pretty": "7.1.0"
+    "@lowdefy/helpers": "3.22.0",
+    "axios": "0.23.0"
   },
   "devDependencies": {
     "@babel/cli": "7.15.7",
     "@babel/core": "7.15.8",
     "@babel/preset-env": "7.15.8",
+    "@lowdefy/ajv": "3.22.0",
     "babel-jest": "27.3.1",
-    "jest": "26.6.3",
-    "nodemon": "2.0.14"
+    "jest": "26.6.3"
+  },
+  "peerDependencies": {
+    "@lowdefy/api": "3.22.0"
   },
   "publishConfig": {
     "access": "public"

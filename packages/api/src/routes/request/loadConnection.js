@@ -14,8 +14,21 @@
   limitations under the License.
 */
 
-async function Request({ actions, arrayIndices, context, event, params }) {
-  return context.Requests.callRequests({ actions, arrayIndices, event, params });
+import { ConfigurationError } from '../../context/errors';
+
+async function loadConnection({ readConfigFile }, { request }) {
+  const { connectionId, requestId } = request;
+
+  if (!connectionId) {
+    throw new ConfigurationError(`Request "${requestId}" does not specify a connection.`);
+  }
+
+  const connection = await readConfigFile(`connections/${connectionId}.json`);
+
+  if (!connection) {
+    throw new ConfigurationError(`Connection "${connectionId}" does not exist.`);
+  }
+  return connection;
 }
 
-export default Request;
+export default loadConnection;

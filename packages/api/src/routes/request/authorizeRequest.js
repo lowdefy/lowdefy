@@ -14,8 +14,13 @@
   limitations under the License.
 */
 
-async function Request({ actions, arrayIndices, context, event, params }) {
-  return context.Requests.callRequests({ actions, arrayIndices, event, params });
+import { ConfigurationError } from '../../context/errors';
+
+function authorizeRequest({ authorize }, { request }) {
+  if (!authorize(request)) {
+    // Throw does not exist error to avoid leaking information that request exists to unauthorized users
+    throw new ConfigurationError(`Request "${request.requestId}" does not exist.`);
+  }
 }
 
-export default Request;
+export default authorizeRequest;

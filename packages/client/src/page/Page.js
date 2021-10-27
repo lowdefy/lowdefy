@@ -19,7 +19,7 @@ import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 import { urlQuery } from '@lowdefy/helpers';
 
-import usePageData from '../swr/usePageData';
+import usePageData from '../api/usePageData';
 import Block from './block/Block';
 import Context from './Context';
 import Helmet from './Helmet';

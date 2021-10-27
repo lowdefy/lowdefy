@@ -20,12 +20,18 @@ import verifyAuthorizationHeader from './verifyAuthorizationHeader';
 
 async function createContext({ configDirectory, getSecrets }) {
   const readConfigFile = createReadConfigFile({ configDirectory });
-  const [config, secrets] = await Promise.all([readConfigFile('config.json'), getSecrets()]);
-  function contextFn({ headers, host, protocol, setHeader }) {
+  const [config, connectionTypes, secrets] = await Promise.all([
+    readConfigFile('config.json'),
+    readConfigFile('connectionTypes.json'),
+    getSecrets(),
+  ]);
+  function contextFn({ headers, host, logger, protocol, setHeader }) {
     const context = {
       config,
+      connectionTypes,
       headers,
       host,
+      logger,
       protocol,
       readConfigFile,
       secrets,

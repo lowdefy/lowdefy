@@ -14,8 +14,12 @@
   limitations under the License.
 */
 
-async function Request({ actions, arrayIndices, context, event, params }) {
-  return context.Requests.callRequests({ actions, arrayIndices, event, params });
-}
+import schema from './AxiosHttpConnectionSchema.json';
+import AxiosHttp from './AxiosHttpRequest/AxiosHttpRequest';
 
-export default Request;
+export default {
+  schema,
+  requests: {
+    AxiosHttp,
+  },
+};

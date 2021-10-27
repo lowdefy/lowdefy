@@ -16,14 +16,16 @@
 
 import React from 'react';
 
+import callRequest from './api/callRequest';
 import createLogin from './auth/createLogin';
 import createLogout from './auth/createLogout';
 import getCookie from './utils/getCookie';
 import parseJwt from './auth/parseJwt';
-import useRootData from './swr/useRootData';
+import useRootData from './api/useRootData';
 
 const lowdefy = {
   basePath: window.lowdefy.basePath,
+  callRequest,
   // TODO: rename contexts to pages
   contexts: {},
   displayMessage: () => () => undefined,
@@ -33,7 +35,7 @@ const lowdefy = {
     jsOperators: window.lowdefy.imports.jsOperators,
   },
   inputs: {},
-  link: () => {},
+  link: () => undefined,
   localStorage,
   registerJsAction: window.lowdefy.registerJsAction,
   registerJsOperator: window.lowdefy.registerJsOperator,
@@ -72,7 +74,7 @@ const LowdefyContext = ({ children }) => {
     lowdefy.user = user;
   }
 
-  return <>{children}</>;
+  return <>{children(lowdefy)}</>;
 };
 
 export default LowdefyContext;
