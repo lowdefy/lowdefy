@@ -15,9 +15,22 @@
 */
 
 import { cleanDirectory } from '@lowdefy/node-utils';
+import cleanBuildDirectory from './cleanBuildDirectory';
 
-async function cleanOutputDirectory({ context }) {
-  return cleanDirectory(context.outputDirectory);
-}
+jest.mock('@lowdefy/node-utils', () => {
+  return {
+    cleanDirectory: jest.fn(),
+  };
+});
 
-export default cleanOutputDirectory;
+beforeEach(() => {
+  cleanDirectory.mockReset();
+});
+
+test('cleanOutputDirectory calls cleanDirectory', async () => {
+  const context = {
+    buildDirectory: 'buildDirectory',
+  };
+  await cleanBuildDirectory({ context });
+  expect(cleanDirectory.mock.calls).toEqual([['outputDirectory']]);
+});

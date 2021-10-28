@@ -14,23 +14,16 @@
   limitations under the License.
 */
 
-import { cleanDirectory } from '@lowdefy/node-utils';
-import cleanOutputDirectory from './cleanOutputDirectory';
+function getSecretsFromEnv() {
+  const secrets = {};
 
-jest.mock('@lowdefy/node-utils', () => {
-  return {
-    cleanDirectory: jest.fn(),
-  };
-});
+  Object.keys(process.env).forEach((key) => {
+    if (key.startsWith('LOWDEFY_SECRET_')) {
+      secrets[key.replace('LOWDEFY_SECRET_', '')] = process.env[key];
+    }
+  });
+  Object.freeze(secrets);
+  return secrets;
+}
 
-beforeEach(() => {
-  cleanDirectory.mockReset();
-});
-
-test('cleanOutputDirectory calls cleanDirectory', async () => {
-  const context = {
-    outputDirectory: 'outputDirectory',
-  };
-  await cleanOutputDirectory({ context });
-  expect(cleanDirectory.mock.calls).toEqual([['outputDirectory']]);
-});
+export default getSecretsFromEnv;

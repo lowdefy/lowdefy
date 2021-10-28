@@ -28,8 +28,8 @@ async function routes(fastify, { lowdefy }, done) {
   // This is done as an optimisation, the lowdefyContext object will be added in the preHandler hook
   fastify.decorateRequest('lowdefyContext', null);
 
-  const { configDirectory, development, getSecrets, serveStaticFiles } = lowdefy;
-  const contextFn = await createContext({ configDirectory, development, getSecrets });
+  const { buildDirectory, connections, development, secrets, serveStaticFiles } = lowdefy;
+  const contextFn = await createContext({ buildDirectory, connections, development, secrets });
 
   fastify.addHook('preHandler', (request, reply, done) => {
     request.lowdefyContext = contextFn({

@@ -14,16 +14,13 @@
   limitations under the License.
 */
 
-function createGetSecretsFromEnv() {
-  const secrets = {};
-
-  Object.keys(process.env).forEach((key) => {
-    if (key.startsWith('LOWDEFY_SECRET_')) {
-      secrets[key.replace('LOWDEFY_SECRET_', '')] = process.env[key];
-    }
-  });
-  Object.freeze(secrets);
-  return () => secrets;
+function getConfigFromEnv() {
+  return {
+    buildDirectory: process.env.LOWDEFY_SERVER_BUILD_DIRECTORY,
+    publicDirectory: process.env.LOWDEFY_SERVER_PUBLIC_DIRECTORY,
+    port: parseInt(process.env.LOWDEFY_SERVER_PORT),
+    serverBasePath: process.env.LOWDEFY_SERVER_BASE_PATH,
+  };
 }
 
-export default createGetSecretsFromEnv;
+export default getConfigFromEnv;

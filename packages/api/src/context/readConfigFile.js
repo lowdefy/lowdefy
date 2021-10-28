@@ -17,9 +17,9 @@
 import path from 'path';
 import { cachedPromises, getFileExtension, readFile } from '@lowdefy/node-utils';
 
-function createReadConfigFile({ configDirectory }) {
+function createReadConfigFile({ buildDirectory }) {
   async function readConfigFile(filePath) {
-    const fileContent = await readFile(path.resolve(configDirectory, filePath));
+    const fileContent = await readFile(path.resolve(buildDirectory, filePath));
     if (getFileExtension(filePath) === 'json') {
       return JSON.parse(fileContent);
     }

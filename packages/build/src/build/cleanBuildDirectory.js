@@ -14,17 +14,10 @@
   limitations under the License.
 */
 
-import getServer from '@lowdefy/server';
+import { cleanDirectory } from '@lowdefy/node-utils';
 
-import config from './config';
+async function cleanBuildDirectory({ context }) {
+  return cleanDirectory(context.buildDirectory);
+}
 
-const options = config();
-const server = getServer(options);
-
-server
-  .listen({ port: options.port })
-  .then((address) => console.log(`Server listening on ${address}`))
-  .catch((err) => {
-    console.log('Error starting server:', err);
-    process.exit(1);
-  });
+export default cleanBuildDirectory;

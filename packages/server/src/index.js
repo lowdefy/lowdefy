@@ -20,12 +20,13 @@ import routes from './routes';
 import staticFiles from './staticFiles';
 
 function getServer({
-  configDirectory,
+  buildDirectory,
   clientDirectory,
+  connections,
   development = false,
-  getSecrets,
   logger,
   publicDirectory,
+  secrets,
   // serverBasePath = '',
   serveStaticFiles = true,
 }) {
@@ -37,9 +38,10 @@ function getServer({
 
   fastify.register(routes, {
     lowdefy: {
-      configDirectory,
+      buildDirectory,
+      connections,
       development,
-      getSecrets,
+      secrets,
       serveStaticFiles,
     },
   });

@@ -18,17 +18,14 @@ import createAuthorize from './createAuthorize';
 import createReadConfigFile from './readConfigFile';
 import verifyAuthorizationHeader from './verifyAuthorizationHeader';
 
-async function createContext({ configDirectory, getSecrets }) {
-  const readConfigFile = createReadConfigFile({ configDirectory });
-  const [config, connectionTypes, secrets] = await Promise.all([
-    readConfigFile('config.json'),
-    readConfigFile('connectionTypes.json'),
-    getSecrets(),
-  ]);
+async function createContext({ buildDirectory, connections, secrets }) {
+  const readConfigFile = createReadConfigFile({ buildDirectory });
+  // TODO: Should this move to server config?
+  const config = await readConfigFile('config.json');
   function contextFn({ headers, host, logger, protocol, setHeader }) {
     const context = {
       config,
-      connectionTypes,
+      connections,
       headers,
       host,
       logger,

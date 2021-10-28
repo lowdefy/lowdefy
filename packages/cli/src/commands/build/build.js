@@ -33,14 +33,14 @@ async function build({ context }) {
   context.print.info('Starting build.');
   await buildScript({
     blocksServerUrl: context.options.blocksServerUrl,
+    buildDirectory: context.buildDirectory,
     cacheDirectory: context.cacheDirectory,
     configDirectory: context.baseDirectory,
     logger: context.print,
-    outputDirectory: context.outputDirectory,
     refResolver: context.options.refResolver,
   });
   await context.sendTelemetry();
-  context.print.log(`Build artifacts saved at ${context.outputDirectory}.`);
+  context.print.log(`Build artifacts saved at ${context.buildDirectory}.`);
   context.print.succeed(`Build successful.`);
 }
 

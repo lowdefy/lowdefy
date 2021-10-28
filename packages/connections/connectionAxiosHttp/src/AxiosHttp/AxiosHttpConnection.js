@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import schema from './AxiosHttpConnectionSchema.json';
+import schema from './AxiosHttpConnectionSchema';
 import AxiosHttp from './AxiosHttpRequest/AxiosHttpRequest';
 
 export default {
