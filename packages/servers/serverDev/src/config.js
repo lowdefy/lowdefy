@@ -17,25 +17,21 @@
 import dotenv from 'dotenv';
 import pino from 'pino';
 
-import {
-  clientDirectory,
-  // publicDirectory as defaultPublicDirectory
-} from '@lowdefy/client';
+import { clientDirectory, publicDirectory as defaultPublicDirectory } from '@lowdefy/client';
 import { getConfigFromEnv, getSecretsFromEnv } from '@lowdefy/node-utils';
 
 import AxiosHttp from '@lowdefy/connection-axios-http';
 
 function config() {
   dotenv.config({ silent: true });
+  const { buildDirectory, logLevel, publicDirectory, port, serverBasePath } = getConfigFromEnv();
 
   const logger = pino({
-    level: 'debug',
+    level: logLevel || 'debug',
     transport: {
       target: 'pino-pretty',
     },
   });
-
-  const { buildDirectory, publicDirectory, port, serverBasePath } = getConfigFromEnv();
 
   // TODO: dynamic connections
   const connections = {
@@ -49,8 +45,7 @@ function config() {
     development: true,
     logger,
     port: port || 3000,
-    publicDirectory: publicDirectory || '../../shell/src/public',
-    // publicDirectory: publicDirectory || defaultPublicDirectory,
+    publicDirectory: publicDirectory || defaultPublicDirectory,
     secrets: getSecretsFromEnv(),
     serverBasePath,
   };

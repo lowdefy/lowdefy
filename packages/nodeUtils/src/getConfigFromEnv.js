@@ -17,6 +17,7 @@
 function getConfigFromEnv() {
   return {
     buildDirectory: process.env.LOWDEFY_SERVER_BUILD_DIRECTORY,
+    logLevel: process.env.LOWDEFY_SERVER_LOG_LEVEL,
     publicDirectory: process.env.LOWDEFY_SERVER_PUBLIC_DIRECTORY,
     port: parseInt(process.env.LOWDEFY_SERVER_PORT),
     serverBasePath: process.env.LOWDEFY_SERVER_BASE_PATH,
