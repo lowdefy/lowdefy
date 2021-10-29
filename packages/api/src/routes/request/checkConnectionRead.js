@@ -13,22 +13,25 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-
 import { ConfigurationError } from '../../context/errors';
 
-async function loadConnection({ readConfigFile }, { request }) {
-  const { connectionId, requestId } = request;
-
-  if (!connectionId) {
-    throw new ConfigurationError(`Request "${requestId}" does not specify a connection.`);
+function checkConnectionRead(
+  { logger },
+  { connectionConfig, connectionProperties, requestConfig, requestHandler }
+) {
+  if (requestHandler.checkRead && connectionProperties.read === false) {
+    const err = new ConfigurationError(
+      `Connection "${connectionConfig.connectionId}" does not allow reads.`
+    );
+    logger.debug(
+      {
+        params: { connectionId: connectionConfig.connectionId, requestId: requestConfig.requestId },
+        err,
+      },
+      err.message
+    );
+    throw err;
   }
-
-  const connection = await readConfigFile(`connections/${connectionId}.json`);
-
-  if (!connection) {
-    throw new ConfigurationError(`Connection "${connectionId}" does not exist.`);
-  }
-  return connection;
 }
 
-export default loadConnection;
+export default checkConnectionRead;

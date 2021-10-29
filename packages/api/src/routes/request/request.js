@@ -17,39 +17,40 @@
 import { serializer } from '@lowdefy/helpers';
 
 import authorizeRequest from './authorizeRequest';
-// import evaluateOperators from './evaluateOperators';
-// import getConnectionPackage from './getConnectionPackage';
-// import getRequestDefinition from './getRequestDefinition';
-import loadConnection from './loadConnection';
-import loadRequest from './loadRequest';
+import checkConnectionRead from './checkConnectionRead';
+import checkConnectionWrite from './checkConnectionWrite';
+import evaluateOperators from './evaluateOperators';
+import getConnectionConfig from './getConnectionConfig';
+import getConnectionHandler from './getConnectionHandler';
+import getRequestConfig from './getRequestConfig';
+import getRequestHandler from './getRequestHandler';
 
 async function request(context, { pageId, payload, requestId }) {
-  const request = await loadRequest(context, { pageId, requestId });
+  const { logger } = context;
+  logger.debug({ route: 'request', params: { pageId, payload, requestId } }, 'Started request');
+  const requestConfig = await getRequestConfig(context, { pageId, requestId });
+  const connectionConfig = await getConnectionConfig(context, { pageId, requestId });
+  authorizeRequest(context, { requestConfig });
 
-  authorizeRequest(context, { request });
+  const connectionHandler = getConnectionHandler(context, { connectionConfig });
+  const requestHandler = getRequestHandler(context, { connectionHandler, requestConfig });
 
-  const connection = await loadConnection(context, { request });
+  const { connectionProperties, requestProperties } = await evaluateOperators(context, {
+    connectionConfig,
+    payload: serializer.deserialize(payload),
+    requestConfig,
+  });
 
-  // Get definitions early to throw and avoid evaluating operators if request/connection type is invalid
-  // const connectionPackage = await getConnectionPackage(context, { connection, request });
-  // const requestDefinition = getRequestDefinition(context, { connectionDefinition, request });
-
-  // const { connectionProperties, requestProperties } = await evaluateOperators(context, {
-  //   connection,
-  //   payload: serializer.deserialize(payload),
-  //   request,
-  // });
-
-  // this.checkConnectionRead({
-  //   connectionId: request.connectionId,
-  //   connectionProperties,
-  //   checkRead: requestDefinition.checkRead,
-  // });
-  // this.checkConnectionWrite({
-  //   connectionId: request.connectionId,
-  //   connectionProperties,
-  //   checkWrite: requestDefinition.checkWrite,
-  // });
+  checkConnectionRead({
+    connectionId: request.connectionId,
+    connectionProperties,
+    checkRead: requestHandler.checkRead,
+  });
+  checkConnectionWrite({
+    connectionId: request.connectionId,
+    connectionProperties,
+    checkWrite: requestHandler.checkWrite,
+  });
 
   // try {
   //   validate({ schema: connectionDefinition.schema, data: connectionProperties });

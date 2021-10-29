@@ -16,12 +16,14 @@
 
 import { ConfigurationError } from '../../context/errors';
 
-async function loadRequest({ readConfigFile }, { pageId, requestId }) {
+async function getRequestConfig({ logger, readConfigFile }, { pageId, requestId }) {
   const request = await readConfigFile(`pages/${pageId}/requests/${requestId}.json`);
   if (!request) {
-    throw new ConfigurationError(`Request "${requestId}" does not exist.`);
+    const err = new ConfigurationError(`Request "${requestId}" does not exist.`);
+    logger.debug({ params: { pageId, requestId }, err }, err.message);
+    throw err;
   }
   return request;
 }
 
-export default loadRequest;
+export default getRequestConfig;

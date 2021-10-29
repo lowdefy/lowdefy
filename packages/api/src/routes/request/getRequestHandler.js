@@ -13,16 +13,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-
 import { ConfigurationError } from '../../context/errors';
 
-function authorizeRequest({ authorize, logger }, { requestConfig }) {
-  if (!authorize(requestConfig)) {
-    logger.warn({ authorized: false }, 'Unauthorized Request');
-    // Throw does not exist error to avoid leaking information that request exists to unauthorized users
-    throw new ConfigurationError(`Request "${requestConfig.requestId}" does not exist.`);
+function getRequestHandler({ logger }, { connectionHandler, requestConfig }) {
+  const requestHandler = connectionHandler.requests[requestConfig.type];
+
+  if (!requestHandler) {
+    const err = new ConfigurationError(`Request type "${requestConfig.type}" can not be found.`);
+    logger.debug(
+      { params: { id: requestConfig.requestId, type: requestConfig.type }, err },
+      err.message
+    );
+    throw err;
   }
-  logger.debug({ authorized: true }, 'Authorize Request');
+
+  return null;
 }
 
-export default authorizeRequest;
+export default getRequestHandler;

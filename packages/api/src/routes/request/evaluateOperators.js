@@ -18,7 +18,7 @@ import { NodeParser } from '@lowdefy/operators';
 
 import { RequestError } from '../../context/errors';
 
-async function evaluateOperators({ secrets, user }, { connection, payload, request }) {
+async function evaluateOperators({ secrets, user }, { connectionConfig, payload, requestConfig }) {
   const operatorsParser = new NodeParser({
     payload,
     secrets,
@@ -26,16 +26,16 @@ async function evaluateOperators({ secrets, user }, { connection, payload, reque
   });
   await operatorsParser.init();
   const { output: connectionProperties, errors: connectionErrors } = operatorsParser.parse({
-    input: connection.properties || {},
-    location: connection.connectionId,
+    input: connectionConfig.properties || {},
+    location: connectionConfig.connectionId,
   });
   if (connectionErrors.length > 0) {
     throw new RequestError(connectionErrors[0]);
   }
 
   const { output: requestProperties, errors: requestErrors } = operatorsParser.parse({
-    input: request.properties || {},
-    location: request.requestId,
+    input: requestConfig.properties || {},
+    location: requestConfig.requestId,
   });
   if (requestErrors.length > 0) {
     throw new RequestError(requestErrors[0]);
