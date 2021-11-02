@@ -20,7 +20,6 @@ import verifyAuthorizationHeader from './verifyAuthorizationHeader';
 
 async function createContext({ buildDirectory, connections, secrets }) {
   const readConfigFile = createReadConfigFile({ buildDirectory });
-  // TODO: Should this move to server config?
   const config = await readConfigFile('config.json');
   function contextFn({ headers, host, logger, protocol, setHeader }) {
     const context = {

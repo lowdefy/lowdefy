@@ -51,7 +51,7 @@ class Requests {
   callRequest({ actions, arrayIndices, event, requestId }) {
     const request = this.requestConfig[requestId];
     if (!request) {
-      const error = new Error(`Configuration Error: Request ${requestId} not defined on context.`);
+      const error = new Error(`Configuration Error: Request ${requestId} not defined on page.`);
       this.context.requests[requestId] = {
         loading: false,
         response: null,
@@ -91,15 +91,13 @@ class Requests {
     }
 
     try {
-      console.log('calling request', requestId);
       const response = await this.context.lowdefy.callRequest({
         pageId: this.context.pageId,
         payload: serializer.serialize(payload),
         requestId,
       });
-      console.log(response);
       const deserializedResponse = serializer.deserialize(
-        get(response, '.response', {
+        get(response, 'response', {
           default: null,
         })
       );

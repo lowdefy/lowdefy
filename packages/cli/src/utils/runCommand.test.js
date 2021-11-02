@@ -65,6 +65,7 @@ test('runCommand calls startUp', async () => {
         "context": Object {
           "appId": "appId",
           "baseDirectory": "baseDirectory",
+          "buildDirectory": "baseDirectory/buildDirectory",
           "cacheDirectory": "baseDirectory/cacheDirectory",
           "cliConfig": Object {},
           "cliVersion": "cliVersion",
@@ -76,7 +77,6 @@ test('runCommand calls startUp', async () => {
           "options": Object {
             "option": true,
           },
-          "outputDirectory": "baseDirectory/outputDirectory",
           "print": Object {
             "info": [MockFunction],
             "log": [MockFunction],
@@ -97,6 +97,7 @@ test('runCommand calls startUp', async () => {
           "context": Object {
             "appId": "appId",
             "baseDirectory": "baseDirectory",
+            "buildDirectory": "baseDirectory/buildDirectory",
             "cacheDirectory": "baseDirectory/cacheDirectory",
             "cliConfig": Object {},
             "cliVersion": "cliVersion",
@@ -108,7 +109,6 @@ test('runCommand calls startUp', async () => {
             "options": Object {
               "option": true,
             },
-            "outputDirectory": "baseDirectory/outputDirectory",
             "print": Object {
               "info": [MockFunction],
               "log": [MockFunction],
@@ -139,6 +139,7 @@ test('Catch error synchronous function', async () => {
           "context": Object {
             "appId": "appId",
             "baseDirectory": "baseDirectory",
+            "buildDirectory": "baseDirectory/buildDirectory",
             "cacheDirectory": "baseDirectory/cacheDirectory",
             "cliConfig": Object {},
             "cliVersion": "cliVersion",
@@ -150,7 +151,6 @@ test('Catch error synchronous function', async () => {
             "options": Object {
               "option": true,
             },
-            "outputDirectory": "baseDirectory/outputDirectory",
             "print": Object {
               "info": [MockFunction],
               "log": [MockFunction],
@@ -180,6 +180,7 @@ test('Catch error asynchronous function', async () => {
           "context": Object {
             "appId": "appId",
             "baseDirectory": "baseDirectory",
+            "buildDirectory": "baseDirectory/buildDirectory",
             "cacheDirectory": "baseDirectory/cacheDirectory",
             "cliConfig": Object {},
             "cliVersion": "cliVersion",
@@ -191,7 +192,6 @@ test('Catch error asynchronous function', async () => {
             "options": Object {
               "option": true,
             },
-            "outputDirectory": "baseDirectory/outputDirectory",
             "print": Object {
               "info": [MockFunction],
               "log": [MockFunction],

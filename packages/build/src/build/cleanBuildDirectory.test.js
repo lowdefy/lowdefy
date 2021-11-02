@@ -32,5 +32,5 @@ test('cleanOutputDirectory calls cleanDirectory', async () => {
     buildDirectory: 'buildDirectory',
   };
   await cleanBuildDirectory({ context });
-  expect(cleanDirectory.mock.calls).toEqual([['outputDirectory']]);
+  expect(cleanDirectory.mock.calls).toEqual([['buildDirectory']]);
 });

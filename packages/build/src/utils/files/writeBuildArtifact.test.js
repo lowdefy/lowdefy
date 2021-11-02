@@ -15,17 +15,17 @@ import fs from 'fs';
 import path from 'path';
 import createWriteBuildArtifact from './writeBuildArtifact';
 
-const outputDirectory = path.resolve(process.cwd(), 'src/test/fileSetter');
+const buildDirectory = path.resolve(process.cwd(), 'src/test/fileSetter');
 
 test('writeFile', async () => {
-  const filePath = path.resolve(outputDirectory, 'writeFile.txt');
+  const filePath = path.resolve(buildDirectory, 'writeFile.txt');
   try {
     fs.unlinkSync(filePath);
   } catch (error) {
     //pass
   }
   expect(fs.existsSync(filePath)).toBe(false);
-  const writeBuildArtifact = createWriteBuildArtifact({ outputDirectory });
+  const writeBuildArtifact = createWriteBuildArtifact({ buildDirectory });
 
   await writeBuildArtifact({
     filePath: 'writeFile.txt',

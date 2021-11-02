@@ -18,30 +18,22 @@ import testContext from './testContext';
 
 const mockReqResponses = {
   req_one: {
-    data: {
-      request: {
-        id: 'req_one',
-        success: true,
-        response: 1,
-      },
-    },
+    id: 'req_one',
+    success: true,
+    response: 1,
   },
-  req_watch: {
-    data: {
-      request: {
-        id: 'req_watch',
-        success: true,
-        response: 2,
-      },
-    },
+
+  req_two: {
+    id: 'req_two',
+    success: true,
+    response: 2,
   },
+
   req_error: new Error('mock error'),
 };
 
-const mockQuery = jest.fn();
-const mockQueryImp = ({ variables }) => {
-  const { input } = variables;
-  const { requestId } = input;
+const mockCallRequest = jest.fn();
+const mockCallRequestImp = ({ requestId }) => {
   return new Promise((resolve, reject) => {
     if (requestId === 'req_error') {
       reject(mockReqResponses[requestId]);
@@ -49,7 +41,6 @@ const mockQueryImp = ({ variables }) => {
     resolve(mockReqResponses[requestId]);
   });
 };
-const client = { query: mockQuery };
 
 const rootBlock = {
   blockId: 'page1',
@@ -78,7 +69,7 @@ const rootBlock = {
       requestId: 'req_error',
     },
     {
-      requestId: 'req_watch',
+      requestId: 'req_two',
     },
   ],
 };
@@ -86,8 +77,12 @@ const rootBlock = {
 const pageId = 'page1';
 const initState = { state: true };
 
+const actions = {};
+const arrayIndices = [];
+const event = {};
+
 const lowdefy = {
-  client,
+  callRequest: mockCallRequest,
   lowdefyGlobal: { array: ['a', 'b', 'c'] },
   pageId,
 };
@@ -97,8 +92,8 @@ console.log = () => {};
 console.error = () => {};
 
 beforeEach(() => {
-  mockQuery.mockReset();
-  mockQuery.mockImplementation(mockQueryImp);
+  mockCallRequest.mockReset();
+  mockCallRequest.mockImplementation(mockCallRequestImp);
 });
 
 test('callRequest', async () => {
@@ -128,16 +123,14 @@ test('callRequest, payload operators are evaluated', async () => {
     actions: { action1: 'action1' },
     arrayIndices: [1],
   });
-  expect(mockQuery.mock.calls[0][0].variables).toEqual({
-    input: {
-      pageId: 'page1',
-      requestId: 'req_one',
-      payload: {
-        event: { event: true },
-        action: 'action1',
-        sum: 2,
-        arrayIndices: 'b',
-      },
+  expect(mockCallRequest.mock.calls[0][0]).toEqual({
+    pageId: 'page1',
+    requestId: 'req_one',
+    payload: {
+      event: { event: true },
+      action: 'action1',
+      sum: 2,
+      arrayIndices: 'b',
     },
   });
 });
@@ -147,7 +140,12 @@ test('callRequests all requests', async () => {
     lowdefy,
     rootBlock,
   });
-  const promise = context.Requests.callRequests();
+  const promise = context.Requests.callRequests({
+    actions,
+    arrayIndices,
+    event,
+    params: { all: true },
+  });
   expect(context.requests).toEqual({
     req_one: {
       error: [],
@@ -159,7 +157,7 @@ test('callRequests all requests', async () => {
       loading: true,
       response: null,
     },
-    req_watch: {
+    req_two: {
       error: [],
       loading: true,
       response: null,
@@ -181,13 +179,13 @@ test('callRequests all requests', async () => {
       loading: false,
       response: null,
     },
-    req_watch: {
+    req_two: {
       error: [],
       loading: false,
       response: 2,
     },
   });
-  expect(mockQuery).toHaveBeenCalledTimes(3);
+  expect(mockCallRequest).toHaveBeenCalledTimes(3);
 });
 
 test('callRequests', async () => {
@@ -195,7 +193,12 @@ test('callRequests', async () => {
     lowdefy,
     rootBlock,
   });
-  const promise = context.Requests.callRequests({ requestIds: ['req_one'] });
+  const promise = context.Requests.callRequests({
+    actions,
+    arrayIndices,
+    event,
+    params: ['req_one'],
+  });
   expect(context.requests).toEqual({
     req_one: {
       error: [],
@@ -211,7 +214,7 @@ test('callRequests', async () => {
       response: 1,
     },
   });
-  expect(mockQuery).toHaveBeenCalledTimes(1);
+  expect(mockCallRequest).toHaveBeenCalledTimes(1);
 });
 
 test('callRequest error', async () => {
@@ -237,37 +240,17 @@ test('callRequest error', async () => {
   });
 });
 
-test('callRequest that is not on root block', async () => {
-  const context = await testContext({
-    lowdefy,
-    rootBlock,
-  });
-  await expect(context.Requests.callRequest({ requestId: 'req_does_not_exist' })).rejects.toThrow(
-    'Configuration Error: Request req_does_not_exist not defined on context.'
-  );
-});
-
-test('callRequest on root block with no requests', async () => {
-  const context = await testContext({
-    lowdefy,
-    rootBlock,
-  });
-  await expect(context.Requests.callRequest({ requestId: 'req_does_not_exist' })).rejects.toThrow(
-    'Configuration Error: Request req_does_not_exist not defined on context.'
-  );
-});
-
 test('callRequest request does not exist', async () => {
   const context = await testContext({
     lowdefy,
     rootBlock,
   });
-  await expect(context.Requests.callRequest({ requestId: 'req_two' })).rejects.toThrow(
-    'Configuration Error: Request req_two not defined on context.'
+  await expect(context.Requests.callRequest({ requestId: 'req_does_not_exist' })).rejects.toThrow(
+    'Configuration Error: Request req_does_not_exist not defined on page.'
   );
   expect(context.requests).toEqual({
-    req_two: {
-      error: [new Error('Configuration Error: Request req_two not defined on context.')],
+    req_does_not_exist: {
+      error: [new Error('Configuration Error: Request req_does_not_exist not defined on page.')],
       loading: false,
       response: null,
     },
@@ -313,8 +296,8 @@ test('fetch should set blocks loading and call query every time it is called', a
   };
   await context.Requests.callRequest({ requestId: 'req_one', onlyNew: true });
   expect(setBlocksLoadingCacheFunction).toHaveBeenCalledTimes(1);
-  expect(mockQuery).toHaveBeenCalledTimes(1);
+  expect(mockCallRequest).toHaveBeenCalledTimes(1);
   context.Requests.fetch({ requestId: 'req_one' });
   expect(setBlocksLoadingCacheFunction).toHaveBeenCalledTimes(2);
-  expect(mockQuery).toHaveBeenCalledTimes(2);
+  expect(mockCallRequest).toHaveBeenCalledTimes(2);
 });
