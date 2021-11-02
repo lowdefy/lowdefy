@@ -13,6 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
 import { ConfigurationError } from '../../context/errors';
 
 function getRequestHandler({ logger }, { connectionHandler, requestConfig }) {
@@ -27,7 +28,7 @@ function getRequestHandler({ logger }, { connectionHandler, requestConfig }) {
     throw err;
   }
 
-  return null;
+  return requestHandler;
 }
 
 export default getRequestHandler;

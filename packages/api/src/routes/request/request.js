@@ -17,6 +17,7 @@
 import { serializer } from '@lowdefy/helpers';
 
 import authorizeRequest from './authorizeRequest';
+import callRequestResolver from './callRequestResolver';
 import checkConnectionRead from './checkConnectionRead';
 import checkConnectionWrite from './checkConnectionWrite';
 import evaluateOperators from './evaluateOperators';
@@ -24,12 +25,13 @@ import getConnectionConfig from './getConnectionConfig';
 import getConnectionHandler from './getConnectionHandler';
 import getRequestConfig from './getRequestConfig';
 import getRequestHandler from './getRequestHandler';
+import validateSchemas from './validateSchemas';
 
 async function request(context, { pageId, payload, requestId }) {
   const { logger } = context;
   logger.debug({ route: 'request', params: { pageId, payload, requestId } }, 'Started request');
   const requestConfig = await getRequestConfig(context, { pageId, requestId });
-  const connectionConfig = await getConnectionConfig(context, { pageId, requestId });
+  const connectionConfig = await getConnectionConfig(context, { requestConfig });
   authorizeRequest(context, { requestConfig });
 
   const connectionHandler = getConnectionHandler(context, { connectionConfig });
@@ -41,31 +43,31 @@ async function request(context, { pageId, payload, requestId }) {
     requestConfig,
   });
 
-  checkConnectionRead({
-    connectionId: request.connectionId,
+  checkConnectionRead(context, {
+    connectionConfig,
     connectionProperties,
-    checkRead: requestHandler.checkRead,
+    requestConfig,
+    requestHandler,
   });
-  checkConnectionWrite({
-    connectionId: request.connectionId,
+  checkConnectionWrite(context, {
+    connectionConfig,
     connectionProperties,
-    checkWrite: requestHandler.checkWrite,
+    requestConfig,
+    requestHandler,
+  });
+  validateSchemas(context, {
+    connectionHandler,
+    connectionProperties,
+    requestConfig,
+    requestHandler,
+    requestProperties,
   });
 
-  // try {
-  //   validate({ schema: connectionDefinition.schema, data: connectionProperties });
-  //   validate({ schema: requestDefinition.schema, data: requestProperties });
-  // } catch (error) {
-  //   throw new ConfigurationError(error.message);
-  // }
-
-  // const response = await this.callResolver({
-  //   connectionProperties,
-  //   requestProperties,
-  //   resolver: requestDefinition.resolver,
-  // });
-
-  const response = null;
+  const response = await callRequestResolver(context, {
+    connectionProperties,
+    requestProperties,
+    requestHandler,
+  });
 
   return {
     id: request.id,

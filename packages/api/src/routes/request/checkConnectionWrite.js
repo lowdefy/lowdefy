@@ -15,20 +15,23 @@
 */
 import { ConfigurationError } from '../../context/errors';
 
-function getConnectionHandler({ connections, logger }, { connectionConfig }) {
-  const connectionHandler = connections[connectionConfig.type];
-  if (!connectionHandler) {
+function checkConnectionWrite(
+  { logger },
+  { connectionConfig, connectionProperties, requestConfig, requestHandler }
+) {
+  if (requestHandler.checkWrite && connectionProperties.write !== true) {
     const err = new ConfigurationError(
-      `Connection type "${connectionConfig.type}" can not be found.`
+      `Connection "${connectionConfig.connectionId}" does not allow writes.`
     );
     logger.debug(
-      { params: { id: connectionConfig.connectionId, type: connectionConfig.type }, err },
+      {
+        params: { connectionId: connectionConfig.connectionId, requestId: requestConfig.requestId },
+        err,
+      },
       err.message
     );
     throw err;
   }
-
-  return connectionHandler;
 }
 
-export default getConnectionHandler;
+export default checkConnectionWrite;

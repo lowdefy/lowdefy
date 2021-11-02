@@ -13,22 +13,26 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
+import { validate } from '@lowdefy/ajv';
+
 import { ConfigurationError } from '../../context/errors';
 
-function getConnectionHandler({ connections, logger }, { connectionConfig }) {
-  const connectionHandler = connections[connectionConfig.type];
-  if (!connectionHandler) {
-    const err = new ConfigurationError(
-      `Connection type "${connectionConfig.type}" can not be found.`
-    );
+function validateSchemas(
+  { logger },
+  { connectionHandler, connectionProperties, requestConfig, requestHandler, requestProperties }
+) {
+  try {
+    validate({ schema: connectionHandler.schema, data: connectionProperties });
+    validate({ schema: requestHandler.schema, data: requestProperties });
+  } catch (error) {
+    const err = new ConfigurationError(error.message);
     logger.debug(
-      { params: { id: connectionConfig.connectionId, type: connectionConfig.type }, err },
+      { params: { id: requestConfig.requestId, type: requestConfig.type }, err },
       err.message
     );
     throw err;
   }
-
-  return connectionHandler;
 }
 
-export default getConnectionHandler;
+export default validateSchemas;

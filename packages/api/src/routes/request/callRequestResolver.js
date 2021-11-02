@@ -13,22 +13,27 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { ConfigurationError } from '../../context/errors';
 
-function getConnectionHandler({ connections, logger }, { connectionConfig }) {
-  const connectionHandler = connections[connectionConfig.type];
-  if (!connectionHandler) {
-    const err = new ConfigurationError(
-      `Connection type "${connectionConfig.type}" can not be found.`
-    );
+import { RequestError } from '../../context/errors';
+
+async function callRequestResolver(
+  { logger },
+  { connectionProperties, requestConfig, requestProperties, requestHandler }
+) {
+  try {
+    const response = await requestHandler.resolver({
+      request: requestProperties,
+      connection: connectionProperties,
+    });
+    return response;
+  } catch (error) {
+    const err = new RequestError(error.message);
     logger.debug(
-      { params: { id: connectionConfig.connectionId, type: connectionConfig.type }, err },
+      { params: { id: requestConfig.requestId, type: requestConfig.type }, err },
       err.message
     );
     throw err;
   }
-
-  return connectionHandler;
 }
 
-export default getConnectionHandler;
+export default callRequestResolver;

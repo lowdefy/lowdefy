@@ -20,7 +20,7 @@ import pino from 'pino';
 import { clientDirectory, publicDirectory as defaultPublicDirectory } from '@lowdefy/client';
 import { getConfigFromEnv, getSecretsFromEnv } from '@lowdefy/node-utils';
 
-import AxiosHttp from '@lowdefy/connection-axios-http';
+import ConnectionAxiosHttp from '@lowdefy/connection-axios-http';
 
 function config() {
   dotenv.config({ silent: true });
@@ -35,7 +35,7 @@ function config() {
 
   // TODO: dynamic connections
   const connections = {
-    AxiosHttp,
+    ...ConnectionAxiosHttp,
   };
 
   return {
