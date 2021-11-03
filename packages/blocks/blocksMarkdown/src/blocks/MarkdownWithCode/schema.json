@@ -1,0 +1,28 @@
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "content": {
+        "type": "string",
+        "description": "Content in markdown format.",
+        "docs": {
+          "displayType": "text-area"
+        }
+      },
+      "skipHtml": {
+        "type": "boolean",
+        "default": false,
+        "description": "By default, HTML in markdown is escaped. When true all HTML code in the markdown will not be rendered."
+      },
+      "style": {
+        "type": "object",
+        "description": "Style to apply to Markdown div.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  }
+}

@@ -14,9 +14,17 @@
   limitations under the License.
 */
 
-import DangerousMarkdown from './blocks/DangerousMarkdown/DangerousMarkdown';
-import Markdown from './blocks/Markdown/Markdown';
-import MarkdownWithCode from './blocks/MarkdownWithCode/MarkdownWithCode';
+import DangerousMarkdown from './blocks/DangerousMarkdown';
+import Markdown from './blocks/Markdown';
+import MarkdownWithCode from './blocks/MarkdownWithCode';
 
-export { DangerousMarkdown, Markdown, MarkdownWithCode };
-export default { DangerousMarkdown, Markdown, MarkdownWithCode };
+export default {
+  blocks: {
+    DangerousMarkdown,
+    Markdown,
+    MarkdownWithCode,
+  },
+  import: {
+    styles: ['style.less'],
+  },
+};

@@ -20,7 +20,6 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 import ReactMarkdown from 'react-markdown';
 
 import gfm from 'remark-gfm';
-import '../../Markdown.css';
 
 class DangerousMarkdown extends React.Component {
   constructor(props) {

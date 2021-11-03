@@ -14,20 +14,11 @@
   limitations under the License.
 */
 
-import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-tools';
-import ReactMarkdown from 'react-markdown';
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import gfm from 'remark-gfm';
+import { Markdown } from '../src';
+import examples from '../demo/examples/Markdown.yaml';
+import meta from '../src/blocks/Markdown/Markdown.json';
 
-const Markdown = ({ blockId, properties, methods }) => (
-  <div id={blockId} className={methods.makeCssClass(properties.style)}>
-    <ReactMarkdown className="markdown-body" plugins={[gfm]} skipHtml={properties.skipHtml}>
-      {properties.content}
-    </ReactMarkdown>
-  </div>
-);
-
-Markdown.defaultProps = blockDefaultProps;
-
-export default Markdown;
+runRenderTests({ examples, Block: Markdown, meta });
+runBlockSchemaTests({ examples, meta });

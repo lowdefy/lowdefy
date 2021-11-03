@@ -32,8 +32,6 @@ import yaml from 'react-syntax-highlighter/dist/cjs/languages/hljs/yaml';
 import markdown from 'react-syntax-highlighter/dist/cjs/languages/hljs/markdown';
 import handlebars from 'react-syntax-highlighter/dist/cjs/languages/hljs/handlebars';
 
-import '../../Markdown.css';
-
 SyntaxHighlighter.registerLanguage('javascript', javascript);
 SyntaxHighlighter.registerLanguage('js', javascript);
 SyntaxHighlighter.registerLanguage('jsx', javascript);

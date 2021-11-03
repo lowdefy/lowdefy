@@ -14,20 +14,22 @@
   limitations under the License.
 */
 
-import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { runMockRenderTests } from '@lowdefy/block-dev';
 import ReactMarkdown from 'react-markdown';
 
-import gfm from 'remark-gfm';
+import Markdown from '../src/blocks/Markdown/Markdown';
+import examples from '../demo/examples/Markdown.yaml';
+import meta from '../src/blocks/Markdown/Markdown.json';
 
-const Markdown = ({ blockId, properties, methods }) => (
-  <div id={blockId} className={methods.makeCssClass(properties.style)}>
-    <ReactMarkdown className="markdown-body" plugins={[gfm]} skipHtml={properties.skipHtml}>
-      {properties.content}
-    </ReactMarkdown>
-  </div>
-);
+jest.mock('react-markdown', () => {
+  return jest.fn(() => 'mocked');
+});
 
-Markdown.defaultProps = blockDefaultProps;
+const mocks = [
+  {
+    name: 'default',
+    fn: ReactMarkdown,
+  },
+];
 
-export default Markdown;
+runMockRenderTests({ examples, Block: Markdown, meta, mocks });
