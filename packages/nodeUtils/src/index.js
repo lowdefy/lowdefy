@@ -16,17 +16,19 @@
 
 import cachedPromises from './cachedPromises';
 import cleanDirectory from './cleanDirectory';
-import createGetSecretsFromEnv from './createGetSecretsFromEnv';
+import getConfigFromEnv from './getConfigFromEnv';
 import getFileExtension, { getFileSubExtension } from './getFileExtension';
+import getSecretsFromEnv from './getSecretsFromEnv';
 import readFile from './readFile';
 import writeFile from './writeFile';
 
 export {
   cachedPromises,
   cleanDirectory,
-  createGetSecretsFromEnv,
+  getConfigFromEnv,
   getFileExtension,
   getFileSubExtension,
+  getSecretsFromEnv,
   readFile,
   writeFile,
 };

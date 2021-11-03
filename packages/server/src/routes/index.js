@@ -15,25 +15,27 @@
 */
 
 import { createContext } from '@lowdefy/api';
-import homeHtml from './homeHtml';
-import openIdAuthorizationUrl from './openIdAuthorizationUrl';
-import openIdCallback from './openIdCallback';
-import openIdLogoutUrl from './openIdLogoutUrl';
-import pageHtml from './pageHtml';
-import pageConfig from './pageConfig';
-import root from './root';
+import homeHtmlHandler from './homeHtml';
+import openIdAuthorizationUrlHandler from './openIdAuthorizationUrl';
+import openIdCallbackHandler from './openIdCallback';
+import openIdLogoutUrlHandler from './openIdLogoutUrl';
+import pageHtmlHandler from './pageHtml';
+import pageConfigHandler from './pageConfig';
+import requestHandler from './request';
+import rootHandler from './root';
 
 async function routes(fastify, { lowdefy }, done) {
   // This is done as an optimisation, the lowdefyContext object will be added in the preHandler hook
   fastify.decorateRequest('lowdefyContext', null);
 
-  const { configDirectory, development, getSecrets, serveStaticFiles } = lowdefy;
-  const contextFn = await createContext({ configDirectory, development, getSecrets });
+  const { buildDirectory, connections, development, secrets, serveStaticFiles } = lowdefy;
+  const contextFn = await createContext({ buildDirectory, connections, development, secrets });
 
   fastify.addHook('preHandler', (request, reply, done) => {
     request.lowdefyContext = contextFn({
       headers: request.headers,
       host: request.hostname,
+      logger: request.log,
       protocol: request.protocol,
       setHeader: (key, value) => reply.header(key, value),
     });
@@ -41,15 +43,16 @@ async function routes(fastify, { lowdefy }, done) {
   });
 
   if (serveStaticFiles) {
-    fastify.get('/', homeHtml);
-    fastify.get('/:pageId', pageHtml);
+    fastify.get('/', homeHtmlHandler);
+    fastify.get('/:pageId', pageHtmlHandler);
   }
-  fastify.get('/lowdefy/page/:pageId', pageConfig);
-  fastify.get('/lowdefy/root', root);
-  fastify.get('/auth/openid-callback', openIdCallback);
+  fastify.get('/lowdefy/page/:pageId', pageConfigHandler);
+  fastify.post('/lowdefy/request/:pageId/:requestId', requestHandler);
+  fastify.get('/lowdefy/root', rootHandler);
+  fastify.get('/auth/openid-callback', openIdCallbackHandler);
 
-  fastify.post('/lowdefy/auth/openIdAuthorizationUrl', openIdAuthorizationUrl);
-  fastify.post('/lowdefy/auth/openIdLogoutUrl', openIdLogoutUrl);
+  fastify.post('/lowdefy/auth/openIdAuthorizationUrl', openIdAuthorizationUrlHandler);
+  fastify.post('/lowdefy/auth/openIdLogoutUrl', openIdLogoutUrlHandler);
   done();
 }
 

@@ -14,34 +14,8 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
 async function Request({ actions, arrayIndices, context, event, params }) {
-  if (type.isNone(params)) {
-    // Should this resolve or error
-    return Promise.resolve();
-  }
-  let requestIds = [];
-  // TODO: Improve this so that we don't do requestIds = undefined to mean all: true
-  if (params.all === true) requestIds = undefined;
-  if (type.isString(params)) requestIds = [params];
-  if (type.isArray(params)) requestIds = params;
-
-  let response;
-  try {
-    response = await context.Requests.callRequests({ actions, arrayIndices, event, requestIds });
-  } catch (error) {
-    let graphQLMessage;
-    try {
-      const { displayTitle, displayMessage } = error.graphQLErrors[0].extensions;
-      graphQLMessage = `${displayTitle}: ${displayMessage}`;
-    } catch (e) {
-      // Not a graphQLError, displayTitle, displayMessage do not exist
-    }
-    throw new Error(graphQLMessage || error.message);
-  }
-
-  return response;
+  return context.Requests.callRequests({ actions, arrayIndices, event, params });
 }
 
 export default Request;

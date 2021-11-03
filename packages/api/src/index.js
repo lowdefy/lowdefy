@@ -22,6 +22,7 @@ import openIdLogoutUrl from './routes/auth/openIdLogoutUrl';
 import pageConfig from './routes/page/pageConfig';
 import pageHtml from './routes/page/pageHtml';
 import rootConfig from './routes/rootConfig/rootConfig';
+import request from './routes/request/request';
 
 import {
   AuthenticationError,
@@ -40,6 +41,7 @@ export {
   pageConfig,
   pageHtml,
   rootConfig,
+  request,
   AuthenticationError,
   ConfigurationError,
   RequestError,

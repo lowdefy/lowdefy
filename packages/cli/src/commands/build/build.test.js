@@ -35,6 +35,6 @@ test('build', async () => {
 
   const { default: buildScript } = getFederatedModule();
   expect(buildScript).toHaveBeenCalledTimes(1);
-  expect(buildScript.mock.calls[0][0].outputDirectory).toEqual('baseDirectory/outputDirectory');
+  expect(buildScript.mock.calls[0][0].buildDirectory).toEqual('baseDirectory/buildDirectory');
   expect(buildScript.mock.calls[0][0].cacheDirectory).toEqual('baseDirectory/cacheDirectory');
 });

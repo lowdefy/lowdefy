@@ -28,7 +28,7 @@ import buildConnections from './build/buildConnections';
 import buildMenu from './build/buildMenu';
 import buildPages from './build/buildPages/buildPages';
 import buildRefs from './build/buildRefs/buildRefs';
-import cleanOutputDirectory from './build/cleanOutputDirectory';
+import cleanBuildDirectory from './build/cleanBuildDirectory';
 import testSchema from './build/testSchema';
 import validateApp from './build/validateApp';
 import validateConfig from './build/validateConfig';
@@ -42,18 +42,18 @@ import writePages from './build/writePages';
 import writeRequests from './build/writeRequests';
 
 function createContext(options) {
-  const { blocksServerUrl, cacheDirectory, configDirectory, logger, outputDirectory, refResolver } =
+  const { blocksServerUrl, buildDirectory, cacheDirectory, configDirectory, logger, refResolver } =
     options;
   const context = {
-    writeBuildArtifact: createWriteBuildArtifact({ outputDirectory }),
-    readConfigFile: createReadConfigFile({ configDirectory }),
     blocksServerUrl,
+    buildDirectory,
     cacheDirectory,
     configDirectory,
     logger,
-    outputDirectory,
+    readConfigFile: createReadConfigFile({ configDirectory }),
     refResolver,
     version: packageJson.version,
+    writeBuildArtifact: createWriteBuildArtifact({ buildDirectory }),
   };
   return context;
 }
@@ -71,7 +71,7 @@ async function build(options) {
     await buildConnections({ components, context });
     await buildPages({ components, context });
     await buildMenu({ components, context });
-    await cleanOutputDirectory({ context });
+    await cleanBuildDirectory({ context });
     await writeApp({ components, context });
     await writeConnections({ components, context });
     await writeRequests({ components, context });

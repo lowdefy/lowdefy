@@ -1,25 +1,7 @@
 {
-  "extends": [
-    "config:base",
-    ":semanticPrefixChore"
-  ],
-  "baseBranches": [
-    "develop"
-  ],
+  "extends": ["config:base", ":semanticPrefixChore"],
+  "baseBranches": ["develop"],
   "dependencyDashboard": true,
   "dependencyDashboardApproval": true,
-  "packageRules": [
-    {
-      "groupName": "Apollo Client packages",
-      "packagePatterns": [
-        "^@apollo/"
-      ]
-    },
-    {
-      "groupName": "Apollo Server packages",
-      "packagePatterns": [
-        "^apollo-server"
-      ]
-    }
-  ]
+  "packageRules": []
 }
