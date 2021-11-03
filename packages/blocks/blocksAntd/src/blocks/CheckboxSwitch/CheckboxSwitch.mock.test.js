@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Checkbox } from 'antd';
 
-import CheckboxSwitchBlock from '../src/blocks/CheckboxSwitch/CheckboxSwitch';
-import examples from '../demo/examples/CheckboxSwitch.yaml';
-import meta from '../src/blocks/CheckboxSwitch/CheckboxSwitch.json';
+import CheckboxSwitchBlock from './CheckboxSwitch';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/checkbox', () => {
   const checkbox = jest.fn(() => 'mocked');

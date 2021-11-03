@@ -1,0 +1,22 @@
+export default [
+  {
+    status: null,
+    errors: [],
+    warnings: [],
+  },
+  {
+    status: 'success',
+    errors: [],
+    warnings: [],
+  },
+  {
+    status: 'error',
+    errors: ['validation error'],
+    warnings: [],
+  },
+  {
+    status: 'warning',
+    warnings: ['validation warning'],
+    errors: [],
+  },
+];

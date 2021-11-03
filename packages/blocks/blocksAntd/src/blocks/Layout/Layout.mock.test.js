@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Layout } from 'antd';
 
-import Block from '../src/blocks/Layout/Layout';
-import examples from '../demo/examples/Layout.yaml';
-import meta from '../src/blocks/Layout/Layout.json';
+import Block from './Layout';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/layout', () => {
   const comp = jest.fn(() => 'mocked');

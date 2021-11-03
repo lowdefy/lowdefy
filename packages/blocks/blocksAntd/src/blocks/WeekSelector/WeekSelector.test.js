@@ -16,10 +16,11 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import validationsExamples from '../demo/validationExamples.json';
-import WeekSelector from '../src/blocks/WeekSelector/WeekSelector';
-import examples from '../demo/examples/WeekSelector.yaml';
-import meta from '../src/blocks/WeekSelector/WeekSelector.json';
+import validationsExamples from '../../validationExamples.js';
+import Block from './WeekSelector';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
-runRenderTests({ examples, Block: WeekSelector, meta, validationsExamples });
-runBlockSchemaTests({ examples, meta });
+runRenderTests({ examples, Block, meta, validationsExamples });
+runBlockSchemaTests({ examples, meta, schema });

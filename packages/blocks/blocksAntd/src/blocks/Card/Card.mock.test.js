@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Card } from 'antd';
 
-import CardBlock from '../src/blocks/Card/Card';
-import examples from '../demo/examples/Card.yaml';
-import meta from '../src/blocks/Card/Card.json';
+import CardBlock from './Card';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/card', () => {
   return jest.fn(() => 'mocked');

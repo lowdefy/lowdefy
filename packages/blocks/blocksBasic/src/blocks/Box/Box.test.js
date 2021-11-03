@@ -19,12 +19,13 @@ import { mockBlock, runBlockSchemaTests, runRenderTests } from '@lowdefy/block-d
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { Box } from '../src';
-import examples from '../demo/examples/Box.yaml';
-import meta from '../src/blocks/Box/Box.json';
+import Block from './Box';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
-runRenderTests({ examples, Block: Box, meta });
-runBlockSchemaTests({ examples, meta });
+runRenderTests({ examples, Block, meta });
+runBlockSchemaTests({ examples, meta, schema });
 
 const { before, methods, getProps } = mockBlock({ meta });
 beforeEach(before);
@@ -34,7 +35,7 @@ test('triggerEvent onClick', () => {
     id: 'one',
     type: 'Box',
   };
-  const Shell = () => <Box {...getProps(block)} methods={methods} />;
+  const Shell = () => <Block {...getProps(block)} methods={methods} />;
   const { container } = render(<Shell />);
   expect(container.firstChild).toMatchInlineSnapshot(`
     .emotion-0 {

@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import Breadcrumb from '../src/blocks/Breadcrumb/Breadcrumb';
-import examples from '../demo/examples/Breadcrumb.yaml';
-import meta from '../src/blocks/Breadcrumb/Breadcrumb.json';
+import Breadcrumb from './Breadcrumb';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 runRenderTests({ examples, Block: Breadcrumb, meta });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

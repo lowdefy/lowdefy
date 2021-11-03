@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Result } from 'antd';
 
-import ResultBlock from '../src/blocks/Result/Result';
-import examples from '../demo/examples/Result.yaml';
-import meta from '../src/blocks/Result/Result.json';
+import ResultBlock from './Result';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/result', () => {
   return jest.fn(() => 'mocked');

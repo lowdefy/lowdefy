@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import Affix from '../src/blocks/Affix/Affix';
-import examples from '../demo/examples/Affix.yaml';
-import meta from '../src/blocks/Affix/Affix.json';
+import Block from './Affix';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
-runRenderTests({ examples, Block: Affix, meta });
-runBlockSchemaTests({ examples, meta });
+runRenderTests({ examples, Block, meta });
+runBlockSchemaTests({ examples, meta, schema });

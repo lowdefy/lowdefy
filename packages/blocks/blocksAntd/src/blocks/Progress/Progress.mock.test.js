@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Progress } from 'antd';
 
-import ProgressBlock from '../src/blocks/Progress/Progress';
-import examples from '../demo/examples/Progress.yaml';
-import meta from '../src/blocks/Progress/Progress.json';
+import ProgressBlock from './Progress';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/progress', () => {
   return jest.fn(() => 'mocked');

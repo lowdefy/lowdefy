@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import Button from '../src/blocks/Button/Button';
-import examples from '../demo/examples/Button.yaml';
-import meta from '../src/blocks/Button/Button.json';
+import Button from './Button';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 runRenderTests({ examples, Block: Button, meta });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

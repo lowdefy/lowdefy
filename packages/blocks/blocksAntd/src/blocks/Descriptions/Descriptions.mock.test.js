@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Descriptions } from 'antd';
 
-import Block from '../src/blocks/Descriptions/Descriptions';
-import examples from '../demo/examples/Descriptions.yaml';
-import meta from '../src/blocks/Descriptions/Descriptions.json';
+import Block from './Descriptions';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/descriptions', () => {
   const comp = jest.fn(() => 'mocked');

@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import Card from '../src/blocks/Card/Card';
-import examples from '../demo/examples/Card.yaml';
-import meta from '../src/blocks/Card/Card.json';
+import Card from './Card';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 runRenderTests({ examples, Block: Card, meta });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

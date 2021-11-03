@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Spin } from 'antd';
 
-import SpinBlock from '../src/blocks/Spin/Spin';
-import examples from '../demo/examples/Spin.yaml';
-import meta from '../src/blocks/Spin/Spin.json';
+import SpinBlock from './Spin';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/spin', () => {
   return jest.fn((props) => props.toString());

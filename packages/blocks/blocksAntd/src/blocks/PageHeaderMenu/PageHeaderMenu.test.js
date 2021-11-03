@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import PageHeaderMenu from '../src/blocks/PageHeaderMenu/PageHeaderMenu';
-import examples from '../demo/examples/PageHeaderMenu.yaml';
-import meta from '../src/blocks/PageHeaderMenu/PageHeaderMenu.json';
+import PageHeaderMenu from './PageHeaderMenu';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 runRenderTests({ examples, Block: PageHeaderMenu, meta });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import Descriptions from '../src/blocks/Descriptions/Descriptions';
-import examples from '../demo/examples/Descriptions.yaml';
-import meta from '../src/blocks/Descriptions/Descriptions.json';
+import Descriptions from './Descriptions';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 runRenderTests({ examples, Block: Descriptions, meta });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

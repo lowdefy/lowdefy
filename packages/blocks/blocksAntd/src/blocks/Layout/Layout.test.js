@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import Layout from '../src/blocks/Layout/Layout';
-import examples from '../demo/examples/Layout.yaml';
-import meta from '../src/blocks/Layout/Layout.json';
+import Layout from './Layout';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 runRenderTests({ examples, Block: Layout, meta });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

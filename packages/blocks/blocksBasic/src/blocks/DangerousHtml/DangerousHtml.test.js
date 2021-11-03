@@ -18,12 +18,13 @@ import React from 'react';
 import { mockBlock, runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 import { render } from '@testing-library/react';
 
-import { DangerousHtml } from '../src';
-import examples from '../demo/examples/Html.yaml';
-import meta from '../src/blocks/Html/Html.json';
+import Block from './DangerousHtml';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
-runRenderTests({ examples, Block: DangerousHtml, meta });
-runBlockSchemaTests({ examples, meta });
+runRenderTests({ examples, Block, meta });
+runBlockSchemaTests({ examples, meta, schema });
 
 const { before, methods, getProps } = mockBlock({ meta });
 beforeEach(before);
@@ -37,7 +38,7 @@ test('update on properties.html change', () => {
     },
   };
   const Shell = ({ properties }) => (
-    <DangerousHtml {...getProps(config)} methods={methods} properties={properties} />
+    <Block {...getProps(config)} methods={methods} properties={properties} />
   );
   const { container, rerender } = render(<Shell properties={config.properties} />);
   expect(container.firstChild).toMatchSnapshot();

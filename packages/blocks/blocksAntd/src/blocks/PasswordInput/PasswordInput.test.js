@@ -16,10 +16,11 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import validationsExamples from '../demo/validationExamples.json';
-import PasswordInput from '../src/blocks/PasswordInput/PasswordInput';
-import examples from '../demo/examples/PasswordInput.yaml';
-import meta from '../src/blocks/PasswordInput/PasswordInput.json';
+import validationsExamples from '../../validationExamples.js';
+import PasswordInput from './PasswordInput';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 runRenderTests({ examples, Block: PasswordInput, meta, validationsExamples });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { AutoComplete } from 'antd';
 
-import Block from '../src/blocks/AutoComplete/AutoComplete';
-import examples from '../demo/examples/AutoComplete.yaml';
-import meta from '../src/blocks/AutoComplete/AutoComplete.json';
+import Block from './AutoComplete';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/auto-complete', () => {
   const comp = jest.fn(() => 'mocked');

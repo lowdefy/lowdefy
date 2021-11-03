@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import Sider from '../src/blocks/Sider/Sider';
-import examples from '../demo/examples/Sider.yaml';
-import meta from '../src/blocks/Sider/Sider.json';
+import Sider from './Sider';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 runRenderTests({ examples, Block: Sider, meta });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

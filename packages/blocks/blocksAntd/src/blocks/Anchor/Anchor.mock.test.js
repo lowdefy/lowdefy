@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Anchor } from 'antd';
 
-import AnchorBlock from '../src/blocks/Anchor/Anchor';
-import examples from '../demo/examples/Anchor.yaml';
-import meta from '../src/blocks/Anchor/Anchor.json';
+import AnchorBlock from './Anchor';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/anchor', () => {
   return jest.fn(() => 'mocked');

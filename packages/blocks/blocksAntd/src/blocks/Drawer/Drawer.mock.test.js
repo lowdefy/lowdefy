@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Drawer } from 'antd';
 
-import Block from '../src/blocks/Drawer/Drawer';
-import examples from '../demo/examples/Drawer.yaml';
-import meta from '../src/blocks/Drawer/Drawer.json';
+import Block from './Drawer';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/drawer', () => {
   const comp = jest.fn(() => 'mocked');

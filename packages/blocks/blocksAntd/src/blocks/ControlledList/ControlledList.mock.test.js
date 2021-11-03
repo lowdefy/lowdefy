@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { List } from 'antd';
 
-import ControlledList from '../src/blocks/ControlledList/ControlledList';
-import examples from '../demo/examples/ControlledList.yaml';
-import meta from '../src/blocks/ControlledList/ControlledList.json';
+import ControlledList from './ControlledList';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/list', () => {
   return jest.fn(() => 'mocked');

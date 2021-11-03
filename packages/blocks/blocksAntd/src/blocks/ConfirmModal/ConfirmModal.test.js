@@ -17,9 +17,10 @@
 import { runBlockSchemaTests, runMockMethodTests } from '@lowdefy/block-dev';
 import { Modal } from 'antd';
 
-import ConfirmModal from '../src/blocks/ConfirmModal/ConfirmModal';
-import examples from '../demo/examples/ConfirmModal.yaml';
-import meta from '../src/blocks/ConfirmModal/ConfirmModal.json';
+import ConfirmModal from './ConfirmModal';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 jest.mock('antd/lib/modal', () => {
   return {
@@ -55,4 +56,4 @@ const mocks = [
 ];
 
 runMockMethodTests({ examples, Block: ConfirmModal, mocks, meta });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

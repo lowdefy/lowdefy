@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import Statistic from '../src/blocks/Statistic/Statistic';
-import examples from '../demo/examples/Statistic.yaml';
-import meta from '../src/blocks/Statistic/Statistic.json';
+import Statistic from './Statistic';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 runRenderTests({ examples, Block: Statistic, meta });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

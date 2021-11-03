@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { notification } from 'antd';
 
-import Block from '../src/blocks/Notification/Notification';
-import examples from '../demo/examples/Notification.yaml';
-import meta from '../src/blocks/Notification/Notification.json';
+import Block from './Notification';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/notification', () => {
   const comp = jest.fn(() => 'mocked');

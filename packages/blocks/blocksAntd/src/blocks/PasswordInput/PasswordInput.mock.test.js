@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Input } from 'antd';
 
-import Block from '../src/blocks/PasswordInput/PasswordInput';
-import examples from '../demo/examples/PasswordInput.yaml';
-import meta from '../src/blocks/PasswordInput/PasswordInput.json';
+import Block from './PasswordInput';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/input', () => {
   const comp = jest.fn(() => 'mocked');

@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Button, Drawer } from 'antd';
 
-import MobileMenuBlock from '../src/blocks/MobileMenu/MobileMenu';
-import examples from '../demo/examples/MobileMenu.yaml';
-import meta from '../src/blocks/MobileMenu/MobileMenu.json';
+import MobileMenuBlock from './MobileMenu';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/button', () => {
   return jest.fn(() => 'mocked');

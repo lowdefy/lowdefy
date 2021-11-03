@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import ReactMarkdown from 'react-markdown';
 
-import MarkdownWithCode from '../src/blocks/MarkdownWithCode/MarkdownWithCode';
-import examples from '../demo/examples/MarkdownWithCode.yaml';
-import meta from '../src/blocks/MarkdownWithCode/MarkdownWithCode.json';
+import MarkdownWithCode from './MarkdownWithCode';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('react-markdown', () => {
   return jest.fn(() => 'mocked');

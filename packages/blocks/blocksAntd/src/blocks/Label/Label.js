@@ -29,8 +29,6 @@ import {
   ExclamationCircleFilled,
 } from '@ant-design/icons';
 
-import 'antd/es/form/style';
-import './style.css';
 import labelLogic from './labelLogic';
 
 const iconMap = {

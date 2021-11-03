@@ -15,9 +15,11 @@
 */
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
-import ProgressBlock from '../src/blocks/Progress/Progress';
-import examples from '../demo/examples/Progress.yaml';
-import meta from '../src/blocks/Progress/Progress.json';
+
+import ProgressBlock from './Progress';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 runRenderTests({ examples, Block: ProgressBlock, meta });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

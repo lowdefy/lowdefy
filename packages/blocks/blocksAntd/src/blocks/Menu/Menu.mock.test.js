@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Menu } from 'antd';
 
-import Block from '../src/blocks/Menu/Menu';
-import examples from '../demo/examples/Menu.yaml';
-import meta from '../src/blocks/Menu/Menu.json';
+import Block from './Menu';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/menu', () => {
   const comp = jest.fn(() => 'mocked');

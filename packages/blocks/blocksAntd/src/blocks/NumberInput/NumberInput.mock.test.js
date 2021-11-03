@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { InputNumber } from 'antd';
 
-import Block from '../src/blocks/NumberInput/NumberInput';
-import examples from '../demo/examples/NumberInput.yaml';
-import meta from '../src/blocks/NumberInput/NumberInput.json';
+import Block from './NumberInput';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/input-number', () => {
   const comp = jest.fn(() => 'mocked');

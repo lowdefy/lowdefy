@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Modal } from 'antd';
 
-import ConfirmModalBlock from '../src/blocks/ConfirmModal/ConfirmModal';
-import examples from '../demo/examples/ConfirmModal.yaml';
-import meta from '../src/blocks/ConfirmModal/ConfirmModal.json';
+import ConfirmModalBlock from './ConfirmModal';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/modal', () => {
   const modal = jest.fn(() => 'mocked');

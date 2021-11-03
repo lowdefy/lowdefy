@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Upload } from 'antd';
 
-import S3UploadButton from '../src/blocks/S3UploadButton/S3UploadButton';
-import examples from '../demo/examples/S3UploadButton.yaml';
-import meta from '../src/blocks/S3UploadButton/S3UploadButton.json';
+import S3UploadButton from './S3UploadButton';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/upload', () => {
   return jest.fn(() => 'mocked');

@@ -19,12 +19,13 @@ import { mockBlock, runBlockSchemaTests, runRenderTests } from '@lowdefy/block-d
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { List } from '../src';
-import examples from '../demo/examples/List.yaml';
-import meta from '../src/blocks/List/List.json';
+import Block from './List';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
-runRenderTests({ examples, Block: List, meta });
-runBlockSchemaTests({ examples, meta });
+runRenderTests({ examples, Block, meta });
+runBlockSchemaTests({ examples, meta, schema });
 
 const { before, methods, getProps } = mockBlock({ meta });
 beforeEach(before);
@@ -34,7 +35,7 @@ test('triggerEvent onClick', () => {
     id: 'one',
     type: 'List',
   };
-  const Shell = () => <List {...getProps(block)} methods={methods} />;
+  const Shell = () => <Block {...getProps(block)} methods={methods} />;
   const { container } = render(<Shell />);
   expect(container.firstChild).toMatchInlineSnapshot(`
     .emotion-0 {
@@ -66,7 +67,7 @@ test('register list methods on mount', () => {
     ],
   };
   const Shell = ({ properties }) => (
-    <List {...getProps(block)} methods={methods} properties={properties} />
+    <Block {...getProps(block)} methods={methods} properties={properties} />
   );
   const { container, rerender } = render(<Shell properties={block.properties} />);
   expect(container.firstChild).toMatchSnapshot();

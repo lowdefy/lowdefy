@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import Menu from '../src/blocks/Menu/Menu';
-import examples from '../demo/examples/Menu.yaml';
-import meta from '../src/blocks/Menu/Menu.json';
+import Menu from './Menu';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 runRenderTests({ examples, Block: Menu, meta });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

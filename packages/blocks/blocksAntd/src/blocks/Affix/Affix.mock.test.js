@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Affix } from 'antd';
 
-import AffixBlock from '../src/blocks/Affix/Affix';
-import examples from '../demo/examples/Affix.yaml';
-import meta from '../src/blocks/Affix/Affix.json';
+import AffixBlock from './Affix';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/affix', () => {
   return jest.fn(() => 'mocked');

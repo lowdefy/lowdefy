@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Statistic } from 'antd';
 
-import StatisticBlock from '../src/blocks/Statistic/Statistic';
-import examples from '../demo/examples/Statistic.yaml';
-import meta from '../src/blocks/Statistic/Statistic.json';
+import StatisticBlock from './Statistic';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/statistic', () => {
   return jest.fn((props) => props.toString());

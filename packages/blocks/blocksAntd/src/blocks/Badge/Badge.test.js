@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import Badge from '../src/blocks/Badge/Badge';
-import examples from '../demo/examples/Badge.yaml';
-import meta from '../src/blocks/Badge/Badge.json';
+import Badge from './Badge';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 runRenderTests({ examples, Block: Badge, meta });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

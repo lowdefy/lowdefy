@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Button } from 'antd';
 
-import ButtonBlock from '../src/blocks/Button/Button';
-import examples from '../demo/examples/Button.yaml';
-import meta from '../src/blocks/Button/Button.json';
+import ButtonBlock from './Button';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/button', () => {
   return jest.fn(() => 'mocked');

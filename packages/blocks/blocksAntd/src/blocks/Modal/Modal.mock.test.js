@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Modal } from 'antd';
 
-import Block from '../src/blocks/Modal/Modal';
-import examples from '../demo/examples/Modal.yaml';
-import meta from '../src/blocks/Modal/Modal.json';
+import Block from './Modal';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/modal', () => {
   const comp = jest.fn(() => 'mocked');

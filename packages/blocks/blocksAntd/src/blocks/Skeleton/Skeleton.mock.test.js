@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Skeleton } from 'antd';
 
-import SkeletonBlock from '../src/blocks/Skeleton/Skeleton';
-import examples from '../demo/examples/Skeleton.yaml';
-import meta from '../src/blocks/Skeleton/Skeleton.json';
+import SkeletonBlock from './Skeleton';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/skeleton', () => {
   const skeleton = jest.fn(() => 'mocked');

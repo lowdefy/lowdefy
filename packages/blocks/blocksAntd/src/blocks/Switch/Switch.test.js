@@ -16,10 +16,11 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import validationsExamples from '../demo/validationExamples.json';
-import Switch from '../src/blocks/Switch/Switch';
-import examples from '../demo/examples/Switch.yaml';
-import meta from '../src/blocks/Switch/Switch.json';
+import validationsExamples from '../../validationExamples.js';
+import Switch from './Switch';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 runRenderTests({ examples, Block: Switch, meta, validationsExamples });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

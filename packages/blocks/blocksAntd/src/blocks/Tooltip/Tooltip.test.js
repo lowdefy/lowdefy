@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import Tooltip from '../src/blocks/Tooltip/Tooltip';
-import examples from '../demo/examples/Tooltip.yaml';
-import meta from '../src/blocks/Tooltip/Tooltip.json';
+import Tooltip from './Tooltip';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 runRenderTests({ examples, Block: Tooltip, meta });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

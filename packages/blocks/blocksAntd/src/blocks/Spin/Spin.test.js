@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import Spin from '../src/blocks/Spin/Spin';
-import examples from '../demo/examples/Spin.yaml';
-import meta from '../src/blocks/Spin/Spin.json';
+import Spin from './Spin';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 runRenderTests({ examples, Block: Spin, meta });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

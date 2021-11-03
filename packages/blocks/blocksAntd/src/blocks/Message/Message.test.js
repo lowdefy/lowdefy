@@ -17,9 +17,10 @@
 import { runBlockSchemaTests, runMockMethodTests } from '@lowdefy/block-dev';
 import { message } from 'antd';
 
-import Message from '../src/blocks/Message/Message';
-import examples from '../demo/examples/Message.yaml';
-import meta from '../src/blocks/Message/Message.json';
+import Message from './Message';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 jest.mock('antd/lib/message', () => {
   return {
@@ -55,4 +56,4 @@ const mocks = [
 ];
 
 runMockMethodTests({ examples, Block: Message, meta, mocks });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

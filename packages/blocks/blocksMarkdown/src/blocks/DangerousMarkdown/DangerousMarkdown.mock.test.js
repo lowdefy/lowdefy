@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import ReactMarkdown from 'react-markdown';
 
-import DangerousMarkdown from '../src/blocks/DangerousMarkdown/DangerousMarkdown';
-import examples from '../demo/examples/DangerousMarkdown.yaml';
-import meta from '../src/blocks/DangerousMarkdown/DangerousMarkdown.json';
+import DangerousMarkdown from './DangerousMarkdown';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('react-markdown', () => {
   return jest.fn(() => 'mocked');

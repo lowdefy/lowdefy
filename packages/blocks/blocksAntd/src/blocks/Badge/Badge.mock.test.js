@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Badge } from 'antd';
 
-import BadgeBlock from '../src/blocks/Badge/Badge';
-import examples from '../demo/examples/Badge.yaml';
-import meta from '../src/blocks/Badge/Badge.json';
+import BadgeBlock from './Badge';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/badge', () => {
   return jest.fn(() => 'mocked');

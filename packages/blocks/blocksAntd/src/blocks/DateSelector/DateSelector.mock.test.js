@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { DatePicker } from 'antd';
 
-import DateSelectorBlock from '../src/blocks/DateSelector/DateSelector';
-import examples from '../demo/examples/DateSelector.yaml';
-import meta from '../src/blocks/DateSelector/DateSelector.json';
+import DateSelectorBlock from './DateSelector';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/date-picker', () => {
   const comp = jest.fn(() => 'mocked');

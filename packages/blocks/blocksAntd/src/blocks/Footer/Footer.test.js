@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import Footer from '../src/blocks/Footer/Footer';
-import examples from '../demo/examples/Footer.yaml';
-import meta from '../src/blocks/Footer/Footer.json';
+import Footer from './Footer';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 runRenderTests({ examples, Block: Footer, meta });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Avatar } from 'antd';
 
-import AvatarBlock from '../src/blocks/Avatar/Avatar';
-import examples from '../demo/examples/Avatar.yaml';
-import meta from '../src/blocks/Avatar/Avatar.json';
+import AvatarBlock from './Avatar';
+import examples from './examples.yaml';
+import meta from './schema.json';
 
 jest.mock('antd/lib/avatar', () => {
   return jest.fn(() => 'mocked');

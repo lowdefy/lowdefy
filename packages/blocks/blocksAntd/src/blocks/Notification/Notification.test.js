@@ -17,9 +17,10 @@
 import { runBlockSchemaTests, runMockMethodTests } from '@lowdefy/block-dev';
 import { notification } from 'antd';
 
-import Notification from '../src/blocks/Notification/Notification';
-import examples from '../demo/examples/Notification.yaml';
-import meta from '../src/blocks/Notification/Notification.json';
+import Notification from './Notification';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 jest.mock('antd/lib/notification', () => {
   return {
@@ -50,4 +51,4 @@ const mocks = [
 ];
 
 runMockMethodTests({ examples, Block: Notification, meta, mocks });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

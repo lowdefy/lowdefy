@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Tooltip } from 'antd';
 
-import TooltipBlock from '../src/blocks/Tooltip/Tooltip';
-import examples from '../demo/examples/Tooltip.yaml';
-import meta from '../src/blocks/Tooltip/Tooltip.json';
+import TooltipBlock from './Tooltip';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/tooltip', () => {
   return jest.fn(() => 'mocked');

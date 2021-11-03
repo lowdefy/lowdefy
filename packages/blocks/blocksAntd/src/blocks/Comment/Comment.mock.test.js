@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Comment } from 'antd';
 
-import CommentBlock from '../src/blocks/Comment/Comment';
-import examples from '../demo/examples/Comment.yaml';
-import meta from '../src/blocks/Comment/Comment.json';
+import CommentBlock from './Comment';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/comment', () => {
   return jest.fn(() => 'mocked');

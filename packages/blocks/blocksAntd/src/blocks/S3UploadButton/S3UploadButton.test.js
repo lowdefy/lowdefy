@@ -16,10 +16,11 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import validationsExamples from '../demo/validationExamples.json';
-import S3UploadButton from '../src/blocks/S3UploadButton/S3UploadButton';
-import examples from '../demo/examples/S3UploadButton.yaml';
-import meta from '../src/blocks/S3UploadButton/S3UploadButton.json';
+import validationsExamples from '../../validationExamples.js';
+import S3UploadButton from './S3UploadButton';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 runRenderTests({ examples, Block: S3UploadButton, meta, validationsExamples });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

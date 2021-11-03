@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Radio } from 'antd';
 
-import Block from '../src/blocks/RadioSelector/RadioSelector';
-import examples from '../demo/examples/RadioSelector.yaml';
-import meta from '../src/blocks/RadioSelector/RadioSelector.json';
+import Block from './RadioSelector';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/radio', () => {
   const comp = jest.fn(() => 'mocked');

@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import Alert from '../src/blocks/Alert/Alert';
-import examples from '../demo/examples/Alert.yaml';
-import meta from '../src/blocks/Alert/Alert.json';
+import Alert from './Alert';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 runRenderTests({ examples, Block: Alert, meta });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

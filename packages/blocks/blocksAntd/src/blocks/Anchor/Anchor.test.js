@@ -16,13 +16,14 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import Anchor from '../src/blocks/Anchor/Anchor';
-import examples from '../demo/examples/Anchor.yaml';
-import meta from '../src/blocks/Anchor/Anchor.json';
+import Anchor from './Anchor';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 runRenderTests({
   examples,
   Block: Anchor,
   meta,
 });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

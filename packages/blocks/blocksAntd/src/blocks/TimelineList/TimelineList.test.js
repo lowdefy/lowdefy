@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import TimelineList from '../src/blocks/TimelineList/TimelineList';
-import examples from '../demo/examples/TimelineList.yaml';
-import meta from '../src/blocks/TimelineList/TimelineList.json';
+import TimelineList from './TimelineList';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 runRenderTests({ examples, Block: TimelineList, meta });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

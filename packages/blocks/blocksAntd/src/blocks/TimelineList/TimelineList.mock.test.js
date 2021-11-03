@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Timeline } from 'antd';
 
-import TimelineList from '../src/blocks/TimelineList/TimelineList';
-import examples from '../demo/examples/TimelineList.yaml';
-import meta from '../src/blocks/TimelineList/TimelineList.json';
+import TimelineList from './TimelineList';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/timeline', () => {
   const timeline = jest.fn((props) => props.toString());

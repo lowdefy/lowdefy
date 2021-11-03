@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import Icon from '../src/blocks/Icon/Icon';
-import examples from '../demo/examples/Icon.yaml';
-import meta from '../src/blocks/Icon/Icon.json';
+import Icon from './Icon';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 runRenderTests({ examples, Block: Icon, meta });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

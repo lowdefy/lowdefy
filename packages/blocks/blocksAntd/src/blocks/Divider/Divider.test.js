@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import Divider from '../src/blocks/Divider/Divider';
-import examples from '../demo/examples/Divider.yaml';
-import meta from '../src/blocks/Divider/Divider.json';
+import Divider from './Divider';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 runRenderTests({ examples, Block: Divider, meta });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

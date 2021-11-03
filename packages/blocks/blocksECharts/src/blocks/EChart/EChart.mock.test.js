@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import ReactECharts from 'echarts-for-react';
 
-import { EChart } from '../src';
-import examples from '../demo/examples/EChart.yaml';
-import meta from '../src/blocks/EChart/EChart.json';
+import EChart from './EChart';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('echarts-for-react', () => {
   return jest.fn(() => 'mocked');

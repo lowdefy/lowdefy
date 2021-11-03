@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Typography } from 'antd';
 
-import Block from '../src/blocks/ParagraphInput/ParagraphInput';
-import examples from '../demo/examples/ParagraphInput.yaml';
-import meta from '../src/blocks/ParagraphInput/ParagraphInput.json';
+import Block from './ParagraphInput';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/typography', () => {
   const comp = jest.fn(() => 'mocked');

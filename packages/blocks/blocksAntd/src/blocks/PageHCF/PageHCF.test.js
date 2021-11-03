@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import PageHCF from '../src/blocks/PageHCF/PageHCF';
-import examples from '../demo/examples/PageHCF.yaml';
-import meta from '../src/blocks/PageHCF/PageHCF.json';
+import PageHCF from './PageHCF';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 runRenderTests({ examples, Block: PageHCF, meta });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

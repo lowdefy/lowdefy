@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Divider } from 'antd';
 
-import Block from '../src/blocks/Divider/Divider';
-import examples from '../demo/examples/Divider.yaml';
-import meta from '../src/blocks/Divider/Divider.json';
+import Block from './Divider';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/divider', () => {
   const comp = jest.fn(() => 'mocked');

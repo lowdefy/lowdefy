@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Layout } from 'antd';
 
-import PageHCF from '../src/blocks/PageHCF/PageHCF';
-import examples from '../demo/examples/PageHCF.yaml';
-import meta from '../src/blocks/PageHCF/PageHCF.json';
+import PageHCF from './PageHCF';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/layout', () => {
   return jest.fn(() => 'mocked');

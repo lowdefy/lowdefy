@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Collapse } from 'antd';
 
-import CollapseBlock from '../src/blocks/Collapse/Collapse';
-import examples from '../demo/examples/Collapse.yaml';
-import meta from '../src/blocks/Collapse/Collapse.json';
+import CollapseBlock from './Collapse';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/collapse', () => {
   const collapse = jest.fn(() => 'mocked');

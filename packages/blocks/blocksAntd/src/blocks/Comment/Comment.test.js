@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import Comment from '../src/blocks/Comment/Comment';
-import examples from '../demo/examples/Comment.yaml';
-import meta from '../src/blocks/Comment/Comment.json';
+import Comment from './Comment';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 runRenderTests({ examples, Block: Comment, meta });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

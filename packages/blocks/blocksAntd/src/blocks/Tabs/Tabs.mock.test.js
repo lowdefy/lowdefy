@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Tabs } from 'antd';
 
-import TabsBlock from '../src/blocks/Tabs/Tabs';
-import examples from '../demo/examples/Tabs.yaml';
-import meta from '../src/blocks/Tabs/Tabs.json';
+import TabsBlock from './Tabs';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/tabs', () => {
   const tabs = jest.fn(() => 'mocked');

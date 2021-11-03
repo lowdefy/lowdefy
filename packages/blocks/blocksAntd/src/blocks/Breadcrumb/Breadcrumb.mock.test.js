@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Breadcrumb } from 'antd';
 
-import BreadcrumbBlock from '../src/blocks/Breadcrumb/Breadcrumb';
-import examples from '../demo/examples/Breadcrumb.yaml';
-import meta from '../src/blocks/Breadcrumb/Breadcrumb.json';
+import BreadcrumbBlock from './Breadcrumb';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/breadcrumb', () => {
   const breadcrumb = jest.fn(() => 'mocked');

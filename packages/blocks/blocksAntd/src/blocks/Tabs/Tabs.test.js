@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import Tabs from '../src/blocks/Tabs/Tabs';
-import examples from '../demo/examples/Tabs.yaml';
-import meta from '../src/blocks/Tabs/Tabs.json';
+import Tabs from './Tabs';
+import examples from './examples.yaml';
+import meta from './index';
+import schema from './schema.json';
 
 runRenderTests({ examples, Block: Tabs, meta });
-runBlockSchemaTests({ examples, meta });
+runBlockSchemaTests({ examples, meta, schema });

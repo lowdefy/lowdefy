@@ -17,9 +17,9 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Layout } from 'antd';
 
-import PageSiderMenu from '../src/blocks/PageSiderMenu/PageSiderMenu';
-import examples from '../demo/examples/PageSiderMenu.yaml';
-import meta from '../src/blocks/PageSiderMenu/PageSiderMenu.json';
+import PageSiderMenu from './PageSiderMenu';
+import examples from './examples.yaml';
+import meta from './index';
 
 jest.mock('antd/lib/layout', () => {
   return jest.fn(() => 'mocked');
