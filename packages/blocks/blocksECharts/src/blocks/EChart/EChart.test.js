@@ -14,13 +14,12 @@
   limitations under the License.
 */
 
-import EChart from './blocks/EChart';
+// import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
+import { runBlockSchemaTests } from '@lowdefy/block-dev';
 
-export default {
-  blocks: {
-    EChart,
-  },
-  import: {
-    styles: [],
-  },
-};
+// import { EChart } from '../src';
+import examples from '../demo/examples/EChart.yaml';
+import meta from '../src/blocks/EChart/EChart.json';
+
+// runRenderTests({ examples, Block: EChart, meta });
+runBlockSchemaTests({ examples, meta });

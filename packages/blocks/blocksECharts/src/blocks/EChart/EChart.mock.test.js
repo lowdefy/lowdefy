@@ -14,13 +14,22 @@
   limitations under the License.
 */
 
-import EChart from './blocks/EChart';
+import { runMockRenderTests } from '@lowdefy/block-dev';
+import ReactECharts from 'echarts-for-react';
 
-export default {
-  blocks: {
-    EChart,
+import { EChart } from '../src';
+import examples from '../demo/examples/EChart.yaml';
+import meta from '../src/blocks/EChart/EChart.json';
+
+jest.mock('echarts-for-react', () => {
+  return jest.fn(() => 'mocked');
+});
+
+const mocks = [
+  {
+    name: 'default',
+    fn: ReactECharts,
   },
-  import: {
-    styles: [],
-  },
-};
+];
+
+runMockRenderTests({ examples, Block: EChart, meta, mocks });
