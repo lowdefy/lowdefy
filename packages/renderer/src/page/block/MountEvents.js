@@ -16,7 +16,14 @@
 
 import React, { useEffect, useState } from 'react';
 
-const MountEvents = ({ asyncEventName, context, eventName, triggerEvent, children }) => {
+const MountEvents = ({
+  asyncEventName,
+  context,
+  eventName,
+  triggerEvent,
+  initEventsTriggered,
+  children,
+}) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   useEffect(() => {
@@ -27,6 +34,9 @@ const MountEvents = ({ asyncEventName, context, eventName, triggerEvent, childre
         if (mounted) {
           triggerEvent({ name: asyncEventName, context });
           setLoading(false);
+        }
+        if (initEventsTriggered) {
+          initEventsTriggered(true);
         }
       } catch (err) {
         setError(err);

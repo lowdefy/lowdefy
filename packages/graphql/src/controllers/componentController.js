@@ -30,27 +30,32 @@ class ComponentController {
 
   async getMenus() {
     const loadedMenus = await this.componentLoader.load('menus');
-    const menus = this.filterMenus({ menus: loadedMenus || [] });
+    const initPageId = await this.getInitPageId();
+    const menus = this.filterMenus({ menus: loadedMenus || [], initPageId });
     const homePageId = await this.getHomePageId({ menus });
     return {
       menus,
       homePageId,
+      initPageId,
     };
   }
 
-  filterMenus({ menus }) {
+  filterMenus({ menus, initPageId }) {
     return menus.map((menu) => {
       return {
         ...menu,
-        links: this.filterMenuList({ menuList: get(menu, 'links', { default: [] }) }),
+        links: this.filterMenuList({ menuList: get(menu, 'links', { default: [] }), initPageId }),
       };
     });
   }
 
-  filterMenuList({ menuList }) {
+  filterMenuList({ menuList, initPageId }) {
     return menuList
       .map((item) => {
         if (item.type === 'MenuLink') {
+          if (item.pageId === initPageId) {
+            return null;
+          }
           if (this.authorizationController.authorize(item)) {
             return item;
           }
@@ -70,6 +75,15 @@ class ComponentController {
         return null;
       })
       .filter((item) => item !== null);
+  }
+
+  async getInitPageId() {
+    const configData = await this.componentLoader.load('config');
+    if (configData && get(configData, 'initPageId')) {
+      return get(configData, 'initPageId');
+    } else {
+      return null;
+    }
   }
 
   async getHomePageId({ menus }) {

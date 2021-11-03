@@ -35,9 +35,11 @@ const GET_PAGE = gql`
   }
 `;
 
-const PageContext = ({ lowdefy }) => {
-  const { pageId } = useParams();
-  const { search } = useLocation();
+const PageContext = (pageArgs) => {
+  const { lowdefy } = pageArgs;
+  const { initEventsTriggered } = pageArgs;
+  const { pageId = useParams().pageId } = pageArgs;
+  const { search = useLocation().search } = pageArgs;
   lowdefy.pageId = pageId;
   lowdefy.routeHistory = useHistory();
   lowdefy.link = setupLink(lowdefy);
@@ -74,6 +76,7 @@ const PageContext = ({ lowdefy }) => {
           urlQuery: lowdefy.urlQuery,
         })}
         lowdefy={lowdefy}
+        initEventsTriggered={initEventsTriggered}
       >
         {(context) => (
           <>
