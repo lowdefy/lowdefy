@@ -45,6 +45,40 @@ const mockLoadMenus = jest.fn((id) => {
   return null;
 });
 
+const mockLoadMenusInitPage = jest.fn((id) => {
+  if (id === 'menus') {
+    return [
+      {
+        id: 'menu:default',
+        menuId: 'default',
+        links: [
+          {
+            id: 'menuitem:default:0',
+            type: 'MenuGroup',
+            auth: { public: true },
+            links: [
+              {
+                id: 'menuitem:default:1',
+                type: 'MenuLink',
+                pageId: 'page',
+                auth: { public: true },
+              },
+              {
+                id: 'menuitem:default:2',
+                type: 'MenuLink',
+                pageId: 'initPage',
+                auth: { public: true },
+              },
+            ],
+          },
+        ],
+        initPageId: 'initPage',
+      },
+    ];
+  }
+  return null;
+});
+
 const mockGetMenus = jest.fn(() => {
   return {
     menus: [
@@ -67,6 +101,7 @@ const mockGetMenus = jest.fn(() => {
       },
     ],
     homePageId: 'page',
+    initPageId: 'initPage',
   };
 });
 
@@ -77,6 +112,12 @@ const getController = jest.fn(() => ({
 const loaders = {
   component: {
     load: mockLoadMenus,
+  },
+};
+
+const loadersInitPage = {
+  component: {
+    load: mockLoadMenusInitPage,
   },
 };
 
@@ -115,6 +156,7 @@ const GET_MENUS = gql`
         }
       }
       homePageId
+      initPageId
     }
   }
 `;
@@ -142,6 +184,7 @@ test('menu resolver', async () => {
       },
     ],
     homePageId: 'page',
+    initPageId: 'initPage',
   });
 });
 
@@ -177,6 +220,43 @@ test('menu graphql', async () => {
         },
       ],
       homePageId: 'page',
+    },
+  });
+});
+
+test('menu graphql initPage', async () => {
+  const res = await runTestQuery({
+    gqlQuery: GET_MENUS,
+    loadersInitPage,
+  });
+  expect(res.errors).toBe(undefined);
+  expect(res.data).toEqual({
+    menu: {
+      menus: [
+        {
+          id: 'menu:default',
+          menuId: 'default',
+          properties: null,
+          links: [
+            {
+              id: 'menuitem:default:0',
+              type: 'MenuGroup',
+              properties: null,
+              links: [
+                {
+                  id: 'menuitem:default:1',
+                  type: 'MenuLink',
+                  properties: null,
+                  pageId: 'page',
+                  url: null,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      homePageId: 'page',
+      initPageId: 'initPage'
     },
   });
 });
