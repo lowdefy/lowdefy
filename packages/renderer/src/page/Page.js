@@ -40,6 +40,16 @@ const PageContext = (pageArgs) => {
   const { initEventsTriggered } = pageArgs;
   const { pageId = useParams().pageId } = pageArgs;
   const { search = useLocation().search } = pageArgs;
+
+  if (
+    initEventsTriggered &&
+    lowdefy.pageId &&
+    lowdefy.pageId !== pageId &&
+    lowdefy.pageId != lowdefy.initPageId
+  ) {
+    initEventsTriggered(false);
+  }
+
   lowdefy.pageId = pageId;
   lowdefy.routeHistory = useHistory();
   lowdefy.link = setupLink(lowdefy);

@@ -131,7 +131,7 @@ const PageLoader = ({ lowdefy }) => {
   const [initEventsTriggered, setInitEventsTriggered] = useState(false);
 
   if (!initPageId || initEventsTriggered) {
-    return <Page lowdefy={lowdefy} />;
+    return <Page lowdefy={lowdefy} initEventsTriggered={setInitEventsTriggered} />;
   } else {
     return (
       <Page lowdefy={lowdefy} pageId={initPageId} initEventsTriggered={setInitEventsTriggered} />
