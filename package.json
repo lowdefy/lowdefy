@@ -25,6 +25,7 @@
   "workspaces": [
     "packages/*",
     "packages/blocks/*",
+    "packages/connections/*",
     "packages/servers/*"
   ],
   "scripts": {

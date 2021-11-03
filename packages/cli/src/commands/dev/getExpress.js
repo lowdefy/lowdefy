@@ -24,7 +24,7 @@ import findOpenPort from '../../utils/findOpenPort';
 async function getExpress({ context, gqlServer }) {
   const serveIndex = async (req, res) => {
     let indexHtml = await readFile(path.resolve(__dirname, 'shell/index.html'));
-    let appConfig = await readFile(path.resolve(context.outputDirectory, 'app.json'));
+    let appConfig = await readFile(path.resolve(context.buildDirectory, 'app.json'));
     appConfig = JSON.parse(appConfig);
     indexHtml = indexHtml.replace(
       '<!-- __LOWDEFY_APP_HEAD_HTML__ -->',

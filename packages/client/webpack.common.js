@@ -1,7 +1,6 @@
 const path = require('path');
-const webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-// const CopyPlugin = require('copy-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const { ModuleFederationPlugin } = require('webpack').container;
 const packageJson = require('./package.json');
 
@@ -65,13 +64,13 @@ module.exports = {
         },
       },
     }),
-    // new CopyPlugin({
-    //   patterns: [
-    //     {
-    //       from: './src/public',
-    //       to: '../public',
-    //     },
-    //   ],
-    // }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: './src/public',
+          to: '../public',
+        },
+      ],
+    }),
   ],
 };

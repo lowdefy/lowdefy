@@ -3,6 +3,7 @@
   "packages": [
     "src/packages/*",
     "src/packages/blocks/*",
+    "src/packages/connections/*",
     "src/packages/servers/*"
   ],
   "npmClient": "yarn",

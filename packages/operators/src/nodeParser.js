@@ -35,7 +35,7 @@ class NodeParser {
   async init() {
     await Promise.all(
       Object.keys(this.operators).map(async (operator) => {
-        const fn = require(`./${this.operators[operator]}.js`);
+        const fn = await import(`./${this.operators[operator]}.js`);
         this.operations[operator] = fn.default;
         if (this.operations[operator].init) {
           await this.operations[operator].init();

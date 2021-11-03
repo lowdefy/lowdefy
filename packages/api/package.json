@@ -29,7 +29,8 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "yarn webpack",
+    "babel": "babel src --out-dir dist",
+    "build": "yarn clean && yarn babel",
     "clean": "rm -rf dist",
     "prepare": "yarn build",
     "test": "jest --coverage",

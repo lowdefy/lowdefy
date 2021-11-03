@@ -23,13 +23,15 @@ jest.mock('./createAuthorize');
 jest.mock('./readConfigFile');
 jest.mock('./verifyAuthorizationHeader');
 
-const getSecrets = jest.fn();
-
-getSecrets.mockImplementation(() => ({ secret: true }));
+const connections = { Connection: true };
+const secrets = { secret: true };
 
 createAuthorize.mockImplementation(({ authenticated, roles = [] }) => ({ authenticated, roles }));
 
-createReadConfigFile.mockImplementation(({ configDirectory }) => () => ({ configDirectory }));
+createReadConfigFile.mockImplementation(({ buildDirectory }) => (path) => ({
+  buildDirectory,
+  path,
+}));
 
 verifyAuthorizationHeader.mockImplementation(() => ({
   authenticated: true,
@@ -38,10 +40,11 @@ verifyAuthorizationHeader.mockImplementation(() => ({
 }));
 
 test('createContext', async () => {
-  const contextFn = await createContext({ configDirectory: 'configDirectory', getSecrets });
+  const contextFn = await createContext({ connections, buildDirectory: 'buildDirectory', secrets });
   const context = contextFn({
     headers: { header: 'header' },
     host: 'host',
+    logger: 'logger',
     protocol: 'https',
     setHeader: 'setHeaderFunction',
   });
@@ -55,12 +58,17 @@ test('createContext', async () => {
         ],
       },
       "config": Object {
-        "configDirectory": "configDirectory",
+        "buildDirectory": "buildDirectory",
+        "path": "config.json",
+      },
+      "connections": Object {
+        "Connection": true,
       },
       "headers": Object {
         "header": "header",
       },
       "host": "host",
+      "logger": "logger",
       "protocol": "https",
       "readConfigFile": [Function],
       "secrets": Object {
@@ -84,12 +92,17 @@ test('createContext', async () => {
             ],
           },
           "config": Object {
-            "configDirectory": "configDirectory",
+            "buildDirectory": "buildDirectory",
+            "path": "config.json",
+          },
+          "connections": Object {
+            "Connection": true,
           },
           "headers": Object {
             "header": "header",
           },
           "host": "host",
+          "logger": "logger",
           "protocol": "https",
           "readConfigFile": [Function],
           "secrets": Object {

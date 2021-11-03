@@ -17,17 +17,17 @@
 import getDirectories from './getDirectories';
 
 test('default directories', () => {
-  const { cacheDirectory, outputDirectory } = getDirectories({
+  const { cacheDirectory, buildDirectory } = getDirectories({
     baseDirectory: '/test/base',
     options: {},
   });
 
   expect(cacheDirectory).toEqual('/test/base/.lowdefy/.cache');
-  expect(outputDirectory).toEqual('/test/base/.lowdefy/build');
+  expect(buildDirectory).toEqual('/test/base/.lowdefy/build');
 });
 
 test('specify outputDirectory in options', () => {
-  const { cacheDirectory, outputDirectory } = getDirectories({
+  const { cacheDirectory, buildDirectory } = getDirectories({
     baseDirectory: '/test/base',
     options: {
       outputDirectory: '/test/build',
@@ -35,5 +35,5 @@ test('specify outputDirectory in options', () => {
   });
 
   expect(cacheDirectory).toEqual('/test/base/.lowdefy/.cache');
-  expect(outputDirectory).toEqual('/test/build');
+  expect(buildDirectory).toEqual('/test/build');
 });

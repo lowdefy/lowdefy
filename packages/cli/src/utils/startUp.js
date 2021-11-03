@@ -43,9 +43,9 @@ async function startUp({ context, options = {}, command }) {
 
   context.options = getOptions(context);
 
-  const { cacheDirectory, outputDirectory } = getDirectories(context);
+  const { cacheDirectory, buildDirectory } = getDirectories(context);
   context.cacheDirectory = cacheDirectory;
-  context.outputDirectory = outputDirectory;
+  context.buildDirectory = buildDirectory;
 
   await checkForUpdatedVersions(context);
 

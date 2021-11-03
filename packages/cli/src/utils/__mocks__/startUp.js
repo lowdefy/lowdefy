@@ -36,7 +36,7 @@ async function mockStartUpImp({ context, options = {} }) {
   context.options = options;
 
   context.cacheDirectory = `${context.baseDirectory}/cacheDirectory`;
-  context.outputDirectory = `${context.baseDirectory}/outputDirectory`;
+  context.buildDirectory = `${context.baseDirectory}/buildDirectory`;
 
   context.sendTelemetry = jest.fn();
 

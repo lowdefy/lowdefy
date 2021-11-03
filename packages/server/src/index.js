@@ -20,25 +20,28 @@ import routes from './routes';
 import staticFiles from './staticFiles';
 
 function getServer({
-  configDirectory,
+  buildDirectory,
   clientDirectory,
+  connections,
   development = false,
-  getSecrets,
+  logger,
   publicDirectory,
+  secrets,
   // serverBasePath = '',
   serveStaticFiles = true,
 }) {
   const fastify = Fastify({
     // TODO
     // prefix: serverBasePath !== '' ? `/${serverBasePath}` : '',
-    logger: true,
+    logger: logger || true,
   });
 
   fastify.register(routes, {
     lowdefy: {
-      configDirectory,
+      buildDirectory,
+      connections,
       development,
-      getSecrets,
+      secrets,
       serveStaticFiles,
     },
   });
@@ -55,11 +58,6 @@ function getServer({
       lowdefy: {
         directory: publicDirectory,
       },
-    });
-
-    // TODO: Is this useful, might just cause issues?
-    fastify.get('/favicon.ico', (_, reply) => {
-      reply.redirect('/public/icon.svg');
     });
   }
 

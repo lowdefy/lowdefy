@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import createGetSecretsFromEnv from '../src/createGetSecretsFromEnv';
+import getSecretsFromEnv from '../src/getSecretsFromEnv';
 
 const realEnv = process.env;
 
@@ -26,8 +26,8 @@ test('Get secret from env', () => {
   process.env = {
     LOWDEFY_SECRET_TEST: 'supersecret',
   };
-  const getSecrets = createGetSecretsFromEnv();
-  expect(getSecrets()).toEqual({
+  const secrets = getSecretsFromEnv();
+  expect(secrets).toEqual({
     TEST: 'supersecret',
   });
 });
@@ -40,8 +40,8 @@ test('Get multiple secrets from env, ignore other env variable', () => {
     ANOTHER_VAR: 'another',
     ASDF_GHJK: 'asdfghjk',
   };
-  const getSecrets = createGetSecretsFromEnv();
-  expect(getSecrets()).toEqual({
+  const secrets = getSecretsFromEnv();
+  expect(secrets).toEqual({
     TEST_1: 'supersecret1',
     TEST_2: 'supersecret2',
   });
@@ -51,8 +51,8 @@ test('Only replace first occurrence of "LOWDEFY_SECRET_"', () => {
   process.env = {
     LOWDEFY_SECRET_LOWDEFY_SECRET_TEST: 'supersecret',
   };
-  const getSecrets = createGetSecretsFromEnv();
-  expect(getSecrets()).toEqual({
+  const secrets = getSecretsFromEnv();
+  expect(secrets).toEqual({
     LOWDEFY_SECRET_TEST: 'supersecret',
   });
 });
@@ -63,24 +63,15 @@ test('Return an empty object if no secrets', () => {
     ANOTHER_VAR: 'another',
     ASDF_GHJK: 'asdfghjk',
   };
-  const getSecrets = createGetSecretsFromEnv();
-  expect(getSecrets()).toEqual({});
-});
-
-test('Return the same object', () => {
-  process.env = {
-    LOWDEFY_SECRET_TEST: 'supersecret',
-  };
-  const getSecrets = createGetSecretsFromEnv();
-  expect(getSecrets()).toBe(getSecrets());
+  const secrets = getSecretsFromEnv();
+  expect(secrets).toEqual({});
 });
 
 test('Secrets are immutable', () => {
   process.env = {
     LOWDEFY_SECRET_TEST: 'supersecret',
   };
-  const getSecrets = createGetSecretsFromEnv();
-  const secrets = getSecrets();
+  const secrets = getSecretsFromEnv();
   expect(secrets).toEqual({
     TEST: 'supersecret',
   });

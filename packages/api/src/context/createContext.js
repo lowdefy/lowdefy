@@ -18,14 +18,16 @@ import createAuthorize from './createAuthorize';
 import createReadConfigFile from './readConfigFile';
 import verifyAuthorizationHeader from './verifyAuthorizationHeader';
 
-async function createContext({ configDirectory, getSecrets }) {
-  const readConfigFile = createReadConfigFile({ configDirectory });
-  const [config, secrets] = await Promise.all([readConfigFile('config.json'), getSecrets()]);
-  function contextFn({ headers, host, protocol, setHeader }) {
+async function createContext({ buildDirectory, connections, secrets }) {
+  const readConfigFile = createReadConfigFile({ buildDirectory });
+  const config = await readConfigFile('config.json');
+  function contextFn({ headers, host, logger, protocol, setHeader }) {
     const context = {
       config,
+      connections,
       headers,
       host,
+      logger,
       protocol,
       readConfigFile,
       secrets,

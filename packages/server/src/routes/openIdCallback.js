@@ -41,6 +41,7 @@ async function openIdCallbackHandler(request, reply) {
 
     reply.redirect(`/${pageId}${templateUrlQuery}`);
   } catch (error) {
+    // TODO
     console.log(error);
     console.log(error.message);
     console.log(error.stack);

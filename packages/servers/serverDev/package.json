@@ -37,9 +37,12 @@
   },
   "dependencies": {
     "@lowdefy/client": "3.22.0",
+    "@lowdefy/connection-axios-http": "3.22.0",
     "@lowdefy/node-utils": "3.22.0",
     "@lowdefy/server": "3.22.0",
-    "dotenv": "10.0.0"
+    "dotenv": "10.0.0",
+    "pino": "7.0.5",
+    "pino-pretty": "7.1.0"
   },
   "devDependencies": {
     "@babel/cli": "7.15.7",

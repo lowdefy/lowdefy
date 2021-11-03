@@ -64,7 +64,7 @@ test('startUp, options empty', async () => {
     commandLineOptions: {},
     lowdefyVersion: 'lowdefyVersion',
     options: { cliConfig: true },
-    outputDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
+    buildDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
     print,
     sendTelemetry: 'sendTelemetry',
   });
@@ -87,7 +87,7 @@ test('startUp, options undefined', async () => {
     commandLineOptions: {},
     lowdefyVersion: 'lowdefyVersion',
     options: { cliConfig: true },
-    outputDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
+    buildDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
     print,
     sendTelemetry: 'sendTelemetry',
   });
@@ -109,7 +109,7 @@ test('startUp, options baseDirectory', async () => {
       cliConfig: true,
       baseDirectory: './baseDirectory',
     },
-    outputDirectory: path.resolve(process.cwd(), 'baseDirectory/.lowdefy/build'),
+    buildDirectory: path.resolve(process.cwd(), 'baseDirectory/.lowdefy/build'),
     sendTelemetry: 'sendTelemetry',
     print,
   });
@@ -131,7 +131,7 @@ test('startUp, options outputDirectory', async () => {
       cliConfig: true,
       outputDirectory: './outputDirectory',
     },
-    outputDirectory: path.resolve(process.cwd(), 'outputDirectory'),
+    buildDirectory: path.resolve(process.cwd(), 'outputDirectory'),
     sendTelemetry: 'sendTelemetry',
     print,
   });
@@ -165,7 +165,7 @@ test('startUp, options baseDirectory and outputDirectory', async () => {
       cliConfig: true,
       outputDirectory: './outputDirectory',
     },
-    outputDirectory: path.resolve(process.cwd(), 'outputDirectory'),
+    buildDirectory: path.resolve(process.cwd(), 'outputDirectory'),
     sendTelemetry: 'sendTelemetry',
     print,
   });
@@ -185,7 +185,7 @@ test('startUp, no lowdefyVersion returned', async () => {
     commandLineOptions: {},
     lowdefyVersion: undefined,
     options: {},
-    outputDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
+    buildDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
     print,
     sendTelemetry: 'sendTelemetry',
   });

@@ -14,16 +14,10 @@
   limitations under the License.
 */
 
-function createGetSecretsFromEnv() {
-  const secrets = {};
+import { cleanDirectory } from '@lowdefy/node-utils';
 
-  Object.keys(process.env).forEach((key) => {
-    if (key.startsWith('LOWDEFY_SECRET_')) {
-      secrets[key.replace('LOWDEFY_SECRET_', '')] = process.env[key];
-    }
-  });
-  Object.freeze(secrets);
-  return () => secrets;
+async function cleanBuildDirectory({ context }) {
+  return cleanDirectory(context.buildDirectory);
 }
 
-export default createGetSecretsFromEnv;
+export default cleanBuildDirectory;
