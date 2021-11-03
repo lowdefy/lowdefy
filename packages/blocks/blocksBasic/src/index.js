@@ -14,12 +14,23 @@
   limitations under the License.
 */
 
-import Box from './blocks/Box/Box';
-import DangerousHtml from './blocks/DangerousHtml/DangerousHtml';
-import Html from './blocks/Html/Html';
-import Img from './blocks/Img/Img';
-import List from './blocks/List/List';
-import Span from './blocks/Span/Span';
+import Box from './blocks/Box';
+import DangerousHtml from './blocks/DangerousHtml';
+import Html from './blocks/Html';
+import Img from './blocks/Img';
+import List from './blocks/List';
+import Span from './blocks/Span';
 
-export { Box, DangerousHtml, Html, Img, List, Span };
-export default { Box, DangerousHtml, Html, Img, List, Span };
+export default {
+  blocks: {
+    Box,
+    DangerousHtml,
+    Html,
+    Img,
+    List,
+    Span,
+  },
+  import: {
+    styles: [],
+  },
+};
