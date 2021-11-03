@@ -18,6 +18,7 @@ import React, { useEffect } from 'react';
 import { notification } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 import { type } from '@lowdefy/helpers';
+
 import Button from '../Button/Button';
 import Icon from '../Icon/Icon';
 

@@ -18,6 +18,7 @@ import React from 'react';
 import { Select } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 import { get, type } from '@lowdefy/helpers';
+
 import Label from '../Label/Label';
 import Icon from '../Icon/Icon';
 import getValueIndex from '../../getValueIndex';

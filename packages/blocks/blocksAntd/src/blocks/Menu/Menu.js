@@ -20,6 +20,7 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 import { type, get } from '@lowdefy/helpers';
 import { Link } from 'react-router-dom';
 import { Menu } from 'antd';
+
 import Icon from '../Icon/Icon';
 
 const getDefaultMenu = (menus, menuId = 'default', links) => {

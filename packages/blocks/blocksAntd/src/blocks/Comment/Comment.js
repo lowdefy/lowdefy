@@ -17,6 +17,7 @@
 import React from 'react';
 import { Comment } from 'antd';
 import { type } from '@lowdefy/helpers';
+
 import Avatar from '../Avatar/Avatar';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 

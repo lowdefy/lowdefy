@@ -19,6 +19,7 @@ import { type, get } from '@lowdefy/helpers';
 import { Link } from 'react-router-dom';
 import { Breadcrumb } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
+
 import Icon from '../Icon/Icon';
 
 const ItemLink = ({ basePath, link, children, className }) => {
