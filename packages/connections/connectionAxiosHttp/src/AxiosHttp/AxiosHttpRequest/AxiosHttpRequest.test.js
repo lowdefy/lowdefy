@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import AxiosHttp from '../../../src/AxiosHttp/AxiosHttpRequest/AxiosHttpRequest';
+import AxiosHttpRequest from './AxiosHttpRequest';
 
-const { resolver } = AxiosHttp;
+const { resolver } = AxiosHttpRequest;
 
 test('get default method,', async () => {
   const request = {

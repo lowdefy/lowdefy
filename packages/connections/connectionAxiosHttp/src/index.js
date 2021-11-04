@@ -1,7 +1,7 @@
 import AxiosHttp from './AxiosHttp/AxiosHttpConnection';
 
-const connections = {
+export const connections = {
   AxiosHttp,
 };
 
-export default connections;
+export default { connections };

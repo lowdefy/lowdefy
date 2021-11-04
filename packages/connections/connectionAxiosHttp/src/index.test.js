@@ -1,4 +1,4 @@
-import connections from '../src/index';
+import { connections } from './index';
 
 test('All connections are present', () => {
   expect(connections.AxiosHttp).toBeDefined();

@@ -15,7 +15,7 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import AxiosHttp from '../../src/AxiosHttp/AxiosHttpConnection';
+import AxiosHttp from './AxiosHttpConnection';
 
 const { schema } = AxiosHttp;
 
