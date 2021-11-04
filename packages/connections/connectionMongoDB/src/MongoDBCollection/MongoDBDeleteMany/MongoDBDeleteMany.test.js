@@ -101,7 +101,7 @@ test('deleteMany connection error', async () => {
 test('deleteMany mongodb error', async () => {
   const request = {
     filter: { _id: 'test' },
-    options: { w: false },
+    options: { writeConcern: { w: false } },
   };
   const connection = {
     databaseUri,
@@ -110,7 +110,7 @@ test('deleteMany mongodb error', async () => {
     write: true,
   };
   await expect(resolver({ request, connection })).rejects.toThrow(
-    'w has to be a number or a string'
+    "BSON field 'writeConcern.w' is the wrong type 'bool', expected types '[string, int, decimal, double, long']"
   );
 });
 

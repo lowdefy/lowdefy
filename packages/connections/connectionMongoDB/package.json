@@ -46,7 +46,7 @@
     "@babel/core": "7.15.8",
     "@babel/preset-env": "7.15.8",
     "@lowdefy/ajv": "3.22.0",
-    "@shelf/jest-mongodb": "1.2.5",
+    "@shelf/jest-mongodb": "2.1.0",
     "babel-jest": "27.3.1",
     "jest": "26.6.3"
   },

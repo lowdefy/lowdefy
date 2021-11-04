@@ -3599,7 +3599,7 @@ __metadata:
     "@babel/preset-env": 7.15.8
     "@lowdefy/ajv": 3.22.0
     "@lowdefy/helpers": 3.22.0
-    "@shelf/jest-mongodb": 1.2.5
+    "@shelf/jest-mongodb": 2.1.0
     babel-jest: 27.3.1
     jest: 26.6.3
     mongodb: 3.7.3
@@ -4393,6 +4393,19 @@ __metadata:
   peerDependencies:
     mongodb: 3.x.x
   checksum: 624939b9071bb264fb991370bd92ce854d328162b3e7534b1627c9e26a5e7acea50af603793b05f976975fd4800581708e6406277936c038f77c33115ffe011d
+  languageName: node
+  linkType: hard
+
+"@shelf/jest-mongodb@npm:2.1.0":
+  version: 2.1.0
+  resolution: "@shelf/jest-mongodb@npm:2.1.0"
+  dependencies:
+    debug: 4.3.2
+    mongodb-memory-server: 7.3.6
+    uuid: 8.3.2
+  peerDependencies:
+    mongodb: 3.x.x || 4.x
+  checksum: c4550ce332161c1d6dd6b69ff3764e37aa410fc6725be51974d66585e2089bd42a2fe785c6c9192cfddfa955c21c18d3f1ca3fe5f2a630babbfaefee7f4078b9
   languageName: node
   linkType: hard
 
@@ -6318,6 +6331,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"async-mutex@npm:^0.3.0":
+  version: 0.3.2
+  resolution: "async-mutex@npm:0.3.2"
+  dependencies:
+    tslib: ^2.3.1
+  checksum: 620b771dfdea1cad0a6b712915c31a1e3ca880a8cf1eae92b4590f435995e0260929c6ebaae0b9126b1456790ea498064b5bb9a506948cda760f48d3d0dcc4c8
+  languageName: node
+  linkType: hard
+
 "async-retry@npm:^1.2.1":
   version: 1.3.3
   resolution: "async-retry@npm:1.3.3"
@@ -7189,7 +7211,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"camelcase@npm:^6.0.0, camelcase@npm:^6.2.0":
+"camelcase@npm:^6.0.0, camelcase@npm:^6.1.0, camelcase@npm:^6.2.0":
   version: 6.2.0
   resolution: "camelcase@npm:6.2.0"
   checksum: 8335cfd0ecc472eae685896a42afd8c9dacd193a91f569120b931c87deb053a1ba82102031b9b48a4dbc1d18066caeacf2e4ace8c3c7f0d02936d348dc0b5a87
@@ -15170,12 +15192,47 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mongodb-memory-server-core@npm:7.3.6":
+  version: 7.3.6
+  resolution: "mongodb-memory-server-core@npm:7.3.6"
+  dependencies:
+    "@types/tmp": ^0.2.0
+    async-mutex: ^0.3.0
+    camelcase: ^6.1.0
+    debug: ^4.2.0
+    find-cache-dir: ^3.3.1
+    get-port: ^5.1.1
+    https-proxy-agent: ^5.0.0
+    md5-file: ^5.0.0
+    mkdirp: ^1.0.4
+    mongodb: ^3.6.9
+    new-find-package-json: ^1.1.0
+    semver: ^7.3.5
+    tar-stream: ^2.1.4
+    tmp: ^0.2.1
+    tslib: ^2.3.0
+    uuid: ^8.3.1
+    yauzl: ^2.10.0
+  checksum: 5654b669d1de0915cff8f4b104c35fb292d6f17dbfcc6236c6887a541d6647b50fd350e3c50962053c92eb1343572a4c8dac4f44c3c49b5c514f0aba580d356b
+  languageName: node
+  linkType: hard
+
 "mongodb-memory-server@npm:6.9.6":
   version: 6.9.6
   resolution: "mongodb-memory-server@npm:6.9.6"
   dependencies:
     mongodb-memory-server-core: 6.9.6
   checksum: 7705263373507ac2149093259544915a11275a9c36b5f8e0a510a93a0930df5273b9099cbe6a19716e62506844e014de436c58c6fa314934a831f8864a8e8f02
+  languageName: node
+  linkType: hard
+
+"mongodb-memory-server@npm:7.3.6":
+  version: 7.3.6
+  resolution: "mongodb-memory-server@npm:7.3.6"
+  dependencies:
+    mongodb-memory-server-core: 7.3.6
+    tslib: ^2.3.0
+  checksum: 88cc0240ad7be8ac959e41e23db32fd61f56acd4d8c8c4b8bd598d143d72d2d9cacbf179fa4908112ab65f6e81012493398fe8c24add827d34f9f451c3c22838
   languageName: node
   linkType: hard
 
@@ -15401,6 +15458,16 @@ __metadata:
   version: 2.6.2
   resolution: "neo-async@npm:2.6.2"
   checksum: deac9f8d00eda7b2e5cd1b2549e26e10a0faa70adaa6fdadca701cc55f49ee9018e427f424bac0c790b7c7e2d3068db97f3093f1093975f2acb8f8818b936ed9
+  languageName: node
+  linkType: hard
+
+"new-find-package-json@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "new-find-package-json@npm:1.1.0"
+  dependencies:
+    debug: ^4.3.2
+    tslib: ^2.3.0
+  checksum: 818e5a837f87c62fb9bc4893247fd9b7b2ff1bbf25b174af9e9ec22d60d44ce355e60f80ed0657652370cca06e59539c7df292354250820403fa33cd210e76ed
   languageName: node
   linkType: hard
 
@@ -20730,7 +20797,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.0.0, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.2.0, tslib@npm:^2.3.0":
+"tslib@npm:^2.0.0, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.2.0, tslib@npm:^2.3.0, tslib@npm:^2.3.1":
   version: 2.3.1
   resolution: "tslib@npm:2.3.1"
   checksum: de17a98d4614481f7fcb5cd53ffc1aaf8654313be0291e1bfaee4b4bb31a20494b7d218ff2e15017883e8ea9626599b3b0e0229c18383ba9dce89da2adf15cb9
@@ -21260,7 +21327,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"uuid@npm:8.3.2, uuid@npm:^8.0.0, uuid@npm:^8.3.0, uuid@npm:^8.3.2":
+"uuid@npm:8.3.2, uuid@npm:^8.0.0, uuid@npm:^8.3.0, uuid@npm:^8.3.1, uuid@npm:^8.3.2":
   version: 8.3.2
   resolution: "uuid@npm:8.3.2"
   bin:

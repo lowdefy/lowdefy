@@ -21,4 +21,5 @@ packages/build/src/test/writeFile.txt
 packages/graphql/globalConfig.json
 packages/graphql/node_modules/**
 
-packages/connections/connectionMongoDB/node_modules/**
+packages/connections/connectionMongoDB/mongod-*
+packages/connections/connectionMongoDB/globalConfig.json

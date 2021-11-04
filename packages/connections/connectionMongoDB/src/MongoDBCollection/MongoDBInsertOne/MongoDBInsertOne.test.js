@@ -52,7 +52,7 @@ test('insertOne', async () => {
 test('insertOne options', async () => {
   const request = {
     doc: { _id: 'insertOne_options' },
-    options: { w: 'majority' },
+    options: { writeConcern: { w: 'majority' } },
   };
   const connection = {
     databaseUri,

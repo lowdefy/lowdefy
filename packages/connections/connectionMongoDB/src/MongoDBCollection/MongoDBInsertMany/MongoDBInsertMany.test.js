@@ -58,7 +58,7 @@ test('insertMany', async () => {
 test('insertMany options', async () => {
   const request = {
     docs: [{ _id: 'insertMany2-1' }, { _id: 'insertMany2-2' }],
-    options: { w: 'majority' },
+    options: { writeConcern: { w: 'majority' } },
   };
   const connection = {
     databaseUri,
