@@ -79,6 +79,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/connections/connectionAxiosHttp"
       },
       {
+        "name": "@lowdefy/connection-elasticsearch",
+        "reference": "workspace:packages/connections/connectionElasticsearch"
+      },
+      {
         "name": "@lowdefy/connection-knex",
         "reference": "workspace:packages/connections/connectionKnex"
       },
@@ -171,6 +175,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@lowdefy/client", ["workspace:packages/client"]],
       ["@lowdefy/color", ["workspace:packages/color"]],
       ["@lowdefy/connection-axios-http", ["virtual:c9d7c5a0f7602869dff02ed24b6a4fe62d4c9e4a4ede33ec34082ee9e4a5dd17f3e1bb396d56863e9bea8e8476d67351fe495fe7cebce9035a9e4de117e68169#workspace:packages/connections/connectionAxiosHttp", "workspace:packages/connections/connectionAxiosHttp"]],
+      ["@lowdefy/connection-elasticsearch", ["workspace:packages/connections/connectionElasticsearch"]],
       ["@lowdefy/connection-knex", ["workspace:packages/connections/connectionKnex"]],
       ["@lowdefy/connection-mongodb", ["workspace:packages/connections/connectionMongoDB"]],
       ["@lowdefy/docs", ["workspace:packages/docs"]],
@@ -5180,6 +5185,23 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/ajv", "workspace:packages/ajv"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
             ["axios", "npm:0.23.0"],
+            ["babel-jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"],
+            ["jest", "npm:26.6.3"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@lowdefy/connection-elasticsearch", [
+        ["workspace:packages/connections/connectionElasticsearch", {
+          "packageLocation": "./packages/connections/connectionElasticsearch/",
+          "packageDependencies": [
+            ["@lowdefy/connection-elasticsearch", "workspace:packages/connections/connectionElasticsearch"],
+            ["@babel/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:7.15.7"],
+            ["@babel/core", "npm:7.15.8"],
+            ["@babel/preset-env", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:7.15.8"],
+            ["@elastic/elasticsearch", "npm:7.15.0"],
+            ["@lowdefy/ajv", "workspace:packages/ajv"],
+            ["@lowdefy/helpers", "workspace:packages/helpers"],
             ["babel-jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"],
             ["jest", "npm:26.6.3"]
           ],

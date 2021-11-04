@@ -3569,6 +3569,23 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@lowdefy/connection-elasticsearch@workspace:packages/connections/connectionElasticsearch":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/connection-elasticsearch@workspace:packages/connections/connectionElasticsearch"
+  dependencies:
+    "@babel/cli": 7.15.7
+    "@babel/core": 7.15.8
+    "@babel/preset-env": 7.15.8
+    "@elastic/elasticsearch": 7.15.0
+    "@lowdefy/ajv": 3.22.0
+    "@lowdefy/helpers": 3.22.0
+    babel-jest: 27.3.1
+    jest: 26.6.3
+  peerDependencies:
+    "@lowdefy/api": 3.22.0
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/connection-knex@workspace:packages/connections/connectionKnex":
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-knex@workspace:packages/connections/connectionKnex"
