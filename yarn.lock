@@ -3642,6 +3642,23 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@lowdefy/connection-sendgrid@workspace:packages/connections/connectionSendGridMail":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/connection-sendgrid@workspace:packages/connections/connectionSendGridMail"
+  dependencies:
+    "@babel/cli": 7.15.7
+    "@babel/core": 7.15.8
+    "@babel/preset-env": 7.15.8
+    "@lowdefy/ajv": 3.22.0
+    "@lowdefy/helpers": 3.22.0
+    "@sendgrid/mail": 7.5.0
+    babel-jest: 27.3.1
+    jest: 26.6.3
+  peerDependencies:
+    "@lowdefy/api": 3.22.0
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/connection-stripe@workspace:packages/connections/connectionStripe":
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-stripe@workspace:packages/connections/connectionStripe"

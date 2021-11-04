@@ -95,6 +95,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/connections/connectionMongoDB"
       },
       {
+        "name": "@lowdefy/connection-sendgrid",
+        "reference": "workspace:packages/connections/connectionSendGridMail"
+      },
+      {
         "name": "@lowdefy/connection-stripe",
         "reference": "workspace:packages/connections/connectionStripe"
       },
@@ -187,6 +191,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@lowdefy/connection-elasticsearch", ["workspace:packages/connections/connectionElasticsearch"]],
       ["@lowdefy/connection-knex", ["workspace:packages/connections/connectionKnex"]],
       ["@lowdefy/connection-mongodb", ["workspace:packages/connections/connectionMongoDB"]],
+      ["@lowdefy/connection-sendgrid", ["workspace:packages/connections/connectionSendGridMail"]],
       ["@lowdefy/connection-stripe", ["workspace:packages/connections/connectionStripe"]],
       ["@lowdefy/docs", ["workspace:packages/docs"]],
       ["@lowdefy/engine", ["workspace:packages/engine"]],
@@ -5270,6 +5275,23 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest", "npm:26.6.3"],
             ["mongodb", "virtual:9f5c807fb51d800a8ec46997510c4bec7f3dd09293f4424e4cde4cdf03a9f5b427aae5ea45bb7e2a13d31f679ab4b574e1578f241361e60b307cd9910849d0a8#npm:3.6.5"],
             ["saslprep", "npm:1.0.3"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@lowdefy/connection-sendgrid", [
+        ["workspace:packages/connections/connectionSendGridMail", {
+          "packageLocation": "./packages/connections/connectionSendGridMail/",
+          "packageDependencies": [
+            ["@lowdefy/connection-sendgrid", "workspace:packages/connections/connectionSendGridMail"],
+            ["@babel/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:7.15.7"],
+            ["@babel/core", "npm:7.15.8"],
+            ["@babel/preset-env", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:7.15.8"],
+            ["@lowdefy/ajv", "workspace:packages/ajv"],
+            ["@lowdefy/helpers", "workspace:packages/helpers"],
+            ["@sendgrid/mail", "npm:7.5.0"],
+            ["babel-jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"],
+            ["jest", "npm:26.6.3"]
           ],
           "linkType": "SOFT",
         }]
