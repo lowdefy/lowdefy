@@ -3552,9 +3552,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-aws@workspace:packages/connections/connectionAws":
+"@lowdefy/connection-aws@workspace:packages/connections/aws":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/connection-aws@workspace:packages/connections/connectionAws"
+  resolution: "@lowdefy/connection-aws@workspace:packages/connections/aws"
   dependencies:
     "@babel/cli": 7.15.7
     "@babel/core": 7.15.8
@@ -3568,9 +3568,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-axios-http@3.22.0, @lowdefy/connection-axios-http@workspace:packages/connections/connectionAxiosHttp":
+"@lowdefy/connection-axios-http@3.22.0, @lowdefy/connection-axios-http@workspace:packages/connections/axios-http":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/connection-axios-http@workspace:packages/connections/connectionAxiosHttp"
+  resolution: "@lowdefy/connection-axios-http@workspace:packages/connections/axios-http"
   dependencies:
     "@babel/cli": 7.15.7
     "@babel/core": 7.15.8
@@ -3585,9 +3585,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-elasticsearch@workspace:packages/connections/connectionElasticsearch":
+"@lowdefy/connection-elasticsearch@workspace:packages/connections/elasticsearch":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/connection-elasticsearch@workspace:packages/connections/connectionElasticsearch"
+  resolution: "@lowdefy/connection-elasticsearch@workspace:packages/connections/elasticsearch"
   dependencies:
     "@babel/cli": 7.15.7
     "@babel/core": 7.15.8
@@ -3602,9 +3602,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-knex@workspace:packages/connections/connectionKnex":
+"@lowdefy/connection-knex@workspace:packages/connections/knex":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/connection-knex@workspace:packages/connections/connectionKnex"
+  resolution: "@lowdefy/connection-knex@workspace:packages/connections/knex"
   dependencies:
     "@babel/cli": 7.15.7
     "@babel/core": 7.15.8
@@ -3623,9 +3623,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-mongodb@workspace:packages/connections/connectionMongoDB":
+"@lowdefy/connection-mongodb@workspace:packages/connections/mongodb":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/connection-mongodb@workspace:packages/connections/connectionMongoDB"
+  resolution: "@lowdefy/connection-mongodb@workspace:packages/connections/mongodb"
   dependencies:
     "@babel/cli": 7.15.7
     "@babel/core": 7.15.8
@@ -3642,9 +3642,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-sendgrid@workspace:packages/connections/connectionSendGridMail":
+"@lowdefy/connection-sendgrid@workspace:packages/connections/sendgrid":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/connection-sendgrid@workspace:packages/connections/connectionSendGridMail"
+  resolution: "@lowdefy/connection-sendgrid@workspace:packages/connections/sendgrid"
   dependencies:
     "@babel/cli": 7.15.7
     "@babel/core": 7.15.8
@@ -3659,9 +3659,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-stripe@workspace:packages/connections/connectionStripe":
+"@lowdefy/connection-stripe@workspace:packages/connections/stripe":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/connection-stripe@workspace:packages/connections/connectionStripe"
+  resolution: "@lowdefy/connection-stripe@workspace:packages/connections/stripe"
   dependencies:
     "@babel/cli": 7.15.7
     "@babel/core": 7.15.8
