@@ -3560,7 +3560,6 @@ __metadata:
     "@babel/core": 7.15.8
     "@babel/preset-env": 7.15.8
     "@lowdefy/ajv": 3.22.0
-    "@lowdefy/helpers": 3.22.0
     aws-sdk: 2.1021.0
     babel-jest: 27.3.1
     jest: 26.6.3
@@ -3638,6 +3637,23 @@ __metadata:
     jest: 26.6.3
     mongodb: 3.7.3
     saslprep: 1.0.3
+  peerDependencies:
+    "@lowdefy/api": 3.22.0
+  languageName: unknown
+  linkType: soft
+
+"@lowdefy/connection-stripe@workspace:packages/connections/connectionStripe":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/connection-stripe@workspace:packages/connections/connectionStripe"
+  dependencies:
+    "@babel/cli": 7.15.7
+    "@babel/core": 7.15.8
+    "@babel/preset-env": 7.15.8
+    "@lowdefy/ajv": 3.22.0
+    "@lowdefy/helpers": 3.22.0
+    babel-jest: 27.3.1
+    jest: 26.6.3
+    stripe: 8.186.0
   peerDependencies:
     "@lowdefy/api": 3.22.0
   languageName: unknown
@@ -20200,6 +20216,16 @@ resolve@^2.0.0-next.3:
     "@types/node": ">=8.1.0"
     qs: ^6.6.0
   checksum: 3c34c40fe0f3b00ca60e59c30e9720fc075b646b63620f9858a18a4f958d86bcf05fcce09fcfb915dc13e2d1fb1489f182571394eaa5800790a1cc97633c999d
+  languageName: node
+  linkType: hard
+
+"stripe@npm:8.186.0":
+  version: 8.186.0
+  resolution: "stripe@npm:8.186.0"
+  dependencies:
+    "@types/node": ">=8.1.0"
+    qs: ^6.6.0
+  checksum: 82fb9b48d0d3465dc3c7a6751247ed0b74fbbea47e510c5dc032597246d82c855d90dfe3068bdee0c4ed1b00a524402b74bfb744d816f8301896546b1b416f36
   languageName: node
   linkType: hard
 

@@ -95,6 +95,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/connections/connectionMongoDB"
       },
       {
+        "name": "@lowdefy/connection-stripe",
+        "reference": "workspace:packages/connections/connectionStripe"
+      },
+      {
         "name": "@lowdefy/docs",
         "reference": "workspace:packages/docs"
       },
@@ -183,6 +187,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@lowdefy/connection-elasticsearch", ["workspace:packages/connections/connectionElasticsearch"]],
       ["@lowdefy/connection-knex", ["workspace:packages/connections/connectionKnex"]],
       ["@lowdefy/connection-mongodb", ["workspace:packages/connections/connectionMongoDB"]],
+      ["@lowdefy/connection-stripe", ["workspace:packages/connections/connectionStripe"]],
       ["@lowdefy/docs", ["workspace:packages/docs"]],
       ["@lowdefy/engine", ["workspace:packages/engine"]],
       ["@lowdefy/format", ["workspace:packages/format"]],
@@ -5167,7 +5172,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/core", "npm:7.15.8"],
             ["@babel/preset-env", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:7.15.8"],
             ["@lowdefy/ajv", "workspace:packages/ajv"],
-            ["@lowdefy/helpers", "workspace:packages/helpers"],
             ["aws-sdk", "npm:2.1021.0"],
             ["babel-jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"],
             ["jest", "npm:26.6.3"]
@@ -5266,6 +5270,23 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest", "npm:26.6.3"],
             ["mongodb", "virtual:9f5c807fb51d800a8ec46997510c4bec7f3dd09293f4424e4cde4cdf03a9f5b427aae5ea45bb7e2a13d31f679ab4b574e1578f241361e60b307cd9910849d0a8#npm:3.6.5"],
             ["saslprep", "npm:1.0.3"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@lowdefy/connection-stripe", [
+        ["workspace:packages/connections/connectionStripe", {
+          "packageLocation": "./packages/connections/connectionStripe/",
+          "packageDependencies": [
+            ["@lowdefy/connection-stripe", "workspace:packages/connections/connectionStripe"],
+            ["@babel/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:7.15.7"],
+            ["@babel/core", "npm:7.15.8"],
+            ["@babel/preset-env", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:7.15.8"],
+            ["@lowdefy/ajv", "workspace:packages/ajv"],
+            ["@lowdefy/helpers", "workspace:packages/helpers"],
+            ["babel-jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"],
+            ["jest", "npm:26.6.3"],
+            ["stripe", "npm:8.186.0"]
           ],
           "linkType": "SOFT",
         }]
@@ -26739,6 +26760,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/stripe-npm-8.184.0-8a19345ec8-3c34c40fe0.zip/node_modules/stripe/",
           "packageDependencies": [
             ["stripe", "npm:8.184.0"],
+            ["@types/node", "npm:16.11.6"],
+            ["qs", "npm:6.10.1"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:8.186.0", {
+          "packageLocation": "./.yarn/cache/stripe-npm-8.186.0-8cf12459a8-82fb9b48d0.zip/node_modules/stripe/",
+          "packageDependencies": [
+            ["stripe", "npm:8.186.0"],
             ["@types/node", "npm:16.11.6"],
             ["qs", "npm:6.10.1"]
           ],
