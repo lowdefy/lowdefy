@@ -14,32 +14,27 @@
   limitations under the License.
 */
 
-import ColorSelector from './blocks/ColorSelector/ColorSelector';
-import ChromeColorSelector from './blocks/ChromeColorSelector/ChromeColorSelector';
-import CircleColorSelector from './blocks/CircleColorSelector/CircleColorSelector';
-import CompactColorSelector from './blocks/CompactColorSelector/CompactColorSelector';
-import GithubColorSelector from './blocks/GithubColorSelector/GithubColorSelector';
-import SliderColorSelector from './blocks/SliderColorSelector/SliderColorSelector';
-import SwatchesColorSelector from './blocks/SwatchesColorSelector/SwatchesColorSelector';
-import TwitterColorSelector from './blocks/TwitterColorSelector/TwitterColorSelector';
+import ColorSelector from './blocks/ColorSelector';
+import ChromeColorSelector from './blocks/ChromeColorSelector';
+import CircleColorSelector from './blocks/CircleColorSelector';
+import CompactColorSelector from './blocks/CompactColorSelector';
+import GithubColorSelector from './blocks/GithubColorSelector';
+import SliderColorSelector from './blocks/SliderColorSelector';
+import SwatchesColorSelector from './blocks/SwatchesColorSelector';
+import TwitterColorSelector from './blocks/TwitterColorSelector';
 
-export {
-  ColorSelector,
-  ChromeColorSelector,
-  CircleColorSelector,
-  CompactColorSelector,
-  GithubColorSelector,
-  SliderColorSelector,
-  SwatchesColorSelector,
-  TwitterColorSelector,
-};
 export default {
-  ColorSelector,
-  ChromeColorSelector,
-  CircleColorSelector,
-  CompactColorSelector,
-  GithubColorSelector,
-  SliderColorSelector,
-  SwatchesColorSelector,
-  TwitterColorSelector,
+  blocks: {
+    ColorSelector,
+    ChromeColorSelector,
+    CircleColorSelector,
+    CompactColorSelector,
+    GithubColorSelector,
+    SliderColorSelector,
+    SwatchesColorSelector,
+    TwitterColorSelector,
+  },
+  import: {
+    styles: [],
+  },
 };
