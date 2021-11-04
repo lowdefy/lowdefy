@@ -3569,6 +3569,27 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@lowdefy/connection-knex@workspace:packages/connections/connectionKnex":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/connection-knex@workspace:packages/connections/connectionKnex"
+  dependencies:
+    "@babel/cli": 7.15.7
+    "@babel/core": 7.15.8
+    "@babel/preset-env": 7.15.8
+    "@lowdefy/ajv": 3.22.0
+    "@lowdefy/helpers": 3.22.0
+    babel-jest: 27.3.1
+    jest: 26.6.3
+    knex: 0.95.13
+    mssql: 7.2.1
+    mysql: 2.18.1
+    pg: 8.7.1
+    sqlite3: 5.0.2
+  peerDependencies:
+    "@lowdefy/api": 3.22.0
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/connection-mongodb@workspace:packages/connections/connectionMongoDB":
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-mongodb@workspace:packages/connections/connectionMongoDB"
@@ -3582,6 +3603,7 @@ __metadata:
     babel-jest: 27.3.1
     jest: 26.6.3
     mongodb: 3.7.3
+    saslprep: 1.0.3
   peerDependencies:
     "@lowdefy/api": 3.22.0
   languageName: unknown
@@ -7608,7 +7630,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"colorette@npm:^2.0.10, colorette@npm:^2.0.14, colorette@npm:^2.0.7":
+"colorette@npm:2.0.16, colorette@npm:^2.0.10, colorette@npm:^2.0.14, colorette@npm:^2.0.7":
   version: 2.0.16
   resolution: "colorette@npm:2.0.16"
   checksum: cd55596a3a2d1071c1a28eee7fd8a5387593ff1bd10a3e8d0a6221499311fe34a9f2b9272d77c391e0e003dcdc8934fb2f8d106e7ef1f7516f8060c901d41a27
@@ -13847,6 +13869,42 @@ __metadata:
   bin:
     knex: bin/cli.js
   checksum: a0a4451dad286e1bdec17380514e402d4b27130edb19775f4a41d5789e14811b4aaa52c0a359655cb7710aa456daa035df764d1086440e1756c2a2c4e71186b3
+  languageName: node
+  linkType: hard
+
+"knex@npm:0.95.13":
+  version: 0.95.13
+  resolution: "knex@npm:0.95.13"
+  dependencies:
+    colorette: 2.0.16
+    commander: ^7.1.0
+    debug: 4.3.2
+    escalade: ^3.1.1
+    esm: ^3.2.25
+    getopts: 2.2.5
+    interpret: ^2.2.0
+    lodash: ^4.17.21
+    pg-connection-string: 2.5.0
+    rechoir: 0.7.0
+    resolve-from: ^5.0.0
+    tarn: ^3.0.1
+    tildify: 2.0.0
+  peerDependenciesMeta:
+    mysql:
+      optional: true
+    mysql2:
+      optional: true
+    pg:
+      optional: true
+    pg-native:
+      optional: true
+    sqlite3:
+      optional: true
+    tedious:
+      optional: true
+  bin:
+    knex: bin/cli.js
+  checksum: 5d5dce81d35659028a24842ee873e885878da3ba445a7c2df2aa58e2cfa4ac9c157e5cb5fa8898a3d6e13aa87618f13323064021b5d5b7f57e1f9cab6c498235
   languageName: node
   linkType: hard
 

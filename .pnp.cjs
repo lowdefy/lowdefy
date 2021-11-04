@@ -79,6 +79,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/connections/connectionAxiosHttp"
       },
       {
+        "name": "@lowdefy/connection-knex",
+        "reference": "workspace:packages/connections/connectionKnex"
+      },
+      {
         "name": "@lowdefy/connection-mongodb",
         "reference": "workspace:packages/connections/connectionMongoDB"
       },
@@ -167,6 +171,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@lowdefy/client", ["workspace:packages/client"]],
       ["@lowdefy/color", ["workspace:packages/color"]],
       ["@lowdefy/connection-axios-http", ["virtual:c9d7c5a0f7602869dff02ed24b6a4fe62d4c9e4a4ede33ec34082ee9e4a5dd17f3e1bb396d56863e9bea8e8476d67351fe495fe7cebce9035a9e4de117e68169#workspace:packages/connections/connectionAxiosHttp", "workspace:packages/connections/connectionAxiosHttp"]],
+      ["@lowdefy/connection-knex", ["workspace:packages/connections/connectionKnex"]],
       ["@lowdefy/connection-mongodb", ["workspace:packages/connections/connectionMongoDB"]],
       ["@lowdefy/docs", ["workspace:packages/docs"]],
       ["@lowdefy/engine", ["workspace:packages/engine"]],
@@ -5181,6 +5186,27 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT",
         }]
       ]],
+      ["@lowdefy/connection-knex", [
+        ["workspace:packages/connections/connectionKnex", {
+          "packageLocation": "./packages/connections/connectionKnex/",
+          "packageDependencies": [
+            ["@lowdefy/connection-knex", "workspace:packages/connections/connectionKnex"],
+            ["@babel/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:7.15.7"],
+            ["@babel/core", "npm:7.15.8"],
+            ["@babel/preset-env", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:7.15.8"],
+            ["@lowdefy/ajv", "workspace:packages/ajv"],
+            ["@lowdefy/helpers", "workspace:packages/helpers"],
+            ["babel-jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"],
+            ["jest", "npm:26.6.3"],
+            ["knex", "virtual:b5c1c7d1991be9e6fe82b8301f4de135131f751d0562f4d25108ce22aaaf3d8d807579a2088e1ce8b2bfe6a2fa11f8c405da33ab95becb86c7023500f6a806ce#npm:0.95.13"],
+            ["mssql", "npm:7.2.1"],
+            ["mysql", "npm:2.18.1"],
+            ["pg", "virtual:dddca670fd0b7758fb2e1b1a3e18ac7ebd1ecd06ecdd7acec2b78bccf1d35802cb22904bfbb233b16515a81f5cb819421786d20887823d98022b367036c1ad51#npm:8.7.1"],
+            ["sqlite3", "virtual:dddca670fd0b7758fb2e1b1a3e18ac7ebd1ecd06ecdd7acec2b78bccf1d35802cb22904bfbb233b16515a81f5cb819421786d20887823d98022b367036c1ad51#npm:5.0.2"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
       ["@lowdefy/connection-mongodb", [
         ["workspace:packages/connections/connectionMongoDB", {
           "packageLocation": "./packages/connections/connectionMongoDB/",
@@ -5194,7 +5220,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@shelf/jest-mongodb", "virtual:9f5c807fb51d800a8ec46997510c4bec7f3dd09293f4424e4cde4cdf03a9f5b427aae5ea45bb7e2a13d31f679ab4b574e1578f241361e60b307cd9910849d0a8#npm:1.2.5"],
             ["babel-jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"],
             ["jest", "npm:26.6.3"],
-            ["mongodb", "virtual:9f5c807fb51d800a8ec46997510c4bec7f3dd09293f4424e4cde4cdf03a9f5b427aae5ea45bb7e2a13d31f679ab4b574e1578f241361e60b307cd9910849d0a8#npm:3.6.5"]
+            ["mongodb", "virtual:9f5c807fb51d800a8ec46997510c4bec7f3dd09293f4424e4cde4cdf03a9f5b427aae5ea45bb7e2a13d31f679ab4b574e1578f241361e60b307cd9910849d0a8#npm:3.6.5"],
+            ["saslprep", "npm:1.0.3"]
           ],
           "linkType": "SOFT",
         }]
@@ -19026,6 +19053,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
+        ["npm:0.95.13", {
+          "packageLocation": "./.yarn/cache/knex-npm-0.95.13-1f9d4ad519-5d5dce81d3.zip/node_modules/knex/",
+          "packageDependencies": [
+            ["knex", "npm:0.95.13"]
+          ],
+          "linkType": "SOFT",
+        }],
         ["virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:0.95.11", {
           "packageLocation": "./.yarn/__virtual__/knex-virtual-9b59a905b9/0/cache/knex-npm-0.95.11-54a974b836-a0a4451dad.zip/node_modules/knex/",
           "packageDependencies": [
@@ -19052,6 +19086,40 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packagePeers": [
             "mysql2",
             "mysql",
+            "pg",
+            "sqlite3",
+            "tedious"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:b5c1c7d1991be9e6fe82b8301f4de135131f751d0562f4d25108ce22aaaf3d8d807579a2088e1ce8b2bfe6a2fa11f8c405da33ab95becb86c7023500f6a806ce#npm:0.95.13", {
+          "packageLocation": "./.yarn/__virtual__/knex-virtual-5dfce725c8/0/cache/knex-npm-0.95.13-1f9d4ad519-5d5dce81d3.zip/node_modules/knex/",
+          "packageDependencies": [
+            ["knex", "virtual:b5c1c7d1991be9e6fe82b8301f4de135131f751d0562f4d25108ce22aaaf3d8d807579a2088e1ce8b2bfe6a2fa11f8c405da33ab95becb86c7023500f6a806ce#npm:0.95.13"],
+            ["colorette", "npm:2.0.16"],
+            ["commander", "npm:7.2.0"],
+            ["debug", "virtual:58c45d1abcfbfa1f01b5cd3e53439720ec2578dbff5c28038489c39241aed010924080812c1c0437781a7914d49dcd5ab8069f87498c3e84e93a3fb3ed6111b7#npm:4.3.2"],
+            ["escalade", "npm:3.1.1"],
+            ["esm", "npm:3.2.25"],
+            ["getopts", "npm:2.2.5"],
+            ["interpret", "npm:2.2.0"],
+            ["lodash", "npm:4.17.21"],
+            ["mysql", "npm:2.18.1"],
+            ["mysql2", null],
+            ["pg", "virtual:dddca670fd0b7758fb2e1b1a3e18ac7ebd1ecd06ecdd7acec2b78bccf1d35802cb22904bfbb233b16515a81f5cb819421786d20887823d98022b367036c1ad51#npm:8.7.1"],
+            ["pg-connection-string", "npm:2.5.0"],
+            ["pg-native", null],
+            ["rechoir", "npm:0.7.0"],
+            ["resolve-from", "npm:5.0.0"],
+            ["sqlite3", "virtual:dddca670fd0b7758fb2e1b1a3e18ac7ebd1ecd06ecdd7acec2b78bccf1d35802cb22904bfbb233b16515a81f5cb819421786d20887823d98022b367036c1ad51#npm:5.0.2"],
+            ["tarn", "npm:3.0.1"],
+            ["tedious", null],
+            ["tildify", "npm:2.0.0"]
+          ],
+          "packagePeers": [
+            "mysql2",
+            "mysql",
+            "pg-native",
             "pg",
             "sqlite3",
             "tedious"
