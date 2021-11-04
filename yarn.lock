@@ -3552,6 +3552,23 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@lowdefy/connection-aws@workspace:packages/connections/connectionAws":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/connection-aws@workspace:packages/connections/connectionAws"
+  dependencies:
+    "@babel/cli": 7.15.7
+    "@babel/core": 7.15.8
+    "@babel/preset-env": 7.15.8
+    "@lowdefy/ajv": 3.22.0
+    "@lowdefy/helpers": 3.22.0
+    aws-sdk: 2.1021.0
+    babel-jest: 27.3.1
+    jest: 26.6.3
+  peerDependencies:
+    "@lowdefy/api": 3.22.0
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/connection-axios-http@3.22.0, @lowdefy/connection-axios-http@workspace:packages/connections/connectionAxiosHttp":
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-axios-http@workspace:packages/connections/connectionAxiosHttp"
@@ -6438,6 +6455,23 @@ __metadata:
     uuid: 3.3.2
     xml2js: 0.4.19
   checksum: b4728bad6cffe0fe0691155d344c1235c1f0e7d62a2798f2ae0c094c4f7bbbbcb1173bea4170929fdc3899092feeaef5fea31582454de987c69c19ea1138ce17
+  languageName: node
+  linkType: hard
+
+"aws-sdk@npm:2.1021.0":
+  version: 2.1021.0
+  resolution: "aws-sdk@npm:2.1021.0"
+  dependencies:
+    buffer: 4.9.2
+    events: 1.1.1
+    ieee754: 1.1.13
+    jmespath: 0.15.0
+    querystring: 0.2.0
+    sax: 1.2.1
+    url: 0.10.3
+    uuid: 3.3.2
+    xml2js: 0.4.19
+  checksum: 057bb0cc7571bfb3e66f7dfc437d369e2abb8af966bfc02f8ccff74a4dec98768cfe8b4eac9179c93d8d9a5986362289f298b31fcb9addeda8d2432736a1ab15
   languageName: node
   linkType: hard
 
