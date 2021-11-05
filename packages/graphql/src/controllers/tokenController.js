@@ -72,6 +72,8 @@ class TokenController {
 
   async issueOpenIdStateToken({ input, pageId, urlQuery }) {
     const { JWT_SECRET } = await this.getSecrets();
+    const appConfig = await this.componentLoader.load('config');
+    const { loginStateExpiresIn } = get(appConfig, 'auth.jwt', { default: {} });
     return jwt.sign(
       {
         input,
@@ -81,7 +83,7 @@ class TokenController {
       },
       JWT_SECRET,
       {
-        expiresIn: '5min',
+        expiresIn: loginStateExpiresIn || '5min',
         audience: this.host,
         issuer: this.host,
       }
