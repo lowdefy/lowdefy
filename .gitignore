@@ -16,7 +16,10 @@
 
 .DS_Store
 
-packages/express/config/**
 packages/build/src/test/writeFile.txt
+
 packages/graphql/globalConfig.json
 packages/graphql/node_modules/**
+
+packages/connections/mongodb/mongod-*
+packages/connections/mongodb/globalConfig.json
