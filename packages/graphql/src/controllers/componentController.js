@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { get } from '@lowdefy/helpers';
+import { get, type } from '@lowdefy/helpers';
 
 class ComponentController {
   constructor({ getController, getLoader }) {
@@ -53,7 +53,7 @@ class ComponentController {
     return menuList
       .map((item) => {
         if (item.type === 'MenuLink') {
-          if (item.pageId === initPageId) {
+          if (!type.isNone(initPageId) && item.pageId === initPageId) {
             return null;
           }
           if (this.authorizationController.authorize(item)) {
@@ -63,7 +63,8 @@ class ComponentController {
         }
         if (item.type === 'MenuGroup') {
           const filteredSubItems = this.filterMenuList({
-            menuList: get(item, 'links', { default: [] }),
+            menuList: get(item, 'links', { default: [] },),
+            initPageId: initPageId,
           });
           if (filteredSubItems.length > 0) {
             return {
@@ -79,8 +80,8 @@ class ComponentController {
 
   async getInitPageId() {
     const configData = await this.componentLoader.load('config');
-    if (configData && get(configData, 'initPageId')) {
-      return get(configData, 'initPageId');
+    if (configData && get(configData, 'experimental_initPageId')) {
+      return get(configData, 'experimental_initPageId');
     } else {
       return null;
     }

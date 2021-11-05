@@ -62,7 +62,7 @@ test('getMenus, menus not found', async () => {
   });
   const controller = createComponentController(context);
   const res = await controller.getMenus();
-  expect(res).toEqual({ menus: [], homePageId: null });
+  expect(res).toEqual({ menus: [], homePageId: null, initPageId: null });
 });
 
 test('getMenus, menu with configured home page id', async () => {
@@ -124,6 +124,7 @@ test('getMenus, menu with configured home page id', async () => {
       },
     ],
     homePageId: 'homePageId',
+    initPageId: null,
   });
 });
 
@@ -168,6 +169,7 @@ test('getMenus, get homePageId at first level', async () => {
       },
     ],
     homePageId: 'page',
+    initPageId: null,
   });
 });
 
@@ -228,6 +230,7 @@ test('getMenus, get homePageId at second level', async () => {
       },
     ],
     homePageId: 'page',
+    initPageId: null,
   });
 });
 
@@ -304,6 +307,7 @@ test('getMenus, get homePageId at third level', async () => {
       },
     ],
     homePageId: 'page',
+    initPageId: null,
   });
 });
 
@@ -348,6 +352,7 @@ test('getMenus, no default menu, no configured homepage', async () => {
       },
     ],
     homePageId: 'page',
+    initPageId: null,
   });
 });
 
@@ -416,6 +421,7 @@ test('getMenus, more than 1 menu, no configured homepage', async () => {
       },
     ],
     homePageId: 'default-page',
+    initPageId: null,
   });
 });
 
@@ -444,6 +450,7 @@ test('getMenus, default menu has no links', async () => {
       },
     ],
     homePageId: null,
+    initPageId: null,
   });
 });
 
@@ -527,6 +534,7 @@ describe('filter menus', () => {
         },
       ],
       homePageId: null,
+      initPageId: null,
     });
   });
 
@@ -655,6 +663,7 @@ describe('filter menus', () => {
         },
       ],
       homePageId: 'page',
+      initPageId: null,
     });
   });
 
@@ -737,6 +746,7 @@ describe('filter menus', () => {
     const res = await controller.getMenus();
     expect(res).toEqual({
       homePageId: 'page',
+      initPageId: null,
       menus: [
         {
           links: [
@@ -776,6 +786,202 @@ describe('filter menus', () => {
       ],
     });
   });
+
+  test('Init page defined', async () => {
+    mockLoadComponent.mockImplementation((id) => {
+      if (id === 'menus') {
+        return [
+          {
+            menuId: 'default',
+            links: [
+              {
+                id: 'menuitem:default:1',
+                menuItemId: '1',
+                type: 'MenuLink',
+                pageId: 'initPage',
+                auth: { public: true },
+              },
+              {
+                id: 'menuitem:default:2',
+                menuItemId: '2',
+                type: 'MenuGroup',
+                links: [
+                  {
+                    id: 'menuitem:default:3',
+                    menuItemId: '3',
+                    type: 'MenuLink',
+                    pageId: 'initPage',
+                    auth: { public: true },
+                  },
+                  {
+                    id: 'menuitem:default:4',
+                    menuItemId: '4',
+                    type: 'MenuGroup',
+                    links: [
+                      {
+                        id: 'menuitem:default:5',
+                        menuItemId: '5',
+                        type: 'MenuLink',
+                        pageId: 'initPage',
+                        auth: { public: true },
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            menuId: 'other',
+            links: [
+              {
+                id: 'menuitem:other:1',
+                menuItemId: '1',
+                type: 'MenuLink',
+                pageId: 'initPage',
+                auth: { public: true },
+              },
+            ],
+          },
+        ];
+      }
+      if (id === 'config') {
+        return {
+          experimental_initPageId: 'initPage',
+        };
+      }
+      return null;
+    });
+    const controller = createComponentController(context);
+    const res = await controller.getMenus();
+    expect(res).toEqual({
+      menus: [
+        {
+          menuId: 'default',
+          links: [],
+        },
+        {
+          menuId: 'other',
+          links: [],
+        },
+      ],
+      homePageId: null,
+      initPageId: 'initPage',
+    });
+  });
+
+  test('Nested init page defined', async () => {
+    mockLoadComponent.mockImplementation((id) => {
+      if (id === 'menus') {
+        return [
+          {
+            menuId: 'default',
+            links: [
+              {
+                id: 'menuitem:default:1',
+                menuItemId: '1',
+                type: 'MenuLink',
+                pageId: 'page',
+                auth: { public: true },
+              },
+              {
+                id: 'menuitem:default:2',
+                menuItemId: '2',
+                type: 'MenuGroup',
+                links: [
+                  {
+                    id: 'menuitem:default:3',
+                    menuItemId: '3',
+                    type: 'MenuLink',
+                    pageId: 'page',
+                    auth: { public: true },
+                  },
+                  {
+                    id: 'menuitem:default:4',
+                    menuItemId: '4',
+                    type: 'MenuGroup',
+                    links: [
+                      {
+                        id: 'menuitem:default:5',
+                        menuItemId: '5',
+                        type: 'MenuLink',
+                        pageId: 'initPage',
+                        auth: { public: true },
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            menuId: 'other',
+            links: [
+              {
+                id: 'menuitem:other:1',
+                menuItemId: '1',
+                type: 'MenuLink',
+                pageId: 'page',
+                auth: { public: true },
+              },
+            ],
+          },
+        ];
+      }
+      if (id === 'config') {
+        return {
+          experimental_initPageId: 'initPage',
+        };
+      }
+      return null;
+    });
+    const controller = createComponentController(context);
+    const res = await controller.getMenus();
+    expect(res).toEqual({
+      menus: [
+        {
+          menuId: 'default',
+          links: [
+            {
+              id: 'menuitem:default:1',
+              menuItemId: '1',
+              type: 'MenuLink',
+              pageId: 'page',
+              auth: { public: true },
+            },
+            {
+              id: 'menuitem:default:2',
+              menuItemId: '2',
+              type: 'MenuGroup',
+              links: [
+                {
+                  id: 'menuitem:default:3',
+                  menuItemId: '3',
+                  type: 'MenuLink',
+                  pageId: 'page',
+                  auth: { public: true },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          menuId: 'other',
+          links: [
+            {
+              id: 'menuitem:other:1',
+              menuItemId: '1',
+              type: 'MenuLink',
+              pageId: 'page',
+              auth: { public: true },
+            },
+          ],
+        },
+      ],
+      homePageId: 'page',
+      initPageId: 'initPage',
+    });
+  });
 });
 
 test('Filter invalid menu item types', async () => {
@@ -805,6 +1011,7 @@ test('Filter invalid menu item types', async () => {
   const res = await controller.getMenus();
   expect(res).toEqual({
     homePageId: null,
+    initPageId: null,
     menus: [
       {
         menuId: 'default',

@@ -21,7 +21,7 @@ import { useParams, useHistory, useLocation, Redirect } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
 
 import { Loading } from '@lowdefy/block-tools';
-import { get, urlQuery } from '@lowdefy/helpers';
+import { get, urlQuery, type } from '@lowdefy/helpers';
 import { makeContextId } from '@lowdefy/engine';
 
 import Block from './block/Block';
@@ -42,10 +42,10 @@ const PageContext = (pageArgs) => {
   const { search = useLocation().search } = pageArgs;
 
   if (
-    initEventsTriggered &&
-    lowdefy.pageId &&
+    type.isFunction(initEventsTriggered) &&
+    !type.isNone(lowdefy.pageId) &&
     lowdefy.pageId !== pageId &&
-    lowdefy.pageId != lowdefy.initPageId
+    lowdefy.pageId !== lowdefy.initPageId
   ) {
     initEventsTriggered(false);
   }

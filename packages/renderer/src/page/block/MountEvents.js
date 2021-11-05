@@ -15,6 +15,7 @@
 */
 
 import React, { useEffect, useState } from 'react';
+import { type } from '@lowdefy/helpers';
 
 const MountEvents = ({
   asyncEventName,
@@ -35,7 +36,7 @@ const MountEvents = ({
           triggerEvent({ name: asyncEventName, context });
           setLoading(false);
         }
-        if (initEventsTriggered) {
+        if (type.isFunction(initEventsTriggered)) {
           initEventsTriggered(true);
         }
       } catch (err) {

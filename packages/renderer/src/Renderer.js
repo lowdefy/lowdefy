@@ -19,7 +19,7 @@ import { BrowserRouter, Route, Redirect, Switch, useLocation } from 'react-route
 import { ApolloProvider, useQuery, gql } from '@apollo/client';
 
 import { ErrorBoundary, Loading } from '@lowdefy/block-tools';
-import { get } from '@lowdefy/helpers';
+import { get, type } from '@lowdefy/helpers';
 
 import useGqlClient from './utils/graphql/useGqlClient';
 import createLogin from './utils/auth/createLogin';
@@ -130,7 +130,7 @@ const PageLoader = ({ lowdefy }) => {
   const { initPageId } = lowdefy;
   const [initEventsTriggered, setInitEventsTriggered] = useState(false);
 
-  if (!initPageId || initEventsTriggered) {
+  if (!type.isNone(initPageId) || initEventsTriggered) {
     return <Page lowdefy={lowdefy} initEventsTriggered={setInitEventsTriggered} />;
   } else {
     return (
