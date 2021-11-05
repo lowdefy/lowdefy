@@ -178,7 +178,7 @@ describe('openId state tokens', () => {
     mockLoadComponent.mockImplementationOnce(() => ({
       auth: {
         jwt: {
-          stateExpiresIn: '12h',
+          loginStateExpiresIn: '12h',
         },
       },
     }));

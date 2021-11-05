@@ -170,12 +170,12 @@
                 "type": "App \"config.auth.jwt.expiresIn\" should be a string or number."
               }
             },
-            "stateExpiresIn": {
+            "loginStateExpiresIn": {
               "type": ["string", "number"],
               "default": "5min",
               "description": "The length of time an authorization request token should be valid. Can be expressed as a number in seconds, or a vercel/ms string (https://github.com/vercel/ms)",
               "errorMessage": {
-                "type": "App \"config.auth.jwt.stateExpiresIn\" should be a string or number."
+                "type": "App \"config.auth.jwt.loginStateExpiresIn\" should be a string or number."
               }
             }
           }
