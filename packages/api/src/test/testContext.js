@@ -18,8 +18,15 @@ import createAuthorize from '../context/createAuthorize';
 
 function testContext({
   config = {},
+  connections = {},
   headers = {},
   host = 'host',
+  logger = {
+    debug: () => {},
+    error: () => {},
+    info: () => {},
+    warn: () => {},
+  },
   readConfigFile,
   roles,
   secrets = {},
@@ -32,8 +39,10 @@ function testContext({
     authenticated,
     authorize: createAuthorize({ authenticated, roles }),
     config,
+    connections,
     headers,
     host,
+    logger,
     protocol,
     readConfigFile,
     secrets,

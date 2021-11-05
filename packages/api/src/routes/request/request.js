@@ -36,13 +36,11 @@ async function request(context, { pageId, payload, requestId }) {
 
   const connectionHandler = getConnectionHandler(context, { connectionConfig });
   const requestHandler = getRequestHandler(context, { connectionHandler, requestConfig });
-
   const { connectionProperties, requestProperties } = await evaluateOperators(context, {
     connectionConfig,
     payload: serializer.deserialize(payload),
     requestConfig,
   });
-
   checkConnectionRead(context, {
     connectionConfig,
     connectionProperties,
@@ -62,17 +60,16 @@ async function request(context, { pageId, payload, requestId }) {
     requestHandler,
     requestProperties,
   });
-
   const response = await callRequestResolver(context, {
     connectionProperties,
-    requestProperties,
+    requestConfig,
     requestHandler,
+    requestProperties,
   });
-
   return {
-    id: request.id,
+    id: requestConfig.id,
     success: true,
-    type: request.type,
+    type: requestConfig.type,
     response: serializer.serialize(response),
   };
 }
