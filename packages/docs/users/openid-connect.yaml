@@ -72,6 +72,7 @@ _ref:
 
             Optional configuration can also be set in the Lowdefy configuration, at the path `config.auth.jwt`. The following fields can be set:
 
+            - `stateExpiresIn: string | number`: The length of time an authorization request token should be valid. The default is 5 minutes. If you expect the user will not log-in immediately then you may want to increase this parameter.  Can be expressed as a number in seconds, or a [vercel/ms string](https://github.com/vercel/ms).
             - `expiresIn: string | number`: The length of time a user token should be valid. The default is 4 hours. Can be expressed as a number in seconds, or a [vercel/ms string](https://github.com/vercel/ms).
 
       - _ref:
