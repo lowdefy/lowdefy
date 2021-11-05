@@ -174,6 +174,33 @@ describe('openId state tokens', () => {
     });
   });
 
+  test('issueOpenIdStateToken, configure token expiry', async () => {
+    mockLoadComponent.mockImplementationOnce(() => ({
+      auth: {
+        jwt: {
+          loginStateExpiresIn: '12h',
+        },
+      },
+    }));
+    const tokenController = createTokenController(context);
+    const stateToken = await tokenController.issueOpenIdStateToken(openIdStateLocation);
+    const claims = jwt.verify(stateToken, 'JWT_SECRET', {
+      algorithms: ['HS256'],
+      audience: 'host',
+      issuer: 'host',
+    });
+    expect(claims).toEqual({
+      aud: 'host',
+      exp: 43201, // 12 hours
+      iat: 1,
+      input: { i: true },
+      iss: 'host',
+      lowdefy_openid_state_token: true,
+      pageId: 'pageId',
+      urlQuery: { u: true },
+    });
+  });
+
   test('issueOpenIdStateToken, no location data', async () => {
     const tokenController = createTokenController(context);
     const stateToken = await tokenController.issueOpenIdStateToken({});
