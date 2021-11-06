@@ -15,21 +15,9 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { Anchor } from 'antd';
 
 import AnchorBlock from './Anchor';
 import examples from './examples.yaml';
 import meta from './index';
 
-jest.mock('antd/lib/anchor', () => {
-  return jest.fn(() => 'mocked');
-});
-
-const mocks = [
-  {
-    name: 'default',
-    fn: Anchor,
-  },
-];
-
-runMockRenderTests({ examples, Block: AnchorBlock, meta, mocks });
+runMockRenderTests({ examples, Block: AnchorBlock, meta });

@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import Anchor from './blocks/Anchor';
 import Box from './blocks/Box';
 import DangerousHtml from './blocks/DangerousHtml';
 import Html from './blocks/Html';
@@ -23,6 +24,7 @@ import Span from './blocks/Span';
 
 export default {
   blocks: {
+    Anchor,
     Box,
     DangerousHtml,
     Html,

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-// TODO move to basic, use link
+// TODO move to basic, use link, fix icon
 import React from 'react';
 import { get, type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-tools';

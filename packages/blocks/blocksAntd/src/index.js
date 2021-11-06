@@ -16,7 +16,6 @@
 
 import Affix from './blocks/Affix';
 import Alert from './blocks/Alert';
-import Anchor from './blocks/Anchor';
 import AutoComplete from './blocks/AutoComplete';
 import Avatar from './blocks/Avatar';
 import Badge from './blocks/Badge';
@@ -87,7 +86,6 @@ export const blocks = {
   types: {
     Affix,
     Alert,
-    Anchor,
     AutoComplete,
     Avatar,
     Badge,
