@@ -16,8 +16,8 @@
 
 import React, { useState } from 'react';
 import { ChromePicker } from 'react-color';
-import { Label } from '@lowdefy/blocks-antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
+import Label from '@lowdefy/blocks-antd/blocks/Label/Label';
 
 const Selector = ({ blockId, loading, methods, properties, required, validation, value }) => {
   const [color, setColor] = useState(value || properties.defaultColor || '#000000');

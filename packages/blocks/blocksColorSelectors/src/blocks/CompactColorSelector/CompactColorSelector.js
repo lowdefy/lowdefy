@@ -16,8 +16,8 @@
 
 import React from 'react';
 import { CompactPicker } from 'react-color';
-import { Label } from '@lowdefy/blocks-antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
+import Label from '@lowdefy/blocks-antd/blocks/Label/Label';
 
 const Selector = ({ blockId, loading, methods, properties, required, validation, value }) => {
   return (

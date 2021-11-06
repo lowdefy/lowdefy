@@ -21,6 +21,5 @@ import examples from './examples.yaml';
 import meta from './index';
 import schema from './schema.json';
 
-// FIX: Error: Not implemented: HTMLCanvasElement.prototype.getContext (without installing the canvas npm package)
-// runRenderTests({ examples, Block: ChromeColorSelector, meta });
+runRenderTests({ examples, Block, meta });
 runBlockSchemaTests({ examples, meta, schema });

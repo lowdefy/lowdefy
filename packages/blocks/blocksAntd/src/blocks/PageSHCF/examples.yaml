@@ -1,3 +1,17 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 - id: default
   type: PageSHCF
 - id: areas.content
@@ -20,7 +34,7 @@
   areas:
     sider:
       blocks: []
-- id: "properties.header.theme: light - dark is default"
+- id: 'properties.header.theme: light - dark is default'
   type: PageSHCF
   properties:
     header:
@@ -35,7 +49,7 @@
     sider:
       blocks: []
 # sider.theme not in js or json, but working in example and docs
-- id: "properties.sider.theme: light - dark is default"
+- id: 'properties.sider.theme: light - dark is default'
   type: PageSHCF
   properties:
     sider:
@@ -49,11 +63,11 @@
       blocks: []
     sider:
       blocks: []
-- id: "properties.header.color: #4432a8 "
+- id: 'properties.header.color: #4432a8 '
   type: PageSHCF
   properties:
     header:
-      color: "#4432a8"
+      color: '#4432a8'
   areas:
     content:
       blocks: []
@@ -63,7 +77,7 @@
       blocks: []
     sider:
       blocks: []
-- id: "properties.style: border: 5px solid blue"
+- id: 'properties.style: border: 5px solid blue'
   type: PageHCSF
   properties:
     style:
@@ -77,7 +91,7 @@
       blocks: []
     sider:
       blocks: []
-- id: "properties.content.style: border: 5px solid blue"
+- id: 'properties.content.style: border: 5px solid blue'
   type: PageHCSF
   properties:
     content:
@@ -92,7 +106,7 @@
       blocks: []
     sider:
       blocks: []
-- id: "properties.header.style: border: 5px solid blue"
+- id: 'properties.header.style: border: 5px solid blue'
   type: PageHCSF
   properties:
     header:
@@ -107,7 +121,7 @@
       blocks: []
     sider:
       blocks: []
-- id: "properties.footer.style: border: 5px solid blue"
+- id: 'properties.footer.style: border: 5px solid blue'
   type: PageHCSF
   properties:
     footer:
@@ -122,7 +136,7 @@
       blocks: []
     sider:
       blocks: []
-- id: "properties.sider.style: border: 5px solid blue"
+- id: 'properties.sider.style: border: 5px solid blue'
   type: PageHCSF
   properties:
     sider:
@@ -137,7 +151,7 @@
       blocks: []
     sider:
       blocks: []
-- id: "properties.main.style: border: 5px solid blue"
+- id: 'properties.main.style: border: 5px solid blue'
   type: PageHCSF
   properties:
     main:

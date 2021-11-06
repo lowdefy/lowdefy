@@ -80,8 +80,11 @@ import TitleInput from './blocks/TitleInput';
 import Tooltip from './blocks/Tooltip';
 import WeekSelector from './blocks/WeekSelector';
 
-export default {
-  blocks: {
+export const blocks = {
+  import: {
+    styles: ['style.less'],
+  },
+  types: {
     Affix,
     Alert,
     Anchor,
@@ -148,7 +151,8 @@ export default {
     Tooltip,
     WeekSelector,
   },
-  import: {
-    styles: ['style.less'],
-  },
+};
+
+export default {
+  blocks,
 };

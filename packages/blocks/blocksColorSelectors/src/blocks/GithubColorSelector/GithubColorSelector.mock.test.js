@@ -15,11 +15,8 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { GithubPicker } from 'react-color';
 
-Enzyme.configure({ adapter: new Adapter() });
 import GithubColorSelectorBlock from './GithubColorSelector';
 import examples from './examples.yaml';
 import meta from './index';
@@ -38,4 +35,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: GithubColorSelectorBlock, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: GithubColorSelectorBlock, meta, mocks });
