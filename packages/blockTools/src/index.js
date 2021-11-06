@@ -17,18 +17,11 @@
 import blockDefaultProps from './blockDefaultProps';
 import ErrorBoundary from './ErrorBoundary';
 import HtmlComponent from './HtmlComponent';
-import IconSpinner from './Spinner/IconSpinner';
 import Loading from './Loading';
 import loadWebpackFederatedModule from './loadWebpackFederatedModule';
 import makeCssClass from './makeCssClass.js';
 import mediaToCssObject from './mediaToCssObject.js';
 import renderHtml from './renderHtml';
-import Skeleton from './Skeleton/Skeleton';
-import SkeletonAvatar from './Skeleton/SkeletonAvatar';
-import SkeletonButton from './Skeleton/SkeletonButton';
-import SkeletonInput from './Skeleton/SkeletonInput';
-import SkeletonParagraph from './Skeleton/SkeletonParagraph';
-import Spinner from './Spinner/Spinner';
 import useDynamicScript from './useDynamicScript';
 import useRunAfterUpdate from './useRunAfterUpdate';
 
@@ -36,18 +29,11 @@ export {
   blockDefaultProps,
   ErrorBoundary,
   HtmlComponent,
-  IconSpinner,
   Loading,
   loadWebpackFederatedModule,
   makeCssClass,
   mediaToCssObject,
   renderHtml,
-  Skeleton,
-  SkeletonAvatar,
-  SkeletonButton,
-  SkeletonInput,
-  SkeletonParagraph,
-  Spinner,
   useDynamicScript,
   useRunAfterUpdate,
 };
