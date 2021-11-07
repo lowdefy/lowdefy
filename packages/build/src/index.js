@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -14,6 +16,76 @@
   limitations under the License.
 */
 
-import build from './build';
+import packageJson from '../package.json';
+
+import createGetMeta from './utils/meta/getMeta';
+import createWriteBuildArtifact from './utils/files/writeBuildArtifact';
+import createReadConfigFile from './utils/files/readConfigFile';
+
+import addDefaultPages from './build/addDefaultPages/addDefaultPages';
+import buildAuth from './build/buildAuth/buildAuth';
+import buildConnections from './build/buildConnections';
+import buildMenu from './build/buildMenu';
+import buildPages from './build/buildPages/buildPages';
+import buildRefs from './build/buildRefs/buildRefs';
+import cleanBuildDirectory from './build/cleanBuildDirectory';
+import testSchema from './build/testSchema';
+import validateApp from './build/validateApp';
+import validateConfig from './build/validateConfig';
+import writeApp from './build/writeApp';
+import writeConfig from './build/writeConfig';
+import writeConnections from './build/writeConnections';
+import writeGlobal from './build/writeGlobal';
+import writeHtml from './build/writeHtml/writeHtml';
+import writeMenus from './build/writeMenus';
+import writePages from './build/writePages';
+import writeRequests from './build/writeRequests';
+
+function createContext(options) {
+  const { blocksServerUrl, buildDirectory, cacheDirectory, configDirectory, logger, refResolver } =
+    options;
+  const context = {
+    blocksServerUrl,
+    buildDirectory,
+    cacheDirectory,
+    configDirectory,
+    logger,
+    readConfigFile: createReadConfigFile({ configDirectory }),
+    refResolver,
+    version: packageJson.version,
+    writeBuildArtifact: createWriteBuildArtifact({ buildDirectory }),
+  };
+  return context;
+}
+
+async function build(options) {
+  const context = createContext(options);
+  try {
+    let components = await buildRefs({ context });
+    await testSchema({ components, context });
+    context.getMeta = createGetMeta({ components, context });
+    await validateApp({ components, context });
+    await validateConfig({ components, context });
+    await addDefaultPages({ components, context });
+    await buildAuth({ components, context });
+    await buildConnections({ components, context });
+    await buildPages({ components, context });
+    await buildMenu({ components, context });
+    await cleanBuildDirectory({ context });
+    await writeApp({ components, context });
+    await writeConnections({ components, context });
+    await writeRequests({ components, context });
+    await writePages({ components, context });
+    await writeHtml({ components, context });
+    await writeConfig({ components, context });
+    await writeGlobal({ components, context });
+    await writeMenus({ components, context });
+  } catch (error) {
+    context.logger.error(error);
+    throw error;
+  }
+}
+
+export { createContext };
 
 export default build;
