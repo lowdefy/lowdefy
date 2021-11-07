@@ -8,4 +8,7 @@ module.exports = {
   errorOnDeprecated: true,
   testEnvironment: 'node',
   testPathIgnorePatterns: ['<rootDir>/dist/'],
+  transform: {
+    '^.+\\.(t|j)sx?$': ['@swc/jest', { configFile: '.swcrc.test' }],
+  },
 };
