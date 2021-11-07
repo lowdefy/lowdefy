@@ -35,9 +35,9 @@
   "scripts": {
     "build": "yarn clean && yarn swc",
     "clean": "rm -rf dist",
-    "test": "jest --coverage",
     "prepare": "yarn build",
-    "swc": "swc src --out-dir dist"
+    "swc": "swc src --out-dir dist",
+    "test": "jest --coverage"
   },
   "dependencies": {
     "@lowdefy/nunjucks": "3.22.0",
@@ -48,8 +48,7 @@
     "@swc/cli": "0.1.51",
     "@swc/core": "1.2.107",
     "@swc/jest": "0.2.5",
-    "jest": "27.3.1",
-    "jest-diff": "27.3.1"
+    "jest": "27.3.1"
   },
   "publishConfig": {
     "access": "public"

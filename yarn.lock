@@ -3208,7 +3208,6 @@ __metadata:
     ajv: 8.6.3
     ajv-errors: 3.0.0
     jest: 27.3.1
-    jest-diff: 27.3.1
   languageName: unknown
   linkType: soft
 
@@ -3216,23 +3215,18 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/api@workspace:packages/api"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
     "@lowdefy/ajv": 3.22.0
     "@lowdefy/helpers": 3.22.0
     "@lowdefy/node-utils": 3.22.0
     "@lowdefy/nunjucks": 3.22.0
     "@lowdefy/operators": 3.22.0
-    babel-jest: 27.3.1
-    babel-loader: 8.2.3
-    clean-webpack-plugin: 4.0.0
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
     cookie: 0.4.1
     jest: 27.3.1
     jsonwebtoken: 8.5.1
     openid-client: 4.9.1
-    webpack: 5.59.1
-    webpack-cli: 4.9.1
   languageName: unknown
   linkType: soft
 
