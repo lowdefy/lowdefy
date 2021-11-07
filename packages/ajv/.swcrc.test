@@ -1,0 +1,16 @@
+{
+  "jsc": {
+    "parser": {
+      "syntax": "ecmascript",
+      "jsx": true,
+      "dynamicImport": true
+    },
+    "target": "es2018",
+    "keepClassNames": true
+  },
+  "module": {
+    "type": "es6",
+    "noInterop": true,
+    "ignoreDynamic": true
+  }
+}

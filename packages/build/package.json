@@ -41,7 +41,7 @@
     "@lowdefy/helpers": "3.22.0",
     "@lowdefy/node-utils": "3.22.0",
     "@lowdefy/nunjucks": "3.22.0",
-    "ajv": "6.12.6",
+    "ajv": "8.6.3",
     "axios": "0.23.0",
     "js-yaml": "4.1.0",
     "json5": "2.2.0",

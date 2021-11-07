@@ -20,7 +20,6 @@ import createErrorMessage from './createErrorMessage';
 
 const ajv = new Ajv({
   allErrors: true,
-  jsonPointers: true,
 });
 
 ajvErrors(ajv);
