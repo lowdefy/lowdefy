@@ -33,7 +33,7 @@
     "clean": "rm -rf dist",
     "prepare": "yarn build",
     "start": "node run.js",
-    "swc": "swc src --out-dir dist",
+    "swc": "swc src --out-dir dist --config-file ../../.swcrc",
     "test": "jest --coverage"
   },
   "dependencies": {

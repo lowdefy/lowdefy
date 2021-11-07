@@ -34,7 +34,7 @@
     "build": "yarn clean && yarn swc",
     "clean": "rm -rf dist",
     "prepare": "yarn build",
-    "swc": "swc src --out-dir dist",
+    "swc": "swc src --out-dir dist --config-file ../../.swcrc",
     "test": "jest --coverage"
   },
   "dependencies": {

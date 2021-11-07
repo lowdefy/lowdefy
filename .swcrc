@@ -1,11 +1,12 @@
 {
+  "exclude": [".*.test.js$"],
   "jsc": {
     "parser": {
       "syntax": "ecmascript",
       "jsx": true,
       "dynamicImport": true
     },
-    "target": "es2018",
+    "target": "es2020",
     "keepClassNames": true
   },
   "module": {
