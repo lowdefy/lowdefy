@@ -20,6 +20,7 @@ import createErrorMessage from './createErrorMessage';
 
 const ajv = new Ajv({
   allErrors: true,
+  strict: false,
 });
 
 ajvErrors(ajv);

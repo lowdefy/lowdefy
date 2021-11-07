@@ -29,12 +29,12 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "yarn webpack",
+    "build": "yarn clean && yarn swc",
     "clean": "rm -rf dist",
     "prepare": "yarn build",
     "start": "node run.js",
-    "test": "jest --coverage",
-    "webpack": "webpack --config webpack.config.js"
+    "swc": "swc src --out-dir dist",
+    "test": "jest --coverage"
   },
   "dependencies": {
     "@lowdefy/ajv": "3.22.0",
@@ -48,15 +48,10 @@
     "uuid": "8.3.2"
   },
   "devDependencies": {
-    "@babel/cli": "7.15.7",
-    "@babel/core": "7.15.8",
-    "@babel/preset-env": "7.15.8",
-    "babel-jest": "27.3.1",
-    "babel-loader": "8.2.3",
-    "clean-webpack-plugin": "4.0.0",
-    "jest": "26.6.3",
-    "webpack": "5.59.1",
-    "webpack-cli": "4.9.1"
+    "@swc/cli": "0.1.51",
+    "@swc/core": "1.2.107",
+    "@swc/jest": "0.2.5",
+    "jest": "26.6.3"
   },
   "publishConfig": {
     "access": "public"

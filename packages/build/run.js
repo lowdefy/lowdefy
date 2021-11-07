@@ -14,12 +14,10 @@
   limitations under the License.
 */
 
-const path = require('path');
+import path from 'path';
+import build from './dist/index.js';
 
 async function run() {
-  // Doing weird things for webpack module federation.
-  // Webpack needs an async import to resolve shared dependencies.
-  const build = await require('./dist/index.js').default.then((module) => module.default);
   await build({
     // blocksServerUrl: 'https://blocks-cdn.lowdefy.com/v3.16.0',
     logger: console,

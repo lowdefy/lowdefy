@@ -14,6 +14,6 @@
   limitations under the License.
 */
 
-const build = import('./build');
+import build from './build';
 
 export default build;

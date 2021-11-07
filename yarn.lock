@@ -3492,24 +3492,19 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/build@workspace:packages/build"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
     "@lowdefy/ajv": 3.22.0
     "@lowdefy/helpers": 3.22.0
     "@lowdefy/node-utils": 3.22.0
     "@lowdefy/nunjucks": 3.22.0
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
     ajv: 8.6.3
     axios: 0.23.0
-    babel-jest: 27.3.1
-    babel-loader: 8.2.3
-    clean-webpack-plugin: 4.0.0
     jest: 26.6.3
     js-yaml: 4.1.0
     json5: 2.2.0
     uuid: 8.3.2
-    webpack: 5.59.1
-    webpack-cli: 4.9.1
   languageName: unknown
   linkType: soft
 
