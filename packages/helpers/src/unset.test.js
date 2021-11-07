@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import unset from '../src/unset';
+import unset from './unset';
 
 test('unset a.1.b', () => {
   const obj = {

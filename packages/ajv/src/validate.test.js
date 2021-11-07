@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import validate from '../src/validate';
+import validate from './validate';
 
 test('Object matches schema', () => {
   const schema = {

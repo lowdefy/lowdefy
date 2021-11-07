@@ -16,7 +16,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import cleanDirectory from '../src/cleanDirectory';
+import cleanDirectory from './cleanDirectory';
 
 test('cleanDirectory', async () => {
   const dirPath = path.resolve(process.cwd(), 'test/cleanDirectory/');

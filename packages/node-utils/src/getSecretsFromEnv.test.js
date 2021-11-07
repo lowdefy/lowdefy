@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getSecretsFromEnv from '../src/getSecretsFromEnv';
+import getSecretsFromEnv from './getSecretsFromEnv';
 
 const realEnv = process.env;
 

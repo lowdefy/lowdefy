@@ -20,7 +20,7 @@
 // https://www.npmjs.com/package/get-value
 
 import diff from 'jest-diff';
-import get from '../src/get';
+import get from './get';
 
 const expectToEqual = (result, value) => {
   expect(result).toEqual(value);

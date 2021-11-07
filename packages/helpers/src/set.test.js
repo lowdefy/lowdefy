@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import typeTest from '../src/type';
-import set, { split } from '../src/set';
+import typeTest from './type';
+import set, { split } from './set';
 
 test('setNestedValue - set a nested value in array object', () => {
   const objOne = {

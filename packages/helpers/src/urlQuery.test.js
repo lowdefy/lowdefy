@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import urlQuery from '../src/urlQuery';
+import urlQuery from './urlQuery';
 
 test('primitives', () => {
   expect(urlQuery.stringify(1)).toEqual('');

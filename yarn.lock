@@ -3839,17 +3839,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/node-utils@3.22.0, @lowdefy/node-utils@workspace:packages/nodeUtils":
+"@lowdefy/node-utils@3.22.0, @lowdefy/node-utils@workspace:packages/node-utils":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/node-utils@workspace:packages/nodeUtils"
+  resolution: "@lowdefy/node-utils@workspace:packages/node-utils"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
     "@lowdefy/helpers": 3.22.0
-    babel-jest: 27.3.1
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
     jest: 27.3.1
-    jest-diff: 27.3.1
     rimraf: 3.0.2
   languageName: unknown
   linkType: soft

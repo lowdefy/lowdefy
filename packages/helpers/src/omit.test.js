@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import omit from '../src/omit';
+import omit from './omit';
 
 test('omit flat keys', () => {
   const obj = { a: 1, b: 2, c: 3, d: 4 };

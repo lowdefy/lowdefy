@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import applyArrayIndices from '../src/applyArrayIndices';
+import applyArrayIndices from './applyArrayIndices';
 
 test('no arrayIndices', () => {
   expect(applyArrayIndices(undefined, 'a')).toEqual('a');
