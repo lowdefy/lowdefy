@@ -24,7 +24,7 @@
 
 import nunjucks from 'nunjucks';
 import moment from 'moment';
-import dateFilter from '../src/dateFilter';
+import dateFilter from './dateFilter';
 
 const testDate = new Date('2015-03-21');
 const testMoment = moment(testDate);

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { nunjucksString, nunjucksFunction, validNunjucksString } from '../src/nunjucks';
+import { nunjucksString, nunjucksFunction, validNunjucksString } from './index';
 
 test('nunjucksString - string parsing', () => {
   expect(nunjucksString('$ {{value}}', '100')).toEqual('$ 100');
