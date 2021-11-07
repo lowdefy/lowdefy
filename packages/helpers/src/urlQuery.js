@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+// TODO: do we want this query-string dep in helpers?
 import queryString from 'query-string';
 
 import serializer from './serializer';

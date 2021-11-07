@@ -25,25 +25,26 @@
     "type": "git",
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
-  "main": "dist/index.js",
+  "type": "module",
+  "exports": "./dist/index.js",
   "files": [
     "dist/*"
   ],
   "scripts": {
-    "build": "babel src --out-dir dist",
+    "build": "yarn clean && yarn swc",
     "clean": "rm -rf dist",
-    "test": "jest --coverage",
-    "prepare": "yarn build"
+    "prepare": "yarn build",
+    "swc": "swc src --out-dir dist --config-file ../../.swcrc",
+    "test": "jest --coverage"
   },
   "dependencies": {
     "lodash.merge": "4.6.2",
     "query-string": "7.0.1"
   },
   "devDependencies": {
-    "@babel/cli": "7.15.7",
-    "@babel/core": "7.15.8",
-    "@babel/preset-env": "7.15.8",
-    "babel-jest": "27.3.1",
+    "@swc/cli": "0.1.51",
+    "@swc/core": "1.2.107",
+    "@swc/jest": "0.2.5",
     "jest": "27.3.1",
     "jest-diff": "27.3.1"
   },

@@ -3773,10 +3773,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/helpers@workspace:packages/helpers"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
-    babel-jest: 27.3.1
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
     jest: 27.3.1
     jest-diff: 27.3.1
     lodash.merge: 4.6.2
