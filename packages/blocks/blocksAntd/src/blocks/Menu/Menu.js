@@ -21,8 +21,6 @@ import { type, get } from '@lowdefy/helpers';
 import { Link } from 'react-router-dom';
 import { Menu } from 'antd';
 
-import Icon from '../Icon/Icon';
-
 const getDefaultMenu = (menus, menuId = 'default', links) => {
   if (type.isArray(links)) return links;
   if (!type.isArray(menus)) return [];
@@ -33,7 +31,7 @@ const getDefaultMenu = (menus, menuId = 'default', links) => {
 const getTitle = (id, properties, defaultTitle) =>
   (properties && properties.title) || defaultTitle || id;
 
-const MenuTitle = ({ id, basePath, makeCssClass, pageId, properties, url, linkStyle }) =>
+const MenuTitle = ({ basePath, id, linkStyle, makeCssClass, pageId, properties, url }) =>
   type.isString(pageId) ? (
     <Link to={`${basePath}/${pageId}`} className={makeCssClass([linkStyle])}>
       {getTitle(id, properties, pageId)}
@@ -65,7 +63,17 @@ const getNestedColors = (menuColor, background) => {
   };
 };
 
-const MenuComp = ({ basePath, blockId, events, methods, menus, pageId, properties, rename }) => {
+const MenuComp = ({
+  basePath,
+  blockId,
+  events,
+  Icon,
+  menus,
+  methods,
+  pageId,
+  properties,
+  rename,
+}) => {
   const styles = {
     lineHeight: '64px',
     display: properties.mode === 'horizontal' && 'inline-block',

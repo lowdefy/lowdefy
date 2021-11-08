@@ -20,9 +20,8 @@ import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 import { type } from '@lowdefy/helpers';
 
 import Button from '../Button/Button';
-import Icon from '../Icon/Icon';
 
-const NotificationBlock = ({ blockId, events, properties, methods }) => {
+const NotificationBlock = ({ blockId, events, Icon, properties, methods }) => {
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
       notification[args.status || properties.status || 'success']({

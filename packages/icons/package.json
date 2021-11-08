@@ -1,0 +1,58 @@
+{
+  "name": "@lowdefy/icons",
+  "version": "4.0.0",
+  "license": "Apache-2.0",
+  "description": "",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "icon",
+    "react-icons"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Sam Tolmay",
+      "url": "https://github.com/SamTolmay"
+    },
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "build": "babel src --out-dir dist",
+    "clean": "rm -rf dist",
+    "test": "jest --coverage",
+    "prepare": "yarn build"
+  },
+  "dependencies": {
+    "@lowdefy/block-tools": "3.22.0",
+    "@lowdefy/helpers": "3.22.0",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-icons": "4.3.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.15.7",
+    "@babel/core": "7.15.8",
+    "@babel/preset-env": "7.15.8",
+    "@babel/preset-react": "7.16.0",
+    "@lowdefy/block-dev": "3.22.0",
+    "babel-jest": "27.3.1",
+    "jest": "27.3.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

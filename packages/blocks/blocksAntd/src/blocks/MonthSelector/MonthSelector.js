@@ -21,7 +21,6 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 import { type } from '@lowdefy/helpers';
 
 import Label from '../Label/Label';
-import Icon from '../Icon/Icon';
 import disabledDate from '../../disabledDate';
 
 const MonthPicker = DatePicker.MonthPicker;
@@ -30,6 +29,7 @@ const MonthSelector = ({
   blockId,
   events,
   loading,
+  Icon,
   methods,
   properties,
   required,

@@ -19,9 +19,7 @@ import { Collapse } from 'antd';
 import { type, serializer } from '@lowdefy/helpers';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 
-import Icon from '../Icon/Icon';
-
-const CollapseBlock = ({ blockId, events, content, methods, properties }) => {
+const CollapseBlock = ({ blockId, events, content, Icon, methods, properties }) => {
   const panels =
     properties.panels ||
     Object.keys(content)

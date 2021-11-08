@@ -20,12 +20,12 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 import { type, serializer } from '@lowdefy/helpers';
 
 import Label from '../Label/Label';
-import Icon from '../Icon/Icon';
 
 const SwitchBlock = ({
   blockId,
   events,
   loading,
+  Icon,
   methods,
   properties,
   required,

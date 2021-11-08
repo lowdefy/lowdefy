@@ -19,9 +19,7 @@ import { message } from 'antd';
 import { type } from '@lowdefy/helpers';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 
-import Icon from '../Icon/Icon';
-
-const MessageBlock = ({ blockId, events, properties, methods }) => {
+const MessageBlock = ({ blockId, events, Icon, properties, methods }) => {
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
       return message[args.status || properties.status || 'success']({

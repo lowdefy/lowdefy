@@ -19,11 +19,9 @@ import { Typography } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 import { type } from '@lowdefy/helpers';
 
-import Icon from '../Icon/Icon';
-
 const Paragraph = Typography.Paragraph;
 
-const ParagraphInput = ({ blockId, events, properties, methods, value }) => {
+const ParagraphInput = ({ blockId, events, Icon, properties, methods, value }) => {
   const [editing, setEdit] = useState(false);
   const editableEvents = {
     onStart: () => {

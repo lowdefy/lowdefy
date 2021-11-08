@@ -20,9 +20,8 @@ import { List, Typography } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 
 import Button from '../Button/Button';
-import Icon from '../Icon/Icon';
 
-const ControlledListBlock = ({ blockId, events, properties, list, methods }) => {
+const ControlledListBlock = ({ blockId, events, Icon, list, methods, properties }) => {
   useEffect(() => {
     methods.registerMethod('pushItem', methods.pushItem);
     methods.registerMethod('unshiftItem', methods.unshiftItem);

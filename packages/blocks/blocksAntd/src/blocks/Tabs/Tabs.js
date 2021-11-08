@@ -18,8 +18,6 @@ import React from 'react';
 import { Tabs } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 
-import Icon from '../Icon/Icon';
-
 const getTabs = ({ content, properties }) => {
   let tabs = properties.tabs;
   if (!tabs) {
@@ -43,7 +41,7 @@ const getAdditionalProps = ({ content, properties }) => {
   return additionalProps;
 };
 
-const TabsBlock = ({ blockId, events, content, methods, properties }) => {
+const TabsBlock = ({ blockId, events, content, Icon, methods, properties }) => {
   const tabs = getTabs({ content, properties });
   const additionalProps = getAdditionalProps({ content, properties });
   return (

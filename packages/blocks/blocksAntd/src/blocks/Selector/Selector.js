@@ -20,7 +20,6 @@ import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 import { get, type } from '@lowdefy/helpers';
 
 import Label from '../Label/Label';
-import Icon from '../Icon/Icon';
 import getValueIndex from '../../getValueIndex';
 import getUniqueValues from '../../getUniqueValues';
 
@@ -30,6 +29,7 @@ const Selector = ({
   blockId,
   events,
   loading,
+  Icon,
   methods,
   properties,
   required,

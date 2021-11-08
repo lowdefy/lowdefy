@@ -21,13 +21,13 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 import { DatePicker } from 'antd';
 
 import Label from '../Label/Label';
-import Icon from '../Icon/Icon';
 import disabledDate from '../../disabledDate';
 
 const DateSelector = ({
   blockId,
   events,
   loading,
+  Icon,
   methods,
   properties,
   required,

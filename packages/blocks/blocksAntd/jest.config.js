@@ -7,7 +7,6 @@ module.exports = {
     '<rootDir>/dist/',
     '<rootDir>/src/test',
     '<rootDir>/demo/',
-    '<rootDir>/src/blocks/Icon/icons/',
     'generateIcons.js',
   ],
   coverageReporters: [['lcov', { projectRoot: '../../..' }], 'text', 'clover'],

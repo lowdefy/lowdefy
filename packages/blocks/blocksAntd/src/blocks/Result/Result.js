@@ -18,9 +18,7 @@ import React from 'react';
 import { Result } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 
-import Icon from '../Icon/Icon';
-
-const ResultBlock = ({ blockId, events, content, methods, properties }) => (
+const ResultBlock = ({ blockId, events, content, Icon, methods, properties }) => (
   <Result
     id={blockId}
     title={renderHtml({ html: properties.title, methods })}

@@ -38,7 +38,6 @@ import Divider from './blocks/Divider';
 import Drawer from './blocks/Drawer';
 import Footer from './blocks/Footer';
 import Header from './blocks/Header';
-import Icon from './blocks/Icon';
 import Label from './blocks/Label';
 import Layout from './blocks/Layout';
 import Menu from './blocks/Menu';
@@ -108,7 +107,6 @@ export const blocks = {
     Drawer,
     Footer,
     Header,
-    Icon,
     Label,
     Layout,
     Menu,

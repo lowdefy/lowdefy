@@ -21,7 +21,6 @@ import { get, mergeObjects, serializer, type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 
 import Label from '../Label/Label';
-import Icon from '../Icon/Icon';
 import CheckboxSelector from '../CheckboxSelector/CheckboxSelector';
 
 const includeMarks = (minMax, minMin, step = 1) => {
@@ -75,6 +74,7 @@ const RatingSlider = ({
   events,
   loading,
   methods,
+  Icon,
   properties,
   required,
   validation,

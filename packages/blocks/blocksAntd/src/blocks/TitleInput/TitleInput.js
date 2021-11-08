@@ -19,11 +19,9 @@ import { Typography } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 import { type } from '@lowdefy/helpers';
 
-import Icon from '../Icon/Icon';
-
 const Title = Typography.Title;
 
-const TitleInput = ({ blockId, events, properties, methods, value }) => {
+const TitleInput = ({ blockId, events, Icon, methods, properties, value }) => {
   const [editing, setEdit] = useState(false);
   const editableEvents = {
     onStart: () => {

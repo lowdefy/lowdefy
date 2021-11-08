@@ -20,9 +20,7 @@ import color from '@lowdefy/color';
 import { get, type } from '@lowdefy/helpers';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 
-import Icon from '../Icon/Icon';
-
-const ButtonBlock = ({ blockId, events, loading, methods, onClick, properties, rename }) => {
+const ButtonBlock = ({ blockId, events, loading, Icon, methods, onClick, properties, rename }) => {
   const onClickActionName = get(rename, 'events.onClick', { default: 'onClick' });
   return (
     <Button

@@ -20,9 +20,7 @@ import { Link } from 'react-router-dom';
 import { Breadcrumb } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 
-import Icon from '../Icon/Icon';
-
-const ItemLink = ({ basePath, link, children, className }) => {
+const ItemLink = ({ basePath, children, className, link }) => {
   if (type.isString(link.pageId)) {
     return (
       <Link to={`${basePath}/${link.pageId}`} className={className}>
@@ -40,7 +38,7 @@ const ItemLink = ({ basePath, link, children, className }) => {
   return <span className={className}>{children}</span>;
 };
 
-const BreadcrumbBlock = ({ basePath, blockId, events, methods, properties, rename }) => {
+const BreadcrumbBlock = ({ basePath, blockId, events, Icon, methods, properties, rename }) => {
   const onClickActionName = get(rename, 'events.onClick', { default: 'onClick' });
   return (
     <Breadcrumb

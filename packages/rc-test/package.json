@@ -1,0 +1,64 @@
+{
+  "name": "@lowdefy/rc-test",
+  "version": "3.22.0",
+  "license": "Apache-2.0",
+  "description": "",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Sam Tolmay",
+      "url": "https://github.com/SamTolmay"
+    },
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "babel": "babel src/location.js --out-dir dist",
+    "build": "yarn webpack && yarn babel",
+    "build:dev": "yarn webpack:dev && yarn babel",
+    "clean": "rm -rf dist",
+    "prepare": "yarn build",
+    "webpack": "webpack --config webpack.prod.js",
+    "webpack:dev": "webpack --config webpack.dev.js",
+    "start": "webpack serve --config webpack.dev.js"
+  },
+  "dependencies": {
+    "@lowdefy/icons": "4.0.0",
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.15.7",
+    "@babel/core": "7.15.8",
+    "@babel/preset-env": "7.15.8",
+    "@babel/preset-react": "7.16.0",
+    "babel-loader": "8.2.3",
+    "clean-webpack-plugin": "4.0.0",
+    "css-loader": "6.5.1",
+    "html-webpack-plugin": "5.5.0",
+    "serve": "13.0.2",
+    "style-loader": "3.3.1",
+    "webpack": "5.62.1",
+    "webpack-cli": "4.9.1",
+    "webpack-dev-server": "4.4.0",
+    "webpack-merge": "5.8.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

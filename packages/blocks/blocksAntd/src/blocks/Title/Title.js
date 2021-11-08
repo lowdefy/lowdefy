@@ -19,11 +19,9 @@ import { Typography } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 import { type } from '@lowdefy/helpers';
 
-import Icon from '../Icon/Icon';
-
 const Title = Typography.Title;
 
-const TitleBlock = ({ blockId, events, properties, methods }) => {
+const TitleBlock = ({ blockId, events, Icon, properties, methods }) => {
   return (
     <Title
       id={blockId}

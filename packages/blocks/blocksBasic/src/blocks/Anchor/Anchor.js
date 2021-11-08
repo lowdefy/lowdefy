@@ -19,8 +19,6 @@ import React from 'react';
 import { get, type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 
-import Icon from '../Icon/Icon';
-
 const Strong = ({ children, strong }) => (strong ? <b>{children}</b> : <>{children}</>);
 const Tag = ({ blockId, children, className, disabled, href, newTab, rel, onClick }) =>
   disabled ? (
@@ -40,7 +38,7 @@ const Tag = ({ blockId, children, className, disabled, href, newTab, rel, onClic
     </a>
   );
 
-const AnchorBlock = ({ blockId, events, loading, methods, properties }) => {
+const AnchorBlock = ({ blockId, events, Icon, loading, methods, properties }) => {
   const title = type.isNone(properties.title)
     ? type.isNone(properties.href)
       ? properties.href

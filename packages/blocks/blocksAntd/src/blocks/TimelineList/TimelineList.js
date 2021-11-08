@@ -19,10 +19,8 @@ import { Timeline } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 import { get, mergeObjects, serializer, type } from '@lowdefy/helpers';
 
-import Icon from '../Icon/Icon';
-
 // TODO: need to pass value to list blocks to render item level settings.
-const TimelineList = ({ blockId, events, list, methods, properties }) => {
+const TimelineList = ({ blockId, events, Icon, list, methods, properties }) => {
   // Temporary fix until list blocks get value from state
   const value = properties.data;
   const other = {};

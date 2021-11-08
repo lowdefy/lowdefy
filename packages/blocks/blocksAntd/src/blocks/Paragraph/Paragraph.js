@@ -19,11 +19,9 @@ import { Typography } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 import { type } from '@lowdefy/helpers';
 
-import Icon from '../Icon/Icon';
-
 const Paragraph = Typography.Paragraph;
 
-const ParagraphBlock = ({ blockId, events, properties, methods }) => (
+const ParagraphBlock = ({ blockId, events, Icon, properties, methods }) => (
   <Paragraph
     id={blockId}
     className={methods.makeCssClass(properties.style)}
