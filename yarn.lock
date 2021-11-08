@@ -3329,9 +3329,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/block-dev@3.22.0, @lowdefy/block-dev@workspace:packages/blockDev":
+"@lowdefy/block-dev@3.22.0, @lowdefy/block-dev@workspace:packages/block-dev":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/block-dev@workspace:packages/blockDev"
+  resolution: "@lowdefy/block-dev@workspace:packages/block-dev"
   dependencies:
     "@babel/cli": 7.15.7
     "@babel/core": 7.15.8
@@ -3356,9 +3356,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/block-tools@3.22.0, @lowdefy/block-tools@workspace:packages/blockTools":
+"@lowdefy/block-tools@3.22.0, @lowdefy/block-tools@workspace:packages/block-tools":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/block-tools@workspace:packages/blockTools"
+  resolution: "@lowdefy/block-tools@workspace:packages/block-tools"
   dependencies:
     "@babel/cli": 7.15.7
     "@babel/core": 7.15.8
@@ -3964,6 +3964,7 @@ __metadata:
     "@lowdefy/block-tools": 3.22.0
     "@lowdefy/helpers": 3.22.0
     babel-jest: 27.3.1
+    classnames: 2.3.1
     jest: 27.3.1
     react: 17.0.2
     react-dom: 17.0.2
