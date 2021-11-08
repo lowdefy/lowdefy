@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import createCheckDuplicateId from './createCheckDuplicateId';
+import createCheckDuplicateId from './createCheckDuplicateId.js';
 
 test('checkDuplicateId return value', async () => {
   const checkDuplicateId = createCheckDuplicateId({

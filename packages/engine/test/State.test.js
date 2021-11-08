@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import State from '../src/State';
+import State from '../src/State.jss';
 
 test('set', () => {
   const context = {

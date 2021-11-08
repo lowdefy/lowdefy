@@ -16,7 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-import buildBlock from './buildBlock';
+import buildBlock from './buildBlock.js';
 
 async function buildSubBlocks(block, pageContext) {
   if (type.isObject(block.areas)) {

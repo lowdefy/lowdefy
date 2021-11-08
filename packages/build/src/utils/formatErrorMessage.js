@@ -18,7 +18,7 @@ function formatErrorMessage(error) {
   return `
 --------- Schema Error ---------
 message: ${error.message}
-path: ${error.dataPath}
+path: ${error.instancePath}
 --------------------------------`;
 }
 

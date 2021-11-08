@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import writeHtml, { pageHtml } from './writeHtml';
-import testContext from '../../test/testContext';
+import writeHtml, { pageHtml } from './writeHtml.js';
+import testContext from '../../test/testContext.js';
 
 const mockWriteBuildArtifact = jest.fn();
 
@@ -143,15 +143,15 @@ test('pageHtml generates the correct html, default values', async () => {
         </script>
         <script defer src=\\"/client/runtime_1.0.0.js\\"></script>
         <script defer src=\\"/client/main_1.0.0.js\\"></script></head>
-        
-        
+
+
       </head>
       <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
         <div id=\\"emotion\\"></div>
         <div id=\\"root\\"></div>
-        
-        
+
+
       </body>
     </html>
     "
@@ -229,15 +229,15 @@ test('pageHtml generates the correct html, all values', async () => {
         </script>
         <script defer src=\\"serverBasePath/client/runtime_1.0.0.js\\"></script>
         <script defer src=\\"serverBasePath/client/main_1.0.0.js\\"></script></head>
-        
-        
+
+
       </head>
       <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
         <div id=\\"emotion\\"></div>
         <div id=\\"root\\"></div>
-        
-        
+
+
       </body>
     </html>
     "

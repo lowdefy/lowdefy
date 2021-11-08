@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import unset from './unset';
+import unset from './unset.js';
 
 const omit = (obj, list) => {
   list.forEach((item) => {

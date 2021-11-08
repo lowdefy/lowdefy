@@ -15,7 +15,7 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import GoogleSheetDeleteOne from './GoogleSheetDeleteOne';
+import GoogleSheetDeleteOne from './GoogleSheetDeleteOne.js';
 
 const mockGetRows = jest.fn();
 const mockDelete = jest.fn();

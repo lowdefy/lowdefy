@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import createGetMeta from './getMeta';
-import createFetchMetaCache from './fetchMetaCache';
-import createWriteMetaCache from './writeMetaCache';
-import fetchMetaUrl from './fetchMetaUrl';
+import createGetMeta from './getMeta.js';
+import createFetchMetaCache from './fetchMetaCache.js';
+import createWriteMetaCache from './writeMetaCache.js';
+import fetchMetaUrl from './fetchMetaUrl.js';
 // eslint-disable-next-line no-unused-vars
-import metaLocations from './metaLocations';
+import metaLocations from './metaLocations.js';
 
 jest.mock('./fetchMetaCache', () => {
   const mockFetchMetaCache = jest.fn();

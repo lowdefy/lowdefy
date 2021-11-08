@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import writeGlobal from './writeGlobal';
-import testContext from '../test/testContext';
+import writeGlobal from './writeGlobal.js';
+import testContext from '../test/testContext.js';
 
 const mockWriteBuildArtifact = jest.fn();
 

@@ -1,4 +1,4 @@
-import createLink from '../src/createLink';
+import createLink from '../src/createLink.js';
 
 const mockBackLink = jest.fn();
 const mockNewOriginLink = jest.fn();

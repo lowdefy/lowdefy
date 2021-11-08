@@ -15,10 +15,10 @@
 */
 
 import schema from './GoogleSheetDeleteOneSchema.json';
-import cleanRows from '../cleanRows';
-import getSheet from '../getSheet';
-import { transformRead } from '../transformTypes';
-import mingoFilter from '../mingoFilter';
+import cleanRows from '../cleanRows.js';
+import getSheet from '../getSheet.js';
+import { transformRead } from '../transformTypes.js';
+import mingoFilter from '../mingoFilter.js';
 
 async function googleSheetDeleteOne({ request, connection }) {
   const { filter, options = {} } = request;

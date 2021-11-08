@@ -13,7 +13,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import createWriteBuildArtifact from './writeBuildArtifact';
+import createWriteBuildArtifact from './writeBuildArtifact.js';
 
 const buildDirectory = path.resolve(process.cwd(), 'src/test/fileSetter');
 

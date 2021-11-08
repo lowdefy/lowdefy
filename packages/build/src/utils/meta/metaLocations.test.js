@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import metaLocations from './metaLocations';
+import metaLocations from './metaLocations.js';
 import packageJson from '../../../package.json';
 
 const { version } = packageJson;

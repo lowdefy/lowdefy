@@ -1,4 +1,4 @@
-import MongoDBCollection from './MongoDBCollection/MongoDBCollection';
+import MongoDBCollection from './MongoDBCollection/MongoDBCollection.js';
 
 export const connections = {
   MongoDBCollection,

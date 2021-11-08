@@ -19,7 +19,7 @@ import { getFileExtension, getFileSubExtension } from '@lowdefy/node-utils';
 import JSON5 from 'json5';
 import YAML from 'js-yaml';
 
-import parseNunjucks from './parseNunjucks';
+import parseNunjucks from './parseNunjucks.js';
 
 function parseRefContent({ content, refDef }) {
   const { path, vars } = refDef;

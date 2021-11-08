@@ -15,8 +15,8 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import MongoDBInsertMany from './MongoDBInsertMany';
-import clearTestMongoDb from '../../../test/clearTestMongoDb';
+import MongoDBInsertMany from './MongoDBInsertMany.js';
+import clearTestMongoDb from '../../../test/clearTestMongoDb.js';
 
 const { resolver, schema, checkRead, checkWrite } = MongoDBInsertMany;
 
@@ -100,9 +100,7 @@ test('insertMany mongodb error', async () => {
     write: true,
   };
   await resolver({ request, connection });
-  await expect(resolver({ request, connection })).rejects.toThrow(
-    'E11000 duplicate key error collection: test.insertMany index: _id_ dup key: { _id: "insertMany9-1" }'
-  );
+  await expect(resolver({ request, connection })).rejects.toThrow('E11000 duplicate key error');
 });
 
 test('checkRead should be false', async () => {

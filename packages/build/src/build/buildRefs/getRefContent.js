@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import getConfigFile from './getConfigFile';
-import parseRefContent from './parseRefContent';
-import runRefResolver from './runRefResolver';
+import getConfigFile from './getConfigFile.js';
+import parseRefContent from './parseRefContent.js';
+import runRefResolver from './runRefResolver.js';
 
 async function getRefContent({ context, refDef, referencedFrom }) {
   let content;

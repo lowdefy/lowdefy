@@ -19,8 +19,8 @@
 import { get } from '@lowdefy/helpers';
 import cookie from 'cookie';
 
-import verifyAccessToken from '../routes/auth/verifyAccessToken';
-import unsetAuthorizationCookie from '../routes/auth/unsetAuthorizationCookie';
+import verifyAccessToken from '../routes/auth/verifyAccessToken.js';
+import unsetAuthorizationCookie from '../routes/auth/unsetAuthorizationCookie.js';
 
 function verifyAuthorizationHeader(context) {
   const { config, headers } = context;

@@ -3316,15 +3316,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/ajv@workspace:packages/ajv"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
     "@lowdefy/nunjucks": 3.22.0
-    ajv: 6.12.6
-    ajv-errors: 1.0.1
-    babel-jest: 27.3.1
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
+    ajv: 8.6.3
+    ajv-errors: 3.0.0
     jest: 27.3.1
-    jest-diff: 27.3.1
   languageName: unknown
   linkType: soft
 
@@ -3332,23 +3330,18 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/api@workspace:packages/api"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
     "@lowdefy/ajv": 3.22.0
     "@lowdefy/helpers": 3.22.0
     "@lowdefy/node-utils": 3.22.0
     "@lowdefy/nunjucks": 3.22.0
     "@lowdefy/operators": 3.22.0
-    babel-jest: 27.3.1
-    babel-loader: 8.2.3
-    clean-webpack-plugin: 4.0.0
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
     cookie: 0.4.1
     jest: 27.3.1
     jsonwebtoken: 8.5.1
     openid-client: 4.9.1
-    webpack: 5.59.1
-    webpack-cli: 4.9.1
   languageName: unknown
   linkType: soft
 
@@ -3366,8 +3359,8 @@ __metadata:
     "@testing-library/dom": 8.10.1
     "@testing-library/react": 12.1.2
     "@testing-library/user-event": 13.5.0
-    ajv: 6.12.6
-    ajv-errors: 1.0.1
+    ajv: 8.6.3
+    ajv-errors: 3.0.0
     babel-jest: 27.3.1
     jest: 27.3.1
     jest-serializer-html: 7.1.0
@@ -3655,24 +3648,19 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/build@workspace:packages/build"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
     "@lowdefy/ajv": 3.22.0
     "@lowdefy/helpers": 3.22.0
     "@lowdefy/node-utils": 3.22.0
     "@lowdefy/nunjucks": 3.22.0
-    ajv: 6.12.6
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
+    ajv: 8.6.3
     axios: 0.23.0
-    babel-jest: 27.3.1
-    babel-loader: 8.2.3
-    clean-webpack-plugin: 4.0.0
     jest: 26.6.3
     js-yaml: 4.1.0
     json5: 2.2.0
     uuid: 8.3.2
-    webpack: 5.59.1
-    webpack-cli: 4.9.1
   languageName: unknown
   linkType: soft
 
@@ -3711,11 +3699,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/color@workspace:packages/color"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
-    babel-jest: 27.3.1
-    jest: 26.6.3
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
+    jest: 27.3.1
     tinycolor2: 1.4.2
   languageName: unknown
   linkType: soft
@@ -3724,13 +3711,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-aws@workspace:packages/connections/aws"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
     "@lowdefy/ajv": 3.22.0
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
     aws-sdk: 2.1021.0
-    babel-jest: 27.3.1
-    jest: 26.6.3
+    jest: 27.3.1
   peerDependencies:
     "@lowdefy/api": 3.22.0
   languageName: unknown
@@ -3740,14 +3726,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-axios-http@workspace:packages/connections/axios-http"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
     "@lowdefy/ajv": 3.22.0
     "@lowdefy/helpers": 3.22.0
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
     axios: 0.23.0
-    babel-jest: 27.3.1
-    jest: 26.6.3
+    jest: 27.3.1
   peerDependencies:
     "@lowdefy/api": 3.22.0
   languageName: unknown
@@ -3757,14 +3742,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-elasticsearch@workspace:packages/connections/elasticsearch"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
     "@elastic/elasticsearch": 7.15.0
     "@lowdefy/ajv": 3.22.0
     "@lowdefy/helpers": 3.22.0
-    babel-jest: 27.3.1
-    jest: 26.6.3
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
+    jest: 27.3.1
   peerDependencies:
     "@lowdefy/api": 3.22.0
   languageName: unknown
@@ -3774,14 +3758,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-google-sheets@workspace:packages/connections/google-sheets"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
     "@lowdefy/ajv": 3.22.0
     "@lowdefy/helpers": 3.22.0
-    babel-jest: 27.3.1
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
     google-spreadsheet: 3.1.15
-    jest: 26.6.3
+    jest: 27.3.1
     mingo: 4.2.0
     moment: 2.29.1
   peerDependencies:
@@ -3793,13 +3776,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-knex@workspace:packages/connections/knex"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
     "@lowdefy/ajv": 3.22.0
     "@lowdefy/helpers": 3.22.0
-    babel-jest: 27.3.1
-    jest: 26.6.3
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
+    jest: 27.3.1
     knex: 0.95.13
     mssql: 7.2.1
     mysql: 2.18.1
@@ -3814,14 +3796,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-mongodb@workspace:packages/connections/mongodb"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
     "@lowdefy/ajv": 3.22.0
     "@lowdefy/helpers": 3.22.0
     "@shelf/jest-mongodb": 2.1.0
-    babel-jest: 27.3.1
-    jest: 26.6.3
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
+    jest: 27.3.1
     mongodb: 3.7.3
     saslprep: 1.0.3
   peerDependencies:
@@ -3833,14 +3814,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-sendgrid@workspace:packages/connections/sendgrid"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
     "@lowdefy/ajv": 3.22.0
     "@lowdefy/helpers": 3.22.0
     "@sendgrid/mail": 7.5.0
-    babel-jest: 27.3.1
-    jest: 26.6.3
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
+    jest: 27.3.1
   peerDependencies:
     "@lowdefy/api": 3.22.0
   languageName: unknown
@@ -3850,13 +3830,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-stripe@workspace:packages/connections/stripe"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
     "@lowdefy/ajv": 3.22.0
     "@lowdefy/helpers": 3.22.0
-    babel-jest: 27.3.1
-    jest: 26.6.3
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
+    jest: 27.3.1
     stripe: 8.186.0
   peerDependencies:
     "@lowdefy/api": 3.22.0
@@ -3879,12 +3858,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/engine@workspace:packages/engine"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
     "@lowdefy/helpers": 3.22.0
     "@lowdefy/operators": 3.22.0
-    babel-jest: 27.3.1
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
     jest: 26.6.3
   languageName: unknown
   linkType: soft
@@ -3902,76 +3880,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/graphql-federated@workspace:packages/graphql-federated":
-  version: 0.0.0-use.local
-  resolution: "@lowdefy/graphql-federated@workspace:packages/graphql-federated"
-  dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
-    "@lowdefy/graphql": 3.22.0
-    babel-loader: 8.2.3
-    clean-webpack-plugin: 4.0.0
-    webpack: 5.59.1
-    webpack-cli: 4.9.1
-  languageName: unknown
-  linkType: soft
-
-"@lowdefy/graphql@3.22.0, @lowdefy/graphql@workspace:packages/graphql":
-  version: 0.0.0-use.local
-  resolution: "@lowdefy/graphql@workspace:packages/graphql"
-  dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
-    "@elastic/elasticsearch": 7.15.0
-    "@lowdefy/ajv": 3.22.0
-    "@lowdefy/helpers": 3.22.0
-    "@lowdefy/node-utils": 3.22.0
-    "@lowdefy/nunjucks": 3.22.0
-    "@lowdefy/operators": 3.22.0
-    "@sendgrid/mail": 7.5.0
-    "@shelf/jest-mongodb": 1.2.5
-    ajv: 6.12.6
-    ajv-errors: 1.0.1
-    apollo-server: 2.25.0
-    apollo-server-testing: 2.25.0
-    aws-sdk: 2.1013.0
-    axios: 0.23.0
-    babel-jest: 27.3.1
-    babel-loader: 8.2.3
-    clean-webpack-plugin: 4.0.0
-    cookie: 0.4.1
-    dataloader: 2.0.0
-    google-spreadsheet: 3.1.15
-    graphql: 15.5.0
-    graphql-type-json: 0.3.2
-    jest: 27.3.1
-    jsonwebtoken: 8.5.1
-    knex: 0.95.11
-    mingo: 4.2.0
-    moment: 2.29.1
-    mongodb: 3.6.12
-    mssql: 7.2.1
-    mysql: 2.18.1
-    openid-client: 4.9.1
-    pg: 8.7.1
-    saslprep: 1.0.3
-    sqlite3: 5.0.2
-    stripe: 8.184.0
-    webpack: 5.59.1
-    webpack-cli: 4.9.1
-  languageName: unknown
-  linkType: soft
-
 "@lowdefy/helpers@3.22.0, @lowdefy/helpers@workspace:packages/helpers":
   version: 0.0.0-use.local
   resolution: "@lowdefy/helpers@workspace:packages/helpers"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
-    babel-jest: 27.3.1
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
     jest: 27.3.1
     jest-diff: 27.3.1
     lodash.merge: 4.6.2
@@ -4035,17 +3950,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/node-utils@3.22.0, @lowdefy/node-utils@workspace:packages/nodeUtils":
+"@lowdefy/node-utils@3.22.0, @lowdefy/node-utils@workspace:packages/node-utils":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/node-utils@workspace:packages/nodeUtils"
+  resolution: "@lowdefy/node-utils@workspace:packages/node-utils"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
     "@lowdefy/helpers": 3.22.0
-    babel-jest: 27.3.1
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
     jest: 27.3.1
-    jest-diff: 27.3.1
     rimraf: 3.0.2
   languageName: unknown
   linkType: soft
@@ -4054,11 +3967,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/nunjucks@workspace:packages/nunjucks"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
     "@lowdefy/helpers": 3.22.0
-    babel-jest: 27.3.1
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
     jest: 27.3.1
     moment: 2.29.1
     nunjucks: 3.2.3
@@ -4108,40 +4020,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/server-aws-lambda@workspace:packages/servers/serverAwsLambda":
-  version: 0.0.0-use.local
-  resolution: "@lowdefy/server-aws-lambda@workspace:packages/servers/serverAwsLambda"
-  dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
-    "@babel/preset-react": 7.14.5
-    "@lowdefy/block-tools": 3.22.0
-    "@lowdefy/graphql": 3.22.0
-    "@lowdefy/node-utils": 3.22.0
-    "@lowdefy/server": 3.22.0
-    "@lowdefy/shell": 3.22.0
-    apollo-server-express: 2.25.0
-    babel-jest: 27.3.1
-    babel-loader: 8.2.3
-    clean-webpack-plugin: 4.0.0
-    copy-webpack-plugin: 9.0.1
-    css-loader: 6.4.0
-    express: 4.17.1
-    graphql: 15.5.0
-    html-webpack-plugin: 5.4.0
-    jest: 27.3.1
-    lowdefy: 3.22.0
-    nodemon: 2.0.14
-    react: 17.0.2
-    react-dom: 17.0.2
-    serverless-http: 2.7.0
-    style-loader: 3.3.1
-    webpack: 5.59.1
-    webpack-cli: 4.9.1
-  languageName: unknown
-  linkType: soft
-
 "@lowdefy/server-dev@workspace:packages/servers/serverDev":
   version: 0.0.0-use.local
   resolution: "@lowdefy/server-dev@workspace:packages/servers/serverDev"
@@ -4159,80 +4037,6 @@ __metadata:
     nodemon: 2.0.14
     pino: 7.0.5
     pino-pretty: 7.1.0
-  languageName: unknown
-  linkType: soft
-
-"@lowdefy/server-docker@workspace:packages/servers/serverDocker":
-  version: 0.0.0-use.local
-  resolution: "@lowdefy/server-docker@workspace:packages/servers/serverDocker"
-  dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
-    "@lowdefy/block-tools": 3.22.0
-    "@lowdefy/graphql": 3.22.0
-    "@lowdefy/node-utils": 3.22.0
-    "@lowdefy/server": 3.22.0
-    "@lowdefy/shell": 3.22.0
-    apollo-server-express: 2.25.0
-    babel-jest: 27.3.1
-    express: 4.17.1
-    graphql: 15.5.0
-    jest: 27.3.1
-    lowdefy: 3.22.0
-  languageName: unknown
-  linkType: soft
-
-"@lowdefy/server-netlify@workspace:packages/servers/serverNetlify":
-  version: 0.0.0-use.local
-  resolution: "@lowdefy/server-netlify@workspace:packages/servers/serverNetlify"
-  dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
-    "@babel/preset-react": 7.14.5
-    "@lowdefy/block-tools": 3.22.0
-    "@lowdefy/graphql": 3.22.0
-    "@lowdefy/node-utils": 3.22.0
-    "@lowdefy/server": 3.22.0
-    apollo-server-express: 2.25.0
-    babel-jest: 27.3.1
-    babel-loader: 8.2.3
-    clean-webpack-plugin: 4.0.0
-    copy-webpack-plugin: 9.0.1
-    css-loader: 6.4.0
-    express: 4.17.1
-    graphql: 15.5.0
-    html-webpack-plugin: 5.4.0
-    jest: 27.3.1
-    react: 17.0.2
-    react-dom: 17.0.2
-    serverless-http: 2.7.0
-    style-loader: 3.3.1
-    webpack: 5.59.1
-    webpack-cli: 4.9.1
-  languageName: unknown
-  linkType: soft
-
-"@lowdefy/server-node@workspace:packages/servers/serverNode":
-  version: 0.0.0-use.local
-  resolution: "@lowdefy/server-node@workspace:packages/servers/serverNode"
-  dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
-    "@lowdefy/graphql": 3.22.0
-    "@lowdefy/node-utils": 3.22.0
-    "@lowdefy/server": 3.22.0
-    "@lowdefy/shell": 3.22.0
-    apollo-server-express: 2.25.0
-    babel-jest: 27.3.1
-    express: 4.17.1
-    graphql: 15.5.0
-    jest: 26.6.3
-    yargs: 17.2.1
-  bin:
-    lowdefy-server: dist/server.js
   languageName: unknown
   linkType: soft
 
@@ -4257,42 +4061,26 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/shell@3.22.0, @lowdefy/shell@workspace:packages/shell":
-  version: 0.0.0-use.local
-  resolution: "@lowdefy/shell@workspace:packages/shell"
-  dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
-    "@babel/preset-react": 7.14.5
-    "@lowdefy/block-tools": 3.22.0
-    "@lowdefy/graphql": 3.22.0
-    "@lowdefy/node-utils": 3.22.0
-    "@lowdefy/server": 3.22.0
-    apollo-server-express: 2.25.0
-    babel-jest: 27.3.1
-    babel-loader: 8.2.3
-    clean-webpack-plugin: 4.0.0
-    copy-webpack-plugin: 9.0.1
-    css-loader: 6.4.0
-    dotenv: 10.0.0
-    express: 4.17.1
-    graphql: 15.5.0
-    html-webpack-plugin: 5.4.0
-    jest: 27.3.1
-    nodemon: 2.0.14
-    react: 17.0.2
-    react-dom: 17.0.2
-    style-loader: 3.3.1
-    webpack: 5.59.1
-    webpack-cli: 4.9.1
-  languageName: unknown
-  linkType: soft
+"@napi-rs/triples@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "@napi-rs/triples@npm:1.0.3"
+  checksum: c83a4cc55f69115bf4ce1d5924efce7f5faf2dc79fd52257385559f668ce91a03c5d7d004df01ebba56028a9b663955eb97f31b65ac0acff7a93c143f0d809af
+  languageName: node
+  linkType: hard
 
 "@nicolo-ribaudo/chokidar-2@npm:2.1.8-no-fsevents.3":
   version: 2.1.8-no-fsevents.3
   resolution: "@nicolo-ribaudo/chokidar-2@npm:2.1.8-no-fsevents.3"
   checksum: ee55cc9241aeea7eb94b8a8551bfa4246c56c53bc71ecda0a2104018fcc328ba5723b33686bdf9cc65d4df4ae65e8016b89e0bbdeb94e0309fe91bb9ced42344
+  languageName: node
+  linkType: hard
+
+"@node-rs/helper@npm:^1.0.0":
+  version: 1.2.1
+  resolution: "@node-rs/helper@npm:1.2.1"
+  dependencies:
+    "@napi-rs/triples": ^1.0.3
+  checksum: c7b96e46df8a4195e62e51b6f60ed05aff398653c270dc9cffaed749303a4c428215d5826de8511b57cf66f2b0165fb3544fb2aec2aaf385c13ac3b9468bb000
   languageName: node
   linkType: hard
 
@@ -4660,19 +4448,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@shelf/jest-mongodb@npm:1.2.5":
-  version: 1.2.5
-  resolution: "@shelf/jest-mongodb@npm:1.2.5"
-  dependencies:
-    debug: 4.1.1
-    mongodb-memory-server: 6.9.6
-    uuid: 8.3.2
-  peerDependencies:
-    mongodb: 3.x.x
-  checksum: 624939b9071bb264fb991370bd92ce854d328162b3e7534b1627c9e26a5e7acea50af603793b05f976975fd4800581708e6406277936c038f77c33115ffe011d
-  languageName: node
-  linkType: hard
-
 "@shelf/jest-mongodb@npm:2.1.0":
   version: 2.1.0
   resolution: "@shelf/jest-mongodb@npm:2.1.0"
@@ -4724,6 +4499,166 @@ __metadata:
   dependencies:
     "@sinonjs/commons": ^1.7.0
   checksum: 97a78e6f83dd420d73b155a0438cd0fd3392e706b8314530db3d99354689cc714eb3d18540be2aedcd3a3d6070e14f509dce7c6cc817701e9538b3b8ac423eaa
+  languageName: node
+  linkType: hard
+
+"@swc/cli@npm:0.1.51":
+  version: 0.1.51
+  resolution: "@swc/cli@npm:0.1.51"
+  dependencies:
+    commander: ^7.1.0
+    fast-glob: ^3.2.5
+    slash: 3.0.0
+    source-map: ^0.7.3
+  peerDependencies:
+    "@swc/core": ^1.2.66
+    chokidar: ^3.5.1
+  peerDependenciesMeta:
+    chokidar:
+      optional: true
+  bin:
+    spack: bin/spack.js
+    swc: bin/swc.js
+  checksum: 348bf0aee8e0cab567b75061f71ccbeff4964d9d6af03760f06641dbdb3f753865d2f0806d9adf805f19b9449a9665fdc4260d907246ab045156f427fa6a1ecd
+  languageName: node
+  linkType: hard
+
+"@swc/core-android-arm64@npm:^1.2.107":
+  version: 1.2.107
+  resolution: "@swc/core-android-arm64@npm:1.2.107"
+  checksum: a9588937181d177f48c4c3c061cc77a31871dd370e53e0baf8ec652c9e5f005b227e2e4f7978f3466c209d74946e514dc550a5f34c441edc4fa2c0f9fefa4cfa
+  languageName: node
+  linkType: hard
+
+"@swc/core-darwin-arm64@npm:^1.2.107":
+  version: 1.2.107
+  resolution: "@swc/core-darwin-arm64@npm:1.2.107"
+  checksum: 7db65a8c21478c86c5e93d6ca5db16fcdc2bdecd3e62e2962907fc51935937fc8ce867af0869efa1dc17f7d85aa95312a027ebb6919ff7a3951509554610aa1c
+  languageName: node
+  linkType: hard
+
+"@swc/core-darwin-x64@npm:^1.2.107":
+  version: 1.2.107
+  resolution: "@swc/core-darwin-x64@npm:1.2.107"
+  checksum: 055bdc095dfc3138eb11efb758a8c4f50ab4abebae7fdfcfc8dd6ef25492b74e8b4a58265c640db9d90752049a1f55d611196342a762a6a29dbdfa2df60ae56b
+  languageName: node
+  linkType: hard
+
+"@swc/core-freebsd-x64@npm:^1.2.107":
+  version: 1.2.107
+  resolution: "@swc/core-freebsd-x64@npm:1.2.107"
+  checksum: 073921a6d5ea2bd02779d932ee51b246ae37bcb3917f9d07fbc24e9a10d291a8ad50a6d4e8726b08dd65bf9530416cc59c4ae0ab8aa5b20016c9b227e5939116
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-arm-gnueabihf@npm:^1.2.107":
+  version: 1.2.107
+  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.2.107"
+  checksum: 7fb04edde2ef32ea599c1a04736a5d63e7d9ac800531effee110241bb8ad4df2c7898b39c02ac614ad6752b92608ae9e99e023365af2d9ce9314efe590c9978e
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-arm64-gnu@npm:^1.2.107":
+  version: 1.2.107
+  resolution: "@swc/core-linux-arm64-gnu@npm:1.2.107"
+  checksum: cbfe4d5973948d60cb71c0faf95c935cfcef1cab9b4b3a577e0325f869adf3de487025c5d39ba6b67185fb268e1d6ccaed9d07950329fbf5c438f8003948134f
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-arm64-musl@npm:^1.2.107":
+  version: 1.2.107
+  resolution: "@swc/core-linux-arm64-musl@npm:1.2.107"
+  checksum: c345e0dba1b890fa03df21037a2dc8313aab9243f755b138f3015e5231139b33729f08c1f0f68634cdd80b5f70606c889b43767c8c39ea84bcd8de63b58b9559
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-x64-gnu@npm:^1.2.107":
+  version: 1.2.107
+  resolution: "@swc/core-linux-x64-gnu@npm:1.2.107"
+  checksum: 1f815379f2fa3e7514b67c41680db8c759a2ec991b8f923df02d5265a9b73e712e00aaa092f2fa389413a3b180ef428fcc9acd776634c50f9fc5fac497f169e8
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-x64-musl@npm:^1.2.107":
+  version: 1.2.107
+  resolution: "@swc/core-linux-x64-musl@npm:1.2.107"
+  checksum: 2d5d3e594f23cd1da0abf988944265cb919cb312872a70e9d28a9eeb0e950ccb3dc113c331285062e1b4819d2f3104d0bae132fbea72ac6f07a5940cc9ed873c
+  languageName: node
+  linkType: hard
+
+"@swc/core-win32-arm64-msvc@npm:^1.2.107":
+  version: 1.2.107
+  resolution: "@swc/core-win32-arm64-msvc@npm:1.2.107"
+  checksum: afc81079d1f9137831d3975bc553c51cbc2851fd9bc375d115f49704df258acc69586354240a691109750dbd77ff986b6e4ca74b7a29c21fc5a787fe70df5351
+  languageName: node
+  linkType: hard
+
+"@swc/core-win32-ia32-msvc@npm:^1.2.107":
+  version: 1.2.107
+  resolution: "@swc/core-win32-ia32-msvc@npm:1.2.107"
+  checksum: 62533c010f1a8d77d7f2175afa0063e0671f1435adf70cc07bc575de4e31df4e7c07829cd52c84cc9344e154e25e8d45e5eb4035d293d021d161fb0970647aba
+  languageName: node
+  linkType: hard
+
+"@swc/core-win32-x64-msvc@npm:^1.2.107":
+  version: 1.2.107
+  resolution: "@swc/core-win32-x64-msvc@npm:1.2.107"
+  checksum: 95b731e92ba9ac8de0d4e8ec1d9226eacd8bea41d2ddcf6d4d180a1adb083d96683fc04809c1a1f7aad56815f71c942e102aeda972af9996455d098b7bc53941
+  languageName: node
+  linkType: hard
+
+"@swc/core@npm:1.2.107":
+  version: 1.2.107
+  resolution: "@swc/core@npm:1.2.107"
+  dependencies:
+    "@node-rs/helper": ^1.0.0
+    "@swc/core-android-arm64": ^1.2.107
+    "@swc/core-darwin-arm64": ^1.2.107
+    "@swc/core-darwin-x64": ^1.2.107
+    "@swc/core-freebsd-x64": ^1.2.107
+    "@swc/core-linux-arm-gnueabihf": ^1.2.107
+    "@swc/core-linux-arm64-gnu": ^1.2.107
+    "@swc/core-linux-arm64-musl": ^1.2.107
+    "@swc/core-linux-x64-gnu": ^1.2.107
+    "@swc/core-linux-x64-musl": ^1.2.107
+    "@swc/core-win32-arm64-msvc": ^1.2.107
+    "@swc/core-win32-ia32-msvc": ^1.2.107
+    "@swc/core-win32-x64-msvc": ^1.2.107
+  dependenciesMeta:
+    "@swc/core-android-arm64":
+      optional: true
+    "@swc/core-darwin-arm64":
+      optional: true
+    "@swc/core-darwin-x64":
+      optional: true
+    "@swc/core-freebsd-x64":
+      optional: true
+    "@swc/core-linux-arm-gnueabihf":
+      optional: true
+    "@swc/core-linux-arm64-gnu":
+      optional: true
+    "@swc/core-linux-arm64-musl":
+      optional: true
+    "@swc/core-linux-x64-gnu":
+      optional: true
+    "@swc/core-linux-x64-musl":
+      optional: true
+    "@swc/core-win32-arm64-msvc":
+      optional: true
+    "@swc/core-win32-ia32-msvc":
+      optional: true
+    "@swc/core-win32-x64-msvc":
+      optional: true
+  checksum: 452fd087c7c16caa1bb51c48847b43e5ec57f44dad24b1d5ca64849d050343caeb0942db126296f799778eaf455274a5a25e4b0a9334bf49657ed758babaa846
+  languageName: node
+  linkType: hard
+
+"@swc/jest@npm:0.2.5":
+  version: 0.2.5
+  resolution: "@swc/jest@npm:0.2.5"
+  peerDependencies:
+    "@swc/core": "*"
+  checksum: 3a1b2717623a1419f0f3fc04bc7e2cd112a084e1763a33d9df06bda9431b6dd67bff8dba358162b23f1911f9a0e67422f09afd0983c77b4dc6f9fbde7a712bd8
   languageName: node
   linkType: hard
 
@@ -4812,13 +4747,6 @@ __metadata:
   version: 4.2.2
   resolution: "@types/aria-query@npm:4.2.2"
   checksum: 6f2ce11d91e2d665f3873258db19da752d91d85d3679eb5efcdf9c711d14492287e1e4eb52613b28e60375841a9e428594e745b68436c963d8bad4bf72188df3
-  languageName: node
-  linkType: hard
-
-"@types/aws-lambda@npm:^8.10.56":
-  version: 8.10.84
-  resolution: "@types/aws-lambda@npm:8.10.84"
-  checksum: c4013fd6f1a10f3856dbdde839009dbfba93d2157f61ea38eccfa74dac0ea96f16da8044c473a0cb442d5dce148a22f3219d993bf41be26c470d398440ca9151
   languageName: node
   linkType: hard
 
@@ -4975,7 +4903,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express-serve-static-core@npm:^4.17.18, @types/express-serve-static-core@npm:^4.17.21":
+"@types/express-serve-static-core@npm:^4.17.18":
   version: 4.17.24
   resolution: "@types/express-serve-static-core@npm:4.17.24"
   dependencies:
@@ -4986,7 +4914,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express@npm:*, @types/express@npm:^4.17.12":
+"@types/express@npm:*":
   version: 4.17.13
   resolution: "@types/express@npm:4.17.13"
   dependencies:
@@ -5913,12 +5841,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ajv-errors@npm:1.0.1":
-  version: 1.0.1
-  resolution: "ajv-errors@npm:1.0.1"
+"ajv-errors@npm:3.0.0":
+  version: 3.0.0
+  resolution: "ajv-errors@npm:3.0.0"
   peerDependencies:
-    ajv: ">=5.0.0"
-  checksum: 2c9fc02cf58f9aae5bace61ebd1b162e1ea372ae9db5999243ba5e32a9a78c0d635d29ae085f652c61c941a43af0b2b1acdb255e29d44dc43a6e021085716d8c
+    ajv: ^8.0.1
+  checksum: f3d1610a104fa776c2f90534acbe2113842a40d5ee446062da9e956ae6de6959afc997da1e3948c47316faa225255fc2d9d97aacd0803f47998fb38156d3d03c
   languageName: node
   linkType: hard
 
@@ -5943,7 +5871,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ajv@npm:^8.1.0":
+"ajv@npm:8.6.3, ajv@npm:^8.1.0":
   version: 8.6.3
   resolution: "ajv@npm:8.6.3"
   dependencies:
@@ -6182,7 +6110,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apollo-server-core@npm:^2.25.0, apollo-server-core@npm:^2.25.2":
+"apollo-server-core@npm:^2.25.0":
   version: 2.25.2
   resolution: "apollo-server-core@npm:2.25.2"
   dependencies:
@@ -6263,33 +6191,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apollo-server-express@npm:^2.25.0":
-  version: 2.25.2
-  resolution: "apollo-server-express@npm:2.25.2"
-  dependencies:
-    "@apollographql/graphql-playground-html": 1.6.27
-    "@types/accepts": ^1.3.5
-    "@types/body-parser": 1.19.0
-    "@types/cors": 2.8.10
-    "@types/express": ^4.17.12
-    "@types/express-serve-static-core": ^4.17.21
-    accepts: ^1.3.5
-    apollo-server-core: ^2.25.2
-    apollo-server-types: ^0.9.0
-    body-parser: ^1.18.3
-    cors: ^2.8.5
-    express: ^4.17.1
-    graphql-subscriptions: ^1.0.0
-    graphql-tools: ^4.0.8
-    parseurl: ^1.3.2
-    subscriptions-transport-ws: ^0.9.19
-    type-is: ^1.6.16
-  peerDependencies:
-    graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
-  checksum: 662eda0b1264e9682fccf1c67326257d4bb17e96a69dd4039a359a616a88450c97e575619cc88c20560b039dfc75fbec17e672bf0967249d44b35154a2b8d52a
-  languageName: node
-  linkType: hard
-
 "apollo-server-plugin-base@npm:^0.13.0":
   version: 0.13.0
   resolution: "apollo-server-plugin-base@npm:0.13.0"
@@ -6298,17 +6199,6 @@ __metadata:
   peerDependencies:
     graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
   checksum: 9db78d0a1d2d9debe32d7e0584a4e180341e095a1df22b71470f3a457bc488ef2580687e06bc59eba1483bdb2e5bcad7f050f57d05632441800ea8953c272a95
-  languageName: node
-  linkType: hard
-
-"apollo-server-testing@npm:2.25.0":
-  version: 2.25.0
-  resolution: "apollo-server-testing@npm:2.25.0"
-  dependencies:
-    apollo-server-core: ^2.25.0
-  peerDependencies:
-    graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
-  checksum: 621113326930b198d4eb809dfd079369a7852a810bde964cad9f1c92c1a74cc0b2c295172d72ea062fe3ddd8530ca180845a9972700e4e5d2271c97ce1602af6
   languageName: node
   linkType: hard
 
@@ -6322,22 +6212,6 @@ __metadata:
   peerDependencies:
     graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
   checksum: 367de9a67c9ff72fd73a0785cef7d0f19b345105adfb8c47c4e771f09c8203da97d45c8783d7e6ee08e3dffc2610f01d546eb106a3e7890af74b4bb70d298503
-  languageName: node
-  linkType: hard
-
-"apollo-server@npm:2.25.0":
-  version: 2.25.0
-  resolution: "apollo-server@npm:2.25.0"
-  dependencies:
-    apollo-server-core: ^2.25.0
-    apollo-server-express: ^2.25.0
-    express: ^4.0.0
-    graphql-subscriptions: ^1.0.0
-    graphql-tools: ^4.0.8
-    stoppable: ^1.1.0
-  peerDependencies:
-    graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
-  checksum: f277e805b88279a0081011766c7ea9d42945e41044bc15f9cfc6ffbb62fc417b01f4a2a8aa29471a9d10f47ce25a30da196bea712dbf00e6c7681a6ca4bf18b6
   languageName: node
   linkType: hard
 
@@ -6702,23 +6576,6 @@ __metadata:
     fastq: ^1.6.1
     queue-microtask: ^1.1.2
   checksum: ece793dd148dbb50e24f40dacf4852b804405fc1cd34ce794659ffc020c6de41695d87999edc0bb2573c802eaa7766493859dbc432d5dc0079381f318c2705a1
-  languageName: node
-  linkType: hard
-
-"aws-sdk@npm:2.1013.0":
-  version: 2.1013.0
-  resolution: "aws-sdk@npm:2.1013.0"
-  dependencies:
-    buffer: 4.9.2
-    events: 1.1.1
-    ieee754: 1.1.13
-    jmespath: 0.15.0
-    querystring: 0.2.0
-    sax: 1.2.1
-    url: 0.10.3
-    uuid: 3.3.2
-    xml2js: 0.4.19
-  checksum: b4728bad6cffe0fe0691155d344c1235c1f0e7d62a2798f2ae0c094c4f7bbbbcb1173bea4170929fdc3899092feeaef5fea31582454de987c69c19ea1138ce17
   languageName: node
   linkType: hard
 
@@ -7982,13 +7839,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"colorette@npm:1.2.1":
-  version: 1.2.1
-  resolution: "colorette@npm:1.2.1"
-  checksum: 06e2fcdb9e2a2c527ac84509a56eadf481cde1768933eb612808f3bb3a9d9872c06b4a9f95e4d0f7befeef8b38307f79b88242d9ea52470d1125520b8116de08
-  languageName: node
-  linkType: hard
-
 "colorette@npm:2.0.16, colorette@npm:^2.0.10, colorette@npm:^2.0.14, colorette@npm:^2.0.7":
   version: 2.0.16
   resolution: "colorette@npm:2.0.16"
@@ -8650,13 +8500,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dataloader@npm:2.0.0":
-  version: 2.0.0
-  resolution: "dataloader@npm:2.0.0"
-  checksum: 9f10b9d2e35225b08a72435facfe40c0c124e329f43bd0fe4d67411ee667d12145f7ce63f9b74f73af8556dc6a98bae59147a5cca2171315dc1de509d4db04c0
-  languageName: node
-  linkType: hard
-
 "date-fns@npm:2.x":
   version: 2.25.0
   resolution: "date-fns@npm:2.25.0"
@@ -8710,15 +8553,6 @@ __metadata:
     supports-color:
       optional: true
   checksum: 820ea160e267e23c953c9ed87e7ad93494d8cda2f7349af5e7e3bb236d23707ee3022f477d5a7d2ee86ef2bf7d60aa9ab22d1f58080d7deb9dccd073585e1e43
-  languageName: node
-  linkType: hard
-
-"debug@npm:4.1.1":
-  version: 4.1.1
-  resolution: "debug@npm:4.1.1"
-  dependencies:
-    ms: ^2.1.1
-  checksum: 1e681f5cce94ba10f8dde74b20b42e4d8cf0d2a6700f4c165bb3bb6885565ef5ca5885bf07e704974a835f2415ff095a63164f539988a1f07e8a69fe8b1d65ad
   languageName: node
   linkType: hard
 
@@ -10206,7 +10040,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"express@npm:4.17.1, express@npm:^4.0.0, express@npm:^4.17.1":
+"express@npm:4.17.1, express@npm:^4.17.1":
   version: 4.17.1
   resolution: "express@npm:4.17.1"
   dependencies:
@@ -10623,13 +10457,6 @@ __metadata:
     safe-regex2: ^2.0.0
     semver-store: ^0.3.0
   checksum: c5f212d2d2a5e76be91a86409b2de9391a1c3cf5210d357facf0fe91d1e46608865aa2396a98a8d4772116bfae2eb0b05abe4efa725d5cf3cc9b9554bb34e048
-  languageName: node
-  linkType: hard
-
-"find-package-json@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "find-package-json@npm:1.2.0"
-  checksum: ea3fc597c3b3bbdb93f91d62debe7b58f388d55e71c2879e3bd77472c78ce8f7ac2c38f5a2d314176f05cb54808554203c72518b27689efa76e46284094a4370
   languageName: node
   linkType: hard
 
@@ -11371,15 +11198,6 @@ __metadata:
   peerDependencies:
     graphql: ^0.13.0 || ^14.0.0 || ^15.0.0
   checksum: 6a2dc7f158a87444943db0762dafdbcc6dbfd57a398c6615721a6c1a150641d76f5efca2109685aadb0c1df6ba8ff5bd0fdddcb690c36d3d4f608b46e40427a7
-  languageName: node
-  linkType: hard
-
-"graphql-type-json@npm:0.3.2":
-  version: 0.3.2
-  resolution: "graphql-type-json@npm:0.3.2"
-  peerDependencies:
-    graphql: ">=0.8.0"
-  checksum: 41620699637a5294937bd61d6e2696edea5a1279ef3d8f4b33716a910635595435381ccd1b74c6fae62c2bc81064c62ae27d3559c8380c0f99bdfdc8ecb249b0
   languageName: node
   linkType: hard
 
@@ -14261,40 +14079,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"knex@npm:0.95.11":
-  version: 0.95.11
-  resolution: "knex@npm:0.95.11"
-  dependencies:
-    colorette: 1.2.1
-    commander: ^7.1.0
-    debug: 4.3.2
-    escalade: ^3.1.1
-    esm: ^3.2.25
-    getopts: 2.2.5
-    interpret: ^2.2.0
-    lodash: ^4.17.21
-    pg-connection-string: 2.5.0
-    rechoir: 0.7.0
-    resolve-from: ^5.0.0
-    tarn: ^3.0.1
-    tildify: 2.0.0
-  peerDependenciesMeta:
-    mysql:
-      optional: true
-    mysql2:
-      optional: true
-    pg:
-      optional: true
-    sqlite3:
-      optional: true
-    tedious:
-      optional: true
-  bin:
-    knex: bin/cli.js
-  checksum: a0a4451dad286e1bdec17380514e402d4b27130edb19775f4a41d5789e14811b4aaa52c0a359655cb7710aa456daa035df764d1086440e1756c2a2c4e71186b3
-  languageName: node
-  linkType: hard
-
 "knex@npm:0.95.13":
   version: 0.95.13
   resolution: "knex@npm:0.95.13"
@@ -14570,15 +14354,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lockfile@npm:^1.0.4":
-  version: 1.0.4
-  resolution: "lockfile@npm:1.0.4"
-  dependencies:
-    signal-exit: ^3.0.2
-  checksum: 8de35aace8acbe883cbca3cc3959e88904d57c79dccd4afffc64aea8f9cf7b4c63598d08b8add66fbf381f8fb3ce4fd4c518cd231c797c266b6c790eb7b33abc
-  languageName: node
-  linkType: hard
-
 "lodash-es@npm:^4.17.15":
   version: 4.17.21
   resolution: "lodash-es@npm:4.17.21"
@@ -14745,7 +14520,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lowdefy@3.22.0, lowdefy@workspace:packages/cli":
+"lowdefy@workspace:packages/cli":
   version: 0.0.0-use.local
   resolution: "lowdefy@workspace:packages/cli"
   dependencies:
@@ -15581,34 +15356,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongodb-memory-server-core@npm:6.9.6":
-  version: 6.9.6
-  resolution: "mongodb-memory-server-core@npm:6.9.6"
-  dependencies:
-    "@types/tmp": ^0.2.0
-    camelcase: ^6.0.0
-    cross-spawn: ^7.0.3
-    debug: ^4.2.0
-    find-cache-dir: ^3.3.1
-    find-package-json: ^1.2.0
-    get-port: ^5.1.1
-    https-proxy-agent: ^5.0.0
-    lockfile: ^1.0.4
-    md5-file: ^5.0.0
-    mkdirp: ^1.0.4
-    mongodb: ^3.6.2
-    semver: ^7.3.2
-    tar-stream: ^2.1.4
-    tmp: ^0.2.1
-    uuid: ^8.3.0
-    yauzl: ^2.10.0
-  dependenciesMeta:
-    mongodb:
-      optional: true
-  checksum: df68e34f5f2153a9c0c3b155a8debe61bc7e1d3b05a7e7fb25a916dc67eabc7a22cbdc907fb94da1031c86a13a86f9cc67f3fe99362e9052a09dc920de3eb82a
-  languageName: node
-  linkType: hard
-
 "mongodb-memory-server-core@npm:7.3.6":
   version: 7.3.6
   resolution: "mongodb-memory-server-core@npm:7.3.6"
@@ -15631,15 +15378,6 @@ __metadata:
     uuid: ^8.3.1
     yauzl: ^2.10.0
   checksum: 5654b669d1de0915cff8f4b104c35fb292d6f17dbfcc6236c6887a541d6647b50fd350e3c50962053c92eb1343572a4c8dac4f44c3c49b5c514f0aba580d356b
-  languageName: node
-  linkType: hard
-
-"mongodb-memory-server@npm:6.9.6":
-  version: 6.9.6
-  resolution: "mongodb-memory-server@npm:6.9.6"
-  dependencies:
-    mongodb-memory-server-core: 6.9.6
-  checksum: 7705263373507ac2149093259544915a11275a9c36b5f8e0a510a93a0930df5273b9099cbe6a19716e62506844e014de436c58c6fa314934a831f8864a8e8f02
   languageName: node
   linkType: hard
 
@@ -19811,18 +19549,6 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"serverless-http@npm:2.7.0":
-  version: 2.7.0
-  resolution: "serverless-http@npm:2.7.0"
-  dependencies:
-    "@types/aws-lambda": ^8.10.56
-  dependenciesMeta:
-    "@types/aws-lambda":
-      optional: true
-  checksum: caf128423daa23c2d20a805560a34ca3a7fe576400a2f2a27505d42031c6c94b2f4fbcf85e1adf6fa750f4efa11d00454559511331771295daadff31ed5564a6
-  languageName: node
-  linkType: hard
-
 "set-blocking@npm:^2.0.0, set-blocking@npm:~2.0.0":
   version: 2.0.0
   resolution: "set-blocking@npm:2.0.0"
@@ -19987,17 +19713,17 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"slash@npm:3.0.0, slash@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "slash@npm:3.0.0"
+  checksum: 94a93fff615f25a999ad4b83c9d5e257a7280c90a32a7cb8b4a87996e4babf322e469c42b7f649fd5796edd8687652f3fb452a86dc97a816f01113183393f11c
+  languageName: node
+  linkType: hard
+
 "slash@npm:^2.0.0":
   version: 2.0.0
   resolution: "slash@npm:2.0.0"
   checksum: 512d4350735375bd11647233cb0e2f93beca6f53441015eea241fe784d8068281c3987fbaa93e7ef1c38df68d9c60013045c92837423c69115297d6169aa85e6
-  languageName: node
-  linkType: hard
-
-"slash@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "slash@npm:3.0.0"
-  checksum: 94a93fff615f25a999ad4b83c9d5e257a7280c90a32a7cb8b4a87996e4babf322e469c42b7f649fd5796edd8687652f3fb452a86dc97a816f01113183393f11c
   languageName: node
   linkType: hard
 
@@ -20654,16 +20380,6 @@ resolve@^2.0.0-next.3:
   version: 2.0.1
   resolution: "strip-json-comments@npm:2.0.1"
   checksum: 1074ccb63270d32ca28edfb0a281c96b94dc679077828135141f27d52a5a398ef5e78bcf22809d23cadc2b81dfbe345eb5fd8699b385c8b1128907dec4a7d1e1
-  languageName: node
-  linkType: hard
-
-"stripe@npm:8.184.0":
-  version: 8.184.0
-  resolution: "stripe@npm:8.184.0"
-  dependencies:
-    "@types/node": ">=8.1.0"
-    qs: ^6.6.0
-  checksum: 3c34c40fe0f3b00ca60e59c30e9720fc075b646b63620f9858a18a4f958d86bcf05fcce09fcfb915dc13e2d1fb1489f182571394eaa5800790a1cc97633c999d
   languageName: node
   linkType: hard
 
@@ -22735,21 +22451,6 @@ resolve@^2.0.0-next.3:
   version: 20.2.9
   resolution: "yargs-parser@npm:20.2.9"
   checksum: 8bb69015f2b0ff9e17b2c8e6bfe224ab463dd00ca211eece72a4cd8a906224d2703fb8a326d36fdd0e68701e201b2a60ed7cf81ce0fd9b3799f9fe7745977ae3
-  languageName: node
-  linkType: hard
-
-"yargs@npm:17.2.1":
-  version: 17.2.1
-  resolution: "yargs@npm:17.2.1"
-  dependencies:
-    cliui: ^7.0.2
-    escalade: ^3.1.1
-    get-caller-file: ^2.0.5
-    require-directory: ^2.1.1
-    string-width: ^4.2.0
-    y18n: ^5.0.5
-    yargs-parser: ^20.2.2
-  checksum: 451aac46f82da776f436018feed0244bc0e7b4355f7e397bcb53d34c691b177c0d71db3dda9653760e1bc240254d8b763a252ff918ef9e235a8d202e2909c4eb
   languageName: node
   linkType: hard
 

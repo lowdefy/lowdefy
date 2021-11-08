@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import writePages from './writePages';
-import testContext from '../test/testContext';
+import writePages from './writePages.js';
+import testContext from '../test/testContext.js';
 
 const mockWriteBuildArtifact = jest.fn();
 

@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import Actions from './Actions';
-import Events from './Events';
-import Blocks from './Blocks';
-import createLink from './createLink';
-import Requests from './Requests';
-import State from './State';
+import Actions from './Actions.js';
+import Events from './Events.js';
+import Blocks from './Blocks.js';
+import createLink from './createLink.js';
+import Requests from './Requests.js';
+import State from './State.js';
 
-import getContext from './getContext';
+import getContext from './getContext.js';
 
 export { Actions, Events, Blocks, createLink, Requests, State };
 

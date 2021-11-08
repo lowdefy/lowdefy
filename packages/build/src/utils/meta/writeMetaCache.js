@@ -16,7 +16,7 @@
 
 import path from 'path';
 import { writeFile } from '@lowdefy/node-utils';
-import createCacheKey from './createCacheKey';
+import createCacheKey from './createCacheKey.js';
 
 function createWriteMetaCache({ cacheDirectory }) {
   async function writeMetaCache({ location, meta }) {

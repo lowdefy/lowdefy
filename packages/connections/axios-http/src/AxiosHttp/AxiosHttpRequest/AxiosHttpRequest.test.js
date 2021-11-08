@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import AxiosHttpRequest from './AxiosHttpRequest';
+import AxiosHttpRequest from './AxiosHttpRequest.js';
 
 const { resolver } = AxiosHttpRequest;
 

@@ -19,10 +19,10 @@
 import { serializer } from '@lowdefy/helpers';
 import { WebParser } from '@lowdefy/operators';
 
-import Blocks from '../../src/Blocks';
-import State from '../../src/State';
+import Blocks from '../../src/Blocks.js';
+import State from '../../src/State.js';
 
-import testContext from '../testContext';
+import testContext from '../testContext.js';
 
 const pageId = 'one';
 const lowdefy = { pageId };

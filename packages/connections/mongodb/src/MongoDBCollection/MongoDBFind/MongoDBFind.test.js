@@ -15,8 +15,8 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import MongoDBFind from './MongoDBFind';
-import populateTestMongoDb from '../../../test/populateTestMongoDb';
+import MongoDBFind from './MongoDBFind.js';
+import populateTestMongoDb from '../../../test/populateTestMongoDb.js';
 
 const { resolver, schema, checkRead, checkWrite } = MongoDBFind;
 

@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import testSchema from './testSchema';
-import testContext from '../test/testContext';
+import testSchema from './testSchema.js';
+import testContext from '../test/testContext.js';
 
 const mockLogWarn = jest.fn();
 

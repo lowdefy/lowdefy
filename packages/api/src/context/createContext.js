@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import createAuthorize from './createAuthorize';
-import createReadConfigFile from './readConfigFile';
-import verifyAuthorizationHeader from './verifyAuthorizationHeader';
+import createAuthorize from './createAuthorize.js';
+import createReadConfigFile from './readConfigFile.js';
+import verifyAuthorizationHeader from './verifyAuthorizationHeader.js';
 
 async function createContext({ buildDirectory, connections, secrets }) {
   const readConfigFile = createReadConfigFile({ buildDirectory });

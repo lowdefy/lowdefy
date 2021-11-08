@@ -14,10 +14,11 @@
   limitations under the License.
 */
 
+// TODO: do we want this query-string dep in helpers?
 import queryString from 'query-string';
 
-import serializer from './serializer';
-import type from './type';
+import serializer from './serializer.js';
+import type from './type.js';
 
 const parse = (str) => {
   const parsed = queryString.parse(str);

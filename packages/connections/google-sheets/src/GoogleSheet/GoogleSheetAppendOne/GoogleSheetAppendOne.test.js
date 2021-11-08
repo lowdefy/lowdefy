@@ -15,7 +15,7 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import GoogleSheetAppendOne from './GoogleSheetAppendOne';
+import GoogleSheetAppendOne from './GoogleSheetAppendOne.js';
 
 const mockAddRow = jest.fn();
 jest.mock('../getSheet', () => () => ({

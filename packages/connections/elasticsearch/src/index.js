@@ -1,4 +1,4 @@
-import Elasticsearch from './Elasticsearch/Elasticsearch';
+import Elasticsearch from './Elasticsearch/Elasticsearch.js';
 
 export const connections = {
   Elasticsearch,

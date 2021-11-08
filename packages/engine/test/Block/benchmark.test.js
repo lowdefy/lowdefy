@@ -16,7 +16,7 @@
    limitations under the License.
 */
 
-import testContext from '../testContext';
+import testContext from '../testContext.js';
 
 const NUM_TIMES = 10;
 const pageId = 'one';

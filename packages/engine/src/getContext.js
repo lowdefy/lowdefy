@@ -16,10 +16,10 @@
 
 import { WebParser } from '@lowdefy/operators';
 
-import Actions from './Actions';
-import Blocks from './Blocks';
-import Requests from './Requests';
-import State from './State';
+import Actions from './Actions.js';
+import Blocks from './Blocks.js';
+import Requests from './Requests.js';
+import State from './State.js';
 
 const blockData = ({
   areas,

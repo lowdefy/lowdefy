@@ -15,15 +15,15 @@
 */
 
 import schema from './MongoDBCollectionSchema.json';
-import MongoDBAggregation from './MongoDBAggregation/MongoDBAggregation';
-import MongoDBDeleteMany from './MongoDBDeleteMany/MongoDBDeleteMany';
-import MongoDBDeleteOne from './MongoDBDeleteOne/MongoDBDeleteOne';
-import MongoDBFind from './MongoDBFind/MongoDBFind';
-import MongoDBFindOne from './MongoDBFindOne/MongoDBFindOne';
-import MongoDBInsertMany from './MongoDBInsertMany/MongoDBInsertMany';
-import MongoDBInsertOne from './MongoDBInsertOne/MongoDBInsertOne';
-import MongoDBUpdateMany from './MongoDBUpdateMany/MongoDBUpdateMany';
-import MongoDBUpdateOne from './MongoDBUpdateOne/MongoDBUpdateOne';
+import MongoDBAggregation from './MongoDBAggregation/MongoDBAggregation.js';
+import MongoDBDeleteMany from './MongoDBDeleteMany/MongoDBDeleteMany.js';
+import MongoDBDeleteOne from './MongoDBDeleteOne/MongoDBDeleteOne.js';
+import MongoDBFind from './MongoDBFind/MongoDBFind.js';
+import MongoDBFindOne from './MongoDBFindOne/MongoDBFindOne.js';
+import MongoDBInsertMany from './MongoDBInsertMany/MongoDBInsertMany.js';
+import MongoDBInsertOne from './MongoDBInsertOne/MongoDBInsertOne.js';
+import MongoDBUpdateMany from './MongoDBUpdateMany/MongoDBUpdateMany.js';
+import MongoDBUpdateOne from './MongoDBUpdateOne/MongoDBUpdateOne.js';
 
 export default {
   schema,

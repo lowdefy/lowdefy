@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import createCacheKey from './createCacheKey';
+import createCacheKey from './createCacheKey.js';
 
 test('createCacheKey converts a url to a file safe string', () => {
   const location = {

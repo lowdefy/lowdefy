@@ -1,4 +1,4 @@
-import AxiosHttp from './AxiosHttp/AxiosHttpConnection';
+import AxiosHttp from './AxiosHttp/AxiosHttpConnection.js';
 
 export const connections = {
   AxiosHttp,

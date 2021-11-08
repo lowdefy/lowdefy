@@ -44,7 +44,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import type from './type';
+import type from './type.js';
 
 function isValidKey(key) {
   return key !== '__proto__' && key !== 'constructor' && key !== 'prototype';

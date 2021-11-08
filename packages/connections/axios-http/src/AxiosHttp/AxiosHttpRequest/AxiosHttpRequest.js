@@ -20,7 +20,7 @@ import https from 'https';
 import axios from 'axios';
 import { mergeObjects } from '@lowdefy/helpers';
 
-import schema from '../AxiosHttpConnectionSchema';
+import schema from '../AxiosHttpConnectionSchema.json';
 
 async function axiosHttpRequest({ request, connection }) {
   try {

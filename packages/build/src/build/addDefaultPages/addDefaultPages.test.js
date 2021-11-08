@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import addDefaultPages from './addDefaultPages';
-import testContext from '../../test/testContext';
+import addDefaultPages from './addDefaultPages.js';
+import testContext from '../../test/testContext.js';
 
 const mockLogWarn = jest.fn();
 

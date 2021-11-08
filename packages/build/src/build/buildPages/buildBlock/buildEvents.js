@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import createCheckDuplicateId from '../../../utils/createCheckDuplicateId';
+import createCheckDuplicateId from '../../../utils/createCheckDuplicateId.js';
 
 function checkActionId(action, eventContext) {
   const { eventId, blockId, pageId, checkDuplicateActionId } = eventContext;

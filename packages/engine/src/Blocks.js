@@ -18,8 +18,8 @@
 
 import { applyArrayIndices, get, serializer, swap, type } from '@lowdefy/helpers';
 
-import Events from './Events';
-import getFieldValues from './getFieldValues';
+import Events from './Events.js';
+import getFieldValues from './getFieldValues.js';
 
 class Blocks {
   constructor({ arrayIndices, areas, context }) {

@@ -54,7 +54,7 @@
           "type": "string",
           "enum": ["string", "number", "boolean", "date", "json"],
           "errorMessage": {
-            "enum": "GoogleSheet connection property \"{{ dataPath }}\" should be one of \"string\", \"number\", \"boolean\", \"date\", or \"json\"."
+            "enum": "GoogleSheet connection property \"{{ instancePath }}\" should be one of \"string\", \"number\", \"boolean\", \"date\", or \"json\"."
           }
         }
       },

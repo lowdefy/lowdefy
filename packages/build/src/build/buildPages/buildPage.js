@@ -17,8 +17,8 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import buildBlock from './buildBlock/buildBlock';
-import createCheckDuplicateId from '../../utils/createCheckDuplicateId';
+import buildBlock from './buildBlock/buildBlock.js';
+import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 
 async function buildPage({ page, index, context, checkDuplicatePageId }) {
   if (type.isUndefined(page.id)) {

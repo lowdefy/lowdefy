@@ -16,7 +16,7 @@
 
 import { Client } from '@elastic/elasticsearch';
 import { validate } from '@lowdefy/ajv';
-import ElasticsearchDeleteByQuery from './ElasticsearchDeleteByQuery';
+import ElasticsearchDeleteByQuery from './ElasticsearchDeleteByQuery.js';
 
 const mockElasticsearchClient = jest.fn(() => mockElasticsearchClient);
 mockElasticsearchClient.deleteByQuery = jest.fn(() => mockElasticsearchClient);

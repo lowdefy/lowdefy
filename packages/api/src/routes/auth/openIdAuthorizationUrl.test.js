@@ -15,9 +15,9 @@
 */
 
 import { Issuer } from 'openid-client';
-import openIdAuthorizationUrl from './openIdAuthorizationUrl';
-import testContext from '../../test/testContext';
-import { ConfigurationError } from '../../context/errors';
+import openIdAuthorizationUrl from './openIdAuthorizationUrl.js';
+import testContext from '../../test/testContext.js';
+import { ConfigurationError } from '../../context/errors.js';
 
 jest.mock('openid-client');
 
