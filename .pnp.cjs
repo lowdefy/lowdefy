@@ -415,7 +415,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["@apollo/protobufjs", [
         ["npm:1.2.2", {
-          "packageLocation": "./.yarn/unplugged/@apollo-protobufjs-npm-1.2.2-306a5b4ea3/node_modules/@apollo/protobufjs/",
+          "packageLocation": "./.yarn/cache/@apollo-protobufjs-npm-1.2.2-306a5b4ea3-75940f213d.zip/node_modules/@apollo/protobufjs/",
           "packageDependencies": [
             ["@apollo/protobufjs", "npm:1.2.2"],
             ["@protobufjs/aspromise", "npm:1.1.2"],
@@ -4831,7 +4831,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@shelf/jest-mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:1.2.5"],
             ["ajv", "npm:6.12.6"],
             ["ajv-errors", "virtual:09ba37edd9db25b7821b7d2b2d2055c41a6ed7b7590f4f31cb08f11ca472be4a006b49e750b63bf1615697d9f5fdbcda49d5e649e3491c0b6490a9dc0dbedfa2#npm:1.0.1"],
-            ["apollo-server", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:2.25.0"],
+            ["apollo-server", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:2.25.3"],
             ["apollo-server-testing", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:2.25.0"],
             ["aws-sdk", "npm:2.918.0"],
             ["axios", "npm:0.21.4"],
@@ -6045,6 +6045,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/serve-static", "npm:1.13.9"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:4.17.13", {
+          "packageLocation": "./.yarn/cache/@types-express-npm-4.17.13-0e12fe9c24-9f17da703d.zip/node_modules/@types/express/",
+          "packageDependencies": [
+            ["@types/express", "npm:4.17.13"],
+            ["@types/body-parser", "npm:1.19.0"],
+            ["@types/express-serve-static-core", "npm:4.17.20"],
+            ["@types/qs", "npm:6.9.6"],
+            ["@types/serve-static", "npm:1.13.9"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["@types/express-serve-static-core", [
@@ -6062,6 +6073,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-express-serve-static-core-npm-4.17.20-4f3f89623e-49bc326947.zip/node_modules/@types/express-serve-static-core/",
           "packageDependencies": [
             ["@types/express-serve-static-core", "npm:4.17.20"],
+            ["@types/node", "npm:15.6.1"],
+            ["@types/qs", "npm:6.9.6"],
+            ["@types/range-parser", "npm:1.2.3"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:4.17.24", {
+          "packageLocation": "./.yarn/cache/@types-express-serve-static-core-npm-4.17.24-cd6b9fd3ba-30fc9b62a7.zip/node_modules/@types/express-serve-static-core/",
+          "packageDependencies": [
+            ["@types/express-serve-static-core", "npm:4.17.24"],
             ["@types/node", "npm:15.6.1"],
             ["@types/qs", "npm:6.9.6"],
             ["@types/range-parser", "npm:1.2.3"]
@@ -8330,20 +8351,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["apollo-server", [
-        ["npm:2.25.0", {
-          "packageLocation": "./.yarn/cache/apollo-server-npm-2.25.0-ef1acc02b6-d68caf8a3d.zip/node_modules/apollo-server/",
+        ["npm:2.25.3", {
+          "packageLocation": "./.yarn/cache/apollo-server-npm-2.25.3-ee08e04b42-3c1cfd789f.zip/node_modules/apollo-server/",
           "packageDependencies": [
-            ["apollo-server", "npm:2.25.0"]
+            ["apollo-server", "npm:2.25.3"]
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:2.25.0", {
-          "packageLocation": "./.yarn/$$virtual/apollo-server-virtual-2778d3a2fd/0/cache/apollo-server-npm-2.25.0-ef1acc02b6-d68caf8a3d.zip/node_modules/apollo-server/",
+        ["virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:2.25.3", {
+          "packageLocation": "./.yarn/$$virtual/apollo-server-virtual-6b587cf9cc/0/cache/apollo-server-npm-2.25.3-ee08e04b42-3c1cfd789f.zip/node_modules/apollo-server/",
           "packageDependencies": [
-            ["apollo-server", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:2.25.0"],
+            ["apollo-server", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:2.25.3"],
             ["@types/graphql", null],
-            ["apollo-server-core", "virtual:8a8911f90d6c9c341a6ab1eb7d5a77222aa58c4e17f47c005ada60ac90a96ade9c99876cbedda6c34fa84fb25d553d0e86d42d3ecc26a6f654714d2b99e4160a#npm:2.25.0"],
-            ["apollo-server-express", "virtual:dddca670fd0b7758fb2e1b1a3e18ac7ebd1ecd06ecdd7acec2b78bccf1d35802cb22904bfbb233b16515a81f5cb819421786d20887823d98022b367036c1ad51#npm:2.25.0"],
+            ["apollo-server-core", "virtual:6b587cf9cc7a395d0b66206eb79b4eff93e8beb48017f7f8716e0dcbb8cbeff26e229a002022f8e33adccde7890f96583d3ab2f8ac5cbe51a28d484ec6840eb1#npm:2.25.3"],
+            ["apollo-server-express", "virtual:6b587cf9cc7a395d0b66206eb79b4eff93e8beb48017f7f8716e0dcbb8cbeff26e229a002022f8e33adccde7890f96583d3ab2f8ac5cbe51a28d484ec6840eb1#npm:2.25.3"],
             ["express", "npm:4.17.1"],
             ["graphql", "npm:15.5.0"],
             ["graphql-subscriptions", "virtual:8a8911f90d6c9c341a6ab1eb7d5a77222aa58c4e17f47c005ada60ac90a96ade9c99876cbedda6c34fa84fb25d553d0e86d42d3ecc26a6f654714d2b99e4160a#npm:1.2.1"],
@@ -8374,6 +8395,51 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["apollo-server-core", "npm:2.25.0"]
           ],
           "linkType": "SOFT",
+        }],
+        ["npm:2.25.3", {
+          "packageLocation": "./.yarn/cache/apollo-server-core-npm-2.25.3-7889eaaa31-cfc91f21e2.zip/node_modules/apollo-server-core/",
+          "packageDependencies": [
+            ["apollo-server-core", "npm:2.25.3"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:6b587cf9cc7a395d0b66206eb79b4eff93e8beb48017f7f8716e0dcbb8cbeff26e229a002022f8e33adccde7890f96583d3ab2f8ac5cbe51a28d484ec6840eb1#npm:2.25.3", {
+          "packageLocation": "./.yarn/$$virtual/apollo-server-core-virtual-68a7632042/0/cache/apollo-server-core-npm-2.25.3-7889eaaa31-cfc91f21e2.zip/node_modules/apollo-server-core/",
+          "packageDependencies": [
+            ["apollo-server-core", "virtual:6b587cf9cc7a395d0b66206eb79b4eff93e8beb48017f7f8716e0dcbb8cbeff26e229a002022f8e33adccde7890f96583d3ab2f8ac5cbe51a28d484ec6840eb1#npm:2.25.3"],
+            ["@apollographql/apollo-tools", "virtual:409fb826ac6e59cdd1b24dae8477237c471ede269f927d24917396be043077512cf05f6577617aa2e3b4f2ebb81aabcd9bb5cf77b24c0edcb20c0c34d4147227#npm:0.5.1"],
+            ["@apollographql/graphql-playground-html", "npm:1.6.27"],
+            ["@apollographql/graphql-upload-8-fork", "virtual:409fb826ac6e59cdd1b24dae8477237c471ede269f927d24917396be043077512cf05f6577617aa2e3b4f2ebb81aabcd9bb5cf77b24c0edcb20c0c34d4147227#npm:8.1.3"],
+            ["@josephg/resolvable", "npm:1.0.1"],
+            ["@types/graphql", null],
+            ["@types/ws", "npm:7.4.4"],
+            ["apollo-cache-control", "virtual:409fb826ac6e59cdd1b24dae8477237c471ede269f927d24917396be043077512cf05f6577617aa2e3b4f2ebb81aabcd9bb5cf77b24c0edcb20c0c34d4147227#npm:0.14.0"],
+            ["apollo-datasource", "npm:0.9.0"],
+            ["apollo-graphql", "virtual:409fb826ac6e59cdd1b24dae8477237c471ede269f927d24917396be043077512cf05f6577617aa2e3b4f2ebb81aabcd9bb5cf77b24c0edcb20c0c34d4147227#npm:0.9.3"],
+            ["apollo-reporting-protobuf", "npm:0.8.0"],
+            ["apollo-server-caching", "npm:0.7.0"],
+            ["apollo-server-env", "npm:3.1.0"],
+            ["apollo-server-errors", "virtual:409fb826ac6e59cdd1b24dae8477237c471ede269f927d24917396be043077512cf05f6577617aa2e3b4f2ebb81aabcd9bb5cf77b24c0edcb20c0c34d4147227#npm:2.5.0"],
+            ["apollo-server-plugin-base", "virtual:409fb826ac6e59cdd1b24dae8477237c471ede269f927d24917396be043077512cf05f6577617aa2e3b4f2ebb81aabcd9bb5cf77b24c0edcb20c0c34d4147227#npm:0.13.0"],
+            ["apollo-server-types", "virtual:8a8911f90d6c9c341a6ab1eb7d5a77222aa58c4e17f47c005ada60ac90a96ade9c99876cbedda6c34fa84fb25d553d0e86d42d3ecc26a6f654714d2b99e4160a#npm:0.9.0"],
+            ["apollo-tracing", "virtual:409fb826ac6e59cdd1b24dae8477237c471ede269f927d24917396be043077512cf05f6577617aa2e3b4f2ebb81aabcd9bb5cf77b24c0edcb20c0c34d4147227#npm:0.15.0"],
+            ["async-retry", "npm:1.3.1"],
+            ["fast-json-stable-stringify", "npm:2.1.0"],
+            ["graphql", "npm:15.5.0"],
+            ["graphql-extensions", "virtual:409fb826ac6e59cdd1b24dae8477237c471ede269f927d24917396be043077512cf05f6577617aa2e3b4f2ebb81aabcd9bb5cf77b24c0edcb20c0c34d4147227#npm:0.15.0"],
+            ["graphql-tag", "virtual:409fb826ac6e59cdd1b24dae8477237c471ede269f927d24917396be043077512cf05f6577617aa2e3b4f2ebb81aabcd9bb5cf77b24c0edcb20c0c34d4147227#npm:2.12.4"],
+            ["graphql-tools", "virtual:8a8911f90d6c9c341a6ab1eb7d5a77222aa58c4e17f47c005ada60ac90a96ade9c99876cbedda6c34fa84fb25d553d0e86d42d3ecc26a6f654714d2b99e4160a#npm:4.0.8"],
+            ["loglevel", "npm:1.7.1"],
+            ["lru-cache", "npm:6.0.0"],
+            ["sha.js", "npm:2.4.11"],
+            ["subscriptions-transport-ws", "virtual:68a7632042534c68d800340a20bd624769169444c825b64796b97aa3edb8fc1f548fb5690e3d353283c3017478fd03f4dbfb643f6b6d3ead1e8d3c6eb0c2a966#npm:0.9.19"],
+            ["uuid", "npm:8.3.2"]
+          ],
+          "packagePeers": [
+            "@types/graphql",
+            "graphql"
+          ],
+          "linkType": "HARD",
         }],
         ["virtual:8a8911f90d6c9c341a6ab1eb7d5a77222aa58c4e17f47c005ada60ac90a96ade9c99876cbedda6c34fa84fb25d553d0e86d42d3ecc26a6f654714d2b99e4160a#npm:2.25.0", {
           "packageLocation": "./.yarn/$$virtual/apollo-server-core-virtual-409fb826ac/0/cache/apollo-server-core-npm-2.25.0-fe4da4112e-6a2619c464.zip/node_modules/apollo-server-core/",
@@ -8455,6 +8521,43 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["apollo-server-express", "npm:2.25.0"]
           ],
           "linkType": "SOFT",
+        }],
+        ["npm:2.25.3", {
+          "packageLocation": "./.yarn/cache/apollo-server-express-npm-2.25.3-cc501bfb0d-7825236371.zip/node_modules/apollo-server-express/",
+          "packageDependencies": [
+            ["apollo-server-express", "npm:2.25.3"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:6b587cf9cc7a395d0b66206eb79b4eff93e8beb48017f7f8716e0dcbb8cbeff26e229a002022f8e33adccde7890f96583d3ab2f8ac5cbe51a28d484ec6840eb1#npm:2.25.3", {
+          "packageLocation": "./.yarn/$$virtual/apollo-server-express-virtual-e37f262c79/0/cache/apollo-server-express-npm-2.25.3-cc501bfb0d-7825236371.zip/node_modules/apollo-server-express/",
+          "packageDependencies": [
+            ["apollo-server-express", "virtual:6b587cf9cc7a395d0b66206eb79b4eff93e8beb48017f7f8716e0dcbb8cbeff26e229a002022f8e33adccde7890f96583d3ab2f8ac5cbe51a28d484ec6840eb1#npm:2.25.3"],
+            ["@apollographql/graphql-playground-html", "npm:1.6.27"],
+            ["@types/accepts", "npm:1.3.5"],
+            ["@types/body-parser", "npm:1.19.0"],
+            ["@types/cors", "npm:2.8.10"],
+            ["@types/express", "npm:4.17.13"],
+            ["@types/express-serve-static-core", "npm:4.17.24"],
+            ["@types/graphql", null],
+            ["accepts", "npm:1.3.7"],
+            ["apollo-server-core", "virtual:6b587cf9cc7a395d0b66206eb79b4eff93e8beb48017f7f8716e0dcbb8cbeff26e229a002022f8e33adccde7890f96583d3ab2f8ac5cbe51a28d484ec6840eb1#npm:2.25.3"],
+            ["apollo-server-types", "virtual:8a8911f90d6c9c341a6ab1eb7d5a77222aa58c4e17f47c005ada60ac90a96ade9c99876cbedda6c34fa84fb25d553d0e86d42d3ecc26a6f654714d2b99e4160a#npm:0.9.0"],
+            ["body-parser", "npm:1.19.0"],
+            ["cors", "npm:2.8.5"],
+            ["express", "npm:4.17.1"],
+            ["graphql", "npm:15.5.0"],
+            ["graphql-subscriptions", "virtual:8a8911f90d6c9c341a6ab1eb7d5a77222aa58c4e17f47c005ada60ac90a96ade9c99876cbedda6c34fa84fb25d553d0e86d42d3ecc26a6f654714d2b99e4160a#npm:1.2.1"],
+            ["graphql-tools", "virtual:8a8911f90d6c9c341a6ab1eb7d5a77222aa58c4e17f47c005ada60ac90a96ade9c99876cbedda6c34fa84fb25d553d0e86d42d3ecc26a6f654714d2b99e4160a#npm:4.0.8"],
+            ["parseurl", "npm:1.3.3"],
+            ["subscriptions-transport-ws", "virtual:68a7632042534c68d800340a20bd624769169444c825b64796b97aa3edb8fc1f548fb5690e3d353283c3017478fd03f4dbfb643f6b6d3ead1e8d3c6eb0c2a966#npm:0.9.19"],
+            ["type-is", "npm:1.6.18"]
+          ],
+          "packagePeers": [
+            "@types/graphql",
+            "graphql"
+          ],
+          "linkType": "HARD",
         }],
         ["virtual:dddca670fd0b7758fb2e1b1a3e18ac7ebd1ecd06ecdd7acec2b78bccf1d35802cb22904bfbb233b16515a81f5cb819421786d20887823d98022b367036c1ad51#npm:2.25.0", {
           "packageLocation": "./.yarn/$$virtual/apollo-server-express-virtual-8a8911f90d/0/cache/apollo-server-express-npm-2.25.0-bcd716db0f-213db380ad.zip/node_modules/apollo-server-express/",
@@ -8995,7 +9098,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["aws-sdk", [
         ["npm:2.918.0", {
-          "packageLocation": "./.yarn/unplugged/aws-sdk-npm-2.918.0-62f2084c7c/node_modules/aws-sdk/",
+          "packageLocation": "./.yarn/cache/aws-sdk-npm-2.918.0-62f2084c7c-72d0648d76.zip/node_modules/aws-sdk/",
           "packageDependencies": [
             ["aws-sdk", "npm:2.918.0"],
             ["buffer", "npm:4.9.2"],
@@ -11712,7 +11815,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["core-js-pure", [
         ["npm:3.13.1", {
-          "packageLocation": "./.yarn/unplugged/core-js-pure-npm-3.13.1-13e8d70a9f/node_modules/core-js-pure/",
+          "packageLocation": "./.yarn/cache/core-js-pure-npm-3.13.1-13e8d70a9f-12f0509d4b.zip/node_modules/core-js-pure/",
           "packageDependencies": [
             ["core-js-pure", "npm:3.13.1"]
           ],
@@ -15735,7 +15838,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }],
         ["npm:9.18.5", {
-          "packageLocation": "./.yarn/unplugged/highlight.js-npm-9.18.5-571500f48d/node_modules/highlight.js/",
+          "packageLocation": "./.yarn/cache/highlight.js-npm-9.18.5-571500f48d-dea74c216c.zip/node_modules/highlight.js/",
           "packageDependencies": [
             ["highlight.js", "npm:9.18.5"]
           ],
@@ -20021,7 +20124,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["mongodb-memory-server", [
         ["npm:6.9.6", {
-          "packageLocation": "./.yarn/unplugged/mongodb-memory-server-npm-6.9.6-70aa543110/node_modules/mongodb-memory-server/",
+          "packageLocation": "./.yarn/cache/mongodb-memory-server-npm-6.9.6-70aa543110-6189945641.zip/node_modules/mongodb-memory-server/",
           "packageDependencies": [
             ["mongodb-memory-server", "npm:6.9.6"],
             ["mongodb-memory-server-core", "npm:6.9.6"]
@@ -20522,7 +20625,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["nodemon", [
         ["npm:2.0.7", {
-          "packageLocation": "./.yarn/unplugged/nodemon-npm-2.0.7-7b95e46511/node_modules/nodemon/",
+          "packageLocation": "./.yarn/cache/nodemon-npm-2.0.7-7b95e46511-e1e8acb584.zip/node_modules/nodemon/",
           "packageDependencies": [
             ["nodemon", "npm:2.0.7"],
             ["chokidar", "npm:3.5.1"],
@@ -26607,6 +26710,31 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
+        ["npm:0.9.19", {
+          "packageLocation": "./.yarn/cache/subscriptions-transport-ws-npm-0.9.19-5f31f99bef-d305b2d9db.zip/node_modules/subscriptions-transport-ws/",
+          "packageDependencies": [
+            ["subscriptions-transport-ws", "npm:0.9.19"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:68a7632042534c68d800340a20bd624769169444c825b64796b97aa3edb8fc1f548fb5690e3d353283c3017478fd03f4dbfb643f6b6d3ead1e8d3c6eb0c2a966#npm:0.9.19", {
+          "packageLocation": "./.yarn/$$virtual/subscriptions-transport-ws-virtual-04699ec538/0/cache/subscriptions-transport-ws-npm-0.9.19-5f31f99bef-d305b2d9db.zip/node_modules/subscriptions-transport-ws/",
+          "packageDependencies": [
+            ["subscriptions-transport-ws", "virtual:68a7632042534c68d800340a20bd624769169444c825b64796b97aa3edb8fc1f548fb5690e3d353283c3017478fd03f4dbfb643f6b6d3ead1e8d3c6eb0c2a966#npm:0.9.19"],
+            ["@types/graphql", null],
+            ["backo2", "npm:1.0.2"],
+            ["eventemitter3", "npm:3.1.2"],
+            ["graphql", "npm:15.5.0"],
+            ["iterall", "npm:1.3.0"],
+            ["symbol-observable", "npm:1.2.0"],
+            ["ws", "virtual:04699ec538ddbfa2e6ca857df905ed7e1154f9cf06e4b3e294b4c74bf44b46aadb534e6f953b5ac82e50bac356047df4df809ed8a82e3043466b12e4a3d7c44c#npm:7.5.5"]
+          ],
+          "packagePeers": [
+            "@types/graphql",
+            "graphql"
+          ],
+          "linkType": "HARD",
+        }],
         ["virtual:8a8911f90d6c9c341a6ab1eb7d5a77222aa58c4e17f47c005ada60ac90a96ade9c99876cbedda6c34fa84fb25d553d0e86d42d3ecc26a6f654714d2b99e4160a#npm:0.9.18", {
           "packageLocation": "./.yarn/$$virtual/subscriptions-transport-ws-virtual-a4932fd28c/0/cache/subscriptions-transport-ws-npm-0.9.18-7d0f338bbd-54f23dadb3.zip/node_modules/subscriptions-transport-ws/",
           "packageDependencies": [
@@ -30387,6 +30515,30 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ws", "npm:7.4.6"]
           ],
           "linkType": "SOFT",
+        }],
+        ["npm:7.5.5", {
+          "packageLocation": "./.yarn/cache/ws-npm-7.5.5-8f4a2a84a8-6a89e6b543.zip/node_modules/ws/",
+          "packageDependencies": [
+            ["ws", "npm:7.5.5"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:04699ec538ddbfa2e6ca857df905ed7e1154f9cf06e4b3e294b4c74bf44b46aadb534e6f953b5ac82e50bac356047df4df809ed8a82e3043466b12e4a3d7c44c#npm:7.5.5", {
+          "packageLocation": "./.yarn/$$virtual/ws-virtual-eb4f382e1c/0/cache/ws-npm-7.5.5-8f4a2a84a8-6a89e6b543.zip/node_modules/ws/",
+          "packageDependencies": [
+            ["ws", "virtual:04699ec538ddbfa2e6ca857df905ed7e1154f9cf06e4b3e294b4c74bf44b46aadb534e6f953b5ac82e50bac356047df4df809ed8a82e3043466b12e4a3d7c44c#npm:7.5.5"],
+            ["@types/bufferutil", null],
+            ["@types/utf-8-validate", null],
+            ["bufferutil", null],
+            ["utf-8-validate", null]
+          ],
+          "packagePeers": [
+            "@types/bufferutil",
+            "@types/utf-8-validate",
+            "bufferutil",
+            "utf-8-validate"
+          ],
+          "linkType": "HARD",
         }],
         ["virtual:5d97c1964f47c97510019e8e1ca12c073edbd7f16b511e7ceee55b6129c48784db6a804ce3b47d654660f50f8f4d1ab075b879abda7a62ddc6511583371ef9b5#npm:7.4.6", {
           "packageLocation": "./.yarn/$$virtual/ws-virtual-f18bd5ad7c/0/cache/ws-npm-7.4.6-9c9a725604-ffeb626d92.zip/node_modules/ws/",

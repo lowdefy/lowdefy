@@ -47,7 +47,7 @@
     "@sendgrid/mail": "7.4.4",
     "ajv": "6.12.6",
     "ajv-errors": "1.0.1",
-    "apollo-server": "2.25.0",
+    "apollo-server": "2.25.3",
     "aws-sdk": "2.918.0",
     "axios": "0.21.4",
     "cookie": "0.4.1",
