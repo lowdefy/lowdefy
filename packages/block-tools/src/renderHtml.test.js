@@ -16,8 +16,8 @@
 
 import { render } from '@testing-library/react';
 
-import renderHtml from './renderHtml';
-import makeCssClass from './makeCssClass';
+import renderHtml from './renderHtml.js';
+import makeCssClass from './makeCssClass.js';
 const methods = {
   makeCssClass,
 };

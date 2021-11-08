@@ -14,17 +14,19 @@
   limitations under the License.
 */
 
-import blockDefaultProps from './blockDefaultProps';
-import ErrorBoundary from './ErrorBoundary';
-import HtmlComponent from './HtmlComponent';
+import blockDefaultProps from './blockDefaultProps.js';
+import ErrorBoundary from './ErrorBoundary.js';
+import HtmlComponent from './HtmlComponent.js';
+import Icon from './Icon.js';
 import makeCssClass from './makeCssClass.js';
 import mediaToCssObject from './mediaToCssObject.js';
-import renderHtml from './renderHtml';
+import renderHtml from './renderHtml.js';
 
 export {
   blockDefaultProps,
   ErrorBoundary,
   HtmlComponent,
+  Icon,
   makeCssClass,
   mediaToCssObject,
   renderHtml,

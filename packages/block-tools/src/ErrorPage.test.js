@@ -17,7 +17,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import ErrorPage from './ErrorPage';
+import ErrorPage from './ErrorPage.js';
 
 test('default', () => {
   const { container } = render(<ErrorPage />);

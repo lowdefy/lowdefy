@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import makeCssClass from './makeCssClass';
+import makeCssClass from './makeCssClass.js';
 import { render } from '@testing-library/react';
 
 test('object with no media', () => {

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import blockDefaultProps from './blockDefaultProps';
+import blockDefaultProps from './blockDefaultProps.js';
 
 test('default', () => {
   expect(blockDefaultProps).toMatchInlineSnapshot(`

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import makeCssClass from './makeCssClass';
+import makeCssClass from './makeCssClass.js';
 
 const blockDefaultProps = {
   basePath: '',

@@ -17,7 +17,7 @@
 import React from 'react';
 import { type } from '@lowdefy/helpers';
 
-import HtmlComponent from './HtmlComponent';
+import HtmlComponent from './HtmlComponent.js';
 
 const renderHtml = ({ div, html, id, methods, style }) =>
   type.isNone(html) ? undefined : (

@@ -1962,6 +1962,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@emotion/react@npm:11.5.0":
+  version: 11.5.0
+  resolution: "@emotion/react@npm:11.5.0"
+  dependencies:
+    "@babel/runtime": ^7.13.10
+    "@emotion/cache": ^11.5.0
+    "@emotion/serialize": ^1.0.2
+    "@emotion/sheet": ^1.0.3
+    "@emotion/utils": ^1.0.0
+    "@emotion/weak-memoize": ^0.2.5
+    hoist-non-react-statics: ^3.3.1
+  peerDependencies:
+    "@babel/core": ^7.0.0
+    react: ">=16.8.0"
+  peerDependenciesMeta:
+    "@babel/core":
+      optional: true
+    "@types/react":
+      optional: true
+  checksum: 4188b664cc5b7142cf58323d78911cfdeef106d7b26987f8e4aceb51074e99a48a16cf6c3d1aa124462d2135a7b0d2b5d1bc2bbb6ac6167010f69607d822d51a
+  languageName: node
+  linkType: hard
+
 "@emotion/serialize@npm:^1.0.0, @emotion/serialize@npm:^1.0.2":
   version: 1.0.2
   resolution: "@emotion/serialize@npm:1.0.2"
@@ -3366,11 +3389,13 @@ __metadata:
     "@babel/preset-react": 7.14.5
     "@emotion/css": 11.5.0
     "@emotion/jest": 11.5.0
+    "@emotion/react": 11.5.0
     "@lowdefy/block-dev": 3.22.0
     "@lowdefy/helpers": 3.22.0
     "@testing-library/react": 12.1.2
     babel-jest: 27.3.1
     babel-loader: 8.2.3
+    classnames: 2.3.1
     clean-webpack-plugin: 4.0.0
     css-loader: 6.4.0
     dompurify: 2.3.3
@@ -3391,9 +3416,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/blocks-antd@3.22.0, @lowdefy/blocks-antd@workspace:packages/blocks/blocksAntd":
+"@lowdefy/blocks-antd@3.22.0, @lowdefy/blocks-antd@workspace:packages/blocks/blocks-antd":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/blocks-antd@workspace:packages/blocks/blocksAntd"
+  resolution: "@lowdefy/blocks-antd@workspace:packages/blocks/blocks-antd"
   dependencies:
     "@ant-design/icons": 4.7.0
     "@babel/cli": 7.15.7
@@ -3435,9 +3460,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/blocks-basic@workspace:packages/blocks/blocksBasic":
+"@lowdefy/blocks-basic@workspace:packages/blocks/blocks-basic":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/blocks-basic@workspace:packages/blocks/blocksBasic"
+  resolution: "@lowdefy/blocks-basic@workspace:packages/blocks/blocks-basic"
   dependencies:
     "@babel/cli": 7.15.7
     "@babel/core": 7.15.8
@@ -3473,9 +3498,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/blocks-color-selectors@workspace:packages/blocks/blocksColorSelectors":
+"@lowdefy/blocks-color-selectors@workspace:packages/blocks/blocks-color-selectors":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/blocks-color-selectors@workspace:packages/blocks/blocksColorSelectors"
+  resolution: "@lowdefy/blocks-color-selectors@workspace:packages/blocks/blocks-color-selectors"
   dependencies:
     "@babel/cli": 7.15.7
     "@babel/core": 7.15.8
@@ -3513,9 +3538,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/blocks-echarts@workspace:packages/blocks/blocksECharts":
+"@lowdefy/blocks-echarts@workspace:packages/blocks/blocks-echarts":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/blocks-echarts@workspace:packages/blocks/blocksECharts"
+  resolution: "@lowdefy/blocks-echarts@workspace:packages/blocks/blocks-echarts"
   dependencies:
     "@babel/cli": 7.15.7
     "@babel/core": 7.15.8
@@ -3550,9 +3575,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/blocks-loaders@workspace:packages/blocks/blocksLoaders":
+"@lowdefy/blocks-loaders@workspace:packages/blocks/blocks-loaders":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/blocks-loaders@workspace:packages/blocks/blocksLoaders"
+  resolution: "@lowdefy/blocks-loaders@workspace:packages/blocks/blocks-loaders"
   dependencies:
     "@babel/cli": 7.15.7
     "@babel/core": 7.15.8
@@ -3587,9 +3612,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/blocks-markdown@workspace:packages/blocks/blocksMarkdown":
+"@lowdefy/blocks-markdown@workspace:packages/blocks/blocks-markdown":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/blocks-markdown@workspace:packages/blocks/blocksMarkdown"
+  resolution: "@lowdefy/blocks-markdown@workspace:packages/blocks/blocks-markdown"
   dependencies:
     "@babel/cli": 7.15.7
     "@babel/core": 7.15.8
@@ -3952,26 +3977,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/icons@4.0.0, @lowdefy/icons@workspace:packages/icons":
-  version: 0.0.0-use.local
-  resolution: "@lowdefy/icons@workspace:packages/icons"
-  dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
-    "@babel/preset-react": 7.16.0
-    "@lowdefy/block-dev": 3.22.0
-    "@lowdefy/block-tools": 3.22.0
-    "@lowdefy/helpers": 3.22.0
-    babel-jest: 27.3.1
-    classnames: 2.3.1
-    jest: 27.3.1
-    react: 17.0.2
-    react-dom: 17.0.2
-    react-icons: 4.3.1
-  languageName: unknown
-  linkType: soft
-
 "@lowdefy/layout@3.22.0, @lowdefy/layout@workspace:packages/layout":
   version: 0.0.0-use.local
   resolution: "@lowdefy/layout@workspace:packages/layout"
@@ -4086,7 +4091,6 @@ __metadata:
     "@babel/core": 7.15.8
     "@babel/preset-env": 7.15.8
     "@babel/preset-react": 7.16.0
-    "@lowdefy/icons": 4.0.0
     babel-loader: 8.2.3
     clean-webpack-plugin: 4.0.0
     css-loader: 6.5.1
@@ -11624,7 +11628,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hoist-non-react-statics@npm:^3.1.0":
+"hoist-non-react-statics@npm:^3.1.0, hoist-non-react-statics@npm:^3.3.1":
   version: 3.3.2
   resolution: "hoist-non-react-statics@npm:3.3.2"
   dependencies:
@@ -18610,15 +18614,6 @@ __metadata:
   peerDependencies:
     react: ">=16.3.0"
   checksum: a4998479dab7fc1c2799eddefb1870a9d881b5f71cfdf97979a9882e42f4bb50402d55335f308f461e735e01a06f46b16cc7b4e6bcb22c7a4a6f85a753c5c106
-  languageName: node
-  linkType: hard
-
-"react-icons@npm:4.3.1":
-  version: 4.3.1
-  resolution: "react-icons@npm:4.3.1"
-  peerDependencies:
-    react: "*"
-  checksum: 2cc608acdd3e906aa3aaee290b8398220639677c949382d86e554020e5dab6a9f1ed7484418aa5272cb5c5c018e1fc9a323d433d901697a76530029f9ecb1263
   languageName: node
   linkType: hard
 

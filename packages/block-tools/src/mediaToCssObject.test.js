@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import mediaToCssObject from './mediaToCssObject';
+import mediaToCssObject from './mediaToCssObject.js';
 
 test('no object', () => {
   expect(mediaToCssObject()).toEqual([]);
