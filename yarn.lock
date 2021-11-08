@@ -3376,38 +3376,23 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/block-tools@workspace:packages/block-tools"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
-    "@babel/preset-react": 7.14.5
     "@emotion/css": 11.5.0
     "@emotion/jest": 11.5.0
     "@emotion/react": 11.5.0
     "@lowdefy/block-dev": 3.22.0
     "@lowdefy/helpers": 3.22.0
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
     "@testing-library/dom": 8.10.1
     "@testing-library/react": 12.1.2
     "@testing-library/user-event": 13.5.0
-    babel-jest: 27.3.1
-    babel-loader: 8.2.3
     classnames: 2.3.1
-    clean-webpack-plugin: 4.0.0
-    css-loader: 6.4.0
     dompurify: 2.3.3
-    html-webpack-plugin: 5.4.0
     jest: 27.3.1
     jest-serializer-html: 7.1.0
-    jest-transform-yaml: 0.1.2
-    js-yaml: 4.1.0
-    process: 0.11.10
     react: 17.0.2
     react-dom: 17.0.2
-    react-syntax-highlight: 15.3.1
-    style-loader: 3.3.1
-    webpack: 5.59.1
-    webpack-cli: 4.9.1
-    webpack-dev-server: 4.3.1
-    yaml-loader: 0.6.0
   languageName: unknown
   linkType: soft
 
