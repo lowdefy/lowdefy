@@ -16,7 +16,8 @@
 
 import React from 'react';
 import classNames from 'classnames';
-import { css, keyframes } from '@emotion/react';
+import { keyframes } from '@emotion/react';
+import { css } from '@emotion/css';
 import { omit, type } from '@lowdefy/helpers';
 
 import blockDefaultProps from './blockDefaultProps.js';
@@ -49,25 +50,29 @@ const spin = keyframes`{
   }
 }`;
 
-const Icon =
-  (Icons) =>
-  ({ blockId, events, methods, properties, ...props }) => {
+const spinClass = css`
+  animation: ${spin} 2s infinite linear;
+`;
+
+const Icon = (Icons) => {
+  const AiOutlineLoading3Quarters = Icons['AiOutlineLoading3Quarters'];
+  const AiOutlineExclamationCircle = Icons['AiOutlineExclamationCircle'];
+
+  const IconComp = ({ blockId, events, methods, properties, ...props }) => {
     const propertiesObj = type.isString(properties) ? { name: properties } : properties;
     const iconProps = {
       id: blockId,
       className: classNames({
         [makeCssClass(propertiesObj.style)]: true,
-        [css(`animation: ${spin} 2s infinite linear;`)]: propertiesObj.spin,
+        [spinClass]: propertiesObj.spin,
       }),
       rotate: propertiesObj.rotate,
       twoToneColor: propertiesObj.color,
       ...omit(props, lowdefyProps),
     };
-    const IconComp = Icons[propertiesObj];
-    const AiOutlineLoading3Quarters = Icons['AiOutlineLoading3Quarters'];
-    const AiOutlineExclamationCircle = Icons['AiOutlineExclamationCircle'];
+    let IconComp = Icons[propertiesObj.name];
     if (!IconComp) {
-      propertiesObj.name = 'CloseCircleOutlined';
+      IconComp = AiOutlineExclamationCircle;
     }
     return (
       <>
@@ -95,7 +100,8 @@ const Icon =
       </>
     );
   };
-
-Icon.defaultProps = blockDefaultProps;
+  IconComp.defaultProps = blockDefaultProps;
+  return IconComp;
+};
 
 export default Icon;

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { css } from '@emotion/react';
+import { css } from '@emotion/css';
 import { mergeObjects } from '@lowdefy/helpers';
 
 import mediaToCssObject from './mediaToCssObject.js';
