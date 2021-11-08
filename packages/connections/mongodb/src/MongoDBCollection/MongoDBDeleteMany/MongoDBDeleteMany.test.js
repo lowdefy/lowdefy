@@ -110,7 +110,7 @@ test('deleteMany mongodb error', async () => {
     write: true,
   };
   await expect(resolver({ request, connection })).rejects.toThrow(
-    "BSON field 'writeConcern.w' is the wrong type 'bool', expected types '[string, int, decimal, double, long']"
+    'w has to be a number or a string'
   );
 });
 

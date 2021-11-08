@@ -1,5 +1,3 @@
-console.log('CWD', process.cwd());
-
 module.exports = {
   clearMocks: true,
   collectCoverage: true,

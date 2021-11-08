@@ -92,9 +92,7 @@ test('insertOne mongodb error', async () => {
     write: true,
   };
   await resolver({ request, connection });
-  await expect(resolver({ request, connection })).rejects.toThrow(
-    'E11000 duplicate key error collection: test.insertOne index: _id_ dup key: { _id: "insertOne_mongodb_error" }'
-  );
+  await expect(resolver({ request, connection })).rejects.toThrow('E11000 duplicate key error');
 });
 
 test('checkRead should be false', async () => {
