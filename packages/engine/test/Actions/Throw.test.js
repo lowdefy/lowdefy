@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import testContext from '../testContext';
-import { ThrowActionError } from '../../src/actions/Throw';
+import testContext from '../testContext.js';
+import { ThrowActionError } from '../../src/actions/Throw.js';
 
 const pageId = 'one';
 

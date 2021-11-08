@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { AuthenticationError } from '../../context/errors';
-import getOpenIdClient from './getOpenIdClient';
-import getOpenIdConfig from './getOpenIdConfig';
-import issueAccessToken from './issueAccessToken';
-import setAuthorizationCookie from './setAuthorizationCookie';
-import setIdTokenCookie from './setIdTokenCookie';
-import verifyOpenIdStateToken from './verifyOpenIdStateToken';
+import { AuthenticationError } from '../../context/errors.js';
+import getOpenIdClient from './getOpenIdClient.js';
+import getOpenIdConfig from './getOpenIdConfig.js';
+import issueAccessToken from './issueAccessToken.js';
+import setAuthorizationCookie from './setAuthorizationCookie.js';
+import setIdTokenCookie from './setIdTokenCookie.js';
+import verifyOpenIdStateToken from './verifyOpenIdStateToken.js';
 
 async function openIdCallback(context, { code, state }) {
   const openIdConfig = getOpenIdConfig(context);

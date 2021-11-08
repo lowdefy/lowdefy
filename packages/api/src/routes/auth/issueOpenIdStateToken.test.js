@@ -32,8 +32,8 @@
 
 import jwt from 'jsonwebtoken';
 
-import testContext from '../../test/testContext';
-import issueOpenIdStateToken from './issueOpenIdStateToken';
+import testContext from '../../test/testContext.js';
+import issueOpenIdStateToken from './issueOpenIdStateToken.js';
 
 const secrets = {
   JWT_SECRET: 'JWT_SECRET',

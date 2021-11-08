@@ -18,28 +18,28 @@
 
 import packageJson from '../package.json';
 
-import createGetMeta from './utils/meta/getMeta';
-import createWriteBuildArtifact from './utils/files/writeBuildArtifact';
-import createReadConfigFile from './utils/files/readConfigFile';
+import createGetMeta from './utils/meta/getMeta.js';
+import createWriteBuildArtifact from './utils/files/writeBuildArtifact.js';
+import createReadConfigFile from './utils/files/readConfigFile.js';
 
-import addDefaultPages from './build/addDefaultPages/addDefaultPages';
-import buildAuth from './build/buildAuth/buildAuth';
-import buildConnections from './build/buildConnections';
-import buildMenu from './build/buildMenu';
-import buildPages from './build/buildPages/buildPages';
-import buildRefs from './build/buildRefs/buildRefs';
-import cleanBuildDirectory from './build/cleanBuildDirectory';
-import testSchema from './build/testSchema';
-import validateApp from './build/validateApp';
-import validateConfig from './build/validateConfig';
-import writeApp from './build/writeApp';
-import writeConfig from './build/writeConfig';
-import writeConnections from './build/writeConnections';
-import writeGlobal from './build/writeGlobal';
-import writeHtml from './build/writeHtml/writeHtml';
-import writeMenus from './build/writeMenus';
-import writePages from './build/writePages';
-import writeRequests from './build/writeRequests';
+import addDefaultPages from './build/addDefaultPages/addDefaultPages.js';
+import buildAuth from './build/buildAuth/buildAuth.js';
+import buildConnections from './build/buildConnections.js';
+import buildMenu from './build/buildMenu.js';
+import buildPages from './build/buildPages/buildPages.js';
+import buildRefs from './build/buildRefs/buildRefs.js';
+import cleanBuildDirectory from './build/cleanBuildDirectory.js';
+import testSchema from './build/testSchema.js';
+import validateApp from './build/validateApp.js';
+import validateConfig from './build/validateConfig.js';
+import writeApp from './build/writeApp.js';
+import writeConfig from './build/writeConfig.js';
+import writeConnections from './build/writeConnections.js';
+import writeGlobal from './build/writeGlobal.js';
+import writeHtml from './build/writeHtml/writeHtml.js';
+import writeMenus from './build/writeMenus.js';
+import writePages from './build/writePages.js';
+import writeRequests from './build/writeRequests.js';
 
 function createContext(options) {
   const { blocksServerUrl, buildDirectory, cacheDirectory, configDirectory, logger, refResolver } =

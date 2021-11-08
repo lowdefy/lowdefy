@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ServerError } from '../context/errors';
+import { ServerError } from '../context/errors.js';
 
 function createAuthorize({ authenticated = false, roles = [] }) {
   function authorize({ auth }) {

@@ -15,7 +15,7 @@
 */
 
 import jwt from 'jsonwebtoken';
-import { AuthenticationError } from '../../context/errors';
+import { AuthenticationError } from '../../context/errors.js';
 
 function verifyOpenIdStateToken({ host, secrets }, { token }) {
   try {

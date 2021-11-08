@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import cachedPromises from './cachedPromises';
-import cleanDirectory from './cleanDirectory';
-import getConfigFromEnv from './getConfigFromEnv';
-import getFileExtension, { getFileSubExtension } from './getFileExtension';
-import getSecretsFromEnv from './getSecretsFromEnv';
-import readFile from './readFile';
-import writeFile from './writeFile';
+import cachedPromises from './cachedPromises.js';
+import cleanDirectory from './cleanDirectory.js';
+import getConfigFromEnv from './getConfigFromEnv.js';
+import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
+import getSecretsFromEnv from './getSecretsFromEnv.js';
+import readFile from './readFile.js';
+import writeFile from './writeFile.js';
 
 export {
   cachedPromises,

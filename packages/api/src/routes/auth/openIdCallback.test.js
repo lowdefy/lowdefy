@@ -15,12 +15,12 @@
 */
 
 import { Issuer } from 'openid-client';
-import openIdCallback from './openIdCallback';
-import issueOpenIdStateToken from './issueOpenIdStateToken';
-import testContext from '../../test/testContext';
-import setAuthorizationCookie from './setAuthorizationCookie';
-import setIdTokenCookie from './setIdTokenCookie';
-import { AuthenticationError, ConfigurationError } from '../../context/errors';
+import openIdCallback from './openIdCallback.js';
+import issueOpenIdStateToken from './issueOpenIdStateToken.js';
+import testContext from '../../test/testContext.js';
+import setAuthorizationCookie from './setAuthorizationCookie.js';
+import setIdTokenCookie from './setIdTokenCookie.js';
+import { AuthenticationError, ConfigurationError } from '../../context/errors.js';
 
 jest.mock('./setAuthorizationCookie');
 jest.mock('./setIdTokenCookie');

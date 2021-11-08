@@ -16,7 +16,7 @@
 
 import { validate } from '@lowdefy/ajv';
 import AWS from 'aws-sdk';
-import AwsS3PresignedPostPolicy from './AwsS3PresignedPostPolicy';
+import AwsS3PresignedPostPolicy from './AwsS3PresignedPostPolicy.js';
 
 jest.mock('aws-sdk');
 

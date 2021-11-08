@@ -16,7 +16,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import createWriteMetaCache from './writeMetaCache';
+import createWriteMetaCache from './writeMetaCache.js';
 
 const cacheDirectory = path.resolve(process.cwd(), 'src/test/fetchMetaCache');
 const writeMetaCache = createWriteMetaCache({ cacheDirectory });

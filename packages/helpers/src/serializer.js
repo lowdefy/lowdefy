@@ -16,8 +16,8 @@
   limitations under the License.
 */
 
-import type from './type';
-import stableStringify from './stableStringify';
+import type from './type.js';
+import stableStringify from './stableStringify.js';
 
 const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
   let dateReplacer = (date) => ({ _date: date.valueOf() });

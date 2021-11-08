@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getBlockMatcher from '../src/getBlockMatcher';
+import getBlockMatcher from '../src/getBlockMatcher.js';
 
 test('params is invalid', () => {
   expect(() => getBlockMatcher(1)).toThrow('Invalid validate params.');

@@ -15,8 +15,8 @@
 */
 
 import schema from './KnexSchema.json';
-import KnexBuilder from './KnexBuilder/KnexBuilder';
-import KnexRaw from './KnexRaw/KnexRaw';
+import KnexBuilder from './KnexBuilder/KnexBuilder.js';
+import KnexRaw from './KnexRaw/KnexRaw.js';
 
 export default {
   schema,

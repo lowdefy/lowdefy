@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getFileExtension, { getFileSubExtension } from './getFileExtension';
+import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
 
 test('getFileExtension a', () => {
   expect(getFileExtension('a')).toBe(null);

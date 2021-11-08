@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getConfigFromEnv from './getConfigFromEnv';
+import getConfigFromEnv from './getConfigFromEnv.js';
 
 const realEnv = process.env;
 

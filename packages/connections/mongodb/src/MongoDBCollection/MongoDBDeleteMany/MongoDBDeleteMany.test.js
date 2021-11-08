@@ -15,8 +15,8 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import MongoDBDeleteMany from './MongoDBDeleteMany';
-import populateTestMongoDb from '../../../test/populateTestMongoDb';
+import MongoDBDeleteMany from './MongoDBDeleteMany.js';
+import populateTestMongoDb from '../../../test/populateTestMongoDb.js';
 
 const { resolver, schema, checkRead, checkWrite } = MongoDBDeleteMany;
 

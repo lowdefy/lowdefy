@@ -17,8 +17,8 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import getPageRoles from './getPageRoles';
-import getProtectedPages from './getProtectedPages';
+import getPageRoles from './getPageRoles.js';
+import getProtectedPages from './getProtectedPages.js';
 
 function buildAuth({ components }) {
   const protectedPages = getProtectedPages({ components });

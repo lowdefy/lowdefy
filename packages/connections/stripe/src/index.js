@@ -1,4 +1,4 @@
-import Stripe from './Stripe/Stripe';
+import Stripe from './Stripe/Stripe.jss';
 
 export const connections = {
   Stripe,

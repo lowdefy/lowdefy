@@ -17,7 +17,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import createCheckDuplicateId from '../utils/createCheckDuplicateId';
+import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
 
 async function buildConnections({ components }) {
   const checkDuplicateConnectionId = createCheckDuplicateId({

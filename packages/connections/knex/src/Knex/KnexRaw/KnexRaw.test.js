@@ -16,7 +16,7 @@
 
 import { validate } from '@lowdefy/ajv';
 import knex from 'knex';
-import KnexRaw from './KnexRaw';
+import KnexRaw from './KnexRaw.js';
 
 const mockRaw = jest.fn(() => {
   return Promise.resolve({ rows: [{ name: 'name' }], _types: 'types' });

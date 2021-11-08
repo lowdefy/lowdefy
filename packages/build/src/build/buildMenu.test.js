@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import buildMenu from './buildMenu';
-import testContext from '../test/testContext';
+import buildMenu from './buildMenu.js';
+import testContext from '../test/testContext.js';
 
 const mockLogWarn = jest.fn();
 

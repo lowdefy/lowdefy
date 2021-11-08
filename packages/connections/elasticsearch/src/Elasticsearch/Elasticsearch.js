@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import ElasticsearchDelete from './ElasticsearchDelete/ElasticsearchDelete';
-import ElasticsearchDeleteByQuery from './ElasticsearchDeleteByQuery/ElasticsearchDeleteByQuery';
-import ElasticsearchIndex from './ElasticsearchIndex/ElasticsearchIndex';
+import ElasticsearchDelete from './ElasticsearchDelete/ElasticsearchDelete.js';
+import ElasticsearchDeleteByQuery from './ElasticsearchDeleteByQuery/ElasticsearchDeleteByQuery.js';
+import ElasticsearchIndex from './ElasticsearchIndex/ElasticsearchIndex.js';
 import schema from './ElasticsearchSchema.json';
-import ElasticsearchSearch from './ElasticsearchSearch/ElasticsearchSearch';
-import ElasticsearchUpdate from './ElasticsearchUpdate/ElasticsearchUpdate';
-import ElasticsearchUpdateByQuery from './ElasticsearchUpdateByQuery/ElasticsearchUpdateByQuery';
+import ElasticsearchSearch from './ElasticsearchSearch/ElasticsearchSearch.js';
+import ElasticsearchUpdate from './ElasticsearchUpdate/ElasticsearchUpdate.js';
+import ElasticsearchUpdateByQuery from './ElasticsearchUpdateByQuery/ElasticsearchUpdateByQuery.js';
 
 export default {
   schema,

@@ -16,7 +16,7 @@
 
 import { Client } from '@elastic/elasticsearch';
 import { validate } from '@lowdefy/ajv';
-import ElasticsearchUpdateByQuery from './ElasticsearchUpdateByQuery';
+import ElasticsearchUpdateByQuery from './ElasticsearchUpdateByQuery.js';
 
 const mockElasticsearchClient = jest.fn(() => mockElasticsearchClient);
 mockElasticsearchClient.updateByQuery = jest.fn(() => mockElasticsearchClient);

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import testContext from '../testContext';
+import testContext from '../testContext.js';
 
 const pageId = 'one';
 

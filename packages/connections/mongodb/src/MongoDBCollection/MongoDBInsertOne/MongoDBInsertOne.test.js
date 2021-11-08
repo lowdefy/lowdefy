@@ -16,8 +16,8 @@
 
 import { validate } from '@lowdefy/ajv';
 import { MongoClient } from 'mongodb';
-import MongoDBInsertOne from './MongoDBInsertOne';
-import clearTestMongoDb from '../../../test/clearTestMongoDb';
+import MongoDBInsertOne from './MongoDBInsertOne.js';
+import clearTestMongoDb from '../../../test/clearTestMongoDb.js';
 
 const { resolver, schema, checkRead, checkWrite } = MongoDBInsertOne;
 

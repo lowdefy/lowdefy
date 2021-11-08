@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import recursiveBuild from './recursiveBuild';
-import makeRefDefinition from './makeRefDefinition';
+import recursiveBuild from './recursiveBuild.js';
+import makeRefDefinition from './makeRefDefinition.js';
 
 async function buildRefs({ context }) {
   return recursiveBuild({

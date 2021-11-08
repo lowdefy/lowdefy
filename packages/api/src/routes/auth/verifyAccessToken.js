@@ -15,7 +15,7 @@
 */
 
 import jwt from 'jsonwebtoken';
-import { AuthenticationError, TokenExpiredError } from '../../context/errors';
+import { AuthenticationError, TokenExpiredError } from '../../context/errors.js';
 
 function verifyAccessToken({ host, secrets }, { token }) {
   try {

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getBlockMatcher from '../getBlockMatcher';
+import getBlockMatcher from '../getBlockMatcher.js';
 
 async function ResetValidation({ context, params }) {
   context.RootBlocks.resetValidation(getBlockMatcher(params));

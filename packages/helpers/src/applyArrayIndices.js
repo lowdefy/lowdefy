@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import type from './type';
+import type from './type.js';
 
 const applyArrayIndices = (arrayIndices, name) => {
   if (!type.isArray(arrayIndices)) return name;

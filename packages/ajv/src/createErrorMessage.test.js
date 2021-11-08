@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import createErrorMessage from './createErrorMessage';
+import createErrorMessage from './createErrorMessage.js';
 
 test('no errors', () => {
   expect(createErrorMessage()).toEqual('Schema validation error.');

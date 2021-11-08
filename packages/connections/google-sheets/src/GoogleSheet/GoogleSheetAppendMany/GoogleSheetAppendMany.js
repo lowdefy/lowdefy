@@ -15,8 +15,8 @@
 */
 
 import schema from './GoogleSheetAppendManySchema.json';
-import getSheet from '../getSheet';
-import { transformWrite } from '../transformTypes';
+import getSheet from '../getSheet.js';
+import { transformWrite } from '../transformTypes.js';
 
 async function googleSheetAppendMany({ request, connection }) {
   const { rows, options = {} } = request;

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import formatErrorMessage from './formatErrorMessage';
+import formatErrorMessage from './formatErrorMessage.js';
 
 test('global incorrect type', async () => {
   const app = {

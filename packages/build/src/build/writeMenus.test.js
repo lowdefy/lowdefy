@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import writeMenus from './writeMenus';
-import testContext from '../test/testContext';
+import writeMenus from './writeMenus.js';
+import testContext from '../test/testContext.js';
 
 const mockWriteBuildArtifact = jest.fn();
 

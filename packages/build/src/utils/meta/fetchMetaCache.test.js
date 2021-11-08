@@ -15,7 +15,7 @@
 */
 
 import path from 'path';
-import createFetchMetaCache from './fetchMetaCache';
+import createFetchMetaCache from './fetchMetaCache.js';
 
 const cacheDirectory = path.resolve(process.cwd(), 'src/test/fetchMetaCache');
 const fetchMetaCache = createFetchMetaCache({ cacheDirectory });

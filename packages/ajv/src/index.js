@@ -14,6 +14,6 @@
   limitations under the License.
 */
 
-import validate from './validate';
+import validate from './validate.js';
 
 export { validate };

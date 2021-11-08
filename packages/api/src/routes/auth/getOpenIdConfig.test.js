@@ -15,9 +15,9 @@
 */
 
 import getOpenIdConfig from './getOpenIdConfig';
-import testContext from '../../test/testContext';
+import testContext from '../../test/testContext.js';
 
-import { ConfigurationError } from '../../context/errors';
+import { ConfigurationError } from '../../context/errors.js';
 
 const secrets = {
   OPENID_CLIENT_ID: 'OPENID_CLIENT_ID',

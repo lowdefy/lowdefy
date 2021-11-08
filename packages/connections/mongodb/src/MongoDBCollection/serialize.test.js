@@ -15,7 +15,7 @@
 */
 
 import { ObjectID } from 'mongodb';
-import { serialize, deserialize } from './serialize';
+import { serialize, deserialize } from './serialize.js';
 
 test('serialize dates', () => {
   const object = {

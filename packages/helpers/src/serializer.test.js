@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import serializer from './serializer';
+import serializer from './serializer.js';
 
 test('serialize convert object js date to _date', () => {
   let object = {

@@ -15,8 +15,8 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import MongoDBFindOne from './MongoDBFindOne';
-import populateTestMongoDb from '../../../test/populateTestMongoDb';
+import MongoDBFindOne from './MongoDBFindOne.js';
+import populateTestMongoDb from '../../../test/populateTestMongoDb.js';
 
 const { resolver, schema, checkRead, checkWrite } = MongoDBFindOne;
 

@@ -15,7 +15,7 @@
 */
 
 // https://github.com/substack/json-stable-stringify
-import stableStringify from './stableStringify';
+import stableStringify from './stableStringify.js';
 
 test('sort keys', () => {
   let object = {

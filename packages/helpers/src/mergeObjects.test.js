@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import mergeObjects from './mergeObjects';
+import mergeObjects from './mergeObjects.js';
 
 test('object with no media unchanged', () => {
   const obj = {

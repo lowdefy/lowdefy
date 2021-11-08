@@ -16,7 +16,7 @@
 
 import { get } from '@lowdefy/helpers';
 
-import { ConfigurationError } from '../../context/errors';
+import { ConfigurationError } from '../../context/errors.js';
 
 function getOpenIdConfig({ protocol, host, config, secrets }) {
   const { OPENID_CLIENT_ID, OPENID_CLIENT_SECRET, OPENID_DOMAIN } = secrets;

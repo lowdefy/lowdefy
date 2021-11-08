@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { ConfigurationError } from '../../context/errors';
+import { ConfigurationError } from '../../context/errors.js';
 
-import getOpenIdClient from './getOpenIdClient';
-import getOpenIdConfig from './getOpenIdConfig';
-import issueOpenIdStateToken from './issueOpenIdStateToken';
+import getOpenIdClient from './getOpenIdClient.js';
+import getOpenIdConfig from './getOpenIdConfig.js';
+import issueOpenIdStateToken from './issueOpenIdStateToken.js';
 
 async function openIdAuthorizationUrl(context, { authUrlQueryParams, pageId, urlQuery }) {
   try {

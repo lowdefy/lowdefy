@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import buildConnections from './buildConnections';
-import testContext from '../test/testContext';
+import buildConnections from './buildConnections.js';
+import testContext from '../test/testContext.js';
 
 const context = testContext();
 

@@ -16,7 +16,7 @@
 
 import nunjucks from 'nunjucks';
 import { type } from '@lowdefy/helpers';
-import dateFilter from './dateFilter';
+import dateFilter from './dateFilter.js';
 
 // dateFilter.setDefaultFormat('YYYY-MM-DD');
 export const nunjucksEnv = new nunjucks.Environment();

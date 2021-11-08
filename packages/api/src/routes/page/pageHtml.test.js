@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import pageHtml from './pageHtml';
-import testContext from '../../test/testContext';
+import pageHtml from './pageHtml.js';
+import testContext from '../../test/testContext.js';
 
 const mockReadConfigFile = jest.fn();
 

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import color from './index';
+import color from './index.js';
 
 test('antd blue test', () => {
   expect(color('#1890ff', 1)).toEqual('#e6f7ff');

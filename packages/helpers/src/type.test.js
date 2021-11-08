@@ -16,7 +16,7 @@
   limitations under the License.
 */
 
-import type from './type';
+import type from './type.js';
 
 const expectToStrictEqual = (result, value) => {
   expect(result).toStrictEqual(value);

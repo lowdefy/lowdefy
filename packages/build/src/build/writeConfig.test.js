@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import writeConfig from './writeConfig';
-import testContext from '../test/testContext';
+import writeConfig from './writeConfig.js';
+import testContext from '../test/testContext.js';
 
 const mockWriteBuildArtifact = jest.fn();
 

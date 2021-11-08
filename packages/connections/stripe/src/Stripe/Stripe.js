@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import StripeRequest from './StripeRequest/StripeRequest';
+import StripeRequest from './StripeRequest/StripeRequest.js';
 import schema from './StripeSchema.json';
 
 export default {

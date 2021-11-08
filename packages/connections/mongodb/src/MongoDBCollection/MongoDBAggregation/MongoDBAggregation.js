@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import getCollection from '../getCollection';
-import { serialize, deserialize } from '../serialize';
+import getCollection from '../getCollection.js';
+import { serialize, deserialize } from '../serialize.js';
 
 import schema from './MongoDBAggregationSchema.json';
 

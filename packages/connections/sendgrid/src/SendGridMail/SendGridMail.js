@@ -15,7 +15,7 @@
 */
 
 import schema from './SendGridMailSchema.json';
-import SendGridMailSend from './SendGridMailSend/SendGridMailSend';
+import SendGridMailSend from './SendGridMailSend/SendGridMailSend.js';
 
 export default {
   schema,

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import swap from './swap';
+import swap from './swap.js';
 
 test('swap', () => {
   const arr = [0, 1, 2, 3, 4];

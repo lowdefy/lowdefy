@@ -14,7 +14,7 @@
   limitations under the License.
 */
 import path from 'path';
-import readFile from './readFile';
+import readFile from './readFile.js';
 
 const baseDir = path.resolve(process.cwd(), 'test/readFile');
 

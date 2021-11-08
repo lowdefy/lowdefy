@@ -17,7 +17,7 @@
 import fs from 'fs';
 import path from 'path';
 import rimraf from 'rimraf';
-import writeFile from './writeFile';
+import writeFile from './writeFile.js';
 
 const baseDir = path.resolve(process.cwd(), 'test/writeFile');
 

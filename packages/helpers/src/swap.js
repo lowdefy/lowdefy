@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import type from './type';
+import type from './type.js';
 
 const swap = (arr, from, to) => {
   if (!type.isArray(arr) || from < 0 || to < 0 || from >= arr.length || to >= arr.length) {

@@ -15,8 +15,8 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import MongoDBInsertMany from './MongoDBInsertMany';
-import clearTestMongoDb from '../../../test/clearTestMongoDb';
+import MongoDBInsertMany from './MongoDBInsertMany.js';
+import clearTestMongoDb from '../../../test/clearTestMongoDb.js';
 
 const { resolver, schema, checkRead, checkWrite } = MongoDBInsertMany;
 

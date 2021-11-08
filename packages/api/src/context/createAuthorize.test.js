@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import createAuthorize from './createAuthorize';
+import createAuthorize from './createAuthorize.js';
 
-import { ServerError } from '../context/errors';
+import { ServerError } from '../context/errors.js';
 
 test('authorize public object', async () => {
   const auth = { public: true };

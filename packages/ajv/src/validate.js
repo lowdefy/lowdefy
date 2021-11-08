@@ -16,7 +16,7 @@
 
 import Ajv from 'ajv';
 import ajvErrors from 'ajv-errors';
-import createErrorMessage from './createErrorMessage';
+import createErrorMessage from './createErrorMessage.js';
 
 const ajv = new Ajv({
   allErrors: true,
