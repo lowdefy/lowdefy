@@ -30,10 +30,10 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "yarn clean && yarn swc",
+    "build": "yarn swc",
     "clean": "rm -rf dist",
     "prepare": "yarn build",
-    "swc": "swc src --out-dir dist --config-file ../../.swcrc",
+    "swc": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
     "test:watch": "jest --coverage --watch",
     "test": "jest --coverage"
   },

@@ -46,4 +46,9 @@ async function stripeRequest({ request, connection }) {
   return method.call(resource, ...(args || []));
 }
 
-export default { resolver: stripeRequest, schema, checkRead: false, checkWrite: false };
+export default {
+  resolver: stripeRequest,
+  schema,
+  checkRead: false,
+  checkWrite: false,
+};

@@ -29,11 +29,11 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "yarn clean && yarn swc",
+    "build": "yarn swc",
     "clean": "rm -rf dist",
     "prepare": "yarn build",
     "start": "node run.js",
-    "swc": "swc src --out-dir dist --config-file ../../.swcrc",
+    "swc": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
     "test": "jest --coverage"
   },
   "dependencies": {

@@ -9,7 +9,7 @@
           "type": "string",
           "examples": ["someone@example.org", "Name One <someone@example.org>"],
           "errorMessage": {
-            "type": "SendGridMail connection property \"{{ dataPath }}\" should be a string."
+            "type": "SendGridMail connection property \"{{ instancePath }}\" should be a string."
           }
         },
         {
@@ -20,25 +20,24 @@
               "type": "string",
               "examples": ["Some One"],
               "errorMessage": {
-                "type": "SendGridMail connection property \"{{ dataPath }}\" should be a string."
+                "type": "SendGridMail connection property \"{{ instancePath }}\" should be a string."
               }
             },
             "email": {
               "type": "string",
               "examples": ["someone@example.org"],
               "errorMessage": {
-                "type": "SendGridMail connection property \"{{ dataPath }}\" should be a string."
+                "type": "SendGridMail connection property \"{{ instancePath }}\" should be a string."
               }
             }
           },
           "errorMessage": {
-            "type": "SendGridMail connection property \"{{ dataPath }}\" should be an object with properties \"name\" and \"email\"."
+            "type": "SendGridMail connection property \"{{ instancePath }}\" should be an object with properties \"name\" and \"email\"."
           }
         }
-      ]
-      ,
+      ],
       "errorMessage": {
-        "anyOf": "SendGridMail connection property \"{{ dataPath }}\" should be an email address, or an object with properties \"name\" and \"email\"."
+        "anyOf": "SendGridMail connection property \"{{ instancePath }}\" should be an email address, or an object with properties \"name\" and \"email\"."
       }
     },
     "emails": {
@@ -52,12 +51,12 @@
             "$ref": "#/definitions/email"
           },
           "errorMessage": {
-            "type": "SendGridMail connection property \"{{ dataPath }}\" should be a list of email addresses"
+            "type": "SendGridMail connection property \"{{ instancePath }}\" should be a list of email addresses"
           }
         }
       ],
       "errorMessage": {
-        "anyOf": "SendGridMail connection property \"{{ dataPath }}\" should be an email address, or a list of email addresses."
+        "anyOf": "SendGridMail connection property \"{{ instancePath }}\" should be an email address, or a list of email addresses."
       }
     }
   },

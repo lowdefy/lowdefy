@@ -3543,13 +3543,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-aws@workspace:packages/connections/aws"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
     "@lowdefy/ajv": 3.22.0
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
     aws-sdk: 2.1021.0
-    babel-jest: 27.3.1
-    jest: 26.6.3
+    jest: 27.3.1
   peerDependencies:
     "@lowdefy/api": 3.22.0
   languageName: unknown
@@ -3559,14 +3558,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-axios-http@workspace:packages/connections/axios-http"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
     "@lowdefy/ajv": 3.22.0
     "@lowdefy/helpers": 3.22.0
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
     axios: 0.23.0
-    babel-jest: 27.3.1
-    jest: 26.6.3
+    jest: 27.3.1
   peerDependencies:
     "@lowdefy/api": 3.22.0
   languageName: unknown
@@ -3576,14 +3574,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-elasticsearch@workspace:packages/connections/elasticsearch"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
     "@elastic/elasticsearch": 7.15.0
     "@lowdefy/ajv": 3.22.0
     "@lowdefy/helpers": 3.22.0
-    babel-jest: 27.3.1
-    jest: 26.6.3
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
+    jest: 27.3.1
   peerDependencies:
     "@lowdefy/api": 3.22.0
   languageName: unknown
@@ -3593,14 +3590,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-google-sheets@workspace:packages/connections/google-sheets"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
     "@lowdefy/ajv": 3.22.0
     "@lowdefy/helpers": 3.22.0
-    babel-jest: 27.3.1
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
     google-spreadsheet: 3.1.15
-    jest: 26.6.3
+    jest: 27.3.1
     mingo: 4.2.0
     moment: 2.29.1
   peerDependencies:
@@ -3612,13 +3608,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-knex@workspace:packages/connections/knex"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
     "@lowdefy/ajv": 3.22.0
     "@lowdefy/helpers": 3.22.0
-    babel-jest: 27.3.1
-    jest: 26.6.3
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
+    jest: 27.3.1
     knex: 0.95.13
     mssql: 7.2.1
     mysql: 2.18.1
@@ -3633,14 +3628,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-mongodb@workspace:packages/connections/mongodb"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
     "@lowdefy/ajv": 3.22.0
     "@lowdefy/helpers": 3.22.0
     "@shelf/jest-mongodb": 2.1.0
-    babel-jest: 27.3.1
-    jest: 26.6.3
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
+    jest: 27.3.1
     mongodb: 3.7.3
     saslprep: 1.0.3
   peerDependencies:
@@ -3652,14 +3646,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-sendgrid@workspace:packages/connections/sendgrid"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
     "@lowdefy/ajv": 3.22.0
     "@lowdefy/helpers": 3.22.0
     "@sendgrid/mail": 7.5.0
-    babel-jest: 27.3.1
-    jest: 26.6.3
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
+    jest: 27.3.1
   peerDependencies:
     "@lowdefy/api": 3.22.0
   languageName: unknown
@@ -3669,13 +3662,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-stripe@workspace:packages/connections/stripe"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
     "@lowdefy/ajv": 3.22.0
     "@lowdefy/helpers": 3.22.0
-    babel-jest: 27.3.1
-    jest: 26.6.3
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
+    jest: 27.3.1
     stripe: 8.186.0
   peerDependencies:
     "@lowdefy/api": 3.22.0

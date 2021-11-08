@@ -90,7 +90,7 @@ test('request invalid script in body', async () => {
     },
   };
   expect(() => validate({ schema, data: request })).toThrow(
-    'should NOT have additional properties; ElasticsearchUpdate request should have required property "body.script.source" or "body.script.id".'
+    'must have required property \'source\'; ElasticsearchUpdate request should have required property "body.script.source" or "body.script.id".'
   );
 });
 

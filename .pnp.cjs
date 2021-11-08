@@ -5150,13 +5150,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/connections/aws/",
           "packageDependencies": [
             ["@lowdefy/connection-aws", "workspace:packages/connections/aws"],
-            ["@babel/cli", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:7.15.7"],
-            ["@babel/core", "npm:7.15.8"],
-            ["@babel/preset-env", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:7.15.8"],
             ["@lowdefy/ajv", "workspace:packages/ajv"],
+            ["@swc/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.1.51"],
+            ["@swc/core", "npm:1.2.107"],
+            ["@swc/jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.2.5"],
             ["aws-sdk", "npm:2.1021.0"],
-            ["babel-jest", "virtual:4d3a3f79f60b2294109a713555c084c0489a2a4f97b0d45817e4aa63b6e15e6ef8f5a5dafe41a4ed8f9dc47978495fbbf92e43efd40de2306fb74fb2638214c5#npm:27.3.1"],
-            ["jest", "npm:26.6.3"]
+            ["jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"]
           ],
           "linkType": "SOFT",
         }]
@@ -5166,16 +5165,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/@lowdefy-connection-axios-http-virtual-30afcaeeab/1/packages/connections/axios-http/",
           "packageDependencies": [
             ["@lowdefy/connection-axios-http", "virtual:c9d7c5a0f7602869dff02ed24b6a4fe62d4c9e4a4ede33ec34082ee9e4a5dd17f3e1bb396d56863e9bea8e8476d67351fe495fe7cebce9035a9e4de117e68169#workspace:packages/connections/axios-http"],
-            ["@babel/cli", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:7.15.7"],
-            ["@babel/core", "npm:7.15.8"],
-            ["@babel/preset-env", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:7.15.8"],
             ["@lowdefy/ajv", "workspace:packages/ajv"],
             ["@lowdefy/api", null],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
+            ["@swc/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.1.51"],
+            ["@swc/core", "npm:1.2.107"],
+            ["@swc/jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.2.5"],
             ["@types/lowdefy__api", null],
             ["axios", "npm:0.23.0"],
-            ["babel-jest", "virtual:4d3a3f79f60b2294109a713555c084c0489a2a4f97b0d45817e4aa63b6e15e6ef8f5a5dafe41a4ed8f9dc47978495fbbf92e43efd40de2306fb74fb2638214c5#npm:27.3.1"],
-            ["jest", "npm:26.6.3"]
+            ["jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"]
           ],
           "packagePeers": [
             "@lowdefy/api",
@@ -5187,14 +5185,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/connections/axios-http/",
           "packageDependencies": [
             ["@lowdefy/connection-axios-http", "workspace:packages/connections/axios-http"],
-            ["@babel/cli", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:7.15.7"],
-            ["@babel/core", "npm:7.15.8"],
-            ["@babel/preset-env", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:7.15.8"],
             ["@lowdefy/ajv", "workspace:packages/ajv"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
+            ["@swc/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.1.51"],
+            ["@swc/core", "npm:1.2.107"],
+            ["@swc/jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.2.5"],
             ["axios", "npm:0.23.0"],
-            ["babel-jest", "virtual:4d3a3f79f60b2294109a713555c084c0489a2a4f97b0d45817e4aa63b6e15e6ef8f5a5dafe41a4ed8f9dc47978495fbbf92e43efd40de2306fb74fb2638214c5#npm:27.3.1"],
-            ["jest", "npm:26.6.3"]
+            ["jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"]
           ],
           "linkType": "SOFT",
         }]
@@ -5204,14 +5201,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/connections/elasticsearch/",
           "packageDependencies": [
             ["@lowdefy/connection-elasticsearch", "workspace:packages/connections/elasticsearch"],
-            ["@babel/cli", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:7.15.7"],
-            ["@babel/core", "npm:7.15.8"],
-            ["@babel/preset-env", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:7.15.8"],
             ["@elastic/elasticsearch", "npm:7.15.0"],
             ["@lowdefy/ajv", "workspace:packages/ajv"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
-            ["babel-jest", "virtual:4d3a3f79f60b2294109a713555c084c0489a2a4f97b0d45817e4aa63b6e15e6ef8f5a5dafe41a4ed8f9dc47978495fbbf92e43efd40de2306fb74fb2638214c5#npm:27.3.1"],
-            ["jest", "npm:26.6.3"]
+            ["@swc/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.1.51"],
+            ["@swc/core", "npm:1.2.107"],
+            ["@swc/jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.2.5"],
+            ["jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"]
           ],
           "linkType": "SOFT",
         }]
@@ -5221,14 +5217,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/connections/google-sheets/",
           "packageDependencies": [
             ["@lowdefy/connection-google-sheets", "workspace:packages/connections/google-sheets"],
-            ["@babel/cli", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:7.15.7"],
-            ["@babel/core", "npm:7.15.8"],
-            ["@babel/preset-env", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:7.15.8"],
             ["@lowdefy/ajv", "workspace:packages/ajv"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
-            ["babel-jest", "virtual:4d3a3f79f60b2294109a713555c084c0489a2a4f97b0d45817e4aa63b6e15e6ef8f5a5dafe41a4ed8f9dc47978495fbbf92e43efd40de2306fb74fb2638214c5#npm:27.3.1"],
+            ["@swc/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.1.51"],
+            ["@swc/core", "npm:1.2.107"],
+            ["@swc/jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.2.5"],
             ["google-spreadsheet", "npm:3.1.15"],
-            ["jest", "npm:26.6.3"],
+            ["jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"],
             ["mingo", "npm:4.2.0"],
             ["moment", "npm:2.29.1"]
           ],
@@ -5240,13 +5235,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/connections/knex/",
           "packageDependencies": [
             ["@lowdefy/connection-knex", "workspace:packages/connections/knex"],
-            ["@babel/cli", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:7.15.7"],
-            ["@babel/core", "npm:7.15.8"],
-            ["@babel/preset-env", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:7.15.8"],
             ["@lowdefy/ajv", "workspace:packages/ajv"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
-            ["babel-jest", "virtual:4d3a3f79f60b2294109a713555c084c0489a2a4f97b0d45817e4aa63b6e15e6ef8f5a5dafe41a4ed8f9dc47978495fbbf92e43efd40de2306fb74fb2638214c5#npm:27.3.1"],
-            ["jest", "npm:26.6.3"],
+            ["@swc/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.1.51"],
+            ["@swc/core", "npm:1.2.107"],
+            ["@swc/jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.2.5"],
+            ["jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"],
             ["knex", "virtual:7552fbd5556545ee2ed2a973a0cf1900cb8e505e278f60daef41fed363728cc16700bbf7bc307ba2e9f155775514371a9f674f518b990b718297ba5e7ff6f90d#npm:0.95.13"],
             ["mssql", "npm:7.2.1"],
             ["mysql", "npm:2.18.1"],
@@ -5261,14 +5255,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/connections/mongodb/",
           "packageDependencies": [
             ["@lowdefy/connection-mongodb", "workspace:packages/connections/mongodb"],
-            ["@babel/cli", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:7.15.7"],
-            ["@babel/core", "npm:7.15.8"],
-            ["@babel/preset-env", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:7.15.8"],
             ["@lowdefy/ajv", "workspace:packages/ajv"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
             ["@shelf/jest-mongodb", "virtual:f8c3c3a402b5677f697dc476d2d49862c837216ba119dd86f5d0035e97416a8e9b630975761c15f9d82158d5e9fab9f6e21444d53db010d46d7119ef984531e1#npm:2.1.0"],
-            ["babel-jest", "virtual:4d3a3f79f60b2294109a713555c084c0489a2a4f97b0d45817e4aa63b6e15e6ef8f5a5dafe41a4ed8f9dc47978495fbbf92e43efd40de2306fb74fb2638214c5#npm:27.3.1"],
-            ["jest", "npm:26.6.3"],
+            ["@swc/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.1.51"],
+            ["@swc/core", "npm:1.2.107"],
+            ["@swc/jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.2.5"],
+            ["jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"],
             ["mongodb", "virtual:f8c3c3a402b5677f697dc476d2d49862c837216ba119dd86f5d0035e97416a8e9b630975761c15f9d82158d5e9fab9f6e21444d53db010d46d7119ef984531e1#npm:3.6.5"],
             ["saslprep", "npm:1.0.3"]
           ],
@@ -5280,14 +5273,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/connections/sendgrid/",
           "packageDependencies": [
             ["@lowdefy/connection-sendgrid", "workspace:packages/connections/sendgrid"],
-            ["@babel/cli", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:7.15.7"],
-            ["@babel/core", "npm:7.15.8"],
-            ["@babel/preset-env", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:7.15.8"],
             ["@lowdefy/ajv", "workspace:packages/ajv"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
             ["@sendgrid/mail", "npm:7.5.0"],
-            ["babel-jest", "virtual:4d3a3f79f60b2294109a713555c084c0489a2a4f97b0d45817e4aa63b6e15e6ef8f5a5dafe41a4ed8f9dc47978495fbbf92e43efd40de2306fb74fb2638214c5#npm:27.3.1"],
-            ["jest", "npm:26.6.3"]
+            ["@swc/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.1.51"],
+            ["@swc/core", "npm:1.2.107"],
+            ["@swc/jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.2.5"],
+            ["jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"]
           ],
           "linkType": "SOFT",
         }]
@@ -5297,13 +5289,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/connections/stripe/",
           "packageDependencies": [
             ["@lowdefy/connection-stripe", "workspace:packages/connections/stripe"],
-            ["@babel/cli", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:7.15.7"],
-            ["@babel/core", "npm:7.15.8"],
-            ["@babel/preset-env", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:7.15.8"],
             ["@lowdefy/ajv", "workspace:packages/ajv"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
-            ["babel-jest", "virtual:4d3a3f79f60b2294109a713555c084c0489a2a4f97b0d45817e4aa63b6e15e6ef8f5a5dafe41a4ed8f9dc47978495fbbf92e43efd40de2306fb74fb2638214c5#npm:27.3.1"],
-            ["jest", "npm:26.6.3"],
+            ["@swc/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.1.51"],
+            ["@swc/core", "npm:1.2.107"],
+            ["@swc/jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.2.5"],
+            ["jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"],
             ["stripe", "npm:8.186.0"]
           ],
           "linkType": "SOFT",
