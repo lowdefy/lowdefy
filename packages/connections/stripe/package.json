@@ -34,7 +34,7 @@
     "build": "yarn swc",
     "clean": "rm -rf dist",
     "prepare": "yarn build",
-    "swc": "swc src --out-dir dist --config-file ../../../.swcrc --delete-dir-on-start",
+    "swc": "swc src --out-dir dist --config-file ../../../.swcrc --delete-dir-on-start --copy-files",
     "test": "jest --coverage",
     "s": "swc"
   },
