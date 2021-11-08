@@ -15,11 +15,11 @@
 */
 
 import openIdLogoutUrl from './openIdLogoutUrl';
-import testContext from '../../test/testContext';
-import unsetAuthorizationCookie from './unsetAuthorizationCookie';
-import { AuthenticationError } from '../../context/errors';
+import testContext from '../../test/testContext.js';
+import unsetAuthorizationCookie from './unsetAuthorizationCookie.js';
+import { AuthenticationError } from '../../context/errors.js';
 
-jest.mock('./unsetAuthorizationCookie');
+jest.mock('./unsetAuthorizationCookie.js');
 
 const secrets = {
   OPENID_CLIENT_ID: 'OPENID_CLIENT_ID',

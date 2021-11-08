@@ -16,10 +16,10 @@
 
 import { WebParser } from '@lowdefy/operators';
 
-import Actions from '../src/Actions';
-import Blocks from '../src/Blocks';
-import Requests from '../src/Requests';
-import State from '../src/State';
+import Actions from '../src/Actions.js';
+import Blocks from '../src/Blocks.js';
+import Requests from '../src/Requests.js';
+import State from '../src/State.js';
 
 const testContext = async ({ lowdefy, rootBlock, initState = {} }) => {
   const testLowdefy = {

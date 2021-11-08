@@ -17,10 +17,10 @@
 import { type } from '@lowdefy/helpers';
 import { nunjucksFunction } from '@lowdefy/nunjucks';
 
-import { AuthenticationError } from '../../context/errors';
+import { AuthenticationError } from '../../context/errors.js';
 
-import getOpenIdConfig from './getOpenIdConfig';
-import unsetAuthorizationCookie from './unsetAuthorizationCookie';
+import getOpenIdConfig from './getOpenIdConfig.js';
+import unsetAuthorizationCookie from './unsetAuthorizationCookie.js';
 
 function parseLogoutUrlNunjucks(context, { openIdConfig, idToken }) {
   const template = nunjucksFunction(openIdConfig.logoutRedirectUri);

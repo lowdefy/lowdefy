@@ -15,9 +15,9 @@
 */
 
 import schema from './GoogleSheetAppendOneSchema.json';
-import getSheet from '../getSheet';
-import cleanRows from '../cleanRows';
-import { transformWrite } from '../transformTypes';
+import getSheet from '../getSheet.js';
+import cleanRows from '../cleanRows.js';
+import { transformWrite } from '../transformTypes.js';
 
 async function googleSheetAppendOne({ request, connection }) {
   const { row, options = {} } = request;

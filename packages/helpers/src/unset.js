@@ -40,8 +40,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import type from './type';
-import get from './get';
+import type from './type.js';
+import get from './get.js';
 
 const hasValues = (val) => {
   switch (type.typeOf(val)) {

@@ -15,7 +15,7 @@
 */
 
 import { cleanDirectory } from '@lowdefy/node-utils';
-import cleanBuildDirectory from './cleanBuildDirectory';
+import cleanBuildDirectory from './cleanBuildDirectory.js';
 
 jest.mock('@lowdefy/node-utils', () => {
   return {

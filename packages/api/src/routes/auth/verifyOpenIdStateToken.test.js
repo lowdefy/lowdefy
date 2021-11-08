@@ -16,12 +16,12 @@
 
 import jwt from 'jsonwebtoken';
 
-import testContext from '../../test/testContext';
-import issueAccessToken from './issueAccessToken';
-import issueOpenIdStateToken from './issueOpenIdStateToken';
-import verifyOpenIdStateToken from './verifyOpenIdStateToken';
+import testContext from '../../test/testContext.js';
+import issueAccessToken from './issueAccessToken.js';
+import issueOpenIdStateToken from './issueOpenIdStateToken.js';
+import verifyOpenIdStateToken from './verifyOpenIdStateToken.js';
 
-import { AuthenticationError } from '../../context/errors';
+import { AuthenticationError } from '../../context/errors.js';
 
 const secrets = {
   JWT_SECRET: 'JWT_SECRET',

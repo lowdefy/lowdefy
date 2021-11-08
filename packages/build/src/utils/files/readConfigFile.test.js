@@ -15,9 +15,9 @@
 */
 
 import path from 'path';
-
-import createReadConfigFile from './readConfigFile';
 import { readFile } from '@lowdefy/node-utils';
+
+import createReadConfigFile from './readConfigFile.js';
 
 jest.mock('@lowdefy/node-utils', () => {
   const originalModule = jest.requireActual('@lowdefy/node-utils');

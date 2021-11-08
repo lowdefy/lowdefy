@@ -16,7 +16,7 @@
 
 import { validate } from '@lowdefy/ajv';
 import AWS from 'aws-sdk';
-import AwsS3PresignedGetObject from './AwsS3PresignedGetObject';
+import AwsS3PresignedGetObject from './AwsS3PresignedGetObject.js';
 
 jest.mock('aws-sdk');
 

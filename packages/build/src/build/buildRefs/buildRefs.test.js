@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import buildRefs from './buildRefs';
-import testContext from '../../test/testContext';
+import buildRefs from './buildRefs.js';
+import testContext from '../../test/testContext.js';
 
 const readConfigFileMockImplementation = (files) => {
   const mockImp = (filePath) => {

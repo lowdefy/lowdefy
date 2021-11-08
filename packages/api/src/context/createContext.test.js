@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import createAuthorize from './createAuthorize';
-import createContext from './createContext';
-import createReadConfigFile from './readConfigFile';
-import verifyAuthorizationHeader from './verifyAuthorizationHeader';
+import createAuthorize from './createAuthorize.js';
+import createContext from './createContext.js';
+import createReadConfigFile from './readConfigFile.js';
+import verifyAuthorizationHeader from './verifyAuthorizationHeader.js';
 
 jest.mock('./createAuthorize');
 jest.mock('./readConfigFile');

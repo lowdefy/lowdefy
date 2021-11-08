@@ -15,7 +15,7 @@
 */
 import { MongoClient } from 'mongodb';
 
-import getCollection from './getCollection';
+import getCollection from './getCollection.js';
 
 const databaseUri = process.env.MONGO_URL;
 

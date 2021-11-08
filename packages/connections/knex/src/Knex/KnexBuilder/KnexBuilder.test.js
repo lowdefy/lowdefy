@@ -16,7 +16,7 @@
 
 import { validate } from '@lowdefy/ajv';
 import knex from 'knex';
-import KnexBuilder from './KnexBuilder';
+import KnexBuilder from './KnexBuilder.js';
 
 const mockKnexClient = jest.fn(() => mockKnexClient);
 

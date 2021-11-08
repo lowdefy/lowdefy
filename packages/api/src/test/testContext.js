@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import createAuthorize from '../context/createAuthorize';
+import createAuthorize from '../context/createAuthorize.js';
 
 function testContext({
   config = {},

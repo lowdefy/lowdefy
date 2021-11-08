@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import validateApp from './validateApp';
-import testContext from '../test/testContext';
+import validateApp from './validateApp.js';
+import testContext from '../test/testContext.js';
 
 const context = testContext();
 

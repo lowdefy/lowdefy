@@ -13,8 +13,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import buildPages from './buildPages';
-import testContext from '../../test/testContext';
+import buildPages from './buildPages.js';
+import testContext from '../../test/testContext.js';
 
 const mockLogWarn = jest.fn();
 const mockLog = jest.fn();

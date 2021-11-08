@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
+// TODO: do we want this lodash dep in helpers?
 import merge from 'lodash.merge';
-
-import type from './type';
+import type from './type.js';
 
 const mergeObjects = (objects) => {
   let merged = objects;

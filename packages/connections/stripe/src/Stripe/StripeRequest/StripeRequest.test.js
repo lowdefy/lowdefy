@@ -15,7 +15,7 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import StripeRequest from './StripeRequest';
+import StripeRequest from './StripeRequest.js';
 
 const { resolver, schema } = StripeRequest;
 const connection = {

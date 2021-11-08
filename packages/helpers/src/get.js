@@ -42,8 +42,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import typeTest from './type';
-import serializer from './serializer';
+import typeTest from './type.js';
+import serializer from './serializer.js';
 
 function join(segs, joinChar, options) {
   if (typeof options.join === 'function') {

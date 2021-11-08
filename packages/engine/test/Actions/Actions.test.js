@@ -16,7 +16,7 @@
   limitations under the License.
 */
 
-import testContext from '../testContext';
+import testContext from '../testContext.js';
 import actions from '../../src/actions/index.js';
 
 jest.mock('../../src/actions/index.js', () => ({

@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import buildAuth from './buildAuth';
-import validateConfig from '../validateConfig';
-import testContext from '../../test/testContext';
+import buildAuth from './buildAuth.js';
+import validateConfig from '../validateConfig.js';
+import testContext from '../../test/testContext.js';
 
 const context = testContext();
 

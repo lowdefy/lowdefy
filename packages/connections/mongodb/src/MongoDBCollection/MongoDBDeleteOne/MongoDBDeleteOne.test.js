@@ -15,8 +15,8 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import MongoDBDeleteOne from './MongoDBDeleteOne';
-import populateTestMongoDb from '../../../test/populateTestMongoDb';
+import MongoDBDeleteOne from './MongoDBDeleteOne.js';
+import populateTestMongoDb from '../../../test/populateTestMongoDb.js';
 
 const { resolver, schema, checkRead, checkWrite } = MongoDBDeleteOne;
 
@@ -78,7 +78,7 @@ test('deleteOne catch invalid options', async () => {
     write: true,
   };
   await expect(resolver({ request, connection })).rejects.toThrow(
-    "BSON field 'writeConcern.w' is the wrong type 'bool', expected types '[string, int, decimal, double, long']"
+    'w has to be a number or a string'
   );
 });
 

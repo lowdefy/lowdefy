@@ -14,17 +14,17 @@
   limitations under the License.
 */
 
-import applyArrayIndices from './applyArrayIndices';
-import get from './get';
-import mergeObjects from './mergeObjects';
-import omit from './omit';
-import serializer from './serializer';
-import set from './set';
-import stableStringify from './stableStringify';
-import swap from './swap';
-import type from './type';
-import unset from './unset';
-import urlQuery from './urlQuery';
+import applyArrayIndices from './applyArrayIndices.js';
+import get from './get.js';
+import mergeObjects from './mergeObjects.js';
+import omit from './omit.js';
+import serializer from './serializer.js';
+import set from './set.js';
+import stableStringify from './stableStringify.js';
+import swap from './swap.js';
+import type from './type.js';
+import unset from './unset.js';
+import urlQuery from './urlQuery.js';
 
 export {
   applyArrayIndices,

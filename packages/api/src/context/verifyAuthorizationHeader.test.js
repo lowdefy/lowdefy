@@ -16,10 +16,10 @@
 
 import cookie from 'cookie';
 
-import { AuthenticationError, TokenExpiredError } from '../context/errors';
-import issueAccessToken from '../routes/auth/issueAccessToken';
-import testContext from '../test/testContext';
-import verifyAuthorizationHeader from './verifyAuthorizationHeader';
+import { AuthenticationError, TokenExpiredError } from '../context/errors.js';
+import issueAccessToken from '../routes/auth/issueAccessToken.js';
+import testContext from '../test/testContext.js';
+import verifyAuthorizationHeader from './verifyAuthorizationHeader.js';
 
 const secrets = { JWT_SECRET: 'JWT_SECRET' };
 

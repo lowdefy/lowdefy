@@ -17,8 +17,8 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import buildPage from './buildPage';
-import createCheckDuplicateId from '../../utils/createCheckDuplicateId';
+import buildPage from './buildPage.js';
+import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 
 async function buildPages({ components, context }) {
   const pages = type.isArray(components.pages) ? components.pages : [];

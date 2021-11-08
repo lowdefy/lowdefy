@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -14,6 +16,76 @@
   limitations under the License.
 */
 
-const build = import('./build');
+import packageJson from '../package.json';
+
+import createGetMeta from './utils/meta/getMeta.js';
+import createWriteBuildArtifact from './utils/files/writeBuildArtifact.js';
+import createReadConfigFile from './utils/files/readConfigFile.js';
+
+import addDefaultPages from './build/addDefaultPages/addDefaultPages.js';
+import buildAuth from './build/buildAuth/buildAuth.js';
+import buildConnections from './build/buildConnections.js';
+import buildMenu from './build/buildMenu.js';
+import buildPages from './build/buildPages/buildPages.js';
+import buildRefs from './build/buildRefs/buildRefs.js';
+import cleanBuildDirectory from './build/cleanBuildDirectory.js';
+import testSchema from './build/testSchema.js';
+import validateApp from './build/validateApp.js';
+import validateConfig from './build/validateConfig.js';
+import writeApp from './build/writeApp.js';
+import writeConfig from './build/writeConfig.js';
+import writeConnections from './build/writeConnections.js';
+import writeGlobal from './build/writeGlobal.js';
+import writeHtml from './build/writeHtml/writeHtml.js';
+import writeMenus from './build/writeMenus.js';
+import writePages from './build/writePages.js';
+import writeRequests from './build/writeRequests.js';
+
+function createContext(options) {
+  const { blocksServerUrl, buildDirectory, cacheDirectory, configDirectory, logger, refResolver } =
+    options;
+  const context = {
+    blocksServerUrl,
+    buildDirectory,
+    cacheDirectory,
+    configDirectory,
+    logger,
+    readConfigFile: createReadConfigFile({ configDirectory }),
+    refResolver,
+    version: packageJson.version,
+    writeBuildArtifact: createWriteBuildArtifact({ buildDirectory }),
+  };
+  return context;
+}
+
+async function build(options) {
+  const context = createContext(options);
+  try {
+    let components = await buildRefs({ context });
+    await testSchema({ components, context });
+    context.getMeta = createGetMeta({ components, context });
+    await validateApp({ components, context });
+    await validateConfig({ components, context });
+    await addDefaultPages({ components, context });
+    await buildAuth({ components, context });
+    await buildConnections({ components, context });
+    await buildPages({ components, context });
+    await buildMenu({ components, context });
+    await cleanBuildDirectory({ context });
+    await writeApp({ components, context });
+    await writeConnections({ components, context });
+    await writeRequests({ components, context });
+    await writePages({ components, context });
+    await writeHtml({ components, context });
+    await writeConfig({ components, context });
+    await writeGlobal({ components, context });
+    await writeMenus({ components, context });
+  } catch (error) {
+    context.logger.error(error);
+    throw error;
+  }
+}
+
+export { createContext };
 
 export default build;

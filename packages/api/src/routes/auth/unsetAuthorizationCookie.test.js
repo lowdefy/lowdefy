@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import testContext from '../../test/testContext';
-import unsetAuthorizationCookie from './unsetAuthorizationCookie';
+import testContext from '../../test/testContext.js';
+import unsetAuthorizationCookie from './unsetAuthorizationCookie.js';
 
 const setHeader = jest.fn();
 

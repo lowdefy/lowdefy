@@ -15,7 +15,7 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import Elasticsearch from './Elasticsearch';
+import Elasticsearch from './Elasticsearch.js';
 
 const { schema } = Elasticsearch;
 

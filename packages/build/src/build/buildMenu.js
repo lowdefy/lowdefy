@@ -17,7 +17,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import createCheckDuplicateId from '../utils/createCheckDuplicateId';
+import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
 
 async function buildDefaultMenu({ components, context }) {
   context.logger.warn('No menus found. Building default menu.');

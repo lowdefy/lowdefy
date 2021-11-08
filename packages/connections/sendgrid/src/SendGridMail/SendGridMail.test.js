@@ -15,7 +15,7 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import SendGridMail from './SendGridMail';
+import SendGridMail from './SendGridMail.js';
 
 const { schema } = SendGridMail;
 

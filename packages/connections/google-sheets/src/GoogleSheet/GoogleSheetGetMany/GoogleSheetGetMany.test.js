@@ -15,7 +15,7 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import GoogleSheetGetMany from './GoogleSheetGetMany';
+import GoogleSheetGetMany from './GoogleSheetGetMany.js';
 
 const mockGetRows = jest.fn();
 jest.mock('../getSheet', () => () => ({

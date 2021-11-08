@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import formatErrorMessage from './formatErrorMessage';
+import formatErrorMessage from './formatErrorMessage.js';
 
 test('global incorrect type', async () => {
   const app = {
@@ -22,7 +22,7 @@ test('global incorrect type', async () => {
   };
   const error = {
     keyword: 'type',
-    dataPath: '/global',
+    instancePath: '/global',
     schemaPath: '#/properties/global/type',
     params: {
       type: 'object',
@@ -54,7 +54,7 @@ test('page id missing', async () => {
   };
   const error = {
     keyword: 'required',
-    dataPath: '/pages/0',
+    instancePath: '/pages/0',
     schemaPath: '#/required',
     params: {
       missingProperty: 'id',
@@ -89,7 +89,7 @@ test('page type missing', async () => {
   };
   const error = {
     keyword: 'required',
-    dataPath: '/pages/0',
+    instancePath: '/pages/0',
     schemaPath: '#/required',
     params: {
       missingProperty: 'type',
@@ -119,7 +119,7 @@ test('id incorrect type', async () => {
   };
   const error = {
     keyword: 'type',
-    dataPath: '/pages/0/id',
+    instancePath: '/pages/0/id',
     schemaPath: '#/properties/id/type',
     params: {
       type: 'string',

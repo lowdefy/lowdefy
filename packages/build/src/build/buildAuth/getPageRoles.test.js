@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getPageRoles from './getPageRoles';
+import getPageRoles from './getPageRoles.js';
 
 test('No roles', () => {
   const components = {

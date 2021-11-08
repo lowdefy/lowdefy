@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import buildEvents from './buildEvents';
-import buildRequests from './buildRequests';
-import buildSubBlocks from './buildSubBlocks';
-import getOperators from './getOperators';
-import moveSubBlocksToArea from './moveSubBlocksToArea';
-import setBlockId from './setBlockId';
-import setBlockMeta from './setBlockMeta';
-import validateBlock from './validateBlock';
+import buildEvents from './buildEvents.js';
+import buildRequests from './buildRequests.js';
+import buildSubBlocks from './buildSubBlocks.js';
+import getOperators from './getOperators.js';
+import moveSubBlocksToArea from './moveSubBlocksToArea.js';
+import setBlockId from './setBlockId.js';
+import setBlockMeta from './setBlockMeta.js';
+import validateBlock from './validateBlock.js';
 
 async function buildBlock(block, pageContext) {
   validateBlock(block, pageContext);

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getContext from '../src/getContext';
+import getContext from '../src/getContext.js';
 
 const updateBlock = () => jest.fn();
 const pageId = 'pageId';

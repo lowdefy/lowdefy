@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import getUserJavascriptFunction from './getUserJavascriptFunction';
+import getUserJavascriptFunction from './getUserJavascriptFunction.js';
 
 async function runRefResolver({ context, refDef, referencedFrom }) {
   const resolverFn = await getUserJavascriptFunction({

@@ -16,7 +16,7 @@
 
 import { get, type } from '@lowdefy/helpers';
 import { nunjucksFunction } from '@lowdefy/nunjucks';
-import template from './template';
+import template from './template.js';
 
 const templateFn = nunjucksFunction(template);
 

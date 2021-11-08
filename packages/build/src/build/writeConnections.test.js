@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import writeConnections from './writeConnections';
-import testContext from '../test/testContext';
+import writeConnections from './writeConnections.js';
+import testContext from '../test/testContext.js';
 
 const mockWriteBuildArtifact = jest.fn();
 
