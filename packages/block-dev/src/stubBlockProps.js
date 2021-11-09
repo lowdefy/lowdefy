@@ -16,13 +16,27 @@
 
 import React, { useState } from 'react';
 import { type } from '@lowdefy/helpers';
-import { makeCssClass } from '@lowdefy/block-utils';
+import { makeCssClass, Icon } from '@lowdefy/block-utils';
 
 import schemaTest from './schemaTest.js';
 
 const validate = {};
+const Icons = {
+  AiIcon: (props) => <svg {...props} data-testid="AiIcon"></svg>,
+  AiOutlineExclamationCircle: (props) => (
+    <svg {...props} data-testid="AiOutlineExclamationCircle"></svg>
+  ),
+  AiOutlineLoading3Quarters: (props) => (
+    <svg {...props} data-testid="AiOutlineLoading3Quarters"></svg>
+  ),
+  ErrorIcon: () => {
+    throw new Error('ErrorIcon');
+  },
+};
 
-const stubBlockProps = ({ block, meta, logger, initialValue }) => {
+const IconComponent = Icon(Icons);
+
+const stubBlockProps = ({ block, meta, logger, initialValue, schema }) => {
   const [value, setState] = useState(type.enforceType(meta.valueType, block.value || initialValue));
   const setValue = (val) => {
     setState(type.enforceType(meta.valueType, val));
@@ -32,7 +46,7 @@ const stubBlockProps = ({ block, meta, logger, initialValue }) => {
   // evaluate block schema
   if (!validate[block.type]) {
     try {
-      validate[block.type] = schemaTest(meta.schema);
+      validate[block.type] = schemaTest(schema);
     } catch (error) {
       throw new Error(`Schema error in ${block.type} - ${error.message}`);
     }
@@ -48,6 +62,7 @@ const stubBlockProps = ({ block, meta, logger, initialValue }) => {
   }
   block.events = block.events || {};
   block.eventLog = [];
+  block.Icon = IconComponent;
   // mock default block methods
   block.methods = {
     makeCssClass,
@@ -61,7 +76,6 @@ const stubBlockProps = ({ block, meta, logger, initialValue }) => {
     },
     triggerEvent: (event) => block.eventLog.unshift(event),
   };
-
   // block category defaults
   if (meta.category === 'list') {
     block.list = [];

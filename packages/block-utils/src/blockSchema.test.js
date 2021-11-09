@@ -14,12 +14,8 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
+import blockSchema from './blockSchema.js';
 
-import Block from './Affix';
-import examples from './examples.yaml';
-import meta from './index';
-import schema from './schema.json';
-
-runRenderTests({ examples, Block, meta, schema });
-runBlockSchemaTests({ examples, meta, schema });
+test('default', () => {
+  expect(blockSchema).toMatchSnapshot();
+});

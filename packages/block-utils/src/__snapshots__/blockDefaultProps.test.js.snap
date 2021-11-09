@@ -2,6 +2,7 @@
 
 exports[`default 1`] = `
 Object {
+  "Icon": [Function],
   "basePath": "",
   "blockId": "undefined_id",
   "content": Object {},

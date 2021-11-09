@@ -30,6 +30,7 @@ const lowdefyProps = [
   'content',
   'eventLog',
   'homePageId',
+  'Icon',
   'list',
   'loading',
   'menus',
@@ -67,7 +68,7 @@ const Icon = (Icons) => {
         [spinClass]: propertiesObj.spin,
       }),
       rotate: propertiesObj.rotate,
-      twoToneColor: propertiesObj.color,
+      // twoToneColor: propertiesObj.color, // TODO: track https://github.com/react-icons/react-icons/issues/508
       ...omit(props, lowdefyProps),
     };
     let IconComp = Icons[propertiesObj.name];

@@ -19,15 +19,16 @@ import { mockBlock, runBlockSchemaTests, runRenderTests } from '@lowdefy/block-d
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import Block from './Box';
+import Block from './Box.js';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
 import schema from './schema.json';
 
-runRenderTests({ examples, Block, meta });
+const { meta } = block;
+runRenderTests({ examples, Block, meta, schema });
 runBlockSchemaTests({ examples, meta, schema });
 
-const { before, methods, getProps } = mockBlock({ meta });
+const { before, methods, getProps } = mockBlock({ meta, schema });
 beforeEach(before);
 
 test('triggerEvent onClick', () => {

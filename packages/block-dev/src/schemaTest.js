@@ -17,59 +17,7 @@
 import Ajv from 'ajv';
 import AjvErrors from 'ajv-errors';
 
-const appTestSchema = {
-  type: 'object',
-  additionalProperties: false,
-  required: ['id', 'type'],
-  properties: {
-    id: {
-      type: 'string',
-    },
-    required: {
-      type: ['boolean', 'object'],
-    },
-    type: {
-      type: 'string',
-    },
-    properties: {
-      type: 'object',
-    },
-    style: {
-      type: 'object',
-    },
-    layout: {
-      type: 'object',
-    },
-    blocks: {
-      type: 'array',
-      items: {
-        type: 'object',
-      },
-    },
-    events: {
-      type: 'object',
-    },
-    menus: {
-      type: 'array',
-    },
-    areas: {
-      type: 'object',
-      patternProperties: {
-        '^.*$': {
-          type: 'object',
-          properties: {
-            blocks: {
-              type: 'array',
-              items: {
-                type: 'object',
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-};
+import { blockSchema } from '@lowdefy/block-utils';
 
 const testSchemaProperties = {
   value: {},
@@ -101,9 +49,12 @@ const initAjv = (options) => {
 };
 
 const ajvInstance = initAjv();
+const sch = JSON.parse(JSON.stringify(blockSchema));
+
 const schemaTest = (schema) => {
-  appTestSchema.properties = { ...appTestSchema.properties, ...schema, ...testSchemaProperties };
-  return ajvInstance.compile(appTestSchema);
+  sch.properties = { ...sch.properties, ...schema.properties.properties, ...testSchemaProperties };
+  sch.additionalProperties = true;
+  return ajvInstance.compile(sch);
 };
 
 export default schemaTest;

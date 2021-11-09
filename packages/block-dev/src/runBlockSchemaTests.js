@@ -16,8 +16,8 @@
 
 import schemaTest from './schemaTest.js';
 
-const runBlockSchemaTests = ({ examples, meta }) => {
-  const validate = schemaTest(meta.schema);
+const runBlockSchemaTests = ({ examples, schema }) => {
+  const validate = schemaTest(schema);
   examples.forEach((block) => {
     test(`Test Schema ${block.id}`, () => {
       const valid = validate(block);

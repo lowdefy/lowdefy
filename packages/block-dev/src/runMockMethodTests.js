@@ -21,8 +21,8 @@ import userEvent from '@testing-library/user-event';
 
 import mockBlock from './mockBlock.js';
 
-const runMockMethodTests = ({ Block, examples, logger, meta, mocks }) => {
-  const { before, methods, getProps } = mockBlock({ meta, logger });
+const runMockMethodTests = ({ Block, examples, logger, meta, mocks, schema }) => {
+  const { before, methods, getProps } = mockBlock({ meta, logger, schema });
 
   beforeEach(() => {
     before();

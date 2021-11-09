@@ -15,6 +15,7 @@
 */
 
 import blockDefaultProps from './blockDefaultProps.js';
+import blockSchema from './blockSchema.js';
 import ErrorBoundary from './ErrorBoundary.js';
 import HtmlComponent from './HtmlComponent.js';
 import Icon from './Icon.js';
@@ -24,6 +25,7 @@ import renderHtml from './renderHtml.js';
 
 export {
   blockDefaultProps,
+  blockSchema,
   ErrorBoundary,
   HtmlComponent,
   Icon,

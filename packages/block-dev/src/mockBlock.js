@@ -18,7 +18,7 @@ import { makeCssClass } from '@lowdefy/block-utils';
 
 import stubBlockProps from './stubBlockProps.js';
 
-const mockBlock = ({ meta, logger }) => {
+const mockBlock = ({ meta, logger, schema }) => {
   const mockMath = Object.create(global.Math);
   mockMath.random = () => 0.5;
   global.Math = mockMath;
@@ -86,7 +86,7 @@ const mockBlock = ({ meta, logger }) => {
     }
   };
   const getProps = (block) => {
-    return stubBlockProps({ block, meta, logger });
+    return stubBlockProps({ block, meta, logger, schema });
   };
 
   return { before, methods, getProps };

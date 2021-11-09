@@ -26,9 +26,10 @@ const runRenderTests = ({
   logger,
   meta,
   reset = () => null,
+  schema,
   validationsExamples,
 }) => {
-  const { before, methods, getProps } = mockBlock({ meta, logger });
+  const { before, methods, getProps } = mockBlock({ meta, logger, schema });
 
   beforeEach(() => {
     reset();

@@ -21,5 +21,5 @@ import examples from './examples.yaml';
 import meta from './index';
 import schema from './schema.json';
 
-runRenderTests({ examples, Block, meta });
+runRenderTests({ examples, Block, meta, schema });
 runBlockSchemaTests({ examples, meta, schema });

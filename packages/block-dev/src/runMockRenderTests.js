@@ -20,8 +20,16 @@ import { render } from '@testing-library/react';
 
 import mockBlock from './mockBlock.js';
 
-const runMockRenderTests = ({ Block, examples, logger, meta, mocks, reset = () => null }) => {
-  const { before, getProps } = mockBlock({ meta, logger });
+const runMockRenderTests = ({
+  Block,
+  examples,
+  logger,
+  meta,
+  mocks,
+  reset = () => null,
+  schema,
+}) => {
+  const { before, getProps } = mockBlock({ meta, logger, schema });
 
   const makeCssClass = jest.fn();
   const makeCssImp = (style, op) => JSON.stringify({ style, options: op });
