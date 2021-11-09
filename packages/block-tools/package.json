@@ -36,7 +36,7 @@
     "prepare": "yarn build",
     "swc": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
     "test:watch": "jest --coverage --watch",
-    "test": "jest --coverage --experimental-modules"
+    "test": "jest --coverage"
   },
   "dependencies": {
     "@emotion/css": "11.5.0",
