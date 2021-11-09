@@ -34,9 +34,7 @@
     "build": "yarn swc",
     "clean": "rm -rf dist",
     "prepare": "yarn build",
-    "swc": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
-    "test:watch": "jest --coverage --watch",
-    "test": "jest --coverage"
+    "swc": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start"
   },
   "dependencies": {
     "@emotion/jest": "11.5.0",
@@ -54,12 +52,8 @@
     "yaml-loader": "0.6.0"
   },
   "devDependencies": {
-    "@babel/core": "7.16.0",
-    "@babel/preset-react": "7.16.0",
     "@swc/cli": "0.1.51",
-    "@swc/core": "1.2.107",
-    "@swc/jest": "0.2.5",
-    "babel-jest": "27.3.1"
+    "@swc/core": "1.2.107"
   },
   "publishConfig": {
     "access": "public"

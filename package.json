@@ -38,7 +38,7 @@
     "postversion": "yarn install",
     "prettier": "prettier --config .prettierrc --write **/*.js",
     "test": "lerna run test",
-    "test:ci": "yarn install --immutable --immutable-cache --check-cache && yarn build && yarn test --ignore='@lowdefy/format'"
+    "test:ci": "yarn install --immutable --immutable-cache --check-cache && yarn build && yarn test --ignore='@lowdefy/format' --ignore='@lowdefy/block-dev'"
   },
   "devDependencies": {
     "@yarnpkg/pnpify": "3.1.0-rc.2",

@@ -95,7 +95,7 @@ const testSchemaProperties = {
 };
 
 const initAjv = (options) => {
-  const ajv = new Ajv({ allErrors: true, jsonPointers: true, ...options });
+  const ajv = new Ajv({ allErrors: true, strict: false, ...options });
   AjvErrors(ajv, options);
   return ajv;
 };
