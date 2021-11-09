@@ -19,7 +19,9 @@ import { Collapse } from 'antd';
 
 import CollapseBlock from './Collapse';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('antd/lib/collapse', () => {
   const collapse = jest.fn(() => 'mocked');

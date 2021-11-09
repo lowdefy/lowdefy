@@ -19,7 +19,7 @@ import ReactMarkdown from 'react-markdown';
 
 import MarkdownWithCode from './MarkdownWithCode';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
 
 jest.mock('react-markdown', () => {
   return jest.fn(() => 'mocked');

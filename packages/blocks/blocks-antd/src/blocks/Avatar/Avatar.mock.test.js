@@ -19,7 +19,9 @@ import { Avatar } from 'antd';
 
 import AvatarBlock from './Avatar';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('antd/lib/avatar', () => {
   return jest.fn(() => 'mocked');

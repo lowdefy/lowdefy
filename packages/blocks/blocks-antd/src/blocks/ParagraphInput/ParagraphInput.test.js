@@ -17,10 +17,12 @@
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import validationsExamples from '../../validationExamples.js';
-import ParagraphInput from './ParagraphInput';
+import Block from './ParagraphInput.js';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
 import schema from './schema.json';
 
-runRenderTests({ examples, Block: ParagraphInput, meta, validationsExamples });
+const { meta } = block;
+
+runRenderTests({ examples, Block, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta, schema });

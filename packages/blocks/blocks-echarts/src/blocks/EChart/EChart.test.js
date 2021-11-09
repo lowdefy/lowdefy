@@ -19,7 +19,7 @@ import { runBlockSchemaTests } from '@lowdefy/block-dev';
 
 // import EChart from './EChart';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
 import schema from './schema.json';
 
 // runRenderTests({ examples, Block: EChart, meta });

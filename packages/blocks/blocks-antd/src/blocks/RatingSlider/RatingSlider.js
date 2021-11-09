@@ -20,8 +20,8 @@ import { Slider } from 'antd';
 import { get, mergeObjects, serializer, type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-import Label from '../Label/Label';
-import CheckboxSelector from '../CheckboxSelector/CheckboxSelector';
+import Label from '../Label/Label.js';
+import CheckboxSelector from '../CheckboxSelector/CheckboxSelector.js';
 
 const includeMarks = (minMax, minMin, step = 1) => {
   const marks = {};

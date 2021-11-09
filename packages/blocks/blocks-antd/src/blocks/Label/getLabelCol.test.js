@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getLabelCol from './getLabelCol';
+import getLabelCol from './getLabelCol.js';
 
 test('with inline', () => {
   expect(getLabelCol({}, true)).toEqual({ flex: '0 1 auto' });

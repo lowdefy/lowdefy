@@ -19,7 +19,9 @@ import { Badge } from 'antd';
 
 import BadgeBlock from './Badge';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('antd/lib/badge', () => {
   return jest.fn(() => 'mocked');

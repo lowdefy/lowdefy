@@ -19,7 +19,7 @@ import { Switch } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import { type, serializer } from '@lowdefy/helpers';
 
-import Label from '../Label/Label';
+import Label from '../Label/Label.js';
 
 const SwitchBlock = ({
   blockId,

@@ -19,7 +19,9 @@ import { DatePicker } from 'antd';
 
 import DateSelectorBlock from './DateSelector';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('antd/lib/date-picker', () => {
   const comp = jest.fn(() => 'mocked');

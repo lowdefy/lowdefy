@@ -17,9 +17,11 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { TwitterPicker } from 'react-color';
 
-import TwitterColorSelectorBlock from './TwitterColorSelector';
+import Block from './TwitterColorSelector.js';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('react-color', () => {
   const selectors = {
@@ -35,4 +37,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: TwitterColorSelectorBlock, meta, mocks });
+runMockRenderTests({ examples, Block, meta, mocks });

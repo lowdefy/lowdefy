@@ -17,10 +17,12 @@
 import { runBlockSchemaTests, runMockMethodTests } from '@lowdefy/block-dev';
 import { Modal } from 'antd';
 
-import ModalBlock from './Modal';
+import Block from './Modal.js';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
 import schema from './schema.json';
+
+const { meta } = block;
 
 jest.mock('antd/lib/modal', () => {
   return jest.fn(() => 'mocked');
@@ -33,5 +35,5 @@ const mocks = [
   },
 ];
 
-runMockMethodTests({ examples, Block: ModalBlock, mocks, meta });
+runMockMethodTests({ examples, Block, mocks, meta });
 runBlockSchemaTests({ examples, meta, schema });

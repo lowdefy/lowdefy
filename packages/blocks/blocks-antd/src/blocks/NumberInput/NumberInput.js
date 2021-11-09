@@ -17,9 +17,8 @@
 import React from 'react';
 import { InputNumber } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-utils';
-import { type } from '@lowdefy/helpers';
 
-import Label from '../Label/Label';
+import Label from '../Label/Label.js';
 
 const NumberInput = ({
   blockId,

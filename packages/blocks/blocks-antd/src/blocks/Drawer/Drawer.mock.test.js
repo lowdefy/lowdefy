@@ -19,7 +19,9 @@ import { Drawer } from 'antd';
 
 import Block from './Drawer';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('antd/lib/drawer', () => {
   const comp = jest.fn(() => 'mocked');

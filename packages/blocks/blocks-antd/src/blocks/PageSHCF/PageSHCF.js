@@ -18,11 +18,11 @@ import React from 'react';
 import { mergeObjects } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-import Header from '../Header/Header';
-import Footer from '../Footer/Footer';
-import Content from '../Content/Content';
-import Layout from '../Layout/Layout';
-import Sider from '../Sider/Sider';
+import Header from '../Header/Header.js';
+import Footer from '../Footer/Footer.js';
+import Content from '../Content/Content.js';
+import Layout from '../Layout/Layout.js';
+import Sider from '../Sider/Sider.js';
 
 const PageSHCF = ({ blockId, events, content, properties, methods }) => (
   <Layout

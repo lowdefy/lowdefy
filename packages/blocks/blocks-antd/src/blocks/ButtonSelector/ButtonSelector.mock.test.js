@@ -19,7 +19,9 @@ import { Radio } from 'antd';
 
 import ButtonSelectorBlock from './ButtonSelector';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('antd/lib/radio', () => {
   const radio = jest.fn(() => 'mocked');

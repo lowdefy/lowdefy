@@ -17,9 +17,11 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Spin } from 'antd';
 
-import SpinBlock from './Spin';
+import Block from './Spin.js';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('antd/lib/spin', () => {
   return jest.fn((props) => props.toString());
@@ -32,4 +34,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: SpinBlock, meta, mocks });
+runMockRenderTests({ examples, Block, meta, mocks });

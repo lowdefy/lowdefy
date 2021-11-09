@@ -15,7 +15,7 @@
 */
 
 import moment from 'moment';
-import disabledDate from './disabledDate';
+import disabledDate from './disabledDate.js';
 
 test('default', () => {
   const fn = disabledDate();

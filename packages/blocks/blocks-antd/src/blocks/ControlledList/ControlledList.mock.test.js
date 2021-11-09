@@ -19,7 +19,9 @@ import { List } from 'antd';
 
 import ControlledList from './ControlledList';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('antd/lib/list', () => {
   return jest.fn(() => 'mocked');

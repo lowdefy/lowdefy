@@ -17,9 +17,11 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Select } from 'antd';
 
-import Block from './Selector';
+import Block from './Selector.js';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('antd/lib/select', () => {
   const comp = jest.fn(() => 'mocked');

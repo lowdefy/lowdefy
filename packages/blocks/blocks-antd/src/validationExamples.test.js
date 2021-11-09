@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import validationExamples from './validationExamples';
+import validationExamples from './validationExamples.js';
 
 test('validationExamples', () => {
   expect(validationExamples).toMatchInlineSnapshot();

@@ -17,9 +17,11 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Upload } from 'antd';
 
-import S3UploadButton from './S3UploadButton';
+import Block from './S3UploadButton.js';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('antd/lib/upload', () => {
   return jest.fn(() => 'mocked');
@@ -32,4 +34,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: S3UploadButton, meta, mocks });
+runMockRenderTests({ examples, Block, meta, mocks });

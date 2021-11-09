@@ -17,9 +17,11 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Layout } from 'antd';
 
-import PageHCSF from './PageHCSF';
+import Block from './PageHCSF.js';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('antd/lib/layout', () => {
   return jest.fn(() => 'mocked');
@@ -32,4 +34,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: PageHCSF, meta, mocks });
+runMockRenderTests({ examples, Block, meta, mocks });

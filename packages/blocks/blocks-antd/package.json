@@ -27,19 +27,18 @@
     "type": "git",
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
+  "type": "module",
+  "exports": "./dist/index.js",
   "files": [
-    "dist/*",
-    "es/*"
+    "dist/*"
   ],
-  "main": "es/index.js",
   "scripts": {
-    "build:es": "babel src --copy-files --out-dir es",
-    "build": "yarn build:es && yarn build:moduleFederation",
+    "build": "yarn swc",
     "clean": "rm -rf dist",
-    "generate-icons": "yarn node ./src/blocks/Icon/generateIcons.js",
     "prepare": "yarn build",
-    "test": "jest --coverage --config jest.config.js",
-    "build:moduleFederation": "webpack --config webpack.prod.js"
+    "swc": "swc src --out-dir dist --config-file ../../../.swcrc --delete-dir-on-start --copy-files",
+    "test:watch": "jest --coverage --watch",
+    "test": "jest --coverage"
   },
   "dependencies": {
     "@ant-design/icons": "4.7.0",
@@ -55,33 +54,19 @@
     "react-router-dom": "5.2.1"
   },
   "devDependencies": {
-    "@babel/cli": "7.15.7",
-    "@babel/core": "7.15.8",
-    "@babel/preset-env": "7.15.8",
-    "@babel/preset-react": "7.14.5",
+    "@babel/core": "7.16.0",
+    "@babel/preset-react": "7.16.0",
     "@emotion/jest": "11.5.0",
     "@lowdefy/block-dev": "3.22.0",
-    "@lowdefy/helpers": "3.22.0",
-    "babel-jest": "27.3.1",
-    "babel-loader": "8.2.3",
-    "babel-plugin-import": "1.13.3",
-    "clean-webpack-plugin": "4.0.0",
-    "copy-webpack-plugin": "9.0.1",
-    "css-loader": "6.4.0",
-    "html-webpack-plugin": "5.4.0",
+    "@swc/cli": "0.1.51",
+    "@swc/core": "1.2.107",
+    "@swc/jest": "0.2.5",
+    "@testing-library/dom": "8.10.1",
+    "@testing-library/react": "12.1.2",
+    "@testing-library/user-event": "13.5.0",
     "jest": "27.3.1",
     "jest-serializer-html": "7.1.0",
-    "jest-transform-yaml": "0.1.2",
-    "js-yaml": "4.1.0",
-    "less": "4.1.2",
-    "less-loader": "10.2.0",
-    "react-syntax-highlighter": "15.4.4",
-    "style-loader": "3.3.1",
-    "webpack": "5.59.1",
-    "webpack-cli": "4.9.1",
-    "webpack-dev-server": "4.3.1",
-    "webpack-merge": "5.8.0",
-    "yaml-loader": "0.6.0"
+    "jest-transform-yaml": "0.1.2"
   },
   "publishConfig": {
     "access": "public"

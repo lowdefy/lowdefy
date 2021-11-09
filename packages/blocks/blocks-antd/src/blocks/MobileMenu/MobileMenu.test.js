@@ -16,10 +16,12 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import MobileMenu from './MobileMenu';
+import MobileMenu from './MobileMenu.js';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
 import schema from './schema.json';
+
+const { meta } = block;
 
 runRenderTests({ examples, Block: MobileMenu, meta });
 runBlockSchemaTests({ examples, meta, schema });

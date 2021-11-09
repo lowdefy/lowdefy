@@ -17,9 +17,11 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Tooltip } from 'antd';
 
-import TooltipBlock from './Tooltip';
+import Block from './Tooltip.js';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('antd/lib/tooltip', () => {
   return jest.fn(() => 'mocked');
@@ -32,4 +34,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: TooltipBlock, meta, mocks });
+runMockRenderTests({ examples, Block, meta, mocks });

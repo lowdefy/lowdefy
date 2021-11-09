@@ -17,9 +17,11 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { ChromePicker } from 'react-color';
 
-import ChromeColorSelectorBlock from './ChromeColorSelector';
+import Block from './ChromeColorSelector.js';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('react-color', () => {
   const selectors = {
@@ -35,4 +37,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: ChromeColorSelectorBlock, meta, mocks });
+runMockRenderTests({ examples, Block, meta, mocks });

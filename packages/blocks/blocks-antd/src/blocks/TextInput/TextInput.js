@@ -18,8 +18,8 @@ import React from 'react';
 import { Input } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-import Label from '../Label/Label';
-import useRunAfterUpdate from '../../useRunAfterUpdate';
+import Label from '../Label/Label.js';
+import useRunAfterUpdate from '../../useRunAfterUpdate.js';
 
 const TextInput = ({
   blockId,
