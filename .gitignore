@@ -18,8 +18,6 @@
 
 packages/build/src/test/writeFile.txt
 
-packages/graphql/globalConfig.json
-packages/graphql/node_modules/**
-
-packages/connections/mongodb/mongod-*
-packages/connections/mongodb/globalConfig.json
+packages/plugins/connections/connection-mongodb/mongod-*
+packages/plugins/connections/connection-mongodb/globalConfig.json
+/packages/plugins/connections/connection-mongodb/*.lock
