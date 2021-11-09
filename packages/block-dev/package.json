@@ -25,14 +25,17 @@
     "type": "git",
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
-  "main": "dist/index.js",
+  "type": "module",
+  "exports": "./dist/index.js",
   "files": [
     "dist/*"
   ],
   "scripts": {
-    "build": "babel src --copy-files --out-dir dist",
+    "build": "yarn swc",
     "clean": "rm -rf dist",
     "prepare": "yarn build",
+    "swc": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
+    "test:watch": "jest --coverage --watch",
     "test": "jest --coverage"
   },
   "dependencies": {
@@ -46,17 +49,16 @@
     "ajv-errors": "3.0.0",
     "jest": "27.3.1",
     "jest-serializer-html": "7.1.0",
-    "jest-transform-yaml": "0.1.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-router": "5.2.1",
     "yaml-loader": "0.6.0"
   },
   "devDependencies": {
-    "@babel/cli": "7.15.7",
-    "@babel/core": "7.15.8",
-    "@babel/preset-env": "7.15.8",
-    "@babel/preset-react": "7.14.5",
+    "@babel/core": "7.16.0",
+    "@babel/preset-react": "7.16.0",
+    "@swc/cli": "0.1.51",
+    "@swc/core": "1.2.107",
+    "@swc/jest": "0.2.5",
     "babel-jest": "27.3.1"
   },
   "publishConfig": {

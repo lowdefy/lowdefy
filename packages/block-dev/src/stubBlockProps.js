@@ -18,7 +18,7 @@ import React, { useState } from 'react';
 import { type } from '@lowdefy/helpers';
 import { makeCssClass } from '@lowdefy/block-tools';
 
-import schemaTest from './schemaTest';
+import schemaTest from './schemaTest.js';
 
 const validate = {};
 

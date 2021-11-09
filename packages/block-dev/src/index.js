@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import BlockSchemaErrors from './BlockSchemaErrors';
-import mockBlock from './mockBlock';
-import runBlockSchemaTests from './runBlockSchemaTests';
-import runMockMethodTests from './runMockMethodTests';
-import runMockRenderTests from './runMockRenderTests';
-import runRenderTests from './runRenderTests';
-import stubBlockProps from './stubBlockProps';
+import BlockSchemaErrors from './BlockSchemaErrors.js';
+import mockBlock from './mockBlock.js';
+import runBlockSchemaTests from './runBlockSchemaTests.js';
+import runMockMethodTests from './runMockMethodTests.js';
+import runMockRenderTests from './runMockRenderTests.js';
+import runRenderTests from './runRenderTests.js';
+import stubBlockProps from './stubBlockProps.js';
 
 export {
   BlockSchemaErrors,

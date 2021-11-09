@@ -16,7 +16,7 @@
 
 import { makeCssClass } from '@lowdefy/block-tools';
 
-import stubBlockProps from './stubBlockProps';
+import stubBlockProps from './stubBlockProps.js';
 
 const mockBlock = ({ meta, logger }) => {
   const mockMath = Object.create(global.Math);

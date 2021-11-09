@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import schemaTest from './schemaTest';
+import schemaTest from './schemaTest.js';
 
 const runBlockSchemaTests = ({ examples, meta }) => {
   const validate = schemaTest(meta.schema);

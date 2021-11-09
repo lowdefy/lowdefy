@@ -16,10 +16,9 @@
 
 import React from 'react';
 import { type } from '@lowdefy/helpers';
-import { MemoryRouter } from 'react-router';
 import { render } from '@testing-library/react';
 
-import mockBlock from './mockBlock';
+import mockBlock from './mockBlock.js';
 
 const runMockRenderTests = ({ Block, examples, logger, meta, mocks, reset = () => null }) => {
   const { before, getProps } = mockBlock({ meta, logger });
@@ -45,11 +44,7 @@ const runMockRenderTests = ({ Block, examples, logger, meta, mocks, reset = () =
             const props = getProps(ex);
             return <Block {...props} methods={{ ...props.methods, makeCssClass }} value={value} />;
           };
-          render(
-            <MemoryRouter>
-              <Shell />
-            </MemoryRouter>
-          );
+          render(<Shell />);
           expect(mock.fn.mock.calls).toMatchSnapshot();
         });
       });

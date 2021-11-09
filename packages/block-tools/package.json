@@ -36,7 +36,7 @@
     "prepare": "yarn build",
     "swc": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
     "test:watch": "jest --coverage --watch",
-    "test": "jest --coverage"
+    "test": "jest --coverage --experimental-modules"
   },
   "dependencies": {
     "@emotion/css": "11.5.0",
@@ -48,14 +48,17 @@
     "react-dom": "17.0.2"
   },
   "devDependencies": {
+    "@babel/core": "7.16.0",
+    "@babel/preset-env": "7.16.0",
+    "@babel/preset-react": "7.16.0",
     "@emotion/jest": "11.5.0",
-    "@lowdefy/block-dev": "3.22.0",
     "@swc/cli": "0.1.51",
     "@swc/core": "1.2.107",
     "@swc/jest": "0.2.5",
     "@testing-library/dom": "8.10.1",
     "@testing-library/react": "12.1.2",
     "@testing-library/user-event": "13.5.0",
+    "babel-jest": "27.3.1",
     "jest": "27.3.1",
     "jest-serializer-html": "7.1.0"
   },

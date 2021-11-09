@@ -19,7 +19,7 @@ import { type } from '@lowdefy/helpers';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import mockBlock from './mockBlock';
+import mockBlock from './mockBlock.js';
 
 const runMockMethodTests = ({ Block, examples, logger, meta, mocks }) => {
   const { before, methods, getProps } = mockBlock({ meta, logger });

@@ -17,9 +17,8 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { type } from '@lowdefy/helpers';
-import { MemoryRouter } from 'react-router';
 
-import mockBlock from './mockBlock';
+import mockBlock from './mockBlock.js';
 
 const runRenderTests = ({
   Block,
@@ -48,11 +47,7 @@ const runRenderTests = ({
       test(`Render ${ex.id} - value[${v}]`, async () => {
         // create shell to setup react hooks with getProps before render;
         const Shell = () => <Block {...getProps(ex)} value={value} methods={methods} />;
-        const { container } = render(
-          <MemoryRouter>
-            <Shell />
-          </MemoryRouter>
-        );
+        const { container } = render(<Shell />);
         await waitFor(() => expect(container.firstChild).toMatchSnapshot());
       });
 
@@ -63,11 +58,7 @@ const runRenderTests = ({
             const Shell = () => (
               <Block {...getProps(ex)} value={value} methods={methods} validation={validationEx} />
             );
-            const { container } = render(
-              <MemoryRouter>
-                <Shell />
-              </MemoryRouter>
-            );
+            const { container } = render(<Shell />);
             await waitFor(() => expect(container.firstChild).toMatchSnapshot());
           });
         });
@@ -77,11 +68,7 @@ const runRenderTests = ({
         test(`Render required = true ${ex.id} - value[${v}]`, async () => {
           // create shell to setup react hooks with getProps before render;
           const Shell = () => <Block {...getProps(ex)} value={value} methods={methods} required />;
-          const { container } = render(
-            <MemoryRouter>
-              <Shell />
-            </MemoryRouter>
-          );
+          const { container } = render(<Shell />);
           await waitFor(() => expect(container.firstChild).toMatchSnapshot());
         });
       }

@@ -1,4 +1,4 @@
-import schemaTest from './schemaTest';
+import schemaTest from './schemaTest.js';
 
 test(`Test Schema pass`, () => {
   const validate = schemaTest({
@@ -44,17 +44,7 @@ test(`Test Schema fail required`, () => {
     },
   });
   expect(valid).toEqual(false);
-  expect(validate.errors).toEqual([
-    {
-      dataPath: '',
-      keyword: 'required',
-      message: "should have required property 'id'",
-      params: {
-        missingProperty: 'id',
-      },
-      schemaPath: '#/required',
-    },
-  ]);
+  expect(validate.errors).toMatchSnapshot();
 });
 
 test(`Test Schema fail properties`, () => {
@@ -78,15 +68,5 @@ test(`Test Schema fail properties`, () => {
     },
   });
   expect(valid).toEqual(false);
-  expect(validate.errors).toEqual([
-    {
-      dataPath: '/properties',
-      keyword: 'additionalProperties',
-      message: 'should NOT have additional properties',
-      params: {
-        additionalProperty: 'mistake',
-      },
-      schemaPath: '#/properties/properties/additionalProperties',
-    },
-  ]);
+  expect(validate.errors).toMatchSnapshot();
 });
