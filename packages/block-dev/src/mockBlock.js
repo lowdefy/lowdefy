@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { makeCssClass } from '@lowdefy/block-tools';
+import { makeCssClass } from '@lowdefy/block-utils';
 
 import stubBlockProps from './stubBlockProps.js';
 

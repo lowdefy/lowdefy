@@ -18,7 +18,7 @@ import React from 'react';
 import { Button } from 'antd';
 import color from '@lowdefy/color';
 import { get, type } from '@lowdefy/helpers';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 
 const ButtonBlock = ({ blockId, events, loading, Icon, methods, onClick, properties, rename }) => {
   const onClickActionName = get(rename, 'events.onClick', { default: 'onClick' });

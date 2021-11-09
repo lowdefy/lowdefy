@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Card } from 'antd';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 
 const CardBlock = ({ blockId, content, properties, methods, events }) => (
   <Card

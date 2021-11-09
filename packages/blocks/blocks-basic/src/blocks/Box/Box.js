@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const Box = ({ blockId, content, events, methods, properties }) => (
   <div

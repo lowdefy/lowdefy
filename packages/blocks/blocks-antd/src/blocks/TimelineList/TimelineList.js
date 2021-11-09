@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Timeline } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 import { get, mergeObjects, serializer, type } from '@lowdefy/helpers';
 
 // TODO: need to pass value to list blocks to render item level settings.

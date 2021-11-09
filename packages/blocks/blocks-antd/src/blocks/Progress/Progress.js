@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Progress } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const ProgressBlock = ({ blockId, properties }) => (
   <Progress

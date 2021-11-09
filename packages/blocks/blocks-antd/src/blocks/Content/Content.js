@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Layout } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const Content = Layout.Content;
 

@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Result } from 'antd';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 
 const ResultBlock = ({ blockId, events, content, Icon, methods, properties }) => (
   <Result

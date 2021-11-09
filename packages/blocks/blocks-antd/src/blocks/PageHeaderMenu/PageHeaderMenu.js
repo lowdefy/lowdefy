@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 import { get, mergeObjects, type } from '@lowdefy/helpers';
 
 import Breadcrumb from '../Breadcrumb/Breadcrumb';

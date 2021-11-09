@@ -17,7 +17,7 @@
 import React from 'react';
 import { GithubPicker } from 'react-color';
 import { Label } from '@lowdefy/blocks-antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const Selector = ({ blockId, loading, methods, properties, required, validation, value }) => {
   return (

@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Pagination } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 const getPageSize = ({ properties, value }) => {

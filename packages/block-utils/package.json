@@ -1,8 +1,8 @@
 {
-  "name": "@lowdefy/block-tools",
+  "name": "@lowdefy/block-utils",
   "version": "3.22.0",
   "licence": "Apache-2.0",
-  "description": "Lowdefy Block Tools",
+  "description": "Lowdefy Block Utils",
   "homepage": "https://lowdefy.com",
   "keywords": [
     "lowdefy",

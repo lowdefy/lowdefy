@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Tabs } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const getTabs = ({ content, properties }) => {
   let tabs = properties.tabs;

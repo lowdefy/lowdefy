@@ -17,7 +17,7 @@
 import React, { useEffect } from 'react';
 import { message } from 'antd';
 import { type } from '@lowdefy/helpers';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 
 const MessageBlock = ({ blockId, events, Icon, properties, methods }) => {
   useEffect(() => {

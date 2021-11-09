@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 import ReactMarkdown from 'react-markdown';
 
 import gfm from 'remark-gfm';

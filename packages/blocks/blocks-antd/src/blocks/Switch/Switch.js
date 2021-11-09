@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Switch } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 import { type, serializer } from '@lowdefy/helpers';
 
 import Label from '../Label/Label';

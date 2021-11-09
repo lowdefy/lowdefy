@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Spin } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const SpinBlock = ({ blockId, content, properties, methods }) => (
   <Spin

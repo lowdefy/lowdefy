@@ -15,7 +15,7 @@
 */
 
 import React, { useState, useEffect } from 'react';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 import { mergeObjects, get } from '@lowdefy/helpers';
 
 import Button from '../Button/Button';

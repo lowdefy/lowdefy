@@ -16,7 +16,7 @@
 
 import React, { useEffect } from 'react';
 import { Modal } from 'antd';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 
 const ConfirmModal = ({ blockId, events, content, Icon, methods, properties }) => {
   useEffect(() => {

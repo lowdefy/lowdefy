@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 import { Avatar } from 'antd';
 
 const AvatarBlock = ({ blockId, events, Icon, methods, properties }) => (

@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { type } from '@lowdefy/helpers';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 import { Input } from 'antd';
 
 import Label from '../Label/Label';

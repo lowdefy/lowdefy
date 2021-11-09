@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Typography } from 'antd';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 const Title = Typography.Title;

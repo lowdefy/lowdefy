@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Layout } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const LayoutBlock = ({ blockId, content, properties, methods }) => (
   <Layout id={blockId} className={methods.makeCssClass(properties.style)}>

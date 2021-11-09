@@ -16,7 +16,7 @@
 
 import React from 'react';
 import color from '@lowdefy/color';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 import { type, get } from '@lowdefy/helpers';
 import { Link } from 'react-router-dom';
 import { Menu } from 'antd';

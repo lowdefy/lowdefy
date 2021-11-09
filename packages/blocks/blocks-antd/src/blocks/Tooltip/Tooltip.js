@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Tooltip } from 'antd';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 
 const TooltipBlock = ({ blockId, content, properties, methods }) => (
   <Tooltip

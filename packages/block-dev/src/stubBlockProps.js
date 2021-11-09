@@ -16,7 +16,7 @@
 
 import React, { useState } from 'react';
 import { type } from '@lowdefy/helpers';
-import { makeCssClass } from '@lowdefy/block-tools';
+import { makeCssClass } from '@lowdefy/block-utils';
 
 import schemaTest from './schemaTest.js';
 

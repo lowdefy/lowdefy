@@ -17,7 +17,7 @@
 import React, { useEffect } from 'react';
 import { get } from '@lowdefy/helpers';
 import { List, Typography } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import Button from '../Button/Button';
 

@@ -17,7 +17,7 @@
 import React from 'react';
 import { Affix } from 'antd';
 import { get } from '@lowdefy/helpers';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const AffixBlock = ({ blockId, content, methods, properties, rename }) => (
   <Affix

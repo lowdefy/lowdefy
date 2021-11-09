@@ -17,7 +17,7 @@
 // TODO move to basic, use link, fix icon
 import React from 'react';
 import { get, type } from '@lowdefy/helpers';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const Strong = ({ children, strong }) => (strong ? <b>{children}</b> : <>{children}</>);
 const Tag = ({ blockId, children, className, disabled, href, newTab, rel, onClick }) =>

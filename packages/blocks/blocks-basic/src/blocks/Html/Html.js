@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { blockDefaultProps, HtmlComponent } from '@lowdefy/block-tools';
+import { blockDefaultProps, HtmlComponent } from '@lowdefy/block-utils';
 
 const HtmlBlock = ({ blockId, properties, methods }) => (
   <HtmlComponent

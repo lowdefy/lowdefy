@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Checkbox, Space } from 'antd';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 
 import Label from '../Label/Label';
 

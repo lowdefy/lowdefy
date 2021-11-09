@@ -16,7 +16,7 @@
 
 import React, { useState } from 'react';
 import { ChromePicker } from 'react-color';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 import Label from '@lowdefy/blocks-antd/blocks/Label/Label';
 
 const Selector = ({ blockId, loading, methods, properties, required, validation, value }) => {

@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 import { mergeObjects } from '@lowdefy/helpers';
 
 import Header from '../Header/Header';

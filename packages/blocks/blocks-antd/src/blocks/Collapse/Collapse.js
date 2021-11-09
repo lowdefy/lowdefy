@@ -17,7 +17,7 @@
 import React from 'react';
 import { Collapse } from 'antd';
 import { type, serializer } from '@lowdefy/helpers';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 
 const CollapseBlock = ({ blockId, events, content, Icon, methods, properties }) => {
   const panels =

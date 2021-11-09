@@ -17,7 +17,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { get, mergeObjects, type } from '@lowdefy/helpers';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import Affix from '../Affix/Affix';
 import Breadcrumb from '../Breadcrumb/Breadcrumb';

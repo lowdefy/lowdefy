@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@emotion/jest": "11.5.0",
-    "@lowdefy/block-tools": "3.22.0",
+    "@lowdefy/block-utils": "3.22.0",
     "@lowdefy/helpers": "3.22.0",
     "@testing-library/dom": "8.10.1",
     "@testing-library/react": "12.1.2",

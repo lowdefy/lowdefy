@@ -16,7 +16,7 @@
 
 import React, { useState } from 'react';
 import { Typography } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 const Paragraph = Typography.Paragraph;

@@ -16,7 +16,7 @@
 
 import React from 'react';
 
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { Descriptions } from 'antd';
 import { type } from '@lowdefy/helpers';
 

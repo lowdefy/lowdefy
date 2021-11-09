@@ -19,7 +19,7 @@ import { Comment } from 'antd';
 import { type } from '@lowdefy/helpers';
 
 import Avatar from '../Avatar/Avatar';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const CommentBlock = ({ blockId, content, properties, methods }) => {
   let avatar = {};

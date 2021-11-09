@@ -17,7 +17,7 @@
 import React from 'react';
 import { DatePicker } from 'antd';
 import moment from 'moment';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 import Label from '../Label/Label';

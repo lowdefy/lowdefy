@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Skeleton } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const SkeletonBlock = ({ blockId, events, properties, methods }) => {
   if (properties.button) {

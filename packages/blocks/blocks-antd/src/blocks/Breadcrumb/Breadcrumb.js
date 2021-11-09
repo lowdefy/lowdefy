@@ -18,7 +18,7 @@ import React from 'react';
 import { type, get } from '@lowdefy/helpers';
 import { Link } from 'react-router-dom';
 import { Breadcrumb } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const ItemLink = ({ basePath, children, className, link }) => {
   if (type.isString(link.pageId)) {

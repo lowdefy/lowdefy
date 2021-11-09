@@ -18,7 +18,7 @@ import React, { useState } from 'react';
 import classNames from 'classnames';
 import { Slider } from 'antd';
 import { get, mergeObjects, serializer, type } from '@lowdefy/helpers';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import Label from '../Label/Label';
 import CheckboxSelector from '../CheckboxSelector/CheckboxSelector';

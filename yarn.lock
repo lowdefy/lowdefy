@@ -3350,7 +3350,7 @@ __metadata:
   resolution: "@lowdefy/block-dev@workspace:packages/block-dev"
   dependencies:
     "@emotion/jest": 11.5.0
-    "@lowdefy/block-tools": 3.22.0
+    "@lowdefy/block-utils": 3.22.0
     "@lowdefy/helpers": 3.22.0
     "@swc/cli": 0.1.51
     "@swc/core": 1.2.107
@@ -3367,9 +3367,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/block-tools@3.22.0, @lowdefy/block-tools@workspace:packages/block-tools":
+"@lowdefy/block-utils@3.22.0, @lowdefy/block-utils@workspace:packages/block-utils":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/block-tools@workspace:packages/block-tools"
+  resolution: "@lowdefy/block-utils@workspace:packages/block-utils"
   dependencies:
     "@babel/preset-react": 7.16.0
     "@emotion/css": 11.5.0
@@ -3402,7 +3402,7 @@ __metadata:
     "@babel/preset-react": 7.14.5
     "@emotion/jest": 11.5.0
     "@lowdefy/block-dev": 3.22.0
-    "@lowdefy/block-tools": 3.22.0
+    "@lowdefy/block-utils": 3.22.0
     "@lowdefy/color": 3.22.0
     "@lowdefy/helpers": 3.22.0
     antd: 4.17.0-alpha.7
@@ -3445,7 +3445,7 @@ __metadata:
     "@babel/preset-react": 7.14.5
     "@emotion/jest": 11.5.0
     "@lowdefy/block-dev": 3.22.0
-    "@lowdefy/block-tools": 3.22.0
+    "@lowdefy/block-utils": 3.22.0
     "@lowdefy/helpers": 3.22.0
     "@testing-library/dom": 8.10.1
     "@testing-library/react": 12.1.2
@@ -3483,7 +3483,7 @@ __metadata:
     "@babel/preset-react": 7.14.5
     "@emotion/jest": 11.5.0
     "@lowdefy/block-dev": 3.22.0
-    "@lowdefy/block-tools": 3.22.0
+    "@lowdefy/block-utils": 3.22.0
     "@lowdefy/blocks-antd": 3.22.0
     "@lowdefy/helpers": 3.22.0
     babel-jest: 27.3.1
@@ -3523,7 +3523,7 @@ __metadata:
     "@babel/preset-react": 7.14.5
     "@emotion/jest": 11.5.0
     "@lowdefy/block-dev": 3.22.0
-    "@lowdefy/block-tools": 3.22.0
+    "@lowdefy/block-utils": 3.22.0
     "@lowdefy/helpers": 3.22.0
     babel-jest: 27.3.1
     babel-loader: 8.2.3
@@ -3560,7 +3560,7 @@ __metadata:
     "@babel/preset-react": 7.14.5
     "@emotion/jest": 11.5.0
     "@lowdefy/block-dev": 3.22.0
-    "@lowdefy/block-tools": 3.22.0
+    "@lowdefy/block-utils": 3.22.0
     "@lowdefy/helpers": 3.22.0
     "@testing-library/dom": 8.10.1
     "@testing-library/react": 12.1.2
@@ -3597,7 +3597,7 @@ __metadata:
     "@babel/preset-react": 7.14.5
     "@emotion/jest": 11.5.0
     "@lowdefy/block-dev": 3.22.0
-    "@lowdefy/block-tools": 3.22.0
+    "@lowdefy/block-utils": 3.22.0
     "@lowdefy/helpers": 3.22.0
     babel-jest: 27.3.1
     babel-loader: 8.2.3
@@ -3652,7 +3652,7 @@ __metadata:
     "@babel/core": 7.15.8
     "@babel/preset-env": 7.15.8
     "@babel/preset-react": 7.14.5
-    "@lowdefy/block-tools": 3.22.0
+    "@lowdefy/block-utils": 3.22.0
     "@lowdefy/engine": 3.22.0
     "@lowdefy/helpers": 3.22.0
     "@lowdefy/layout": 3.22.0
@@ -3868,7 +3868,7 @@ __metadata:
     "@babel/preset-env": 7.15.8
     "@babel/preset-react": 7.14.5
     "@emotion/jest": 11.5.0
-    "@lowdefy/block-tools": 3.22.0
+    "@lowdefy/block-utils": 3.22.0
     "@lowdefy/helpers": 3.22.0
     "@testing-library/react": 12.1.2
     antd: 4.17.0-alpha.7
@@ -4006,7 +4006,7 @@ __metadata:
     "@babel/preset-env": 7.15.8
     "@babel/preset-react": 7.14.5
     "@lowdefy/api": 3.22.0
-    "@lowdefy/block-tools": 3.22.0
+    "@lowdefy/block-utils": 3.22.0
     "@lowdefy/client": 3.22.0
     "@lowdefy/helpers": 3.22.0
     "@lowdefy/node-utils": 3.22.0
@@ -14378,7 +14378,7 @@ __metadata:
     "@babel/core": 7.15.8
     "@babel/preset-env": 7.15.8
     "@babel/preset-react": 7.14.5
-    "@lowdefy/block-tools": 3.22.0
+    "@lowdefy/block-utils": 3.22.0
     "@lowdefy/helpers": 3.22.0
     "@lowdefy/node-utils": 3.22.0
     apollo-server-express: 2.25.0

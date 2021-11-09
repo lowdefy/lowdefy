@@ -16,7 +16,7 @@
 
 import React from 'react';
 import DOMPurify from 'dompurify';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 class DangerousHtml extends React.Component {

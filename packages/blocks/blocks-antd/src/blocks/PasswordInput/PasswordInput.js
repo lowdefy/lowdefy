@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Input } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import Label from '../Label/Label';
 import useRunAfterUpdate from '../../useRunAfterUpdate';

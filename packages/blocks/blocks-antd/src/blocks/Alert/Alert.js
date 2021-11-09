@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Alert } from 'antd';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 const AlertBlock = ({ blockId, content, events, Icon, methods, properties }) => {

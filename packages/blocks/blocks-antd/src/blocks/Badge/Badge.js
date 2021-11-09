@@ -17,7 +17,7 @@
 import React from 'react';
 import { type } from '@lowdefy/helpers';
 import { Badge } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const BadgeBlock = ({ blockId, events, content, Icon, properties }) => (
   <Badge

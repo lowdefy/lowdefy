@@ -19,7 +19,7 @@
 
 import React from 'react';
 import classNames from 'classnames';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { Col, Row } from 'antd';
 import CSSMotion from 'rc-animate/lib/CSSMotion';
 import {

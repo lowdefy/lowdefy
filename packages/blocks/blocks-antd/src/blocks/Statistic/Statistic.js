@@ -17,7 +17,7 @@
 import React from 'react';
 import { Statistic } from 'antd';
 import { type } from '@lowdefy/helpers';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 
 const StatisticBlock = ({ blockId, events, Icon, properties, methods }) => (
   <Statistic

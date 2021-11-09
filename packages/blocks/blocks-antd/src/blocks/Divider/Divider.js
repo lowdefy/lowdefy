@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Divider } from 'antd';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 
 const DividerBlock = ({ blockId, properties, methods }) => (
   <Divider
