@@ -46,25 +46,13 @@ const Icons = {
 test('Icon default', () => {
   const IconComponent = Icon(Icons);
   const { container } = render(<IconComponent methods={methods} />);
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <svg
-      class="emotion-0"
-      data-testid="AiOutlineExclamationCircle"
-      id="undefined_id"
-    />
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Icon default and id', () => {
   const IconComponent = Icon(Icons);
   const { container } = render(<IconComponent id="test-id" methods={methods} />);
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <svg
-      class="emotion-0"
-      data-testid="AiOutlineExclamationCircle"
-      id="test-id"
-    />
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Icon properties.name', () => {
@@ -72,13 +60,7 @@ test('Icon properties.name', () => {
   const { container } = render(
     <IconComponent id="test-id" methods={methods} properties={{ name: 'AiIcon' }} />
   );
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <svg
-      class="emotion-0"
-      data-testid="AiIcon"
-      id="test-id"
-    />
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Icon properties string', () => {
@@ -86,13 +68,7 @@ test('Icon properties string', () => {
   const { container } = render(
     <IconComponent id="test-id" methods={methods} properties="AiIcon" />
   );
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <svg
-      class="emotion-0"
-      data-testid="AiIcon"
-      id="test-id"
-    />
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Icon properties.spin', () => {
@@ -100,34 +76,7 @@ test('Icon properties.spin', () => {
   const { container } = render(
     <IconComponent id="test-id" methods={methods} properties={{ name: 'AiIcon', spin: true }} />
   );
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    @keyframes animation-0 {
-      {
-        -webkit-transform: rotate(0deg);
-        -moz-transform: rotate(0deg);
-        -ms-transform: rotate(0deg);
-        transform: rotate(0deg);
-      }
-
-       {
-        -webkit-transform: rotate(359deg);
-        -moz-transform: rotate(359deg);
-        -ms-transform: rotate(359deg);
-        transform: rotate(359deg);
-      }
-    }
-
-    .emotion-1 {
-      -webkit-animation: animation-0 2s infinite linear;
-      animation: animation-0 2s infinite linear;
-    }
-
-    <svg
-      class="emotion-0 emotion-1"
-      data-testid="AiIcon"
-      id="test-id"
-    />
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Icon properties.style', () => {
@@ -139,17 +88,7 @@ test('Icon properties.style', () => {
       properties={{ name: 'AiIcon', style: { background: 'yellow' } }}
     />
   );
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    .emotion-0 {
-      background: yellow;
-    }
-
-    <svg
-      class="emotion-0"
-      data-testid="AiIcon"
-      id="test-id"
-    />
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Icon properties.name error', () => {
@@ -157,14 +96,7 @@ test('Icon properties.name error', () => {
   const { container } = render(
     <IconComponent id="test-id" methods={methods} properties={{ name: 'ErrorIcon' }} />
   );
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <svg
-      class="emotion-0"
-      color="#F00"
-      data-testid="AiOutlineExclamationCircle"
-      id="test-id"
-    />
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Icon onClick.loading false', () => {
@@ -177,13 +109,7 @@ test('Icon onClick.loading false', () => {
       events={{ onClick: { loading: false } }}
     />
   );
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <svg
-      class="emotion-0"
-      data-testid="AiIcon"
-      id="test-id"
-    />
-  `);
+  expect(container.firstChild).toMatchSnapshot();
   userEvent.click(screen.getByTestId('AiIcon'));
   expect(methods.triggerEvent).toHaveBeenCalledWith({ name: 'onClick' });
 });
@@ -198,11 +124,5 @@ test('Icon onClick.loading true', () => {
       events={{ onClick: { loading: true } }}
     />
   );
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <svg
-      class="emotion-0"
-      data-testid="AiOutlineLoading3Quarters"
-      id="test-id"
-    />
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });

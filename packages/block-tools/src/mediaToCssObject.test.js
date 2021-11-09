@@ -74,31 +74,7 @@ test('object with all media', () => {
     xl: { a: 'xl' },
     xxl: { a: 'xxl' },
   };
-  expect(mediaToCssObject(obj)).toMatchInlineSnapshot(`
-    Array [
-      Object {
-        "@media screen and (max-width: 576px)": Object {
-          "a": "xs",
-        },
-        "@media screen and (min-width: 1200px)": Object {
-          "a": "xl",
-        },
-        "@media screen and (min-width: 1600px)": Object {
-          "a": "xxl",
-        },
-        "@media screen and (min-width: 576px)": Object {
-          "a": "sm",
-        },
-        "@media screen and (min-width: 768px)": Object {
-          "a": "md",
-        },
-        "@media screen and (min-width: 992px)": Object {
-          "a": "lg",
-        },
-        "a": "a",
-      },
-    ]
-  `);
+  expect(mediaToCssObject(obj)).toMatchSnapshot();
 });
 
 test('object with all media with styleObjectOnly option', () => {
@@ -111,31 +87,7 @@ test('object with all media with styleObjectOnly option', () => {
     xl: { a: 'xl' },
     xxl: { a: 'xxl' },
   };
-  expect(mediaToCssObject(obj, true)).toMatchInlineSnapshot(`
-    Array [
-      Object {
-        "@media screen and (maxWidth: 576px)": Object {
-          "a": "xs",
-        },
-        "@media screen and (minWidth: 1200px)": Object {
-          "a": "xl",
-        },
-        "@media screen and (minWidth: 1600px)": Object {
-          "a": "xxl",
-        },
-        "@media screen and (minWidth: 576px)": Object {
-          "a": "sm",
-        },
-        "@media screen and (minWidth: 768px)": Object {
-          "a": "md",
-        },
-        "@media screen and (minWidth: 992px)": Object {
-          "a": "lg",
-        },
-        "a": "a",
-      },
-    ]
-  `);
+  expect(mediaToCssObject(obj, true)).toMatchSnapshot();
 });
 
 test('string with all media', () => {
@@ -148,17 +100,7 @@ test('string with all media', () => {
     @media xl{ a: 'xl' }
     @media xxl  { a: 'xxl' }
   }`;
-  expect(mediaToCssObject(obj)).toMatchInlineSnapshot(`
-    "{
-        a: 'a',
-        @media screen and (max-width: 576px) { a: 'xs' }
-        @media screen and (min-width: 576px) { a: 'sm' }
-        @media screen and (min-width: 768px) { a: 'md' }
-        @media screen and (min-width: 992px) { a: 'lg' }
-        @media screen and (min-width: 1200px) { a: 'xl' }
-        @media screen and (min-width: 1600px) { a: 'xxl' }
-      }"
-  `);
+  expect(mediaToCssObject(obj)).toMatchSnapshot();
 });
 
 test('array of mixed types with all media', () => {

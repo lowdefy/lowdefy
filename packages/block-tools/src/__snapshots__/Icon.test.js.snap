@@ -1,0 +1,99 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Icon default 1`] = `
+<svg
+  class="emotion-0"
+  data-testid="AiOutlineExclamationCircle"
+  id="undefined_id"
+/>
+`;
+
+exports[`Icon default and id 1`] = `
+<svg
+  class="emotion-0"
+  data-testid="AiOutlineExclamationCircle"
+  id="test-id"
+/>
+`;
+
+exports[`Icon onClick.loading false 1`] = `
+<svg
+  class="emotion-0"
+  data-testid="AiIcon"
+  id="test-id"
+/>
+`;
+
+exports[`Icon onClick.loading true 1`] = `
+<svg
+  class="emotion-0"
+  data-testid="AiOutlineLoading3Quarters"
+  id="test-id"
+/>
+`;
+
+exports[`Icon properties string 1`] = `
+<svg
+  class="emotion-0"
+  data-testid="AiIcon"
+  id="test-id"
+/>
+`;
+
+exports[`Icon properties.name 1`] = `
+<svg
+  class="emotion-0"
+  data-testid="AiIcon"
+  id="test-id"
+/>
+`;
+
+exports[`Icon properties.name error 1`] = `
+<svg
+  class="emotion-0"
+  color="#F00"
+  data-testid="AiOutlineExclamationCircle"
+  id="test-id"
+/>
+`;
+
+exports[`Icon properties.spin 1`] = `
+@keyframes animation-0 {
+  {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+   {
+    -webkit-transform: rotate(359deg);
+    -moz-transform: rotate(359deg);
+    -ms-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+
+.emotion-1 {
+  -webkit-animation: animation-0 2s infinite linear;
+  animation: animation-0 2s infinite linear;
+}
+
+<svg
+  class="emotion-0 emotion-1"
+  data-testid="AiIcon"
+  id="test-id"
+/>
+`;
+
+exports[`Icon properties.style 1`] = `
+.emotion-0 {
+  background: yellow;
+}
+
+<svg
+  class="emotion-0"
+  data-testid="AiIcon"
+  id="test-id"
+/>
+`;

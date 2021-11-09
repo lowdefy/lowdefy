@@ -17,34 +17,11 @@
 import blockDefaultProps from './blockDefaultProps.js';
 
 test('default', () => {
-  expect(blockDefaultProps).toMatchInlineSnapshot(`
-    Object {
-      "basePath": "",
-      "blockId": "undefined_id",
-      "content": Object {},
-      "events": Object {},
-      "list": Array [],
-      "menus": Array [],
-      "methods": Object {
-        "makeCssClass": [Function],
-        "registerEvent": [Function],
-        "registerMethod": [Function],
-        "triggerEvent": [Function],
-      },
-      "properties": Object {},
-      "required": false,
-      "user": Object {},
-      "validation": Object {
-        "errors": Array [],
-        "status": null,
-        "warnings": Array [],
-      },
-    }
-  `);
+  expect(blockDefaultProps).toMatchSnapshot();
 });
 
 test('call default methods', () => {
-  expect(blockDefaultProps.methods.makeCssClass({ a: 1 })).toMatchInlineSnapshot(`"css-1iomdgj"`);
+  expect(blockDefaultProps.methods.makeCssClass({ a: 1 })).toEqual('css-1iomdgj');
   expect(blockDefaultProps.methods.registerEvent()).toEqual(undefined);
   expect(blockDefaultProps.methods.registerMethod()).toEqual(undefined);
   expect(blockDefaultProps.methods.triggerEvent()).toEqual(undefined);

@@ -1,0 +1,233 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render bad html 1`] = `
+<span
+  class="emotion-0"
+>
+  
+      
+  <h1>
+    Link
+  </h1>
+  <h1>
+    
+      
+    <a
+      href="https://lowdefy.com"
+    >
+      Lowdefy link
+    </a>
+    
+      
+    <font
+      size="+10"
+    >
+      Description
+    </font>
+    
+      
+  </h1>
+  <h1>
+    Bad HTML
+  </h1>
+  
+      
+  <div>
+    
+        
+    <a>
+      delta
+    </a>
+    
+        
+    <img
+      src="x"
+    />
+    
+        
+    <math>
+      <mi />
+    </math>
+    
+      
+  </div>
+  
+      
+</span>
+`;
+
+exports[`Render boolean true false 1`] = `
+<span
+  class="emotion-0"
+>
+  true
+</span>
+`;
+
+exports[`Render boolean true false 2`] = `
+<span
+  class="emotion-0"
+>
+  false
+</span>
+`;
+
+exports[`Render default 1`] = `
+<span
+  class="emotion-0"
+/>
+`;
+
+exports[`Render default and id 1`] = `
+<span
+  class="emotion-0"
+  data-testid="test-id"
+  id="test-id"
+/>
+`;
+
+exports[`Render html 1`] = `
+<span
+  class="emotion-0"
+>
+  <div
+    style="background: green; padding: 10px;"
+  >
+    Content green background
+  </div>
+</span>
+`;
+
+exports[`Render html 2`] = `
+<span
+  class="emotion-0"
+>
+  <div
+    style="background: green; padding: 10px;"
+  >
+    Content green background updated
+  </div>
+</span>
+`;
+
+exports[`Render html and style 1`] = `
+.emotion-0 {
+  color: red;
+}
+
+<span
+  class="emotion-0"
+>
+  <div
+    style="background: green; padding: 10px;"
+  >
+    Content green background
+  </div>
+</span>
+`;
+
+exports[`Render html and style 2`] = `
+.emotion-0 {
+  color: red updated;
+}
+
+<span
+  class="emotion-0"
+>
+  <div
+    style="background: green; padding: 10px; updated: true;"
+  >
+    Content green background
+  </div>
+</span>
+`;
+
+exports[`Render html div 1`] = `
+<div
+  class="emotion-0"
+>
+  <div
+    style="background: green; padding: 10px;"
+  >
+    Content green background
+  </div>
+</div>
+`;
+
+exports[`Render html div 2`] = `
+<div
+  class="emotion-0"
+>
+  <div
+    style="background: green; padding: 10px;"
+  >
+    Content green background updated
+  </div>
+</div>
+`;
+
+exports[`Render html iframe 1`] = `
+<span
+  class="emotion-0"
+/>
+`;
+
+exports[`Render null, undefined 1`] = `
+<span
+  class="emotion-0"
+/>
+`;
+
+exports[`Render null, undefined 2`] = `
+<span
+  class="emotion-0"
+/>
+`;
+
+exports[`Render number 0 1 1`] = `
+<span
+  class="emotion-0"
+>
+  0
+</span>
+`;
+
+exports[`Render number 0 1 2`] = `
+<span
+  class="emotion-0"
+>
+  1
+</span>
+`;
+
+exports[`Render number 1`] = `
+<span
+  class="emotion-0"
+>
+  123
+</span>
+`;
+
+exports[`Render number 2`] = `
+<span
+  class="emotion-0"
+>
+  1000
+</span>
+`;
+
+exports[`Render string and update 1`] = `
+<span
+  class="emotion-0"
+>
+  A string value
+</span>
+`;
+
+exports[`Render string and update 2`] = `
+<span
+  class="emotion-0"
+>
+  A string value updated
+</span>
+`;

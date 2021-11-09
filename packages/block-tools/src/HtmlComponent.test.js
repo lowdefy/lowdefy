@@ -26,113 +26,47 @@ const methods = {
 
 test('Render default', () => {
   const { container } = render(<HtmlComponent methods={methods} />);
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <span
-      class="emotion-0"
-    />
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Render default and id', () => {
   const { container } = render(<HtmlComponent id="test-id" methods={methods} />);
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <span
-      class="emotion-0"
-      data-testid="test-id"
-      id="test-id"
-    />
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Render string and update', () => {
   const { container, rerender } = render(<HtmlComponent html="A string value" methods={methods} />);
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <span
-      class="emotion-0"
-    >
-      A string value
-    </span>
-  `);
+  expect(container.firstChild).toMatchSnapshot();
   rerender(<HtmlComponent html="A string value updated" methods={methods} />);
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <span
-      class="emotion-0"
-    >
-      A string value updated
-    </span>
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Render number', () => {
   const { container, rerender } = render(<HtmlComponent html={123} methods={methods} />);
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <span
-      class="emotion-0"
-    >
-      123
-    </span>
-  `);
+  expect(container.firstChild).toMatchSnapshot();
   rerender(<HtmlComponent html={1000} methods={methods} />);
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <span
-      class="emotion-0"
-    >
-      1000
-    </span>
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Render number 0 1', () => {
   const { container, rerender } = render(<HtmlComponent html={0} methods={methods} />);
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <span
-      class="emotion-0"
-    >
-      0
-    </span>
-  `);
+  expect(container.firstChild).toMatchSnapshot();
   rerender(<HtmlComponent html={1} methods={methods} />);
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <span
-      class="emotion-0"
-    >
-      1
-    </span>
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Render boolean true false', () => {
   const { container, rerender } = render(<HtmlComponent html={true} methods={methods} />);
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <span
-      class="emotion-0"
-    >
-      true
-    </span>
-  `);
+  expect(container.firstChild).toMatchSnapshot();
   rerender(<HtmlComponent html={false} methods={methods} />);
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <span
-      class="emotion-0"
-    >
-      false
-    </span>
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Render null, undefined', () => {
   const { container, rerender } = render(<HtmlComponent html={null} methods={methods} />);
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <span
-      class="emotion-0"
-    />
-  `);
+  expect(container.firstChild).toMatchSnapshot();
   rerender(<HtmlComponent html={undefined} methods={methods} />);
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <span
-      class="emotion-0"
-    />
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Render html', () => {
@@ -142,34 +76,14 @@ test('Render html', () => {
       methods={methods}
     />
   );
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <span
-      class="emotion-0"
-    >
-      <div
-        style="background: green; padding: 10px;"
-      >
-        Content green background
-      </div>
-    </span>
-  `);
+  expect(container.firstChild).toMatchSnapshot();
   rerender(
     <HtmlComponent
       html={'<div style="background: green; padding: 10px;">Content green background updated</div>'}
       methods={methods}
     />
   );
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <span
-      class="emotion-0"
-    >
-      <div
-        style="background: green; padding: 10px;"
-      >
-        Content green background updated
-      </div>
-    </span>
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Render html div', () => {
@@ -180,17 +94,7 @@ test('Render html div', () => {
       div={true}
     />
   );
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <div
-      class="emotion-0"
-    >
-      <div
-        style="background: green; padding: 10px;"
-      >
-        Content green background
-      </div>
-    </div>
-  `);
+  expect(container.firstChild).toMatchSnapshot();
   rerender(
     <HtmlComponent
       html={'<div style="background: green; padding: 10px;">Content green background updated</div>'}
@@ -198,17 +102,7 @@ test('Render html div', () => {
       div={true}
     />
   );
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <div
-      class="emotion-0"
-    >
-      <div
-        style="background: green; padding: 10px;"
-      >
-        Content green background updated
-      </div>
-    </div>
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Render html and style', () => {
@@ -219,21 +113,7 @@ test('Render html and style', () => {
       style={{ color: 'red' }}
     />
   );
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    .emotion-0 {
-      color: red;
-    }
-
-    <span
-      class="emotion-0"
-    >
-      <div
-        style="background: green; padding: 10px;"
-      >
-        Content green background
-      </div>
-    </span>
-  `);
+  expect(container.firstChild).toMatchSnapshot();
   rerender(
     <HtmlComponent
       html={
@@ -243,21 +123,7 @@ test('Render html and style', () => {
       style={{ color: 'red updated' }}
     />
   );
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    .emotion-0 {
-      color: red updated;
-    }
-
-    <span
-      class="emotion-0"
-    >
-      <div
-        style="background: green; padding: 10px; updated: true;"
-      >
-        Content green background
-      </div>
-    </span>
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Render html iframe', () => {
@@ -269,11 +135,7 @@ test('Render html iframe', () => {
       methods={methods}
     />
   );
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <span
-      class="emotion-0"
-    />
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Render bad html', async () => {
@@ -293,59 +155,5 @@ test('Render bad html', async () => {
       methods={methods}
     />
   );
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <span
-      class="emotion-0"
-    >
-      
-          
-      <h1>
-        Link
-      </h1>
-      <h1>
-        
-          
-        <a
-          href="https://lowdefy.com"
-        >
-          Lowdefy link
-        </a>
-        
-          
-        <font
-          size="+10"
-        >
-          Description
-        </font>
-        
-          
-      </h1>
-      <h1>
-        Bad HTML
-      </h1>
-      
-          
-      <div>
-        
-            
-        <a>
-          delta
-        </a>
-        
-            
-        <img
-          src="x"
-        />
-        
-            
-        <math>
-          <mi />
-        </math>
-        
-          
-      </div>
-      
-          
-    </span>
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });

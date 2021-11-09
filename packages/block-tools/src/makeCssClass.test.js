@@ -25,20 +25,7 @@ test('object with no media', () => {
     c: { a: 'b' },
   });
   const { container } = render(<div className={cls} />);
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    .emotion-0 {
-      a: a;
-      b: 1px;
-    }
-
-    .emotion-0 c {
-      a: b;
-    }
-
-    <div
-      class="emotion-0"
-    />
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 test('objects with no media', () => {
@@ -50,24 +37,7 @@ test('objects with no media', () => {
     c: { a: 'c' },
   };
   const { container } = render(<div className={makeCssClass([obj1, obj2])} />);
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    .emotion-0 {
-      a: a;
-    }
-
-    .emotion-0 c {
-      a: b;
-      d: 1px;
-    }
-
-    .emotion-0 c {
-      a: c;
-    }
-
-    <div
-      class="emotion-0"
-    />
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 test('objects with media', () => {
@@ -79,40 +49,7 @@ test('objects with media', () => {
     xl: { a: 'xl' },
   };
   const { container } = render(<div className={makeCssClass(obj)} />);
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    .emotion-0 {
-      a: a;
-    }
-
-    @media screen and (min-width: 576px) {
-      .emotion-0 {
-        a: sm;
-        c: 1px;
-      }
-    }
-
-    @media screen and (min-width: 768px) {
-      .emotion-0 {
-        a: md;
-      }
-    }
-
-    @media screen and (min-width: 992px) {
-      .emotion-0 {
-        a: lg;
-      }
-    }
-
-    @media screen and (min-width: 1200px) {
-      .emotion-0 {
-        a: xl;
-      }
-    }
-
-    <div
-      class="emotion-0"
-    />
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 test('objects with media', () => {
@@ -131,69 +68,7 @@ test('objects with media', () => {
     xl: { a: 'xl' },
   };
   const { container } = render(<div className={makeCssClass([obj1, obj2])} />);
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    .emotion-0 {
-      a: a;
-      a: x;
-    }
-
-    @media screen and (min-width: 576px) {
-      .emotion-0 {
-        a: sm;
-        c: 1px;
-      }
-    }
-
-    @media screen and (min-width: 768px) {
-      .emotion-0 {
-        a: md;
-      }
-    }
-
-    @media screen and (min-width: 992px) {
-      .emotion-0 {
-        a: lg;
-      }
-    }
-
-    @media screen and (min-width: 1200px) {
-      .emotion-0 {
-        a: xl;
-      }
-    }
-
-    @media screen and (min-width: 576px) {
-      .emotion-0 {
-        a: smsm;
-      }
-    }
-
-    @media screen and (min-width: 768px) {
-      .emotion-0 {
-        a: md;
-      }
-    }
-
-    @media screen and (min-width: 992px) {
-      .emotion-0 {
-        a: lg;
-      }
-
-      .emotion-0 c sm {
-        a: 1;
-      }
-    }
-
-    @media screen and (min-width: 1200px) {
-      .emotion-0 {
-        a: xl;
-      }
-    }
-
-    <div
-      class="emotion-0"
-    />
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 test('object with no media, styleObjectOnly', () => {
@@ -202,15 +77,7 @@ test('object with no media, styleObjectOnly', () => {
     b: 1,
     c: { a: 'b' },
   };
-  expect(makeCssClass(obj, { styleObjectOnly: true })).toMatchInlineSnapshot(`
-    Object {
-      "a": "a",
-      "b": 1,
-      "c": Object {
-        "a": "b",
-      },
-    }
-  `);
+  expect(makeCssClass(obj, { styleObjectOnly: true })).toMatchSnapshot();
 });
 
 test('objects with no media, styleObjectOnly', () => {
@@ -221,15 +88,7 @@ test('objects with no media, styleObjectOnly', () => {
   const obj2 = {
     c: { a: 'c' },
   };
-  expect(makeCssClass([obj1, obj2], { styleObjectOnly: true })).toMatchInlineSnapshot(`
-    Object {
-      "a": "a",
-      "c": Object {
-        "a": "c",
-        "d": 1,
-      },
-    }
-  `);
+  expect(makeCssClass([obj1, obj2], { styleObjectOnly: true })).toMatchSnapshot();
 });
 
 test('objects with media, styleObjectOnly', () => {
@@ -240,24 +99,7 @@ test('objects with media, styleObjectOnly', () => {
     lg: { a: 'lg' },
     xl: { a: 'xl' },
   };
-  expect(makeCssClass(obj, { styleObjectOnly: true })).toMatchInlineSnapshot(`
-    Object {
-      "@media screen and (minWidth: 1200px)": Object {
-        "a": "xl",
-      },
-      "@media screen and (minWidth: 576px)": Object {
-        "a": "sm",
-        "c": 1,
-      },
-      "@media screen and (minWidth: 768px)": Object {
-        "a": "md",
-      },
-      "@media screen and (minWidth: 992px)": Object {
-        "a": "lg",
-      },
-      "a": "a",
-    }
-  `);
+  expect(makeCssClass(obj, { styleObjectOnly: true })).toMatchSnapshot();
 });
 
 test('objects with media, styleObjectOnly', () => {
@@ -275,27 +117,5 @@ test('objects with media, styleObjectOnly', () => {
     lg: { a: 'lg', c: { sm: { a: '1' } } },
     xl: { a: 'xl' },
   };
-  expect(makeCssClass([obj1, obj2], { styleObjectOnly: true })).toMatchInlineSnapshot(`
-    Object {
-      "@media screen and (minWidth: 1200px)": Object {
-        "a": "xl",
-      },
-      "@media screen and (minWidth: 576px)": Object {
-        "a": "smsm",
-        "c": 1,
-      },
-      "@media screen and (minWidth: 768px)": Object {
-        "a": "md",
-      },
-      "@media screen and (minWidth: 992px)": Object {
-        "a": "lg",
-        "c": Object {
-          "sm": Object {
-            "a": "1",
-          },
-        },
-      },
-      "a": "x",
-    }
-  `);
+  expect(makeCssClass([obj1, obj2], { styleObjectOnly: true })).toMatchSnapshot();
 });

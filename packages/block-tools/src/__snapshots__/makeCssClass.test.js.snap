@@ -1,0 +1,197 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`object with no media 1`] = `
+.emotion-0 {
+  a: a;
+  b: 1px;
+}
+
+.emotion-0 c {
+  a: b;
+}
+
+<div
+  class="emotion-0"
+/>
+`;
+
+exports[`object with no media, styleObjectOnly 1`] = `
+Object {
+  "a": "a",
+  "b": 1,
+  "c": Object {
+    "a": "b",
+  },
+}
+`;
+
+exports[`objects with media 1`] = `
+.emotion-0 {
+  a: a;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-0 {
+    a: sm;
+    c: 1px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-0 {
+    a: md;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-0 {
+    a: lg;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .emotion-0 {
+    a: xl;
+  }
+}
+
+<div
+  class="emotion-0"
+/>
+`;
+
+exports[`objects with media 2`] = `
+.emotion-0 {
+  a: a;
+  a: x;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-0 {
+    a: sm;
+    c: 1px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-0 {
+    a: md;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-0 {
+    a: lg;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .emotion-0 {
+    a: xl;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-0 {
+    a: smsm;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-0 {
+    a: md;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-0 {
+    a: lg;
+  }
+
+  .emotion-0 c sm {
+    a: 1;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .emotion-0 {
+    a: xl;
+  }
+}
+
+<div
+  class="emotion-0"
+/>
+`;
+
+exports[`objects with media, styleObjectOnly 1`] = `
+Object {
+  "@media screen and (minWidth: 1200px)": Object {
+    "a": "xl",
+  },
+  "@media screen and (minWidth: 576px)": Object {
+    "a": "sm",
+    "c": 1,
+  },
+  "@media screen and (minWidth: 768px)": Object {
+    "a": "md",
+  },
+  "@media screen and (minWidth: 992px)": Object {
+    "a": "lg",
+  },
+  "a": "a",
+}
+`;
+
+exports[`objects with media, styleObjectOnly 2`] = `
+Object {
+  "@media screen and (minWidth: 1200px)": Object {
+    "a": "xl",
+  },
+  "@media screen and (minWidth: 576px)": Object {
+    "a": "smsm",
+    "c": 1,
+  },
+  "@media screen and (minWidth: 768px)": Object {
+    "a": "md",
+  },
+  "@media screen and (minWidth: 992px)": Object {
+    "a": "lg",
+    "c": Object {
+      "sm": Object {
+        "a": "1",
+      },
+    },
+  },
+  "a": "x",
+}
+`;
+
+exports[`objects with no media 1`] = `
+.emotion-0 {
+  a: a;
+}
+
+.emotion-0 c {
+  a: b;
+  d: 1px;
+}
+
+.emotion-0 c {
+  a: c;
+}
+
+<div
+  class="emotion-0"
+/>
+`;
+
+exports[`objects with no media, styleObjectOnly 1`] = `
+Object {
+  "a": "a",
+  "c": Object {
+    "a": "c",
+    "d": 1,
+  },
+}
+`;

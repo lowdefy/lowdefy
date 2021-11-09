@@ -29,57 +29,25 @@ test('renderHtml html is undefined', () => {
 
 test('renderHtml html string', () => {
   const { container } = render(renderHtml({ html: '<p>Hello</p>', methods }));
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <span
-      class="emotion-0"
-    >
-      <p>
-        Hello
-      </p>
-    </span>
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 test('renderHtml html number 0', () => {
   const { container } = render(renderHtml({ html: 0, methods }));
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <span
-      class="emotion-0"
-    >
-      0
-    </span>
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 test('renderHtml html number 123', () => {
   const { container } = render(renderHtml({ html: 123, methods }));
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <span
-      class="emotion-0"
-    >
-      123
-    </span>
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 test('renderHtml html boolean false', () => {
   const { container } = render(renderHtml({ html: false, methods }));
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <span
-      class="emotion-0"
-    >
-      false
-    </span>
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 test('renderHtml html boolean true', () => {
   const { container } = render(renderHtml({ html: true, methods }));
-  expect(container.firstChild).toMatchInlineSnapshot(`
-    <span
-      class="emotion-0"
-    >
-      true
-    </span>
-  `);
+  expect(container.firstChild).toMatchSnapshot();
 });
