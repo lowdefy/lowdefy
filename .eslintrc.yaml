@@ -40,6 +40,11 @@ rules:
   import/extensions:
     - error
     - ignorePackages
+  import/no-unresolved:
+    - error
+    # Because of https://github.com/import-js/eslint-plugin-import/issues/1868
+    - ignore:
+        - "^@lowdefy\/.*$"
 parserOptions:
   sourceType: module
   ecmaVersion: latest
