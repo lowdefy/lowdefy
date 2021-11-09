@@ -20,7 +20,7 @@ import getContext from '@lowdefy/engine';
 import MountEvents from './MountEvents';
 import LoadingBlock from './LoadingBlock';
 
-const Context = ({ block, children, contextId, lowdefy }) => {
+const Context = ({ block, children, contextId, lowdefy, initEventsTriggered }) => {
   const [context, setContext] = useState({});
   const [error, setError] = useState(null);
 
@@ -58,6 +58,7 @@ const Context = ({ block, children, contextId, lowdefy }) => {
       triggerEvent={({ name, context }) =>
         context.RootBlocks.areas.root.blocks[0].triggerEvent({ name })
       }
+      initEventsTriggered={initEventsTriggered}
     >
       {(loaded) => (!loaded ? <LoadingBlock block={block} lowdefy={lowdefy} /> : children(context))}
     </MountEvents>

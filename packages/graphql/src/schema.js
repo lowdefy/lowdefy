@@ -44,6 +44,7 @@ const typeDefs = gql`
   type MenuResponse {
     menus: [Menu]
     homePageId: String
+    initPageId: String
   }
 
   type Menu {

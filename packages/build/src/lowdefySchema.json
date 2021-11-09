@@ -591,6 +591,13 @@
             "type": "App \"config.homePageId\" should be a string."
           }
         },
+        "experimental_initPageId": {
+          "type": "string",
+          "description": "Id of the page to load when app is first run. After loading it, app will redirect to the requested page.",
+          "errorMessage": {
+            "type": "App \"config.experimental_initPageId\" should be a string."
+          }
+        },
         "auth": {
           "$ref": "#/definitions/authConfig"
         }
