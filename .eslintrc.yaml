@@ -39,7 +39,7 @@ rules:
   jsx-a11y/no-static-element-interactions: 'off'
   import/extensions:
     - error
-    - always
+    - ignorePackages
 parserOptions:
   sourceType: module
   ecmaVersion: latest
