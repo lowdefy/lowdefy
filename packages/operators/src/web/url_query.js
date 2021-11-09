@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getFromObject from '../getFromObject';
+import getFromObject from '../getFromObject.js';
 
 function _url_query({ arrayIndices, location, params, urlQuery }) {
   return getFromObject({

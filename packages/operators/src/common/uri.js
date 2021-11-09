@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import runClass from '../runClass';
+import runClass from '../runClass.js';
 
 function decode(input) {
   return decodeURIComponent(input);

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import string from '../../src/common/string';
+import string from '../../src/common/string.js';
 const location = 'locationId';
 
 describe('_string.charAt', () => {

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import gt from '../../src/common/gt';
+import gt from '../../src/common/gt.js';
 
 const location = 'locationId';
 

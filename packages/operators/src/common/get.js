@@ -15,7 +15,7 @@
 */
 
 import { get, type } from '@lowdefy/helpers';
-import getFromObject from '../getFromObject';
+import getFromObject from '../getFromObject.js';
 
 function _get({ arrayIndices, location, params }) {
   if (!type.isObject(params)) {

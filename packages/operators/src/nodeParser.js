@@ -16,8 +16,8 @@
 
 import { serializer, type } from '@lowdefy/helpers';
 
-import commonOperators from './common';
-import nodeOperators from './node';
+import commonOperators from './common/index.js';
+import nodeOperators from './node/index.js';
 
 class NodeParser {
   constructor({ payload, secrets, user } = {}) {
@@ -33,18 +33,25 @@ class NodeParser {
   }
 
   async init() {
+    const operators = this.operators;
+    const operations = this.operations;
     await Promise.all(
-      Object.keys(this.operators).map(async (operator) => {
-        const fn = require(`./${this.operators[operator]}.js`);
-        this.operations[operator] = fn.default;
-        if (this.operations[operator].init) {
-          await this.operations[operator].init();
+      Object.keys(operators).map(async (operator) => {
+        const fn = await import(`./${operators[operator]}.js`);
+        operations[operator] = fn.default;
+        if (operations[operator].init) {
+          await operations[operator].init();
         }
       })
     );
   }
 
   parse({ args, input, location }) {
+    const operations = this.operations;
+    const secrets = this.secrets;
+    const payload = this.payload;
+    const user = this.user;
+
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
     }
@@ -60,18 +67,18 @@ class NodeParser {
         const key = Object.keys(value)[0];
         const [op, methodName] = key.split('.');
         try {
-          if (!type.isUndefined(this.operations[op])) {
-            const res = this.operations[op]({
+          if (!type.isUndefined(operations[op])) {
+            const res = operations[op]({
               args,
               arrayIndices: [],
               env: 'node',
               location,
               methodName,
-              operations: this.operations,
+              operations: operations,
               params: value[key],
-              secrets: this.secrets,
-              payload: this.payload,
-              user: this.user,
+              secrets,
+              payload,
+              user,
               parser: this,
             });
             return res;

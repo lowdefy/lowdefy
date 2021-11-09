@@ -13,10 +13,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-
-import runInstance from '../runInstance';
-import runClass from '../runClass';
 import { type } from '@lowdefy/helpers';
+
+import runInstance from '../runInstance.js';
+import runClass from '../runClass.js';
 
 const prep = (args) => {
   if (type.isNone(args[0])) {

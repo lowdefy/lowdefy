@@ -15,8 +15,8 @@
 */
 
 /* eslint-disable max-classes-per-file */
-import WebParser from '../../src/webParser';
-import { context } from '../testContext';
+import WebParser from '../../src/webParser.js';
+import { context } from '../testContext.js';
 
 const logger = console.log;
 const mockLogger = jest.fn();

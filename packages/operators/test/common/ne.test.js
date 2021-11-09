@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import ne from '../../src/common/ne';
+import ne from '../../src/common/ne.js';
 
 const location = 'locationId';
 

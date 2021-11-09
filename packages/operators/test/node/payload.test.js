@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import payload from '../../src/node/payload';
-import getFromObject from '../../src/getFromObject';
+import payload from '../../src/node/payload.js';
+import getFromObject from '../../src/getFromObject.js';
 
 jest.mock('../../src/getFromObject');
 

@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import global from '../../src/web/global';
-import getFromObject from '../../src/getFromObject';
+import global from '../../src/web/global.js';
+import getFromObject from '../../src/getFromObject.js';
 
 jest.mock('../../src/getFromObject');
 

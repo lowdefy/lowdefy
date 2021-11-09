@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import url_query from '../../src/web/url_query';
-import getFromObject from '../../src/getFromObject';
+import url_query from '../../src/web/url_query.js';
+import getFromObject from '../../src/getFromObject.js';
 
 jest.mock('../../src/getFromObject');
 

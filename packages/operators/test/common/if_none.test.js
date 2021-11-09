@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import if_none from '../../src/common/if_none';
+import if_none from '../../src/common/if_none.js';
 
 test('_if_none evaluates true for null and undefined', () => {
   expect(if_none({ params: [null, 'default'], location: 'locationId' })).toEqual('default');

@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import get from '../../src/common/get';
-import getFromObject from '../../src/getFromObject';
+import get from '../../src/common/get.js';
+import getFromObject from '../../src/getFromObject.js';
 
 jest.mock('../../src/getFromObject');
 

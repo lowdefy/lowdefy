@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import lt from '../../src/common/lt';
+import lt from '../../src/common/lt.js';
 
 const location = 'locationId';
 

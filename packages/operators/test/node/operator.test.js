@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import NodeParser from '../../src/nodeParser';
+import NodeParser from '../../src/nodeParser.js';
 
 const payload = {
   string: 'Some String',

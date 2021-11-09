@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import event from '../../src/web/event';
-import getFromObject from '../../src/getFromObject';
+import event from '../../src/web/event.js';
+import getFromObject from '../../src/getFromObject.js';
 
 jest.mock('../../src/getFromObject');
 
