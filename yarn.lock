@@ -3539,21 +3539,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-aws@workspace:packages/plugins/plugins/plugin-aws":
-  version: 0.0.0-use.local
-  resolution: "@lowdefy/connection-aws@workspace:packages/plugins/plugins/plugin-aws"
-  dependencies:
-    "@lowdefy/ajv": 3.22.0
-    "@swc/cli": 0.1.51
-    "@swc/core": 1.2.107
-    "@swc/jest": 0.2.5
-    aws-sdk: 2.1021.0
-    jest: 27.3.1
-  peerDependencies:
-    "@lowdefy/api": 3.22.0
-  languageName: unknown
-  linkType: soft
-
 "@lowdefy/connection-axios-http@3.22.0, @lowdefy/connection-axios-http@workspace:packages/plugins/connections/connection-axios-http":
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-axios-http@workspace:packages/plugins/connections/connection-axios-http"
@@ -3570,9 +3555,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-elasticsearch@workspace:packages/plugins/connections/elasticsearch":
+"@lowdefy/connection-elasticsearch@workspace:packages/plugins/connections/connection-elasticsearch":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/connection-elasticsearch@workspace:packages/plugins/connections/elasticsearch"
+  resolution: "@lowdefy/connection-elasticsearch@workspace:packages/plugins/connections/connection-elasticsearch"
   dependencies:
     "@elastic/elasticsearch": 7.15.0
     "@lowdefy/ajv": 3.22.0
@@ -3826,6 +3811,21 @@ __metadata:
     js-yaml: 4.1.0
     mingo: 4.2.0
     uuid: 8.3.2
+  languageName: unknown
+  linkType: soft
+
+"@lowdefy/plugin-aws@workspace:packages/plugins/plugins/plugin-aws":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/plugin-aws@workspace:packages/plugins/plugins/plugin-aws"
+  dependencies:
+    "@lowdefy/ajv": 3.22.0
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
+    aws-sdk: 2.1021.0
+    jest: 27.3.1
+  peerDependencies:
+    "@lowdefy/api": 3.22.0
   languageName: unknown
   linkType: soft
 

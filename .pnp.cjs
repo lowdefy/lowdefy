@@ -112,7 +112,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       },
       {
         "name": "@lowdefy/connection-elasticsearch",
-        "reference": "workspace:packages/plugins/connections/elasticsearch"
+        "reference": "workspace:packages/plugins/connections/connection-elasticsearch"
       },
       {
         "name": "@lowdefy/connection-google-sheets",
@@ -135,7 +135,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/plugins/connections/stripe"
       },
       {
-        "name": "@lowdefy/connection-aws",
+        "name": "@lowdefy/plugin-aws",
         "reference": "workspace:packages/plugins/plugins/plugin-aws"
       },
       {
@@ -162,9 +162,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@lowdefy/build", ["workspace:packages/build"]],
       ["@lowdefy/client", ["workspace:packages/client"]],
       ["@lowdefy/color", ["workspace:packages/color"]],
-      ["@lowdefy/connection-aws", ["workspace:packages/plugins/plugins/plugin-aws"]],
       ["@lowdefy/connection-axios-http", ["virtual:c9d7c5a0f7602869dff02ed24b6a4fe62d4c9e4a4ede33ec34082ee9e4a5dd17f3e1bb396d56863e9bea8e8476d67351fe495fe7cebce9035a9e4de117e68169#workspace:packages/plugins/connections/connection-axios-http", "workspace:packages/plugins/connections/connection-axios-http"]],
-      ["@lowdefy/connection-elasticsearch", ["workspace:packages/plugins/connections/elasticsearch"]],
+      ["@lowdefy/connection-elasticsearch", ["workspace:packages/plugins/connections/connection-elasticsearch"]],
       ["@lowdefy/connection-google-sheets", ["workspace:packages/plugins/connections/google-sheets"]],
       ["@lowdefy/connection-knex", ["workspace:packages/plugins/connections/knex"]],
       ["@lowdefy/connection-mongodb", ["workspace:packages/plugins/connections/mongodb"]],
@@ -179,6 +178,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@lowdefy/node-utils", ["workspace:packages/node-utils"]],
       ["@lowdefy/nunjucks", ["workspace:packages/nunjucks"]],
       ["@lowdefy/operators", ["workspace:packages/operators"]],
+      ["@lowdefy/plugin-aws", ["workspace:packages/plugins/plugins/plugin-aws"]],
       ["@lowdefy/server", ["workspace:packages/server"]],
       ["@lowdefy/server-dev", ["workspace:packages/servers/serverDev"]],
       ["lowdefy", ["workspace:packages/cli"]]
@@ -5125,21 +5125,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT",
         }]
       ]],
-      ["@lowdefy/connection-aws", [
-        ["workspace:packages/plugins/plugins/plugin-aws", {
-          "packageLocation": "./packages/plugins/plugins/plugin-aws/",
-          "packageDependencies": [
-            ["@lowdefy/connection-aws", "workspace:packages/plugins/plugins/plugin-aws"],
-            ["@lowdefy/ajv", "workspace:packages/ajv"],
-            ["@swc/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.1.51"],
-            ["@swc/core", "npm:1.2.107"],
-            ["@swc/jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.2.5"],
-            ["aws-sdk", "npm:2.1021.0"],
-            ["jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"]
-          ],
-          "linkType": "SOFT",
-        }]
-      ]],
       ["@lowdefy/connection-axios-http", [
         ["virtual:c9d7c5a0f7602869dff02ed24b6a4fe62d4c9e4a4ede33ec34082ee9e4a5dd17f3e1bb396d56863e9bea8e8476d67351fe495fe7cebce9035a9e4de117e68169#workspace:packages/plugins/connections/connection-axios-http", {
           "packageLocation": "./.yarn/__virtual__/@lowdefy-connection-axios-http-virtual-8d9d80ba88/1/packages/plugins/connections/connection-axios-http/",
@@ -5177,10 +5162,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@lowdefy/connection-elasticsearch", [
-        ["workspace:packages/plugins/connections/elasticsearch", {
-          "packageLocation": "./packages/plugins/connections/elasticsearch/",
+        ["workspace:packages/plugins/connections/connection-elasticsearch", {
+          "packageLocation": "./packages/plugins/connections/connection-elasticsearch/",
           "packageDependencies": [
-            ["@lowdefy/connection-elasticsearch", "workspace:packages/plugins/connections/elasticsearch"],
+            ["@lowdefy/connection-elasticsearch", "workspace:packages/plugins/connections/connection-elasticsearch"],
             ["@elastic/elasticsearch", "npm:7.15.0"],
             ["@lowdefy/ajv", "workspace:packages/ajv"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
@@ -5449,6 +5434,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["js-yaml", "npm:4.1.0"],
             ["mingo", "npm:4.2.0"],
             ["uuid", "npm:8.3.2"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@lowdefy/plugin-aws", [
+        ["workspace:packages/plugins/plugins/plugin-aws", {
+          "packageLocation": "./packages/plugins/plugins/plugin-aws/",
+          "packageDependencies": [
+            ["@lowdefy/plugin-aws", "workspace:packages/plugins/plugins/plugin-aws"],
+            ["@lowdefy/ajv", "workspace:packages/ajv"],
+            ["@swc/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.1.51"],
+            ["@swc/core", "npm:1.2.107"],
+            ["@swc/jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.2.5"],
+            ["aws-sdk", "npm:2.1021.0"],
+            ["jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"]
           ],
           "linkType": "SOFT",
         }]

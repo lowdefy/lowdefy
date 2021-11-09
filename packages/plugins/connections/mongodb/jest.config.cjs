@@ -4,12 +4,12 @@ module.exports = {
   collectCoverageFrom: ['src/**/*.js'],
   coverageDirectory: 'coverage',
   coveragePathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/src/index.js'],
-  coverageReporters: [['lcov', { projectRoot: '../..' }], 'text', 'clover'],
+  coverageReporters: [['lcov', { projectRoot: '../../../..' }], 'text', 'clover'],
   errorOnDeprecated: true,
   preset: '@shelf/jest-mongodb',
   testEnvironment: 'node',
   testPathIgnorePatterns: ['<rootDir>/dist/'],
   transform: {
-    '^.+\\.(t|j)sx?$': ['@swc/jest', { configFile: '../../../.swcrc.test' }],
+    '^.+\\.(t|j)sx?$': ['@swc/jest', { configFile: '../../../../.swcrc.test' }],
   },
 };
