@@ -15,9 +15,11 @@
 */
 
 import metaLocations from './metaLocations.js';
-import packageJson from '../../../package.json';
+// import packageJson from '../../../package.json';
 
-const { version } = packageJson;
+// const { version } = packageJson;
+
+const version = '3.22.0';
 
 test('metaLocations default URL', async () => {
   expect(metaLocations({ version })).toEqual({

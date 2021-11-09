@@ -21,7 +21,7 @@ async function run() {
   await build({
     // blocksServerUrl: 'https://blocks-cdn.lowdefy.com/v3.16.0',
     logger: console,
-    buildDirectory: path.resolve(process.cwd(), '../servers/serverDev/.lowdefy/build'),
+    buildDirectory: path.resolve(process.cwd(), '../server/.lowdefy/build'),
     // buildDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
     // cacheDirectory: path.resolve(process.cwd(), '../servers/serverDev/.lowdefy/.cache'),
     cacheDirectory: path.resolve(process.cwd(), './.lowdefy/.cache'),

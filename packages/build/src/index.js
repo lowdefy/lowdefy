@@ -16,8 +16,6 @@
   limitations under the License.
 */
 
-import packageJson from '../package.json';
-
 import createGetMeta from './utils/meta/getMeta.js';
 import createWriteBuildArtifact from './utils/files/writeBuildArtifact.js';
 import createReadConfigFile from './utils/files/readConfigFile.js';
@@ -36,7 +34,6 @@ import writeApp from './build/writeApp.js';
 import writeConfig from './build/writeConfig.js';
 import writeConnections from './build/writeConnections.js';
 import writeGlobal from './build/writeGlobal.js';
-import writeHtml from './build/writeHtml/writeHtml.js';
 import writeMenus from './build/writeMenus.js';
 import writePages from './build/writePages.js';
 import writeRequests from './build/writeRequests.js';
@@ -52,7 +49,8 @@ function createContext(options) {
     logger,
     readConfigFile: createReadConfigFile({ configDirectory }),
     refResolver,
-    version: packageJson.version,
+    version: '3.22.0',
+    // version: packageJson.version,
     writeBuildArtifact: createWriteBuildArtifact({ buildDirectory }),
   };
   return context;
@@ -76,7 +74,6 @@ async function build(options) {
     await writeConnections({ components, context });
     await writeRequests({ components, context });
     await writePages({ components, context });
-    await writeHtml({ components, context });
     await writeConfig({ components, context });
     await writeGlobal({ components, context });
     await writeMenus({ components, context });

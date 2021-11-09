@@ -14,15 +14,14 @@
   limitations under the License.
 */
 
-import createContext from './context/createContext';
-import homePageId from './routes/rootConfig/homePageId';
-import openIdAuthorizationUrl from './routes/auth/openIdAuthorizationUrl';
-import openIdCallback from './routes/auth/openIdCallback';
-import openIdLogoutUrl from './routes/auth/openIdLogoutUrl';
-import pageConfig from './routes/page/pageConfig';
-import pageHtml from './routes/page/pageHtml';
-import rootConfig from './routes/rootConfig/rootConfig';
-import request from './routes/request/request';
+import createContext from './context/createContext.js';
+import getHomePageId from './routes/rootConfig/getHomePageId.js';
+import getPageConfig from './routes/page/getPageConfig.js';
+import openIdAuthorizationUrl from './routes/auth/openIdAuthorizationUrl.js';
+import openIdCallback from './routes/auth/openIdCallback.js';
+import openIdLogoutUrl from './routes/auth/openIdLogoutUrl.js';
+import request from './routes/request/request.js';
+import rootConfig from './routes/rootConfig/rootConfig.js';
 
 import {
   AuthenticationError,
@@ -30,21 +29,20 @@ import {
   RequestError,
   ServerError,
   TokenExpiredError,
-} from './context/errors';
+} from './context/errors.js';
 
 export {
+  AuthenticationError,
+  ConfigurationError,
   createContext,
-  homePageId,
+  getHomePageId,
+  getPageConfig,
   openIdAuthorizationUrl,
   openIdCallback,
   openIdLogoutUrl,
-  pageConfig,
-  pageHtml,
-  rootConfig,
   request,
-  AuthenticationError,
-  ConfigurationError,
   RequestError,
+  rootConfig,
   ServerError,
   TokenExpiredError,
 };

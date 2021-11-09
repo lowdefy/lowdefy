@@ -14,15 +14,15 @@
   limitations under the License.
 */
 
-import getHomePageId from './getHomePageId';
-import getLowdefyGlobal from './getLowdefyGlobal';
-import getMenus from './menus/getMenus';
+import findHomePageId from './findHomePageId.js';
+import getLowdefyGlobal from './getLowdefyGlobal.js';
+import getMenus from './menus/getMenus.js';
 
 async function rootConfig(context) {
   const [lowdefyGlobal, menus] = await Promise.all([getLowdefyGlobal(context), getMenus(context)]);
   return {
     authenticated: context.authenticated,
-    homePageId: getHomePageId(context, { menus }),
+    homePageId: findHomePageId(context, { menus }),
     lowdefyGlobal,
     menus,
   };

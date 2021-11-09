@@ -18,7 +18,7 @@
 
 import { type } from '@lowdefy/helpers';
 import { validate } from '@lowdefy/ajv';
-import lowdefySchema from '../lowdefySchema.json';
+import lowdefySchema from '../lowdefySchema.js';
 
 async function validateConfig({ components }) {
   if (type.isNone(components.config)) {
