@@ -15,7 +15,6 @@
 */
 
 import { Client } from '@elastic/elasticsearch';
-import schema from './ElasticsearchIndex.json';
 
 async function elasticsearchIndex({ request, connection }) {
   const client = new Client(connection);

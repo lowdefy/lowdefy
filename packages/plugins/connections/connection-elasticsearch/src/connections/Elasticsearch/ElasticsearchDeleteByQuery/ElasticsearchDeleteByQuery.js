@@ -15,7 +15,6 @@
 */
 
 import { Client } from '@elastic/elasticsearch';
-import schema from './ElasticsearchDeleteByQuery.json';
 
 async function elasticsearchDeleteByQuery({ request, connection }) {
   const client = new Client(connection);

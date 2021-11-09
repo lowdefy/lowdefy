@@ -16,15 +16,18 @@
 
 import { Client } from '@elastic/elasticsearch';
 import { validate } from '@lowdefy/ajv';
-import ElasticsearchUpdate from './ElasticsearchUpdate.js';
+
+import elasticsearchUpdate from './ElasticsearchUpdate.js';
+import requestIndex from './index.js';
+import schema from './ElasticsearchUpdate.json';
+
+const { checkRead, checkWrite } = requestIndex.meta;
 
 const mockElasticsearchClient = jest.fn(() => mockElasticsearchClient);
 mockElasticsearchClient.update = jest.fn(() => mockElasticsearchClient);
 jest.mock('@elastic/elasticsearch', () => ({
   Client: jest.fn().mockImplementation(() => mockElasticsearchClient),
 }));
-
-const { resolver, schema, checkRead, checkWrite } = ElasticsearchUpdate;
 
 const connection = {
   node: 'http://node',
@@ -125,7 +128,7 @@ test('ElasticsearchUpdate', async () => {
       },
     },
   };
-  const res = await resolver({ request, connection });
+  const res = await elasticsearchUpdate({ request, connection });
   expect(Client.mock.calls).toEqual([
     [
       {

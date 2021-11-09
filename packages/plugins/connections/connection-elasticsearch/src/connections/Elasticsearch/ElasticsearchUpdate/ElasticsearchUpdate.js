@@ -15,7 +15,6 @@
 */
 
 import { Client } from '@elastic/elasticsearch';
-import schema from './ElasticsearchUpdate.json';
 
 async function elasticsearchUpdate({ request, connection }) {
   const client = new Client(connection);
