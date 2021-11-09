@@ -1,0 +1,62 @@
+{
+  "name": "@lowdefy/connection-google-sheets",
+  "version": "3.22.0",
+  "licence": "Apache-2.0",
+  "description": "",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "lowdefy connection"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Sam Tolmay",
+      "url": "https://github.com/SamTolmay"
+    },
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "build": "yarn swc",
+    "clean": "rm -rf dist",
+    "prepare": "yarn build",
+    "swc": "swc src --out-dir dist --config-file ../../../.swcrc --delete-dir-on-start --copy-files",
+    "test": "jest --coverage"
+  },
+  "dependencies": {
+    "@lowdefy/helpers": "3.22.0",
+    "google-spreadsheet": "3.1.15",
+    "mingo": "4.2.0",
+    "moment": "2.29.1"
+  },
+  "devDependencies": {
+    "@lowdefy/ajv": "3.22.0",
+    "@swc/cli": "0.1.51",
+    "@swc/core": "1.2.107",
+    "@swc/jest": "0.2.5",
+    "jest": "27.3.1"
+  },
+  "peerDependencies": {
+    "@lowdefy/api": "3.22.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
