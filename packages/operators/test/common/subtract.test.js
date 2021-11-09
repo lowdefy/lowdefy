@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import subtract from '../../src/common/subtract';
+import subtract from '../../src/common/subtract.js';
 
 test('_subtract param 0 greater than param 1', () => {
   expect(subtract({ params: [1, 1], location: 'locationId' })).toBe(0);

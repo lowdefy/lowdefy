@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getFromObject from '../getFromObject';
+import getFromObject from '../getFromObject.js';
 
 const breakpoints = {
   xs: 576,

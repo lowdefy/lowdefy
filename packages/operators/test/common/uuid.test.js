@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import uuid from 'uuid';
-import _uuid from '../../src/common/uuid';
+import * as uuid from 'uuid';
+import _uuid from '../../src/common/uuid.js';
 
 jest.mock('uuid', () => {
   return {

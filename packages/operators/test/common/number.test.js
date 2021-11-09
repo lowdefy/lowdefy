@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import _number from '../../src/common/number';
+import _number from '../../src/common/number.js';
 
 test('_number called with no method or params', () => {
   expect(() => _number({ location: 'locationId' })).toThrowErrorMatchingInlineSnapshot(`

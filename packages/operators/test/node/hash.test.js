@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import hash from '../../src/node/hash';
+import hash from '../../src/node/hash.js';
 
 console.error = () => {};
 

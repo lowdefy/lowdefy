@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import state from '../../src/web/state';
-import getFromObject from '../../src/getFromObject';
+import state from '../../src/web/state.js';
+import getFromObject from '../../src/getFromObject.js';
 
 jest.mock('../../src/getFromObject');
 

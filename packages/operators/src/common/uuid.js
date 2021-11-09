@@ -16,7 +16,8 @@
 
 import { v1, v3, v4, v5 } from 'uuid';
 import { type } from '@lowdefy/helpers';
-import runClass from '../runClass';
+
+import runClass from '../runClass.js';
 
 const meta = {
   v1: { noArgs: true },

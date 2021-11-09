@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import location from '../../src/web/location';
-import getFromObject from '../../src/getFromObject';
+import location from '../../src/web/location.js';
+import getFromObject from '../../src/getFromObject.js';
 
 jest.mock('../../src/getFromObject');
 

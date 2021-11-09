@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import date from '../../src/common/date';
+import date from '../../src/common/date.js';
 
 const location = 'locationId';
 

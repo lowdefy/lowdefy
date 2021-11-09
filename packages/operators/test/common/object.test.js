@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import object from '../../src/common/object';
+import object from '../../src/common/object.js';
 
 const location = 'locationId';
 

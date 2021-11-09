@@ -3591,13 +3591,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/operators@workspace:packages/operators"
   dependencies:
-    "@babel/cli": 7.15.7
-    "@babel/core": 7.15.8
-    "@babel/preset-env": 7.15.8
     "@lowdefy/format": 3.22.0
     "@lowdefy/helpers": 3.22.0
     "@lowdefy/nunjucks": 3.22.0
-    babel-jest: 27.3.1
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
     change-case: 4.1.2
     deep-diff: 1.0.2
     jest: 27.3.1

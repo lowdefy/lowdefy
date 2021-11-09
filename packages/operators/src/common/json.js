@@ -15,7 +15,7 @@
 */
 
 import { serializer } from '@lowdefy/helpers';
-import runClass from '../runClass';
+import runClass from '../runClass.js';
 
 function parse(input) {
   if (input === 'undefined') return undefined;

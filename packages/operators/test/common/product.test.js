@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import product from '../../src/common/product';
+import product from '../../src/common/product.js';
 
 test('_product number parameters', () => {
   expect(product({ params: [1, 3], location: 'locationId' })).toBe(3);

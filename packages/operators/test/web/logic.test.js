@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import WebParser from '../../src/webParser';
-import { context } from '../testContext';
+import WebParser from '../../src/webParser.js';
+import { context } from '../testContext.js';
 
 const arrayIndices = [1];
 

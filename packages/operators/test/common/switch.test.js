@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import _switch from '../../src/common/switch';
+import _switch from '../../src/common/switch.js';
 
 test('_switch evaluates to true for the first case', () => {
   expect(

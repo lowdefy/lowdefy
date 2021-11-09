@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getFromObject from '../getFromObject';
+import getFromObject from '../getFromObject.js';
 
 function _secret({ location, params, secrets = {} }) {
   if (params === true || params.all) {

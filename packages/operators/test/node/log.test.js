@@ -15,7 +15,7 @@
 */
 
 /* eslint-disable max-classes-per-file */
-import NodeParser from '../../src/nodeParser';
+import NodeParser from '../../src/nodeParser.js';
 
 const logger = console.log;
 const mockLogger = jest.fn();

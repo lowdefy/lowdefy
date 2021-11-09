@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import _index from '../../src/web/_index';
-import getFromObject from '../../src/getFromObject';
+import _index from '../../src/web/_index.js';
+import getFromObject from '../../src/getFromObject.js';
 
 jest.mock('../../src/getFromObject');
 

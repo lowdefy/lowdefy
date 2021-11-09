@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import runClass from '../runClass';
-import runInstance from '../runInstance';
+import runClass from '../runClass.js';
+import runInstance from '../runInstance.js';
 
 const meta = {
   EPSILON: { property: true },

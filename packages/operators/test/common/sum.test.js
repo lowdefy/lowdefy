@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import sum from '../../src/common/sum';
+import sum from '../../src/common/sum.js';
 
 test('_sum number parameters', () => {
   expect(sum({ params: [1, 1], location: 'locationId' })).toBe(2);

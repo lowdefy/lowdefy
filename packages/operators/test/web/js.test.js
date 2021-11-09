@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import _js from '../../src/web/js';
-import { context } from '../testContext';
+import _js from '../../src/web/js.js';
+import { context } from '../testContext.js';
 
 const location = 'location';
 

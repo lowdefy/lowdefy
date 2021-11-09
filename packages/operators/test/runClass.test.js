@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import runClass from '../src/runClass';
+import runClass from '../src/runClass.js';
 
 const location = 'locationId';
 const operator = '_op';

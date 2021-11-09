@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import gte from '../../src/common/gte';
+import gte from '../../src/common/gte.js';
 
 const location = 'locationId';
 

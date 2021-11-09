@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import runClass from '../runClass';
 import { type } from '@lowdefy/helpers';
+import runClass from '../runClass.js';
 
 function date(input) {
   const result = new Date(input);

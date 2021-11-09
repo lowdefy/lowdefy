@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import random from '../../src/common/random';
+import random from '../../src/common/random.js';
 
 const mockRandom = jest.fn();
 const mockRandomImp = () => 0.5234;
