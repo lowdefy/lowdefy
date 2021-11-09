@@ -26,6 +26,7 @@
     "packages/*",
     "packages/blocks/*",
     "packages/connections/*",
+    "packages/plugins/**",
     "packages/servers/*"
   ],
   "scripts": {
