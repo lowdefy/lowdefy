@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Area, BlockLayout, layoutParamsToArea } from '@lowdefy/layout';
-import { makeCssClass } from '@lowdefy/block-tools';
+import { makeCssClass } from '@lowdefy/block-utils';
 
 import Block from './Block';
 

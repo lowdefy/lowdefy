@@ -15,7 +15,7 @@
 */
 
 import React, { lazy } from 'react';
-import { loadWebpackFederatedModule, useDynamicScript } from '@lowdefy/block-tools';
+import { loadWebpackFederatedModule, useDynamicScript } from '@lowdefy/block-utils';
 
 const Components = {};
 

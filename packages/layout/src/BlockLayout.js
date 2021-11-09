@@ -17,7 +17,7 @@
 import React from 'react';
 import { Col } from 'antd';
 import deriveLayout from './deriveLayout.js';
-import { blockDefaultProps } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const alignSelf = (align) => {
   if (align === 'bottom') {

@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { type } from '@lowdefy/helpers';
-import { ErrorBoundary } from '@lowdefy/block-tools';
+import { ErrorBoundary } from '@lowdefy/block-utils';
 import { Area, BlockLayout, layoutParamsToArea } from '../src';
 
 import Block from './blocks/Block';

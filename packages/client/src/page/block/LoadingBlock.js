@@ -1,5 +1,5 @@
 import React from 'react';
-import { Loading, makeCssClass } from '@lowdefy/block-tools';
+import { Loading, makeCssClass } from '@lowdefy/block-utils';
 import { get } from '@lowdefy/helpers';
 import { BlockLayout } from '@lowdefy/layout';
 

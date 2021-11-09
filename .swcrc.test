@@ -6,7 +6,8 @@
       "dynamicImport": true
     },
     "target": "es2020",
-    "keepClassNames": true
+    "keepClassNames": true,
+    "transform": { "react": { "runtime": "automatic" } }
   },
   "module": {
     "type": "es6",

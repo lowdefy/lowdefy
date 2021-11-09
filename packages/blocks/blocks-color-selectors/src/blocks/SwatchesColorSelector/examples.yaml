@@ -1,0 +1,46 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- id: default
+  type: SwatchesColorSelector
+- id: title
+  type: SwatchesColorSelector
+  properties:
+    title: The color selector
+- id: colors
+  type: SwatchesColorSelector
+  properties:
+    colors: [['#123456', '#abc345'], ['#ff3456', '#aff345']]
+- id: defaultColor
+  type: SwatchesColorSelector
+  properties:
+    defaultColor: '#11FF00'
+- id: width
+  type: SwatchesColorSelector
+  properties:
+    width: 100
+- id: height
+  type: SwatchesColorSelector
+  properties:
+    height: 100
+- id: inputStyle
+  type: SwatchesColorSelector
+  properties:
+    inputStyle:
+      border: 3px solid blue
+- id: label-disabled
+  type: SwatchesColorSelector
+  properties:
+    label:
+      disabled: true

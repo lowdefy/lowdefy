@@ -17,7 +17,7 @@
 import React, { Suspense } from 'react';
 import packageJson from '../../package.json';
 
-import { ErrorBoundary, makeCssClass } from '@lowdefy/block-tools';
+import { ErrorBoundary, makeCssClass } from '@lowdefy/block-utils';
 
 import LoadBlock from './block/LoadBlock';
 

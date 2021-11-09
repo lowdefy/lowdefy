@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { render } from 'react-dom';
-import { makeCssClass } from '@lowdefy/block-tools';
+import { makeCssClass } from '@lowdefy/block-utils';
 
 import AutoBlockSim from './AutoBlockSim';
 import examples from './examples';

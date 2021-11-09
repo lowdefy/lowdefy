@@ -1,0 +1,38 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- id: default
+  type: CompactColorSelector
+- id: title
+  type: CompactColorSelector
+  properties:
+    title: The color selector
+- id: colors
+  type: CompactColorSelector
+  properties:
+    colors: ['#123456', '#abc345']
+- id: defaultColor
+  type: CompactColorSelector
+  properties:
+    defaultColor: '#FF0000'
+- id: inputStyle
+  type: CompactColorSelector
+  properties:
+    inputStyle:
+      border: 3px solid blue
+- id: label-disabled
+  type: CompactColorSelector
+  properties:
+    label:
+      disabled: true

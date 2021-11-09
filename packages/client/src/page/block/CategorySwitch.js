@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { BlockLayout } from '@lowdefy/layout';
-import { makeCssClass } from '@lowdefy/block-tools';
+import { makeCssClass } from '@lowdefy/block-utils';
 
 import Container from './Container';
 import List from './List';

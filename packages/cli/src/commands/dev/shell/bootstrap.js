@@ -16,7 +16,7 @@ limitations under the License.
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Loading, loadWebpackFederatedModule, useDynamicScript } from '@lowdefy/block-tools';
+import { Loading, loadWebpackFederatedModule, useDynamicScript } from '@lowdefy/block-utils';
 
 function Shell({ rendererRemoteEntryUrl }) {
   const { ready, failed } = useDynamicScript({
