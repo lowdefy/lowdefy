@@ -115,24 +115,24 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/plugins/connections/connection-elasticsearch"
       },
       {
+        "name": "@lowdefy/connection-knex",
+        "reference": "workspace:packages/plugins/connections/connection-knex"
+      },
+      {
+        "name": "@lowdefy/connection-sendgrid",
+        "reference": "workspace:packages/plugins/connections/connection-sendgrid"
+      },
+      {
+        "name": "@lowdefy/connection-stripe",
+        "reference": "workspace:packages/plugins/connections/connection-stripe"
+      },
+      {
         "name": "@lowdefy/connection-google-sheets",
         "reference": "workspace:packages/plugins/connections/google-sheets"
       },
       {
-        "name": "@lowdefy/connection-knex",
-        "reference": "workspace:packages/plugins/connections/knex"
-      },
-      {
         "name": "@lowdefy/connection-mongodb",
         "reference": "workspace:packages/plugins/connections/mongodb"
-      },
-      {
-        "name": "@lowdefy/connection-sendgrid",
-        "reference": "workspace:packages/plugins/connections/sendgrid"
-      },
-      {
-        "name": "@lowdefy/connection-stripe",
-        "reference": "workspace:packages/plugins/connections/stripe"
       },
       {
         "name": "@lowdefy/plugin-aws",
@@ -165,10 +165,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@lowdefy/connection-axios-http", ["virtual:c9d7c5a0f7602869dff02ed24b6a4fe62d4c9e4a4ede33ec34082ee9e4a5dd17f3e1bb396d56863e9bea8e8476d67351fe495fe7cebce9035a9e4de117e68169#workspace:packages/plugins/connections/connection-axios-http", "workspace:packages/plugins/connections/connection-axios-http"]],
       ["@lowdefy/connection-elasticsearch", ["workspace:packages/plugins/connections/connection-elasticsearch"]],
       ["@lowdefy/connection-google-sheets", ["workspace:packages/plugins/connections/google-sheets"]],
-      ["@lowdefy/connection-knex", ["workspace:packages/plugins/connections/knex"]],
+      ["@lowdefy/connection-knex", ["workspace:packages/plugins/connections/connection-knex"]],
       ["@lowdefy/connection-mongodb", ["workspace:packages/plugins/connections/mongodb"]],
-      ["@lowdefy/connection-sendgrid", ["workspace:packages/plugins/connections/sendgrid"]],
-      ["@lowdefy/connection-stripe", ["workspace:packages/plugins/connections/stripe"]],
+      ["@lowdefy/connection-sendgrid", ["workspace:packages/plugins/connections/connection-sendgrid"]],
+      ["@lowdefy/connection-stripe", ["workspace:packages/plugins/connections/connection-stripe"]],
       ["@lowdefy/docs", ["workspace:packages/docs"]],
       ["@lowdefy/engine", ["workspace:packages/engine"]],
       ["@lowdefy/format", ["workspace:packages/format"]],
@@ -5196,17 +5196,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@lowdefy/connection-knex", [
-        ["workspace:packages/plugins/connections/knex", {
-          "packageLocation": "./packages/plugins/connections/knex/",
+        ["workspace:packages/plugins/connections/connection-knex", {
+          "packageLocation": "./packages/plugins/connections/connection-knex/",
           "packageDependencies": [
-            ["@lowdefy/connection-knex", "workspace:packages/plugins/connections/knex"],
+            ["@lowdefy/connection-knex", "workspace:packages/plugins/connections/connection-knex"],
             ["@lowdefy/ajv", "workspace:packages/ajv"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
             ["@swc/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.1.51"],
             ["@swc/core", "npm:1.2.107"],
             ["@swc/jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.2.5"],
             ["jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"],
-            ["knex", "virtual:4319648a34ac38e023c4c76781d59cb2ca01f07a4713c6e9afa1a5e0af28c9e6fa7cc76bb0f2a84c36e8791727674618b43b3e4a2f5a23ec1b449d1f6a7c5b63#npm:0.95.13"],
+            ["knex", "virtual:d71d6ceb7acaf0344eb3c809fbafec1c0f2a945a526449ed4c3af2b6cfdd3665ab27f950a42ec1e1d490093a7a1bfb8d28c9ba4754ab9892568d530efd8b3a20#npm:0.95.13"],
             ["mssql", "npm:7.2.1"],
             ["mysql", "npm:2.18.1"],
             ["pg", "virtual:dddca670fd0b7758fb2e1b1a3e18ac7ebd1ecd06ecdd7acec2b78bccf1d35802cb22904bfbb233b16515a81f5cb819421786d20887823d98022b367036c1ad51#npm:8.7.1"],
@@ -5234,10 +5234,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@lowdefy/connection-sendgrid", [
-        ["workspace:packages/plugins/connections/sendgrid", {
-          "packageLocation": "./packages/plugins/connections/sendgrid/",
+        ["workspace:packages/plugins/connections/connection-sendgrid", {
+          "packageLocation": "./packages/plugins/connections/connection-sendgrid/",
           "packageDependencies": [
-            ["@lowdefy/connection-sendgrid", "workspace:packages/plugins/connections/sendgrid"],
+            ["@lowdefy/connection-sendgrid", "workspace:packages/plugins/connections/connection-sendgrid"],
             ["@lowdefy/ajv", "workspace:packages/ajv"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
             ["@sendgrid/mail", "npm:7.5.0"],
@@ -5250,10 +5250,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@lowdefy/connection-stripe", [
-        ["workspace:packages/plugins/connections/stripe", {
-          "packageLocation": "./packages/plugins/connections/stripe/",
+        ["workspace:packages/plugins/connections/connection-stripe", {
+          "packageLocation": "./packages/plugins/connections/connection-stripe/",
           "packageDependencies": [
-            ["@lowdefy/connection-stripe", "workspace:packages/plugins/connections/stripe"],
+            ["@lowdefy/connection-stripe", "workspace:packages/plugins/connections/connection-stripe"],
             ["@lowdefy/ajv", "workspace:packages/ajv"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
             ["@swc/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.1.51"],
@@ -18199,10 +18199,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:4319648a34ac38e023c4c76781d59cb2ca01f07a4713c6e9afa1a5e0af28c9e6fa7cc76bb0f2a84c36e8791727674618b43b3e4a2f5a23ec1b449d1f6a7c5b63#npm:0.95.13", {
-          "packageLocation": "./.yarn/__virtual__/knex-virtual-4b5899c16f/0/cache/knex-npm-0.95.13-1f9d4ad519-5d5dce81d3.zip/node_modules/knex/",
+        ["virtual:d71d6ceb7acaf0344eb3c809fbafec1c0f2a945a526449ed4c3af2b6cfdd3665ab27f950a42ec1e1d490093a7a1bfb8d28c9ba4754ab9892568d530efd8b3a20#npm:0.95.13", {
+          "packageLocation": "./.yarn/__virtual__/knex-virtual-32e97cecbe/0/cache/knex-npm-0.95.13-1f9d4ad519-5d5dce81d3.zip/node_modules/knex/",
           "packageDependencies": [
-            ["knex", "virtual:4319648a34ac38e023c4c76781d59cb2ca01f07a4713c6e9afa1a5e0af28c9e6fa7cc76bb0f2a84c36e8791727674618b43b3e4a2f5a23ec1b449d1f6a7c5b63#npm:0.95.13"],
+            ["knex", "virtual:d71d6ceb7acaf0344eb3c809fbafec1c0f2a945a526449ed4c3af2b6cfdd3665ab27f950a42ec1e1d490093a7a1bfb8d28c9ba4754ab9892568d530efd8b3a20#npm:0.95.13"],
             ["colorette", "npm:2.0.16"],
             ["commander", "npm:7.2.0"],
             ["debug", "virtual:58c45d1abcfbfa1f01b5cd3e53439720ec2578dbff5c28038489c39241aed010924080812c1c0437781a7914d49dcd5ab8069f87498c3e84e93a3fb3ed6111b7#npm:4.3.2"],

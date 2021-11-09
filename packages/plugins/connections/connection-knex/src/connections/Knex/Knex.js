@@ -14,13 +14,15 @@
   limitations under the License.
 */
 
-import AxiosHttp from './AxiosHttpRequest/AxiosHttpRequest.js';
+import KnexBuilder from './KnexBuilder/KnexBuilder.js';
+import KnexRaw from './KnexRaw/KnexRaw.js';
 
 export default {
   import: {
-    schema: 'connections/AxiosHttp/AxiosHttpConnectionSchema.json',
+    schema: 'connections/Knex/KnexSchema.json',
   },
   requests: {
-    AxiosHttp,
+    KnexBuilder,
+    KnexRaw,
   },
 };

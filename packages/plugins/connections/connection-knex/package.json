@@ -1,5 +1,5 @@
 {
-  "name": "@lowdefy/connection-mongodb",
+  "name": "@lowdefy/connection-knex",
   "version": "3.22.0",
   "licence": "Apache-2.0",
   "description": "",
@@ -42,12 +42,14 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "3.22.0",
-    "mongodb": "3.7.3",
-    "saslprep": "1.0.3"
+    "knex": "0.95.13",
+    "mssql": "7.2.1",
+    "mysql": "2.18.1",
+    "pg": "8.7.1",
+    "sqlite3": "5.0.2"
   },
   "devDependencies": {
     "@lowdefy/ajv": "3.22.0",
-    "@shelf/jest-mongodb": "2.1.0",
     "@swc/cli": "0.1.51",
     "@swc/core": "1.2.107",
     "@swc/jest": "0.2.5",

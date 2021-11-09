@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import AxiosHttp from './AxiosHttpRequest/AxiosHttpRequest.js';
-
 export default {
   import: {
-    schema: 'connections/AxiosHttp/AxiosHttpConnectionSchema.json',
+    path: 'connections/Stripe/StripeRequest/StripeRequest.js',
+    schema: 'connections/Stripe/StripeRequest/StripeRequestSchema.json',
   },
-  requests: {
-    AxiosHttp,
+  meta: {
+    checkRead: false,
+    checkWrite: false,
   },
 };

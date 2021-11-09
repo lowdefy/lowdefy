@@ -28,7 +28,7 @@
   "type": "module",
   "exports": {
     ".": "./dist/index.js",
-    "./*": "./dist/*"
+    "./connections/*": "./dist/connections/*"
   },
   "files": [
     "dist/*"

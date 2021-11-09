@@ -23,7 +23,7 @@ import ElasticsearchUpdateByQuery from './ElasticsearchUpdateByQuery/Elasticsear
 
 export default {
   import: {
-    schema: 'connections/ElasticsearchSchema.json',
+    schema: 'connections/Elasticsearch/ElasticsearchSchema.json',
   },
   requests: {
     ElasticsearchDelete,

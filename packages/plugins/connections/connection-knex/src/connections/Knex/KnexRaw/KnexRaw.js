@@ -14,13 +14,17 @@
   limitations under the License.
 */
 
-import AxiosHttp from './AxiosHttpRequest/AxiosHttpRequest.js';
+import knex from 'knex';
 
-export default {
-  import: {
-    schema: 'connections/AxiosHttp/AxiosHttpConnectionSchema.json',
-  },
-  requests: {
-    AxiosHttp,
-  },
-};
+async function knexRaw({ request, connection }) {
+  const client = knex(connection);
+  const res = await client.raw(request.query, request.parameters);
+  Object.keys(res).forEach((key) => {
+    if (key.startsWith('_')) {
+      delete res[key];
+    }
+  });
+  return res;
+}
+
+export default knexRaw;

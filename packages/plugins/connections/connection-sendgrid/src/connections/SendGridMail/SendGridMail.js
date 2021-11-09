@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import AxiosHttp from './AxiosHttpRequest/AxiosHttpRequest.js';
+import SendGridMailSend from './SendGridMailSend/SendGridMailSend.js';
 
 export default {
   import: {
-    schema: 'connections/AxiosHttp/AxiosHttpConnectionSchema.json',
+    schema: 'connections/SendGridMail/SendGridMailSchema.json',
   },
   requests: {
-    AxiosHttp,
+    SendGridMailSend,
   },
 };

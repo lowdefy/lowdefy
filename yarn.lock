@@ -3589,9 +3589,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-knex@workspace:packages/plugins/connections/knex":
+"@lowdefy/connection-knex@workspace:packages/plugins/connections/connection-knex":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/connection-knex@workspace:packages/plugins/connections/knex"
+  resolution: "@lowdefy/connection-knex@workspace:packages/plugins/connections/connection-knex"
   dependencies:
     "@lowdefy/ajv": 3.22.0
     "@lowdefy/helpers": 3.22.0
@@ -3627,9 +3627,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-sendgrid@workspace:packages/plugins/connections/sendgrid":
+"@lowdefy/connection-sendgrid@workspace:packages/plugins/connections/connection-sendgrid":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/connection-sendgrid@workspace:packages/plugins/connections/sendgrid"
+  resolution: "@lowdefy/connection-sendgrid@workspace:packages/plugins/connections/connection-sendgrid"
   dependencies:
     "@lowdefy/ajv": 3.22.0
     "@lowdefy/helpers": 3.22.0
@@ -3643,9 +3643,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-stripe@workspace:packages/plugins/connections/stripe":
+"@lowdefy/connection-stripe@workspace:packages/plugins/connections/connection-stripe":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/connection-stripe@workspace:packages/plugins/connections/stripe"
+  resolution: "@lowdefy/connection-stripe@workspace:packages/plugins/connections/connection-stripe"
   dependencies:
     "@lowdefy/ajv": 3.22.0
     "@lowdefy/helpers": 3.22.0
