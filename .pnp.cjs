@@ -115,8 +115,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/plugins/connections/connection-elasticsearch"
       },
       {
+        "name": "@lowdefy/connection-google-sheets",
+        "reference": "workspace:packages/plugins/connections/connection-google-sheets"
+      },
+      {
         "name": "@lowdefy/connection-knex",
         "reference": "workspace:packages/plugins/connections/connection-knex"
+      },
+      {
+        "name": "@lowdefy/connection-mongodb",
+        "reference": "workspace:packages/plugins/connections/connection-mongodb"
       },
       {
         "name": "@lowdefy/connection-sendgrid",
@@ -125,14 +133,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       {
         "name": "@lowdefy/connection-stripe",
         "reference": "workspace:packages/plugins/connections/connection-stripe"
-      },
-      {
-        "name": "@lowdefy/connection-google-sheets",
-        "reference": "workspace:packages/plugins/connections/google-sheets"
-      },
-      {
-        "name": "@lowdefy/connection-mongodb",
-        "reference": "workspace:packages/plugins/connections/mongodb"
       },
       {
         "name": "@lowdefy/plugin-aws",
@@ -164,9 +164,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@lowdefy/color", ["workspace:packages/color"]],
       ["@lowdefy/connection-axios-http", ["virtual:c9d7c5a0f7602869dff02ed24b6a4fe62d4c9e4a4ede33ec34082ee9e4a5dd17f3e1bb396d56863e9bea8e8476d67351fe495fe7cebce9035a9e4de117e68169#workspace:packages/plugins/connections/connection-axios-http", "workspace:packages/plugins/connections/connection-axios-http"]],
       ["@lowdefy/connection-elasticsearch", ["workspace:packages/plugins/connections/connection-elasticsearch"]],
-      ["@lowdefy/connection-google-sheets", ["workspace:packages/plugins/connections/google-sheets"]],
+      ["@lowdefy/connection-google-sheets", ["workspace:packages/plugins/connections/connection-google-sheets"]],
       ["@lowdefy/connection-knex", ["workspace:packages/plugins/connections/connection-knex"]],
-      ["@lowdefy/connection-mongodb", ["workspace:packages/plugins/connections/mongodb"]],
+      ["@lowdefy/connection-mongodb", ["workspace:packages/plugins/connections/connection-mongodb"]],
       ["@lowdefy/connection-sendgrid", ["workspace:packages/plugins/connections/connection-sendgrid"]],
       ["@lowdefy/connection-stripe", ["workspace:packages/plugins/connections/connection-stripe"]],
       ["@lowdefy/docs", ["workspace:packages/docs"]],
@@ -5178,10 +5178,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@lowdefy/connection-google-sheets", [
-        ["workspace:packages/plugins/connections/google-sheets", {
-          "packageLocation": "./packages/plugins/connections/google-sheets/",
+        ["workspace:packages/plugins/connections/connection-google-sheets", {
+          "packageLocation": "./packages/plugins/connections/connection-google-sheets/",
           "packageDependencies": [
-            ["@lowdefy/connection-google-sheets", "workspace:packages/plugins/connections/google-sheets"],
+            ["@lowdefy/connection-google-sheets", "workspace:packages/plugins/connections/connection-google-sheets"],
             ["@lowdefy/ajv", "workspace:packages/ajv"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
             ["@swc/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.1.51"],
@@ -5216,18 +5216,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@lowdefy/connection-mongodb", [
-        ["workspace:packages/plugins/connections/mongodb", {
-          "packageLocation": "./packages/plugins/connections/mongodb/",
+        ["workspace:packages/plugins/connections/connection-mongodb", {
+          "packageLocation": "./packages/plugins/connections/connection-mongodb/",
           "packageDependencies": [
-            ["@lowdefy/connection-mongodb", "workspace:packages/plugins/connections/mongodb"],
+            ["@lowdefy/connection-mongodb", "workspace:packages/plugins/connections/connection-mongodb"],
             ["@lowdefy/ajv", "workspace:packages/ajv"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
-            ["@shelf/jest-mongodb", "virtual:f563d076d9d51e61926271024485599f42a587b690be9c4f62b2cb610956c56dd4ef1c7fe5815e2d766ccffd494788fd4c2105b0e7f6b864c7ab1537cfe37727#npm:2.1.0"],
+            ["@shelf/jest-mongodb", "virtual:8892fd55020404ef7b68cfff5e095a43035d4129ed154e1c28837e4f2c038ceb7761f36556ed437d5a606142082cb5505d80f52744c412cdeaaaf5d9c72e693c#npm:2.1.0"],
             ["@swc/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.1.51"],
             ["@swc/core", "npm:1.2.107"],
             ["@swc/jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.2.5"],
             ["jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"],
-            ["mongodb", "virtual:f563d076d9d51e61926271024485599f42a587b690be9c4f62b2cb610956c56dd4ef1c7fe5815e2d766ccffd494788fd4c2105b0e7f6b864c7ab1537cfe37727#npm:3.6.5"],
+            ["mongodb", "virtual:8892fd55020404ef7b68cfff5e095a43035d4129ed154e1c28837e4f2c038ceb7761f36556ed437d5a606142082cb5505d80f52744c412cdeaaaf5d9c72e693c#npm:3.6.5"],
             ["saslprep", "npm:1.0.3"]
           ],
           "linkType": "SOFT",
@@ -5985,13 +5985,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:f563d076d9d51e61926271024485599f42a587b690be9c4f62b2cb610956c56dd4ef1c7fe5815e2d766ccffd494788fd4c2105b0e7f6b864c7ab1537cfe37727#npm:2.1.0", {
-          "packageLocation": "./.yarn/__virtual__/@shelf-jest-mongodb-virtual-872d9c7f40/0/cache/@shelf-jest-mongodb-npm-2.1.0-b8d4e35c2e-c4550ce332.zip/node_modules/@shelf/jest-mongodb/",
+        ["virtual:8892fd55020404ef7b68cfff5e095a43035d4129ed154e1c28837e4f2c038ceb7761f36556ed437d5a606142082cb5505d80f52744c412cdeaaaf5d9c72e693c#npm:2.1.0", {
+          "packageLocation": "./.yarn/__virtual__/@shelf-jest-mongodb-virtual-d942c5f261/0/cache/@shelf-jest-mongodb-npm-2.1.0-b8d4e35c2e-c4550ce332.zip/node_modules/@shelf/jest-mongodb/",
           "packageDependencies": [
-            ["@shelf/jest-mongodb", "virtual:f563d076d9d51e61926271024485599f42a587b690be9c4f62b2cb610956c56dd4ef1c7fe5815e2d766ccffd494788fd4c2105b0e7f6b864c7ab1537cfe37727#npm:2.1.0"],
+            ["@shelf/jest-mongodb", "virtual:8892fd55020404ef7b68cfff5e095a43035d4129ed154e1c28837e4f2c038ceb7761f36556ed437d5a606142082cb5505d80f52744c412cdeaaaf5d9c72e693c#npm:2.1.0"],
             ["@types/mongodb", null],
             ["debug", "virtual:58c45d1abcfbfa1f01b5cd3e53439720ec2578dbff5c28038489c39241aed010924080812c1c0437781a7914d49dcd5ab8069f87498c3e84e93a3fb3ed6111b7#npm:4.3.2"],
-            ["mongodb", "virtual:f563d076d9d51e61926271024485599f42a587b690be9c4f62b2cb610956c56dd4ef1c7fe5815e2d766ccffd494788fd4c2105b0e7f6b864c7ab1537cfe37727#npm:3.6.5"],
+            ["mongodb", "virtual:8892fd55020404ef7b68cfff5e095a43035d4129ed154e1c28837e4f2c038ceb7761f36556ed437d5a606142082cb5505d80f52744c412cdeaaaf5d9c72e693c#npm:3.6.5"],
             ["mongodb-memory-server", "npm:7.3.6"],
             ["uuid", "npm:8.3.2"]
           ],
@@ -19643,10 +19643,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:f563d076d9d51e61926271024485599f42a587b690be9c4f62b2cb610956c56dd4ef1c7fe5815e2d766ccffd494788fd4c2105b0e7f6b864c7ab1537cfe37727#npm:3.6.5", {
-          "packageLocation": "./.yarn/__virtual__/mongodb-virtual-0078c3b640/0/cache/mongodb-npm-3.6.5-df947000e5-b18c3c1c53.zip/node_modules/mongodb/",
+        ["virtual:8892fd55020404ef7b68cfff5e095a43035d4129ed154e1c28837e4f2c038ceb7761f36556ed437d5a606142082cb5505d80f52744c412cdeaaaf5d9c72e693c#npm:3.6.5", {
+          "packageLocation": "./.yarn/__virtual__/mongodb-virtual-cdc6100ca4/0/cache/mongodb-npm-3.6.5-df947000e5-b18c3c1c53.zip/node_modules/mongodb/",
           "packageDependencies": [
-            ["mongodb", "virtual:f563d076d9d51e61926271024485599f42a587b690be9c4f62b2cb610956c56dd4ef1c7fe5815e2d766ccffd494788fd4c2105b0e7f6b864c7ab1537cfe37727#npm:3.6.5"],
+            ["mongodb", "virtual:8892fd55020404ef7b68cfff5e095a43035d4129ed154e1c28837e4f2c038ceb7761f36556ed437d5a606142082cb5505d80f52744c412cdeaaaf5d9c72e693c#npm:3.6.5"],
             ["aws4", null],
             ["bl", "npm:2.2.1"],
             ["bson", "npm:1.1.6"],
@@ -19696,7 +19696,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["https-proxy-agent", "npm:5.0.0"],
             ["md5-file", "npm:5.0.0"],
             ["mkdirp", "npm:1.0.4"],
-            ["mongodb", "virtual:f563d076d9d51e61926271024485599f42a587b690be9c4f62b2cb610956c56dd4ef1c7fe5815e2d766ccffd494788fd4c2105b0e7f6b864c7ab1537cfe37727#npm:3.6.5"],
+            ["mongodb", "virtual:8892fd55020404ef7b68cfff5e095a43035d4129ed154e1c28837e4f2c038ceb7761f36556ed437d5a606142082cb5505d80f52744c412cdeaaaf5d9c72e693c#npm:3.6.5"],
             ["new-find-package-json", "npm:1.1.0"],
             ["semver", "npm:7.3.5"],
             ["tar-stream", "npm:2.2.0"],

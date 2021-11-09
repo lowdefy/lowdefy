@@ -14,15 +14,13 @@
   limitations under the License.
 */
 
-import AwsS3PresignedGetObject from './AwsS3PresignedGetObject/index.js';
-import AwsS3PresignedPostPolicy from './AwsS3PresignedPostPolicy/index.js';
-
 export default {
   import: {
-    schema: 'connections/AwsS3Bucket/AwsS3BucketSchema.json',
+    path: 'connections/GoogleSheet/GoogleSheetUpdateMany/GoogleSheetUpdateMany.js',
+    schema: 'connections/GoogleSheet/GoogleSheetUpdateMany/GoogleSheetUpdateManySchema.json',
   },
-  requests: {
-    AwsS3PresignedGetObject,
-    AwsS3PresignedPostPolicy,
+  meta: {
+    checkRead: false,
+    checkWrite: true,
   },
 };

@@ -14,15 +14,22 @@
   limitations under the License.
 */
 
-import AwsS3PresignedGetObject from './AwsS3PresignedGetObject/index.js';
-import AwsS3PresignedPostPolicy from './AwsS3PresignedPostPolicy/index.js';
+import getCollection from '../getCollection.js';
+import { serialize, deserialize } from '../serialize.js';
 
-export default {
-  import: {
-    schema: 'connections/AwsS3Bucket/AwsS3BucketSchema.json',
-  },
-  requests: {
-    AwsS3PresignedGetObject,
-    AwsS3PresignedPostPolicy,
-  },
-};
+async function mongodbFindOne({ request, connection }) {
+  const deserializedRequest = deserialize(request);
+  const { query, options } = deserializedRequest;
+  const { collection, client } = await getCollection({ connection });
+  let res;
+  try {
+    res = await collection.findOne(query, options);
+  } catch (error) {
+    await client.close();
+    throw error;
+  }
+  await client.close();
+  return serialize(res);
+}
+
+export default mongodbFindOne;

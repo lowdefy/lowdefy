@@ -14,15 +14,17 @@
   limitations under the License.
 */
 
-import AwsS3PresignedGetObject from './AwsS3PresignedGetObject/index.js';
-import AwsS3PresignedPostPolicy from './AwsS3PresignedPostPolicy/index.js';
+import getSheet from '../getSheet.js';
+import { transformWrite } from '../transformTypes.js';
 
-export default {
-  import: {
-    schema: 'connections/AwsS3Bucket/AwsS3BucketSchema.json',
-  },
-  requests: {
-    AwsS3PresignedGetObject,
-    AwsS3PresignedPostPolicy,
-  },
-};
+async function googleSheetAppendMany({ request, connection }) {
+  const { rows, options = {} } = request;
+  const { raw } = options;
+  const sheet = await getSheet({ connection });
+  await sheet.addRows(transformWrite({ input: rows, types: connection.columnTypes }), { raw });
+  return {
+    insertedCount: rows.length,
+  };
+}
+
+export default googleSheetAppendMany;
