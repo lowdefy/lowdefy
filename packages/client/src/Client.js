@@ -17,7 +17,7 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-import { ErrorBoundary } from '@lowdefy/block-tools';
+import { ErrorBoundary } from '@lowdefy/block-utils';
 
 import DisplayMessage from './page/DisplayMessage';
 import LowdefyContext from './LowdefyContext';

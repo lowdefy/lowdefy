@@ -1,0 +1,88 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- id: default
+  type: Anchor
+- id: properties.title
+  type: Anchor
+  properties:
+    title: Anchor title
+- id: properties.icon string
+  type: Anchor
+  properties:
+    icon: FireFilled
+- id: properties.icon object
+  type: Anchor
+  properties:
+    title: Click here
+    icon:
+      color: red
+      name: RocketTwoTone
+- id: properties.icon and properties.title
+  type: Anchor
+  properties:
+    icon: LinkOutlined
+    title: This is the anchor title
+- id: properties.disabled
+  type: Anchor
+  properties:
+    disabled: true
+    title: disabled
+- id: properties.icon, properties.title and properties.disabled
+  type: Anchor
+  properties:
+    icon: LinkOutlined
+    title: This is the anchor title
+    disabled: true
+- id: properties.strong
+  type: Anchor
+  properties:
+    strong: true
+    title: Strong
+- id: properties.href
+  type: Anchor
+  properties:
+    href: https://lowdefy.com
+- id: properties.href, title and target
+  type: Anchor
+  properties:
+    href: https://lowdefy.com
+    newTab: true
+    title: New tab Website
+- id: properties.href and target
+  type: Anchor
+  properties:
+    href: /Button
+    newTab: true
+    title: To Button
+- id: properties.href and rel
+  type: Anchor
+  properties:
+    href: https://lowdefy.com
+    rel: 'noopener'
+- id: properties.style
+  type: Anchor
+  properties:
+    title: Click here
+    style:
+      color: green !important
+      fontSize: 18
+- id: properties.style with icon
+  type: Anchor
+  properties:
+    title: Click here
+    icon: LinkOutlined
+    style:
+      color: green !important
+      fontSize: 8

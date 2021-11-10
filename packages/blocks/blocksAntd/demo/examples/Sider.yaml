@@ -1,6 +1,0 @@
-- id: default
-  type: Sider
-- id: properties.theme
-  type: Sider
-  properties:
-    theme: dark

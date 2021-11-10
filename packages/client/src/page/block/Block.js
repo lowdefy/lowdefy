@@ -16,7 +16,7 @@
 
 import React, { Suspense, useState } from 'react';
 
-import { ErrorBoundary } from '@lowdefy/block-tools';
+import { ErrorBoundary } from '@lowdefy/block-utils';
 
 import CategorySwitch from './CategorySwitch';
 import LoadBlock from './LoadBlock';
