@@ -17,5 +17,32 @@
 import validationExamples from './validationExamples.js';
 
 test('validationExamples', () => {
-  expect(validationExamples).toMatchInlineSnapshot();
+  expect(validationExamples).toMatchInlineSnapshot(`
+    Array [
+      Object {
+        "errors": Array [],
+        "status": null,
+        "warnings": Array [],
+      },
+      Object {
+        "errors": Array [],
+        "status": "success",
+        "warnings": Array [],
+      },
+      Object {
+        "errors": Array [
+          "validation error",
+        ],
+        "status": "error",
+        "warnings": Array [],
+      },
+      Object {
+        "errors": Array [],
+        "status": "warning",
+        "warnings": Array [
+          "validation warning",
+        ],
+      },
+    ]
+  `);
 });
