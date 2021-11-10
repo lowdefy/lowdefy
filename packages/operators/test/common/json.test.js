@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import json from '../../src/common/json';
+import json from '../../src/common/json.js';
 
 test('_json.parse string unquoted', () => {
   expect(() =>

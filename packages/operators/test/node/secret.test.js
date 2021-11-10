@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import secret from '../../src/node/secret';
-import getFromObject from '../../src/getFromObject';
+import secret from '../../src/node/secret.js';
+import getFromObject from '../../src/getFromObject.js';
 
 jest.mock('../../src/getFromObject');
 

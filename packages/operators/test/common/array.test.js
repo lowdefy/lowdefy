@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import NodeParser from '../../src/nodeParser';
-import array from '../../src/common/array';
-import _function from '../../src/common/function';
+import NodeParser from '../../src/nodeParser.js';
+import array from '../../src/common/array.js';
+import _function from '../../src/common/function.js';
 
 const parser = new NodeParser();
 beforeAll(async () => {

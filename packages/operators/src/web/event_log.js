@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getFromObject from '../getFromObject';
+import getFromObject from '../getFromObject.js';
 
 function _event_log({ arrayIndices, eventLog, location, params }) {
   return getFromObject({

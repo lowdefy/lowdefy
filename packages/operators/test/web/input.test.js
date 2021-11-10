@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import input from '../../src/web/input';
-import getFromObject from '../../src/getFromObject';
+import input from '../../src/web/input.js';
+import getFromObject from '../../src/getFromObject.js';
 
 jest.mock('../../src/getFromObject');
 

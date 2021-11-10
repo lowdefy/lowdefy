@@ -1,5 +1,5 @@
-import commonOperators from '../src/common';
-import webOperators from '../src/web';
+import commonOperators from '../src/common/index.js';
+import webOperators from '../src/web/index.js';
 
 const operators = Object.keys({
   ...commonOperators,

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import diff from '../../src/node/diff';
+import diff from '../../src/node/diff.js';
 
 const location = 'locationId';
 

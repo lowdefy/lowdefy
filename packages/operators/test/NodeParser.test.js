@@ -15,7 +15,7 @@
 */
 
 /* eslint-disable max-classes-per-file */
-import NodeParser from '../src/nodeParser';
+import NodeParser from '../src/nodeParser.js';
 
 const payload = {
   string: 'Some String',
@@ -31,6 +31,7 @@ test('parse input undefined', async () => {
 
 test('parse object', async () => {
   const input = { a: { _payload: 'string' } };
+
   const parser = new NodeParser({ payload });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId' });

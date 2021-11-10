@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import lte from '../../src/common/lte';
+import lte from '../../src/common/lte.js';
 
 const location = 'locationId';
 

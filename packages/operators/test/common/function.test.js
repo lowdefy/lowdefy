@@ -13,10 +13,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import NodeParser from '../../src/nodeParser';
-import WebParser from '../../src/webParser';
-import _function from '../../src/common/function';
-import { operators } from '../testContext';
+import NodeParser from '../../src/nodeParser.js';
+import WebParser from '../../src/webParser.js';
+import _function from '../../src/common/function.js';
+import { operators } from '../testContext.js';
 
 const state = {
   string: 'Some String',

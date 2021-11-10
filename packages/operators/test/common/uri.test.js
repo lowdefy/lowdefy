@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import uri from '../../src/common/uri';
+import uri from '../../src/common/uri.js';
 
 test('_uri.decode strings', () => {
   expect(

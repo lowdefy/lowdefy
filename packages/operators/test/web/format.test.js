@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
-import format from '../../src/web/format';
 import formatters from '@lowdefy/format';
+
+import format from '../../src/web/format.js';
 
 const location = 'location';
 const params = { params: { formatParams: true }, on: 'on' };

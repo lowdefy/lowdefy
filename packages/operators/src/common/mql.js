@@ -16,7 +16,7 @@
 
 import mingo from 'mingo';
 import { get, type } from '@lowdefy/helpers';
-import runClass from '../runClass';
+import runClass from '../runClass.js';
 
 import 'mingo/init/system';
 

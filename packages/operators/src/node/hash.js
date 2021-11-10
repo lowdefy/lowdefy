@@ -15,7 +15,7 @@
 */
 
 import crypto from 'crypto';
-import runClass from '../runClass';
+import runClass from '../runClass.js';
 
 function hash(algorithm, data) {
   return crypto.createHash(algorithm).update(data).digest('hex');

@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import runInstance from '../runInstance';
 import { type } from '@lowdefy/helpers';
+import runInstance from '../runInstance.js';
 
 const prepRegex = (regexIndex, flagsIndex) => (args) => {
   if (args[regexIndex]) {

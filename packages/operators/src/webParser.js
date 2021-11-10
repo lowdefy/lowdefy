@@ -16,8 +16,8 @@
 
 import { applyArrayIndices, serializer, type } from '@lowdefy/helpers';
 
-import commonOperators from './common';
-import webOperators from './web';
+import commonOperators from './common/index.js';
+import webOperators from './web/index.js';
 
 class WebParser {
   constructor({ context }) {
@@ -38,13 +38,15 @@ class WebParser {
     if (!type.isArray(this.context.operators)) {
       throw new Error('context.operators must be an array.');
     }
+    const operators = this.operators;
+    const operations = this.operations;
     await Promise.all(
       this.context.operators.map(async (operator) => {
-        if (this.operators[operator]) {
-          const fn = await import(`./${this.operators[operator]}.js`);
-          this.operations[operator] = fn.default;
-          if (this.operations[operator].init) {
-            await this.operations[operator].init();
+        if (operators[operator]) {
+          const fn = await import(`./${operators[operator]}.js`);
+          operations[operator] = fn.default;
+          if (operations[operator].init) {
+            await operations[operator].init();
           }
         }
       })
@@ -52,6 +54,9 @@ class WebParser {
   }
 
   parse({ actions, args, arrayIndices, event, input, location }) {
+    const operations = this.operations;
+    const context = this.context;
+
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
     }
@@ -65,30 +70,30 @@ class WebParser {
       throw new Error('Operator parser location must be a string.');
     }
     const errors = [];
-    const { inputs, lowdefyGlobal, menus, urlQuery, user } = this.context.lowdefy;
+    const { inputs, lowdefyGlobal, menus, urlQuery, user } = context.lowdefy;
     const reviver = (_, value) => {
       if (type.isObject(value) && Object.keys(value).length === 1) {
         const key = Object.keys(value)[0];
         const [op, methodName] = key.split('.');
         try {
-          if (!type.isUndefined(this.operations[op])) {
-            const res = this.operations[op]({
-              eventLog: this.context.eventLog,
+          if (!type.isUndefined(operations[op])) {
+            const res = operations[op]({
+              eventLog: context.eventLog,
               actions,
               args,
               arrayIndices,
-              context: this.context,
+              context: context,
               env: 'web',
               event,
-              input: inputs ? inputs[this.context.id] : {},
+              input: inputs ? inputs[context.id] : {},
               location: location ? applyArrayIndices(arrayIndices, location) : null,
               lowdefyGlobal: lowdefyGlobal || {},
               menus: menus || {},
               methodName,
-              operations: this.operations,
+              operations: operations,
               params: value[key],
-              requests: this.context.requests,
-              state: this.context.state,
+              requests: context.requests,
+              state: context.state,
               urlQuery: urlQuery || {},
               user: user || {},
               parser: this,

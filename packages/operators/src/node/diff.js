@@ -15,7 +15,7 @@
 */
 
 import { diff } from 'deep-diff';
-import runClass from '../runClass';
+import runClass from '../runClass.js';
 
 function deep(lhs, rhs) {
   const result = diff(lhs, rhs);

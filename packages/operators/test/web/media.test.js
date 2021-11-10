@@ -15,7 +15,7 @@
 */
 
 /* eslint-disable no-global-assign */
-import media from '../../src/web/media';
+import media from '../../src/web/media.js';
 
 console.error = () => {};
 

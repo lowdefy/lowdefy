@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import _math from '../../src/common/math';
+import _math from '../../src/common/math.js';
 
 test('_math called with no method or params', () => {
   expect(() => _math({ location: 'locationId' })).toThrowErrorMatchingInlineSnapshot(`

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import NodeParser from './nodeParser';
-import WebParser from './webParser';
+import NodeParser from './nodeParser.js';
+import WebParser from './webParser.js';
 
 export { NodeParser, WebParser };

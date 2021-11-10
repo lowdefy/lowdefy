@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import NodeParser from '../../src/nodeParser';
+import NodeParser from '../../src/nodeParser.js';
 
 const arr0 = [0, 0];
 const arr1 = [0, 1];
