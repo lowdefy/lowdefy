@@ -20,8 +20,8 @@ import moment from 'moment';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
-import Label from '../Label/Label';
-import disabledDate from '../../disabledDate';
+import Label from '../Label/Label.js';
+import disabledDate from '../../disabledDate.js';
 
 const MonthPicker = DatePicker.MonthPicker;
 

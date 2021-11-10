@@ -21,7 +21,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { Col, Row } from 'antd';
-import CSSMotion from 'rc-animate/lib/CSSMotion';
+import CSSMotion from 'rc-animate/lib/CSSMotion.js';
 import {
   LoadingOutlined,
   CloseCircleFilled,
@@ -29,7 +29,7 @@ import {
   ExclamationCircleFilled,
 } from '@ant-design/icons';
 
-import labelLogic from './labelLogic';
+import labelLogic from './labelLogic.js';
 
 const iconMap = {
   success: CheckCircleFilled,

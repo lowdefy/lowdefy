@@ -16,10 +16,12 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import Pagination from './Pagination';
+import Block from './Pagination.js';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
 import schema from './schema.json';
 
-runRenderTests({ examples, Block: Pagination, meta });
+const { meta } = block;
+
+runRenderTests({ examples, Block, meta });
 runBlockSchemaTests({ examples, meta, schema });

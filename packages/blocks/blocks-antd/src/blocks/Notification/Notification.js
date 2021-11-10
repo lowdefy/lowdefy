@@ -19,7 +19,7 @@ import { notification } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
-import Button from '../Button/Button';
+import Button from '../Button/Button.js';
 
 const NotificationBlock = ({ blockId, events, Icon, properties, methods }) => {
   useEffect(() => {

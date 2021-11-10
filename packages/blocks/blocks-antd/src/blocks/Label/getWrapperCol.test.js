@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getWrapperCol from './getWrapperCol';
+import getWrapperCol from './getWrapperCol.js';
 
 test('with inline', () => {
   expect(getWrapperCol({}, true)).toEqual({ flex: '1 1 auto' });

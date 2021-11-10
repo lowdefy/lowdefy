@@ -19,7 +19,9 @@ import { Modal } from 'antd';
 
 import ConfirmModalBlock from './ConfirmModal';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('antd/lib/modal', () => {
   const modal = jest.fn(() => 'mocked');

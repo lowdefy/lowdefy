@@ -19,7 +19,7 @@ import ReactECharts from 'echarts-for-react';
 
 import EChart from './EChart';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
 
 jest.mock('echarts-for-react', () => {
   return jest.fn(() => 'mocked');

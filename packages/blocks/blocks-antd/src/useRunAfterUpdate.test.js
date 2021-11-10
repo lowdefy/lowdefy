@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import useRunAfterUpdate from './useRunAfterUpdate';
+import useRunAfterUpdate from './useRunAfterUpdate.js';
 import { useRef, useLayoutEffect } from 'react';
 
 jest.mock('react', () => {

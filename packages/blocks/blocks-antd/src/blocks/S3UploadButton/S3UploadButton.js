@@ -19,7 +19,7 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 import { get } from '@lowdefy/helpers';
 import { Upload } from 'antd';
 
-import Button from '../Button/Button';
+import Button from '../Button/Button.js';
 
 const makeFileValue = (file, s3Parameters) => {
   const { lastModified, name, percent, size, status, type, uid } = file;

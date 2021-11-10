@@ -19,16 +19,16 @@ import { Link } from 'react-router-dom';
 import { get, mergeObjects, type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-import Affix from '../Affix/Affix';
-import Breadcrumb from '../Breadcrumb/Breadcrumb';
-import Button from '../Button/Button';
-import Content from '../Content/Content';
-import Footer from '../Footer/Footer';
-import Header from '../Header/Header';
-import Layout from '../Layout/Layout';
-import Menu from '../Menu/Menu';
-import MobileMenu from '../MobileMenu/MobileMenu';
-import Sider from '../Sider/Sider';
+import Affix from '../Affix/Affix.js';
+import Breadcrumb from '../Breadcrumb/Breadcrumb.js';
+import Button from '../Button/Button.js';
+import Content from '../Content/Content.js';
+import Footer from '../Footer/Footer.js';
+import Header from '../Header/Header.js';
+import Layout from '../Layout/Layout.js';
+import Menu from '../Menu/Menu.js';
+import MobileMenu from '../MobileMenu/MobileMenu.js';
+import Sider from '../Sider/Sider.js';
 
 const PageSiderMenu = ({
   basePath,

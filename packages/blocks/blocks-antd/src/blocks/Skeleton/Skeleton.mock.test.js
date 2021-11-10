@@ -17,9 +17,11 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Skeleton } from 'antd';
 
-import SkeletonBlock from './Skeleton';
+import Block from './Skeleton.js';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('antd/lib/skeleton', () => {
   const skeleton = jest.fn(() => 'mocked');
@@ -48,4 +50,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: SkeletonBlock, meta, mocks });
+runMockRenderTests({ examples, Block, meta, mocks });

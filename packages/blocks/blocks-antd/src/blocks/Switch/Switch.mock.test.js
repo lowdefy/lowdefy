@@ -17,9 +17,11 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Switch } from 'antd';
 
-import Block from './Switch';
+import Block from './Switch.js';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('antd/lib/switch', () => {
   const comp = jest.fn(() => 'mocked');

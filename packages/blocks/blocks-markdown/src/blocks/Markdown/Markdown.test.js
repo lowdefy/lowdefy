@@ -18,7 +18,7 @@ import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import Markdown from './Markdown';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
 import schema from './schema.json';
 
 runRenderTests({ examples, Block: Markdown, meta });

@@ -19,8 +19,10 @@ import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 import validationsExamples from '../../validationExamples.js';
 import CheckboxSwitch from './CheckboxSwitch';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
 import schema from './schema.json';
+
+const { meta } = block;
 
 runRenderTests({ examples, Block: CheckboxSwitch, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta, schema });

@@ -19,8 +19,10 @@ import { Drawer } from 'antd';
 
 import DrawerBlock from './Drawer';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
 import schema from './schema.json';
+
+const { meta } = block;
 
 jest.mock('antd/lib/drawer', () => {
   return jest.fn(() => 'mocked');

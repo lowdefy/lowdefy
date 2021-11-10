@@ -17,9 +17,11 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Pagination } from 'antd';
 
-import Block from './Pagination';
+import Block from './Pagination.js';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('antd/lib/pagination', () => {
   const comp = jest.fn(() => 'mocked');

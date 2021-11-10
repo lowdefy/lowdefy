@@ -19,7 +19,9 @@ import { Checkbox } from 'antd';
 
 import CheckboxSelectorBlock from './CheckboxSelector';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('antd/lib/checkbox', () => {
   const checkbox = jest.fn(() => 'mocked');

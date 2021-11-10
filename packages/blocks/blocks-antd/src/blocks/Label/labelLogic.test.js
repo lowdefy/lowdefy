@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import labelLogic from './labelLogic';
+import labelLogic from './labelLogic.js';
 
 const makeCssClass = jest.fn();
 const makeCssClassImp = (style, op) => JSON.stringify({ style, options: op });

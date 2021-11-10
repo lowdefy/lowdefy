@@ -1,22 +1,3 @@
 {
-  "presets": [
-    [
-      "@babel/preset-env",
-      {
-        "targets": {
-          "esmodules": true
-        }
-      }
-    ],
-    "@babel/preset-react"
-  ],
-  "plugins": [
-    [
-      "import",
-      {
-        "libraryName": "antd",
-        "style": true
-      }
-    ]
-  ]
+  "presets": ["@babel/preset-react"]
 }

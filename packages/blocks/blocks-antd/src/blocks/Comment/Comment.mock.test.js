@@ -19,7 +19,9 @@ import { Comment } from 'antd';
 
 import CommentBlock from './Comment';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('antd/lib/comment', () => {
   return jest.fn(() => 'mocked');

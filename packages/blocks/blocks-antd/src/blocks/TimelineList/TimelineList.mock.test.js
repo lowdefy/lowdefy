@@ -17,9 +17,11 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Timeline } from 'antd';
 
-import TimelineList from './TimelineList';
+import Block from './TimelineList.js';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('antd/lib/timeline', () => {
   const timeline = jest.fn((props) => props.toString());
@@ -34,4 +36,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: TimelineList, meta, mocks });
+runMockRenderTests({ examples, Block, meta, mocks });

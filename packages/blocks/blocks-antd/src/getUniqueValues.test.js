@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getUniqueValues from './getUniqueValues';
+import getUniqueValues from './getUniqueValues.js';
 
 test('primitive string - return all items', () => {
   const arr = ['a', 'b', 'c'];

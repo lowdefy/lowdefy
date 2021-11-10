@@ -17,9 +17,11 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { GithubPicker } from 'react-color';
 
-import GithubColorSelectorBlock from './GithubColorSelector';
+import Block from './GithubColorSelector.js';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('react-color', () => {
   const selectors = {
@@ -35,4 +37,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: GithubColorSelectorBlock, meta, mocks });
+runMockRenderTests({ examples, Block, meta, mocks });

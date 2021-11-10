@@ -19,7 +19,9 @@ import { AutoComplete } from 'antd';
 
 import Block from './AutoComplete';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('antd/lib/auto-complete', () => {
   const comp = jest.fn(() => 'mocked');

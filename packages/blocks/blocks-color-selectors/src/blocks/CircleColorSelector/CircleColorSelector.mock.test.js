@@ -17,9 +17,11 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { CirclePicker } from 'react-color';
 
-import CircleColorSelectorBlock from './CircleColorSelector';
+import Block from './CircleColorSelector.js';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('react-color', () => {
   const selectors = {
@@ -35,4 +37,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: CircleColorSelectorBlock, meta, mocks });
+runMockRenderTests({ examples, Block, meta, mocks });

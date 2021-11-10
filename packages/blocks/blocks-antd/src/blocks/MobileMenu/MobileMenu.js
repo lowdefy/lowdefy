@@ -18,9 +18,9 @@ import React, { useState, useEffect } from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import { mergeObjects, get } from '@lowdefy/helpers';
 
-import Button from '../Button/Button';
-import Drawer from '../Drawer/Drawer';
-import Menu from '../Menu/Menu';
+import Button from '../Button/Button.js';
+import Drawer from '../Drawer/Drawer.js';
+import Menu from '../Menu/Menu.js';
 
 const MobileMenu = ({ basePath, blockId, events, methods, menus, pageId, properties, rename }) => {
   const [openState, setOpen] = useState(false);

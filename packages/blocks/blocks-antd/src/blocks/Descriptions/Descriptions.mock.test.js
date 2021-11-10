@@ -19,7 +19,9 @@ import { Descriptions } from 'antd';
 
 import Block from './Descriptions';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('antd/lib/descriptions', () => {
   const comp = jest.fn(() => 'mocked');

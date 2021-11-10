@@ -16,10 +16,12 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import Paragraph from './Paragraph';
+import Block from './Paragraph.js';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
 import schema from './schema.json';
 
-runRenderTests({ examples, Block: Paragraph, meta });
+const { meta } = block;
+
+runRenderTests({ examples, Block, meta });
 runBlockSchemaTests({ examples, meta, schema });

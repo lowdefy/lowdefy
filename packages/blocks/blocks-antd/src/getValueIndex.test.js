@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getValueIndex from './getValueIndex';
+import getValueIndex from './getValueIndex.js';
 
 test('primitive string single', () => {
   expect(getValueIndex('b', ['a', 'b', 'c'])).toEqual('1');

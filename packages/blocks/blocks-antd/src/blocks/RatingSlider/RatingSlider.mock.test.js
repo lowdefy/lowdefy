@@ -17,9 +17,11 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Slider, Checkbox } from 'antd';
 
-import Block from './RatingSlider';
+import Block from './RatingSlider.js';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('antd/lib/checkbox', () => {
   const comp = jest.fn(() => 'mocked');

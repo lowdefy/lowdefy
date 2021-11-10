@@ -15,7 +15,7 @@
 */
 
 import React, { useState, useEffect } from 'react';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 import { get } from '@lowdefy/helpers';
 import { Modal } from 'antd';
 

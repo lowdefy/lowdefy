@@ -17,9 +17,11 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Progress } from 'antd';
 
-import ProgressBlock from './Progress';
+import Block from './Progress.js';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('antd/lib/progress', () => {
   return jest.fn(() => 'mocked');
@@ -32,4 +34,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: ProgressBlock, meta, mocks });
+runMockRenderTests({ examples, Block, meta, mocks });

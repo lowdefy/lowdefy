@@ -17,9 +17,11 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Row, Col } from 'antd';
 
-import Block from './Label';
+import Block from './Label.js';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('antd/lib/row', () => {
   const comp = jest.fn(() => 'mocked');

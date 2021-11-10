@@ -16,10 +16,12 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import Skeleton from './Skeleton';
+import Block from './Skeleton.js';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
 import schema from './schema.json';
 
-runRenderTests({ examples, Block: Skeleton, meta });
+const { meta } = block;
+
+runRenderTests({ examples, Block, meta });
 runBlockSchemaTests({ examples, meta, schema });

@@ -19,8 +19,8 @@ import { type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import { Input } from 'antd';
 
-import Label from '../Label/Label';
-import useRunAfterUpdate from '../../useRunAfterUpdate';
+import Label from '../Label/Label.js';
+import useRunAfterUpdate from '../../useRunAfterUpdate.js';
 
 const TextAreaComp = Input.TextArea;
 

@@ -17,9 +17,11 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Result } from 'antd';
 
-import ResultBlock from './Result';
+import Block from './Result.js';
 import examples from './examples.yaml';
-import meta from './index';
+import block from './index.js';
+
+const { meta } = block;
 
 jest.mock('antd/lib/result', () => {
   return jest.fn(() => 'mocked');
@@ -32,4 +34,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: ResultBlock, meta, mocks });
+runMockRenderTests({ examples, Block, meta, mocks });
