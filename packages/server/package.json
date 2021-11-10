@@ -25,34 +25,31 @@
     "type": "git",
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
-  "main": "dist/index.js",
+  "type": "module",
   "files": [
     "dist/*"
   ],
   "scripts": {
-    "babel": "babel src --out-dir dist",
-    "build": "yarn clean && yarn babel",
-    "clean": "rm -rf dist",
-    "prepare": "yarn build",
-    "start": "nodemon dist/server.js"
+    "build": "next build",
+    "dev": "next dev",
+    "start": "next start",
+    "lint": "next lint",
+    "next": "next"
   },
   "dependencies": {
     "@lowdefy/api": "3.22.0",
-    "@lowdefy/client": "3.22.0",
     "@lowdefy/helpers": "3.22.0",
     "@lowdefy/node-utils": "3.22.0",
-    "fastify": "3.22.1",
-    "fastify-static": "4.4.2"
+    "next": "12.0.3",
+    "next-auth": "4.0.0-beta.6",
+    "react": "alpha",
+    "react-dom": "alpha"
   },
   "devDependencies": {
-    "@babel/cli": "7.15.7",
-    "@babel/core": "7.15.8",
-    "@babel/preset-env": "7.15.8",
-    "@babel/preset-react": "7.14.5",
-    "@lowdefy/block-utils": "3.22.0",
-    "babel-jest": "27.3.1",
-    "jest": "27.3.1",
-    "nodemon": "2.0.14"
+    "@next/eslint-plugin-next": "12.0.2",
+    "less": "4.1.2",
+    "less-loader": "10.2.0",
+    "next-with-less": "2.0.2"
   },
   "publishConfig": {
     "access": "public"

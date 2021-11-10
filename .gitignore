@@ -9,6 +9,7 @@
 **/es/*
 **/coverage/*
 **/.lowdefy/*
+**/.next/*
 **/.env
 **/lowdefy.yaml
 !packages/docs/lowdefy.yaml

@@ -15,7 +15,7 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import lowdefySchema from '../lowdefySchema.json';
+import lowdefySchema from '../lowdefySchema.js';
 import formatErrorMessage from '../utils/formatErrorMessage.js';
 
 async function testSchema({ components, context }) {

@@ -14,26 +14,14 @@
   limitations under the License.
 */
 
-import { get } from '@lowdefy/helpers';
+import findHomePageId from '../rootConfig/findHomePageId.js';
+import getMenus from '../rootConfig/menus/getMenus.js';
 
-function getHomePageId({ config }, { menus }) {
-  if (get(config, 'homePageId')) {
-    return get(config, 'homePageId');
-  }
-  let defaultMenu = menus.find((menu) => menu.menuId === 'default');
-  if (!defaultMenu) {
-    // eslint-disable-next-line prefer-destructuring
-    defaultMenu = menus[0];
-  }
-  let homePageId = null;
-  homePageId = get(defaultMenu, 'links.0.pageId', { default: null });
-  if (!homePageId) {
-    homePageId = get(defaultMenu, 'links.0.links.0.pageId', { default: null });
-  }
-  if (!homePageId) {
-    homePageId = get(defaultMenu, 'links.0.links.0.links.0.pageId', { default: null });
-  }
-  return homePageId;
+async function getHomePageId(context) {
+  // TODO: We can optimise here as we don't need to read menus if homepageId is configured
+  // but not sure if it is worth the added complexity
+  const menus = await getMenus(context);
+  return findHomePageId(context, { menus });
 }
 
 export default getHomePageId;
