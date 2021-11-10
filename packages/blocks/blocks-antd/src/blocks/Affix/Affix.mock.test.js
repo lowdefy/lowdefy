@@ -15,24 +15,28 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { Affix } from 'antd';
 
-import Block from './Affix.js';
 import examples from './examples.yaml';
 import block from './index.js';
 import schema from './schema.json';
 
 const { meta } = block;
 
-jest.mock('antd/lib/affix', () => {
-  return jest.fn(() => 'mocked');
-});
+jest.mock('antd', () => ({
+  Affix: jest.fn(() => 'mocked'),
+}));
 
 const mocks = [
   {
-    name: 'default',
-    fn: Affix,
+    getMockFn: async () => {
+      const antd = await import('antd');
+      return antd.Affix;
+    },
+    getBlock: async () => {
+      const Block = await import('./Affix.js');
+      return Block.default;
+    },
+    name: 'Affix',
   },
 ];
-
-runMockRenderTests({ examples, Block, meta, mocks, schema });
+runMockRenderTests({ examples, meta, mocks, schema });
