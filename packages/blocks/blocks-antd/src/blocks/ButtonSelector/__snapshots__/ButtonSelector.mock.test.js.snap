@@ -1,0 +1,1991 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mock render - default - value[0] - ButtonSelector 1`] = `Array []`;
+
+exports[`Mock render - default - value[0] - ButtonSelector 2`] = `
+Array [
+  Array [
+    Object {
+      "buttonStyle": "solid",
+      "children": Array [],
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "default_input",
+      "onChange": [Function],
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - default - value[0] - ButtonSelector 3`] = `Array []`;
+
+exports[`Mock render - properties.buttonStyle: outline - value[0] - ButtonSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.buttonStyle: outline - value[0] - ButtonSelector 2`] = `
+Array [
+  Array [
+    Object {
+      "buttonStyle": "outline",
+      "children": Array [
+        <mockConstructor
+          id="properties.buttonStyle: outline_0"
+          value="0"
+        >
+          <HtmlComponent
+            html="Option 1"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          id="properties.buttonStyle: outline_1"
+          value="1"
+        >
+          <HtmlComponent
+            html="Option 2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.buttonStyle: outline_input",
+      "onChange": [Function],
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.buttonStyle: outline - value[0] - ButtonSelector 3`] = `Array []`;
+
+exports[`Mock render - properties.color_red - value[0] - ButtonSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.color_red - value[0] - ButtonSelector 2`] = `
+Array [
+  Array [
+    Object {
+      "buttonStyle": "solid",
+      "children": Array [
+        <mockConstructor
+          id="properties.color_red_0"
+          value="0"
+        >
+          <HtmlComponent
+            html="Option 1"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "& > label.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)": Object {
+                            "backgroundColor": "red !important",
+                            "borderColor": "red !important",
+                          },
+                        },
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"& > label.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)\\":{\\"backgroundColor\\":\\"red !important\\",\\"borderColor\\":\\"red !important\\"}},null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          id="properties.color_red_1"
+          value="1"
+        >
+          <HtmlComponent
+            html="Option 2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "& > label.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)": Object {
+                            "backgroundColor": "red !important",
+                            "borderColor": "red !important",
+                          },
+                        },
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"& > label.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)\\":{\\"backgroundColor\\":\\"red !important\\",\\"borderColor\\":\\"red !important\\"}},null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[{\\"& > label.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)\\":{\\"backgroundColor\\":\\"red !important\\",\\"borderColor\\":\\"red !important\\"}},null]}",
+      "disabled": undefined,
+      "id": "properties.color_red_input",
+      "onChange": [Function],
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.color_red - value[0] - ButtonSelector 3`] = `Array []`;
+
+exports[`Mock render - properties.color_yellow - value[0] - ButtonSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.color_yellow - value[0] - ButtonSelector 2`] = `
+Array [
+  Array [
+    Object {
+      "buttonStyle": "outline",
+      "children": Array [
+        <mockConstructor
+          id="properties.color_yellow_0"
+          value="0"
+        >
+          <HtmlComponent
+            html="Option 1"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "& > label.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)": Object {
+                            "backgroundColor": "yellow !important",
+                            "borderColor": "yellow !important",
+                          },
+                        },
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"& > label.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)\\":{\\"backgroundColor\\":\\"yellow !important\\",\\"borderColor\\":\\"yellow !important\\"}},null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          id="properties.color_yellow_1"
+          value="1"
+        >
+          <HtmlComponent
+            html="Option 2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "& > label.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)": Object {
+                            "backgroundColor": "yellow !important",
+                            "borderColor": "yellow !important",
+                          },
+                        },
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"& > label.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)\\":{\\"backgroundColor\\":\\"yellow !important\\",\\"borderColor\\":\\"yellow !important\\"}},null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[{\\"& > label.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)\\":{\\"backgroundColor\\":\\"yellow !important\\",\\"borderColor\\":\\"yellow !important\\"}},null]}",
+      "disabled": undefined,
+      "id": "properties.color_yellow_input",
+      "onChange": [Function],
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.color_yellow - value[0] - ButtonSelector 3`] = `Array []`;
+
+exports[`Mock render - properties.disabled: true - value[0] - ButtonSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.disabled: true - value[0] - ButtonSelector 2`] = `
+Array [
+  Array [
+    Object {
+      "buttonStyle": "solid",
+      "children": Array [
+        <mockConstructor
+          id="properties.disabled: true_0"
+          value="0"
+        >
+          <HtmlComponent
+            html="Option 1"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          id="properties.disabled: true_1"
+          value="1"
+        >
+          <HtmlComponent
+            html="Option 2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": true,
+      "id": "properties.disabled: true_input",
+      "onChange": [Function],
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.disabled: true - value[0] - ButtonSelector 3`] = `Array []`;
+
+exports[`Mock render - properties.label.colon: false - value[0] - ButtonSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.label.colon: false - value[0] - ButtonSelector 2`] = `
+Array [
+  Array [
+    Object {
+      "buttonStyle": "solid",
+      "children": Array [
+        <mockConstructor
+          id="properties.label.colon: false_0"
+          value="0"
+        >
+          <HtmlComponent
+            html="Option 1"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          id="properties.label.colon: false_1"
+          value="1"
+        >
+          <HtmlComponent
+            html="Option 2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.label.colon: false_input",
+      "onChange": [Function],
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label.colon: false - value[0] - ButtonSelector 3`] = `Array []`;
+
+exports[`Mock render - properties.label.disabled: true - value[0] - ButtonSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.label.disabled: true - value[0] - ButtonSelector 2`] = `
+Array [
+  Array [
+    Object {
+      "buttonStyle": "solid",
+      "children": Array [
+        <mockConstructor
+          id="properties.label.disabled: true_0"
+          value="0"
+        >
+          <HtmlComponent
+            html="Option 1"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          id="properties.label.disabled: true_1"
+          value="1"
+        >
+          <HtmlComponent
+            html="Option 2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.label.disabled: true_input",
+      "onChange": [Function],
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label.disabled: true - value[0] - ButtonSelector 3`] = `Array []`;
+
+exports[`Mock render - properties.label.extra: showingextra - value[0] - ButtonSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.label.extra: showingextra - value[0] - ButtonSelector 2`] = `
+Array [
+  Array [
+    Object {
+      "buttonStyle": "solid",
+      "children": Array [
+        <mockConstructor
+          id="properties.label.extra: showingextra_0"
+          value="0"
+        >
+          <HtmlComponent
+            html="Option 1"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          id="properties.label.extra: showingextra_1"
+          value="1"
+        >
+          <HtmlComponent
+            html="Option 2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.label.extra: showingextra_input",
+      "onChange": [Function],
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label.extra: showingextra - value[0] - ButtonSelector 3`] = `Array []`;
+
+exports[`Mock render - properties.label: align_right - value[0] - ButtonSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.label: align_right - value[0] - ButtonSelector 2`] = `
+Array [
+  Array [
+    Object {
+      "buttonStyle": "solid",
+      "children": Array [
+        <mockConstructor
+          id="properties.label: align_right_0"
+          value="0"
+        >
+          <HtmlComponent
+            html="Option 1"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          id="properties.label: align_right_1"
+          value="1"
+        >
+          <HtmlComponent
+            html="Option 2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.label: align_right_input",
+      "onChange": [Function],
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label: align_right - value[0] - ButtonSelector 3`] = `Array []`;
+
+exports[`Mock render - properties.label: inline_true - value[0] - ButtonSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.label: inline_true - value[0] - ButtonSelector 2`] = `
+Array [
+  Array [
+    Object {
+      "buttonStyle": "solid",
+      "children": Array [
+        <mockConstructor
+          id="properties.label: inline_true_0"
+          value="0"
+        >
+          <HtmlComponent
+            html="Option 1"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          id="properties.label: inline_true_1"
+          value="1"
+        >
+          <HtmlComponent
+            html="Option 2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.label: inline_true_input",
+      "onChange": [Function],
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label: inline_true - value[0] - ButtonSelector 3`] = `Array []`;
+
+exports[`Mock render - properties.label: span_12 - value[0] - ButtonSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.label: span_12 - value[0] - ButtonSelector 2`] = `
+Array [
+  Array [
+    Object {
+      "buttonStyle": "solid",
+      "children": Array [
+        <mockConstructor
+          id="properties.label: span_12_0"
+          value="0"
+        >
+          <HtmlComponent
+            html="Option 1"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          id="properties.label: span_12_1"
+          value="1"
+        >
+          <HtmlComponent
+            html="Option 2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.label: span_12_input",
+      "onChange": [Function],
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label: span_12 - value[0] - ButtonSelector 3`] = `Array []`;
+
+exports[`Mock render - properties.options.label: html - value[0] - ButtonSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.options.label: html - value[0] - ButtonSelector 2`] = `
+Array [
+  Array [
+    Object {
+      "buttonStyle": "solid",
+      "children": Array [
+        <mockConstructor
+          className="{}"
+          id="properties.options.label: html_0"
+          value="0"
+        >
+          <HtmlComponent
+            html=<div>
+  Some main text
+</div>
+<div style="font-size: 6px;">
+  Some small subtext
+</div>
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          className="{}"
+          id="properties.options.label: html_1"
+          value="1"
+        >
+          <HtmlComponent
+            html=<div style="color: green;">
+  Option green
+</div>
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          className="{}"
+          id="properties.options.label: html_2"
+          value="2"
+        >
+          <HtmlComponent
+            html="Option 3"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.options.label: html_input",
+      "onChange": [Function],
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.options.label: html - value[0] - ButtonSelector 3`] = `Array []`;
+
+exports[`Mock render - properties.options: html - value[0] - ButtonSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.options: html - value[0] - ButtonSelector 2`] = `
+Array [
+  Array [
+    Object {
+      "buttonStyle": "solid",
+      "children": Array [
+        <mockConstructor
+          id="properties.options: html_0"
+          value="0"
+        >
+          <HtmlComponent
+            html=<div>
+  Some main text
+</div>
+<div style="font-size: 6px;">
+  Some small subtext
+</div>
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          id="properties.options: html_1"
+          value="1"
+        >
+          <HtmlComponent
+            html=<div style="color: green;">
+  Option green
+</div>
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          id="properties.options: html_2"
+          value="2"
+        >
+          <HtmlComponent
+            html="Option 3"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.options: html_input",
+      "onChange": [Function],
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.options: html - value[0] - ButtonSelector 3`] = `Array []`;
+
+exports[`Mock render - properties.options-boolean - value[0] - ButtonSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.options-boolean - value[0] - ButtonSelector 2`] = `
+Array [
+  Array [
+    Object {
+      "buttonStyle": "solid",
+      "children": Array [
+        <mockConstructor
+          id="properties.options-boolean_0"
+          value="0"
+        >
+          <HtmlComponent
+            html="true"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          id="properties.options-boolean_1"
+          value="1"
+        >
+          <HtmlComponent
+            html="false"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.options-boolean_input",
+      "onChange": [Function],
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.options-boolean - value[0] - ButtonSelector 3`] = `Array []`;
+
+exports[`Mock render - properties.options-number - value[0] - ButtonSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.options-number - value[0] - ButtonSelector 2`] = `
+Array [
+  Array [
+    Object {
+      "buttonStyle": "solid",
+      "children": Array [
+        <mockConstructor
+          id="properties.options-number_0"
+          value="0"
+        >
+          <HtmlComponent
+            html="15"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          id="properties.options-number_1"
+          value="1"
+        >
+          <HtmlComponent
+            html="20"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.options-number_input",
+      "onChange": [Function],
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.options-number - value[0] - ButtonSelector 3`] = `Array []`;
+
+exports[`Mock render - properties.options-object - value[0] - ButtonSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.options-object - value[0] - ButtonSelector 2`] = `
+Array [
+  Array [
+    Object {
+      "buttonStyle": "solid",
+      "children": Array [
+        <mockConstructor
+          className="{}"
+          id="properties.options-object_0"
+          value="0"
+        >
+          <HtmlComponent
+            html="one"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          className="{}"
+          id="properties.options-object_1"
+          value="1"
+        >
+          <HtmlComponent
+            html="two"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.options-object_input",
+      "onChange": [Function],
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.options-object - value[0] - ButtonSelector 3`] = `Array []`;
+
+exports[`Mock render - properties.options-string - value[0] - ButtonSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.options-string - value[0] - ButtonSelector 2`] = `
+Array [
+  Array [
+    Object {
+      "buttonStyle": "solid",
+      "children": Array [
+        <mockConstructor
+          id="properties.options-string_0"
+          value="0"
+        >
+          <HtmlComponent
+            html="Option 1"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          id="properties.options-string_1"
+          value="1"
+        >
+          <HtmlComponent
+            html="Option 2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.options-string_input",
+      "onChange": [Function],
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.options-string - value[0] - ButtonSelector 3`] = `Array []`;
+
+exports[`Mock render - properties.options-style - value[0] - ButtonSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.options-style - value[0] - ButtonSelector 2`] = `
+Array [
+  Array [
+    Object {
+      "buttonStyle": "solid",
+      "children": Array [
+        <mockConstructor
+          className="{\\"style\\":{\\"background\\":\\"red\\"}}"
+          id="properties.options-style_0"
+          value="0"
+        >
+          <HtmlComponent
+            html="one"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Object {
+                        "background": "red",
+                      },
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"background\\":\\"red\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          className="{}"
+          id="properties.options-style_1"
+          value="1"
+        >
+          <HtmlComponent
+            html="two"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Object {
+                        "background": "red",
+                      },
+                    ],
+                    Array [
+                      undefined,
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":{\\"background\\":\\"red\\"}}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.options-style_input",
+      "onChange": [Function],
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.options-style - value[0] - ButtonSelector 3`] = `Array []`;
+
+exports[`Mock render - properties.size: small - value[0] - ButtonSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.size: small - value[0] - ButtonSelector 2`] = `
+Array [
+  Array [
+    Object {
+      "buttonStyle": "solid",
+      "children": Array [
+        <mockConstructor
+          id="properties.size: small_0"
+          value="0"
+        >
+          <HtmlComponent
+            html="Option 1"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          id="properties.size: small_1"
+          value="1"
+        >
+          <HtmlComponent
+            html="Option 2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.size: small_input",
+      "onChange": [Function],
+      "size": "small",
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.size: small - value[0] - ButtonSelector 3`] = `Array []`;
+
+exports[`Mock render - properties.size_large - value[0] - ButtonSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.size_large - value[0] - ButtonSelector 2`] = `
+Array [
+  Array [
+    Object {
+      "buttonStyle": "solid",
+      "children": Array [
+        <mockConstructor
+          id="properties.size_large_0"
+          value="0"
+        >
+          <HtmlComponent
+            html="Option 1"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          id="properties.size_large_1"
+          value="1"
+        >
+          <HtmlComponent
+            html="Option 2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.size_large_input",
+      "onChange": [Function],
+      "size": "large",
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.size_large - value[0] - ButtonSelector 3`] = `Array []`;
+
+exports[`Mock render - properties.title - value[0] - ButtonSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.title - value[0] - ButtonSelector 2`] = `
+Array [
+  Array [
+    Object {
+      "buttonStyle": "solid",
+      "children": Array [
+        <mockConstructor
+          id="properties.title_0"
+          value="0"
+        >
+          <HtmlComponent
+            html="Option 1"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          id="properties.title_1"
+          value="1"
+        >
+          <HtmlComponent
+            html="Option 2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "setValue": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.title_input",
+      "onChange": [Function],
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.title - value[0] - ButtonSelector 3`] = `Array []`;

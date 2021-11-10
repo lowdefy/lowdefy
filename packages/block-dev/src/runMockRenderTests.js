@@ -40,14 +40,16 @@ const runMockRenderTests = ({ examples, logger, meta, mocks, reset = () => null,
     values.forEach((value, v) => {
       mocks.forEach((mock) => {
         test(`Mock render - ${ex.id} - value[${v}] - ${mock.name}`, async () => {
-          const mockFn = await mock.getMockFn();
+          const mockFns = await mock.getMockFns();
           const Block = await mock.getBlock();
           const Shell = () => {
             const props = getProps(ex);
             return <Block {...props} methods={{ ...props.methods, makeCssClass }} value={value} />;
           };
           render(<Shell />);
-          expect(mockFn.mock.calls).toMatchSnapshot();
+          mockFns.forEach((mockFn) => {
+            expect(mockFn.mock.calls).toMatchSnapshot();
+          });
         });
       });
     });

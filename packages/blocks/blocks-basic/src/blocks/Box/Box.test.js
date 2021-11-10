@@ -38,7 +38,7 @@ test('triggerEvent onClick', () => {
   };
   const Shell = () => <Block {...getProps(block)} methods={methods} />;
   const { container } = render(<Shell />);
-  expect(container.firstChild).toMatchInlineSnapshot(`
+  expect(container.firstChild).toMatchSnapshot(`
     .emotion-0 {
       outline: none;
     }

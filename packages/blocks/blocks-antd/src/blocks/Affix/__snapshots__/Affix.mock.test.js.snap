@@ -5,6 +5,7 @@ Array [
   Array [
     Object {
       "children": <div
+        data-testid="area-content"
         style={
           Object {
             "border": "1px solid red",
@@ -30,6 +31,7 @@ Array [
   Array [
     Object {
       "children": <div
+        data-testid="area-content"
         style={
           Object {
             "border": "1px solid red",
@@ -55,6 +57,7 @@ Array [
   Array [
     Object {
       "children": <div
+        data-testid="area-content"
         style={
           Object {
             "border": "1px solid red",
@@ -80,6 +83,7 @@ Array [
   Array [
     Object {
       "children": <div
+        data-testid="area-content"
         style={
           Object {
             "border": "1px solid red",

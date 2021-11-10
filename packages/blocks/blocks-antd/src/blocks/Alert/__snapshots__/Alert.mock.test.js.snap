@@ -5,6 +5,7 @@ Array [
   Array [
     Object {
       "action": <div
+        data-testid="area-action"
         style={
           Object {
             "border": "1px solid red",
@@ -55,6 +56,7 @@ Array [
   Array [
     Object {
       "action": <div
+        data-testid="area-action"
         style={
           Object {
             "border": "1px solid red",
@@ -190,9 +192,14 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "icon": <IconComp1
-        Icon={[Function]}
         basePath=""
         blockId="properties.icon object_icon"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -254,9 +261,14 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "icon": <IconComp1
-        Icon={[Function]}
         basePath=""
         blockId="properties.icon string_icon"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -881,9 +893,14 @@ Array [
         }
       />,
       "icon": <IconComp1
-        Icon={[Function]}
         basePath=""
         blockId="with description properties.icon object_icon"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -955,9 +972,14 @@ Array [
         }
       />,
       "icon": <IconComp1
-        Icon={[Function]}
         basePath=""
         blockId="with description properties.icon string_icon"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
         content={Object {}}
         events={Object {}}
         list={Array []}

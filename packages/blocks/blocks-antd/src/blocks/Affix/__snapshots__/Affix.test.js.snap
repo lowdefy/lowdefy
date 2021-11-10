@@ -9,6 +9,7 @@ exports[`Render default - value[0] 1`] = `
     class=""
   >
     <div
+      data-testid="area-content"
       style="border: 1px solid red; padding: 10px;"
     >
       content
@@ -26,6 +27,7 @@ exports[`Render properties.offsetBottom - value[0] 1`] = `
     class=""
   >
     <div
+      data-testid="area-content"
       style="border: 1px solid red; padding: 10px;"
     >
       content
@@ -43,6 +45,7 @@ exports[`Render properties.offsetTop - value[0] 1`] = `
     class=""
   >
     <div
+      data-testid="area-content"
       style="border: 1px solid red; padding: 10px;"
     >
       content
@@ -64,6 +67,7 @@ exports[`Render properties.style - value[0] 1`] = `
     class=""
   >
     <div
+      data-testid="area-content"
       style="border: 1px solid red; padding: 10px;"
     >
       content

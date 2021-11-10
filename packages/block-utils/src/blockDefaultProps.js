@@ -13,16 +13,19 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-
+import Link from 'next/link';
 import makeCssClass from './makeCssClass.js';
 import Icon from './Icon.js';
 
 const blockDefaultProps = {
   basePath: '',
   blockId: 'undefined_id',
+  components: {
+    Icon,
+    Link,
+  },
   content: {},
   events: {},
-  Icon,
   list: [],
   menus: [],
   methods: {

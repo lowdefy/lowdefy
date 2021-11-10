@@ -11,6 +11,7 @@ exports[`Render areas.content - value[0] 1`] = `
   id="areas.content"
 >
   <div
+    data-testid="area-content"
     style="border: 1px solid red; padding: 10px;"
   >
     content
@@ -29,6 +30,7 @@ exports[`Render default - value[0] 1`] = `
   id="default"
 >
   <div
+    data-testid="area-content"
     style="border: 1px solid red; padding: 10px;"
   >
     content
@@ -48,6 +50,7 @@ exports[`Render events.onClick - value[0] 1`] = `
   id="events.onClick"
 >
   <div
+    data-testid="area-content"
     style="border: 1px solid red; padding: 10px;"
   >
     content
@@ -81,6 +84,7 @@ exports[`Render properties.style - value[0] 1`] = `
   id="properties.style"
 >
   <div
+    data-testid="area-content"
     style="border: 1px solid red; padding: 10px;"
   >
     content
@@ -107,3 +111,38 @@ exports[`Test Schema properties.content 2`] = `null`;
 exports[`Test Schema properties.style 1`] = `true`;
 
 exports[`Test Schema properties.style 2`] = `null`;
+
+exports[`triggerEvent onClick: 
+    .emotion-0 {
+      outline: none;
+    }
+
+    <div
+      class="emotion-0"
+      data-testid="one"
+      id="one"
+    >
+      <div
+        style="border: 1px solid red; padding: 10px;"
+      >
+        content
+      </div>
+    </div>
+   1`] = `
+.emotion-0 {
+  outline: none;
+}
+
+<div
+  class="emotion-0"
+  data-testid="one"
+  id="one"
+>
+  <div
+    data-testid="area-content"
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+</div>
+`;

@@ -28,9 +28,9 @@ jest.mock('antd', () => ({
 
 const mocks = [
   {
-    getMockFn: async () => {
+    getMockFns: async () => {
       const antd = await import('antd');
-      return antd.Alert;
+      return [antd.Alert];
     },
     getBlock: async () => {
       const Block = await import('./Alert.js');
