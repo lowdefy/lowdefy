@@ -1,18 +1,13 @@
 const withLess = require('next-with-less');
 
-const lessConfig = withLess({
+module.exports = withLess({
   lessLoaderOptions: {
     lessOptions: {
       modifyVars: {
         'primary-color': '#9900FF',
-        'border-radius-base': '32px',
       },
     },
   },
-});
-
-module.exports = {
-  ...lessConfig,
   reactStrictMode: true,
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -32,4 +27,4 @@ module.exports = {
   // experimental: {
   //   concurrentFeatures: true,
   // },
-};
+});

@@ -15,7 +15,7 @@
 */
 
 function Message({ context, params = {} }) {
-  context.lowdefy.displayMessage({
+  context.lowdefy._internal.displayMessage({
     content: params.content || 'Success',
     duration: params.duration,
     icon: params.icon,

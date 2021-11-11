@@ -14,11 +14,15 @@
   limitations under the License.
 */
 
+import Anchor from '@lowdefy/blocks-basic/blocks/Anchor/Anchor.js';
 import Box from '@lowdefy/blocks-basic/blocks/Box/Box.js';
+import Button from '@lowdefy/blocks-antd/blocks/Button/Button.js';
 import Html from '@lowdefy/blocks-basic/blocks/Html/Html.js';
 
 const blocks = {
+  Anchor,
   Box,
+  Button,
   Html,
 };
 

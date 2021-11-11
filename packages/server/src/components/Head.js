@@ -13,21 +13,17 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import createApiContext from '@lowdefy/api/context/createApiContext';
-import getHomePageId from '@lowdefy/api/routes/rootConfig/getHomePageId.js';
 
-const Home = () => {};
+import React from 'react';
+import Head from 'next/head';
 
-export async function getServerSideProps() {
-  const apiContext = await createApiContext({ buildDirectory: './.lowdefy/build' });
-  const homePageId = await getHomePageId(apiContext);
+const BindHead = ({ properties }) => {
+  console.log(properties);
+  return (
+    <Head>
+      <title>{properties.title}</title>
+    </Head>
+  );
+};
 
-  return {
-    redirect: {
-      destination: `/${homePageId}`,
-      permanent: false,
-    },
-  };
-}
-
-export default Home;
+export default BindHead;

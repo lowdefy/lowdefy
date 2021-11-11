@@ -23,6 +23,11 @@ const LowdefyContext = ({ children }) => {
     _internal: {
       blockComponents,
       updaters: {},
+      displayMessage: (message) => {
+        console.log(message);
+        return () => undefined;
+      },
+      link: () => undefined,
     },
     contexts: {},
     inputs: {},

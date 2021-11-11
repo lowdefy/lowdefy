@@ -15,19 +15,24 @@
 */
 
 import React from 'react';
+
 import Context from './Context.js';
+import Head from './Head.js';
 import Block from './block/Block.js';
 
 const Page = ({ lowdefy, pageConfig }) => {
   return (
     <Context config={pageConfig} lowdefy={lowdefy}>
       {(context) => (
-        <Block
-          block={context._internal.RootBlocks.map['home']}
-          Blocks={context._internal.RootBlocks}
-          context={context}
-          lowdefy={lowdefy}
-        />
+        <>
+          <Head properties={context._internal.RootBlocks.map[pageConfig.pageId].eval.properties} />
+          <Block
+            block={context._internal.RootBlocks.map[pageConfig.pageId]}
+            Blocks={context._internal.RootBlocks}
+            context={context}
+            lowdefy={lowdefy}
+          />
+        </>
       )}
     </Context>
   );
