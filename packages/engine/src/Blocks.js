@@ -70,7 +70,7 @@ class Blocks {
       block.id = this.generateBlockId(block.blockIdPattern);
       block.fieldPattern = block.field;
       block.blockId = applyArrayIndices(this.arrayIndices, block.blockIdPattern);
-      this.context.RootBlocks.map[block.blockId] = block;
+      this.context._internal.RootBlocks.map[block.blockId] = block;
       block.field = !type.isNone(block.fieldPattern)
         ? applyArrayIndices(this.arrayIndices, block.fieldPattern)
         : block.blockId;
@@ -127,11 +127,11 @@ class Blocks {
           this.subBlocks[block.id].unshift(
             this.newBlocks({ arrayIndices: this.arrayIndices.concat([0]), block, initState: {} })
           );
-          this.context.State.set(block.field, undefined);
+          this.context._internal.State.set(block.field, undefined);
           // set block and subBlock values undefined, so as not to pass values to new blocks
           this.subBlocks[block.id][0].recSetUndefined();
           block.update = true;
-          this.context.update();
+          this.context._internal.update();
         };
 
         block.pushItem = () => {
@@ -143,11 +143,11 @@ class Blocks {
             })
           );
           block.update = true;
-          this.context.update();
+          this.context._internal.update();
         };
 
         block.removeItem = (index) => {
-          this.context.State.removeItem(block.blockId, index);
+          this.context._internal.State.removeItem(block.blockId, index);
           const lastBlock = this.subBlocks[block.id][this.subBlocks[block.id].length - 1];
           lastBlock.recRemoveBlocksFromMap();
           const largerBlocks = this.subBlocks[block.id].slice(index + 1);
@@ -160,12 +160,12 @@ class Blocks {
           this.subBlocks[block.id].splice(index, 1);
 
           block.update = true;
-          this.context.update();
+          this.context._internal.update();
         };
 
         block.moveItemUp = (index) => {
           if (index === 0) return;
-          this.context.State.swapItems(block.blockId, index - 1, index);
+          this.context._internal.State.swapItems(block.blockId, index - 1, index);
           this.subBlocks[block.id][index - 1].recUpdateArrayIndices(
             this.arrayIndices.concat([index - 1]),
             this.arrayIndices.concat([index])
@@ -176,12 +176,12 @@ class Blocks {
           );
           swap(this.subBlocks[block.id], index - 1, index);
           block.update = true;
-          this.context.update();
+          this.context._internal.update();
         };
 
         block.moveItemDown = (index) => {
           if (index === this.subBlocks[block.id].length - 1) return;
-          this.context.State.swapItems(block.blockId, index, index + 1);
+          this.context._internal.State.swapItems(block.blockId, index, index + 1);
           this.subBlocks[block.id][index + 1].recUpdateArrayIndices(
             this.arrayIndices.concat([index + 1]),
             this.arrayIndices.concat([index])
@@ -192,16 +192,16 @@ class Blocks {
           );
           swap(this.subBlocks[block.id], index, index + 1);
           block.update = true;
-          this.context.update();
+          this.context._internal.update();
         };
       }
       if (get(block, 'meta.category') === 'input') {
         block.setValue = (value) => {
           block.value = type.enforceType(block.meta.valueType, value);
 
-          this.context.State.set(block.field, block.value);
+          this.context._internal.State.set(block.field, block.value);
           block.update = true;
-          this.context.update();
+          this.context._internal.update();
         };
       }
 
@@ -228,7 +228,7 @@ class Blocks {
           blockValue = type.isUndefined(block.meta.initValue)
             ? type.enforceType(block.meta.valueType, null)
             : block.meta.initValue;
-          this.context.State.set(block.field, block.value);
+          this.context._internal.State.set(block.field, block.value);
         }
         if (get(block, 'meta.category') === 'list') {
           // load list value into list blocks
@@ -302,7 +302,7 @@ class Blocks {
       if (visibleParent === false) {
         block.visibleEval.output = false;
       } else {
-        block.visibleEval = this.context.parser.parse({
+        block.visibleEval = this.context._internal.parser.parse({
           input: block.visible,
           location: block.blockId,
           arrayIndices: this.arrayIndices,
@@ -313,12 +313,12 @@ class Blocks {
       }
       // only evaluate visible blocks
       if (block.visibleEval.output !== false) {
-        block.propertiesEval = this.context.parser.parse({
+        block.propertiesEval = this.context._internal.parser.parse({
           input: block.properties,
           location: block.blockId,
           arrayIndices: this.arrayIndices,
         });
-        block.requiredEval = this.context.parser.parse({
+        block.requiredEval = this.context._internal.parser.parse({
           input: block.required,
           location: block.blockId,
           arrayIndices: this.arrayIndices,
@@ -343,7 +343,7 @@ class Blocks {
         let validationError = false;
         let validationWarning = false;
         validation.forEach((test) => {
-          const parsed = this.context.parser.parse({
+          const parsed = this.context._internal.parser.parse({
             input: test,
             location: block.blockId,
             arrayIndices: this.arrayIndices,
@@ -378,17 +378,17 @@ class Blocks {
           block.validationEval.output.status = 'error';
         }
 
-        block.styleEval = this.context.parser.parse({
+        block.styleEval = this.context._internal.parser.parse({
           input: block.style,
           location: block.blockId,
           arrayIndices: this.arrayIndices,
         });
-        block.layoutEval = this.context.parser.parse({
+        block.layoutEval = this.context._internal.parser.parse({
           input: block.layout,
           location: block.blockId,
           arrayIndices: this.arrayIndices,
         });
-        block.areasLayoutEval = this.context.parser.parse({
+        block.areasLayoutEval = this.context._internal.parser.parse({
           input: block.areasLayout,
           location: block.blockId,
           arrayIndices: this.arrayIndices,
@@ -422,11 +422,14 @@ class Blocks {
             });
           } else {
             toSet.add(block.field);
-            this.context.State.set(block.field, type.enforceType(block.meta.valueType, null));
+            this.context._internal.State.set(
+              block.field,
+              type.enforceType(block.meta.valueType, null)
+            );
           }
         } else if (get(block, 'meta.category') === 'input') {
           toSet.add(block.field);
-          this.context.State.set(block.field, block.value);
+          this.context._internal.State.set(block.field, block.value);
         }
       } else if (get(block, 'meta.category') === 'container') {
         this.subBlocks[block.id].forEach((blockClass) => {
@@ -438,7 +441,7 @@ class Blocks {
     });
     toDelete.forEach((field) => {
       if (!toSet.has(field)) {
-        this.context.State.del(field);
+        this.context._internal.State.del(field);
       }
     });
   }
@@ -471,7 +474,7 @@ class Blocks {
     });
     this.loopBlocks((block) => {
       block.blockId = applyArrayIndices(this.arrayIndices, block.blockIdPattern);
-      this.context.RootBlocks.map[block.blockId] = block;
+      this.context._internal.RootBlocks.map[block.blockId] = block;
       block.field = !type.isNone(block.fieldPattern)
         ? applyArrayIndices(this.arrayIndices, block.fieldPattern)
         : block.blockId;
@@ -510,7 +513,7 @@ class Blocks {
 
   recSetUndefined() {
     this.loopBlocks((block) => {
-      this.context.State.set(block.field, undefined);
+      this.context._internal.State.set(block.field, undefined);
     });
     Object.keys(this.subBlocks).forEach((subKey) => {
       this.subBlocks[subKey].forEach((subBlock) => {
@@ -521,7 +524,7 @@ class Blocks {
 
   recRemoveBlocksFromMap() {
     this.loopBlocks((block) => {
-      delete this.context.RootBlocks.map[block.blockId];
+      delete this.context._internal.RootBlocks.map[block.blockId];
     });
     Object.keys(this.subBlocks).forEach((subKey) => {
       this.subBlocks[subKey].forEach((subBlock) => {
@@ -584,7 +587,7 @@ class Blocks {
           value: type.isNone(block.value) ? null : block.value,
           visible: block.visibleEval.output,
         };
-        this.context.lowdefy.updateBlock(block.id);
+        this.context._internal.lowdefy._internal.updateBlock(block.id);
       }
     });
     Object.keys(this.subBlocks).forEach((subKey) => {
@@ -603,7 +606,7 @@ class Blocks {
         false
       );
       if (block.loading_prev !== block.loading) {
-        this.context.lowdefy.updateBlock(block.id);
+        this.context._internal.lowdefy._internal.updateBlock(block.id);
       }
     });
     Object.keys(this.subBlocks).forEach((subKey) => {
@@ -614,7 +617,8 @@ class Blocks {
   }
 
   generateBlockId(blockIdPattern) {
-    return `${this.context.pageId}:${blockIdPattern}:${Math.random()
+    // TODO: is rootId correct?
+    return `${this.context.rootId}:${blockIdPattern}:${Math.random()
       .toString(36)
       .replace(/[^a-z]+/g, '')
       .substr(0, 5)}`;

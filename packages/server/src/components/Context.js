@@ -14,14 +14,13 @@
   limitations under the License.
 */
 
-import { useEffect, useState } from 'react';
-// import getContext from '@lowdefy/engine';
-import getPageContext from './getPageContext.js';
+import React, { useEffect, useState } from 'react';
+import getContext from '@lowdefy/engine';
 
 // import MountEvents from './MountEvents';
 const LoadingBlock = () => <div>Loading...</div>;
 
-const Context = ({ children, lowdefy, pageConfig }) => {
+const Context = ({ children, lowdefy, config }) => {
   const [context, setContext] = useState({});
   const [error, setError] = useState(null);
 
@@ -29,15 +28,14 @@ const Context = ({ children, lowdefy, pageConfig }) => {
     let mounted = true;
     const mount = async () => {
       try {
-        const ctx = await getPageContext({
-          pageConfig,
+        const ctx = await getContext({
+          config,
           lowdefy,
         });
         if (mounted) {
           setContext(ctx);
         }
       } catch (err) {
-        // ??
         setError(err);
       }
     };
@@ -45,12 +43,10 @@ const Context = ({ children, lowdefy, pageConfig }) => {
     return () => {
       mounted = false;
     };
-  }, [pageConfig, lowdefy]);
+  }, [config, lowdefy]);
 
-  // ??
   if (error) throw error;
-
-  if (context.id !== pageConfig.pageId) return <LoadingBlock />;
+  if (context.id !== config.id) return <LoadingBlock />;
 
   return children(context);
 

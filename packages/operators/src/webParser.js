@@ -32,16 +32,16 @@ class WebParser {
   }
 
   async init() {
-    if (!type.isObject(this.context.lowdefy)) {
-      throw new Error('context.lowdefy must be an object.');
+    if (!type.isObject(this.context._internal.lowdefy)) {
+      throw new Error('context._internal.lowdefy must be an object.');
     }
-    if (!type.isArray(this.context.operators)) {
-      throw new Error('context.operators must be an array.');
+    if (!type.isArray(this.context._internal.operators)) {
+      throw new Error('context._internal.operators must be an array.');
     }
     const operators = this.operators;
     const operations = this.operations;
     await Promise.all(
-      this.context.operators.map(async (operator) => {
+      this.context._internal.operators.map(async (operator) => {
         if (operators[operator]) {
           const fn = await import(`./${operators[operator]}.js`);
           operations[operator] = fn.default;
@@ -70,7 +70,7 @@ class WebParser {
       throw new Error('Operator parser location must be a string.');
     }
     const errors = [];
-    const { inputs, lowdefyGlobal, menus, urlQuery, user } = context.lowdefy;
+    const { inputs, lowdefyGlobal, menus, urlQuery, user } = context._internal.lowdefy;
     const reviver = (_, value) => {
       if (type.isObject(value) && Object.keys(value).length === 1) {
         const key = Object.keys(value)[0];

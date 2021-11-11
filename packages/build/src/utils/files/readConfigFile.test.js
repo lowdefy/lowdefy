@@ -20,10 +20,8 @@ import { readFile } from '@lowdefy/node-utils';
 import createReadConfigFile from './readConfigFile.js';
 
 jest.mock('@lowdefy/node-utils', () => {
-  const originalModule = jest.requireActual('@lowdefy/node-utils');
   return {
     readFile: jest.fn(),
-    cachedPromises: originalModule.cachedPromises,
   };
 });
 

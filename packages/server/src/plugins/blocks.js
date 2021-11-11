@@ -14,10 +14,12 @@
   limitations under the License.
 */
 
+import Box from '@lowdefy/blocks-basic/blocks/Box/Box.js';
 import Html from '@lowdefy/blocks-basic/blocks/Html/Html.js';
 
 const blocks = {
-  Html
-}
+  Box,
+  Html,
+};
 
 export default blocks;

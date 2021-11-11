@@ -15,6 +15,7 @@
 */
 
 import applyArrayIndices from './applyArrayIndices.js';
+import cachedPromises from './cachedPromises.js';
 import get from './get.js';
 import mergeObjects from './mergeObjects.js';
 import omit from './omit.js';
@@ -28,6 +29,7 @@ import urlQuery from './urlQuery.js';
 
 export {
   applyArrayIndices,
+  cachedPromises,
   get,
   mergeObjects,
   omit,

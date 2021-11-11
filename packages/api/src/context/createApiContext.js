@@ -14,17 +14,14 @@
   limitations under the License.
 */
 
-import React from 'react';
+import createReadConfigFile from './readConfigFile.js';
 
-const Block = ({ pageContext, lowdefy }) => {
-  const { pageConfig } = pageContext;
-  const Comp = lowdefy.Components[pageConfig.type];
-  return (
-    <>
-      <div>{JSON.stringify(pageConfig)}</div>
-      <Comp properties={pageConfig.properties} />
-    </>
-  );
-};
+async function createApiContext({ buildDirectory }) {
+  const readConfigFile = createReadConfigFile({ buildDirectory });
+  return {
+    authorize: () => true,
+    readConfigFile,
+  };
+}
 
-export default Block;
+export default createApiContext;

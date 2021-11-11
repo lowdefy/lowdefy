@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import getPageConfig from '@lowdefy/api/routes/page/getPageConfig.js';
-import createContext from '@lowdefy/api/context/createContext.js';
+import createApiContext from '@lowdefy/api/context/createApiContext';
+import getPageConfig from '@lowdefy/api/routes/page/getPageConfig';
 
 import Page from '../components/Page.js';
 
 export async function getServerSideProps(context) {
   const { pageId } = context.params;
-  const apiContext = await createContext({});
+  const apiContext = await createApiContext({ buildDirectory: './.lowdefy/build' });
   const pageConfig = await getPageConfig(apiContext, { pageId });
 
   if (!pageConfig) {

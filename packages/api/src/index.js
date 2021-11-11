@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import createApiContext from './context/createApiContext.js';
 import createContext from './context/createContext.js';
 import getHomePageId from './routes/rootConfig/getHomePageId.js';
 import getPageConfig from './routes/page/getPageConfig.js';
@@ -32,8 +33,7 @@ import {
 } from './context/errors.js';
 
 export {
-  AuthenticationError,
-  ConfigurationError,
+  createApiContext,
   createContext,
   getHomePageId,
   getPageConfig,
@@ -41,8 +41,10 @@ export {
   openIdCallback,
   openIdLogoutUrl,
   request,
-  RequestError,
   rootConfig,
+  AuthenticationError,
+  ConfigurationError,
+  RequestError,
   ServerError,
   TokenExpiredError,
 };

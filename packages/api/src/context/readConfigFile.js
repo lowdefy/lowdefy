@@ -15,7 +15,8 @@
 */
 
 import path from 'path';
-import { cachedPromises, getFileExtension, readFile } from '@lowdefy/node-utils';
+import { cachedPromises } from '@lowdefy/helpers';
+import { getFileExtension, readFile } from '@lowdefy/node-utils';
 
 function createReadConfigFile({ buildDirectory }) {
   async function readConfigFile(filePath) {

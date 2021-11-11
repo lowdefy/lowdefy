@@ -133,7 +133,7 @@ class Actions {
         index,
       };
     }
-    const { output: parsedAction, errors: parserErrors } = this.context.parser.parse({
+    const { output: parsedAction, errors: parserErrors } = this.context._internal.parser.parse({
       actions: responses,
       event,
       arrayIndices,
@@ -164,7 +164,7 @@ class Actions {
       });
     } catch (error) {
       responses[action.id] = { error, index, type: action.type };
-      const { output: parsedMessages, errors: parserErrors } = this.context.parser.parse({
+      const { output: parsedMessages, errors: parserErrors } = this.context._internal.parser.parse({
         actions: responses,
         event,
         arrayIndices,
@@ -201,7 +201,7 @@ class Actions {
   displayMessage({ defaultMessage, duration, hideExplicitly, message, status }) {
     let close = () => undefined;
     if ((hideExplicitly && message !== false) || (!hideExplicitly && !type.isNone(message))) {
-      close = this.context.lowdefy.displayMessage({
+      close = this.context._internal.lowdefy.displayMessage({
         content: type.isString(message) ? message : defaultMessage,
         duration,
         status,

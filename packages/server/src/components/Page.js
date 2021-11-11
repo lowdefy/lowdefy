@@ -15,14 +15,21 @@
 */
 
 import React from 'react';
-import PageContext from './PageContext.js';
-import Block from './Block.js';
+import Context from './Context.js';
+import Block from './block/Block.js';
 
 const Page = ({ lowdefy, pageConfig }) => {
   return (
-    <PageContext pageConfig={pageConfig} lowdefy={lowdefy}>
-      {(pageContext) => <Block pageContext={pageContext} lowdefy={lowdefy} />}
-    </PageContext>
+    <Context config={pageConfig} lowdefy={lowdefy}>
+      {(context) => (
+        <Block
+          block={context._internal.RootBlocks.map['home']}
+          Blocks={context._internal.RootBlocks}
+          context={context}
+          lowdefy={lowdefy}
+        />
+      )}
+    </Context>
   );
 };
 

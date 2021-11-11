@@ -25,7 +25,7 @@ class Requests {
 
     this.requestConfig = {};
 
-    (this.context.rootBlock.requests || []).forEach((request) => {
+    (this.context._internal.rootBlock.requests || []).forEach((request) => {
       this.requestConfig[request.requestId] = request;
     });
   }
@@ -92,7 +92,8 @@ class Requests {
 
     try {
       const response = await this.context.lowdefy.callRequest({
-        pageId: this.context.pageId,
+        // TODO:
+        pageId: this.context.rootId,
         payload: serializer.serialize(payload),
         requestId,
       });
