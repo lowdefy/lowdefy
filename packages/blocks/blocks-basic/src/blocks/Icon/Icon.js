@@ -17,7 +17,7 @@
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-const IconBlock = ({ Icon, ...props }) => <Icon {...props} />;
+const IconBlock = ({ components: { Icon }, ...props }) => <Icon {...props} />;
 
 IconBlock.defaultProps = blockDefaultProps;
 

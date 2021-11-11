@@ -17,12 +17,12 @@
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import validationsExamples from '../../validationExamples.js';
-import AutoComplete from './AutoComplete';
+import Block from './AutoComplete.js';
 import examples from './examples.yaml';
 import block from './index.js';
 import schema from './schema.json';
 
 const { meta } = block;
 
-runRenderTests({ examples, Block: AutoComplete, meta, validationsExamples });
+runRenderTests({ examples, Block, meta, schema, validationsExamples });
 runBlockSchemaTests({ examples, meta, schema });

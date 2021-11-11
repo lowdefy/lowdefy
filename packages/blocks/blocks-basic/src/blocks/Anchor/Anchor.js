@@ -20,13 +20,13 @@ import { get, type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const Strong = ({ children, strong }) => (strong ? <b>{children}</b> : <>{children}</>);
-const Tag = ({ blockId, children, className, disabled, href, newTab, rel, onClick }) =>
+const Tag = ({ blockId, children, className, disabled, href, Link, newTab, rel, onClick }) =>
   disabled ? (
     <span id={blockId} className={className}>
       {children}
     </span>
   ) : (
-    <a
+    <Link
       id={blockId}
       className={className}
       href={href}
@@ -35,10 +35,17 @@ const Tag = ({ blockId, children, className, disabled, href, newTab, rel, onClic
       target={newTab ? '_blank' : '_self'}
     >
       {children}
-    </a>
+    </Link>
   );
 
-const AnchorBlock = ({ blockId, events, Icon, loading, methods, properties }) => {
+const AnchorBlock = ({
+  blockId,
+  events,
+  components: { Icon, Link },
+  loading,
+  methods,
+  properties,
+}) => {
   const title = type.isNone(properties.title)
     ? type.isNone(properties.href)
       ? properties.href
@@ -55,6 +62,7 @@ const AnchorBlock = ({ blockId, events, Icon, loading, methods, properties }) =>
       ])}
       disabled={disabled}
       href={properties.href}
+      Link={Link}
       rel={properties.rel}
       newTab={properties.newTab}
       onClick={() => methods.triggerEvent({ name: 'onClick' })}

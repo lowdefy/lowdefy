@@ -15,26 +15,37 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { Radio } from 'antd';
+import { Col, Row } from 'antd';
 
-import ButtonSelectorBlock from './ButtonSelector';
 import examples from './examples.yaml';
 import block from './index.js';
+import schema from './schema.json';
 
 const { meta } = block;
 
-jest.mock('antd/lib/radio', () => {
-  const radio = jest.fn(() => 'mocked');
-  radio.Group = jest.fn(() => 'mocked');
-  radio.Button = jest.fn(() => 'mocked');
-  return radio;
+jest.mock('antd', () => {
+  const comp = jest.fn(() => 'mocked');
+  comp.Group = jest.fn(() => 'mocked');
+  comp.Button = jest.fn(() => 'mocked');
+  return {
+    Radio: comp,
+    Row,
+    Col,
+  };
 });
 
 const mocks = [
   {
-    name: 'default',
-    fn: Radio,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [antd.Radio, antd.Radio.Group, antd.Radio.Button];
+    },
+    getBlock: async () => {
+      const Block = await import('./ButtonSelector.js');
+      return Block.default;
+    },
+    name: 'ButtonSelector',
   },
 ];
 
-runMockRenderTests({ examples, Block: ButtonSelectorBlock, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema });

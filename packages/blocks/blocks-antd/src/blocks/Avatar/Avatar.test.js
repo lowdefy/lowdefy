@@ -16,16 +16,12 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import Avatar from './Avatar';
+import Block from './Avatar.js';
 import examples from './examples.yaml';
 import block from './index.js';
 import schema from './schema.json';
 
 const { meta } = block;
 
-runRenderTests({
-  examples,
-  Block: Avatar,
-  meta,
-});
+runRenderTests({ examples, Block, meta, schema });
 runBlockSchemaTests({ examples, meta, schema });

@@ -16,29 +16,36 @@
 
 import React from 'react';
 import { type, get } from '@lowdefy/helpers';
-import { Link } from 'react-router-dom';
 import { Breadcrumb } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-const ItemLink = ({ basePath, children, className, link }) => {
+const ItemLink = ({ basePath, children, className, link, Link }) => {
   if (type.isString(link.pageId)) {
     return (
-      <Link to={`${basePath}/${link.pageId}`} className={className}>
+      <Link href={`${basePath}/${link.pageId}`} className={className}>
         {children}
       </Link>
     );
   }
   if (type.isString(link.url)) {
     return (
-      <a href={link.url} className={className}>
+      <Link href={link.url} className={className}>
         {children}
-      </a>
+      </Link>
     );
   }
   return <span className={className}>{children}</span>;
 };
 
-const BreadcrumbBlock = ({ basePath, blockId, events, Icon, methods, properties, rename }) => {
+const BreadcrumbBlock = ({
+  basePath,
+  blockId,
+  events,
+  components: { Icon, Link },
+  methods,
+  properties,
+  rename,
+}) => {
   const onClickActionName = get(rename, 'events.onClick', { default: 'onClick' });
   return (
     <Breadcrumb
@@ -63,6 +70,7 @@ const BreadcrumbBlock = ({ basePath, blockId, events, Icon, methods, properties,
               link.style,
             ])}
             link={link}
+            Link={Link}
           >
             {link.icon && (
               <Icon

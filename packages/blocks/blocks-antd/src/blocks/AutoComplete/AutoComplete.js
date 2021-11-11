@@ -19,8 +19,8 @@ import { AutoComplete } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
-import Label from '../Label/Label';
-import getUniqueValues from '../../getUniqueValues';
+import Label from '../Label/Label.js';
+import getUniqueValues from '../../getUniqueValues.js';
 
 const Option = AutoComplete.Option;
 

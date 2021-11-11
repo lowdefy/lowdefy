@@ -27,10 +27,10 @@ import makeCssClass from './makeCssClass.js';
 const lowdefyProps = [
   'actionLog',
   'basePath',
+  'components',
   'content',
   'eventLog',
   'homePageId',
-  'Icon',
   'list',
   'loading',
   'menus',

@@ -22,27 +22,25 @@ import classNames from 'classnames';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { Col, Row } from 'antd';
 import CSSMotion from 'rc-animate/lib/CSSMotion.js';
-import {
-  LoadingOutlined,
-  CloseCircleFilled,
-  CheckCircleFilled,
-  ExclamationCircleFilled,
-} from '@ant-design/icons';
 
 import labelLogic from './labelLogic.js';
 
-const iconMap = {
-  success: CheckCircleFilled,
-  warning: ExclamationCircleFilled,
-  error: CloseCircleFilled,
-  validating: LoadingOutlined,
-};
 const validationKeyMap = {
   warning: 'warnings',
   error: 'errors',
 };
 
-const Label = ({ blockId, content, methods, properties, required, validation }) => {
+let iconMap;
+
+const Label = ({
+  blockId,
+  content,
+  components: { Icon },
+  methods,
+  properties,
+  required,
+  validation,
+}) => {
   const {
     extraClassName,
     feedbackClassName,
@@ -55,6 +53,14 @@ const Label = ({ blockId, content, methods, properties, required, validation }) 
     showFeedback,
     wrapperCol,
   } = labelLogic({ blockId, content, methods, properties, required, validation });
+  if (!iconMap) {
+    iconMap = {
+      success: () => <Icon properties="AiFilledCheckCircle" />,
+      warning: () => <Icon properties="AiFilledExclamationCircle" />,
+      error: () => <Icon properties="AiFilledCloseCircle" />,
+      validating: () => <Icon properties="AiOutlinedLoading" />,
+    };
+  }
   const IconNode = validation.status && iconMap[validation.status];
   const icon =
     validation.status && IconNode ? (
