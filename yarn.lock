@@ -3415,8 +3415,8 @@ __metadata:
     ajv-errors: 3.0.0
     jest: 27.3.1
     jest-serializer-html: 7.1.0
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.0.0-alpha-327d5c484-20211106
+    react-dom: 18.0.0-alpha-327d5c484-20211106
     yaml-loader: 0.6.0
   languageName: unknown
   linkType: soft
@@ -3440,8 +3440,8 @@ __metadata:
     dompurify: 2.3.3
     jest: 27.3.1
     jest-serializer-html: 7.1.0
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.0.0-alpha-327d5c484-20211106
+    react-dom: 18.0.0-alpha-327d5c484-20211106
   languageName: unknown
   linkType: soft
 
@@ -3470,8 +3470,8 @@ __metadata:
     jest-transform-yaml: 0.1.2
     moment: 2.29.1
     rc-animate: 3.1.1
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.0.0-alpha-327d5c484-20211106
+    react-dom: 18.0.0-alpha-327d5c484-20211106
     react-router-dom: 5.2.1
   languageName: unknown
   linkType: soft
@@ -3495,8 +3495,8 @@ __metadata:
     jest: 27.3.1
     jest-serializer-html: 7.1.0
     jest-transform-yaml: 0.1.2
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.0.0-alpha-327d5c484-20211106
+    react-dom: 18.0.0-alpha-327d5c484-20211106
   languageName: unknown
   linkType: soft
 
@@ -3518,9 +3518,9 @@ __metadata:
     jest: 27.3.1
     jest-serializer-html: 7.1.0
     jest-transform-yaml: 0.1.2
-    react: 17.0.2
+    react: 18.0.0-alpha-327d5c484-20211106
     react-color: 2.19.3
-    react-dom: 17.0.2
+    react-dom: 18.0.0-alpha-327d5c484-20211106
   languageName: unknown
   linkType: soft
 
@@ -3543,8 +3543,8 @@ __metadata:
     jest: 27.3.1
     jest-serializer-html: 7.1.0
     jest-transform-yaml: 0.1.2
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.0.0-alpha-327d5c484-20211106
+    react-dom: 18.0.0-alpha-327d5c484-20211106
   languageName: unknown
   linkType: soft
 
@@ -3566,8 +3566,8 @@ __metadata:
     jest: 27.3.1
     jest-serializer-html: 7.1.0
     jest-transform-yaml: 0.1.2
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.0.0-alpha-327d5c484-20211106
+    react-dom: 18.0.0-alpha-327d5c484-20211106
   languageName: unknown
   linkType: soft
 
@@ -3589,8 +3589,8 @@ __metadata:
     jest: 27.3.1
     jest-serializer-html: 7.1.0
     jest-transform-yaml: 0.1.2
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.0.0-alpha-327d5c484-20211106
+    react-dom: 18.0.0-alpha-327d5c484-20211106
     react-markdown: 5.0.3
     react-syntax-highlighter: 15.4.4
     remark-gfm: 1.0.0
@@ -3636,8 +3636,8 @@ __metadata:
     css-loader: 6.4.0
     html-webpack-plugin: 5.4.0
     jest: 27.3.1
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.0.0-alpha-327d5c484-20211106
+    react-dom: 18.0.0-alpha-327d5c484-20211106
     react-helmet: 6.1.0
     react-router-dom: 5.2.1
     style-loader: 3.3.1
@@ -3858,8 +3858,8 @@ __metadata:
     less: 4.1.2
     less-loader: 10.2.0
     process: 0.11.10
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.0.0-alpha-327d5c484-20211106
+    react-dom: 18.0.0-alpha-327d5c484-20211106
     react-markdown: 5.0.3
     react-syntax-highlight: 15.3.1
     style-loader: 3.3.1
@@ -3909,9 +3909,9 @@ __metadata:
     "@swc/cli": 0.1.51
     "@swc/core": 1.2.107
     "@swc/jest": 0.2.5
+    chokidar: 3.5.2
     jest: 27.3.1
     moment: 2.29.1
-    nunjucks: 3.2.3
   languageName: unknown
   linkType: soft
 
@@ -3982,8 +3982,8 @@ __metadata:
     next: 12.0.3
     next-auth: 4.0.0-beta.6
     next-with-less: 2.0.2
-    react: alpha
-    react-dom: alpha
+    react: 18.0.0-alpha-327d5c484-20211106
+    react-dom: 18.0.0-alpha-327d5c484-20211106
   languageName: unknown
   linkType: soft
 
@@ -5726,13 +5726,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"a-sync-waterfall@npm:^1.0.0":
-  version: 1.0.1
-  resolution: "a-sync-waterfall@npm:1.0.1"
-  checksum: 534948b50d6787c2dd5b7e89179b30c0fd96ac80a662d0f92eaa568cfffb36f1eea4aa720e3a21572d8b5f8686940954ac9d8c7667bcc719c1317ae3bdf86fe0
-  languageName: node
-  linkType: hard
-
 "abab@npm:^2.0.3, abab@npm:^2.0.5":
   version: 2.0.5
   resolution: "abab@npm:2.0.5"
@@ -6454,7 +6447,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"asap@npm:^2.0.0, asap@npm:^2.0.3, asap@npm:~2.0.3":
+"asap@npm:^2.0.0, asap@npm:~2.0.3":
   version: 2.0.6
   resolution: "asap@npm:2.0.6"
   checksum: b296c92c4b969e973260e47523207cd5769abd27c245a68c26dc7a0fe8053c55bb04360237cb51cab1df52be939da77150ace99ad331fb7fb13b3423ed73ff3d
@@ -7911,13 +7904,6 @@ __metadata:
   version: 4.1.1
   resolution: "commander@npm:4.1.1"
   checksum: d7b9913ff92cae20cb577a4ac6fcc121bd6223319e54a40f51a14740a681ad5c574fd29a57da478a5f234a6fa6c52cbf0b7c641353e03c648b1ae85ba670b977
-  languageName: node
-  linkType: hard
-
-"commander@npm:^5.1.0":
-  version: 5.1.0
-  resolution: "commander@npm:5.1.0"
-  checksum: 0b7fec1712fbcc6230fcb161d8d73b4730fa91a21dc089515489402ad78810547683f058e2a9835929c212fead1d6a6ade70db28bbb03edbc2829a9ab7d69447
   languageName: node
   linkType: hard
 
@@ -13899,8 +13885,8 @@ __metadata:
     opener: 1.5.2
     ora: 5.4.0
     pg: 8.7.1
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.0.0-alpha-327d5c484-20211106
+    react-dom: 18.0.0-alpha-327d5c484-20211106
     reload: 3.2.0
     saslprep: 1.0.3
     sqlite3: 5.0.2
@@ -14702,14 +14688,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongodb@npm:3.6.5":
-  version: 3.6.5
-  resolution: "mongodb@npm:3.6.5"
+"mongodb@npm:3.7.3, mongodb@npm:^3.6.9":
+  version: 3.7.3
+  resolution: "mongodb@npm:3.7.3"
   dependencies:
     bl: ^2.2.1
     bson: ^1.1.4
     denque: ^1.4.1
-    require_optional: ^1.0.1
+    optional-require: ^1.1.8
     safe-buffer: ^5.1.2
     saslprep: ^1.0.0
   dependenciesMeta:
@@ -14728,7 +14714,7 @@ __metadata:
       optional: true
     snappy:
       optional: true
-  checksum: b18c3c1c53957c74eea50862c36d2487904d58877287d05d125a4220ed8142856cfd200dc3a15b265fe71e6b6183b56d83a6a074e890849f2486e73a864d4c7c
+  checksum: ef7690fe6ee7d1752f121b14e59b3fabfddc60ff0536babce6c945703ad0010de9e6fa7de4c91b99275c256876a72a06899ce27893aba0838c2b542088bd1044
   languageName: node
   linkType: hard
 
@@ -15539,24 +15525,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nunjucks@npm:3.2.3":
-  version: 3.2.3
-  resolution: "nunjucks@npm:3.2.3"
-  dependencies:
-    a-sync-waterfall: ^1.0.0
-    asap: ^2.0.3
-    commander: ^5.1.0
-  peerDependencies:
-    chokidar: ^3.3.0
-  peerDependenciesMeta:
-    chokidar:
-      optional: true
-  bin:
-    nunjucks-precompile: bin/precompile
-  checksum: 9d0125acf917166675af2d9b5d525b6d3edaba68ec6f8c92edee8ad05140cfa8aef12feb46f4c3da52ed2836cadfb9d26fbf1fa9d9be6bef4660d03ce1e89dbe
-  languageName: node
-  linkType: hard
-
 "nwsapi@npm:^2.2.0":
   version: 2.2.0
   resolution: "nwsapi@npm:2.2.0"
@@ -15807,6 +15775,15 @@ __metadata:
     object-hash: ^2.0.1
     oidc-token-hash: ^5.0.1
   checksum: 79acd4815707cb5aad387465cef08004ee9a543c19fdce79834b672d8e4fcfa2437b4ad0c7583d5900d4c4b565dbfb658d6af5428cee42fddd6d38be954a6b5f
+  languageName: node
+  linkType: hard
+
+"optional-require@npm:^1.1.8":
+  version: 1.1.8
+  resolution: "optional-require@npm:1.1.8"
+  dependencies:
+    require-at: ^1.0.6
+  checksum: 437db76f713052925185ae80837b593877f75101154e8937f50d33b0b07bd500c214efc9016748642109b6e3e1197eb0513a2963eb06bcf3890f88a2724b1c87
   languageName: node
   linkType: hard
 
@@ -17769,7 +17746,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:*, react-dom@npm:17.0.2":
+"react-dom@npm:*":
   version: 17.0.2
   resolution: "react-dom@npm:17.0.2"
   dependencies:
@@ -17782,7 +17759,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:alpha":
+"react-dom@npm:18.0.0-alpha-327d5c484-20211106":
   version: 18.0.0-alpha-327d5c484-20211106
   resolution: "react-dom@npm:18.0.0-alpha-327d5c484-20211106"
   dependencies:
@@ -17939,7 +17916,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:*, react@npm:17.0.2":
+"react@npm:*":
   version: 17.0.2
   resolution: "react@npm:17.0.2"
   dependencies:
@@ -17949,7 +17926,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:alpha":
+"react@npm:18.0.0-alpha-327d5c484-20211106":
   version: 18.0.0-alpha-327d5c484-20211106
   resolution: "react@npm:18.0.0-alpha-327d5c484-20211106"
   dependencies:
@@ -18386,6 +18363,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"require-at@npm:^1.0.6":
+  version: 1.0.6
+  resolution: "require-at@npm:1.0.6"
+  checksum: 7753a6ebad99855ef015d5533a787c65e883c94c23371368eebf6f1c7e2a078811013b204823152cbab206a00e825e8e5ca09416fd835a489fa30bf064fbe6d9
+  languageName: node
+  linkType: hard
+
 "require-directory@npm:^2.1.1":
   version: 2.1.1
   resolution: "require-directory@npm:2.1.1"
@@ -18397,16 +18381,6 @@ __metadata:
   version: 2.0.2
   resolution: "require-from-string@npm:2.0.2"
   checksum: a03ef6895445f33a4015300c426699bc66b2b044ba7b670aa238610381b56d3f07c686251740d575e22f4c87531ba662d06937508f0f3c0f1ddc04db3130560b
-  languageName: node
-  linkType: hard
-
-"require_optional@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "require_optional@npm:1.0.1"
-  dependencies:
-    resolve-from: ^2.0.0
-    semver: ^5.1.0
-  checksum: 64aed45ccff138e3e8abfa104de6f9bd324d27408228dbe0902049f586a2a80caf885e162b4724ee9dd5a2a0369987e8b5c5db86f5eb48a98a9f7c7d00b5c5a5
   languageName: node
   linkType: hard
 
@@ -18437,13 +18411,6 @@ __metadata:
   dependencies:
     resolve-from: ^5.0.0
   checksum: 546e0816012d65778e580ad62b29e975a642989108d9a3c5beabfb2304192fa3c9f9146fbdfe213563c6ff51975ae41bac1d3c6e047dd9572c94863a057b4d81
-  languageName: node
-  linkType: hard
-
-"resolve-from@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "resolve-from@npm:2.0.0"
-  checksum: 02db4c30fecddef0efafbafb2d66b96c4a80f91d103d9850be3b85d1feb65b6af6c818d137dc546cea7d0288c21e13aa0fb4580af9af34b08052b3516690c5f3
   languageName: node
   linkType: hard
 
@@ -18776,7 +18743,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"semver@npm:2 || 3 || 4 || 5, semver@npm:^5.1.0, semver@npm:^5.3.0, semver@npm:^5.4.1, semver@npm:^5.6.0, semver@npm:^5.7.1":
+"semver@npm:2 || 3 || 4 || 5, semver@npm:^5.3.0, semver@npm:^5.4.1, semver@npm:^5.6.0, semver@npm:^5.7.1":
   version: 5.7.1
   resolution: "semver@npm:5.7.1"
   bin:

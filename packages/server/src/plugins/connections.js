@@ -14,18 +14,4 @@
   limitations under the License.
 */
 
-import React, { Suspense } from 'react';
-
-import LowdefyContext from '../components/LowdefyContext.js';
-
-import '../plugins/style.less';
-
-function MyApp({ Component, pageProps }) {
-  return (
-    <Suspense>
-      <LowdefyContext>{(lowdefy) => <Component lowdefy={lowdefy} {...pageProps} />}</LowdefyContext>
-    </Suspense>
-  );
-}
-
-export default MyApp;
+// ------------- GENERATED AT BUILD -------------

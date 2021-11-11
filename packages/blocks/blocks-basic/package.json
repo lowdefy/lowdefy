@@ -42,8 +42,8 @@
     "@lowdefy/block-utils": "3.22.0",
     "@lowdefy/helpers": "3.22.0",
     "dompurify": "2.3.3",
-    "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react": "18.0.0-alpha-327d5c484-20211106",
+    "react-dom": "18.0.0-alpha-327d5c484-20211106"
   },
   "devDependencies": {
     "@babel/preset-react": "7.16.0",

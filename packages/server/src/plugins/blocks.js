@@ -14,18 +14,10 @@
   limitations under the License.
 */
 
-import React, { Suspense } from 'react';
+import Html from '@lowdefy/blocks-basic/blocks/Html/Html.js';
 
-import LowdefyContext from '../components/LowdefyContext.js';
-
-import '../plugins/style.less';
-
-function MyApp({ Component, pageProps }) {
-  return (
-    <Suspense>
-      <LowdefyContext>{(lowdefy) => <Component lowdefy={lowdefy} {...pageProps} />}</LowdefyContext>
-    </Suspense>
-  );
+const blocks = {
+  Html
 }
 
-export default MyApp;
+export default blocks;

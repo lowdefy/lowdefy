@@ -14,8 +14,20 @@
   limitations under the License.
 */
 
-import Page from '../components/Page';
+import getHomePageId from '@lowdefy/api/routes/rootConfig/getHomePageId.js';
 
-export default function Home({ lowdefy }) {
-  return <Page lowdefy={lowdefy} />;
+const Home = () => {};
+
+export async function getServerSideProps() {
+  const apiContext = {};
+  const homePageId = await getHomePageId(apiContext);
+
+  return {
+    redirect: {
+      destination: `/${homePageId}`,
+      permanent: false,
+    },
+  };
 }
+
+export default Home;
