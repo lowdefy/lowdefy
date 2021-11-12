@@ -14,16 +14,18 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import findHomePageId from './findHomePageId.js';
+import getLowdefyGlobal from './getLowdefyGlobal.js';
+import getMenus from './menus/getMenus.js';
 
-async function Link({ context, params }) {
-  const linkParams = type.isString(params) ? { pageId: params } : params;
-  try {
-    context._internal.lowdefy._internal.link(linkParams);
-  } catch (error) {
-    console.log(error);
-    throw new Error(`Invalid Link, check action params. Received "${JSON.stringify(params)}".`);
-  }
+async function getRootConfig(context) {
+  const [lowdefyGlobal, menus] = await Promise.all([getLowdefyGlobal(context), getMenus(context)]);
+  return {
+    authenticated: context.authenticated,
+    homePageId: findHomePageId(context, { menus }),
+    lowdefyGlobal,
+    menus,
+  };
 }
 
-export default Link;
+export default getRootConfig;

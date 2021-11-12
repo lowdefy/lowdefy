@@ -16,13 +16,20 @@
 
 import createApiContext from '@lowdefy/api/context/createApiContext';
 import getPageConfig from '@lowdefy/api/routes/page/getPageConfig';
+import getRootConfig from '@lowdefy/api/routes/rootConfig/getRootConfig';
 
 import Page from '../components/Page.js';
 
 export async function getServerSideProps(context) {
   const { pageId } = context.params;
   const apiContext = await createApiContext({ buildDirectory: './.lowdefy/build' });
-  const pageConfig = await getPageConfig(apiContext, { pageId });
+
+  // TODO: Maybe we can only get rootConfig once?
+  // We can't do getServerSideProps on _app :(
+  const [rootConfig, pageConfig] = await Promise.all([
+    getRootConfig(apiContext),
+    getPageConfig(apiContext, { pageId }),
+  ]);
 
   if (!pageConfig) {
     return {
@@ -36,6 +43,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       pageConfig,
+      rootConfig,
     },
   };
 }

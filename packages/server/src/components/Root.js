@@ -13,17 +13,24 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import React, { useEffect, useState } from 'react';
 
-import { type } from '@lowdefy/helpers';
+const Root = ({ children, lowdefy, rootConfig }) => {
+  const [loading, setLoading] = useState(true);
 
-async function Link({ context, params }) {
-  const linkParams = type.isString(params) ? { pageId: params } : params;
-  try {
-    context._internal.lowdefy._internal.link(linkParams);
-  } catch (error) {
-    console.log(error);
-    throw new Error(`Invalid Link, check action params. Received "${JSON.stringify(params)}".`);
-  }
-}
+  useEffect(() => {
+    lowdefy.document = document;
+    lowdefy.window = window;
+    setLoading(false);
+  }, [lowdefy]);
 
-export default Link;
+  lowdefy.homePageId = rootConfig.homePageId;
+  lowdefy.lowdefyGlobal = rootConfig.lowdefyGlobal;
+  lowdefy.menus = rootConfig.menus;
+
+  if (loading) return <div>Loading...</div>;
+
+  return <>{children(true)}</>;
+};
+
+export default Root;

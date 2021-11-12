@@ -18,11 +18,8 @@ import createApiContext from './context/createApiContext.js';
 import createContext from './context/createContext.js';
 import getHomePageId from './routes/rootConfig/getHomePageId.js';
 import getPageConfig from './routes/page/getPageConfig.js';
-import openIdAuthorizationUrl from './routes/auth/openIdAuthorizationUrl.js';
-import openIdCallback from './routes/auth/openIdCallback.js';
-import openIdLogoutUrl from './routes/auth/openIdLogoutUrl.js';
+import getRootConfig from './routes/rootConfig/getRootConfig.js';
 import request from './routes/request/request.js';
-import rootConfig from './routes/rootConfig/rootConfig.js';
 
 import {
   AuthenticationError,
@@ -37,11 +34,8 @@ export {
   createContext,
   getHomePageId,
   getPageConfig,
-  openIdAuthorizationUrl,
-  openIdCallback,
-  openIdLogoutUrl,
+  getRootConfig,
   request,
-  rootConfig,
   AuthenticationError,
   ConfigurationError,
   RequestError,

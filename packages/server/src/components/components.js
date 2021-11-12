@@ -14,18 +14,8 @@
   limitations under the License.
 */
 
-import findHomePageId from './findHomePageId.js';
-import getLowdefyGlobal from './getLowdefyGlobal.js';
-import getMenus from './menus/getMenus.js';
+import Link from 'next/link';
 
-async function rootConfig(context) {
-  const [lowdefyGlobal, menus] = await Promise.all([getLowdefyGlobal(context), getMenus(context)]);
-  return {
-    authenticated: context.authenticated,
-    homePageId: findHomePageId(context, { menus }),
-    lowdefyGlobal,
-    menus,
-  };
-}
-
-export default rootConfig;
+export default {
+  Link,
+};

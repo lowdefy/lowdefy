@@ -19,6 +19,7 @@ import createReadConfigFile from './readConfigFile.js';
 async function createApiContext({ buildDirectory }) {
   const readConfigFile = createReadConfigFile({ buildDirectory });
   return {
+    authenticated: false,
     authorize: () => true,
     readConfigFile,
   };

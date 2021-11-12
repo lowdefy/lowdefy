@@ -22,21 +22,16 @@ const LoadingBlock = () => <div>Loading...</div>;
 
 const Context = ({ children, lowdefy, config }) => {
   const [context, setContext] = useState({});
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     let mounted = true;
     const mount = async () => {
-      try {
-        const ctx = await getContext({
-          config,
-          lowdefy,
-        });
-        if (mounted) {
-          setContext(ctx);
-        }
-      } catch (err) {
-        setError(err);
+      const ctx = await getContext({
+        config,
+        lowdefy,
+      });
+      if (mounted) {
+        setContext(ctx);
       }
     };
     mount();
@@ -45,7 +40,6 @@ const Context = ({ children, lowdefy, config }) => {
     };
   }, [config, lowdefy]);
 
-  if (error) throw error;
   if (context.id !== config.id) return <LoadingBlock />;
 
   return children(context);

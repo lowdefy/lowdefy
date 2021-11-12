@@ -23,6 +23,7 @@ module.exports = withLess({
     }
     return config;
   },
+  poweredByHeader: false,
   // productionBrowserSourceMaps: true
   // experimental: {
   //   concurrentFeatures: true,

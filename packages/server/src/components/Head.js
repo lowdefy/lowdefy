@@ -18,7 +18,6 @@ import React from 'react';
 import Head from 'next/head';
 
 const BindHead = ({ properties }) => {
-  console.log(properties);
   return (
     <Head>
       <title>{properties.title}</title>

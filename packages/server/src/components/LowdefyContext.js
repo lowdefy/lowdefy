@@ -17,14 +17,16 @@
 import React from 'react';
 
 import blockComponents from '../plugins/blocks.js';
+import components from './components.js';
 
 const LowdefyContext = ({ children }) => {
   const lowdefy = {
     _internal: {
       blockComponents,
+      components,
       updaters: {},
       displayMessage: (message) => {
-        console.log(message);
+        alert(message);
         return () => undefined;
       },
       link: () => undefined,
