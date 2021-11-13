@@ -18,9 +18,11 @@ import createReadConfigFile from './readConfigFile.js';
 
 async function createApiContext({ buildDirectory }) {
   const readConfigFile = createReadConfigFile({ buildDirectory });
+  const config = await readConfigFile('config.json');
   return {
     authenticated: false,
     authorize: () => true,
+    config,
     readConfigFile,
   };
 }

@@ -15,19 +15,43 @@
 */
 import createApiContext from '@lowdefy/api/context/createApiContext';
 import getHomePageId from '@lowdefy/api/routes/rootConfig/getHomePageId.js';
+import getPageConfig from '@lowdefy/api/routes/page/getPageConfig';
+import getRootConfig from '@lowdefy/api/routes/rootConfig/getRootConfig';
 
-const Home = () => {};
+import Page from '../components/Page.js';
 
 export async function getServerSideProps() {
   const apiContext = await createApiContext({ buildDirectory: './.lowdefy/build' });
-  const homePageId = await getHomePageId(apiContext);
+  const homePageIdData = await getHomePageId(apiContext);
+  if (homePageIdData.configured === false) {
+    return {
+      redirect: {
+        destination: `/${homePageIdData.homePageId}`,
+        permanent: false,
+      },
+    };
+  }
+
+  const [rootConfig, pageConfig] = await Promise.all([
+    getRootConfig(apiContext),
+    getPageConfig(apiContext, { pageId: homePageIdData.homePageId }),
+  ]);
+
+  if (!pageConfig) {
+    return {
+      redirect: {
+        destination: '/404',
+        permanent: false,
+      },
+    };
+  }
 
   return {
-    redirect: {
-      destination: `/${homePageId}`,
-      permanent: false,
+    props: {
+      pageConfig,
+      rootConfig,
     },
   };
 }
 
-export default Home;
+export default Page;
