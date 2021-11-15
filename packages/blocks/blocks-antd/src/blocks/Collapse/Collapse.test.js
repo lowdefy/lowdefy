@@ -16,12 +16,12 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import Collapse from './Collapse';
+import Block from './Collapse.js';
 import examples from './examples.yaml';
 import block from './index.js';
 import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-runRenderTests({ examples, Block: Collapse, meta });
+runRenderTests({ examples, Block, meta, schema });
 runBlockSchemaTests({ examples, meta, schema });

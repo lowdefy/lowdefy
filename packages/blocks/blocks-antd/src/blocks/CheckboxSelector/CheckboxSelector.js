@@ -19,12 +19,13 @@ import { Checkbox, Space } from 'antd';
 import { type } from '@lowdefy/helpers';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 
-import Label from '../Label/Label';
-import getValueIndex from '../../getValueIndex';
-import getUniqueValues from '../../getUniqueValues';
+import Label from '../Label/Label.js';
+import getValueIndex from '../../getValueIndex.js';
+import getUniqueValues from '../../getUniqueValues.js';
 
 const CheckboxSelector = ({
   blockId,
+  components,
   events,
   loading,
   properties,
@@ -37,6 +38,7 @@ const CheckboxSelector = ({
   return (
     <Label
       blockId={blockId}
+      components={components}
       events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}

@@ -20,14 +20,14 @@ import moment from 'moment';
 import { type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-import Label from '../Label/Label';
-import disabledDate from '../../disabledDate';
+import Label from '../Label/Label.js';
+import disabledDate from '../../disabledDate.js';
 
 const DateTimeSelector = ({
   blockId,
   events,
   loading,
-  Icon,
+  components: { Icon },
   methods,
   properties,
   required,
@@ -44,6 +44,7 @@ const DateTimeSelector = ({
   return (
     <Label
       blockId={blockId}
+      components={{ Icon }}
       events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}

@@ -14,13 +14,13 @@
   limitations under the License.
 */
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { Row, Col } from 'antd';
+import { Col, Row } from 'antd';
 
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
 import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
 jest.mock('antd', () => {
   const comp = jest.fn(() => 'mocked');
@@ -46,4 +46,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, meta, mocks, schema });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

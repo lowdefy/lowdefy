@@ -46,6 +46,7 @@ exports[`Render default - value[0] 1`] = `
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -114,6 +115,7 @@ exports[`Render inline and long extra default size - value[0] 1`] = `
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -192,6 +194,7 @@ exports[`Render inline and long extra large size - value[0] 1`] = `
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -270,6 +273,7 @@ exports[`Render inline and long extra small size - value[0] 1`] = `
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -336,6 +340,7 @@ exports[`Render properties.align: left - value[0] 1`] = `
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -392,6 +397,7 @@ exports[`Render properties.align: right - value[0] 1`] = `
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -448,6 +454,7 @@ exports[`Render properties.colon: false - value[0] 1`] = `
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -504,6 +511,7 @@ exports[`Render properties.colon: true - value[0] 1`] = `
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -533,6 +541,7 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -593,6 +602,7 @@ exports[`Render properties.extra: Extra long - value[0] 1`] = `
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -669,6 +679,7 @@ exports[`Render properties.extra: Extra long with inline = true - value[0] 1`] =
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -745,6 +756,7 @@ exports[`Render properties.extra: Extra long with inline = true, size = large - 
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -821,6 +833,7 @@ exports[`Render properties.extra: Extra long with inline = true, size = small - 
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -895,6 +908,7 @@ exports[`Render properties.extra: Extra long with inline true - value[0] 1`] = `
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -955,6 +969,7 @@ exports[`Render properties.extra: Extra text - value[0] 1`] = `
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -1024,6 +1039,7 @@ exports[`Render properties.extra: html in extra - value[0] 1`] = `
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -1098,6 +1114,7 @@ exports[`Render properties.extraStyle: border 1px purple - value[0] 1`] = `
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -1167,6 +1184,7 @@ exports[`Render properties.feedbackStyle: border 1px blue - value[0] 1`] = `
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -1238,6 +1256,7 @@ exports[`Render properties.inline: true - value[0] 1`] = `
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -1294,6 +1313,7 @@ exports[`Render properties.span: 2 - value[0] 1`] = `
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -1350,6 +1370,7 @@ exports[`Render properties.span: 2 with long work title - value[0] 1`] = `
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -1406,6 +1427,7 @@ exports[`Render properties.title - value[0] 1`] = `
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -1464,6 +1486,7 @@ exports[`Render properties.title long - value[0] 1`] = `
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -1526,6 +1549,7 @@ exports[`Render properties.title: html in title - value[0] 1`] = `
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -1588,6 +1612,7 @@ exports[`Render span, align right and long extra for default size - value[0] 1`]
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -1660,6 +1685,7 @@ exports[`Render span, align right and long extra for large size - value[0] 1`] =
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -1732,6 +1758,7 @@ exports[`Render span, align right and long extra for small size - value[0] 1`] =
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -1804,6 +1831,7 @@ exports[`Render span, align right, long title and long extra for default size - 
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -1876,6 +1904,7 @@ exports[`Render span, align right, long title and long extra for large size - va
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content
@@ -1948,6 +1977,7 @@ exports[`Render span, align right, long title and long extra for small size - va
         class="ant-form-item-control-input-content"
       >
         <div
+          data-testid="area-content"
           style="border: 1px solid red; padding: 10px;"
         >
           content

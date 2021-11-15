@@ -15,28 +15,36 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { Menu } from 'antd';
 
-import Block from './Menu.js';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-jest.mock('antd/lib/menu', () => {
+jest.mock('antd', () => {
   const comp = jest.fn(() => 'mocked');
   comp.Divider = jest.fn(() => 'mocked');
-  comp.SubMenu = jest.fn(() => 'mocked');
-  comp.ItemGroup = jest.fn(() => 'mocked');
   comp.Item = jest.fn(() => 'mocked');
-  return comp;
+  comp.ItemGroup = jest.fn(() => 'mocked');
+  comp.SubMenu = jest.fn(() => 'mocked');
+  return {
+    Menu: comp,
+  };
 });
 
 const mocks = [
   {
-    name: 'default',
-    fn: Menu,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [antd.Menu];
+    },
+    getBlock: async () => {
+      const Block = await import('./Menu.js');
+      return Block.default;
+    },
+    name: 'Menu',
   },
 ];
 
-runMockRenderTests({ examples, Block, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

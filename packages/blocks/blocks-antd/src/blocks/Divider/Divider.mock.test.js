@@ -15,24 +15,32 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { Divider } from 'antd';
 
-import Block from './Divider';
 import examples from './examples.yaml';
 import block from './index.js';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-jest.mock('antd/lib/divider', () => {
+jest.mock('antd', () => {
   const comp = jest.fn(() => 'mocked');
-  return comp;
+  return {
+    Divider: comp,
+  };
 });
 
 const mocks = [
   {
-    name: 'default',
-    fn: Divider,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [antd.Divider];
+    },
+    getBlock: async () => {
+      const Block = await import('./Divider.js');
+      return Block.default;
+    },
+    name: 'Divider',
   },
 ];
 
-runMockRenderTests({ examples, Block, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

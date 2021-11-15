@@ -15,24 +15,35 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { InputNumber } from 'antd';
+import { Col, Row } from 'antd';
 
-import Block from './NumberInput.js';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-jest.mock('antd/lib/input-number', () => {
+jest.mock('antd', () => {
   const comp = jest.fn(() => 'mocked');
-  return comp;
+  return {
+    Col,
+    InputNumber: comp,
+    Row,
+  };
 });
 
 const mocks = [
   {
-    name: 'default',
-    fn: InputNumber,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [antd.InputNumber];
+    },
+    getBlock: async () => {
+      const Block = await import('./NumberInput.js');
+      return Block.default;
+    },
+    name: 'NumberInput',
   },
 ];
 
-runMockRenderTests({ examples, Block, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

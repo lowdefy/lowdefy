@@ -15,9 +15,9 @@
 */
 
 import React from 'react';
-import { Select } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { get, type } from '@lowdefy/helpers';
+import { Select } from 'antd';
 
 import Label from '../Label/Label.js';
 import getValueIndex from '../../getValueIndex.js';
@@ -27,9 +27,9 @@ const Option = Select.Option;
 
 const Selector = ({
   blockId,
+  components: { Icon, Link },
   events,
   loading,
-  Icon,
   methods,
   properties,
   required,
@@ -40,6 +40,7 @@ const Selector = ({
   return (
     <Label
       blockId={blockId}
+      components={{ Icon, Link }}
       events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}

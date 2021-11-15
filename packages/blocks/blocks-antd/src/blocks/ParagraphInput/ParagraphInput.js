@@ -21,7 +21,7 @@ import { type } from '@lowdefy/helpers';
 
 const Paragraph = Typography.Paragraph;
 
-const ParagraphInput = ({ blockId, events, Icon, properties, methods, value }) => {
+const ParagraphInput = ({ blockId, events, components: { Icon }, properties, methods, value }) => {
   const [editing, setEdit] = useState(false);
   const editableEvents = {
     onStart: () => {

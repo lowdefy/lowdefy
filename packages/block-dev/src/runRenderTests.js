@@ -27,6 +27,7 @@ const runRenderTests = ({
   meta,
   reset = () => null,
   schema,
+  tests,
   validationsExamples,
 }) => {
   const { before, methods, getProps } = mockBlock({ meta, logger, schema });
@@ -52,7 +53,7 @@ const runRenderTests = ({
         await waitFor(() => expect(container.firstChild).toMatchSnapshot());
       });
 
-      if (meta.test && meta.test.validation) {
+      if (tests && tests.validation) {
         (validationsExamples || []).map((validationEx) => {
           test(`Render validation.status = ${validationEx.status} ${ex.id} - value[${v}]`, async () => {
             // create shell to setup react hooks with getProps before render;
@@ -65,7 +66,7 @@ const runRenderTests = ({
         });
       }
 
-      if (meta.test && meta.test.required) {
+      if (tests && tests.required) {
         test(`Render required = true ${ex.id} - value[${v}]`, async () => {
           // create shell to setup react hooks with getProps before render;
           const Shell = () => <Block {...getProps(ex)} value={value} methods={methods} required />;

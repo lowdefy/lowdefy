@@ -1,0 +1,454 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render default - value[0] 1`] = `
+<div
+  class="ant-statistic emotion-0"
+>
+  <div
+    class="ant-statistic-content"
+  >
+    
+    <span
+      class="ant-statistic-content-value"
+    >
+      <span
+        class="ant-statistic-content-value-int"
+      >
+        
+        0
+      </span>
+      
+    </span>
+    
+  </div>
+</div>
+`;
+
+exports[`Render properties.decimalSeparator: ',' - value[0] 1`] = `
+<div
+  class="ant-statistic emotion-0"
+>
+  <div
+    class="ant-statistic-content"
+  >
+    
+    <span
+      class="ant-statistic-content-value"
+    >
+      <span
+        class="ant-statistic-content-value-int"
+      >
+        
+        3
+      </span>
+      <span
+        class="ant-statistic-content-value-decimal"
+      >
+        ,45
+      </span>
+    </span>
+    
+  </div>
+</div>
+`;
+
+exports[`Render properties.groupSeparator: ',' - value[0] 1`] = `
+<div
+  class="ant-statistic emotion-0"
+>
+  <div
+    class="ant-statistic-content"
+  >
+    
+    <span
+      class="ant-statistic-content-value"
+    >
+      <span
+        class="ant-statistic-content-value-int"
+      >
+        
+        3.565.542
+      </span>
+      <span
+        class="ant-statistic-content-value-decimal"
+      >
+        ,45
+      </span>
+    </span>
+    
+  </div>
+</div>
+`;
+
+exports[`Render properties.loading: true - value[0] 1`] = `
+<div
+  class="ant-statistic emotion-0"
+>
+  <div
+    class="ant-statistic-title"
+  >
+    <span
+      class="emotion-0"
+    >
+      Statistic title
+    </span>
+  </div>
+  <div
+    class="ant-skeleton"
+  >
+    <div
+      class="ant-skeleton-content"
+    >
+      <h3
+        class="ant-skeleton-title"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.precision: 2 - value[0] 1`] = `
+<div
+  class="ant-statistic emotion-0"
+>
+  <div
+    class="ant-statistic-content"
+  >
+    
+    <span
+      class="ant-statistic-content-value"
+    >
+      <span
+        class="ant-statistic-content-value-int"
+      >
+        
+        3
+      </span>
+      <span
+        class="ant-statistic-content-value-decimal"
+      >
+        .45
+      </span>
+    </span>
+    
+  </div>
+</div>
+`;
+
+exports[`Render properties.prefix: R - value[0] 1`] = `
+<div
+  class="ant-statistic emotion-0"
+>
+  <div
+    class="ant-statistic-content"
+  >
+    <span
+      class="ant-statistic-content-prefix"
+    >
+      R
+    </span>
+    <span
+      class="ant-statistic-content-value"
+    >
+      <span
+        class="ant-statistic-content-value-int"
+      >
+        
+        3
+      </span>
+      <span
+        class="ant-statistic-content-value-decimal"
+      >
+        .45
+      </span>
+    </span>
+    
+  </div>
+</div>
+`;
+
+exports[`Render properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
+<div
+  class="ant-statistic emotion-0"
+>
+  <div
+    class="ant-statistic-content"
+  >
+    <span
+      class="ant-statistic-content-prefix"
+    >
+      <svg
+        class="emotion-0"
+        data-testid="AiOutlineExclamationCircle"
+        id="properties.prefixIcon: AccountBookFilled_prefixIcon"
+      />
+    </span>
+    <span
+      class="ant-statistic-content-value"
+    >
+      <span
+        class="ant-statistic-content-value-int"
+      >
+        
+        3
+      </span>
+      <span
+        class="ant-statistic-content-value-decimal"
+      >
+        .45
+      </span>
+    </span>
+    
+  </div>
+</div>
+`;
+
+exports[`Render properties.suffix: Rand - value[0] 1`] = `
+<div
+  class="ant-statistic emotion-0"
+>
+  <div
+    class="ant-statistic-content"
+  >
+    
+    <span
+      class="ant-statistic-content-value"
+    >
+      <span
+        class="ant-statistic-content-value-int"
+      >
+        
+        3
+      </span>
+      <span
+        class="ant-statistic-content-value-decimal"
+      >
+        .45
+      </span>
+    </span>
+    <span
+      class="ant-statistic-content-suffix"
+    >
+      Rand
+    </span>
+  </div>
+</div>
+`;
+
+exports[`Render properties.suffixIcon: AccountBookFilled - value[0] 1`] = `
+<div
+  class="ant-statistic emotion-0"
+>
+  <div
+    class="ant-statistic-content"
+  >
+    
+    <span
+      class="ant-statistic-content-value"
+    >
+      <span
+        class="ant-statistic-content-value-int"
+      >
+        
+        3
+      </span>
+      <span
+        class="ant-statistic-content-value-decimal"
+      >
+        .45
+      </span>
+    </span>
+    <span
+      class="ant-statistic-content-suffix"
+    >
+      <svg
+        class="emotion-0"
+        data-testid="AiOutlineExclamationCircle"
+        id="properties.suffixIcon: AccountBookFilled_suffixIcon"
+      />
+    </span>
+  </div>
+</div>
+`;
+
+exports[`Render properties.title - value[0] 1`] = `
+<div
+  class="ant-statistic emotion-0"
+>
+  <div
+    class="ant-statistic-title"
+  >
+    <span
+      class="emotion-0"
+    >
+      Statistic title
+    </span>
+  </div>
+  <div
+    class="ant-statistic-content"
+  >
+    
+    <span
+      class="ant-statistic-content-value"
+    >
+      <span
+        class="ant-statistic-content-value-int"
+      >
+        
+        0
+      </span>
+      
+    </span>
+    
+  </div>
+</div>
+`;
+
+exports[`Render properties.title with html - value[0] 1`] = `
+<div
+  class="ant-statistic emotion-0"
+>
+  <div
+    class="ant-statistic-title"
+  >
+    <span
+      class="emotion-0"
+    >
+      <div
+        style="color:blue;"
+      >
+        Very Html
+      </div>
+    </span>
+  </div>
+  <div
+    class="ant-statistic-content"
+  >
+    
+    <span
+      class="ant-statistic-content-value"
+    >
+      <span
+        class="ant-statistic-content-value-int"
+      >
+        
+        100
+      </span>
+      
+    </span>
+    <span
+      class="ant-statistic-content-suffix"
+    >
+      %
+    </span>
+  </div>
+</div>
+`;
+
+exports[`Render properties.value: '3.45' as string - value[0] 1`] = `
+<div
+  class="ant-statistic emotion-0"
+>
+  <div
+    class="ant-statistic-content"
+  >
+    
+    <span
+      class="ant-statistic-content-value"
+    >
+      <span
+        class="ant-statistic-content-value-int"
+      >
+        
+        3
+      </span>
+      <span
+        class="ant-statistic-content-value-decimal"
+      >
+        .45
+      </span>
+    </span>
+    
+  </div>
+</div>
+`;
+
+exports[`Render properties.value: 3.45 as number - value[0] 1`] = `
+<div
+  class="ant-statistic emotion-0"
+>
+  <div
+    class="ant-statistic-content"
+  >
+    
+    <span
+      class="ant-statistic-content-value"
+    >
+      <span
+        class="ant-statistic-content-value-int"
+      >
+        
+        3
+      </span>
+      <span
+        class="ant-statistic-content-value-decimal"
+      >
+        .45
+      </span>
+    </span>
+    
+  </div>
+</div>
+`;
+
+exports[`Test Schema default 1`] = `true`;
+
+exports[`Test Schema default 2`] = `null`;
+
+exports[`Test Schema properties.decimalSeparator: ',' 1`] = `true`;
+
+exports[`Test Schema properties.decimalSeparator: ',' 2`] = `null`;
+
+exports[`Test Schema properties.groupSeparator: ',' 1`] = `true`;
+
+exports[`Test Schema properties.groupSeparator: ',' 2`] = `null`;
+
+exports[`Test Schema properties.loading: true 1`] = `true`;
+
+exports[`Test Schema properties.loading: true 2`] = `null`;
+
+exports[`Test Schema properties.precision: 2 1`] = `true`;
+
+exports[`Test Schema properties.precision: 2 2`] = `null`;
+
+exports[`Test Schema properties.prefix: R 1`] = `true`;
+
+exports[`Test Schema properties.prefix: R 2`] = `null`;
+
+exports[`Test Schema properties.prefixIcon: AccountBookFilled 1`] = `true`;
+
+exports[`Test Schema properties.prefixIcon: AccountBookFilled 2`] = `null`;
+
+exports[`Test Schema properties.suffix: Rand 1`] = `true`;
+
+exports[`Test Schema properties.suffix: Rand 2`] = `null`;
+
+exports[`Test Schema properties.suffixIcon: AccountBookFilled 1`] = `true`;
+
+exports[`Test Schema properties.suffixIcon: AccountBookFilled 2`] = `null`;
+
+exports[`Test Schema properties.title 1`] = `true`;
+
+exports[`Test Schema properties.title 2`] = `null`;
+
+exports[`Test Schema properties.title with html 1`] = `true`;
+
+exports[`Test Schema properties.title with html 2`] = `null`;
+
+exports[`Test Schema properties.value: '3.45' as string 1`] = `true`;
+
+exports[`Test Schema properties.value: '3.45' as string 2`] = `null`;
+
+exports[`Test Schema properties.value: 3.45 as number 1`] = `true`;
+
+exports[`Test Schema properties.value: 3.45 as number 2`] = `null`;

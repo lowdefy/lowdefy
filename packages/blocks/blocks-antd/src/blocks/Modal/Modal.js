@@ -15,11 +15,11 @@
 */
 
 import React, { useState, useEffect } from 'react';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { get } from '@lowdefy/helpers';
 import { Modal } from 'antd';
 
-const triggerSetOpen = ({ state, setOpen, methods }) => {
+const triggerSetOpen = ({ methods, setOpen, state }) => {
   if (!state) {
     methods.triggerEvent({ name: 'onClose' });
   }
@@ -29,7 +29,7 @@ const triggerSetOpen = ({ state, setOpen, methods }) => {
   setOpen(state);
 };
 
-const ModalBlock = ({ blockId, content, properties, events, methods }) => {
+const ModalBlock = ({ blockId, content, events, methods, properties }) => {
   const [openState, setOpen] = useState(false);
   useEffect(() => {
     methods.registerMethod('toggleOpen', () =>
@@ -50,9 +50,24 @@ const ModalBlock = ({ blockId, content, properties, events, methods }) => {
     <div id={blockId}>
       <Modal
         id={`${blockId}_modal`}
-        title={renderHtml({ html: properties.title, methods })}
+        afterClose={() => methods.triggerEvent({ name: 'afterClose' })}
         bodyStyle={methods.makeCssClass(properties.bodyStyle, true)}
+        cancelButtonProps={properties.cancelButtonProps}
+        cancelText={properties.cancelText || 'Cancel'}
+        centered={!!properties.centered}
+        closable={properties.closable !== undefined ? properties.closable : true}
+        confirmLoading={get(events, 'onOk.loading')}
+        mask={properties.mask !== undefined ? properties.mask : true}
+        maskClosable={properties.maskClosable !== undefined ? properties.maskClosable : true}
+        maskStyle={methods.makeCssClass(properties.maskStyle, true)}
+        okButtonProps={properties.okButtonProps}
+        okText={properties.okText || 'Ok'}
+        okType={properties.okButtonType || 'primary'}
+        title={renderHtml({ html: properties.title, methods })}
         visible={openState}
+        width={properties.width}
+        wrapClassName={methods.makeCssClass(properties.wrapperStyle)}
+        zIndex={properties.zIndex}
         onOk={async () => {
           const response = await methods.triggerEvent({ name: 'onOk' });
           if (response.success === false) return;
@@ -67,21 +82,6 @@ const ModalBlock = ({ blockId, content, properties, events, methods }) => {
             triggerSetOpen({ state: false, setOpen, methods });
           }
         }}
-        afterClose={() => methods.triggerEvent({ name: 'afterClose' })}
-        confirmLoading={get(events, 'onOk.loading')}
-        okText={properties.okText || 'Ok'}
-        cancelText={properties.cancelText || 'Cancel'}
-        width={properties.width}
-        centered={!!properties.centered}
-        closable={properties.closable !== undefined ? properties.closable : true}
-        mask={properties.mask !== undefined ? properties.mask : true}
-        maskClosable={properties.maskClosable !== undefined ? properties.maskClosable : true}
-        maskStyle={methods.makeCssClass(properties.maskStyle, true)}
-        okType={properties.okButtonType || 'primary'}
-        okButtonProps={properties.okButtonProps}
-        cancelButtonProps={properties.cancelButtonProps}
-        wrapClassName={methods.makeCssClass(properties.wrapperStyle)}
-        zIndex={properties.zIndex}
         {...extraProps}
       >
         {content.content && content.content()}

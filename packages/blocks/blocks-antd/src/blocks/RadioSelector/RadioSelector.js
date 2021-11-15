@@ -27,6 +27,7 @@ const RadioGroup = Radio.Group;
 
 const RadioSelector = ({
   blockId,
+  components,
   events,
   loading,
   properties,
@@ -39,6 +40,7 @@ const RadioSelector = ({
   return (
     <Label
       blockId={blockId}
+      components={components}
       events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}

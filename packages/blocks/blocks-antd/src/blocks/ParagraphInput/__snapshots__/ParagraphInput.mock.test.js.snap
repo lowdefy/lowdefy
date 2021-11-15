@@ -1,0 +1,856 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mock render - default - value[0] - ParagraphInput 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "",
+      "className": "{}",
+      "code": undefined,
+      "copyable": undefined,
+      "delete": undefined,
+      "disabled": undefined,
+      "editable": Object {
+        "onChange": [Function],
+        "onStart": [Function],
+      },
+      "ellipsis": undefined,
+      "id": "default",
+      "italic": undefined,
+      "mark": undefined,
+      "strong": undefined,
+      "type": undefined,
+      "underline": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.code: true - value[0] - ParagraphInput 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "",
+      "className": "{}",
+      "code": true,
+      "copyable": undefined,
+      "delete": undefined,
+      "disabled": undefined,
+      "editable": Object {
+        "onChange": [Function],
+        "onStart": [Function],
+      },
+      "ellipsis": undefined,
+      "id": "properties.code: true",
+      "italic": undefined,
+      "mark": undefined,
+      "strong": undefined,
+      "type": undefined,
+      "underline": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.copyable: icon - value[0] - ParagraphInput 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "",
+      "className": "{}",
+      "code": undefined,
+      "copyable": Object {
+        "icon": <IconComp1
+          basePath=""
+          blockId="properties.copyable: icon_copyable_icon"
+          components={
+            Object {
+              "Icon": [Function],
+              "Link": [Function],
+            }
+          }
+          content={Object {}}
+          events={Object {}}
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "makeCssClass": [Function],
+              "registerEvent": [Function],
+              "registerMethod": [Function],
+              "triggerEvent": [Function],
+            }
+          }
+          properties="WarningOutlined"
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />,
+        "onCopy": [Function],
+        "text": null,
+        "tooltips": undefined,
+      },
+      "delete": undefined,
+      "disabled": undefined,
+      "editable": Object {
+        "onChange": [Function],
+        "onStart": [Function],
+      },
+      "ellipsis": undefined,
+      "id": "properties.copyable: icon",
+      "italic": undefined,
+      "mark": undefined,
+      "strong": undefined,
+      "type": undefined,
+      "underline": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.copyable: icon: [] - value[0] - ParagraphInput 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "",
+      "className": "{}",
+      "code": undefined,
+      "copyable": Object {
+        "icon": Array [
+          <IconComp1
+            basePath=""
+            blockId="properties.copyable: icon: []_copyable_before_icon"
+            components={
+              Object {
+                "Icon": [Function],
+                "Link": [Function],
+              }
+            }
+            content={Object {}}
+            events={Object {}}
+            list={Array []}
+            menus={Array []}
+            methods={
+              Object {
+                "makeCssClass": [Function],
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+            properties="WarningOutlined"
+            required={false}
+            user={Object {}}
+            validation={
+              Object {
+                "errors": Array [],
+                "status": null,
+                "warnings": Array [],
+              }
+            }
+          />,
+          <IconComp1
+            basePath=""
+            blockId="properties.copyable: icon: []_copyable_after_icon"
+            components={
+              Object {
+                "Icon": [Function],
+                "Link": [Function],
+              }
+            }
+            content={Object {}}
+            events={Object {}}
+            list={Array []}
+            menus={Array []}
+            methods={
+              Object {
+                "makeCssClass": [Function],
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+            properties="RocketOutlined"
+            required={false}
+            user={Object {}}
+            validation={
+              Object {
+                "errors": Array [],
+                "status": null,
+                "warnings": Array [],
+              }
+            }
+          />,
+        ],
+        "onCopy": [Function],
+        "text": null,
+        "tooltips": undefined,
+      },
+      "delete": undefined,
+      "disabled": undefined,
+      "editable": Object {
+        "onChange": [Function],
+        "onStart": [Function],
+      },
+      "ellipsis": undefined,
+      "id": "properties.copyable: icon: []",
+      "italic": undefined,
+      "mark": undefined,
+      "strong": undefined,
+      "type": undefined,
+      "underline": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.copyable: text: one - value[0] - ParagraphInput 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "",
+      "className": "{}",
+      "code": undefined,
+      "copyable": Object {
+        "icon": undefined,
+        "onCopy": [Function],
+        "text": "one",
+        "tooltips": undefined,
+      },
+      "delete": undefined,
+      "disabled": undefined,
+      "editable": Object {
+        "onChange": [Function],
+        "onStart": [Function],
+      },
+      "ellipsis": undefined,
+      "id": "properties.copyable: text: one",
+      "italic": undefined,
+      "mark": undefined,
+      "strong": undefined,
+      "type": undefined,
+      "underline": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.copyable: tooltips: [] - value[0] - ParagraphInput 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "",
+      "className": "{}",
+      "code": undefined,
+      "copyable": Object {
+        "icon": undefined,
+        "onCopy": [Function],
+        "text": null,
+        "tooltips": Array [
+          "Click to copy",
+          "Copy done",
+        ],
+      },
+      "delete": undefined,
+      "disabled": undefined,
+      "editable": Object {
+        "onChange": [Function],
+        "onStart": [Function],
+      },
+      "ellipsis": undefined,
+      "id": "properties.copyable: tooltips: []",
+      "italic": undefined,
+      "mark": undefined,
+      "strong": undefined,
+      "type": undefined,
+      "underline": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.copyable: true - value[0] - ParagraphInput 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "",
+      "className": "{}",
+      "code": undefined,
+      "copyable": true,
+      "delete": undefined,
+      "disabled": undefined,
+      "editable": Object {
+        "onChange": [Function],
+        "onStart": [Function],
+      },
+      "ellipsis": undefined,
+      "id": "properties.copyable: true",
+      "italic": undefined,
+      "mark": undefined,
+      "strong": undefined,
+      "type": undefined,
+      "underline": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.delete: true - value[0] - ParagraphInput 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "",
+      "className": "{}",
+      "code": undefined,
+      "copyable": undefined,
+      "delete": true,
+      "disabled": undefined,
+      "editable": Object {
+        "onChange": [Function],
+        "onStart": [Function],
+      },
+      "ellipsis": undefined,
+      "id": "properties.delete: true",
+      "italic": undefined,
+      "mark": undefined,
+      "strong": undefined,
+      "type": undefined,
+      "underline": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.disabled: true - value[0] - ParagraphInput 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "",
+      "className": "{}",
+      "code": undefined,
+      "copyable": undefined,
+      "delete": undefined,
+      "disabled": true,
+      "editable": Object {
+        "onChange": [Function],
+        "onStart": [Function],
+      },
+      "ellipsis": undefined,
+      "id": "properties.disabled: true",
+      "italic": undefined,
+      "mark": undefined,
+      "strong": undefined,
+      "type": undefined,
+      "underline": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.editable.icon - value[0] - ParagraphInput 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "",
+      "className": "{}",
+      "code": undefined,
+      "copyable": undefined,
+      "delete": undefined,
+      "disabled": undefined,
+      "editable": Object {
+        "autoSize": undefined,
+        "editing": false,
+        "icon": <IconComp1
+          basePath=""
+          blockId="properties.editable.icon_editable_icon"
+          components={
+            Object {
+              "Icon": [Function],
+              "Link": [Function],
+            }
+          }
+          content={Object {}}
+          events={Object {}}
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "makeCssClass": [Function],
+              "registerEvent": [Function],
+              "registerMethod": [Function],
+              "triggerEvent": [Function],
+            }
+          }
+          properties="PlusOutlined"
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />,
+        "maxLength": undefined,
+        "onChange": [Function],
+        "onStart": [Function],
+        "tooltip": undefined,
+      },
+      "ellipsis": undefined,
+      "id": "properties.editable.icon",
+      "italic": undefined,
+      "mark": undefined,
+      "strong": undefined,
+      "type": undefined,
+      "underline": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.editable.maxLength: 10 - value[0] - ParagraphInput 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "",
+      "className": "{}",
+      "code": undefined,
+      "copyable": undefined,
+      "delete": undefined,
+      "disabled": undefined,
+      "editable": Object {
+        "autoSize": undefined,
+        "editing": false,
+        "icon": undefined,
+        "maxLength": 10,
+        "onChange": [Function],
+        "onStart": [Function],
+        "tooltip": undefined,
+      },
+      "ellipsis": undefined,
+      "id": "properties.editable.maxLength: 10",
+      "italic": undefined,
+      "mark": undefined,
+      "strong": undefined,
+      "type": undefined,
+      "underline": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.editable.tooltip - value[0] - ParagraphInput 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "",
+      "className": "{}",
+      "code": undefined,
+      "copyable": undefined,
+      "delete": undefined,
+      "disabled": undefined,
+      "editable": Object {
+        "autoSize": undefined,
+        "editing": false,
+        "icon": undefined,
+        "maxLength": undefined,
+        "onChange": [Function],
+        "onStart": [Function],
+        "tooltip": "Change the value",
+      },
+      "ellipsis": undefined,
+      "id": "properties.editable.tooltip",
+      "italic": undefined,
+      "mark": undefined,
+      "strong": undefined,
+      "type": undefined,
+      "underline": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.editable: false - value[0] - ParagraphInput 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "",
+      "className": "{}",
+      "code": undefined,
+      "copyable": undefined,
+      "delete": undefined,
+      "disabled": undefined,
+      "editable": false,
+      "ellipsis": undefined,
+      "id": "properties.editable: false",
+      "italic": undefined,
+      "mark": undefined,
+      "strong": undefined,
+      "type": undefined,
+      "underline": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.editable: true - value[0] - ParagraphInput 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "",
+      "className": "{}",
+      "code": undefined,
+      "copyable": undefined,
+      "delete": undefined,
+      "disabled": undefined,
+      "editable": Object {
+        "onChange": [Function],
+        "onStart": [Function],
+      },
+      "ellipsis": undefined,
+      "id": "properties.editable: true",
+      "italic": undefined,
+      "mark": undefined,
+      "strong": undefined,
+      "type": undefined,
+      "underline": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.ellipsis: expandable, rows - value[0] - ParagraphInput 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "",
+      "className": "{}",
+      "code": undefined,
+      "copyable": undefined,
+      "delete": undefined,
+      "disabled": undefined,
+      "editable": Object {
+        "onChange": [Function],
+        "onStart": [Function],
+      },
+      "ellipsis": Object {
+        "expandable": true,
+        "onEllipsis": [Function],
+        "onExpand": [Function],
+        "rows": 3,
+        "suffix": undefined,
+      },
+      "id": "properties.ellipsis: expandable, rows",
+      "italic": undefined,
+      "mark": undefined,
+      "strong": undefined,
+      "type": undefined,
+      "underline": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.ellipsis: rows - value[0] - ParagraphInput 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "",
+      "className": "{}",
+      "code": undefined,
+      "copyable": undefined,
+      "delete": undefined,
+      "disabled": undefined,
+      "editable": Object {
+        "onChange": [Function],
+        "onStart": [Function],
+      },
+      "ellipsis": Object {
+        "expandable": undefined,
+        "onEllipsis": [Function],
+        "onExpand": [Function],
+        "rows": 3,
+        "suffix": undefined,
+      },
+      "id": "properties.ellipsis: rows",
+      "italic": undefined,
+      "mark": undefined,
+      "strong": undefined,
+      "type": undefined,
+      "underline": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.ellipsis: rows, suffix - value[0] - ParagraphInput 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "",
+      "className": "{}",
+      "code": undefined,
+      "copyable": undefined,
+      "delete": undefined,
+      "disabled": undefined,
+      "editable": Object {
+        "onChange": [Function],
+        "onStart": [Function],
+      },
+      "ellipsis": Object {
+        "expandable": undefined,
+        "onEllipsis": [Function],
+        "onExpand": [Function],
+        "rows": 3,
+        "suffix": "and other",
+      },
+      "id": "properties.ellipsis: rows, suffix",
+      "italic": undefined,
+      "mark": undefined,
+      "strong": undefined,
+      "type": undefined,
+      "underline": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.ellipsis: true - value[0] - ParagraphInput 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "",
+      "className": "{}",
+      "code": undefined,
+      "copyable": undefined,
+      "delete": undefined,
+      "disabled": undefined,
+      "editable": Object {
+        "onChange": [Function],
+        "onStart": [Function],
+      },
+      "ellipsis": true,
+      "id": "properties.ellipsis: true",
+      "italic": undefined,
+      "mark": undefined,
+      "strong": undefined,
+      "type": undefined,
+      "underline": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.italic: true - value[0] - ParagraphInput 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "",
+      "className": "{}",
+      "code": undefined,
+      "copyable": undefined,
+      "delete": undefined,
+      "disabled": undefined,
+      "editable": Object {
+        "onChange": [Function],
+        "onStart": [Function],
+      },
+      "ellipsis": undefined,
+      "id": "properties.italic: true",
+      "italic": true,
+      "mark": undefined,
+      "strong": undefined,
+      "type": undefined,
+      "underline": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.mark: true - value[0] - ParagraphInput 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "",
+      "className": "{}",
+      "code": undefined,
+      "copyable": undefined,
+      "delete": undefined,
+      "disabled": undefined,
+      "editable": Object {
+        "onChange": [Function],
+        "onStart": [Function],
+      },
+      "ellipsis": undefined,
+      "id": "properties.mark: true",
+      "italic": undefined,
+      "mark": true,
+      "strong": undefined,
+      "type": undefined,
+      "underline": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.strong: true - value[0] - ParagraphInput 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "",
+      "className": "{}",
+      "code": undefined,
+      "copyable": undefined,
+      "delete": undefined,
+      "disabled": undefined,
+      "editable": Object {
+        "onChange": [Function],
+        "onStart": [Function],
+      },
+      "ellipsis": undefined,
+      "id": "properties.strong: true",
+      "italic": undefined,
+      "mark": undefined,
+      "strong": true,
+      "type": undefined,
+      "underline": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.type: danger - value[0] - ParagraphInput 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "",
+      "className": "{}",
+      "code": undefined,
+      "copyable": undefined,
+      "delete": undefined,
+      "disabled": undefined,
+      "editable": Object {
+        "onChange": [Function],
+        "onStart": [Function],
+      },
+      "ellipsis": undefined,
+      "id": "properties.type: danger",
+      "italic": undefined,
+      "mark": undefined,
+      "strong": undefined,
+      "type": "danger",
+      "underline": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.type: secondary - value[0] - ParagraphInput 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "",
+      "className": "{}",
+      "code": undefined,
+      "copyable": undefined,
+      "delete": undefined,
+      "disabled": undefined,
+      "editable": Object {
+        "onChange": [Function],
+        "onStart": [Function],
+      },
+      "ellipsis": undefined,
+      "id": "properties.type: secondary",
+      "italic": undefined,
+      "mark": undefined,
+      "strong": undefined,
+      "type": "secondary",
+      "underline": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.type: warning - value[0] - ParagraphInput 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "",
+      "className": "{}",
+      "code": undefined,
+      "copyable": undefined,
+      "delete": undefined,
+      "disabled": undefined,
+      "editable": Object {
+        "onChange": [Function],
+        "onStart": [Function],
+      },
+      "ellipsis": undefined,
+      "id": "properties.type: warning",
+      "italic": undefined,
+      "mark": undefined,
+      "strong": undefined,
+      "type": "warning",
+      "underline": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.underline: true - value[0] - ParagraphInput 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "",
+      "className": "{}",
+      "code": undefined,
+      "copyable": undefined,
+      "delete": undefined,
+      "disabled": undefined,
+      "editable": Object {
+        "onChange": [Function],
+        "onStart": [Function],
+      },
+      "ellipsis": undefined,
+      "id": "properties.underline: true",
+      "italic": undefined,
+      "mark": undefined,
+      "strong": undefined,
+      "type": undefined,
+      "underline": true,
+    },
+    Object {},
+  ],
+]
+`;

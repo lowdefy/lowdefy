@@ -15,11 +15,10 @@
 */
 
 import React from 'react';
-import color from '@lowdefy/color';
 import { blockDefaultProps } from '@lowdefy/block-utils';
-import { type, get } from '@lowdefy/helpers';
-import { Link } from 'react-router-dom';
 import { Menu } from 'antd';
+import { type, get } from '@lowdefy/helpers';
+import color from '@lowdefy/color';
 
 const getDefaultMenu = (menus, menuId = 'default', links) => {
   if (type.isArray(links)) return links;
@@ -31,18 +30,23 @@ const getDefaultMenu = (menus, menuId = 'default', links) => {
 const getTitle = (id, properties, defaultTitle) =>
   (properties && properties.title) || defaultTitle || id;
 
-const MenuTitle = ({ basePath, id, linkStyle, makeCssClass, pageId, properties, url }) =>
-  type.isString(pageId) ? (
-    <Link to={`${basePath}/${pageId}`} className={makeCssClass([linkStyle])}>
-      {getTitle(id, properties, pageId)}
-    </Link>
-  ) : type.isString(url) ? (
-    <a href={url} className={makeCssClass([linkStyle])}>
-      {getTitle(id, properties, url)}
-    </a>
-  ) : (
-    <span className={makeCssClass([linkStyle])}>{getTitle(id, properties)}</span>
-  );
+const MenuTitle = ({ basePath, id, Link, linkStyle, makeCssClass, pageId, properties, url }) => {
+  if (type.isString(pageId)) {
+    return (
+      <Link href={`${basePath}/${pageId}`} className={makeCssClass([linkStyle])}>
+        {getTitle(id, properties, pageId)}
+      </Link>
+    );
+  }
+  if (url) {
+    return (
+      <Link href={url} className={makeCssClass([linkStyle])}>
+        {getTitle(id, properties, url)}
+      </Link>
+    );
+  }
+  return <span className={makeCssClass([linkStyle])}>{getTitle(id, properties)}</span>;
+};
 
 const getNestedColors = (menuColor, background) => {
   const fontColor = color(menuColor, 6);
@@ -66,8 +70,8 @@ const getNestedColors = (menuColor, background) => {
 const MenuComp = ({
   basePath,
   blockId,
+  components: { Icon, Link },
   events,
-  Icon,
   menus,
   methods,
   pageId,
@@ -215,6 +219,7 @@ const MenuComp = ({
                 title={
                   <MenuTitle
                     basePath={basePath}
+                    Link={Link}
                     linkStyle={methods.makeCssClass(link.style, true)}
                     id={link.id}
                     makeCssClass={methods.makeCssClass}
@@ -249,6 +254,7 @@ const MenuComp = ({
                           title={
                             <MenuTitle
                               basePath={basePath}
+                              Link={Link}
                               linkStyle={methods.makeCssClass(subLink.style, true)}
                               id={subLink.id}
                               makeCssClass={methods.makeCssClass}
@@ -283,6 +289,7 @@ const MenuComp = ({
                               >
                                 <MenuTitle
                                   basePath={basePath}
+                                  Link={Link}
                                   linkStyle={methods.makeCssClass(subLinkGroup.style, true)}
                                   id={subLinkGroup.id}
                                   makeCssClass={methods.makeCssClass}
@@ -314,6 +321,7 @@ const MenuComp = ({
                         >
                           <MenuTitle
                             basePath={basePath}
+                            Link={Link}
                             linkStyle={methods.makeCssClass(subLink.style, true)}
                             id={subLink.id}
                             makeCssClass={methods.makeCssClass}
@@ -346,6 +354,7 @@ const MenuComp = ({
               >
                 <MenuTitle
                   basePath={basePath}
+                  Link={Link}
                   linkStyle={methods.makeCssClass(link.style, true)}
                   id={link.id}
                   makeCssClass={methods.makeCssClass}

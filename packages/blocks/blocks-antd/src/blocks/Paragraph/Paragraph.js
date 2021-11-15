@@ -15,13 +15,13 @@
 */
 
 import React from 'react';
-import { Typography } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
+import { Typography } from 'antd';
 
 const Paragraph = Typography.Paragraph;
 
-const ParagraphBlock = ({ blockId, events, Icon, properties, methods }) => (
+const ParagraphBlock = ({ blockId, components: { Icon }, events, methods, properties }) => (
   <Paragraph
     id={blockId}
     className={methods.makeCssClass(properties.style)}

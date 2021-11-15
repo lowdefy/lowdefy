@@ -15,8 +15,8 @@
 */
 
 import React from 'react';
-import { Pagination } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import { Pagination } from 'antd';
 import { type } from '@lowdefy/helpers';
 
 const getPageSize = ({ properties, value }) => {
@@ -54,18 +54,18 @@ const PaginationBlock = ({ blockId, methods, properties, value }) => {
   return (
     <Pagination
       id={blockId}
-      onShowSizeChange={createChangeHandler({ eventName: 'onSizeChange', methods })}
-      onChange={createChangeHandler({ eventName: 'onChange', methods })}
-      total={properties.total !== undefined ? properties.total : 100}
-      size={properties.size}
-      simple={!!properties.simple}
-      showTotal={showTotal}
-      showSizeChanger={properties.showSizeChanger}
-      showQuickJumper={properties.showQuickJumper}
-      pageSizeOptions={properties.pageSizeOptions || [10, 20, 30, 40]}
-      hideOnSinglePage={properties.hideOnSinglePage}
       disabled={properties.disabled}
+      hideOnSinglePage={properties.hideOnSinglePage}
+      onChange={createChangeHandler({ eventName: 'onChange', methods })}
+      onShowSizeChange={createChangeHandler({ eventName: 'onSizeChange', methods })}
       pageSize={getPageSize({ properties, value })}
+      pageSizeOptions={properties.pageSizeOptions || [10, 20, 30, 40]}
+      showQuickJumper={properties.showQuickJumper}
+      showSizeChanger={properties.showSizeChanger}
+      showTotal={showTotal}
+      simple={!!properties.simple}
+      size={properties.size}
+      total={properties.total !== undefined ? properties.total : 100}
       current={
         type.isNone(value) || !type.isObject(value) || !type.isNumber(value.current)
           ? 1

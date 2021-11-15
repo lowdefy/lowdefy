@@ -15,21 +15,21 @@
 */
 
 import React from 'react';
-import { DatePicker } from 'antd';
-import moment from 'moment';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import { DatePicker } from 'antd';
 import { type } from '@lowdefy/helpers';
+import moment from 'moment';
 
-import Label from '../Label/Label.js';
 import disabledDate from '../../disabledDate.js';
+import Label from '../Label/Label.js';
 
 const WeekPicker = DatePicker.WeekPicker;
 
 const WeekSelector = ({
   blockId,
+  components: { Icon, Link },
   events,
   loading,
-  Icon,
   methods,
   properties,
   required,
@@ -39,6 +39,7 @@ const WeekSelector = ({
   return (
     <Label
       blockId={blockId}
+      components={{ Icon, Link }}
       events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}

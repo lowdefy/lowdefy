@@ -20,7 +20,7 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 import { get, mergeObjects, serializer, type } from '@lowdefy/helpers';
 
 // TODO: need to pass value to list blocks to render item level settings.
-const TimelineList = ({ blockId, events, Icon, list, methods, properties }) => {
+const TimelineList = ({ blockId, components: { Icon }, events, list, methods, properties }) => {
   // Temporary fix until list blocks get value from state
   const value = properties.data;
   const other = {};

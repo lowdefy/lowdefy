@@ -16,11 +16,11 @@
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
 
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
 import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
 jest.mock('antd', () => ({
   Affix: jest.fn(() => 'mocked'),
@@ -39,4 +39,4 @@ const mocks = [
     name: 'Affix',
   },
 ];
-runMockRenderTests({ examples, meta, mocks, schema });
+runMockRenderTests({ examples, meta, mocks, schema, tests });
