@@ -51,9 +51,6 @@
     "@swc/jest": "0.2.5",
     "jest": "27.3.1"
   },
-  "peerDependencies": {
-    "@lowdefy/api": "3.22.0"
-  },
   "publishConfig": {
     "access": "public"
   }
