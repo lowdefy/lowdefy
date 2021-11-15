@@ -167,7 +167,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@lowdefy/build", ["workspace:packages/build"]],
       ["@lowdefy/client", ["workspace:packages/client"]],
       ["@lowdefy/color", ["workspace:packages/color"]],
-      ["@lowdefy/connection-axios-http", ["virtual:c9d7c5a0f7602869dff02ed24b6a4fe62d4c9e4a4ede33ec34082ee9e4a5dd17f3e1bb396d56863e9bea8e8476d67351fe495fe7cebce9035a9e4de117e68169#workspace:packages/plugins/connections/connection-axios-http", "workspace:packages/plugins/connections/connection-axios-http"]],
+      ["@lowdefy/connection-axios-http", ["workspace:packages/plugins/connections/connection-axios-http"]],
       ["@lowdefy/connection-elasticsearch", ["workspace:packages/plugins/connections/connection-elasticsearch"]],
       ["@lowdefy/connection-google-sheets", ["workspace:packages/plugins/connections/connection-google-sheets"]],
       ["@lowdefy/connection-knex", ["workspace:packages/plugins/connections/connection-knex"]],
@@ -5438,26 +5438,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@lowdefy/connection-axios-http", [
-        ["virtual:c9d7c5a0f7602869dff02ed24b6a4fe62d4c9e4a4ede33ec34082ee9e4a5dd17f3e1bb396d56863e9bea8e8476d67351fe495fe7cebce9035a9e4de117e68169#workspace:packages/plugins/connections/connection-axios-http", {
-          "packageLocation": "./.yarn/__virtual__/@lowdefy-connection-axios-http-virtual-8d9d80ba88/1/packages/plugins/connections/connection-axios-http/",
-          "packageDependencies": [
-            ["@lowdefy/connection-axios-http", "virtual:c9d7c5a0f7602869dff02ed24b6a4fe62d4c9e4a4ede33ec34082ee9e4a5dd17f3e1bb396d56863e9bea8e8476d67351fe495fe7cebce9035a9e4de117e68169#workspace:packages/plugins/connections/connection-axios-http"],
-            ["@lowdefy/ajv", "workspace:packages/ajv"],
-            ["@lowdefy/api", null],
-            ["@lowdefy/helpers", "workspace:packages/helpers"],
-            ["@swc/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.1.51"],
-            ["@swc/core", "npm:1.2.107"],
-            ["@swc/jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.2.5"],
-            ["@types/lowdefy__api", null],
-            ["axios", "npm:0.23.0"],
-            ["jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"]
-          ],
-          "packagePeers": [
-            "@lowdefy/api",
-            "@types/lowdefy__api"
-          ],
-          "linkType": "SOFT",
-        }],
         ["workspace:packages/plugins/connections/connection-axios-http", {
           "packageLocation": "./packages/plugins/connections/connection-axios-http/",
           "packageDependencies": [
@@ -5783,7 +5763,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/core", "npm:7.15.8"],
             ["@babel/preset-env", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:7.15.8"],
             ["@lowdefy/client", "workspace:packages/client"],
-            ["@lowdefy/connection-axios-http", "virtual:c9d7c5a0f7602869dff02ed24b6a4fe62d4c9e4a4ede33ec34082ee9e4a5dd17f3e1bb396d56863e9bea8e8476d67351fe495fe7cebce9035a9e4de117e68169#workspace:packages/plugins/connections/connection-axios-http"],
+            ["@lowdefy/connection-axios-http", "workspace:packages/plugins/connections/connection-axios-http"],
             ["@lowdefy/node-utils", "workspace:packages/node-utils"],
             ["@lowdefy/server", "workspace:packages/server"],
             ["babel-jest", "virtual:4d3a3f79f60b2294109a713555c084c0489a2a4f97b0d45817e4aa63b6e15e6ef8f5a5dafe41a4ed8f9dc47978495fbbf92e43efd40de2306fb74fb2638214c5#npm:27.3.1"],

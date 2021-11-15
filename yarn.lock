@@ -3672,8 +3672,6 @@ __metadata:
     "@swc/jest": 0.2.5
     axios: 0.23.0
     jest: 27.3.1
-  peerDependencies:
-    "@lowdefy/api": 3.22.0
   languageName: unknown
   linkType: soft
 
@@ -3688,8 +3686,6 @@ __metadata:
     "@swc/core": 1.2.107
     "@swc/jest": 0.2.5
     jest: 27.3.1
-  peerDependencies:
-    "@lowdefy/api": 3.22.0
   languageName: unknown
   linkType: soft
 
@@ -3706,8 +3702,6 @@ __metadata:
     jest: 27.3.1
     mingo: 4.2.0
     moment: 2.29.1
-  peerDependencies:
-    "@lowdefy/api": 3.22.0
   languageName: unknown
   linkType: soft
 
@@ -3726,8 +3720,6 @@ __metadata:
     mysql: 2.18.1
     pg: 8.7.1
     sqlite3: 5.0.2
-  peerDependencies:
-    "@lowdefy/api": 3.22.0
   languageName: unknown
   linkType: soft
 
@@ -3744,8 +3736,6 @@ __metadata:
     jest: 27.3.1
     mongodb: 3.7.3
     saslprep: 1.0.3
-  peerDependencies:
-    "@lowdefy/api": 3.22.0
   languageName: unknown
   linkType: soft
 
@@ -3760,8 +3750,6 @@ __metadata:
     "@swc/core": 1.2.107
     "@swc/jest": 0.2.5
     jest: 27.3.1
-  peerDependencies:
-    "@lowdefy/api": 3.22.0
   languageName: unknown
   linkType: soft
 
@@ -3776,8 +3764,6 @@ __metadata:
     "@swc/jest": 0.2.5
     jest: 27.3.1
     stripe: 8.186.0
-  peerDependencies:
-    "@lowdefy/api": 3.22.0
   languageName: unknown
   linkType: soft
 
