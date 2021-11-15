@@ -17,7 +17,7 @@
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-import Skeleton from '../Skeleton/Skeleton';
+import Skeleton from '../Skeleton/Skeleton.js';
 
 const SkeletonInput = ({ properties, methods }) => {
   let inputHeight;
@@ -39,7 +39,7 @@ const SkeletonInput = ({ properties, methods }) => {
           properties={{
             width: properties.labelWidth || properties.width || '30%',
             height: properties.labelHeight || 20,
-            style: { ...{ marginBottom: 10 }, ...properties.style },
+            style: { ...{ marginBottom: 10 }, ...(properties.labelStyle || {}) },
           }}
         />
       )}
@@ -48,6 +48,7 @@ const SkeletonInput = ({ properties, methods }) => {
         properties={{
           width: properties.width || '100%',
           height: properties.inputHeight || inputHeight,
+          style: properties.inputStyle || {},
         }}
       />
     </div>

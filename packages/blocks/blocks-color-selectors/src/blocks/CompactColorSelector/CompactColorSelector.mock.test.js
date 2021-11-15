@@ -15,26 +15,32 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { CompactPicker } from 'react-color';
 
-import Block from './CompactColorSelector.js';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
 jest.mock('react-color', () => {
   const selectors = {
-    CompactPicker: jest.fn((props) => props.toString()),
+    CompactPicker: jest.fn(() => 'mocked'),
   };
   return selectors;
 });
 
 const mocks = [
   {
-    name: 'default',
-    fn: CompactPicker,
+    getMockFns: async () => {
+      const antd = await import('react-color');
+      return [antd.CompactPicker];
+    },
+    getBlock: async () => {
+      const Block = await import('./CompactColorSelector.js');
+      return Block.default;
+    },
+    name: 'CompactColorSelector',
   },
 ];
 
-runMockRenderTests({ examples, Block, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

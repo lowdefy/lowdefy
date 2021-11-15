@@ -14,13 +14,12 @@
   limitations under the License.
 */
 
-// TODO use link
 import React from 'react';
 import { get, type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const Strong = ({ children, strong }) => (strong ? <b>{children}</b> : <>{children}</>);
-const Tag = ({ blockId, children, className, disabled, href, Link, newTab, rel, onClick }) =>
+const Tag = ({ blockId, children, className, disabled, href, Link, newTab, onClick, rel }) =>
   disabled ? (
     <span id={blockId} className={className}>
       {children}

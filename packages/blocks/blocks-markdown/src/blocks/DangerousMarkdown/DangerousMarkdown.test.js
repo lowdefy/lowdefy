@@ -16,10 +16,12 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import DangerousMarkdown from './DangerousMarkdown';
-import examples from './examples.yaml';
+import Block from './DangerousMarkdown.js';
 import block from './index.js';
+import examples from './examples.yaml';
 import schema from './schema.json';
 
-runRenderTests({ examples, Block: DangerousMarkdown, meta });
+const { meta, tests } = block;
+
+runRenderTests({ Block, examples, meta, schema, tests });
 runBlockSchemaTests({ examples, meta, schema });

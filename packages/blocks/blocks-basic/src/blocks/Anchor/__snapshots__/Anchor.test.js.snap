@@ -88,7 +88,6 @@ exports[`Render properties.icon and properties.title - value[0] 1`] = `
 >
   <svg
     class="emotion-1"
-    components="[object Object]"
     data-testid="AiOutlineExclamationCircle"
     id="properties.icon and properties.title_icon"
   />
@@ -106,7 +105,6 @@ exports[`Render properties.icon object - value[0] 1`] = `
 >
   <svg
     class="emotion-1"
-    components="[object Object]"
     data-testid="AiOutlineExclamationCircle"
     id="properties.icon object_icon"
   />
@@ -124,7 +122,6 @@ exports[`Render properties.icon string - value[0] 1`] = `
 >
   <svg
     class="emotion-1"
-    components="[object Object]"
     data-testid="AiOutlineExclamationCircle"
     id="properties.icon string_icon"
   />
@@ -144,7 +141,6 @@ exports[`Render properties.icon, properties.title and properties.disabled - valu
 >
   <svg
     class="emotion-1"
-    components="[object Object]"
     data-testid="AiOutlineExclamationCircle"
     id="properties.icon, properties.title and properties.disabled_icon"
   />
@@ -198,7 +194,6 @@ exports[`Render properties.style with icon - value[0] 1`] = `
 >
   <svg
     class="emotion-1"
-    components="[object Object]"
     data-testid="AiOutlineExclamationCircle"
     id="properties.style with icon_icon"
   />

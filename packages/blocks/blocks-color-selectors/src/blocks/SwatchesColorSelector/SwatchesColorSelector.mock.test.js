@@ -15,26 +15,32 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { SwatchesPicker } from 'react-color';
 
-import Block from './SwatchesColorSelector.js';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
 jest.mock('react-color', () => {
   const selectors = {
-    SwatchesPicker: jest.fn((props) => props.toString()),
+    SwatchesPicker: jest.fn(() => 'mocked'),
   };
   return selectors;
 });
 
 const mocks = [
   {
-    name: 'default',
-    fn: SwatchesPicker,
+    getMockFns: async () => {
+      const antd = await import('react-color');
+      return [antd.SwatchesPicker];
+    },
+    getBlock: async () => {
+      const Block = await import('./SwatchesColorSelector.js');
+      return Block.default;
+    },
+    name: 'SwatchesColorSelector',
   },
 ];
 
-runMockRenderTests({ examples, Block, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

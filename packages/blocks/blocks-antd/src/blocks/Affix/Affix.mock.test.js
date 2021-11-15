@@ -39,4 +39,5 @@ const mocks = [
     name: 'Affix',
   },
 ];
+
 runMockRenderTests({ examples, meta, mocks, schema, tests });

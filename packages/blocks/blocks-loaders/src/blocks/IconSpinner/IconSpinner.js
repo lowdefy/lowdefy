@@ -34,12 +34,15 @@ const IconSpinner = ({ properties, methods }) => {
   }
   return (
     <span
-      className={methods.makeCssClass({
-        height: size,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      })}
+      className={methods.makeCssClass([
+        {
+          height: size,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+        properties.style,
+      ])}
     >
       <svg
         viewBox="0 0 1024 1024"

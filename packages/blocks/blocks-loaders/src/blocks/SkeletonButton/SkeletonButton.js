@@ -17,7 +17,7 @@
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-import Skeleton from '../Skeleton/Skeleton';
+import Skeleton from '../Skeleton/Skeleton.js';
 
 const SkeletonButton = ({ properties, methods }) => {
   let height;
@@ -35,7 +35,10 @@ const SkeletonButton = ({ properties, methods }) => {
     <Skeleton
       methods={methods}
       properties={{
-        style: { borderRadius: properties.shape === 'round' && height / 2 },
+        style: {
+          ...{ borderRadius: properties.shape === 'round' && height / 2 },
+          ...(properties.style || {}),
+        },
         width: properties.width || '100%',
         height: height,
       }}

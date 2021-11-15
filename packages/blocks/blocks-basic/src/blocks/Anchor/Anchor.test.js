@@ -17,10 +17,11 @@
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import Block from './Anchor.js';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
 import schema from './schema.json';
 
-const { meta } = block;
-runRenderTests({ examples, Block, meta, schema });
+const { meta, tests } = block;
+
+runRenderTests({ examples, Block, meta, schema, tests });
 runBlockSchemaTests({ examples, meta, schema });

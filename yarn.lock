@@ -3517,6 +3517,7 @@ __metadata:
     "@testing-library/react": 12.1.2
     "@testing-library/user-event": 13.5.0
     jest: 27.3.1
+    jest-canvas-mock: 2.3.1
     jest-serializer-html: 7.1.0
     jest-transform-yaml: 0.1.2
     react: 17.0.2
@@ -7847,7 +7848,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"color-name@npm:~1.1.4":
+"color-name@npm:^1.1.4, color-name@npm:~1.1.4":
   version: 1.1.4
   resolution: "color-name@npm:1.1.4"
   checksum: b0445859521eb4021cd0fb0cc1a75cecf67fceecae89b63f62b201cca8d345baf8b952c966862a9d9a2632987d4f6581f0ec8d957dfacece86f0a7919316f610
@@ -8450,6 +8451,13 @@ __metadata:
   version: 0.0.10
   resolution: "cssfilter@npm:0.0.10"
   checksum: bc2c52bbb3426c3f2e4832edb6f8573e6cfa65b40b540932762d1e018f0f0157725e2991b77344bbc8266c6bbf4daa2803b0707cfb1bd0877505bf83a68e4b04
+  languageName: node
+  linkType: hard
+
+"cssfontparser@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "cssfontparser@npm:1.2.1"
+  checksum: 952d487cddab591fb944f2a4c326a7736bc963784a6d92b6ad4051f3bf5ee49a732eff62e29a52ff085197cb07f5bd66525a2245ded7fd356113ac81be9238b9
   languageName: node
   linkType: hard
 
@@ -12501,6 +12509,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jest-canvas-mock@npm:2.3.1":
+  version: 2.3.1
+  resolution: "jest-canvas-mock@npm:2.3.1"
+  dependencies:
+    cssfontparser: ^1.2.1
+    moo-color: ^1.0.2
+  checksum: 82606d348cf4f671af098dcebac19c98643fc5896c6e1af24b572b8e477e7bee18e4c65e0aee8d72d3af88511eba265e12001c6fb72c319d7efe15a6ba23b58b
+  languageName: node
+  linkType: hard
+
 "jest-changed-files@npm:^27.3.0":
   version: 27.3.0
   resolution: "jest-changed-files@npm:27.3.0"
@@ -14730,6 +14748,15 @@ __metadata:
     snappy:
       optional: true
   checksum: b18c3c1c53957c74eea50862c36d2487904d58877287d05d125a4220ed8142856cfd200dc3a15b265fe71e6b6183b56d83a6a074e890849f2486e73a864d4c7c
+  languageName: node
+  linkType: hard
+
+"moo-color@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "moo-color@npm:1.0.2"
+  dependencies:
+    color-name: ^1.1.4
+  checksum: 9425438cf14314ff8847fa911b3c6936cbe8550644c380733c4803719c3980a0de9324c70c3bc21c36b4aab3c181745774cc0efc4d3f5bfce009382eeeb89572
   languageName: node
   linkType: hard
 

@@ -23,5 +23,5 @@ import schema from './schema.json';
 
 const { meta, tests } = block;
 
-runRenderTests({ examples, Block, meta, schema });
+runRenderTests({ examples, Block, meta, schema, tests });
 runBlockSchemaTests({ examples, meta, schema });

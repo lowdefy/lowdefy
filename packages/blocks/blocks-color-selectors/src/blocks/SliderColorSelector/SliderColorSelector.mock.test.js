@@ -15,26 +15,32 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { SliderPicker } from 'react-color';
 
-import Block from './SliderColorSelector.js';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
 jest.mock('react-color', () => {
   const selectors = {
-    SliderPicker: jest.fn((props) => props.toString()),
+    SliderPicker: jest.fn(() => 'mocked'),
   };
   return selectors;
 });
 
 const mocks = [
   {
-    name: 'default',
-    fn: SliderPicker,
+    getMockFns: async () => {
+      const antd = await import('react-color');
+      return [antd.SliderPicker];
+    },
+    getBlock: async () => {
+      const Block = await import('./SliderColorSelector.js');
+      return Block.default;
+    },
+    name: 'SliderColorSelector',
   },
 ];
 
-runMockRenderTests({ examples, Block, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

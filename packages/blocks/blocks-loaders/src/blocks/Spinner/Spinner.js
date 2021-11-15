@@ -17,7 +17,7 @@
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-import LogoSpinner from '../LogoSpinner/LogoSpinner';
+import LogoSpinner from '../LogoSpinner/LogoSpinner.js';
 
 const Spinner = ({ properties, methods }) => {
   return (
