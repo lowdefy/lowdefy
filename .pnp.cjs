@@ -5145,10 +5145,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@swc/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.1.51"],
             ["@swc/core", "npm:1.2.107"],
             ["@swc/jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:0.2.5"],
-            ["cookie", "npm:0.4.1"],
-            ["jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"],
-            ["jsonwebtoken", "npm:8.5.1"],
-            ["openid-client", "npm:4.9.1"]
+            ["jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"]
           ],
           "linkType": "SOFT",
         }]
@@ -6312,15 +6309,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@opentelemetry-api-npm-1.0.3-458c8426bf-24be831d89.zip/node_modules/@opentelemetry/api/",
           "packageDependencies": [
             ["@opentelemetry/api", "npm:1.0.3"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["@panva/asn1.js", [
-        ["npm:1.0.0", {
-          "packageLocation": "./.yarn/cache/@panva-asn1.js-npm-1.0.0-2bf51df722-cb6bcc1918.zip/node_modules/@panva/asn1.js/",
-          "packageDependencies": [
-            ["@panva/asn1.js", "npm:1.0.0"]
           ],
           "linkType": "HARD",
         }]
@@ -10991,13 +10979,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/cookie-npm-0.4.0-4b3d629e45-760384ba0a.zip/node_modules/cookie/",
           "packageDependencies": [
             ["cookie", "npm:0.4.0"]
-          ],
-          "linkType": "HARD",
-        }],
-        ["npm:0.4.1", {
-          "packageLocation": "./.yarn/cache/cookie-npm-0.4.1-cc5e2ebb42-bd7c47f5d9.zip/node_modules/cookie/",
-          "packageDependencies": [
-            ["cookie", "npm:0.4.1"]
           ],
           "linkType": "HARD",
         }]
@@ -16712,14 +16693,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["jose", [
-        ["npm:2.0.5", {
-          "packageLocation": "./.yarn/cache/jose-npm-2.0.5-f7da318eaf-80a3447b51.zip/node_modules/jose/",
-          "packageDependencies": [
-            ["jose", "npm:2.0.5"],
-            ["@panva/asn1.js", "npm:1.0.0"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:4.2.0", {
           "packageLocation": "./.yarn/cache/jose-npm-4.2.0-63a879fd9e-d85cbf36ac.zip/node_modules/jose/",
           "packageDependencies": [
@@ -17784,15 +17757,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["make-dir", "npm:3.1.0"],
             ["semver", "npm:6.3.0"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["make-error", [
-        ["npm:1.3.6", {
-          "packageLocation": "./.yarn/cache/make-error-npm-1.3.6-ccb85d9458-b86e5e0e25.zip/node_modules/make-error/",
-          "packageDependencies": [
-            ["make-error", "npm:1.3.6"]
           ],
           "linkType": "HARD",
         }]
@@ -19779,20 +19743,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["openid-client", [
-        ["npm:4.9.1", {
-          "packageLocation": "./.yarn/cache/openid-client-npm-4.9.1-ead5a0b4ca-f40f1b4f2c.zip/node_modules/openid-client/",
-          "packageDependencies": [
-            ["openid-client", "npm:4.9.1"],
-            ["aggregate-error", "npm:3.1.0"],
-            ["got", "npm:11.8.2"],
-            ["jose", "npm:2.0.5"],
-            ["lru-cache", "npm:6.0.0"],
-            ["make-error", "npm:1.3.6"],
-            ["object-hash", "npm:2.2.0"],
-            ["oidc-token-hash", "npm:5.0.1"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:5.0.2", {
           "packageLocation": "./.yarn/cache/openid-client-npm-5.0.2-a781f98453-79acd48157.zip/node_modules/openid-client/",
           "packageDependencies": [
