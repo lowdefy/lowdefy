@@ -15,23 +15,34 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { Layout } from 'antd';
 
-import Block from './PageSHCF.js';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-jest.mock('antd/lib/layout', () => {
-  return jest.fn(() => 'mocked');
+jest.mock('antd', () => {
+  const comp = jest.fn(() => 'mocked');
+  comp.Content = jest.fn(() => 'mocked');
+  comp.Footer = jest.fn(() => 'mocked');
+  comp.Header = jest.fn(() => 'mocked');
+  return {
+    Layout: comp,
+  };
 });
-
 const mocks = [
   {
-    name: 'default',
-    fn: Layout,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [antd.Layout];
+    },
+    getBlock: async () => {
+      const Block = await import('./PageSHCF.js');
+      return Block.default;
+    },
+    name: 'PageSHCF',
   },
 ];
 
-runMockRenderTests({ examples, Block, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

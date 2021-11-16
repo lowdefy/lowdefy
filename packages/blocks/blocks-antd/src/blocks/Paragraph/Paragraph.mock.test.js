@@ -15,25 +15,31 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { Typography } from 'antd';
 
-import Block from './Paragraph.js';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-jest.mock('antd/lib/typography', () => {
+jest.mock('antd', () => {
   const comp = jest.fn(() => 'mocked');
   comp.Paragraph = jest.fn(() => 'mocked');
-  return comp;
+  return {
+    Typography: comp,
+  };
 });
-
 const mocks = [
   {
-    name: 'default',
-    fn: Typography,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [antd.Typography.Paragraph];
+    },
+    getBlock: async () => {
+      const Block = await import('./Paragraph.js');
+      return Block.default;
+    },
+    name: 'Paragraph',
   },
 ];
-
-runMockRenderTests({ examples, Block, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

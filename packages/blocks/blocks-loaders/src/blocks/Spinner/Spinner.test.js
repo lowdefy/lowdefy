@@ -13,9 +13,14 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { runRenderTests } from '@lowdefy/block-dev';
 
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
+
+import Block from './Spinner.js';
 import examples from './examples.yaml';
-import Spinner from './Spinner';
+import block from './index.js';
+import schema from './schema.json';
 
-runRenderTests({ examples, Block: Spinner, meta: {} });
+const { meta, tests } = block;
+runRenderTests({ examples, Block, meta, schema, tests });
+runBlockSchemaTests({ examples, meta, schema });

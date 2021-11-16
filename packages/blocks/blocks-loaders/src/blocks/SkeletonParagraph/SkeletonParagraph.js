@@ -17,7 +17,7 @@
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-import Skeleton from '../Skeleton/Skeleton';
+import Skeleton from '../Skeleton/Skeleton.js';
 
 const SkeletonParagraph = ({ properties, methods }) => {
   const lines = [...Array(properties.lines || 4).keys()];
@@ -28,9 +28,12 @@ const SkeletonParagraph = ({ properties, methods }) => {
           key={key}
           methods={methods}
           properties={{
-            height: '1.25rem',
-            width: key === lines.length - 1 && key !== 0 ? '40%' : '100%',
-            style: { marginBottom: '1rem' },
+            ...{
+              height: '1.25rem',
+              width: key === lines.length - 1 && key !== 0 ? '40%' : '100%',
+              style: { marginBottom: '1rem' },
+            },
+            ...(properties.style || {}),
           }}
         />
       ))}

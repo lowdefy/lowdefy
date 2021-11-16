@@ -21,7 +21,7 @@ import { type } from '@lowdefy/helpers';
 
 const Title = Typography.Title;
 
-const TitleInput = ({ blockId, events, Icon, methods, properties, value }) => {
+const TitleInput = ({ blockId, components: { Icon }, events, methods, properties, value }) => {
   const [editing, setEdit] = useState(false);
   const editableEvents = {
     onStart: () => {
@@ -39,11 +39,16 @@ const TitleInput = ({ blockId, events, Icon, methods, properties, value }) => {
   return (
     <Title
       id={blockId}
+      code={properties.code}
+      italic={properties.italic}
+      level={properties.level}
+      mark={properties.mark}
+      type={properties.type}
+      underline={properties.underline}
       className={methods.makeCssClass([
         properties.color && { color: `${properties.color} !important` },
         properties.style,
       ])}
-      code={properties.code}
       copyable={
         type.isObject(properties.copyable)
           ? {
@@ -117,11 +122,6 @@ const TitleInput = ({ blockId, events, Icon, methods, properties, value }) => {
             }
           : properties.editable !== false && editableEvents
       }
-      italic={properties.italic}
-      level={properties.level}
-      mark={properties.mark}
-      type={properties.type}
-      underline={properties.underline}
     >
       {!type.isNone(value) ? value.toString() : ''}
     </Title>

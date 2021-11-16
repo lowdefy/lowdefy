@@ -5279,6 +5279,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/react", "virtual:04055f037dce009b6d437327a3df2c0a05f0436e14e2b705672dd0d1e0a3dfd29d8d62e0db8cb7e152c4b95e36ad3ccd6a68c9e962121dec9e597b25e0481519#npm:12.1.2"],
             ["@testing-library/user-event", "virtual:04055f037dce009b6d437327a3df2c0a05f0436e14e2b705672dd0d1e0a3dfd29d8d62e0db8cb7e152c4b95e36ad3ccd6a68c9e962121dec9e597b25e0481519#npm:13.5.0"],
             ["jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:27.3.1"],
+            ["jest-canvas-mock", "npm:2.3.1"],
             ["jest-serializer-html", "npm:7.1.0"],
             ["jest-transform-yaml", "npm:0.1.2"],
             ["react", "npm:17.0.2"],
@@ -11488,6 +11489,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["cssfontparser", [
+        ["npm:1.2.1", {
+          "packageLocation": "./.yarn/cache/cssfontparser-npm-1.2.1-f48947509b-952d487cdd.zip/node_modules/cssfontparser/",
+          "packageDependencies": [
+            ["cssfontparser", "npm:1.2.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["cssnano-preset-simple", [
         ["npm:3.0.0", {
           "packageLocation": "./.yarn/cache/cssnano-preset-simple-npm-3.0.0-42fae6d1e4-03ad717960.zip/node_modules/cssnano-preset-simple/",
@@ -16294,6 +16304,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["jest-canvas-mock", [
+        ["npm:2.3.1", {
+          "packageLocation": "./.yarn/cache/jest-canvas-mock-npm-2.3.1-75424c30ba-82606d348c.zip/node_modules/jest-canvas-mock/",
+          "packageDependencies": [
+            ["jest-canvas-mock", "npm:2.3.1"],
+            ["cssfontparser", "npm:1.2.1"],
+            ["moo-color", "npm:1.0.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["jest-changed-files", [
         ["npm:27.3.0", {
           "packageLocation": "./.yarn/cache/jest-changed-files-npm-27.3.0-97edea84fa-add4a688ad.zip/node_modules/jest-changed-files/",
@@ -18786,6 +18807,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["tslib", "npm:2.3.1"],
             ["uuid", "npm:8.3.2"],
             ["yauzl", "npm:2.10.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["moo-color", [
+        ["npm:1.0.2", {
+          "packageLocation": "./.yarn/cache/moo-color-npm-1.0.2-2779af0966-9425438cf1.zip/node_modules/moo-color/",
+          "packageDependencies": [
+            ["moo-color", "npm:1.0.2"],
+            ["color-name", "npm:1.1.4"]
           ],
           "linkType": "HARD",
         }]
@@ -21700,6 +21731,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react", null],
             ["@types/react-dom", null],
             ["array-tree-filter", "npm:2.1.0"],
+            ["classnames", "npm:2.3.1"],
             ["rc-tree-select", "virtual:f51b1cb75a236e36e293eb76a87681f019adbf3f5aedfe36a146d2276015470e1d909cf16ab2fa4c56c80f2417cca61ebeff4bf279d81f5629fbc27b319640d4#npm:4.6.1"],
             ["rc-trigger", "virtual:f51b1cb75a236e36e293eb76a87681f019adbf3f5aedfe36a146d2276015470e1d909cf16ab2fa4c56c80f2417cca61ebeff4bf279d81f5629fbc27b319640d4#npm:5.2.10"],
             ["rc-util", "virtual:b4bef33da8e9831d877c411d271b512ed60ec6f7b4d9bd87e629837651b1d9a39982466cbc2a33da1a488f99503791693fd8cee2d167add3e72e0a50659d5277#npm:5.14.0"],

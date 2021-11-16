@@ -21,11 +21,11 @@ import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 const DividerBlock = ({ blockId, properties, methods }) => (
   <Divider
     id={blockId}
-    style={properties.style}
     dashed={properties.dashed}
     orientation={properties.orientation}
-    type={properties.type}
     plain={properties.plain}
+    style={properties.style}
+    type={properties.type}
   >
     {renderHtml({ html: properties.title, methods })}
   </Divider>

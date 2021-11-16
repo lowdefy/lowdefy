@@ -19,7 +19,7 @@ import { Alert } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
-const AlertBlock = ({ blockId, content, events, Icon, methods, properties }) => {
+const AlertBlock = ({ blockId, content, events, components: { Icon }, methods, properties }) => {
   const additionalProps = {};
   if (properties.icon) {
     additionalProps.icon = (

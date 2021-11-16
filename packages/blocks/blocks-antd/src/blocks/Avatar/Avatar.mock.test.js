@@ -15,23 +15,29 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { Avatar } from 'antd';
 
-import AvatarBlock from './Avatar';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-jest.mock('antd/lib/avatar', () => {
-  return jest.fn(() => 'mocked');
-});
+jest.mock('antd', () => ({
+  Avatar: jest.fn(() => 'mocked'),
+}));
 
 const mocks = [
   {
-    name: 'default',
-    fn: Avatar,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [antd.Avatar];
+    },
+    getBlock: async () => {
+      const Block = await import('./Avatar.js');
+      return Block.default;
+    },
+    name: 'Avatar',
   },
 ];
 
-runMockRenderTests({ examples, Block: AvatarBlock, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

@@ -1,0 +1,1092 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render default - value[0] 1`] = `
+<div
+  class="emotion-0"
+  id="default"
+>
+  <div
+    class="markdown-body"
+  />
+</div>
+`;
+
+exports[`Render properties.content = table - value[0] 1`] = `
+<div
+  class="emotion-0"
+  id="properties.content = table"
+>
+  <div
+    class="markdown-body"
+  >
+    <h3>
+      Table
+    </h3>
+    <table>
+      <thead>
+        <tr>
+          <th
+            style="text-align: right;"
+          >
+            A
+          </th>
+          <th
+            style="text-align: center;"
+          >
+            B
+          </th>
+          <th
+            style="text-align: left;"
+          >
+            C
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td
+            style="text-align: right;"
+          >
+            one
+          </td>
+          <td
+            style="text-align: center;"
+          >
+            two
+          </td>
+          <td
+            style="text-align: left;"
+          >
+            three
+          </td>
+        </tr>
+        <tr>
+          <td
+            style="text-align: right;"
+          >
+            123
+          </td>
+          <td
+            style="text-align: center;"
+          >
+            345
+          </td>
+          <td
+            style="text-align: left;"
+          >
+            34892
+          </td>
+        </tr>
+        <tr>
+          <td
+            style="text-align: right;"
+          >
+            true
+          </td>
+          <td
+            style="text-align: center;"
+          >
+            false
+          </td>
+          <td
+            style="text-align: left;"
+          >
+            none
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;
+
+exports[`Render properties.content - value[0] 1`] = `
+<div
+  class="emotion-0"
+  id="properties.content"
+>
+  <div
+    class="markdown-body"
+  >
+    <h1>
+      One Heading
+    </h1>
+    <p>
+      A paragraph with 
+      <em>
+        emphasis
+      </em>
+       and 
+      <strong>
+        strong importance
+      </strong>
+      .
+    </p>
+    <blockquote>
+      <p>
+        A block quote with 
+        <del>
+          strikethrough
+        </del>
+         and a URL: 
+        <a
+          href="https://reactjs.org"
+        >
+          https://reactjs.org
+        </a>
+        .
+      </p>
+    </blockquote>
+    <h4>
+      Link
+    </h4>
+    <p>
+      <a
+        href="https://lowdefy.com"
+      >
+        A link to Lowdefy
+      </a>
+    </p>
+    <h1>
+      Two
+    </h1>
+    <ul>
+      <li>
+        Lists
+      </li>
+      <li>
+        <input
+          readonly=""
+          type="checkbox"
+        />
+        todo
+      </li>
+      <li>
+        <input
+          checked=""
+          readonly=""
+          type="checkbox"
+        />
+        done
+      </li>
+    </ul>
+    <p>
+      A table:
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>
+            a
+          </th>
+          <th>
+            b
+          </th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+</div>
+`;
+
+exports[`Render properties.content DangerousHtml - value[0] 1`] = `
+<div
+  class="emotion-0"
+  id="properties.content DangerousHtml"
+>
+  <div
+    class="markdown-body"
+  >
+    <h3>
+      Link
+    </h3>
+    <p>
+      &lt;a href="https://lowdefy.com"&gt;
+      Lowdefy link
+      &lt;/a&gt;
+    </p>
+    <p>
+      &lt;font size="+10"&gt;
+      Description
+      &lt;/font&gt;
+    </p>
+    <h3>
+      Bad HTML
+    </h3>
+    &lt;div onmouseover="alert('alpha')"&gt;
+  &lt;a href="javascript:alert('bravo')"&gt;delta&lt;/a&gt;
+  &lt;img src="x" onerror="alert('charlie')"&gt;
+  &lt;iframe src="javascript:alert('delta')"&gt;&lt;/iframe&gt;
+  &lt;math&gt;
+    &lt;mi xlink:href="data:x,&lt;script&gt;alert('echo')&lt;/script&gt;"&gt;&lt;/mi&gt;
+  &lt;/math&gt;
+&lt;/div&gt;
+&lt;script&gt;
+  alert('script tag');
+&lt;/script&gt;
+  </div>
+</div>
+`;
+
+exports[`Render properties.content with code - value[0] 1`] = `
+<div
+  class="emotion-0"
+  id="properties.content with code"
+>
+  <div
+    class="markdown-body"
+  >
+    <h3>
+      Code
+    </h3>
+    <p>
+      Default
+    </p>
+    <pre
+      style="display: block; overflow-x: auto; padding: 0.5em; color: rgb(51, 51, 51); background: rgb(248, 248, 248);"
+    >
+      <code
+        style="white-space: pre;"
+      >
+        <span>
+            &lt;a 
+        </span>
+        <span
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          href
+        </span>
+        <span>
+          =
+        </span>
+        <span
+          style="color: rgb(221, 17, 68);"
+        >
+          ""
+        </span>
+        <span>
+          &gt;Default style&lt;/a&gt;
+        </span>
+      </code>
+    </pre>
+    <p>
+      Html
+    </p>
+    <pre
+      style="display: block; overflow-x: auto; padding: 0.5em; color: rgb(51, 51, 51); background: rgb(248, 248, 248);"
+    >
+      <code
+        class="language-html"
+        style="white-space: pre;"
+      >
+        <span
+          class="xml"
+        >
+            
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &lt;
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          a
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+           
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          href
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          =
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(221, 17, 68); font-weight: normal;"
+        >
+          ""
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &gt;
+        </span>
+        <span
+          class="xml"
+        >
+          html style
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &lt;/
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          a
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &gt;
+        </span>
+        <span
+          class="xml"
+        >
+          
+
+        </span>
+        <span
+          class="xml"
+        >
+            
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &lt;
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          script
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &gt;
+        </span>
+        <span
+          class="xml javascript"
+        >
+          
+
+        </span>
+        <span
+          class="xml javascript"
+        >
+              alert(
+        </span>
+        <span
+          class="xml javascript"
+          style="color: rgb(221, 17, 68);"
+        >
+          'script tag'
+        </span>
+        <span
+          class="xml javascript"
+        >
+          );
+
+        </span>
+        <span
+          class="xml javascript"
+        >
+            
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &lt;/
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          script
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &gt;
+        </span>
+      </code>
+    </pre>
+    <p>
+      Json
+    </p>
+    <pre
+      style="display: block; overflow-x: auto; padding: 0.5em; color: rgb(51, 51, 51); background: rgb(248, 248, 248);"
+    >
+      <code
+        class="language-json"
+        style="white-space: pre;"
+      >
+        <span>
+            {
+
+        </span>
+        <span>
+              
+        </span>
+        <span>
+          "obj"
+        </span>
+        <span>
+          : 
+        </span>
+        <span
+          style="color: rgb(221, 17, 68);"
+        >
+          "one"
+        </span>
+        <span>
+          ,
+
+        </span>
+        <span>
+              
+        </span>
+        <span>
+          "list"
+        </span>
+        <span>
+          : [
+
+        </span>
+        <span>
+                
+        </span>
+        <span
+          style="color: rgb(0, 128, 128);"
+        >
+          1
+        </span>
+        <span>
+          ,
+
+        </span>
+        <span>
+                
+        </span>
+        <span
+          style="color: rgb(0, 128, 128);"
+        >
+          2
+        </span>
+        <span>
+          
+
+        </span>
+            ]
+
+          }
+
+      </code>
+    </pre>
+    <p>
+      Bad HTML
+    </p>
+    <pre
+      style="display: block; overflow-x: auto; padding: 0.5em; color: rgb(51, 51, 51); background: rgb(248, 248, 248);"
+    >
+      <code
+        class="language-html"
+        style="white-space: pre;"
+      >
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &lt;
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          div
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+           
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          onmouseover
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          =
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(221, 17, 68); font-weight: normal;"
+        >
+          "alert('alpha')"
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &gt;
+        </span>
+        <span
+          class="xml"
+        >
+          
+
+        </span>
+        <span
+          class="xml"
+        >
+            
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &lt;
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          a
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+           
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          href
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          =
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(221, 17, 68); font-weight: normal;"
+        >
+          "javascript:alert('bravo')"
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &gt;
+        </span>
+        <span
+          class="xml"
+        >
+          delta
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &lt;/
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          a
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &gt;
+        </span>
+        <span
+          class="xml"
+        >
+          
+
+        </span>
+        <span
+          class="xml"
+        >
+            
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &lt;
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          img
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+           
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          src
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          =
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(221, 17, 68); font-weight: normal;"
+        >
+          "x"
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+           
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          onerror
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          =
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(221, 17, 68); font-weight: normal;"
+        >
+          "alert('charlie')"
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &gt;
+        </span>
+        <span
+          class="xml"
+        >
+          
+
+        </span>
+        <span
+          class="xml"
+        >
+            
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &lt;
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          iframe
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+           
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          src
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          =
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(221, 17, 68); font-weight: normal;"
+        >
+          "javascript:alert('delta')"
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &gt;
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &lt;/
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          iframe
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &gt;
+        </span>
+        <span
+          class="xml"
+        >
+          
+
+        </span>
+        <span
+          class="xml"
+        >
+            
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &lt;
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          math
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &gt;
+        </span>
+        <span
+          class="xml"
+        >
+          
+
+        </span>
+        <span
+          class="xml"
+        >
+              
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &lt;
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          mi
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+           
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          xlink:href
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          =
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(221, 17, 68); font-weight: normal;"
+        >
+          "data:x,&lt;script&gt;alert('echo')&lt;/script&gt;"
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &gt;
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &lt;/
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          mi
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &gt;
+        </span>
+        <span
+          class="xml"
+        >
+          
+
+        </span>
+        <span
+          class="xml"
+        >
+            
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &lt;/
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          math
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &gt;
+        </span>
+        <span
+          class="xml"
+        >
+          
+
+        </span>
+        <span
+          class="xml"
+        >
+          
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &lt;/
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          div
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &gt;
+        </span>
+        <span
+          class="xml"
+        >
+          
+
+        </span>
+        <span
+          class="xml"
+        >
+          
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &lt;
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          script
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &gt;
+        </span>
+        <span
+          class="xml javascript"
+        >
+          
+
+        </span>
+        <span
+          class="xml javascript"
+        >
+            alert(
+        </span>
+        <span
+          class="xml javascript"
+          style="color: rgb(221, 17, 68);"
+        >
+          'script tag'
+        </span>
+        <span
+          class="xml javascript"
+        >
+          );
+
+        </span>
+        <span
+          class="xml javascript"
+        >
+          
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &lt;/
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          script
+        </span>
+        <span
+          class="xml"
+          style="color: rgb(0, 0, 128); font-weight: normal;"
+        >
+          &gt;
+        </span>
+      </code>
+    </pre>
+  </div>
+</div>
+`;
+
+exports[`Render properties.html-iframe - value[0] 1`] = `
+<div
+  class="emotion-0"
+  id="properties.html-iframe"
+>
+  <div
+    class="markdown-body"
+  >
+    <p>
+      No additional ADD_TAGS:
+    </p>
+    &lt;iframe width="560" height="315" src="https://www.youtube.com/embed/7N7GWdlQJlU" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen&gt;&lt;/iframe&gt;
+  </div>
+</div>
+`;
+
+exports[`Render properties.style and headings - value[0] 1`] = `
+.emotion-0 {
+  border: 1px solid blue;
+}
+
+<div
+  class="emotion-0"
+  id="properties.style and headings"
+>
+  <div
+    class="markdown-body"
+  >
+    <h1>
+      One
+    </h1>
+    <h2>
+      Two
+    </h2>
+    <h3>
+      Three
+    </h3>
+    <h4>
+      Four
+    </h4>
+    <h5>
+      Five
+    </h5>
+    <h6>
+      Six
+    </h6>
+  </div>
+</div>
+`;
+
+exports[`Test Schema default 1`] = `true`;
+
+exports[`Test Schema default 2`] = `null`;
+
+exports[`Test Schema properties.content = table 1`] = `true`;
+
+exports[`Test Schema properties.content = table 2`] = `null`;
+
+exports[`Test Schema properties.content 1`] = `true`;
+
+exports[`Test Schema properties.content 2`] = `null`;
+
+exports[`Test Schema properties.content DangerousHtml 1`] = `true`;
+
+exports[`Test Schema properties.content DangerousHtml 2`] = `null`;
+
+exports[`Test Schema properties.content with code 1`] = `true`;
+
+exports[`Test Schema properties.content with code 2`] = `null`;
+
+exports[`Test Schema properties.html-iframe 1`] = `true`;
+
+exports[`Test Schema properties.html-iframe 2`] = `null`;
+
+exports[`Test Schema properties.style and headings 1`] = `true`;
+
+exports[`Test Schema properties.style and headings 2`] = `null`;

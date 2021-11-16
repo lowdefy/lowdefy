@@ -15,25 +15,36 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { Input } from 'antd';
+import { Col, Row } from 'antd';
 
-import Block from './PasswordInput.js';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-jest.mock('antd/lib/input', () => {
+jest.mock('antd', () => {
   const comp = jest.fn(() => 'mocked');
   comp.Password = jest.fn(() => 'mocked');
-  return comp;
+  return {
+    Col,
+    Input: comp,
+    Row,
+  };
 });
 
 const mocks = [
   {
-    name: 'default',
-    fn: Input.Password,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [antd.Input.Password];
+    },
+    getBlock: async () => {
+      const Block = await import('./PasswordInput.js');
+      return Block.default;
+    },
+    name: 'PasswordInput',
   },
 ];
 
-runMockRenderTests({ examples, Block, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

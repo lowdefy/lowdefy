@@ -15,13 +15,12 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { Collapse } from 'antd';
 
-import CollapseBlock from './Collapse';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
 jest.mock('antd/lib/collapse', () => {
   const collapse = jest.fn(() => 'mocked');
@@ -29,11 +28,26 @@ jest.mock('antd/lib/collapse', () => {
   return collapse;
 });
 
+jest.mock('antd', () => {
+  const comp = jest.fn(() => 'mocked');
+  comp.Panel = jest.fn(() => 'mocked');
+  return {
+    Collapse: comp,
+  };
+});
+
 const mocks = [
   {
-    name: 'default',
-    fn: Collapse,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [antd.Collapse];
+    },
+    getBlock: async () => {
+      const Block = await import('./Collapse.js');
+      return Block.default;
+    },
+    name: 'Collapse',
   },
 ];
 
-runMockRenderTests({ examples, Block: CollapseBlock, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

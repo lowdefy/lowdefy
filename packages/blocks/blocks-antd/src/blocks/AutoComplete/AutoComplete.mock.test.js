@@ -13,27 +13,37 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { AutoComplete } from 'antd';
+import { Col, Row } from 'antd';
 
-import Block from './AutoComplete';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-jest.mock('antd/lib/auto-complete', () => {
+jest.mock('antd', () => {
   const comp = jest.fn(() => 'mocked');
   comp.Option = jest.fn(() => 'mocked');
-  return comp;
+  return {
+    AutoComplete: comp,
+    Row,
+    Col,
+  };
 });
 
 const mocks = [
   {
-    name: 'default',
-    fn: AutoComplete,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [antd.AutoComplete];
+    },
+    getBlock: async () => {
+      const Block = await import('./AutoComplete.js');
+      return Block.default;
+    },
+    name: 'AutoComplete',
   },
 ];
 
-runMockRenderTests({ examples, Block, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

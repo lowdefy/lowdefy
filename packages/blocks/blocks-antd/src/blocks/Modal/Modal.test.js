@@ -22,7 +22,7 @@ import examples from './examples.yaml';
 import block from './index.js';
 import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
 jest.mock('antd/lib/modal', () => {
   return jest.fn(() => 'mocked');
@@ -35,5 +35,5 @@ const mocks = [
   },
 ];
 
-runMockMethodTests({ examples, Block, mocks, meta });
+runMockMethodTests({ examples, Block, mocks, meta, schema, tests });
 runBlockSchemaTests({ examples, meta, schema });

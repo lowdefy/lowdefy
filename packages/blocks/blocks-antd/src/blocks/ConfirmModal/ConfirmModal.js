@@ -18,7 +18,7 @@ import React, { useEffect } from 'react';
 import { Modal } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 
-const ConfirmModal = ({ blockId, events, content, Icon, methods, properties }) => {
+const ConfirmModal = ({ blockId, events, content, components: { Icon }, methods, properties }) => {
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
       const additionalProps = {};

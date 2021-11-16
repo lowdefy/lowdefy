@@ -15,23 +15,29 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { Badge } from 'antd';
 
-import BadgeBlock from './Badge';
 import examples from './examples.yaml';
 import block from './index.js';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-jest.mock('antd/lib/badge', () => {
-  return jest.fn(() => 'mocked');
-});
+jest.mock('antd', () => ({
+  Badge: jest.fn(() => 'mocked'),
+}));
 
 const mocks = [
   {
-    name: 'default',
-    fn: Badge,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [antd.Badge];
+    },
+    getBlock: async () => {
+      const Block = await import('./Badge.js');
+      return Block.default;
+    },
+    name: 'Badge',
   },
 ];
 
-runMockRenderTests({ examples, Block: BadgeBlock, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

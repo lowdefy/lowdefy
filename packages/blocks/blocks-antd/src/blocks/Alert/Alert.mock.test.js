@@ -15,24 +15,29 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { Alert } from 'antd';
 
-import Block from './Alert.js';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
 import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-jest.mock('antd/lib/alert', () => {
-  return jest.fn(() => 'mocked');
-});
+jest.mock('antd', () => ({
+  Alert: jest.fn(() => 'mocked'),
+}));
 
 const mocks = [
   {
-    name: 'default',
-    fn: Alert,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [antd.Alert];
+    },
+    getBlock: async () => {
+      const Block = await import('./Alert.js');
+      return Block.default;
+    },
+    name: 'Alert',
   },
 ];
 
-runMockRenderTests({ examples, Block, meta, mocks, schema });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

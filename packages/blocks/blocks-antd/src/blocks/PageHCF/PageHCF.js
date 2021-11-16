@@ -18,14 +18,15 @@ import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import { mergeObjects } from '@lowdefy/helpers';
 
-import Header from '../Header/Header.js';
-import Footer from '../Footer/Footer.js';
 import Content from '../Content/Content.js';
+import Footer from '../Footer/Footer.js';
+import Header from '../Header/Header.js';
 import Layout from '../Layout/Layout.js';
 
-const PageHCF = ({ blockId, events, content, properties, methods }) => (
+const PageHCF = ({ blockId, components, content, events, properties }) => (
   <Layout
     blockId={blockId}
+    components={components}
     events={events}
     properties={{ style: mergeObjects([{ minHeight: '100vh' }, properties.style]) }}
     content={{
@@ -34,6 +35,7 @@ const PageHCF = ({ blockId, events, content, properties, methods }) => (
           {content.header && (
             <Header
               blockId={`${blockId}_header`}
+              components={components}
               events={events}
               properties={properties.header}
               content={{
@@ -44,6 +46,7 @@ const PageHCF = ({ blockId, events, content, properties, methods }) => (
           {content.content && (
             <Content
               blockId={`${blockId}_content`}
+              components={components}
               events={events}
               properties={properties.content}
               content={{
@@ -54,6 +57,7 @@ const PageHCF = ({ blockId, events, content, properties, methods }) => (
           {content.footer && (
             <Footer
               blockId={`${blockId}_footer`}
+              components={components}
               events={events}
               properties={properties.footer}
               content={{

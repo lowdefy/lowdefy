@@ -15,11 +15,12 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import ReactMarkdown from 'react-markdown';
 
-import MarkdownWithCode from './MarkdownWithCode';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
+
+const { meta, tests } = block;
 
 jest.mock('react-markdown', () => {
   return jest.fn(() => 'mocked');
@@ -27,9 +28,15 @@ jest.mock('react-markdown', () => {
 
 const mocks = [
   {
-    name: 'default',
-    fn: ReactMarkdown,
+    getMockFns: async () => {
+      const ReactMarkdown = await import('react-markdown');
+      return [ReactMarkdown];
+    },
+    getBlock: async () => {
+      const Block = await import('./MarkdownWithCode.js');
+      return Block.default;
+    },
+    name: 'MarkdownWithCode',
   },
 ];
-
-runMockRenderTests({ examples, Block: MarkdownWithCode, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

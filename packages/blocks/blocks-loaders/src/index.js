@@ -14,19 +14,17 @@
   limitations under the License.
 */
 
-import IconSpinner from './blocks/IconSpinner';
-import LogoSpinner from './blocks/LogoSpinner';
-import Skeleton from './blocks/Skeleton';
-import SkeletonAvatar from './blocks/SkeletonAvatar';
-import SkeletonButton from './blocks/SkeletonButton';
-import SkeletonInput from './blocks/SkeletonInput';
-import SkeletonParagraph from './blocks/SkeletonParagraph';
-import Spinner from './blocks/Spinner';
+import IconSpinner from './blocks/IconSpinner/IconSpinner.js';
+import Skeleton from './blocks/Skeleton/Skeleton.js';
+import SkeletonAvatar from './blocks/SkeletonAvatar/SkeletonAvatar.js';
+import SkeletonButton from './blocks/SkeletonButton/SkeletonButton.js';
+import SkeletonInput from './blocks/SkeletonInput/SkeletonInput.js';
+import SkeletonParagraph from './blocks/SkeletonParagraph/SkeletonParagraph.js';
+import Spinner from './blocks/Spinner/Spinner.js';
 
 export default {
   blocks: {
     IconSpinner,
-    LogoSpinner,
     Skeleton,
     SkeletonAvatar,
     SkeletonButton,

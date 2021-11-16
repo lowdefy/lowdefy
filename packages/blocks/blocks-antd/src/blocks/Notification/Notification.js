@@ -15,18 +15,29 @@
 */
 
 import React, { useEffect } from 'react';
-import { notification } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { notification } from 'antd';
 import { type } from '@lowdefy/helpers';
 
 import Button from '../Button/Button.js';
 
-const NotificationBlock = ({ blockId, events, Icon, properties, methods }) => {
+const NotificationBlock = ({ blockId, components: { Icon }, events, methods, properties }) => {
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
       notification[args.status || properties.status || 'success']({
         id: `${blockId}_notification`,
         bottom: properties.bottom,
+        className: methods.makeCssClass(properties.notificationStyle),
+        description: renderHtml({ html: args.description || properties.description, methods }),
+        duration: type.isNone(args.duration) ? properties.duration : args.duration,
+        message: renderHtml({ html: args.message || properties.message || blockId, methods }),
+        onClick: () => methods.triggerEvent({ name: 'onClick' }),
+        onClose: () => methods.triggerEvent({ name: 'onClose' }),
+        placement: properties.placement,
+        top: properties.top,
+        icon: properties.icon && (
+          <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
+        ),
         btn: properties.button && (
           <Button
             blockId={`${blockId}_button`}
@@ -35,12 +46,6 @@ const NotificationBlock = ({ blockId, events, Icon, properties, methods }) => {
             onClick={() => methods.triggerEvent({ name: 'onClose' })}
           />
         ),
-        className: methods.makeCssClass(properties.notificationStyle),
-        description: renderHtml({ html: args.description || properties.description, methods }),
-        duration: type.isNone(args.duration) ? properties.duration : args.duration,
-        icon: properties.icon && (
-          <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
-        ),
         closeIcon: properties.closeIcon && (
           <Icon
             blockId={`${blockId}_closeIcon`}
@@ -48,11 +53,6 @@ const NotificationBlock = ({ blockId, events, Icon, properties, methods }) => {
             properties={properties.closeIcon}
           />
         ),
-        message: renderHtml({ html: args.message || properties.message || blockId, methods }),
-        onClose: () => methods.triggerEvent({ name: 'onClose' }),
-        onClick: () => methods.triggerEvent({ name: 'onClick' }),
-        placement: properties.placement,
-        top: properties.top,
       });
     });
   });

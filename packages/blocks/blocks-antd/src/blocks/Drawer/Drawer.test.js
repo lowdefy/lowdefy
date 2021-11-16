@@ -15,25 +15,33 @@
 */
 
 import { runBlockSchemaTests, runMockMethodTests } from '@lowdefy/block-dev';
-import { Drawer } from 'antd';
 
-import DrawerBlock from './Drawer';
 import examples from './examples.yaml';
 import block from './index.js';
 import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-jest.mock('antd/lib/drawer', () => {
-  return jest.fn(() => 'mocked');
+jest.mock('antd', () => {
+  const comp = jest.fn(() => 'mocked');
+  return {
+    Drawer: comp,
+  };
 });
 
 const mocks = [
   {
-    name: 'default',
-    fn: Drawer,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [antd.Drawer];
+    },
+    getBlock: async () => {
+      const Block = await import('./Drawer.js');
+      return Block.default;
+    },
+    name: 'Drawer',
   },
 ];
 
-runMockMethodTests({ examples, Block: DrawerBlock, mocks, meta });
+runMockMethodTests({ examples, mocks, meta, schema, tests });
 runBlockSchemaTests({ examples, meta, schema });

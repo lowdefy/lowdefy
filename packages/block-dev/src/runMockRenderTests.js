@@ -20,40 +20,36 @@ import { render } from '@testing-library/react';
 
 import mockBlock from './mockBlock.js';
 
-const runMockRenderTests = ({
-  Block,
-  examples,
-  logger,
-  meta,
-  mocks,
-  reset = () => null,
-  schema,
-}) => {
+const runMockRenderTests = ({ examples, logger, meta, mocks, reset = () => null, schema }) => {
   const { before, getProps } = mockBlock({ meta, logger, schema });
 
   const makeCssClass = jest.fn();
   const makeCssImp = (style, op) => JSON.stringify({ style, options: op });
 
-  beforeEach(() => {
-    reset();
+  beforeEach(async () => {
+    await reset();
     before();
     makeCssClass.mockReset();
     makeCssClass.mockImplementation(makeCssImp);
   });
+
   const values = meta.values
     ? [type.enforceType(meta.valueType, null), ...meta.values]
     : [type.enforceType(meta.valueType, null)];
-
   examples.forEach((ex) => {
     values.forEach((value, v) => {
       mocks.forEach((mock) => {
-        test(`Mock render - ${ex.id} - value[${v}] - ${mock.name}`, () => {
+        test(`Mock render - ${ex.id} - value[${v}] - ${mock.name}`, async () => {
+          const mockFns = await mock.getMockFns();
+          const Block = await mock.getBlock();
           const Shell = () => {
             const props = getProps(ex);
             return <Block {...props} methods={{ ...props.methods, makeCssClass }} value={value} />;
           };
           render(<Shell />);
-          expect(mock.fn.mock.calls).toMatchSnapshot();
+          mockFns.forEach((mockFn) => {
+            expect(mockFn.mock.calls).toMatchSnapshot();
+          });
         });
       });
     });

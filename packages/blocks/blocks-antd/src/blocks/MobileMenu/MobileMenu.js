@@ -22,7 +22,17 @@ import Button from '../Button/Button.js';
 import Drawer from '../Drawer/Drawer.js';
 import Menu from '../Menu/Menu.js';
 
-const MobileMenu = ({ basePath, blockId, events, methods, menus, pageId, properties, rename }) => {
+const MobileMenu = ({
+  basePath,
+  blockId,
+  components,
+  events,
+  methods,
+  menus,
+  pageId,
+  properties,
+  rename,
+}) => {
   const [openState, setOpen] = useState(false);
   useEffect(() => {
     methods.registerMethod(get(rename, 'methods.toggleOpen', { default: 'toggleOpen' }), () => {
@@ -38,6 +48,7 @@ const MobileMenu = ({ basePath, blockId, events, methods, menus, pageId, propert
     <div id={blockId}>
       <Button
         blockId={`${blockId}_button`}
+        components={components}
         events={events}
         properties={{
           hideTitle: true,
@@ -57,6 +68,7 @@ const MobileMenu = ({ basePath, blockId, events, methods, menus, pageId, propert
       />
       <Drawer
         blockId={`${blockId}_drawer`}
+        components={components}
         properties={mergeObjects([
           {
             bodyStyle: { padding: '3.1em 0 0 0', backgroundColor: properties.backgroundColor },
@@ -79,6 +91,7 @@ const MobileMenu = ({ basePath, blockId, events, methods, menus, pageId, propert
             <>
               <Menu
                 basePath={basePath}
+                components={components}
                 blockId={`${blockId}_menu`}
                 methods={methods}
                 events={events}

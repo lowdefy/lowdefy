@@ -29,7 +29,7 @@ export default {
       },
     },
   },
-  test: {
+  tests: {
     validation: true,
     required: true,
   },

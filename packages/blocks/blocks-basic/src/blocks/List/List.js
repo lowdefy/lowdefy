@@ -16,7 +16,7 @@
 
 import React, { useEffect } from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
-import Box from '../Box/Box';
+import Box from '../Box/Box.js';
 
 const List = ({ blockId, events, list, methods, properties }) => {
   useEffect(() => {

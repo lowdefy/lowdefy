@@ -23,9 +23,9 @@ import Label from '../Label/Label.js';
 
 const SwitchBlock = ({
   blockId,
+  components: { Icon, Link },
   events,
   loading,
-  Icon,
   methods,
   properties,
   required,
@@ -43,6 +43,7 @@ const SwitchBlock = ({
   return (
     <Label
       blockId={blockId}
+      components={{ Icon, Link }}
       events={events}
       loading={loading}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}

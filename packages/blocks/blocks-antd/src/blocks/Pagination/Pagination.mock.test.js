@@ -15,24 +15,32 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { Pagination } from 'antd';
 
-import Block from './Pagination.js';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-jest.mock('antd/lib/pagination', () => {
+jest.mock('antd', () => {
   const comp = jest.fn(() => 'mocked');
-  return comp;
+  return {
+    Pagination: comp,
+  };
 });
 
 const mocks = [
   {
-    name: 'default',
-    fn: Pagination,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [antd.Pagination];
+    },
+    getBlock: async () => {
+      const Block = await import('./Pagination.js');
+      return Block.default;
+    },
+    name: 'Pagination',
   },
 ];
 
-runMockRenderTests({ examples, Block, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

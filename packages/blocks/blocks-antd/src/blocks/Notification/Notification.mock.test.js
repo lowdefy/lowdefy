@@ -15,28 +15,42 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { notification } from 'antd';
 
-import Block from './Notification.js';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-jest.mock('antd/lib/notification', () => {
+jest.mock('antd', () => {
   const comp = jest.fn(() => 'mocked');
   comp.error = jest.fn(() => 'mocked');
+  comp.info = jest.fn(() => 'mocked');
   comp.success = jest.fn(() => 'mocked');
   comp.warning = jest.fn(() => 'mocked');
-  comp.info = jest.fn(() => 'mocked');
-  return comp;
+  return {
+    notification: comp,
+  };
 });
 
 const mocks = [
   {
-    name: 'default',
-    fn: notification,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [
+        antd.notification,
+        antd.notification.error,
+        antd.notification.info,
+        antd.notification.success,
+        antd.notification.warning,
+      ];
+    },
+    getBlock: async () => {
+      const Block = await import('./Notification.js');
+      return Block.default;
+    },
+    name: 'Notification',
   },
 ];
 
-runMockRenderTests({ examples, Block, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

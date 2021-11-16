@@ -24,8 +24,8 @@ import examples from './examples.yaml';
 import block from './index.js';
 import schema from './schema.json';
 
-const { meta } = block;
-runRenderTests({ examples, Block, meta, schema });
+const { meta, tests } = block;
+runRenderTests({ examples, Block, meta, schema, tests });
 runBlockSchemaTests({ examples, schema });
 
 const { before, methods, getProps } = mockBlock({ meta, schema });

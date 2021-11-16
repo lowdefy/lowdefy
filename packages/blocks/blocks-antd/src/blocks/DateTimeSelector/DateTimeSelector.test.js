@@ -17,12 +17,12 @@
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import validationsExamples from '../../validationExamples.js';
-import DateTimeSelector from './DateTimeSelector';
+import Block from './DateTimeSelector.js';
 import examples from './examples.yaml';
 import block from './index.js';
 import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-runRenderTests({ examples, Block: DateTimeSelector, meta, validationsExamples });
+runRenderTests({ examples, Block, meta, schema, tests, validationsExamples });
 runBlockSchemaTests({ examples, meta, schema });

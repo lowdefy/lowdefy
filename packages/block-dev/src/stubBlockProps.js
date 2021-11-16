@@ -16,7 +16,7 @@
 
 import React, { useState } from 'react';
 import { type } from '@lowdefy/helpers';
-import { makeCssClass, Icon } from '@lowdefy/block-utils';
+import { makeCssClass, createIcon } from '@lowdefy/block-utils';
 
 import schemaTest from './schemaTest.js';
 
@@ -34,7 +34,7 @@ const Icons = {
   },
 };
 
-const IconComponent = Icon(Icons);
+const IconComponent = createIcon(Icons);
 
 const stubBlockProps = ({ block, meta, logger, initialValue, schema }) => {
   const [value, setState] = useState(type.enforceType(meta.valueType, block.value || initialValue));
@@ -62,7 +62,14 @@ const stubBlockProps = ({ block, meta, logger, initialValue, schema }) => {
   }
   block.events = block.events || {};
   block.eventLog = [];
-  block.Icon = IconComponent;
+  block.components = {
+    Icon: IconComponent,
+    Link: (props) => (
+      <a data-testid={`link-${props.href}`} {...props}>
+        {props.children}
+      </a>
+    ),
+  };
   // mock default block methods
   block.methods = {
     makeCssClass,
@@ -79,10 +86,14 @@ const stubBlockProps = ({ block, meta, logger, initialValue, schema }) => {
   // block category defaults
   if (meta.category === 'list') {
     block.list = [];
-    (block.areas.content.blocks || []).forEach((bl) => {
+    (block.areas.content.blocks || []).forEach((bl, i) => {
       block.list.push({
         content: () => (
-          <div key={bl.id} style={{ border: '1px solid red', padding: 10 }}>
+          <div
+            data-testid={`list-${i}-${bl.id}`}
+            key={bl.id}
+            style={{ border: '1px solid red', padding: 10 }}
+          >
             {bl.id}
           </div>
         ),
@@ -97,11 +108,11 @@ const stubBlockProps = ({ block, meta, logger, initialValue, schema }) => {
       ...block.methods,
     };
   }
-  if (meta.category === 'container' || meta.category === 'context') {
+  if (meta.category === 'container') {
     block.content = {};
     Object.keys(block.areas).forEach((key) => {
       block.content[key] = () => (
-        <div key={key} style={{ border: '1px solid red', padding: 10 }}>
+        <div data-testid={`area-${key}`} key={key} style={{ border: '1px solid red', padding: 10 }}>
           {key}
         </div>
       );

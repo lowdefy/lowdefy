@@ -15,26 +15,32 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { GithubPicker } from 'react-color';
 
-import Block from './GithubColorSelector.js';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
 jest.mock('react-color', () => {
   const selectors = {
-    GithubPicker: jest.fn((props) => props.toString()),
+    GithubPicker: jest.fn(() => 'mocked'),
   };
   return selectors;
 });
 
 const mocks = [
   {
-    name: 'default',
-    fn: GithubPicker,
+    getMockFns: async () => {
+      const antd = await import('react-color');
+      return [antd.GithubPicker];
+    },
+    getBlock: async () => {
+      const Block = await import('./GithubColorSelector.js');
+      return Block.default;
+    },
+    name: 'GithubColorSelector',
   },
 ];
 
-runMockRenderTests({ examples, Block, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

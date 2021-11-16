@@ -21,7 +21,7 @@ import { type } from '@lowdefy/helpers';
 
 const Title = Typography.Title;
 
-const TitleBlock = ({ blockId, events, Icon, properties, methods }) => {
+const TitleBlock = ({ blockId, components: { Icon }, events, properties, methods }) => {
   return (
     <Title
       id={blockId}

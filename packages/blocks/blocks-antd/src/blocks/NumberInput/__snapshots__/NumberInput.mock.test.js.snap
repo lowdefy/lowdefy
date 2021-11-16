@@ -1,0 +1,639 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mock render - default - value[0] - NumberInput 1`] = `
+Array [
+  Array [
+    Object {
+      "autoComplete": "off",
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "controls": undefined,
+      "decimalSeparator": undefined,
+      "disabled": undefined,
+      "formatter": undefined,
+      "id": "default_input",
+      "keyboard": undefined,
+      "max": undefined,
+      "min": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "precision": undefined,
+      "size": undefined,
+      "step": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.autoFocus: true - value[0] - NumberInput 1`] = `
+Array [
+  Array [
+    Object {
+      "autoComplete": "off",
+      "autoFocus": true,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "controls": undefined,
+      "decimalSeparator": undefined,
+      "disabled": undefined,
+      "formatter": undefined,
+      "id": "properties.autoFocus: true_input",
+      "keyboard": undefined,
+      "max": undefined,
+      "min": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "precision": undefined,
+      "size": undefined,
+      "step": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.disabled: true - value[0] - NumberInput 1`] = `
+Array [
+  Array [
+    Object {
+      "autoComplete": "off",
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "controls": undefined,
+      "decimalSeparator": undefined,
+      "disabled": true,
+      "formatter": undefined,
+      "id": "properties.disabled: true_input",
+      "keyboard": undefined,
+      "max": undefined,
+      "min": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "precision": undefined,
+      "size": undefined,
+      "step": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.inputStyle: CSS style applied - value[0] - NumberInput 1`] = `
+Array [
+  Array [
+    Object {
+      "autoComplete": "off",
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},{\\"border\\":\\"1px solid red\\",\\"fontSize\\":\\"25px\\"}]}",
+      "controls": undefined,
+      "decimalSeparator": undefined,
+      "disabled": undefined,
+      "formatter": undefined,
+      "id": "properties.inputStyle: CSS style applied_input",
+      "keyboard": undefined,
+      "max": undefined,
+      "min": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "precision": undefined,
+      "size": undefined,
+      "step": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label align: right - value[0] - NumberInput 1`] = `
+Array [
+  Array [
+    Object {
+      "autoComplete": "off",
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "controls": undefined,
+      "decimalSeparator": undefined,
+      "disabled": undefined,
+      "formatter": undefined,
+      "id": "properties.label align: right_input",
+      "keyboard": undefined,
+      "max": undefined,
+      "min": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "precision": undefined,
+      "size": undefined,
+      "step": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label colon: false - value[0] - NumberInput 1`] = `
+Array [
+  Array [
+    Object {
+      "autoComplete": "off",
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "controls": undefined,
+      "decimalSeparator": undefined,
+      "disabled": undefined,
+      "formatter": undefined,
+      "id": "properties.label colon: false_input",
+      "keyboard": undefined,
+      "max": undefined,
+      "min": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "precision": undefined,
+      "size": undefined,
+      "step": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label disabled: true - value[0] - NumberInput 1`] = `
+Array [
+  Array [
+    Object {
+      "autoComplete": "off",
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "controls": undefined,
+      "decimalSeparator": undefined,
+      "disabled": undefined,
+      "formatter": undefined,
+      "id": "properties.label disabled: true_input",
+      "keyboard": undefined,
+      "max": undefined,
+      "min": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "precision": undefined,
+      "size": undefined,
+      "step": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label extra: showing extra - value[0] - NumberInput 1`] = `
+Array [
+  Array [
+    Object {
+      "autoComplete": "off",
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "controls": undefined,
+      "decimalSeparator": undefined,
+      "disabled": undefined,
+      "formatter": undefined,
+      "id": "properties.label extra: showing extra_input",
+      "keyboard": undefined,
+      "max": undefined,
+      "min": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "precision": undefined,
+      "size": undefined,
+      "step": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label inline: true - value[0] - NumberInput 1`] = `
+Array [
+  Array [
+    Object {
+      "autoComplete": "off",
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "controls": undefined,
+      "decimalSeparator": undefined,
+      "disabled": undefined,
+      "formatter": undefined,
+      "id": "properties.label inline: true_input",
+      "keyboard": undefined,
+      "max": undefined,
+      "min": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "precision": undefined,
+      "size": undefined,
+      "step": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label span: 5 - value[0] - NumberInput 1`] = `
+Array [
+  Array [
+    Object {
+      "autoComplete": "off",
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "controls": undefined,
+      "decimalSeparator": undefined,
+      "disabled": undefined,
+      "formatter": undefined,
+      "id": "properties.label span: 5_input",
+      "keyboard": undefined,
+      "max": undefined,
+      "min": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "precision": undefined,
+      "size": undefined,
+      "step": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.placeholder: Please enter a number between 10 and 250 - value[0] - NumberInput 1`] = `
+Array [
+  Array [
+    Object {
+      "autoComplete": "off",
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "controls": undefined,
+      "decimalSeparator": undefined,
+      "disabled": undefined,
+      "formatter": undefined,
+      "id": "properties.placeholder: Please enter a number between 10 and 250_input",
+      "keyboard": undefined,
+      "max": undefined,
+      "min": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": "Please enter a number between 10 and 250",
+      "precision": undefined,
+      "size": undefined,
+      "step": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.size: large - value[0] - NumberInput 1`] = `
+Array [
+  Array [
+    Object {
+      "autoComplete": "off",
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "controls": undefined,
+      "decimalSeparator": undefined,
+      "disabled": undefined,
+      "formatter": undefined,
+      "id": "properties.size: large_input",
+      "keyboard": undefined,
+      "max": undefined,
+      "min": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "precision": undefined,
+      "size": "large",
+      "step": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.size: small - value[0] - NumberInput 1`] = `
+Array [
+  Array [
+    Object {
+      "autoComplete": "off",
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "controls": undefined,
+      "decimalSeparator": undefined,
+      "disabled": undefined,
+      "formatter": undefined,
+      "id": "properties.size: small_input",
+      "keyboard": undefined,
+      "max": undefined,
+      "min": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "precision": undefined,
+      "size": "small",
+      "step": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.title - value[0] - NumberInput 1`] = `
+Array [
+  Array [
+    Object {
+      "autoComplete": "off",
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "controls": undefined,
+      "decimalSeparator": undefined,
+      "disabled": undefined,
+      "formatter": undefined,
+      "id": "properties.title_input",
+      "keyboard": undefined,
+      "max": undefined,
+      "min": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "precision": undefined,
+      "size": undefined,
+      "step": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - property.bordered: false - value[0] - NumberInput 1`] = `
+Array [
+  Array [
+    Object {
+      "autoComplete": "off",
+      "autoFocus": undefined,
+      "bordered": false,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "controls": undefined,
+      "decimalSeparator": undefined,
+      "disabled": undefined,
+      "formatter": undefined,
+      "id": "property.bordered: false_input",
+      "keyboard": undefined,
+      "max": undefined,
+      "min": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "precision": undefined,
+      "size": undefined,
+      "step": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - property.controls: false - value[0] - NumberInput 1`] = `
+Array [
+  Array [
+    Object {
+      "autoComplete": "off",
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "controls": false,
+      "decimalSeparator": undefined,
+      "disabled": undefined,
+      "formatter": undefined,
+      "id": "property.controls: false_input",
+      "keyboard": undefined,
+      "max": undefined,
+      "min": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "precision": undefined,
+      "size": undefined,
+      "step": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - property.decimalSeparator: "," - value[0] - NumberInput 1`] = `
+Array [
+  Array [
+    Object {
+      "autoComplete": "off",
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "controls": undefined,
+      "decimalSeparator": ",",
+      "disabled": undefined,
+      "formatter": undefined,
+      "id": "property.decimalSeparator: \\",\\"_input",
+      "keyboard": undefined,
+      "max": undefined,
+      "min": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "precision": undefined,
+      "size": undefined,
+      "step": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - property.keyboard: false - value[0] - NumberInput 1`] = `
+Array [
+  Array [
+    Object {
+      "autoComplete": "off",
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "controls": undefined,
+      "decimalSeparator": undefined,
+      "disabled": undefined,
+      "formatter": undefined,
+      "id": "property.keyboard: false_input",
+      "keyboard": false,
+      "max": undefined,
+      "min": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "precision": undefined,
+      "size": undefined,
+      "step": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - property.max: 250 - value[0] - NumberInput 1`] = `
+Array [
+  Array [
+    Object {
+      "autoComplete": "off",
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "controls": undefined,
+      "decimalSeparator": undefined,
+      "disabled": undefined,
+      "formatter": undefined,
+      "id": "property.max: 250_input",
+      "keyboard": undefined,
+      "max": 250,
+      "min": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "precision": undefined,
+      "size": undefined,
+      "step": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - property.min: 10 - value[0] - NumberInput 1`] = `
+Array [
+  Array [
+    Object {
+      "autoComplete": "off",
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "controls": undefined,
+      "decimalSeparator": undefined,
+      "disabled": undefined,
+      "formatter": undefined,
+      "id": "property.min: 10_input",
+      "keyboard": undefined,
+      "max": undefined,
+      "min": 10,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "precision": undefined,
+      "size": undefined,
+      "step": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - property.precision: 1 - value[0] - NumberInput 1`] = `
+Array [
+  Array [
+    Object {
+      "autoComplete": "off",
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "controls": undefined,
+      "decimalSeparator": undefined,
+      "disabled": undefined,
+      "formatter": undefined,
+      "id": "property.precision: 1_input",
+      "keyboard": undefined,
+      "max": undefined,
+      "min": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "precision": 1,
+      "size": undefined,
+      "step": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - property.step: 3 - value[0] - NumberInput 1`] = `
+Array [
+  Array [
+    Object {
+      "autoComplete": "off",
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "controls": undefined,
+      "decimalSeparator": undefined,
+      "disabled": undefined,
+      "formatter": undefined,
+      "id": "property.step: 3_input",
+      "keyboard": undefined,
+      "max": undefined,
+      "min": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "precision": undefined,
+      "size": undefined,
+      "step": 3,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;

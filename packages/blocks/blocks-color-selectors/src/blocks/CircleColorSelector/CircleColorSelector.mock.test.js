@@ -15,26 +15,32 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { CirclePicker } from 'react-color';
 
-import Block from './CircleColorSelector.js';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
 jest.mock('react-color', () => {
   const selectors = {
-    CirclePicker: jest.fn((props) => props.toString()),
+    CirclePicker: jest.fn(() => 'mocked'),
   };
   return selectors;
 });
 
 const mocks = [
   {
-    name: 'default',
-    fn: CirclePicker,
+    getMockFns: async () => {
+      const antd = await import('react-color');
+      return [antd.CirclePicker];
+    },
+    getBlock: async () => {
+      const Block = await import('./CircleColorSelector.js');
+      return Block.default;
+    },
+    name: 'CircleColorSelector',
   },
 ];
 
-runMockRenderTests({ examples, Block, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

@@ -15,30 +15,32 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { Button, Drawer } from 'antd';
 
-import MobileMenuBlock from './MobileMenu.js';
 import examples from './examples.yaml';
 import block from './index.js';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-jest.mock('antd/lib/button', () => {
-  return jest.fn(() => 'mocked');
-});
-jest.mock('antd/lib/drawer', () => {
-  return jest.fn(() => 'mocked');
+jest.mock('antd', () => {
+  return {
+    Drawer: jest.fn(() => 'mocked'),
+    Button: jest.fn(() => 'mocked'),
+  };
 });
 
 const mocks = [
   {
-    name: 'Drawer',
-    fn: Drawer,
-  },
-  {
-    name: 'Button',
-    fn: Button,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [antd.Drawer, antd.Button];
+    },
+    getBlock: async () => {
+      const Block = await import('./MobileMenu.js');
+      return Block.default;
+    },
+    name: 'MobileMenu',
   },
 ];
 
-runMockRenderTests({ examples, Block: MobileMenuBlock, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

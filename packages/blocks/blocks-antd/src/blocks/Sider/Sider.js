@@ -15,9 +15,9 @@
 */
 
 import React, { useState, useEffect } from 'react';
-import { Layout } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import { get } from '@lowdefy/helpers';
+import { Layout } from 'antd';
 
 const Sider = Layout.Sider;
 

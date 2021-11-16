@@ -15,25 +15,36 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { Select } from 'antd';
+import { Col, Row } from 'antd';
 
-import Block from './MultipleSelector.js';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-jest.mock('antd/lib/select', () => {
+jest.mock('antd', () => {
   const comp = jest.fn(() => 'mocked');
   comp.Option = jest.fn(() => 'mocked');
-  return comp;
+  return {
+    Select: comp,
+    Row,
+    Col,
+  };
 });
 
 const mocks = [
   {
-    name: 'default',
-    fn: Select,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [antd.Select, antd.Select.Option];
+    },
+    getBlock: async () => {
+      const Block = await import('./MultipleSelector.js');
+      return Block.default;
+    },
+    name: 'MultipleSelector',
   },
 ];
 
-runMockRenderTests({ examples, Block, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

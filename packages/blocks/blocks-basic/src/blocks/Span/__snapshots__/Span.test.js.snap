@@ -11,6 +11,7 @@ exports[`Render areas.content - value[0] 1`] = `
   id="areas.content"
 >
   <div
+    data-testid="area-content"
     style="border: 1px solid red; padding: 10px;"
   >
     content
@@ -29,6 +30,7 @@ exports[`Render default - value[0] 1`] = `
   id="default"
 >
   <div
+    data-testid="area-content"
     style="border: 1px solid red; padding: 10px;"
   >
     content
@@ -48,6 +50,7 @@ exports[`Render events.onClick - value[0] 1`] = `
   id="events.onClick"
 >
   <div
+    data-testid="area-content"
     style="border: 1px solid red; padding: 10px;"
   >
     content
@@ -81,6 +84,7 @@ exports[`Render properties.style - value[0] 1`] = `
   id="properties.style"
 >
   <div
+    data-testid="area-content"
     style="border: 1px solid red; padding: 10px;"
   >
     content
@@ -119,6 +123,7 @@ exports[`triggerEvent onClick 1`] = `
   id="one"
 >
   <div
+    data-testid="area-content"
     style="border: 1px solid red; padding: 10px;"
   >
     content

@@ -19,7 +19,7 @@ import { Statistic } from 'antd';
 import { type } from '@lowdefy/helpers';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 
-const StatisticBlock = ({ blockId, events, Icon, properties, methods }) => (
+const StatisticBlock = ({ blockId, components: { Icon }, events, properties, methods }) => (
   <Statistic
     className={methods.makeCssClass(properties.style)}
     decimalSeparator={properties.decimalSeparator}

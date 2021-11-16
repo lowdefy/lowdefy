@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import Anchor from './blocks/Anchor';
-import Box from './blocks/Box';
-import DangerousHtml from './blocks/DangerousHtml';
-import Html from './blocks/Html';
-import Img from './blocks/Img';
-import List from './blocks/List';
-import Span from './blocks/Span';
+import Anchor from './blocks/Anchor/index.js';
+import Box from './blocks/Box/index.js';
+import DangerousHtml from './blocks/DangerousHtml/index.js';
+import Html from './blocks/Html/index.js';
+import Img from './blocks/Img/index.js';
+import List from './blocks/List/index.js';
+import Span from './blocks/Span/index.js';
 
 export default {
   blocks: {

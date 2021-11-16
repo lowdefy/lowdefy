@@ -15,24 +15,43 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { Modal } from 'antd';
 
-import Block from './Modal.js';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-jest.mock('antd/lib/modal', () => {
+jest.mock('antd', () => {
   const comp = jest.fn(() => 'mocked');
-  return comp;
+  comp.confirm = jest.fn(() => 'mocked');
+  comp.error = jest.fn(() => 'mocked');
+  comp.info = jest.fn(() => 'mocked');
+  comp.success = jest.fn(() => 'mocked');
+  comp.warning = jest.fn(() => 'mocked');
+  return {
+    Modal: comp,
+  };
 });
 
 const mocks = [
   {
-    name: 'default',
-    fn: Modal,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [
+        antd.Modal.confirm,
+        antd.Modal.error,
+        antd.Modal.info,
+        antd.Modal.success,
+        antd.Modal.warning,
+      ];
+    },
+    getBlock: async () => {
+      const Block = await import('./Modal.js');
+      return Block.default;
+    },
+    name: 'Modal',
   },
 ];
 
-runMockRenderTests({ examples, Block, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

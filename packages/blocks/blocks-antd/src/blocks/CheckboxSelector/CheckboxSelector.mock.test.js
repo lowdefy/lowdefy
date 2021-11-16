@@ -15,25 +15,37 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { Checkbox } from 'antd';
+import { Col, Row, Space } from 'antd';
 
-import CheckboxSelectorBlock from './CheckboxSelector';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-jest.mock('antd/lib/checkbox', () => {
-  const checkbox = jest.fn(() => 'mocked');
-  checkbox.Group = jest.fn(() => 'mocked');
-  return checkbox;
+jest.mock('antd', () => {
+  const comp = jest.fn(() => 'mocked');
+  comp.Group = jest.fn(() => 'mocked');
+  return {
+    Checkbox: comp,
+    Col,
+    Row,
+    Space,
+  };
 });
 
 const mocks = [
   {
-    name: 'default',
-    fn: Checkbox,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [antd.Checkbox];
+    },
+    getBlock: async () => {
+      const Block = await import('./CheckboxSelector.js');
+      return Block.default;
+    },
+    name: 'CheckboxSelector',
   },
 ];
 
-runMockRenderTests({ examples, Block: CheckboxSelectorBlock, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

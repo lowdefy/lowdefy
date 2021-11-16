@@ -15,20 +15,20 @@
 */
 
 import React from 'react';
-import { Select } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { get, type } from '@lowdefy/helpers';
+import { Select } from 'antd';
 
-import Label from '../Label/Label.js';
-import getValueIndex from '../../getValueIndex.js';
 import getUniqueValues from '../../getUniqueValues.js';
+import getValueIndex from '../../getValueIndex.js';
+import Label from '../Label/Label.js';
 
 const Option = Select.Option;
 
 const MultipleSelector = ({
   blockId,
+  components: { Icon },
   events,
-  Icon,
   loading,
   methods,
   properties,
@@ -40,6 +40,7 @@ const MultipleSelector = ({
   return (
     <Label
       blockId={blockId}
+      components={{ Icon }}
       loading={loading}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
@@ -50,13 +51,18 @@ const MultipleSelector = ({
             <div id={`${blockId}_popup`} />
             <Select
               id={`${blockId}_input`}
+              allowClear={properties.allowClear !== false}
+              autoFocus={properties.autoFocus}
               bordered={properties.bordered}
               className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
+              disabled={properties.disabled}
               getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
               mode="multiple"
-              autoFocus={properties.autoFocus}
-              disabled={properties.disabled}
+              notFoundContent="Not found"
               placeholder={get(properties, 'placeholder', { default: 'Select items' })}
+              showArrow={get(properties, 'showArrow', { default: true })}
+              size={properties.size}
+              value={getValueIndex(value, uniqueValueOptions, true)}
               suffixIcon={
                 properties.suffixIcon && (
                   <Icon
@@ -84,15 +90,11 @@ const MultipleSelector = ({
                   />
                 )
               }
-              showArrow={get(properties, 'showArrow', { default: true })}
-              allowClear={properties.allowClear !== false}
-              size={properties.size}
               filterOption={(input, option) =>
                 (option.filterstring || option.children.props.html || '')
                   .toLowerCase()
                   .indexOf(input.toLowerCase()) >= 0
               }
-              notFoundContent="Not found"
               onChange={(newVal) => {
                 const val = [];
                 newVal.forEach((nv) => {
@@ -105,7 +107,6 @@ const MultipleSelector = ({
                 methods.setValue(val);
                 methods.triggerEvent({ name: 'onChange' });
               }}
-              value={getValueIndex(value, uniqueValueOptions, true)}
             >
               {uniqueValueOptions.map((opt, i) =>
                 type.isPrimitive(opt) ? (

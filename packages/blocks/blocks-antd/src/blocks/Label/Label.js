@@ -18,31 +18,29 @@
 // MIT Copyright (c) 2015-present Ant UED, https://xtech.antfin.com/ - 2020-09-08
 
 import React from 'react';
-import classNames from 'classnames';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { Col, Row } from 'antd';
+import classNames from 'classnames';
 import CSSMotion from 'rc-animate/lib/CSSMotion.js';
-import {
-  LoadingOutlined,
-  CloseCircleFilled,
-  CheckCircleFilled,
-  ExclamationCircleFilled,
-} from '@ant-design/icons';
 
 import labelLogic from './labelLogic.js';
 
-const iconMap = {
-  success: CheckCircleFilled,
-  warning: ExclamationCircleFilled,
-  error: CloseCircleFilled,
-  validating: LoadingOutlined,
-};
 const validationKeyMap = {
-  warning: 'warnings',
   error: 'errors',
+  warning: 'warnings',
 };
 
-const Label = ({ blockId, content, methods, properties, required, validation }) => {
+let iconMap;
+
+const Label = ({
+  blockId,
+  components: { Icon },
+  content,
+  methods,
+  properties,
+  required,
+  validation,
+}) => {
   const {
     extraClassName,
     feedbackClassName,
@@ -55,6 +53,14 @@ const Label = ({ blockId, content, methods, properties, required, validation }) 
     showFeedback,
     wrapperCol,
   } = labelLogic({ blockId, content, methods, properties, required, validation });
+  if (!iconMap) {
+    iconMap = {
+      error: () => <Icon properties="AiFilledCloseCircle" />,
+      success: () => <Icon properties="AiFilledCheckCircle" />,
+      validating: () => <Icon properties="AiOutlinedLoading" />,
+      warning: () => <Icon properties="AiFilledExclamationCircle" />,
+    };
+  }
   const IconNode = validation.status && iconMap[validation.status];
   const icon =
     validation.status && IconNode ? (

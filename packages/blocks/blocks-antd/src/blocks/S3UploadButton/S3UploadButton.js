@@ -94,7 +94,7 @@ const getCustomRequest =
     }
   };
 
-const S3UploadButtonBlock = ({ blockId, events, methods, properties, value }) => {
+const S3UploadButtonBlock = ({ blockId, components, events, methods, properties, value }) => {
   // Use state here because we need to set s3 bucket and key as block value
   // The customRequest function does not have access to the updated block value,
   // so it cannot set the value directly. customRequest sets the parameters to s3Parameters state,
@@ -131,6 +131,7 @@ const S3UploadButtonBlock = ({ blockId, events, methods, properties, value }) =>
     >
       <Button
         blockId={`${blockId}_button`}
+        components={components}
         events={events}
         properties={{
           disabled,

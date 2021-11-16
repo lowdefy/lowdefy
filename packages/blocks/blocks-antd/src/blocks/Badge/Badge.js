@@ -19,7 +19,7 @@ import { type } from '@lowdefy/helpers';
 import { Badge } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-const BadgeBlock = ({ blockId, events, content, Icon, properties }) => (
+const BadgeBlock = ({ blockId, events, content, components: { Icon }, properties }) => (
   <Badge
     id={blockId}
     color={properties.color}

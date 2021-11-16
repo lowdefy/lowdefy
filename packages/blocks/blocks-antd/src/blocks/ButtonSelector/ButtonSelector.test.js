@@ -16,13 +16,13 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import validationsExamples from '../../validationExamples.js';
-import ButtonSelector from './ButtonSelector';
-import examples from './examples.yaml';
+import Block from './ButtonSelector.js';
 import block from './index.js';
+import examples from './examples.yaml';
 import schema from './schema.json';
+import validationsExamples from '../../validationExamples.js';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-runRenderTests({ examples, Block: ButtonSelector, meta, validationsExamples });
+runRenderTests({ Block, examples, meta, schema, tests, validationsExamples });
 runBlockSchemaTests({ examples, meta, schema });

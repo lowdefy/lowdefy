@@ -15,23 +15,29 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { Card } from 'antd';
 
-import CardBlock from './Card';
 import examples from './examples.yaml';
 import block from './index.js';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-jest.mock('antd/lib/card', () => {
-  return jest.fn(() => 'mocked');
-});
+jest.mock('antd', () => ({
+  Card: jest.fn(() => 'mocked'),
+}));
 
 const mocks = [
   {
-    name: 'default',
-    fn: Card,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [antd.Card];
+    },
+    getBlock: async () => {
+      const Block = await import('./Card.js');
+      return Block.default;
+    },
+    name: 'Card',
   },
 ];
 
-runMockRenderTests({ examples, Block: CardBlock, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

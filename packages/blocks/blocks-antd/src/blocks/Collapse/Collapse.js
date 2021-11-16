@@ -16,10 +16,10 @@
 
 import React from 'react';
 import { Collapse } from 'antd';
-import { type, serializer } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 
-const CollapseBlock = ({ blockId, events, content, Icon, methods, properties }) => {
+const CollapseBlock = ({ blockId, events, content, components: { Icon }, methods, properties }) => {
   const panels =
     properties.panels ||
     Object.keys(content)
@@ -58,7 +58,7 @@ const CollapseBlock = ({ blockId, events, content, Icon, methods, properties }) 
       {panels.map((panel) => (
         <Collapse.Panel
           extra={content[panel.extraKey] && content[panel.extraKey]()}
-          disabled={panel.disabled}
+          collapsible={panel.disabled && 'disabled'}
           forceRender={properties.forceRender}
           header={renderHtml({ html: panel.title, methods })}
           key={panel.key}

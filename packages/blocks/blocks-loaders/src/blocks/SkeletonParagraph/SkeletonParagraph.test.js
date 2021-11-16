@@ -13,9 +13,14 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { runRenderTests } from '@lowdefy/block-dev';
 
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
+
+import Block from './SkeletonParagraph.js';
 import examples from './examples.yaml';
-import SkeletonParagraph from './SkeletonParagraph';
+import block from './index.js';
+import schema from './schema.json';
 
-runRenderTests({ examples, Block: SkeletonParagraph, meta: {} });
+const { meta, tests } = block;
+runRenderTests({ examples, Block, meta, schema, tests });
+runBlockSchemaTests({ examples, meta, schema });

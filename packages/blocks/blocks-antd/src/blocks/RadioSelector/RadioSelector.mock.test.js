@@ -15,25 +15,37 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { Radio } from 'antd';
+import { Col, Row, Space } from 'antd';
 
-import Block from './RadioSelector.js';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-jest.mock('antd/lib/radio', () => {
+jest.mock('antd', () => {
   const comp = jest.fn(() => 'mocked');
   comp.Group = jest.fn(() => 'mocked');
-  return comp;
+  return {
+    Col,
+    Radio: comp,
+    Row,
+    Space,
+  };
 });
 
 const mocks = [
   {
-    name: 'default',
-    fn: Radio,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [antd.Radio.Group];
+    },
+    getBlock: async () => {
+      const Block = await import('./RadioSelector.js');
+      return Block.default;
+    },
+    name: 'RadioSelector',
   },
 ];
 
-runMockRenderTests({ examples, Block, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

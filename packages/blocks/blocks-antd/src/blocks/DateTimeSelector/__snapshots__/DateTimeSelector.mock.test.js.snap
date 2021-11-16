@@ -1,0 +1,891 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mock render - default - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "YYYY-MM-DD HH:mm",
+      "getPopupContainer": [Function],
+      "id": "default_input",
+      "onChange": [Function],
+      "placeholder": "Select Date & Time",
+      "showNow": undefined,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 1,
+        "minuteStep": 5,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.allowClear: false - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": false,
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "YYYY-MM-DD HH:mm",
+      "getPopupContainer": [Function],
+      "id": "properties.allowClear: false_input",
+      "onChange": [Function],
+      "placeholder": "Select Date & Time",
+      "showNow": undefined,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 1,
+        "minuteStep": 5,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.autoFocus: true - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": true,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "YYYY-MM-DD HH:mm",
+      "getPopupContainer": [Function],
+      "id": "properties.autoFocus: true_input",
+      "onChange": [Function],
+      "placeholder": "Select Date & Time",
+      "showNow": undefined,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 1,
+        "minuteStep": 5,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.bordered: false - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "bordered": false,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "YYYY-MM-DD HH:mm",
+      "getPopupContainer": [Function],
+      "id": "properties.bordered: false_input",
+      "onChange": [Function],
+      "placeholder": "Select Date & Time",
+      "showNow": undefined,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 1,
+        "minuteStep": 5,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.disabled: true - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": true,
+      "disabledDate": [Function],
+      "format": "YYYY-MM-DD HH:mm",
+      "getPopupContainer": [Function],
+      "id": "properties.disabled: true_input",
+      "onChange": [Function],
+      "placeholder": "Select Date & Time",
+      "showNow": undefined,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 1,
+        "minuteStep": 5,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.disabledDates.dates - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "YYYY-MM-DD HH:mm",
+      "getPopupContainer": [Function],
+      "id": "properties.disabledDates.dates_input",
+      "onChange": [Function],
+      "placeholder": "Select Date & Time",
+      "showNow": undefined,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 1,
+        "minuteStep": 5,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.disabledDates.max - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "YYYY-MM-DD HH:mm",
+      "getPopupContainer": [Function],
+      "id": "properties.disabledDates.max_input",
+      "onChange": [Function],
+      "placeholder": "Select Date & Time",
+      "showNow": undefined,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 1,
+        "minuteStep": 5,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.disabledDates.min - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "YYYY-MM-DD HH:mm",
+      "getPopupContainer": [Function],
+      "id": "properties.disabledDates.min_input",
+      "onChange": [Function],
+      "placeholder": "Select Date & Time",
+      "showNow": undefined,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 1,
+        "minuteStep": 5,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.disabledDates.ranges - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "YYYY-MM-DD HH:mm",
+      "getPopupContainer": [Function],
+      "id": "properties.disabledDates.ranges_input",
+      "onChange": [Function],
+      "placeholder": "Select Date & Time",
+      "showNow": undefined,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 1,
+        "minuteStep": 5,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.format: YYYY-MMM-DD HH:mm:ss (moment.js formats) - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "YYYY-MMM-DD HH:mm:ss",
+      "getPopupContainer": [Function],
+      "id": "properties.format: YYYY-MMM-DD HH:mm:ss (moment.js formats)_input",
+      "onChange": [Function],
+      "placeholder": "Select Date & Time",
+      "showNow": undefined,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 1,
+        "minuteStep": 5,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.hourStep - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "YYYY-MM-DD HH:mm",
+      "getPopupContainer": [Function],
+      "id": "properties.hourStep_input",
+      "onChange": [Function],
+      "placeholder": "Select Date & Time",
+      "showNow": undefined,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 2,
+        "minuteStep": 5,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.inputStyle: CSS style applied - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},{\\"border\\":\\"1px solid red\\"}]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "YYYY-MM-DD HH:mm",
+      "getPopupContainer": [Function],
+      "id": "properties.inputStyle: CSS style applied_input",
+      "onChange": [Function],
+      "placeholder": "Select Date & Time",
+      "showNow": undefined,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 1,
+        "minuteStep": 5,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label align: right - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "YYYY-MM-DD HH:mm",
+      "getPopupContainer": [Function],
+      "id": "properties.label align: right_input",
+      "onChange": [Function],
+      "placeholder": "Select Date & Time",
+      "showNow": undefined,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 1,
+        "minuteStep": 5,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label colon: true - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "YYYY-MM-DD HH:mm",
+      "getPopupContainer": [Function],
+      "id": "properties.label colon: true_input",
+      "onChange": [Function],
+      "placeholder": "Select Date & Time",
+      "showNow": undefined,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 1,
+        "minuteStep": 5,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label disabled: true - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "YYYY-MM-DD HH:mm",
+      "getPopupContainer": [Function],
+      "id": "properties.label disabled: true_input",
+      "onChange": [Function],
+      "placeholder": "Select Date & Time",
+      "showNow": undefined,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 1,
+        "minuteStep": 5,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label extra: extra text added - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "YYYY-MM-DD HH:mm",
+      "getPopupContainer": [Function],
+      "id": "properties.label extra: extra text added_input",
+      "onChange": [Function],
+      "placeholder": "Select Date & Time",
+      "showNow": undefined,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 1,
+        "minuteStep": 5,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label inline: true - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "YYYY-MM-DD HH:mm",
+      "getPopupContainer": [Function],
+      "id": "properties.label inline: true_input",
+      "onChange": [Function],
+      "placeholder": "Select Date & Time",
+      "showNow": undefined,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 1,
+        "minuteStep": 5,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label span: 5 - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "YYYY-MM-DD HH:mm",
+      "getPopupContainer": [Function],
+      "id": "properties.label span: 5_input",
+      "onChange": [Function],
+      "placeholder": "Select Date & Time",
+      "showNow": undefined,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 1,
+        "minuteStep": 5,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.minuteStep - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "YYYY-MM-DD HH:mm",
+      "getPopupContainer": [Function],
+      "id": "properties.minuteStep_input",
+      "onChange": [Function],
+      "placeholder": "Select Date & Time",
+      "showNow": undefined,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 1,
+        "minuteStep": 15,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.placeholder: - Select this Date and Time - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "YYYY-MM-DD HH:mm",
+      "getPopupContainer": [Function],
+      "id": "properties.placeholder: - Select this Date and Time_input",
+      "onChange": [Function],
+      "placeholder": "Select this Date and Time",
+      "showNow": undefined,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 1,
+        "minuteStep": 5,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.secondStep - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "YYYY-MM-DD HH:mm",
+      "getPopupContainer": [Function],
+      "id": "properties.secondStep_input",
+      "onChange": [Function],
+      "placeholder": "Select Date & Time",
+      "showNow": undefined,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 1,
+        "minuteStep": 5,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.selectUTC: true - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "YYYY-MM-DD HH:mm",
+      "getPopupContainer": [Function],
+      "id": "properties.selectUTC: true_input",
+      "onChange": [Function],
+      "placeholder": "Select Date & Time",
+      "showNow": undefined,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 1,
+        "minuteStep": 5,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.showNow: false - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "YYYY-MM-DD HH:mm",
+      "getPopupContainer": [Function],
+      "id": "properties.showNow: false_input",
+      "onChange": [Function],
+      "placeholder": "Select Date & Time",
+      "showNow": false,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 1,
+        "minuteStep": 5,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.size: small - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "YYYY-MM-DD HH:mm",
+      "getPopupContainer": [Function],
+      "id": "properties.size: small_input",
+      "onChange": [Function],
+      "placeholder": "Select Date & Time",
+      "showNow": undefined,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 1,
+        "minuteStep": 5,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": "small",
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.suffixIcon: CalendarTwoTone - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "YYYY-MM-DD HH:mm",
+      "getPopupContainer": [Function],
+      "id": "properties.suffixIcon: CalendarTwoTone_input",
+      "onChange": [Function],
+      "placeholder": "Select Date & Time",
+      "showNow": undefined,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 1,
+        "minuteStep": 5,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": <IconComp1
+        basePath=""
+        blockId="properties.suffixIcon: CalendarTwoTone_suffixIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties="CalendarTwoTone"
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.timeFormat: HH:mm:ss - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "HH:mm:ss",
+      "getPopupContainer": [Function],
+      "id": "properties.timeFormat: HH:mm:ss_input",
+      "onChange": [Function],
+      "placeholder": "Select Date & Time",
+      "showNow": undefined,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 1,
+        "minuteStep": 5,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.title - value[0] - DateTimeSelector 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "bordered": undefined,
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+      "disabled": undefined,
+      "disabledDate": [Function],
+      "format": "YYYY-MM-DD HH:mm",
+      "getPopupContainer": [Function],
+      "id": "properties.title_input",
+      "onChange": [Function],
+      "placeholder": "Select Date & Time",
+      "showNow": undefined,
+      "showTime": Object {
+        "format": "HH:mm",
+        "hourStep": 1,
+        "minuteStep": 5,
+        "secondStep": 30,
+      },
+      "showToday": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;

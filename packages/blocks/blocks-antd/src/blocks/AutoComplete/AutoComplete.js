@@ -19,13 +19,14 @@ import { AutoComplete } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
-import Label from '../Label/Label';
-import getUniqueValues from '../../getUniqueValues';
+import Label from '../Label/Label.js';
+import getUniqueValues from '../../getUniqueValues.js';
 
 const Option = AutoComplete.Option;
 
 const AutoCompleteInput = ({
   blockId,
+  components,
   events,
   loading,
   methods,
@@ -38,6 +39,7 @@ const AutoCompleteInput = ({
   return (
     <Label
       blockId={blockId}
+      components={components}
       events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}

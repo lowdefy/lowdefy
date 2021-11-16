@@ -1,0 +1,1275 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render default - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="default"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="default_input"
+      title="default"
+    >
+      <span
+        class="emotion-3"
+      >
+        default
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <button
+          aria-checked="false"
+          class="ant-switch emotion-4"
+          id="default_input"
+          role="switch"
+          type="button"
+        >
+          <div
+            class="ant-switch-handle"
+          />
+          <span
+            class="ant-switch-inner"
+          >
+            <svg
+              class="emotion-3"
+              data-testid="AiOutlineExclamationCircle"
+              id="default_uncheckedIcon"
+            />
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.autoFocus: true - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="properties.autoFocus: true"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="properties.autoFocus: true_input"
+      title="properties.autoFocus: true"
+    >
+      <span
+        class="emotion-3"
+      >
+        properties.autoFocus: true
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <button
+          aria-checked="false"
+          class="ant-switch emotion-4"
+          id="properties.autoFocus: true_input"
+          role="switch"
+          type="button"
+        >
+          <div
+            class="ant-switch-handle"
+          />
+          <span
+            class="ant-switch-inner"
+          >
+            <svg
+              class="emotion-3"
+              data-testid="AiOutlineExclamationCircle"
+              id="properties.autoFocus: true_uncheckedIcon"
+            />
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.checkedIcon: CheckCircleOutlined - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="properties.checkedIcon: CheckCircleOutlined"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="properties.checkedIcon: CheckCircleOutlined_input"
+      title="properties.checkedIcon: CheckCircleOutlined"
+    >
+      <span
+        class="emotion-3"
+      >
+        properties.checkedIcon: CheckCircleOutlined
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <button
+          aria-checked="false"
+          class="ant-switch emotion-4"
+          id="properties.checkedIcon: CheckCircleOutlined_input"
+          role="switch"
+          type="button"
+        >
+          <div
+            class="ant-switch-handle"
+          />
+          <span
+            class="ant-switch-inner"
+          >
+            <svg
+              class="emotion-3"
+              data-testid="AiOutlineExclamationCircle"
+              id="properties.checkedIcon: CheckCircleOutlined_uncheckedIcon"
+            />
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.checkedText: Checked - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="properties.checkedText: Checked"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="properties.checkedText: Checked_input"
+      title="properties.checkedText: Checked"
+    >
+      <span
+        class="emotion-3"
+      >
+        properties.checkedText: Checked
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <button
+          aria-checked="false"
+          class="ant-switch emotion-4"
+          id="properties.checkedText: Checked_input"
+          role="switch"
+          type="button"
+        >
+          <div
+            class="ant-switch-handle"
+          />
+          <span
+            class="ant-switch-inner"
+          >
+            <svg
+              class="emotion-3"
+              data-testid="AiOutlineExclamationCircle"
+              id="properties.checkedText: Checked_uncheckedIcon"
+            />
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.color: # - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4.ant-switch-checked {
+  background-color: #f44336!important;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="properties.color: #"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="properties.color: #_input"
+      title="properties.color: #"
+    >
+      <span
+        class="emotion-3"
+      >
+        properties.color: #
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <button
+          aria-checked="false"
+          class="ant-switch emotion-4"
+          id="properties.color: #_input"
+          role="switch"
+          type="button"
+        >
+          <div
+            class="ant-switch-handle"
+          />
+          <span
+            class="ant-switch-inner"
+          >
+            <svg
+              class="emotion-3"
+              data-testid="AiOutlineExclamationCircle"
+              id="properties.color: #_uncheckedIcon"
+            />
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.disabled: true - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="properties.disabled: true"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="properties.disabled: true_input"
+      title="properties.disabled: true"
+    >
+      <span
+        class="emotion-3"
+      >
+        properties.disabled: true
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <button
+          aria-checked="false"
+          class="ant-switch emotion-4 ant-switch-disabled"
+          disabled=""
+          id="properties.disabled: true_input"
+          role="switch"
+          type="button"
+        >
+          <div
+            class="ant-switch-handle"
+          />
+          <span
+            class="ant-switch-inner"
+          >
+            <svg
+              class="emotion-3"
+              data-testid="AiOutlineExclamationCircle"
+              id="properties.disabled: true_uncheckedIcon"
+            />
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.inputStyle: CSS style applied - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  border: 2px solid red;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="properties.inputStyle: CSS style applied"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="properties.inputStyle: CSS style applied_input"
+      title="properties.inputStyle: CSS style applied"
+    >
+      <span
+        class="emotion-3"
+      >
+        properties.inputStyle: CSS style applied
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <button
+          aria-checked="false"
+          class="ant-switch emotion-4"
+          id="properties.inputStyle: CSS style applied_input"
+          role="switch"
+          type="button"
+        >
+          <div
+            class="ant-switch-handle"
+          />
+          <span
+            class="ant-switch-inner"
+          >
+            <svg
+              class="emotion-3"
+              data-testid="AiOutlineExclamationCircle"
+              id="properties.inputStyle: CSS style applied_uncheckedIcon"
+            />
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.label align: right - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="properties.label align: right"
+>
+  <div
+    class="ant-col ant-form-item-label emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="properties.label align: right_input"
+      title="properties.label align: right"
+    >
+      <span
+        class="emotion-3"
+      >
+        properties.label align: right
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <button
+          aria-checked="false"
+          class="ant-switch emotion-4"
+          id="properties.label align: right_input"
+          role="switch"
+          type="button"
+        >
+          <div
+            class="ant-switch-handle"
+          />
+          <span
+            class="ant-switch-inner"
+          >
+            <svg
+              class="emotion-3"
+              data-testid="AiOutlineExclamationCircle"
+              id="properties.label align: right_uncheckedIcon"
+            />
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.label colon: false - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="properties.label colon: false"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="ant-form-item-no-colon emotion-2"
+      for="properties.label colon: false_input"
+      title="properties.label colon: false"
+    >
+      <span
+        class="emotion-3"
+      >
+        properties.label colon: false
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <button
+          aria-checked="false"
+          class="ant-switch emotion-4"
+          id="properties.label colon: false_input"
+          role="switch"
+          type="button"
+        >
+          <div
+            class="ant-switch-handle"
+          />
+          <span
+            class="ant-switch-inner"
+          >
+            <svg
+              class="emotion-3"
+              data-testid="AiOutlineExclamationCircle"
+              id="properties.label colon: false_uncheckedIcon"
+            />
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.label disabled: true - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="properties.label disabled: true"
+>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <button
+          aria-checked="false"
+          class="ant-switch emotion-1"
+          id="properties.label disabled: true_input"
+          role="switch"
+          type="button"
+        >
+          <div
+            class="ant-switch-handle"
+          />
+          <span
+            class="ant-switch-inner"
+          >
+            <svg
+              class="emotion-2"
+              data-testid="AiOutlineExclamationCircle"
+              id="properties.label disabled: true_uncheckedIcon"
+            />
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.label extra: showing extra - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-6 {
+  margin-top: 0;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="properties.label extra: showing extra"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="properties.label extra: showing extra_input"
+      title="properties.label extra: showing extra"
+    >
+      <span
+        class="emotion-3"
+      >
+        properties.label extra: showing extra
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <button
+          aria-checked="false"
+          class="ant-switch emotion-4"
+          id="properties.label extra: showing extra_input"
+          role="switch"
+          type="button"
+        >
+          <div
+            class="ant-switch-handle"
+          />
+          <span
+            class="ant-switch-inner"
+          >
+            <svg
+              class="emotion-3"
+              data-testid="AiOutlineExclamationCircle"
+              id="properties.label extra: showing extra_uncheckedIcon"
+            />
+          </span>
+        </button>
+      </div>
+    </div>
+    <div
+      class="ant-form-item-explain ant-form-item-extra emotion-6"
+    >
+      <span
+        class="emotion-3"
+      >
+        showing extra
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.label inline: true - value[0] 1`] = `
+.emotion-0 {
+  -webkit-box-flex-wrap: inherit;
+  -webkit-flex-wrap: inherit;
+  -ms-flex-wrap: inherit;
+  flex-wrap: inherit;
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  overflow: inherit;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="properties.label inline: true"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1"
+    style="flex: 0 1 auto;"
+  >
+    <label
+      class="emotion-2"
+      for="properties.label inline: true_input"
+      title="properties.label inline: true"
+    >
+      <span
+        class="emotion-3"
+      >
+        properties.label inline: true
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control"
+    style="flex: 1 1 auto;"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <button
+          aria-checked="false"
+          class="ant-switch emotion-4"
+          id="properties.label inline: true_input"
+          role="switch"
+          type="button"
+        >
+          <div
+            class="ant-switch-handle"
+          />
+          <span
+            class="ant-switch-inner"
+          >
+            <svg
+              class="emotion-3"
+              data-testid="AiOutlineExclamationCircle"
+              id="properties.label inline: true_uncheckedIcon"
+            />
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.label span: 4 - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="properties.label span: 4"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+  >
+    <label
+      class="emotion-2"
+      for="properties.label span: 4_input"
+      title="properties.label span: 4"
+    >
+      <span
+        class="emotion-3"
+      >
+        properties.label span: 4
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24 ant-col-md-20"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <button
+          aria-checked="false"
+          class="ant-switch emotion-4"
+          id="properties.label span: 4_input"
+          role="switch"
+          type="button"
+        >
+          <div
+            class="ant-switch-handle"
+          />
+          <span
+            class="ant-switch-inner"
+          >
+            <svg
+              class="emotion-3"
+              data-testid="AiOutlineExclamationCircle"
+              id="properties.label span: 4_uncheckedIcon"
+            />
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.size: small - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 0;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 24px;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="properties.size: small"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="properties.size: small_input"
+      title="properties.size: small"
+    >
+      <span
+        class="emotion-3"
+      >
+        properties.size: small
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <button
+          aria-checked="false"
+          class="ant-switch ant-switch-small emotion-4"
+          id="properties.size: small_input"
+          role="switch"
+          type="button"
+        >
+          <div
+            class="ant-switch-handle"
+          />
+          <span
+            class="ant-switch-inner"
+          >
+            <svg
+              class="emotion-3"
+              data-testid="AiOutlineExclamationCircle"
+              id="properties.size: small_uncheckedIcon"
+            />
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.title - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="properties.title"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="properties.title_input"
+      title="A Switch"
+    >
+      <span
+        class="emotion-3"
+      >
+        A Switch
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <button
+          aria-checked="false"
+          class="ant-switch emotion-4"
+          id="properties.title_input"
+          role="switch"
+          type="button"
+        >
+          <div
+            class="ant-switch-handle"
+          />
+          <span
+            class="ant-switch-inner"
+          >
+            <svg
+              class="emotion-3"
+              data-testid="AiOutlineExclamationCircle"
+              id="properties.title_uncheckedIcon"
+            />
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.uncheckedIcon: UnlockFilled - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="properties.uncheckedIcon: UnlockFilled"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="properties.uncheckedIcon: UnlockFilled_input"
+      title="properties.uncheckedIcon: UnlockFilled"
+    >
+      <span
+        class="emotion-3"
+      >
+        properties.uncheckedIcon: UnlockFilled
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <button
+          aria-checked="false"
+          class="ant-switch emotion-4"
+          id="properties.uncheckedIcon: UnlockFilled_input"
+          role="switch"
+          type="button"
+        >
+          <div
+            class="ant-switch-handle"
+          />
+          <span
+            class="ant-switch-inner"
+          >
+            <svg
+              class="emotion-3"
+              data-testid="AiOutlineExclamationCircle"
+              id="properties.uncheckedIcon: UnlockFilled_uncheckedIcon"
+            />
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.uncheckedText: Unchecked - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="properties.uncheckedText: Unchecked"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="properties.uncheckedText: Unchecked_input"
+      title="properties.uncheckedText: Unchecked"
+    >
+      <span
+        class="emotion-3"
+      >
+        properties.uncheckedText: Unchecked
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <button
+          aria-checked="false"
+          class="ant-switch emotion-4"
+          id="properties.uncheckedText: Unchecked_input"
+          role="switch"
+          type="button"
+        >
+          <div
+            class="ant-switch-handle"
+          />
+          <span
+            class="ant-switch-inner"
+          >
+            <span>
+              Unchecked
+            </span>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Test Schema default 1`] = `true`;
+
+exports[`Test Schema default 2`] = `null`;
+
+exports[`Test Schema properties.autoFocus: true 1`] = `true`;
+
+exports[`Test Schema properties.autoFocus: true 2`] = `null`;
+
+exports[`Test Schema properties.checkedIcon: CheckCircleOutlined 1`] = `true`;
+
+exports[`Test Schema properties.checkedIcon: CheckCircleOutlined 2`] = `null`;
+
+exports[`Test Schema properties.checkedText: Checked 1`] = `true`;
+
+exports[`Test Schema properties.checkedText: Checked 2`] = `null`;
+
+exports[`Test Schema properties.color: # 1`] = `true`;
+
+exports[`Test Schema properties.color: # 2`] = `null`;
+
+exports[`Test Schema properties.disabled: true 1`] = `true`;
+
+exports[`Test Schema properties.disabled: true 2`] = `null`;
+
+exports[`Test Schema properties.inputStyle: CSS style applied 1`] = `true`;
+
+exports[`Test Schema properties.inputStyle: CSS style applied 2`] = `null`;
+
+exports[`Test Schema properties.label align: right 1`] = `true`;
+
+exports[`Test Schema properties.label align: right 2`] = `null`;
+
+exports[`Test Schema properties.label colon: false 1`] = `true`;
+
+exports[`Test Schema properties.label colon: false 2`] = `null`;
+
+exports[`Test Schema properties.label disabled: true 1`] = `true`;
+
+exports[`Test Schema properties.label disabled: true 2`] = `null`;
+
+exports[`Test Schema properties.label extra: showing extra 1`] = `true`;
+
+exports[`Test Schema properties.label extra: showing extra 2`] = `null`;
+
+exports[`Test Schema properties.label inline: true 1`] = `true`;
+
+exports[`Test Schema properties.label inline: true 2`] = `null`;
+
+exports[`Test Schema properties.label span: 4 1`] = `true`;
+
+exports[`Test Schema properties.label span: 4 2`] = `null`;
+
+exports[`Test Schema properties.size: small 1`] = `true`;
+
+exports[`Test Schema properties.size: small 2`] = `null`;
+
+exports[`Test Schema properties.title 1`] = `true`;
+
+exports[`Test Schema properties.title 2`] = `null`;
+
+exports[`Test Schema properties.uncheckedIcon: UnlockFilled 1`] = `true`;
+
+exports[`Test Schema properties.uncheckedIcon: UnlockFilled 2`] = `null`;
+
+exports[`Test Schema properties.uncheckedText: Unchecked 1`] = `true`;
+
+exports[`Test Schema properties.uncheckedText: Unchecked 2`] = `null`;

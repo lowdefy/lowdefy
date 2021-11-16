@@ -15,25 +15,33 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { Breadcrumb } from 'antd';
 
-import BreadcrumbBlock from './Breadcrumb';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-jest.mock('antd/lib/breadcrumb', () => {
-  const breadcrumb = jest.fn(() => 'mocked');
-  breadcrumb.Item = jest.fn(() => 'mocked');
-  return breadcrumb;
+jest.mock('antd', () => {
+  const comp = jest.fn(() => 'mocked');
+  comp.Item = jest.fn(() => 'mocked');
+  return {
+    Breadcrumb: comp,
+  };
 });
 
 const mocks = [
   {
-    name: 'default',
-    fn: Breadcrumb,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [antd.Breadcrumb];
+    },
+    getBlock: async () => {
+      const Block = await import('./Breadcrumb.js');
+      return Block.default;
+    },
+    name: 'Breadcrumb',
   },
 ];
 
-runMockRenderTests({ examples, Block: BreadcrumbBlock, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });
