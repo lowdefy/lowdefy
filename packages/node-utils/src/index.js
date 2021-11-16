@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import cachedPromises from './cachedPromises.js';
 import cleanDirectory from './cleanDirectory.js';
 import getConfigFromEnv from './getConfigFromEnv.js';
 import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
@@ -23,7 +22,6 @@ import readFile from './readFile.js';
 import writeFile from './writeFile.js';
 
 export {
-  cachedPromises,
   cleanDirectory,
   getConfigFromEnv,
   getFileExtension,

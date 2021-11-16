@@ -14,19 +14,31 @@
   limitations under the License.
 */
 
-// import dynamic from 'next/dynamic';
+import React from 'react';
 
-import { useSession } from 'next-auth/react';
-import Components from './Blocks.js';
+import callRequest from '../utils/callRequest.js';
+import blockComponents from '../plugins/blocks.js';
+import components from './components.js';
 
 const LowdefyContext = ({ children }) => {
-  const { data: session } = useSession();
-  console.log(session);
   const lowdefy = {
-    Components,
-    pages: {},
-    updaters: {},
+    _internal: {
+      blockComponents,
+      callRequest,
+      components,
+      updaters: {},
+      displayMessage: ({ content }) => {
+        alert(content);
+        return () => undefined;
+      },
+      link: () => undefined,
+    },
+    contexts: {},
+    inputs: {},
+    lowdefyGlobal: {},
   };
+  lowdefy._internal.updateBlock = (blockId) =>
+    lowdefy._internal.updaters[blockId] && lowdefy._internal.updaters[blockId]();
   return <>{children(lowdefy)}</>;
 };
 

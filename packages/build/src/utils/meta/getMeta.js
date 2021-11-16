@@ -25,8 +25,7 @@ Steps to fetch meta
     - return
 */
 
-import { type as typeHelper } from '@lowdefy/helpers';
-import { cachedPromises } from '@lowdefy/node-utils';
+import { cachedPromises, type as typeHelper } from '@lowdefy/helpers';
 
 import createFetchMetaCache from './fetchMetaCache.js';
 import createWriteMetaCache from './writeMetaCache.js';

@@ -15,14 +15,46 @@
 */
 
 import React from 'react';
-import PageContext from './PageContext.js';
-import Block from './Block.js';
 
-const Page = ({ lowdefy, pageConfig }) => {
+import { useRouter } from 'next/router';
+
+import Context from './Context.js';
+import Head from './Head.js';
+import Block from './block/Block.js';
+import Root from './Root.js';
+import setupLink from '../utils/setupLink.js';
+
+const Page = ({ lowdefy, pageConfig, rootConfig }) => {
+  const router = useRouter();
+  lowdefy._internal.basePath = router.basePath;
+  lowdefy._internal.pathname = router.pathname;
+  lowdefy._internal.query = router.query;
+  lowdefy._internal.router = router;
+  lowdefy._internal.link = setupLink({ lowdefy });
   return (
-    <PageContext pageConfig={pageConfig} lowdefy={lowdefy}>
-      {(pageContext) => <Block pageContext={pageContext} lowdefy={lowdefy} />}
-    </PageContext>
+    <Root lowdefy={lowdefy} rootConfig={rootConfig}>
+      {(loaded) =>
+        !loaded ? (
+          <div>Loading</div>
+        ) : (
+          <Context config={pageConfig} lowdefy={lowdefy}>
+            {(context) => (
+              <>
+                <Head
+                  properties={context._internal.RootBlocks.map[pageConfig.pageId].eval.properties}
+                />
+                <Block
+                  block={context._internal.RootBlocks.map[pageConfig.pageId]}
+                  Blocks={context._internal.RootBlocks}
+                  context={context}
+                  lowdefy={lowdefy}
+                />
+              </>
+            )}
+          </Context>
+        )
+      }
+    </Root>
   );
 };
 

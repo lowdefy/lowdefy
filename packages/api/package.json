@@ -25,7 +25,11 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "type": "module",
-  "exports": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./context/*": "./dist/context/*",
+    "./routes/*": "./dist/routes/*"
+  },
   "files": [
     "dist/*"
   ],
@@ -41,10 +45,7 @@
     "@lowdefy/helpers": "3.22.0",
     "@lowdefy/node-utils": "3.22.0",
     "@lowdefy/nunjucks": "3.22.0",
-    "@lowdefy/operators": "3.22.0",
-    "cookie": "0.4.1",
-    "jsonwebtoken": "8.5.1",
-    "openid-client": "4.9.1"
+    "@lowdefy/operators": "3.22.0"
   },
   "devDependencies": {
     "@swc/cli": "0.1.51",

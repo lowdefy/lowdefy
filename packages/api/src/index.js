@@ -14,14 +14,11 @@
   limitations under the License.
 */
 
-import createContext from './context/createContext.js';
+import callRequest from './routes/request/callRequest.js';
+import createApiContext from './context/createApiContext.js';
 import getHomePageId from './routes/rootConfig/getHomePageId.js';
 import getPageConfig from './routes/page/getPageConfig.js';
-import openIdAuthorizationUrl from './routes/auth/openIdAuthorizationUrl.js';
-import openIdCallback from './routes/auth/openIdCallback.js';
-import openIdLogoutUrl from './routes/auth/openIdLogoutUrl.js';
-import request from './routes/request/request.js';
-import rootConfig from './routes/rootConfig/rootConfig.js';
+import getRootConfig from './routes/rootConfig/getRootConfig.js';
 
 import {
   AuthenticationError,
@@ -32,17 +29,14 @@ import {
 } from './context/errors.js';
 
 export {
-  AuthenticationError,
-  ConfigurationError,
-  createContext,
+  callRequest,
+  createApiContext,
   getHomePageId,
   getPageConfig,
-  openIdAuthorizationUrl,
-  openIdCallback,
-  openIdLogoutUrl,
-  request,
+  getRootConfig,
+  AuthenticationError,
+  ConfigurationError,
   RequestError,
-  rootConfig,
   ServerError,
   TokenExpiredError,
 };

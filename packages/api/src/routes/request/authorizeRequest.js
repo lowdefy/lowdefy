@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigurationError } from '../../context/errors';
+import { ConfigurationError } from '../../context/errors.js';
 
 function authorizeRequest({ authorize, logger }, { requestConfig }) {
   if (!authorize(requestConfig)) {

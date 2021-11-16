@@ -28,7 +28,11 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "type": "module",
-  "exports": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./blocks/*": "./dist/blocks/*",
+    "./style.less": "./dist/style.less"
+  },
   "files": [
     "dist/*"
   ],
@@ -49,8 +53,8 @@
     "classnames": "2.3.1",
     "moment": "2.29.1",
     "rc-animate": "3.1.1",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
+    "react": "18.0.0-alpha-327d5c484-20211106",
+    "react-dom": "18.0.0-alpha-327d5c484-20211106",
     "react-router-dom": "5.2.1"
   },
   "devDependencies": {

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigurationError } from '../../context/errors';
+import { ConfigurationError } from '../../context/errors.js';
 
 function getRequestHandler({ logger }, { connectionHandler, requestConfig }) {
   const requestHandler = connectionHandler.requests[requestConfig.type];

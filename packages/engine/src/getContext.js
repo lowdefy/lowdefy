@@ -59,51 +59,54 @@ const blockData = ({
   visible,
 });
 
-const getContext = async ({ page, lowdefy }) => {
-  if (!page) {
+async function getContext({ config, lowdefy }) {
+  if (!config) {
     throw new Error('A page must be provided to get context.');
   }
-  const { pageId } = page;
-  if (lowdefy.contexts[pageId]) {
-    lowdefy.contexts[pageId].update();
-    return lowdefy.contexts[pageId];
+  const { id } = config;
+  if (lowdefy.contexts[id]) {
+    lowdefy.contexts[id]._internal.update();
+    return lowdefy.contexts[id];
   }
 
-  if (!lowdefy.inputs[pageId]) {
-    lowdefy.inputs[pageId] = {};
+  if (!lowdefy.inputs[id]) {
+    lowdefy.inputs[id] = {};
   }
-  const operatorsSet = new Set([...page.operators, '_not', '_type']);
-  lowdefy.contexts[pageId] = {
-    id: pageId,
-    pageId: pageId,
+  const operatorsSet = new Set([...config.operators, '_not', '_type']);
+  const ctx = {
+    id: id,
+    // TODO: What about app object?
+    rootId: config.pageId,
     eventLog: [],
     requests: {},
-    operators: [...operatorsSet],
-    lowdefy,
-    rootBlock: blockData(page), // filter block to prevent circular structure
     state: {},
-    update: () => {}, // Initialize update since Requests might call it during context creation
+    _internal: {
+      lowdefy,
+      operators: [...operatorsSet],
+      rootBlock: blockData(config), // filter block to prevent circular structure
+      update: () => {}, // Initialize update since Requests might call it during context creation
+    },
   };
-  const ctx = lowdefy.contexts[pageId];
-  ctx.parser = new WebParser({ context: ctx });
-  await ctx.parser.init();
-  ctx.State = new State(ctx);
-  ctx.Actions = new Actions(ctx);
-  ctx.Requests = new Requests(ctx);
-  // TODO: Remove "areas: { root: { blocks: [ctx.rootBlock] } },"
-  ctx.RootBlocks = new Blocks({
-    areas: { root: { blocks: [ctx.rootBlock] } },
+  const _internal = ctx._internal;
+  _internal.parser = new WebParser({ context: ctx });
+  await _internal.parser.init();
+  _internal.State = new State(ctx);
+  _internal.Actions = new Actions(ctx);
+  _internal.Requests = new Requests(ctx);
+  _internal.RootBlocks = new Blocks({
+    areas: { root: { blocks: [_internal.rootBlock] } },
     context: ctx,
   });
-  ctx.RootBlocks.init();
-  ctx.update = () => {
-    ctx.RootBlocks.update();
+  _internal.RootBlocks.init();
+  _internal.update = () => {
+    _internal.RootBlocks.update();
   };
-  await ctx.RootBlocks.map[ctx.pageId].triggerEvent({ name: 'onInit' });
-  ctx.update();
-  ctx.State.freezeState();
-  ctx.RootBlocks.map[ctx.pageId].triggerEvent({ name: 'onInitAsync' });
+  await _internal.RootBlocks.map[ctx.rootId].triggerEvent({ name: 'onInit' });
+  _internal.update();
+  _internal.State.freezeState();
+  _internal.RootBlocks.map[ctx.rootId].triggerEvent({ name: 'onInitAsync' });
+  lowdefy.contexts[id] = ctx;
   return ctx;
-};
+}
 
 export default getContext;

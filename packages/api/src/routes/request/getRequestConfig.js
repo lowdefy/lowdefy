@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigurationError } from '../../context/errors';
+import { ConfigurationError } from '../../context/errors.js';
 
 async function getRequestConfig({ logger, readConfigFile }, { pageId, requestId }) {
   const request = await readConfigFile(`pages/${pageId}/requests/${requestId}.json`);

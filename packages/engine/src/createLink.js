@@ -18,21 +18,30 @@ import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
 function createLink({ backLink, lowdefy, newOriginLink, sameOriginLink }) {
   function link({ back, home, input, newTab, pageId, url, urlQuery }) {
+    let pathname = pageId;
     if (back) {
       return backLink();
     }
     const lowdefyUrlQuery = type.isNone(urlQuery) ? '' : `?${urlQueryFn.stringify(urlQuery)}`;
-    if (home) pageId = lowdefy.homePageId;
-    if (pageId) {
+    if (home) {
+      if (lowdefy.homePageId.configured) {
+        pathname = '';
+        pageId = lowdefy.homePageId.homePageId;
+      } else {
+        pathname = lowdefy.homePageId.homePageId;
+        pageId = lowdefy.homePageId.homePageId;
+      }
+    }
+    if (!type.isNone(pathname)) {
       if (!type.isNone(input)) {
         lowdefy.inputs[pageId] = input;
       }
-      return sameOriginLink(`/${pageId}${lowdefyUrlQuery}`, newTab);
-    } else if (url) {
-      return newOriginLink(`${url}${lowdefyUrlQuery}`, newTab);
-    } else {
-      throw new Error(`Invalid Link.`);
+      return sameOriginLink(`/${pathname}${lowdefyUrlQuery}`, newTab);
     }
+    if (!type.isNone(url)) {
+      return newOriginLink(`${url}${lowdefyUrlQuery}`, newTab);
+    }
+    throw new Error(`Invalid Link.`);
   }
   return link;
 }

@@ -16,7 +16,7 @@
 
 async function ScrollTo({ context, params = {} }) {
   if (params.blockId) {
-    const element = context.lowdefy.document.getElementById(params.blockId);
+    const element = context.lowdefy._internal.document.getElementById(params.blockId);
     if (element) {
       element.scrollIntoView(params.options);
     }

@@ -18,7 +18,10 @@ import { get } from '@lowdefy/helpers';
 
 function findHomePageId({ config }, { menus }) {
   if (get(config, 'homePageId')) {
-    return get(config, 'homePageId');
+    return {
+      homePageId: config.homePageId,
+      configured: true,
+    };
   }
   let defaultMenu = menus.find((menu) => menu.menuId === 'default');
   if (!defaultMenu) {
@@ -33,7 +36,10 @@ function findHomePageId({ config }, { menus }) {
   if (!homePageId) {
     homePageId = get(defaultMenu, 'links.0.links.0.links.0.pageId', { default: null });
   }
-  return homePageId;
+  return {
+    homePageId: homePageId,
+    configured: false,
+  };
 }
 
 export default findHomePageId;

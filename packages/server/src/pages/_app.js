@@ -16,16 +16,22 @@
 
 import React, { Suspense } from 'react';
 
+import { ErrorBoundary } from '@lowdefy/block-utils';
+
 import LowdefyContext from '../components/LowdefyContext.js';
 
-import './app.less';
+import '../plugins/style.less';
 
-function MyApp({ Component, pageProps }) {
+function App({ Component, pageProps }) {
   return (
-    <Suspense>
-      <LowdefyContext>{(lowdefy) => <Component lowdefy={lowdefy} {...pageProps} />}</LowdefyContext>
-    </Suspense>
+    <ErrorBoundary>
+      <Suspense>
+        <LowdefyContext>
+          {(lowdefy) => <Component lowdefy={lowdefy} {...pageProps} />}
+        </LowdefyContext>
+      </Suspense>
+    </ErrorBoundary>
   );
 }
 
-export default MyApp;
+export default App;

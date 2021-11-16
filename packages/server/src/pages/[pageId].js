@@ -14,49 +14,38 @@
   limitations under the License.
 */
 
-import path from 'path';
-import React from 'react';
-
-import { readFile } from '@lowdefy/node-utils';
-import { getSession } from 'next-auth/react';
+import createApiContext from '@lowdefy/api/context/createApiContext';
+import getPageConfig from '@lowdefy/api/routes/page/getPageConfig';
+import getRootConfig from '@lowdefy/api/routes/rootConfig/getRootConfig';
 
 import Page from '../components/Page.js';
 
-const PageWrapper = ({ lowdefy, pageConfig }) => {
-  return <Page lowdefy={lowdefy} pageConfig={pageConfig} />;
-};
-
 export async function getServerSideProps(context) {
-  const session = await getSession(context);
   const { pageId } = context.params;
-  const buildDirectory = path.join(process.cwd(), '.lowdefy/build');
+  const apiContext = await createApiContext({ buildDirectory: './.lowdefy/build' });
 
-  const pageContent = await readFile(path.join(buildDirectory, `pages/${pageId}/${pageId}.json`));
+  // TODO: Maybe we can only get rootConfig once?
+  // We can't do getServerSideProps on _app :(
+  const [rootConfig, pageConfig] = await Promise.all([
+    getRootConfig(apiContext),
+    getPageConfig(apiContext, { pageId }),
+  ]);
 
-  if (!pageContent) {
+  if (!pageConfig) {
     return {
-      notFound: true,
+      redirect: {
+        destination: '/404',
+        permanent: false,
+      },
     };
   }
 
   return {
     props: {
-      session,
-      pageConfig: JSON.parse(pageContent),
+      pageConfig,
+      rootConfig,
     },
   };
 }
 
-// export async function getStaticPaths(context) {
-//   const buildDirectory = path.join(process.cwd(), '.lowdefy/build');
-//   const pagesContent = await fs.readFile(path.join(buildDirectory, 'pages.json'), 'utf8');
-//   const pagesConfig = JSON.parse(pagesContent);
-//   const paths = pagesConfig.pages.map((page) => ({ params: { pageId: page.pageId } }));
-
-//   return {
-//     paths,
-//     fallback: false,
-//   };
-// }
-
-export default PageWrapper;
+export default Page;

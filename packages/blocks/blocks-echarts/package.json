@@ -44,8 +44,8 @@
     "@lowdefy/block-utils": "3.22.0",
     "echarts": "5.2.1",
     "echarts-for-react": "3.0.1",
-    "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react": "18.0.0-alpha-327d5c484-20211106",
+    "react-dom": "18.0.0-alpha-327d5c484-20211106"
   },
   "devDependencies": {
     "@babel/preset-react": "7.16.0",
