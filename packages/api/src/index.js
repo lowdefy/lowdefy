@@ -14,12 +14,11 @@
   limitations under the License.
 */
 
+import callRequest from './routes/request/callRequest.js';
 import createApiContext from './context/createApiContext.js';
-import createContext from './context/createContext.js';
 import getHomePageId from './routes/rootConfig/getHomePageId.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
-import request from './routes/request/request.js';
 
 import {
   AuthenticationError,
@@ -30,12 +29,11 @@ import {
 } from './context/errors.js';
 
 export {
+  callRequest,
   createApiContext,
-  createContext,
   getHomePageId,
   getPageConfig,
   getRootConfig,
-  request,
   AuthenticationError,
   ConfigurationError,
   RequestError,

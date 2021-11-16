@@ -15,7 +15,7 @@
 */
 
 async function Request({ actions, arrayIndices, context, event, params }) {
-  return context.Requests.callRequests({ actions, arrayIndices, event, params });
+  return context._internal.Requests.callRequests({ actions, arrayIndices, event, params });
 }
 
 export default Request;

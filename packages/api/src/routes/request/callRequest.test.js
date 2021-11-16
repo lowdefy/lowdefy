@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import requestHandler from './request';
-import testContext from '../../test/testContext';
+import callRequest from './callRequest.js';
+import testContext from '../../test/testContext.js';
 
-import { ConfigurationError, RequestError } from '../../context/errors';
+import { ConfigurationError, RequestError } from '../../context/errors.js';
 
 console.error = () => {};
 
@@ -123,7 +123,7 @@ beforeEach(() => {
 test('call request, public auth', async () => {
   mockReadConfigFile.mockImplementation(defaultReadConfigImp());
   mockTestRequestResolver.mockImplementation(defaultResolverImp);
-  const res = await requestHandler(context, defaultParams);
+  const res = await callRequest(context, defaultParams);
   expect(res).toEqual({
     id: 'request:pageId:requestId',
     response: {
@@ -156,7 +156,7 @@ test('call request, protected auth with user', async () => {
   );
   mockTestRequestResolver.mockImplementation(defaultResolverImp);
 
-  const res = await requestHandler(authenticatedContext, defaultParams);
+  const res = await callRequest(authenticatedContext, defaultParams);
   expect(res).toEqual({
     id: 'request:pageId:requestId',
     response: {
@@ -189,8 +189,8 @@ test('call request, protected auth without user', async () => {
   );
   mockTestRequestResolver.mockImplementation(defaultResolverImp);
 
-  await expect(requestHandler(context, defaultParams)).rejects.toThrow(ConfigurationError);
-  await expect(requestHandler(context, defaultParams)).rejects.toThrow(
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(
     'Request "requestId" does not exist.'
   );
 });
@@ -203,8 +203,8 @@ test('request does not exist', async () => {
     payload: {},
     requestId: 'doesNotExist',
   };
-  await expect(requestHandler(context, params)).rejects.toThrow(ConfigurationError);
-  await expect(requestHandler(context, params)).rejects.toThrow(
+  await expect(callRequest(context, params)).rejects.toThrow(ConfigurationError);
+  await expect(callRequest(context, params)).rejects.toThrow(
     'Request "doesNotExist" does not exist.'
   );
 });
@@ -226,8 +226,8 @@ test('request does not have a connectionId', async () => {
 
   mockTestRequestResolver.mockImplementation(defaultResolverImp);
 
-  await expect(requestHandler(context, defaultParams)).rejects.toThrow(ConfigurationError);
-  await expect(requestHandler(context, defaultParams)).rejects.toThrow(
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(
     'Request "requestId" does not specify a connection.'
   );
 });
@@ -249,8 +249,8 @@ test('request is not a valid request type', async () => {
   );
   mockTestRequestResolver.mockImplementation(defaultResolverImp);
 
-  await expect(requestHandler(context, defaultParams)).rejects.toThrow(ConfigurationError);
-  await expect(requestHandler(context, defaultParams)).rejects.toThrow(
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(
     'Request type "InvalidType" can not be found.'
   );
 });
@@ -272,8 +272,8 @@ test('connection does not exist', async () => {
   );
   mockTestRequestResolver.mockImplementation(defaultResolverImp);
 
-  await expect(requestHandler(context, defaultParams)).rejects.toThrow(ConfigurationError);
-  await expect(requestHandler(context, defaultParams)).rejects.toThrow(
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(
     'Connection "doesNotExist" does not exist.'
   );
 });
@@ -293,8 +293,8 @@ test('connection does not have correct type', async () => {
   );
   mockTestRequestResolver.mockImplementation(defaultResolverImp);
 
-  await expect(requestHandler(context, defaultParams)).rejects.toThrow(ConfigurationError);
-  await expect(requestHandler(context, defaultParams)).rejects.toThrow(
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(
     'Connection type "OtherConnection" can not be found.'
   );
 });
@@ -317,7 +317,7 @@ test('deserialize inputs', async () => {
   );
   mockTestRequestResolver.mockImplementation(defaultResolverImp);
 
-  await requestHandler(context, {
+  await callRequest(context, {
     blockId: 'contextId',
     payload: {
       date: { _date: 0 },
@@ -358,7 +358,7 @@ test('parse request properties for operators', async () => {
   );
   mockTestRequestResolver.mockImplementation(defaultResolverImp);
 
-  const res = await requestHandler(authenticatedContext, {
+  const res = await callRequest(authenticatedContext, {
     blockId: 'contextId',
     payload: {
       value: 'payloadValue',
@@ -398,7 +398,7 @@ test('parse connection properties for operators', async () => {
   );
   mockTestRequestResolver.mockImplementation(defaultResolverImp);
 
-  const res = await requestHandler(authenticatedContext, {
+  const res = await callRequest(authenticatedContext, {
     blockId: 'contextId',
     payload: {
       value: 'payloadValue',
@@ -447,7 +447,7 @@ test('parse secrets', async () => {
   );
   mockTestRequestResolver.mockImplementation(defaultResolverImp);
 
-  const res = await requestHandler(context, defaultParams);
+  const res = await callRequest(context, defaultParams);
   expect(res).toEqual({
     id: 'request:pageId:requestId',
     response: {
@@ -477,7 +477,7 @@ test('request properties default value', async () => {
   );
   mockTestRequestResolver.mockImplementation(defaultResolverImp);
 
-  const res = await requestHandler(context, defaultParams);
+  const res = await callRequest(context, defaultParams);
   expect(res).toEqual({
     id: 'request:pageId:requestId',
     response: {
@@ -503,7 +503,7 @@ test('connection properties default value', async () => {
   );
   mockTestRequestResolver.mockImplementation(defaultResolverImp);
 
-  const res = await requestHandler(context, defaultParams);
+  const res = await callRequest(context, defaultParams);
   expect(res).toEqual({
     id: 'request:pageId:requestId',
     response: {
@@ -534,8 +534,8 @@ test('request properties operator error', async () => {
   );
   mockTestRequestResolver.mockImplementation(defaultResolverImp);
 
-  await expect(requestHandler(context, defaultParams)).rejects.toThrow(RequestError);
-  await expect(requestHandler(context, defaultParams)).rejects.toThrow(
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(RequestError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(
     'Error: Operator Error: _get takes an object as params. Received: null at requestId.'
   );
 });
@@ -556,8 +556,8 @@ test('connection properties operator error', async () => {
   );
   mockTestRequestResolver.mockImplementation(defaultResolverImp);
 
-  await expect(requestHandler(context, defaultParams)).rejects.toThrow(RequestError);
-  await expect(requestHandler(context, defaultParams)).rejects.toThrow(
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(RequestError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(
     'Error: Operator Error: _get takes an object as params. Received: null at testConnection.'
   );
 });
@@ -568,8 +568,8 @@ test('request resolver throws  error', async () => {
     throw new Error('Test error.');
   });
 
-  await expect(requestHandler(context, defaultParams)).rejects.toThrow(RequestError);
-  await expect(requestHandler(context, defaultParams)).rejects.toThrow('Test error.');
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(RequestError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow('Test error.');
 });
 
 test('connection properties schema error', async () => {
@@ -587,8 +587,8 @@ test('connection properties schema error', async () => {
   );
   mockTestRequestResolver.mockImplementation(defaultResolverImp);
 
-  await expect(requestHandler(context, defaultParams)).rejects.toThrow(ConfigurationError);
-  await expect(requestHandler(context, defaultParams)).rejects.toThrow('must be string');
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow('must be string');
 });
 
 test('request properties schema error', async () => {
@@ -608,8 +608,8 @@ test('request properties schema error', async () => {
   );
   mockTestRequestResolver.mockImplementation(defaultResolverImp);
 
-  await expect(requestHandler(context, defaultParams)).rejects.toThrow(ConfigurationError);
-  await expect(requestHandler(context, defaultParams)).rejects.toThrow('must be string');
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow('must be string');
 });
 
 test('checkRead, read explicitly true', async () => {
@@ -635,7 +635,7 @@ test('checkRead, read explicitly true', async () => {
   );
   mockTestRequestResolver.mockImplementation(defaultResolverImp);
 
-  const res = await requestHandler(context, defaultParams);
+  const res = await callRequest(context, defaultParams);
   expect(res).toEqual({
     id: 'request:pageId:requestId',
     response: {
@@ -672,8 +672,8 @@ test('checkRead, read explicitly false', async () => {
   );
   mockTestRequestResolver.mockImplementation(defaultResolverImp);
 
-  await expect(requestHandler(context, defaultParams)).rejects.toThrow(ConfigurationError);
-  await expect(requestHandler(context, defaultParams)).rejects.toThrow(
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(
     'Connection "testConnection" does not allow reads.'
   );
 });
@@ -700,7 +700,7 @@ test('checkRead, read not set', async () => {
   );
   mockTestRequestResolver.mockImplementation(defaultResolverImp);
 
-  const res = await requestHandler(context, defaultParams);
+  const res = await callRequest(context, defaultParams);
   expect(res).toEqual({
     id: 'request:pageId:requestId',
     response: {
@@ -735,7 +735,7 @@ test('checkWrite, write explicitly true', async () => {
   );
   mockTestRequestResolver.mockImplementation(defaultResolverImp);
 
-  const res = await requestHandler(context, defaultParams);
+  const res = await callRequest(context, defaultParams);
   expect(res).toEqual({
     id: 'request:pageId:requestId',
     response: {
@@ -772,8 +772,8 @@ test('checkWrite, write explicitly false', async () => {
   );
   mockTestRequestResolver.mockImplementation(defaultResolverImp);
 
-  await expect(requestHandler(context, defaultParams)).rejects.toThrow(ConfigurationError);
-  await expect(requestHandler(context, defaultParams)).rejects.toThrow(
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(
     'Connection "testConnection" does not allow writes.'
   );
 });
@@ -799,8 +799,8 @@ test('checkWrite, write not set', async () => {
   );
   mockTestRequestResolver.mockImplementation(defaultResolverImp);
 
-  await expect(requestHandler(context, defaultParams)).rejects.toThrow(ConfigurationError);
-  await expect(requestHandler(context, defaultParams)).rejects.toThrow(
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(
     'Connection "testConnection" does not allow writes.'
   );
 });

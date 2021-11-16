@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { RequestError } from '../../context/errors';
+import { RequestError } from '../../context/errors.js';
 
 async function callRequestResolver(
   { logger },

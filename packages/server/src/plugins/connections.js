@@ -14,4 +14,4 @@
   limitations under the License.
 */
 
-// ------------- GENERATED AT BUILD -------------
+export default {};

@@ -68,7 +68,7 @@ class Requests {
       };
     }
 
-    const { output: payload, errors: parserErrors } = this.context.parser.parse({
+    const { output: payload, errors: parserErrors } = this.context._internal.parser.parse({
       actions,
       event,
       arrayIndices,
@@ -86,12 +86,12 @@ class Requests {
 
   async fetch({ requestId, payload }) {
     this.context.requests[requestId].loading = true;
-    if (this.context.RootBlocks) {
-      this.context.RootBlocks.setBlocksLoadingCache();
+    if (this.context._internal.RootBlocks) {
+      this.context._internal.RootBlocks.setBlocksLoadingCache();
     }
 
     try {
-      const response = await this.context.lowdefy.callRequest({
+      const response = await this.context._internal.lowdefy._internal.callRequest({
         // TODO:
         pageId: this.context.rootId,
         payload: serializer.serialize(payload),
@@ -104,12 +104,12 @@ class Requests {
       );
       this.context.requests[requestId].response = deserializedResponse;
       this.context.requests[requestId].loading = false;
-      this.context.update();
+      this.context._internal.update();
       return deserializedResponse;
     } catch (error) {
       this.context.requests[requestId].error.unshift(error);
       this.context.requests[requestId].loading = false;
-      this.context.update();
+      this.context._internal.update();
       throw error;
     }
   }

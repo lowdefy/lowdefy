@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { ConfigurationError } from '../../context/errors';
+import { ConfigurationError } from '../../context/errors.js';
 
 function getConnectionHandler({ connections, logger }, { connectionConfig }) {
   const connectionHandler = connections[connectionConfig.type];

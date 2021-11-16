@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigurationError } from '../../context/errors';
+import { ConfigurationError } from '../../context/errors.js';
 
 async function getConnectionConfig({ logger, readConfigFile }, { requestConfig }) {
   const { connectionId, requestId } = requestConfig;

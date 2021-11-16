@@ -28,7 +28,7 @@
     },
     "headers": {
       "type": "object",
-      "description": "An object with custom headers to be sent sent with the request. The object keys should be header names, and the values should be the string header values.",
+      "description": "An object with custom headers to be sent with the request. The object keys should be header names, and the values should be the string header values.",
       "errorMessage": {
         "type": "AxiosHttp property \"headers\" should be an object."
       }

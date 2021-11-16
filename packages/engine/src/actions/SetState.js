@@ -18,10 +18,10 @@ import { applyArrayIndices } from '@lowdefy/helpers';
 
 async function SetState({ arrayIndices, context, params }) {
   Object.keys(params).forEach((key) => {
-    context.State.set(applyArrayIndices(arrayIndices, key), params[key]);
+    context._internal.State.set(applyArrayIndices(arrayIndices, key), params[key]);
   });
-  context.RootBlocks.reset();
-  context.update();
+  context._internal.RootBlocks.reset();
+  context._internal.update();
 }
 
 export default SetState;

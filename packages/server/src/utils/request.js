@@ -14,15 +14,19 @@
   limitations under the License.
 */
 
-async function ScrollTo({ context, params = {} }) {
-  if (params.blockId) {
-    const element = context.lowdefy._internal.document.getElementById(params.blockId);
-    if (element) {
-      element.scrollIntoView(params.options);
-    }
-  } else {
-    context.lowdefy.window.scrollTo(params);
+async function request({ url, method = 'GET', body }) {
+  const res = await fetch(url, {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) {
+    console.log(res);
+    throw new Error('Request Error');
   }
+  return res.json();
 }
 
-export default ScrollTo;
+export default request;

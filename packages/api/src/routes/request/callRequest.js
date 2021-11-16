@@ -16,18 +16,18 @@
 
 import { serializer } from '@lowdefy/helpers';
 
-import authorizeRequest from './authorizeRequest';
-import callRequestResolver from './callRequestResolver';
-import checkConnectionRead from './checkConnectionRead';
-import checkConnectionWrite from './checkConnectionWrite';
-import evaluateOperators from './evaluateOperators';
-import getConnectionConfig from './getConnectionConfig';
-import getConnectionHandler from './getConnectionHandler';
-import getRequestConfig from './getRequestConfig';
-import getRequestHandler from './getRequestHandler';
-import validateSchemas from './validateSchemas';
+import authorizeRequest from './authorizeRequest.js';
+import callRequestHandler from './callRequestHandler.js';
+import checkConnectionRead from './checkConnectionRead.js';
+import checkConnectionWrite from './checkConnectionWrite.js';
+import evaluateOperators from './evaluateOperators.js';
+import getConnectionConfig from './getConnectionConfig.js';
+import getConnectionHandler from './getConnectionHandler.js';
+import getRequestConfig from './getRequestConfig.js';
+import getRequestHandler from './getRequestHandler.js';
+import validateSchemas from './validateSchemas.js';
 
-async function request(context, { pageId, payload, requestId }) {
+async function callRequest(context, { pageId, payload, requestId }) {
   const { logger } = context;
   logger.debug({ route: 'request', params: { pageId, payload, requestId } }, 'Started request');
   const requestConfig = await getRequestConfig(context, { pageId, requestId });
@@ -60,7 +60,7 @@ async function request(context, { pageId, payload, requestId }) {
     requestHandler,
     requestProperties,
   });
-  const response = await callRequestResolver(context, {
+  const response = await callRequestHandler(context, {
     connectionProperties,
     requestConfig,
     requestHandler,
@@ -74,4 +74,4 @@ async function request(context, { pageId, payload, requestId }) {
   };
 }
 
-export default request;
+export default callRequest;

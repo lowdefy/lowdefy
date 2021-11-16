@@ -16,6 +16,7 @@
 
 import React from 'react';
 
+import callRequest from '../utils/callRequest.js';
 import blockComponents from '../plugins/blocks.js';
 import components from './components.js';
 
@@ -23,6 +24,7 @@ const LowdefyContext = ({ children }) => {
   const lowdefy = {
     _internal: {
       blockComponents,
+      callRequest,
       components,
       updaters: {},
       displayMessage: ({ content }) => {
