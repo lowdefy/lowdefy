@@ -222,12 +222,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="backgroundColor: #016e1e_button_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -421,12 +416,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="default_button_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -678,12 +668,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="menus: default_button_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -912,12 +897,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="menus: links[0]_button_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -1170,12 +1150,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="menus: properties.menuId: menu_one_button_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -1386,12 +1361,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="menusTitle pageId_button_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -1603,12 +1573,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="menusTitle properties.title_button_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -1819,12 +1784,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="menusTitle url_button_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -2045,12 +2005,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="properties.MenuGroup with MenuLInks_button_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -2281,12 +2236,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="properties.danger: true_button_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -2498,12 +2448,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="properties.icon_button_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -2709,12 +2654,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="properties.links_button_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -2936,12 +2876,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="properties.subMenuCloseDelay: 3_button_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -3163,12 +3098,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="properties.subMenuOpenDelay: 3_button_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -3382,12 +3312,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="properties.title_button_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -3649,12 +3574,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="selectedColor: #f16e1e_button_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -3917,12 +3837,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="selectedColor: #f16e1e, backgroundColor: #016e1e_button_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -4183,12 +4098,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="theme: light_button_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -4450,12 +4360,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="theme: light, selectedColor: #6C2ACB_button_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -4718,12 +4623,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e_button_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}

@@ -9,12 +9,7 @@ Array [
       "checkedChildren": <IconComp1
         basePath=""
         blockId="default_checkedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -51,12 +46,7 @@ Array [
       "unCheckedChildren": <IconComp1
         basePath=""
         blockId="default_uncheckedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -99,12 +89,7 @@ Array [
       "checkedChildren": <IconComp1
         basePath=""
         blockId="properties.autoFocus: true_checkedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -141,12 +126,7 @@ Array [
       "unCheckedChildren": <IconComp1
         basePath=""
         blockId="properties.autoFocus: true_uncheckedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -189,12 +169,7 @@ Array [
       "checkedChildren": <IconComp1
         basePath=""
         blockId="properties.checkedIcon: CheckCircleOutlined_checkedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -231,12 +206,7 @@ Array [
       "unCheckedChildren": <IconComp1
         basePath=""
         blockId="properties.checkedIcon: CheckCircleOutlined_uncheckedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -288,12 +258,7 @@ Array [
       "unCheckedChildren": <IconComp1
         basePath=""
         blockId="properties.checkedText: Checked_uncheckedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -336,12 +301,7 @@ Array [
       "checkedChildren": <IconComp1
         basePath=""
         blockId="properties.color: #_checkedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -378,12 +338,7 @@ Array [
       "unCheckedChildren": <IconComp1
         basePath=""
         blockId="properties.color: #_uncheckedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -426,12 +381,7 @@ Array [
       "checkedChildren": <IconComp1
         basePath=""
         blockId="properties.disabled: true_checkedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -468,12 +418,7 @@ Array [
       "unCheckedChildren": <IconComp1
         basePath=""
         blockId="properties.disabled: true_uncheckedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -516,12 +461,7 @@ Array [
       "checkedChildren": <IconComp1
         basePath=""
         blockId="properties.inputStyle: CSS style applied_checkedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -558,12 +498,7 @@ Array [
       "unCheckedChildren": <IconComp1
         basePath=""
         blockId="properties.inputStyle: CSS style applied_uncheckedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -606,12 +541,7 @@ Array [
       "checkedChildren": <IconComp1
         basePath=""
         blockId="properties.label align: right_checkedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -648,12 +578,7 @@ Array [
       "unCheckedChildren": <IconComp1
         basePath=""
         blockId="properties.label align: right_uncheckedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -696,12 +621,7 @@ Array [
       "checkedChildren": <IconComp1
         basePath=""
         blockId="properties.label colon: false_checkedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -738,12 +658,7 @@ Array [
       "unCheckedChildren": <IconComp1
         basePath=""
         blockId="properties.label colon: false_uncheckedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -786,12 +701,7 @@ Array [
       "checkedChildren": <IconComp1
         basePath=""
         blockId="properties.label disabled: true_checkedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -828,12 +738,7 @@ Array [
       "unCheckedChildren": <IconComp1
         basePath=""
         blockId="properties.label disabled: true_uncheckedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -876,12 +781,7 @@ Array [
       "checkedChildren": <IconComp1
         basePath=""
         blockId="properties.label extra: showing extra_checkedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -918,12 +818,7 @@ Array [
       "unCheckedChildren": <IconComp1
         basePath=""
         blockId="properties.label extra: showing extra_uncheckedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -966,12 +861,7 @@ Array [
       "checkedChildren": <IconComp1
         basePath=""
         blockId="properties.label inline: true_checkedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -1008,12 +898,7 @@ Array [
       "unCheckedChildren": <IconComp1
         basePath=""
         blockId="properties.label inline: true_uncheckedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -1056,12 +941,7 @@ Array [
       "checkedChildren": <IconComp1
         basePath=""
         blockId="properties.label span: 4_checkedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -1098,12 +978,7 @@ Array [
       "unCheckedChildren": <IconComp1
         basePath=""
         blockId="properties.label span: 4_uncheckedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -1146,12 +1021,7 @@ Array [
       "checkedChildren": <IconComp1
         basePath=""
         blockId="properties.size: small_checkedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -1188,12 +1058,7 @@ Array [
       "unCheckedChildren": <IconComp1
         basePath=""
         blockId="properties.size: small_uncheckedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -1236,12 +1101,7 @@ Array [
       "checkedChildren": <IconComp1
         basePath=""
         blockId="properties.title_checkedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -1278,12 +1138,7 @@ Array [
       "unCheckedChildren": <IconComp1
         basePath=""
         blockId="properties.title_uncheckedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -1326,12 +1181,7 @@ Array [
       "checkedChildren": <IconComp1
         basePath=""
         blockId="properties.uncheckedIcon: UnlockFilled_checkedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -1368,12 +1218,7 @@ Array [
       "unCheckedChildren": <IconComp1
         basePath=""
         blockId="properties.uncheckedIcon: UnlockFilled_uncheckedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -1416,12 +1261,7 @@ Array [
       "checkedChildren": <IconComp1
         basePath=""
         blockId="properties.uncheckedText: Unchecked_checkedIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}

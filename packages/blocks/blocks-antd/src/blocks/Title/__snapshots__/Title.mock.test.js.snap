@@ -207,12 +207,7 @@ Array [
         "icon": <IconComp1
           basePath=""
           blockId="properties.copyable: icon_copyable_icon"
-          components={
-            Object {
-              "Icon": [Function],
-              "Link": [Function],
-            }
-          }
+          components={Object {}}
           content={Object {}}
           events={Object {}}
           list={Array []}
@@ -292,12 +287,7 @@ Array [
           <IconComp1
             basePath=""
             blockId="properties.copyable: icon: []_copyable_before_icon"
-            components={
-              Object {
-                "Icon": [Function],
-                "Link": [Function],
-              }
-            }
+            components={Object {}}
             content={Object {}}
             events={Object {}}
             list={Array []}
@@ -324,12 +314,7 @@ Array [
           <IconComp1
             basePath=""
             blockId="properties.copyable: icon: []_copyable_after_icon"
-            components={
-              Object {
-                "Icon": [Function],
-                "Link": [Function],
-              }
-            }
+            components={Object {}}
             content={Object {}}
             events={Object {}}
             list={Array []}

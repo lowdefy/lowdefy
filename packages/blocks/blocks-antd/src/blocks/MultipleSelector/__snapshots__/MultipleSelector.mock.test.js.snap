@@ -456,12 +456,7 @@ Array [
       "clearIcon": <IconComp1
         basePath=""
         blockId="properties.clearIcon: ChromeFilled_clearIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -635,12 +630,7 @@ Array [
       "clearIcon": <IconComp1
         basePath=""
         blockId="properties.clearIcon-object: ChromeFilled_clearIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -2830,12 +2820,7 @@ Array [
       "suffixIcon": <IconComp1
         basePath=""
         blockId="properties.suffixIcon: DoubleLeftOutlined_suffixIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}

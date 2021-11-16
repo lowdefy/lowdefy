@@ -83,12 +83,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="properties. icon: ApiFilled_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}

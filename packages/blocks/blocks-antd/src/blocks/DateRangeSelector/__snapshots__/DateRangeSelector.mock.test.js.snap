@@ -639,12 +639,7 @@ Array [
       "suffixIcon": <IconComp1
         basePath=""
         blockId="property.suffixIcon Red: CalendarOutlined_suffixIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -703,12 +698,7 @@ Array [
       "suffixIcon": <IconComp1
         basePath=""
         blockId="property.suffixIcon: CalendarOutlined_suffixIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}

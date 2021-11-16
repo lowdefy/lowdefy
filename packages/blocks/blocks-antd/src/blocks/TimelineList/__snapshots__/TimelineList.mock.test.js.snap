@@ -29,12 +29,7 @@ Array [
             <IconComp1
               basePath=""
               blockId="properties.mode: alternate_0_icon"
-              components={
-                Object {
-                  "Icon": [Function],
-                  "Link": [Function],
-                }
-              }
+              components={Object {}}
               content={Object {}}
               events={Object {}}
               list={Array []}
@@ -85,12 +80,7 @@ Array [
             <IconComp1
               basePath=""
               blockId="properties.mode: alternate_1_icon"
-              components={
-                Object {
-                  "Icon": [Function],
-                  "Link": [Function],
-                }
-              }
+              components={Object {}}
               content={Object {}}
               events={Object {}}
               list={Array []}
@@ -141,12 +131,7 @@ Array [
             <IconComp1
               basePath=""
               blockId="properties.mode: alternate_2_icon"
-              components={
-                Object {
-                  "Icon": [Function],
-                  "Link": [Function],
-                }
-              }
+              components={Object {}}
               content={Object {}}
               events={Object {}}
               list={Array []}
@@ -217,12 +202,7 @@ Array [
             <IconComp1
               basePath=""
               blockId="properties.mode: left_0_icon"
-              components={
-                Object {
-                  "Icon": [Function],
-                  "Link": [Function],
-                }
-              }
+              components={Object {}}
               content={Object {}}
               events={Object {}}
               list={Array []}
@@ -273,12 +253,7 @@ Array [
             <IconComp1
               basePath=""
               blockId="properties.mode: left_1_icon"
-              components={
-                Object {
-                  "Icon": [Function],
-                  "Link": [Function],
-                }
-              }
+              components={Object {}}
               content={Object {}}
               events={Object {}}
               list={Array []}
@@ -329,12 +304,7 @@ Array [
             <IconComp1
               basePath=""
               blockId="properties.mode: left_2_icon"
-              components={
-                Object {
-                  "Icon": [Function],
-                  "Link": [Function],
-                }
-              }
+              components={Object {}}
               content={Object {}}
               events={Object {}}
               list={Array []}
@@ -405,12 +375,7 @@ Array [
             <IconComp1
               basePath=""
               blockId="properties.mode: right_0_icon"
-              components={
-                Object {
-                  "Icon": [Function],
-                  "Link": [Function],
-                }
-              }
+              components={Object {}}
               content={Object {}}
               events={Object {}}
               list={Array []}
@@ -461,12 +426,7 @@ Array [
             <IconComp1
               basePath=""
               blockId="properties.mode: right_1_icon"
-              components={
-                Object {
-                  "Icon": [Function],
-                  "Link": [Function],
-                }
-              }
+              components={Object {}}
               content={Object {}}
               events={Object {}}
               list={Array []}
@@ -517,12 +477,7 @@ Array [
             <IconComp1
               basePath=""
               blockId="properties.mode: right_2_icon"
-              components={
-                Object {
-                  "Icon": [Function],
-                  "Link": [Function],
-                }
-              }
+              components={Object {}}
               content={Object {}}
               events={Object {}}
               list={Array []}
@@ -593,12 +548,7 @@ Array [
             <IconComp1
               basePath=""
               blockId="properties.pending: true_0_icon"
-              components={
-                Object {
-                  "Icon": [Function],
-                  "Link": [Function],
-                }
-              }
+              components={Object {}}
               content={Object {}}
               events={Object {}}
               list={Array []}
@@ -649,12 +599,7 @@ Array [
             <IconComp1
               basePath=""
               blockId="properties.pending: true_1_icon"
-              components={
-                Object {
-                  "Icon": [Function],
-                  "Link": [Function],
-                }
-              }
+              components={Object {}}
               content={Object {}}
               events={Object {}}
               list={Array []}
@@ -705,12 +650,7 @@ Array [
             <IconComp1
               basePath=""
               blockId="properties.pending: true_2_icon"
-              components={
-                Object {
-                  "Icon": [Function],
-                  "Link": [Function],
-                }
-              }
+              components={Object {}}
               content={Object {}}
               events={Object {}}
               list={Array []}
@@ -780,12 +720,7 @@ Array [
             <IconComp1
               basePath=""
               blockId="properties.pendingDotIcon: _0_icon"
-              components={
-                Object {
-                  "Icon": [Function],
-                  "Link": [Function],
-                }
-              }
+              components={Object {}}
               content={Object {}}
               events={Object {}}
               list={Array []}
@@ -836,12 +771,7 @@ Array [
             <IconComp1
               basePath=""
               blockId="properties.pendingDotIcon: _1_icon"
-              components={
-                Object {
-                  "Icon": [Function],
-                  "Link": [Function],
-                }
-              }
+              components={Object {}}
               content={Object {}}
               events={Object {}}
               list={Array []}
@@ -892,12 +822,7 @@ Array [
             <IconComp1
               basePath=""
               blockId="properties.pendingDotIcon: _2_icon"
-              components={
-                Object {
-                  "Icon": [Function],
-                  "Link": [Function],
-                }
-              }
+              components={Object {}}
               content={Object {}}
               events={Object {}}
               list={Array []}
@@ -949,12 +874,7 @@ Array [
       "pendingDot": <IconComp1
         basePath=""
         blockId="properties.pendingDotIcon: _pendingDotIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -1004,12 +924,7 @@ Array [
             <IconComp1
               basePath=""
               blockId="properties.reverse: true_0_icon"
-              components={
-                Object {
-                  "Icon": [Function],
-                  "Link": [Function],
-                }
-              }
+              components={Object {}}
               content={Object {}}
               events={Object {}}
               list={Array []}
@@ -1060,12 +975,7 @@ Array [
             <IconComp1
               basePath=""
               blockId="properties.reverse: true_1_icon"
-              components={
-                Object {
-                  "Icon": [Function],
-                  "Link": [Function],
-                }
-              }
+              components={Object {}}
               content={Object {}}
               events={Object {}}
               list={Array []}
@@ -1116,12 +1026,7 @@ Array [
             <IconComp1
               basePath=""
               blockId="properties.reverse: true_2_icon"
-              components={
-                Object {
-                  "Icon": [Function],
-                  "Link": [Function],
-                }
-              }
+              components={Object {}}
               content={Object {}}
               events={Object {}}
               list={Array []}

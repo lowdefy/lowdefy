@@ -179,12 +179,7 @@ Array [
       "count": <IconComp1
         basePath=""
         blockId="properties.icon object_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -247,12 +242,7 @@ Array [
       "count": <IconComp1
         basePath=""
         blockId="properties.icon string_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}

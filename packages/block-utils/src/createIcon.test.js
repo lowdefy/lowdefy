@@ -18,7 +18,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import Icon from './Icon.js';
+import createIcon from './createIcon.js';
 import makeCssClass from './makeCssClass.js';
 
 const methods = {
@@ -44,19 +44,19 @@ const Icons = {
 };
 
 test('Icon default', () => {
-  const IconComponent = Icon(Icons);
+  const IconComponent = createIcon(Icons);
   const { container } = render(<IconComponent methods={methods} />);
   expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Icon default and id', () => {
-  const IconComponent = Icon(Icons);
+  const IconComponent = createIcon(Icons);
   const { container } = render(<IconComponent id="test-id" methods={methods} />);
   expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Icon properties.name', () => {
-  const IconComponent = Icon(Icons);
+  const IconComponent = createIcon(Icons);
   const { container } = render(
     <IconComponent id="test-id" methods={methods} properties={{ name: 'AiIcon' }} />
   );
@@ -64,7 +64,7 @@ test('Icon properties.name', () => {
 });
 
 test('Icon properties string', () => {
-  const IconComponent = Icon(Icons);
+  const IconComponent = createIcon(Icons);
   const { container } = render(
     <IconComponent id="test-id" methods={methods} properties="AiIcon" />
   );
@@ -72,7 +72,7 @@ test('Icon properties string', () => {
 });
 
 test('Icon properties.spin', () => {
-  const IconComponent = Icon(Icons);
+  const IconComponent = createIcon(Icons);
   const { container } = render(
     <IconComponent id="test-id" methods={methods} properties={{ name: 'AiIcon', spin: true }} />
   );
@@ -80,7 +80,7 @@ test('Icon properties.spin', () => {
 });
 
 test('Icon properties.style', () => {
-  const IconComponent = Icon(Icons);
+  const IconComponent = createIcon(Icons);
   const { container } = render(
     <IconComponent
       id="test-id"
@@ -92,7 +92,7 @@ test('Icon properties.style', () => {
 });
 
 test('Icon properties.name error', () => {
-  const IconComponent = Icon(Icons);
+  const IconComponent = createIcon(Icons);
   const { container } = render(
     <IconComponent id="test-id" methods={methods} properties={{ name: 'ErrorIcon' }} />
   );
@@ -100,7 +100,7 @@ test('Icon properties.name error', () => {
 });
 
 test('Icon onClick.loading false', () => {
-  const IconComponent = Icon(Icons);
+  const IconComponent = createIcon(Icons);
   const { container } = render(
     <IconComponent
       id="test-id"
@@ -115,7 +115,7 @@ test('Icon onClick.loading false', () => {
 });
 
 test('Icon onClick.loading true', () => {
-  const IconComponent = Icon(Icons);
+  const IconComponent = createIcon(Icons);
   const { container } = render(
     <IconComponent
       id="test-id"

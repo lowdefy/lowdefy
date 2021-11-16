@@ -169,12 +169,7 @@ Array [
       "prefix": <IconComp1
         basePath=""
         blockId="properties.prefixIcon: AccountBookFilled_prefixIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -243,12 +238,7 @@ Array [
       "suffix": <IconComp1
         basePath=""
         blockId="properties.suffixIcon: AccountBookFilled_suffixIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}

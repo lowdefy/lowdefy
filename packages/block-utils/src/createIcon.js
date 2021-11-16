@@ -55,7 +55,7 @@ const spinClass = css`
   animation: ${spin} 2s infinite linear;
 `;
 
-const Icon = (Icons) => {
+const createIcon = (Icons) => {
   const AiOutlineLoading3Quarters = Icons['AiOutlineLoading3Quarters'];
   const AiOutlineExclamationCircle = Icons['AiOutlineExclamationCircle'];
 
@@ -105,4 +105,4 @@ const Icon = (Icons) => {
   return IconComp;
 };
 
-export default Icon;
+export default createIcon;

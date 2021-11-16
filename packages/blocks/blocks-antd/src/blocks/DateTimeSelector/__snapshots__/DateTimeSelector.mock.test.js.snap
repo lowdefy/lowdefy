@@ -795,12 +795,7 @@ Array [
       "suffixIcon": <IconComp1
         basePath=""
         blockId="properties.suffixIcon: CalendarTwoTone_suffixIcon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}

@@ -194,12 +194,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="properties.icon object_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -263,12 +258,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="properties.icon string_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -895,12 +885,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="with description properties.icon object_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -974,12 +959,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="with description properties.icon string_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}

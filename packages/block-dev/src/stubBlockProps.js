@@ -16,7 +16,7 @@
 
 import React, { useState } from 'react';
 import { type } from '@lowdefy/helpers';
-import { makeCssClass, Icon } from '@lowdefy/block-utils';
+import { makeCssClass, createIcon } from '@lowdefy/block-utils';
 
 import schemaTest from './schemaTest.js';
 
@@ -34,7 +34,7 @@ const Icons = {
   },
 };
 
-const IconComponent = Icon(Icons);
+const IconComponent = createIcon(Icons);
 
 const stubBlockProps = ({ block, meta, logger, initialValue, schema }) => {
   const [value, setState] = useState(type.enforceType(meta.valueType, block.value || initialValue));
@@ -108,7 +108,7 @@ const stubBlockProps = ({ block, meta, logger, initialValue, schema }) => {
       ...block.methods,
     };
   }
-  if (meta.category === 'container' || meta.category === 'context') {
+  if (meta.category === 'container') {
     block.content = {};
     Object.keys(block.areas).forEach((key) => {
       block.content[key] = () => (

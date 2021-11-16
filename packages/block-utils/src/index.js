@@ -16,9 +16,9 @@
 
 import blockDefaultProps from './blockDefaultProps.js';
 import blockSchema from './blockSchema.js';
+import createIcon from './createIcon.js';
 import ErrorBoundary from './ErrorBoundary.js';
 import HtmlComponent from './HtmlComponent.js';
-import Icon from './Icon.js';
 import makeCssClass from './makeCssClass.js';
 import mediaToCssObject from './mediaToCssObject.js';
 import renderHtml from './renderHtml.js';
@@ -26,9 +26,9 @@ import renderHtml from './renderHtml.js';
 export {
   blockDefaultProps,
   blockSchema,
+  createIcon,
   ErrorBoundary,
   HtmlComponent,
-  Icon,
   makeCssClass,
   mediaToCssObject,
   renderHtml,

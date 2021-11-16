@@ -332,12 +332,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="properties.icon: AndroidFilled_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -1430,12 +1425,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="properties.icon: AndroidFilled_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -2528,12 +2518,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="properties.icon: AndroidFilled_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -3634,12 +3619,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="properties.icon: AndroidFilled_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -4724,12 +4704,7 @@ Array [
       "icon": <IconComp1
         basePath=""
         blockId="properties.icon: AndroidFilled_icon"
-        components={
-          Object {
-            "Icon": [Function],
-            "Link": [Function],
-          }
-        }
+        components={Object {}}
         content={Object {}}
         events={Object {}}
         list={Array []}
