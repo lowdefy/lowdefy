@@ -25,6 +25,7 @@ import getUniqueValues from '../../getUniqueValues.js';
 
 const ButtonSelector = ({
   blockId,
+  components,
   events,
   loading,
   properties,
@@ -37,6 +38,7 @@ const ButtonSelector = ({
   return (
     <Label
       blockId={blockId}
+      components={components}
       events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}

@@ -23,7 +23,7 @@ export default {
     category: 'container',
     loading: false,
   },
-  test: {
+  tests: {
     methods: [
       {
         name: 'open',

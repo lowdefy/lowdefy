@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import LogoSpinner from './LogoSpinner';
+import LogoSpinner from './LogoSpinner.js';
 import { render } from '@testing-library/react';
 
 test('default', () => {

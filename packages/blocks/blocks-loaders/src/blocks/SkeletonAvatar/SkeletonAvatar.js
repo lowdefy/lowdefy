@@ -18,7 +18,7 @@ import React from 'react';
 import { type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-import Skeleton from '../Skeleton/Skeleton';
+import Skeleton from '../Skeleton/Skeleton.js';
 
 const SkeletonAvatar = ({ properties, methods }) => {
   let size = properties.size || 32;
@@ -38,7 +38,10 @@ const SkeletonAvatar = ({ properties, methods }) => {
     <Skeleton
       methods={methods}
       properties={{
-        style: { borderRadius: properties.shape === 'square' ? '0' : size / 2 },
+        style: {
+          ...{ borderRadius: properties.shape === 'square' ? '0' : size / 2 },
+          ...(properties.style || {}),
+        },
         width: size,
         height: size,
       }}

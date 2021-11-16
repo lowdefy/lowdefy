@@ -20,7 +20,7 @@ import examples from './examples.yaml';
 import block from './index.js';
 import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
 jest.mock('antd', () => ({
   Button: jest.fn(() => 'mocked'),
@@ -40,4 +40,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, meta, mocks, schema });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

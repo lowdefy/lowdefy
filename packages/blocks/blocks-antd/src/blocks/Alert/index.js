@@ -18,6 +18,7 @@ export default {
   import: {
     block: 'blocks/Alert/Alert.js',
     styles: ['blocks/Alert/style.less'],
+    icons: ['AiOutlined'],
   },
   meta: {
     category: 'container',

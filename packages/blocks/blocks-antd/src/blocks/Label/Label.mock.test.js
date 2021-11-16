@@ -16,11 +16,11 @@
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
 
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
 import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
 jest.mock('antd', () => ({
   Row: jest.fn(() => 'mocked'),
@@ -29,20 +29,9 @@ jest.mock('antd', () => ({
 
 const mocks = [
   {
-    getMockFn: async () => {
+    getMockFns: async () => {
       const antd = await import('antd');
-      return antd.Row;
-    },
-    getBlock: async () => {
-      const Block = await import('./Label.js');
-      return Block.default;
-    },
-    name: 'Label',
-  },
-  {
-    getMockFn: async () => {
-      const antd = await import('antd');
-      return antd.Col;
+      return [antd.Row, antd.Col];
     },
     getBlock: async () => {
       const Block = await import('./Label.js');
@@ -52,4 +41,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, meta, mocks, schema });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

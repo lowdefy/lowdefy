@@ -21,7 +21,7 @@ import examples from './examples.yaml';
 import block from './index.js';
 import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-runRenderTests({ examples, Block, meta });
+runRenderTests({ examples, Block, meta, schema, tests });
 runBlockSchemaTests({ examples, meta, schema });

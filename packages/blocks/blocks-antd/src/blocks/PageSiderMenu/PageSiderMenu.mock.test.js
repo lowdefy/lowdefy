@@ -15,23 +15,39 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { Layout } from 'antd';
+import { Affix, Breadcrumb, Button } from 'antd';
 
-import Block from './PageSiderMenu.js';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-jest.mock('antd/lib/layout', () => {
-  return jest.fn(() => 'mocked');
+jest.mock('antd', () => {
+  const comp = jest.fn(() => 'mocked');
+  const menu = jest.fn(() => 'mocked');
+  comp.Content = jest.fn(() => 'mocked');
+  comp.Footer = jest.fn(() => 'mocked');
+  comp.Header = jest.fn(() => 'mocked');
+  return {
+    Affix,
+    Breadcrumb,
+    Button,
+    Layout: comp,
+    Menu: menu,
+  };
 });
-
 const mocks = [
   {
-    name: 'default',
-    fn: Layout,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [antd.Layout, antd.Menu];
+    },
+    getBlock: async () => {
+      const Block = await import('./PageSiderMenu.js');
+      return Block.default;
+    },
+    name: 'PageSiderMenu',
   },
 ];
-
-runMockRenderTests({ examples, Block, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

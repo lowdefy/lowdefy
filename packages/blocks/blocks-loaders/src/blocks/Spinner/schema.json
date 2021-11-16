@@ -1,0 +1,32 @@
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "style": {
+        "type": "object",
+        "description": "Css style object to apply to the skeleton.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "size": {
+        "type": "string",
+        "default": "medium",
+        "description": "Size of the logo spinner.",
+        "enum": ["small", "medium", "large"]
+      },
+      "height": {
+        "type": ["string", "number"],
+        "default": "100%",
+        "description": "Height of the container."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  }
+}

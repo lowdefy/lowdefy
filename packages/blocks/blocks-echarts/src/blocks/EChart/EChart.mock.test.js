@@ -15,11 +15,12 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import ReactECharts from 'echarts-for-react';
 
-import EChart from './EChart';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
+
+const { meta, tests } = block;
 
 jest.mock('echarts-for-react', () => {
   return jest.fn(() => 'mocked');
@@ -27,9 +28,16 @@ jest.mock('echarts-for-react', () => {
 
 const mocks = [
   {
-    name: 'default',
-    fn: ReactECharts,
+    getMockFns: async () => {
+      const ReactECharts = await import('echarts-for-react');
+      return [ReactECharts];
+    },
+    getBlock: async () => {
+      const Block = await import('./EChart.js');
+      return Block.default;
+    },
+    name: 'EChart',
   },
 ];
 
-runMockRenderTests({ examples, Block: EChart, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

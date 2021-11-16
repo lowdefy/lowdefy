@@ -15,24 +15,35 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { Switch } from 'antd';
+import { Col, Row } from 'antd';
 
-import Block from './Switch.js';
 import examples from './examples.yaml';
 import block from './index.js';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-jest.mock('antd/lib/switch', () => {
+jest.mock('antd', () => {
   const comp = jest.fn(() => 'mocked');
-  return comp;
+  return {
+    Col,
+    Row,
+    Switch: comp,
+  };
 });
 
 const mocks = [
   {
-    name: 'default',
-    fn: Switch,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [antd.Switch];
+    },
+    getBlock: async () => {
+      const Block = await import('./Switch.js');
+      return Block.default;
+    },
+    name: 'Switch',
   },
 ];
 
-runMockRenderTests({ examples, Block, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

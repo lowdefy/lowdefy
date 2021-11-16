@@ -17,11 +17,11 @@
 import React from 'react';
 import { Comment } from 'antd';
 import { type } from '@lowdefy/helpers';
-
-import Avatar from '../Avatar/Avatar';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-const CommentBlock = ({ blockId, content, properties, methods }) => {
+import Avatar from '../Avatar/Avatar.js';
+
+const CommentBlock = ({ blockId, components, content, properties, methods }) => {
   let avatar = {};
   if (type.isObject(properties.avatar)) {
     avatar = properties.avatar;
@@ -40,7 +40,7 @@ const CommentBlock = ({ blockId, content, properties, methods }) => {
       author={properties.author || (content.author && content.author())}
       content={properties.content || (content.content && content.content())}
       datetime={properties.datetime}
-      avatar={<Avatar properties={avatar} />}
+      avatar={<Avatar components={components} properties={avatar} methods={methods} />}
     >
       {content.children && content.children()}
     </Comment>

@@ -14,26 +14,23 @@
   limitations under the License.
 */
 
-import useRunAfterUpdate from './useRunAfterUpdate.js';
-import { useRef, useLayoutEffect } from 'react';
+const useLayoutEffect = jest.fn();
+const current = jest.fn();
+const ref = { current };
+const useRef = () => ref;
 
 jest.mock('react', () => {
-  const useLayoutEffect = jest.fn();
-  const ref = { current: jest.fn() };
-  const useRef = () => ref;
   return { useLayoutEffect, useRef };
 });
-
-const ref = useRef();
-const { current } = ref;
-
 beforeEach(() => {
   ref.current.mockReset();
   useLayoutEffect.mockReset();
   useLayoutEffect.mockImplementation((fn) => fn());
 });
 
-test('default call', () => {
+test('default call', async () => {
+  const useRunAfterUpdateFn = await import('./useRunAfterUpdate.js');
+  const useRunAfterUpdate = useRunAfterUpdateFn.default;
   const res = useRunAfterUpdate();
   expect(useLayoutEffect).toHaveBeenCalledTimes(1);
   expect(current).toBeCalledTimes(1);

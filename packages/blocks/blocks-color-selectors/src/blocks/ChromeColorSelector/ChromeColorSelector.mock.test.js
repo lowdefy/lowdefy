@@ -13,28 +13,34 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-
+import 'jest-canvas-mock';
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { ChromePicker } from 'react-color';
 
-import Block from './ChromeColorSelector.js';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
 jest.mock('react-color', () => {
   const selectors = {
-    ChromePicker: jest.fn((props) => props.toString()),
+    ChromePicker: jest.fn(() => 'mocked'),
   };
   return selectors;
 });
 
 const mocks = [
   {
-    name: 'default',
-    fn: ChromePicker,
+    getMockFns: async () => {
+      const antd = await import('react-color');
+      return [antd.ChromePicker];
+    },
+    getBlock: async () => {
+      const Block = await import('./ChromeColorSelector.js');
+      return Block.default;
+    },
+    name: 'ChromeColorSelector',
   },
 ];
 
-runMockRenderTests({ examples, Block, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

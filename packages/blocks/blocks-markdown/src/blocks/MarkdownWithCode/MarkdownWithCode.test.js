@@ -16,14 +16,12 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import MarkdownWithCode from './MarkdownWithCode';
-import examples from './examples.yaml';
 import block from './index.js';
+import Block from './MarkdownWithCode.js';
+import examples from './examples.yaml';
 import schema from './schema.json';
 
-runRenderTests({
-  examples,
-  Block: MarkdownWithCode,
-  meta,
-});
+const { meta, tests } = block;
+
+runRenderTests({ Block, examples, meta, schema, tests });
 runBlockSchemaTests({ examples, meta, schema });

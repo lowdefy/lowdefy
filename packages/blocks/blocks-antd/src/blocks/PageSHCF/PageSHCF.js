@@ -15,18 +15,19 @@
 */
 
 import React from 'react';
-import { mergeObjects } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import { mergeObjects } from '@lowdefy/helpers';
 
-import Header from '../Header/Header.js';
-import Footer from '../Footer/Footer.js';
 import Content from '../Content/Content.js';
+import Footer from '../Footer/Footer.js';
+import Header from '../Header/Header.js';
 import Layout from '../Layout/Layout.js';
 import Sider from '../Sider/Sider.js';
 
-const PageSHCF = ({ blockId, events, content, properties, methods }) => (
+const PageSHCF = ({ blockId, components, events, content, properties, methods }) => (
   <Layout
     blockId={blockId}
+    components={components}
     events={events}
     properties={{ style: mergeObjects([{ minHeight: '100vh' }, properties.style]) }}
     content={{
@@ -35,6 +36,7 @@ const PageSHCF = ({ blockId, events, content, properties, methods }) => (
           {content.sider && (
             <Sider
               blockId={`${blockId}_sider`}
+              components={components}
               events={events}
               properties={properties.sider}
               methods={methods}
@@ -55,6 +57,7 @@ const PageSHCF = ({ blockId, events, content, properties, methods }) => (
           )}
           <Layout
             blockId={`${blockId}_layout`}
+            components={components}
             events={events}
             properties={properties.main}
             content={{
@@ -63,6 +66,7 @@ const PageSHCF = ({ blockId, events, content, properties, methods }) => (
                   {content.header && (
                     <Header
                       blockId={`${blockId}_header`}
+                      components={components}
                       events={events}
                       properties={properties.header}
                       content={{
@@ -73,6 +77,7 @@ const PageSHCF = ({ blockId, events, content, properties, methods }) => (
                   {content.content && (
                     <Content
                       blockId={`${blockId}_content`}
+                      components={components}
                       events={events}
                       properties={properties.content}
                       content={{
@@ -83,6 +88,7 @@ const PageSHCF = ({ blockId, events, content, properties, methods }) => (
                   {content.footer && (
                     <Footer
                       blockId={`${blockId}_footer`}
+                      components={components}
                       events={events}
                       properties={properties.footer}
                       content={{

@@ -27,9 +27,9 @@ const MonthPicker = DatePicker.MonthPicker;
 
 const MonthSelector = ({
   blockId,
+  components: { Icon },
   events,
   loading,
-  Icon,
   methods,
   properties,
   required,
@@ -39,11 +39,12 @@ const MonthSelector = ({
   return (
     <Label
       blockId={blockId}
+      components={{ Icon }}
       events={events}
-      properties={{ title: properties.title, size: properties.size, ...properties.label }}
-      validation={validation}
-      required={required}
       loading={loading}
+      properties={{ title: properties.title, size: properties.size, ...properties.label }}
+      required={required}
+      validation={validation}
       content={{
         content: () => (
           <div className={methods.makeCssClass({ width: '100%' })}>

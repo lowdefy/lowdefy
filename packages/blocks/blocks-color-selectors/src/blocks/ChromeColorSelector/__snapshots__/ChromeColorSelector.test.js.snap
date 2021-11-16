@@ -1,0 +1,1409 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render default - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  margin-bottom: 0px!important;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="default"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="default_input"
+      title="default"
+    >
+      <span
+        class="emotion-3"
+      >
+        default
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="chrome-picker emotion-4"
+          style="width: 225px; background: rgb(255, 255, 255); border-radius: 2px; box-shadow: 0 0 2px rgba(0,0,0,.3), 0 4px 8px rgba(0,0,0,.3); box-sizing: initial; font-family: Menlo;"
+        >
+          <div
+            style="width: 100%; padding-bottom: 55%; position: relative; border-radius: 2px 2px 0 0; overflow: hidden;"
+          >
+            <div
+              style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; background: rgb(255, 0, 0);"
+            >
+              <style>
+                
+          .saturation-white {
+            background: -webkit-linear-gradient(to right, #fff, rgba(255,255,255,0));
+            background: linear-gradient(to right, #fff, rgba(255,255,255,0));
+          }
+          .saturation-black {
+            background: -webkit-linear-gradient(to top, #000, rgba(0,0,0,0));
+            background: linear-gradient(to top, #000, rgba(0,0,0,0));
+          }
+        
+              </style>
+              <div
+                class="saturation-white"
+                style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+              >
+                <div
+                  class="saturation-black"
+                  style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+                />
+                <div
+                  style="position: absolute; top: 100%; left: 0%; cursor: default;"
+                >
+                  <div
+                    style="width: 12px; height: 12px; border-radius: 6px; box-shadow: inset 0 0 0 1px #fff; transform: translate(-6px, -6px);"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="padding: 16px 16px 12px;"
+          >
+            <div
+              class="flexbox-fix"
+              style="display: flex;"
+            >
+              <div
+                style="width: 32px;"
+              >
+                <div
+                  style="margin-top: 6px; width: 16px; height: 16px; border-radius: 8px; position: relative; overflow: hidden;"
+                >
+                  <div
+                    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; border-radius: 8px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.1); background: rgb(0, 0, 0); z-index: 2;"
+                  />
+                  <div
+                    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; background: url(data:image/png;base64,00) left;"
+                  />
+                </div>
+              </div>
+              <div
+                style="flex: 1;"
+              >
+                <div
+                  style="height: 10px; position: relative; margin-bottom: 8px;"
+                >
+                  <div
+                    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+                  >
+                    <div
+                      class="hue-horizontal"
+                      style="padding: 0px 2px; position: relative; height: 100%;"
+                    >
+                      <style>
+                        
+            .hue-horizontal {
+              background: linear-gradient(to right, #f00 0%, #ff0 17%, #0f0
+                33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+              background: -webkit-linear-gradient(to right, #f00 0%, #ff0
+                17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+            }
+
+            .hue-vertical {
+              background: linear-gradient(to top, #f00 0%, #ff0 17%, #0f0 33%,
+                #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+              background: -webkit-linear-gradient(to top, #f00 0%, #ff0 17%,
+                #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+            }
+          
+                      </style>
+                      <div
+                        style="position: absolute; left: 0%;"
+                      >
+                        <div
+                          style="width: 12px; height: 12px; border-radius: 6px; transform: translate(-6px, -1px); background-color: rgb(248, 248, 248); box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style="height: 10px; position: relative;"
+                >
+                  <div
+                    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+                  >
+                    <div
+                      style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; overflow: hidden;"
+                    >
+                      <div
+                        style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; background: url(data:image/png;base64,00) left;"
+                      />
+                    </div>
+                    <div
+                      style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+                    />
+                    <div
+                      style="position: relative; height: 100%; margin: 0px 3px;"
+                    >
+                      <div
+                        style="position: absolute; left: 100%;"
+                      >
+                        <div
+                          style="width: 12px; height: 12px; border-radius: 6px; transform: translate(-6px, -1px); background-color: rgb(248, 248, 248); box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="flexbox-fix"
+              style="padding-top: 16px; display: flex;"
+            >
+              <div
+                class="flexbox-fix"
+                style="flex: 1; display: flex; margin-left: -6px;"
+              >
+                <div
+                  style="padding-left: 6px; width: 100%;"
+                >
+                  <div
+                    style="position: relative;"
+                  >
+                    <input
+                      id="rc-editable-input-1"
+                      spellcheck="false"
+                      style="font-size: 11px; color: rgb(51, 51, 51); width: 100%; border-radius: 2px; box-shadow: inset 0 0 0 1px #dadada; height: 21px; text-align: center;"
+                      value="#000000"
+                    />
+                    <label
+                      for="rc-editable-input-1"
+                      style="text-transform: uppercase; font-size: 11px; line-height: 11px; color: rgb(150, 150, 150); text-align: center; display: block; margin-top: 12px;"
+                    >
+                      hex
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div
+                style="width: 32px; text-align: right; position: relative;"
+              >
+                <div
+                  style="margin-right: -4px; margin-top: 12px; cursor: pointer; position: relative;"
+                >
+                  <svg
+                    style="fill: #333; width: 24px; height: 24px; border: 1px solid transparent; border-radius: 5px;"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12,18.17L8.83,15L7.42,16.41L12,21L16.59,16.41L15.17,15M12,5.83L15.17,9L16.58,7.59L12,3L7.41,7.59L8.83,9L12,5.83Z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render defaultColor - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  margin-bottom: 0px!important;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="defaultColor"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="defaultColor_input"
+      title="defaultColor"
+    >
+      <span
+        class="emotion-3"
+      >
+        defaultColor
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="chrome-picker emotion-4"
+          style="width: 225px; background: rgb(255, 255, 255); border-radius: 2px; box-shadow: 0 0 2px rgba(0,0,0,.3), 0 4px 8px rgba(0,0,0,.3); box-sizing: initial; font-family: Menlo;"
+        >
+          <div
+            style="width: 100%; padding-bottom: 55%; position: relative; border-radius: 2px 2px 0 0; overflow: hidden;"
+          >
+            <div
+              style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; background: rgb(255, 0, 0);"
+            >
+              <style>
+                
+          .saturation-white {
+            background: -webkit-linear-gradient(to right, #fff, rgba(255,255,255,0));
+            background: linear-gradient(to right, #fff, rgba(255,255,255,0));
+          }
+          .saturation-black {
+            background: -webkit-linear-gradient(to top, #000, rgba(0,0,0,0));
+            background: linear-gradient(to top, #000, rgba(0,0,0,0));
+          }
+        
+              </style>
+              <div
+                class="saturation-white"
+                style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+              >
+                <div
+                  class="saturation-black"
+                  style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+                />
+                <div
+                  style="position: absolute; top: 0%; left: 100%; cursor: default;"
+                >
+                  <div
+                    style="width: 12px; height: 12px; border-radius: 6px; box-shadow: inset 0 0 0 1px #fff; transform: translate(-6px, -6px);"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="padding: 16px 16px 12px;"
+          >
+            <div
+              class="flexbox-fix"
+              style="display: flex;"
+            >
+              <div
+                style="width: 32px;"
+              >
+                <div
+                  style="margin-top: 6px; width: 16px; height: 16px; border-radius: 8px; position: relative; overflow: hidden;"
+                >
+                  <div
+                    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; border-radius: 8px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.1); background: rgb(255, 0, 0); z-index: 2;"
+                  />
+                  <div
+                    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; background: url(data:image/png;base64,00) left;"
+                  />
+                </div>
+              </div>
+              <div
+                style="flex: 1;"
+              >
+                <div
+                  style="height: 10px; position: relative; margin-bottom: 8px;"
+                >
+                  <div
+                    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+                  >
+                    <div
+                      class="hue-horizontal"
+                      style="padding: 0px 2px; position: relative; height: 100%;"
+                    >
+                      <style>
+                        
+            .hue-horizontal {
+              background: linear-gradient(to right, #f00 0%, #ff0 17%, #0f0
+                33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+              background: -webkit-linear-gradient(to right, #f00 0%, #ff0
+                17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+            }
+
+            .hue-vertical {
+              background: linear-gradient(to top, #f00 0%, #ff0 17%, #0f0 33%,
+                #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+              background: -webkit-linear-gradient(to top, #f00 0%, #ff0 17%,
+                #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+            }
+          
+                      </style>
+                      <div
+                        style="position: absolute; left: 0%;"
+                      >
+                        <div
+                          style="width: 12px; height: 12px; border-radius: 6px; transform: translate(-6px, -1px); background-color: rgb(248, 248, 248); box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style="height: 10px; position: relative;"
+                >
+                  <div
+                    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+                  >
+                    <div
+                      style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; overflow: hidden;"
+                    >
+                      <div
+                        style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; background: url(data:image/png;base64,00) left;"
+                      />
+                    </div>
+                    <div
+                      style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+                    />
+                    <div
+                      style="position: relative; height: 100%; margin: 0px 3px;"
+                    >
+                      <div
+                        style="position: absolute; left: 100%;"
+                      >
+                        <div
+                          style="width: 12px; height: 12px; border-radius: 6px; transform: translate(-6px, -1px); background-color: rgb(248, 248, 248); box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="flexbox-fix"
+              style="padding-top: 16px; display: flex;"
+            >
+              <div
+                class="flexbox-fix"
+                style="flex: 1; display: flex; margin-left: -6px;"
+              >
+                <div
+                  style="padding-left: 6px; width: 100%;"
+                >
+                  <div
+                    style="position: relative;"
+                  >
+                    <input
+                      id="rc-editable-input-4"
+                      spellcheck="false"
+                      style="font-size: 11px; color: rgb(51, 51, 51); width: 100%; border-radius: 2px; box-shadow: inset 0 0 0 1px #dadada; height: 21px; text-align: center;"
+                      value="#FF0000"
+                    />
+                    <label
+                      for="rc-editable-input-4"
+                      style="text-transform: uppercase; font-size: 11px; line-height: 11px; color: rgb(150, 150, 150); text-align: center; display: block; margin-top: 12px;"
+                    >
+                      hex
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div
+                style="width: 32px; text-align: right; position: relative;"
+              >
+                <div
+                  style="margin-right: -4px; margin-top: 12px; cursor: pointer; position: relative;"
+                >
+                  <svg
+                    style="fill: #333; width: 24px; height: 24px; border: 1px solid transparent; border-radius: 5px;"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12,18.17L8.83,15L7.42,16.41L12,21L16.59,16.41L15.17,15M12,5.83L15.17,9L16.58,7.59L12,3L7.41,7.59L8.83,9L12,5.83Z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render disableAlpha - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  margin-bottom: 0px!important;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="disableAlpha"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="disableAlpha_input"
+      title="disableAlpha"
+    >
+      <span
+        class="emotion-3"
+      >
+        disableAlpha
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="chrome-picker emotion-4"
+          style="width: 225px; background: rgb(255, 255, 255); border-radius: 2px; box-shadow: 0 0 2px rgba(0,0,0,.3), 0 4px 8px rgba(0,0,0,.3); box-sizing: initial; font-family: Menlo;"
+        >
+          <div
+            style="width: 100%; padding-bottom: 55%; position: relative; border-radius: 2px 2px 0 0; overflow: hidden;"
+          >
+            <div
+              style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; background: rgb(255, 0, 0);"
+            >
+              <style>
+                
+          .saturation-white {
+            background: -webkit-linear-gradient(to right, #fff, rgba(255,255,255,0));
+            background: linear-gradient(to right, #fff, rgba(255,255,255,0));
+          }
+          .saturation-black {
+            background: -webkit-linear-gradient(to top, #000, rgba(0,0,0,0));
+            background: linear-gradient(to top, #000, rgba(0,0,0,0));
+          }
+        
+              </style>
+              <div
+                class="saturation-white"
+                style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+              >
+                <div
+                  class="saturation-black"
+                  style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+                />
+                <div
+                  style="position: absolute; top: 100%; left: 0%; cursor: default;"
+                >
+                  <div
+                    style="width: 12px; height: 12px; border-radius: 6px; box-shadow: inset 0 0 0 1px #fff; transform: translate(-6px, -6px);"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="padding: 16px 16px 12px;"
+          >
+            <div
+              class="flexbox-fix"
+              style="display: flex;"
+            >
+              <div
+                style="width: 22px;"
+              >
+                <div
+                  style="margin-top: 0px; width: 10px; height: 10px; border-radius: 8px; position: relative; overflow: hidden;"
+                >
+                  <div
+                    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; border-radius: 8px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.1); background: rgb(0, 0, 0); z-index: 2;"
+                  />
+                  <div
+                    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; background: url(data:image/png;base64,00) left;"
+                  />
+                </div>
+              </div>
+              <div
+                style="flex: 1;"
+              >
+                <div
+                  style="height: 10px; position: relative; margin-bottom: 0px;"
+                >
+                  <div
+                    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+                  >
+                    <div
+                      class="hue-horizontal"
+                      style="padding: 0px 2px; position: relative; height: 100%;"
+                    >
+                      <style>
+                        
+            .hue-horizontal {
+              background: linear-gradient(to right, #f00 0%, #ff0 17%, #0f0
+                33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+              background: -webkit-linear-gradient(to right, #f00 0%, #ff0
+                17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+            }
+
+            .hue-vertical {
+              background: linear-gradient(to top, #f00 0%, #ff0 17%, #0f0 33%,
+                #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+              background: -webkit-linear-gradient(to top, #f00 0%, #ff0 17%,
+                #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+            }
+          
+                      </style>
+                      <div
+                        style="position: absolute; left: 0%;"
+                      >
+                        <div
+                          style="width: 12px; height: 12px; border-radius: 6px; transform: translate(-6px, -1px); background-color: rgb(248, 248, 248); box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style="height: 10px; position: relative; display: none;"
+                >
+                  <div
+                    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+                  >
+                    <div
+                      style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; overflow: hidden;"
+                    >
+                      <div
+                        style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; background: url(data:image/png;base64,00) left;"
+                      />
+                    </div>
+                    <div
+                      style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+                    />
+                    <div
+                      style="position: relative; height: 100%; margin: 0px 3px;"
+                    >
+                      <div
+                        style="position: absolute; left: 100%;"
+                      >
+                        <div
+                          style="width: 12px; height: 12px; border-radius: 6px; transform: translate(-6px, -1px); background-color: rgb(248, 248, 248); box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="flexbox-fix"
+              style="padding-top: 16px; display: flex;"
+            >
+              <div
+                class="flexbox-fix"
+                style="flex: 1; display: flex; margin-left: -6px;"
+              >
+                <div
+                  style="padding-left: 6px; width: 100%;"
+                >
+                  <div
+                    style="position: relative;"
+                  >
+                    <input
+                      id="rc-editable-input-3"
+                      spellcheck="false"
+                      style="font-size: 11px; color: rgb(51, 51, 51); width: 100%; border-radius: 2px; box-shadow: inset 0 0 0 1px #dadada; height: 21px; text-align: center;"
+                      value="#000000"
+                    />
+                    <label
+                      for="rc-editable-input-3"
+                      style="text-transform: uppercase; font-size: 11px; line-height: 11px; color: rgb(150, 150, 150); text-align: center; display: block; margin-top: 12px;"
+                    >
+                      hex
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div
+                style="width: 32px; text-align: right; position: relative;"
+              >
+                <div
+                  style="margin-right: -4px; margin-top: 12px; cursor: pointer; position: relative;"
+                >
+                  <svg
+                    style="fill: #333; width: 24px; height: 24px; border: 1px solid transparent; border-radius: 5px;"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12,18.17L8.83,15L7.42,16.41L12,21L16.59,16.41L15.17,15M12,5.83L15.17,9L16.58,7.59L12,3L7.41,7.59L8.83,9L12,5.83Z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render inputStyle - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  margin-bottom: 0px!important;
+  border: 3px solid blue;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="inputStyle"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="inputStyle_input"
+      title="inputStyle"
+    >
+      <span
+        class="emotion-3"
+      >
+        inputStyle
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="chrome-picker emotion-4"
+          style="width: 225px; background: rgb(255, 255, 255); border-radius: 2px; box-shadow: 0 0 2px rgba(0,0,0,.3), 0 4px 8px rgba(0,0,0,.3); box-sizing: initial; font-family: Menlo;"
+        >
+          <div
+            style="width: 100%; padding-bottom: 55%; position: relative; border-radius: 2px 2px 0 0; overflow: hidden;"
+          >
+            <div
+              style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; background: rgb(255, 0, 0);"
+            >
+              <style>
+                
+          .saturation-white {
+            background: -webkit-linear-gradient(to right, #fff, rgba(255,255,255,0));
+            background: linear-gradient(to right, #fff, rgba(255,255,255,0));
+          }
+          .saturation-black {
+            background: -webkit-linear-gradient(to top, #000, rgba(0,0,0,0));
+            background: linear-gradient(to top, #000, rgba(0,0,0,0));
+          }
+        
+              </style>
+              <div
+                class="saturation-white"
+                style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+              >
+                <div
+                  class="saturation-black"
+                  style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+                />
+                <div
+                  style="position: absolute; top: 100%; left: 0%; cursor: default;"
+                >
+                  <div
+                    style="width: 12px; height: 12px; border-radius: 6px; box-shadow: inset 0 0 0 1px #fff; transform: translate(-6px, -6px);"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="padding: 16px 16px 12px;"
+          >
+            <div
+              class="flexbox-fix"
+              style="display: flex;"
+            >
+              <div
+                style="width: 32px;"
+              >
+                <div
+                  style="margin-top: 6px; width: 16px; height: 16px; border-radius: 8px; position: relative; overflow: hidden;"
+                >
+                  <div
+                    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; border-radius: 8px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.1); background: rgb(0, 0, 0); z-index: 2;"
+                  />
+                  <div
+                    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; background: url(data:image/png;base64,00) left;"
+                  />
+                </div>
+              </div>
+              <div
+                style="flex: 1;"
+              >
+                <div
+                  style="height: 10px; position: relative; margin-bottom: 8px;"
+                >
+                  <div
+                    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+                  >
+                    <div
+                      class="hue-horizontal"
+                      style="padding: 0px 2px; position: relative; height: 100%;"
+                    >
+                      <style>
+                        
+            .hue-horizontal {
+              background: linear-gradient(to right, #f00 0%, #ff0 17%, #0f0
+                33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+              background: -webkit-linear-gradient(to right, #f00 0%, #ff0
+                17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+            }
+
+            .hue-vertical {
+              background: linear-gradient(to top, #f00 0%, #ff0 17%, #0f0 33%,
+                #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+              background: -webkit-linear-gradient(to top, #f00 0%, #ff0 17%,
+                #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+            }
+          
+                      </style>
+                      <div
+                        style="position: absolute; left: 0%;"
+                      >
+                        <div
+                          style="width: 12px; height: 12px; border-radius: 6px; transform: translate(-6px, -1px); background-color: rgb(248, 248, 248); box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style="height: 10px; position: relative;"
+                >
+                  <div
+                    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+                  >
+                    <div
+                      style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; overflow: hidden;"
+                    >
+                      <div
+                        style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; background: url(data:image/png;base64,00) left;"
+                      />
+                    </div>
+                    <div
+                      style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+                    />
+                    <div
+                      style="position: relative; height: 100%; margin: 0px 3px;"
+                    >
+                      <div
+                        style="position: absolute; left: 100%;"
+                      >
+                        <div
+                          style="width: 12px; height: 12px; border-radius: 6px; transform: translate(-6px, -1px); background-color: rgb(248, 248, 248); box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="flexbox-fix"
+              style="padding-top: 16px; display: flex;"
+            >
+              <div
+                class="flexbox-fix"
+                style="flex: 1; display: flex; margin-left: -6px;"
+              >
+                <div
+                  style="padding-left: 6px; width: 100%;"
+                >
+                  <div
+                    style="position: relative;"
+                  >
+                    <input
+                      id="rc-editable-input-5"
+                      spellcheck="false"
+                      style="font-size: 11px; color: rgb(51, 51, 51); width: 100%; border-radius: 2px; box-shadow: inset 0 0 0 1px #dadada; height: 21px; text-align: center;"
+                      value="#000000"
+                    />
+                    <label
+                      for="rc-editable-input-5"
+                      style="text-transform: uppercase; font-size: 11px; line-height: 11px; color: rgb(150, 150, 150); text-align: center; display: block; margin-top: 12px;"
+                    >
+                      hex
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div
+                style="width: 32px; text-align: right; position: relative;"
+              >
+                <div
+                  style="margin-right: -4px; margin-top: 12px; cursor: pointer; position: relative;"
+                >
+                  <svg
+                    style="fill: #333; width: 24px; height: 24px; border: 1px solid transparent; border-radius: 5px;"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12,18.17L8.83,15L7.42,16.41L12,21L16.59,16.41L15.17,15M12,5.83L15.17,9L16.58,7.59L12,3L7.41,7.59L8.83,9L12,5.83Z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render label-disabled - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  margin-bottom: 0px!important;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="label-disabled"
+>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="chrome-picker emotion-1"
+          style="width: 225px; background: rgb(255, 255, 255); border-radius: 2px; box-shadow: 0 0 2px rgba(0,0,0,.3), 0 4px 8px rgba(0,0,0,.3); box-sizing: initial; font-family: Menlo;"
+        >
+          <div
+            style="width: 100%; padding-bottom: 55%; position: relative; border-radius: 2px 2px 0 0; overflow: hidden;"
+          >
+            <div
+              style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; background: rgb(255, 0, 0);"
+            >
+              <style>
+                
+          .saturation-white {
+            background: -webkit-linear-gradient(to right, #fff, rgba(255,255,255,0));
+            background: linear-gradient(to right, #fff, rgba(255,255,255,0));
+          }
+          .saturation-black {
+            background: -webkit-linear-gradient(to top, #000, rgba(0,0,0,0));
+            background: linear-gradient(to top, #000, rgba(0,0,0,0));
+          }
+        
+              </style>
+              <div
+                class="saturation-white"
+                style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+              >
+                <div
+                  class="saturation-black"
+                  style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+                />
+                <div
+                  style="position: absolute; top: 100%; left: 0%; cursor: default;"
+                >
+                  <div
+                    style="width: 12px; height: 12px; border-radius: 6px; box-shadow: inset 0 0 0 1px #fff; transform: translate(-6px, -6px);"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="padding: 16px 16px 12px;"
+          >
+            <div
+              class="flexbox-fix"
+              style="display: flex;"
+            >
+              <div
+                style="width: 32px;"
+              >
+                <div
+                  style="margin-top: 6px; width: 16px; height: 16px; border-radius: 8px; position: relative; overflow: hidden;"
+                >
+                  <div
+                    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; border-radius: 8px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.1); background: rgb(0, 0, 0); z-index: 2;"
+                  />
+                  <div
+                    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; background: url(data:image/png;base64,00) left;"
+                  />
+                </div>
+              </div>
+              <div
+                style="flex: 1;"
+              >
+                <div
+                  style="height: 10px; position: relative; margin-bottom: 8px;"
+                >
+                  <div
+                    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+                  >
+                    <div
+                      class="hue-horizontal"
+                      style="padding: 0px 2px; position: relative; height: 100%;"
+                    >
+                      <style>
+                        
+            .hue-horizontal {
+              background: linear-gradient(to right, #f00 0%, #ff0 17%, #0f0
+                33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+              background: -webkit-linear-gradient(to right, #f00 0%, #ff0
+                17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+            }
+
+            .hue-vertical {
+              background: linear-gradient(to top, #f00 0%, #ff0 17%, #0f0 33%,
+                #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+              background: -webkit-linear-gradient(to top, #f00 0%, #ff0 17%,
+                #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+            }
+          
+                      </style>
+                      <div
+                        style="position: absolute; left: 0%;"
+                      >
+                        <div
+                          style="width: 12px; height: 12px; border-radius: 6px; transform: translate(-6px, -1px); background-color: rgb(248, 248, 248); box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style="height: 10px; position: relative;"
+                >
+                  <div
+                    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+                  >
+                    <div
+                      style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; overflow: hidden;"
+                    >
+                      <div
+                        style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; background: url(data:image/png;base64,00) left;"
+                      />
+                    </div>
+                    <div
+                      style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+                    />
+                    <div
+                      style="position: relative; height: 100%; margin: 0px 3px;"
+                    >
+                      <div
+                        style="position: absolute; left: 100%;"
+                      >
+                        <div
+                          style="width: 12px; height: 12px; border-radius: 6px; transform: translate(-6px, -1px); background-color: rgb(248, 248, 248); box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="flexbox-fix"
+              style="padding-top: 16px; display: flex;"
+            >
+              <div
+                class="flexbox-fix"
+                style="flex: 1; display: flex; margin-left: -6px;"
+              >
+                <div
+                  style="padding-left: 6px; width: 100%;"
+                >
+                  <div
+                    style="position: relative;"
+                  >
+                    <input
+                      id="rc-editable-input-6"
+                      spellcheck="false"
+                      style="font-size: 11px; color: rgb(51, 51, 51); width: 100%; border-radius: 2px; box-shadow: inset 0 0 0 1px #dadada; height: 21px; text-align: center;"
+                      value="#000000"
+                    />
+                    <label
+                      for="rc-editable-input-6"
+                      style="text-transform: uppercase; font-size: 11px; line-height: 11px; color: rgb(150, 150, 150); text-align: center; display: block; margin-top: 12px;"
+                    >
+                      hex
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div
+                style="width: 32px; text-align: right; position: relative;"
+              >
+                <div
+                  style="margin-right: -4px; margin-top: 12px; cursor: pointer; position: relative;"
+                >
+                  <svg
+                    style="fill: #333; width: 24px; height: 24px; border: 1px solid transparent; border-radius: 5px;"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12,18.17L8.83,15L7.42,16.41L12,21L16.59,16.41L15.17,15M12,5.83L15.17,9L16.58,7.59L12,3L7.41,7.59L8.83,9L12,5.83Z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render title - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  margin-bottom: 0px!important;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="title"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="title_input"
+      title="The color selector"
+    >
+      <span
+        class="emotion-3"
+      >
+        The color selector
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="chrome-picker emotion-4"
+          style="width: 225px; background: rgb(255, 255, 255); border-radius: 2px; box-shadow: 0 0 2px rgba(0,0,0,.3), 0 4px 8px rgba(0,0,0,.3); box-sizing: initial; font-family: Menlo;"
+        >
+          <div
+            style="width: 100%; padding-bottom: 55%; position: relative; border-radius: 2px 2px 0 0; overflow: hidden;"
+          >
+            <div
+              style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; background: rgb(255, 0, 0);"
+            >
+              <style>
+                
+          .saturation-white {
+            background: -webkit-linear-gradient(to right, #fff, rgba(255,255,255,0));
+            background: linear-gradient(to right, #fff, rgba(255,255,255,0));
+          }
+          .saturation-black {
+            background: -webkit-linear-gradient(to top, #000, rgba(0,0,0,0));
+            background: linear-gradient(to top, #000, rgba(0,0,0,0));
+          }
+        
+              </style>
+              <div
+                class="saturation-white"
+                style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+              >
+                <div
+                  class="saturation-black"
+                  style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+                />
+                <div
+                  style="position: absolute; top: 100%; left: 0%; cursor: default;"
+                >
+                  <div
+                    style="width: 12px; height: 12px; border-radius: 6px; box-shadow: inset 0 0 0 1px #fff; transform: translate(-6px, -6px);"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="padding: 16px 16px 12px;"
+          >
+            <div
+              class="flexbox-fix"
+              style="display: flex;"
+            >
+              <div
+                style="width: 32px;"
+              >
+                <div
+                  style="margin-top: 6px; width: 16px; height: 16px; border-radius: 8px; position: relative; overflow: hidden;"
+                >
+                  <div
+                    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; border-radius: 8px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.1); background: rgb(0, 0, 0); z-index: 2;"
+                  />
+                  <div
+                    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; background: url(data:image/png;base64,00) left;"
+                  />
+                </div>
+              </div>
+              <div
+                style="flex: 1;"
+              >
+                <div
+                  style="height: 10px; position: relative; margin-bottom: 8px;"
+                >
+                  <div
+                    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+                  >
+                    <div
+                      class="hue-horizontal"
+                      style="padding: 0px 2px; position: relative; height: 100%;"
+                    >
+                      <style>
+                        
+            .hue-horizontal {
+              background: linear-gradient(to right, #f00 0%, #ff0 17%, #0f0
+                33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+              background: -webkit-linear-gradient(to right, #f00 0%, #ff0
+                17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+            }
+
+            .hue-vertical {
+              background: linear-gradient(to top, #f00 0%, #ff0 17%, #0f0 33%,
+                #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+              background: -webkit-linear-gradient(to top, #f00 0%, #ff0 17%,
+                #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+            }
+          
+                      </style>
+                      <div
+                        style="position: absolute; left: 0%;"
+                      >
+                        <div
+                          style="width: 12px; height: 12px; border-radius: 6px; transform: translate(-6px, -1px); background-color: rgb(248, 248, 248); box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style="height: 10px; position: relative;"
+                >
+                  <div
+                    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+                  >
+                    <div
+                      style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; overflow: hidden;"
+                    >
+                      <div
+                        style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; background: url(data:image/png;base64,00) left;"
+                      />
+                    </div>
+                    <div
+                      style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
+                    />
+                    <div
+                      style="position: relative; height: 100%; margin: 0px 3px;"
+                    >
+                      <div
+                        style="position: absolute; left: 100%;"
+                      >
+                        <div
+                          style="width: 12px; height: 12px; border-radius: 6px; transform: translate(-6px, -1px); background-color: rgb(248, 248, 248); box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="flexbox-fix"
+              style="padding-top: 16px; display: flex;"
+            >
+              <div
+                class="flexbox-fix"
+                style="flex: 1; display: flex; margin-left: -6px;"
+              >
+                <div
+                  style="padding-left: 6px; width: 100%;"
+                >
+                  <div
+                    style="position: relative;"
+                  >
+                    <input
+                      id="rc-editable-input-2"
+                      spellcheck="false"
+                      style="font-size: 11px; color: rgb(51, 51, 51); width: 100%; border-radius: 2px; box-shadow: inset 0 0 0 1px #dadada; height: 21px; text-align: center;"
+                      value="#000000"
+                    />
+                    <label
+                      for="rc-editable-input-2"
+                      style="text-transform: uppercase; font-size: 11px; line-height: 11px; color: rgb(150, 150, 150); text-align: center; display: block; margin-top: 12px;"
+                    >
+                      hex
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div
+                style="width: 32px; text-align: right; position: relative;"
+              >
+                <div
+                  style="margin-right: -4px; margin-top: 12px; cursor: pointer; position: relative;"
+                >
+                  <svg
+                    style="fill: #333; width: 24px; height: 24px; border: 1px solid transparent; border-radius: 5px;"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12,18.17L8.83,15L7.42,16.41L12,21L16.59,16.41L15.17,15M12,5.83L15.17,9L16.58,7.59L12,3L7.41,7.59L8.83,9L12,5.83Z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Test Schema default 1`] = `true`;
+
+exports[`Test Schema default 2`] = `null`;
+
+exports[`Test Schema defaultColor 1`] = `true`;
+
+exports[`Test Schema defaultColor 2`] = `null`;
+
+exports[`Test Schema disableAlpha 1`] = `true`;
+
+exports[`Test Schema disableAlpha 2`] = `null`;
+
+exports[`Test Schema inputStyle 1`] = `true`;
+
+exports[`Test Schema inputStyle 2`] = `null`;
+
+exports[`Test Schema label-disabled 1`] = `true`;
+
+exports[`Test Schema label-disabled 2`] = `null`;
+
+exports[`Test Schema title 1`] = `true`;
+
+exports[`Test Schema title 2`] = `null`;

@@ -19,15 +19,22 @@ import { get } from '@lowdefy/helpers';
 import { List, Typography } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-import Button from '../Button/Button';
+import Button from '../Button/Button.js';
 
-const ControlledListBlock = ({ blockId, events, Icon, list, methods, properties }) => {
+const ControlledListBlock = ({
+  blockId,
+  components: { Icon, Link },
+  events,
+  list,
+  methods,
+  properties,
+}) => {
   useEffect(() => {
-    methods.registerMethod('pushItem', methods.pushItem);
-    methods.registerMethod('unshiftItem', methods.unshiftItem);
-    methods.registerMethod('removeItem', methods.removeItem);
     methods.registerMethod('moveItemDown', methods.moveItemDown);
     methods.registerMethod('moveItemUp', methods.moveItemUp);
+    methods.registerMethod('pushItem', methods.pushItem);
+    methods.registerMethod('removeItem', methods.removeItem);
+    methods.registerMethod('unshiftItem', methods.unshiftItem);
   });
   const styles = {
     header: {
@@ -61,12 +68,13 @@ const ControlledListBlock = ({ blockId, events, Icon, list, methods, properties 
             {properties.addToFront && !properties.hideAddButton && (
               <Button
                 blockId={`${blockId}_add_button`}
+                components={{ Icon, Link }}
                 events={events}
                 properties={{
-                  title: get(properties, 'addItemButton.title ') || 'Add Item',
-                  size: properties.size,
-                  type: 'default',
                   icon: 'PlusOutlined',
+                  size: properties.size,
+                  title: get(properties, 'addItemButton.title ') || 'Add Item',
+                  type: 'default',
                   ...properties.addItemButton,
                 }}
                 onClick={() => methods.unshiftItem()}
@@ -82,12 +90,13 @@ const ControlledListBlock = ({ blockId, events, Icon, list, methods, properties 
             <br />
             <Button
               blockId={`${blockId}_add_button`}
+              components={{ Icon, Link }}
               events={events}
               properties={{
+                icon: 'PlusOutlined',
+                size: properties.size,
                 title: get(properties, 'addItemButton.title ') || 'Add Item',
                 type: 'dashed',
-                size: properties.size,
-                icon: 'PlusOutlined',
                 ...properties.addItemButton,
               }}
               onClick={() => methods.pushItem()}

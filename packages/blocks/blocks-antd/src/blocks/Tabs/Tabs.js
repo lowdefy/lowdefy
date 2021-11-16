@@ -15,8 +15,8 @@
 */
 
 import React from 'react';
-import { Tabs } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import { Tabs } from 'antd';
 
 const getTabs = ({ content, properties }) => {
   let tabs = properties.tabs;
@@ -41,7 +41,7 @@ const getAdditionalProps = ({ content, properties }) => {
   return additionalProps;
 };
 
-const TabsBlock = ({ blockId, events, content, Icon, methods, properties }) => {
+const TabsBlock = ({ blockId, components: { Icon }, events, content, methods, properties }) => {
   const tabs = getTabs({ content, properties });
   const additionalProps = getAdditionalProps({ content, properties });
   return (
@@ -60,7 +60,7 @@ const TabsBlock = ({ blockId, events, content, Icon, methods, properties }) => {
       onTabClick={(key) => methods.triggerEvent({ name: 'onTabClick', event: { key } })}
       {...additionalProps}
     >
-      {tabs.map((tab, i) => (
+      {tabs.map((tab) => (
         <Tabs.TabPane
           disabled={tab.disabled}
           key={tab.key}

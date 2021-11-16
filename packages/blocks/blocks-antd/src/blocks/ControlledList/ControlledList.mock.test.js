@@ -15,23 +15,35 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { List } from 'antd';
+import { Typography, Button } from 'antd';
 
-import ControlledList from './ControlledList';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-jest.mock('antd/lib/list', () => {
-  return jest.fn(() => 'mocked');
+jest.mock('antd', () => {
+  const comp = jest.fn(() => 'mocked');
+  return {
+    List: comp,
+    Typography,
+    Button,
+  };
 });
 
 const mocks = [
   {
-    name: 'default',
-    fn: List,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [antd.List];
+    },
+    getBlock: async () => {
+      const Block = await import('./ControlledList.js');
+      return Block.default;
+    },
+    name: 'ControlledList',
   },
 ];
 
-runMockRenderTests({ examples, Block: ControlledList, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

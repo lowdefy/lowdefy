@@ -15,7 +15,6 @@
 */
 
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import { get, mergeObjects, type } from '@lowdefy/helpers';
 
@@ -30,6 +29,7 @@ import MobileMenu from '../MobileMenu/MobileMenu.js';
 const PageHeaderMenu = ({
   basePath,
   blockId,
+  components: { Icon, Link },
   content,
   events,
   homePageId,
@@ -100,12 +100,14 @@ const PageHeaderMenu = ({
       blockId={blockId}
       events={events}
       properties={{ style: mergeObjects([{ minHeight: '100vh' }, properties.style]) }}
+      components={{ Icon, Link }}
       content={{
         content: () => (
           <>
             <Header
               blockId={`${blockId}_header`}
               events={events}
+              components={{ Icon, Link }}
               properties={mergeObjects([
                 {
                   style: styles.header,
@@ -115,7 +117,7 @@ const PageHeaderMenu = ({
               content={{
                 content: () => (
                   <>
-                    <Link to={`${basePath}/${homePageId}`}>
+                    <Link href={`${basePath}/${homePageId}`}>
                       <img
                         src={
                           (properties.logo && properties.logo.src) ||
@@ -155,6 +157,7 @@ const PageHeaderMenu = ({
                         <Menu
                           blockId={`${blockId}_menu`}
                           basePath={basePath}
+                          components={{ Icon, Link }}
                           events={events}
                           methods={methods}
                           menus={menus}
@@ -182,6 +185,7 @@ const PageHeaderMenu = ({
                         <MobileMenu
                           blockId={`${blockId}_mobile_menu`}
                           basePath={basePath}
+                          components={{ Icon, Link }}
                           events={events}
                           methods={methods}
                           menus={menus}
@@ -196,6 +200,7 @@ const PageHeaderMenu = ({
             />
             <Content
               blockId={`${blockId}_content`}
+              components={{ Icon, Link }}
               events={events}
               properties={mergeObjects([properties.content, { style: styles.body }])}
               content={{
@@ -205,6 +210,7 @@ const PageHeaderMenu = ({
                       <Breadcrumb
                         blockId={`${blockId}_breadcrumb`}
                         basePath={basePath}
+                        components={{ Icon, Link }}
                         events={events}
                         methods={methods}
                         properties={mergeObjects([
@@ -228,6 +234,7 @@ const PageHeaderMenu = ({
             {content.footer && (
               <Footer
                 blockId={`${blockId}_footer`}
+                components={{ Icon, Link }}
                 events={events}
                 properties={properties.footer}
                 content={{

@@ -15,24 +15,26 @@
 */
 
 import React from 'react';
-import { InputNumber } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import { InputNumber } from 'antd';
 
 import Label from '../Label/Label.js';
 
 const NumberInput = ({
   blockId,
   events,
+  components,
   loading,
+  methods,
   properties,
   required,
   validation,
   value,
-  methods,
 }) => {
   return (
     <Label
       blockId={blockId}
+      components={components}
       events={events}
       loading={loading}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
@@ -50,9 +52,9 @@ const NumberInput = ({
             decimalSeparator={properties.decimalSeparator}
             disabled={properties.disabled}
             formatter={properties.formatter}
+            keyboard={properties.keyboard}
             max={properties.max}
             min={properties.min}
-            keyboard={properties.keyboard}
             placeholder={properties.placeholder}
             precision={properties.precision}
             size={properties.size}

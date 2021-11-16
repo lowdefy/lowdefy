@@ -15,23 +15,33 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { Upload } from 'antd';
 
-import Block from './S3UploadButton.js';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-jest.mock('antd/lib/upload', () => {
-  return jest.fn(() => 'mocked');
+jest.mock('antd', () => {
+  const comp = jest.fn(() => 'mocked');
+  return {
+    Upload: comp,
+    Button: comp,
+  };
 });
 
 const mocks = [
   {
-    name: 'default',
-    fn: Upload,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [antd.Upload, antd.Button];
+    },
+    getBlock: async () => {
+      const Block = await import('./S3UploadButton.js');
+      return Block.default;
+    },
+    name: 'S3UploadButton',
   },
 ];
 
-runMockRenderTests({ examples, Block, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

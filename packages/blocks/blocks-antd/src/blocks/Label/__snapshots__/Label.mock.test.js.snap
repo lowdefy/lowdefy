@@ -119,6 +119,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -253,6 +254,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -466,6 +468,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -679,6 +682,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -908,6 +912,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -1058,6 +1063,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -1208,6 +1214,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -1358,6 +1365,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -1415,6 +1423,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -1565,6 +1574,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -1776,6 +1786,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -1987,6 +1998,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -2198,6 +2210,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -2411,6 +2424,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -2561,6 +2575,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -2789,6 +2804,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -3021,6 +3037,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -3253,6 +3270,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -3465,6 +3483,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -3625,6 +3644,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -3785,6 +3805,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -3935,6 +3956,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -4087,6 +4109,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -4241,6 +4264,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -4403,6 +4427,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -4644,6 +4669,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -4885,6 +4911,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -5126,6 +5153,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -5367,6 +5395,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",
@@ -5608,6 +5637,7 @@ Array [
               className="ant-form-item-control-input-content"
             >
               <div
+                data-testid="area-content"
                 style={
                   Object {
                     "border": "1px solid red",

@@ -14,13 +14,17 @@
   limitations under the License.
 */
 
-// import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
+// FIX: Error: Cannot find module 'tslib'
 import { runBlockSchemaTests } from '@lowdefy/block-dev';
+// import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-// import EChart from './EChart';
-import examples from './examples.yaml';
 import block from './index.js';
+// import Block from './EChart.js';
+import examples from './examples.yaml';
 import schema from './schema.json';
 
-// runRenderTests({ examples, Block: EChart, meta });
+// const { meta, tests } = block;
+const { meta } = block;
+
+// runRenderTests({ Block, examples, meta, schema, tests });
 runBlockSchemaTests({ examples, meta, schema });

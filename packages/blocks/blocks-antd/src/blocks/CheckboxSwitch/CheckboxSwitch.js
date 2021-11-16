@@ -18,10 +18,11 @@ import React from 'react';
 import { Checkbox, Space } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 
-import Label from '../Label/Label';
+import Label from '../Label/Label.js';
 
 const CheckboxSwitch = ({
   blockId,
+  components,
   events,
   loading,
   properties,
@@ -33,6 +34,7 @@ const CheckboxSwitch = ({
   return (
     <Label
       blockId={blockId}
+      components={components}
       events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}

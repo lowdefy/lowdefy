@@ -15,13 +15,13 @@
 */
 
 import React, { useState } from 'react';
-import classNames from 'classnames';
-import { Slider } from 'antd';
-import { get, mergeObjects, serializer, type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import { get, mergeObjects, serializer, type } from '@lowdefy/helpers';
+import { Slider } from 'antd';
+import classNames from 'classnames';
 
-import Label from '../Label/Label.js';
 import CheckboxSelector from '../CheckboxSelector/CheckboxSelector.js';
+import Label from '../Label/Label.js';
 
 const includeMarks = (minMax, minMin, step = 1) => {
   const marks = {};
@@ -71,10 +71,10 @@ const styles = {
 
 const RatingSlider = ({
   blockId,
+  components: { Icon, Link },
   events,
   loading,
   methods,
-  Icon,
   properties,
   required,
   validation,
@@ -100,8 +100,10 @@ const RatingSlider = ({
   return (
     <Label
       blockId={blockId}
+      components={{ Icon, Link }}
       events={events}
       loading={loading}
+      methods={methods}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
       validation={validation}
@@ -118,6 +120,7 @@ const RatingSlider = ({
             {!required && !properties.disableNotApplicable && (
               <CheckboxSelector
                 blockId={`${blockId}_checkbox_selector`}
+                components={{ Icon, Link }}
                 properties={mergeObjects([
                   {
                     label: { disabled: true },
@@ -157,6 +160,7 @@ const RatingSlider = ({
             )}
             <Slider
               id={`${blockId}_input`}
+              components={{ Icon, Link }}
               events={events}
               className={classNames(
                 methods.makeCssClass([

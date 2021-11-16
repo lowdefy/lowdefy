@@ -20,14 +20,14 @@ import { type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import { DatePicker } from 'antd';
 
-import Label from '../Label/Label';
-import disabledDate from '../../disabledDate';
+import Label from '../Label/Label.js';
+import disabledDate from '../../disabledDate.js';
 
 const DateSelector = ({
   blockId,
   events,
   loading,
-  Icon,
+  components: { Icon },
   methods,
   properties,
   required,
@@ -37,6 +37,7 @@ const DateSelector = ({
   return (
     <Label
       blockId={blockId}
+      components={{ Icon }}
       events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}

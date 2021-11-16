@@ -23,8 +23,8 @@ import useRunAfterUpdate from '../../useRunAfterUpdate.js';
 
 const TextInput = ({
   blockId,
+  components: { Icon, Link },
   events,
-  Icon,
   loading,
   methods,
   properties,
@@ -35,6 +35,7 @@ const TextInput = ({
   return (
     <Label
       blockId={blockId}
+      components={{ Icon, Link }}
       events={events}
       loading={loading}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}

@@ -21,7 +21,7 @@ import userEvent from '@testing-library/user-event';
 
 import mockBlock from './mockBlock.js';
 
-const runMockMethodTests = ({ Block, examples, logger, meta, mocks, schema }) => {
+const runMockMethodTests = ({ examples, logger, meta, mocks, schema, tests }) => {
   const { before, methods, getProps } = mockBlock({ meta, logger, schema });
 
   beforeEach(() => {
@@ -33,12 +33,14 @@ const runMockMethodTests = ({ Block, examples, logger, meta, mocks, schema }) =>
 
   examples.forEach((ex) => {
     values.forEach((value, v) => {
-      if (meta.test && meta.test.methods) {
-        meta.test.methods.forEach((method) => {
+      if (tests && tests.methods) {
+        tests.methods.forEach((method) => {
           mocks.forEach((mock) => {
             test(`Mock for method: ${JSON.stringify(method)} - ${ex.id} - value[${v}] - ${
               mock.name
-            }`, () => {
+            }`, async () => {
+              const mockFns = await mock.getMockFns();
+              const Block = await mock.getBlock();
               const Shell = () => {
                 const props = getProps(ex);
                 props.methods = { ...methods, registerMethod: props.methods.registerMethod };
@@ -58,7 +60,9 @@ const runMockMethodTests = ({ Block, examples, logger, meta, mocks, schema }) =>
               const { container } = render(<Shell />);
               expect(container.firstChild).toMatchSnapshot();
               userEvent.click(screen.getByTestId('btn_method'));
-              expect(mock.fn.mock.calls).toMatchSnapshot();
+              mockFns.forEach((mockFn) => {
+                expect(mockFn.mock.calls).toMatchSnapshot();
+              });
             });
           });
         });

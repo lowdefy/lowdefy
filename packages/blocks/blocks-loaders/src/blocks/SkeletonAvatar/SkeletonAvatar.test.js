@@ -14,9 +14,13 @@
   limitations under the License.
 */
 
-import { runRenderTests } from '@lowdefy/block-dev';
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
+import Block from './SkeletonAvatar.js';
 import examples from './examples.yaml';
-import SkeletonAvatar from './SkeletonAvatar';
+import block from './index.js';
+import schema from './schema.json';
 
-runRenderTests({ examples, Block: SkeletonAvatar, meta: {} });
+const { meta, tests } = block;
+runRenderTests({ examples, Block, meta, schema, tests });
+runBlockSchemaTests({ examples, meta, schema });

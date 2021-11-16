@@ -279,7 +279,6 @@ exports[`Render properties.icon object - value[0] 1`] = `
 >
   <svg
     class="ant-alert-icon"
-    components="[object Object]"
     data-testid="AiOutlineExclamationCircle"
     id="properties.icon object_icon"
   />
@@ -307,7 +306,6 @@ exports[`Render properties.icon string - value[0] 1`] = `
 >
   <svg
     class="ant-alert-icon"
-    components="[object Object]"
     data-testid="AiOutlineExclamationCircle"
     id="properties.icon string_icon"
   />
@@ -1014,7 +1012,6 @@ exports[`Render with description properties.icon object - value[0] 1`] = `
 >
   <svg
     class="ant-alert-icon"
-    components="[object Object]"
     data-testid="AiOutlineExclamationCircle"
     id="with description properties.icon object_icon"
   />
@@ -1051,7 +1048,6 @@ exports[`Render with description properties.icon string - value[0] 1`] = `
 >
   <svg
     class="ant-alert-icon"
-    components="[object Object]"
     data-testid="AiOutlineExclamationCircle"
     id="with description properties.icon string_icon"
   />

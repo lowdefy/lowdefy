@@ -15,25 +15,33 @@
 */
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
-import { Tabs } from 'antd';
 
-import Block from './Tabs.js';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-jest.mock('antd/lib/tabs', () => {
-  const tabs = jest.fn(() => 'mocked');
-  tabs.TabPane = jest.fn(() => 'mocked');
-  return tabs;
+jest.mock('antd', () => {
+  const comp = jest.fn(() => 'mocked');
+  comp.TabPane = jest.fn(() => 'mocked');
+  return {
+    Tabs: comp,
+  };
 });
 
 const mocks = [
   {
-    name: 'default',
-    fn: Tabs,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [antd.Tabs.TabPane];
+    },
+    getBlock: async () => {
+      const Block = await import('./Tabs.js');
+      return Block.default;
+    },
+    name: 'Tabs',
   },
 ];
 
-runMockRenderTests({ examples, Block, meta, mocks });
+runMockRenderTests({ examples, meta, mocks, schema, tests });

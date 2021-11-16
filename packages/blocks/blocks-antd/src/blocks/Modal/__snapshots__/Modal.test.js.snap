@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test Schema default 1`] = `true`;
+
+exports[`Test Schema default 2`] = `null`;
+
+exports[`Test Schema properties.title 1`] = `true`;
+
+exports[`Test Schema properties.title 2`] = `null`;
+
+exports[`Test Schema properties: bodyStyle: border: 10px solid blue 1`] = `true`;
+
+exports[`Test Schema properties: bodyStyle: border: 10px solid blue 2`] = `null`;
+
+exports[`Test Schema properties: cancelText: Text of the Cancel button 1`] = `true`;
+
+exports[`Test Schema properties: cancelText: Text of the Cancel button 2`] = `null`;
+
+exports[`Test Schema properties: centered: true 1`] = `true`;
+
+exports[`Test Schema properties: centered: true 2`] = `null`;
+
+exports[`Test Schema properties: closable: false 1`] = `true`;
+
+exports[`Test Schema properties: closable: false 2`] = `null`;
+
+exports[`Test Schema properties: footer: false 1`] = `true`;
+
+exports[`Test Schema properties: footer: false 2`] = `null`;
+
+exports[`Test Schema properties: mask: false 1`] = `true`;
+
+exports[`Test Schema properties: mask: false 2`] = `null`;
+
+exports[`Test Schema properties: maskClosable: false 1`] = `true`;
+
+exports[`Test Schema properties: maskClosable: false 2`] = `null`;
+
+exports[`Test Schema properties: maskStyle: border: 10px solid blue 1`] = `true`;
+
+exports[`Test Schema properties: maskStyle: border: 10px solid blue 2`] = `null`;
+
+exports[`Test Schema properties: okText: Text of the OK button 1`] = `true`;
+
+exports[`Test Schema properties: okText: Text of the OK button 2`] = `null`;
+
+exports[`Test Schema properties: width: 350px - 520px is default 1`] = `true`;
+
+exports[`Test Schema properties: width: 350px - 520px is default 2`] = `null`;
+
+exports[`Test Schema properties: wrapperStyle: border: 10px solid blue 1`] = `true`;
+
+exports[`Test Schema properties: wrapperStyle: border: 10px solid blue 2`] = `null`;
+
+exports[`Test Schema properties: zIndex: 1200 - 1000 is the default 1`] = `true`;
+
+exports[`Test Schema properties: zIndex: 1200 - 1000 is the default 2`] = `null`;
+
+exports[`Test Schema with html in title 1`] = `true`;
+
+exports[`Test Schema with html in title 2`] = `null`;

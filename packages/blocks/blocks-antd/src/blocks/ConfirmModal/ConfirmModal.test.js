@@ -15,47 +15,44 @@
 */
 
 import { runBlockSchemaTests, runMockMethodTests } from '@lowdefy/block-dev';
-import { Modal } from 'antd';
 
-import ConfirmModal from './ConfirmModal';
-import examples from './examples.yaml';
 import block from './index.js';
+import examples from './examples.yaml';
 import schema from './schema.json';
 
-const { meta } = block;
+const { meta, tests } = block;
 
-jest.mock('antd/lib/modal', () => {
+jest.mock('antd', () => {
+  const comp = jest.fn(() => 'mocked');
+  comp.confirm = jest.fn(() => 'mocked');
+  comp.error = jest.fn(() => 'mocked');
+  comp.info = jest.fn(() => 'mocked');
+  comp.success = jest.fn(() => 'mocked');
+  comp.warning = jest.fn(() => 'mocked');
   return {
-    confirm: jest.fn(),
-    error: jest.fn(),
-    info: jest.fn(),
-    success: jest.fn(),
-    warning: jest.fn(),
+    Modal: comp,
   };
 });
 
 const mocks = [
   {
-    name: 'confirm',
-    fn: Modal.confirm,
-  },
-  {
-    name: 'error',
-    fn: Modal.error,
-  },
-  {
-    name: 'info',
-    fn: Modal.info,
-  },
-  {
-    name: 'success',
-    fn: Modal.success,
-  },
-  {
-    name: 'warning',
-    fn: Modal.warning,
+    getMockFns: async () => {
+      const antd = await import('antd');
+      return [
+        antd.Modal.confirm,
+        antd.Modal.error,
+        antd.Modal.info,
+        antd.Modal.success,
+        antd.Modal.warning,
+      ];
+    },
+    getBlock: async () => {
+      const Block = await import('./ConfirmModal.js');
+      return Block.default;
+    },
+    name: 'ConfirmModal',
   },
 ];
 
-runMockMethodTests({ examples, Block: ConfirmModal, mocks, meta });
+runMockMethodTests({ examples, mocks, meta, schema, tests });
 runBlockSchemaTests({ examples, meta, schema });

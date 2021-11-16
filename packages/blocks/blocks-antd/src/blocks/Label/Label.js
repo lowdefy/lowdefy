@@ -18,24 +18,24 @@
 // MIT Copyright (c) 2015-present Ant UED, https://xtech.antfin.com/ - 2020-09-08
 
 import React from 'react';
-import classNames from 'classnames';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { Col, Row } from 'antd';
+import classNames from 'classnames';
 import CSSMotion from 'rc-animate/lib/CSSMotion.js';
 
 import labelLogic from './labelLogic.js';
 
 const validationKeyMap = {
-  warning: 'warnings',
   error: 'errors',
+  warning: 'warnings',
 };
 
 let iconMap;
 
 const Label = ({
   blockId,
-  content,
   components: { Icon },
+  content,
   methods,
   properties,
   required,
@@ -55,10 +55,10 @@ const Label = ({
   } = labelLogic({ blockId, content, methods, properties, required, validation });
   if (!iconMap) {
     iconMap = {
-      success: () => <Icon properties="AiFilledCheckCircle" />,
-      warning: () => <Icon properties="AiFilledExclamationCircle" />,
       error: () => <Icon properties="AiFilledCloseCircle" />,
+      success: () => <Icon properties="AiFilledCheckCircle" />,
       validating: () => <Icon properties="AiOutlinedLoading" />,
+      warning: () => <Icon properties="AiFilledExclamationCircle" />,
     };
   }
   const IconNode = validation.status && iconMap[validation.status];
