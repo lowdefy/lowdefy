@@ -176,12 +176,20 @@ _ref:
 
       const readFilePromise = promisify(fs.readFile);
 
-      async function useLocalOrSharedConfig(path, vars, context) {
-        const localFile =  await readFilePromise(path.resolve(path), 'utf8');
+      async function useLocalOrSharedConfig(refPath, vars, context) {
+        let fileContent
+        try {
+          fileContent =  await readFilePromise(path.resolve(refPath), 'utf8');
+          return fileContent;
+        } catch (error) {
+          if (error.code === 'ENOENT') {
+            fileContent = readFilePromise(path.resolve('../shared', refPath), 'utf8');
+            return fileContent;
+          }
+          throw error;
+        }
 
-        if (localFile) return localFile;
 
-        return readFilePromise(path.resolve('../shared', path), 'utf8');
       }
 
       module.exports = useLocalOrSharedConfig;
