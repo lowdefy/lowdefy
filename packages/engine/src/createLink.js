@@ -24,12 +24,12 @@ function createLink({ backLink, lowdefy, newOriginLink, sameOriginLink }) {
     }
     const lowdefyUrlQuery = type.isNone(urlQuery) ? '' : `?${urlQueryFn.stringify(urlQuery)}`;
     if (home) {
-      if (lowdefy.homePageId.configured) {
+      if (lowdefy.home.configured) {
         pathname = '';
-        pageId = lowdefy.homePageId.homePageId;
+        pageId = lowdefy.home.pageId;
       } else {
-        pathname = lowdefy.homePageId.homePageId;
-        pageId = lowdefy.homePageId.homePageId;
+        pathname = lowdefy.home.pageId;
+        pageId = lowdefy.home.pageId;
       }
     }
     if (!type.isNone(pathname)) {

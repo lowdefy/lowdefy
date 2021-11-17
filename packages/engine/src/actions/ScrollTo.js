@@ -16,12 +16,12 @@
 
 async function ScrollTo({ context, params = {} }) {
   if (params.blockId) {
-    const element = context.lowdefy._internal.document.getElementById(params.blockId);
+    const element = context._internal.lowdefy._internal.document.getElementById(params.blockId);
     if (element) {
       element.scrollIntoView(params.options);
     }
   } else {
-    context.lowdefy.window.scrollTo(params);
+    context._internal.lowdefy._internal.window.scrollTo(params);
   }
 }
 

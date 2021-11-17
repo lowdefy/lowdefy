@@ -23,8 +23,11 @@ async function request({ url, method = 'GET', body }) {
     body: JSON.stringify(body),
   });
   if (!res.ok) {
+    // TODO: check
+    const body = await res.json();
     console.log(res);
-    throw new Error('Request Error');
+    console.log(body);
+    throw new Error(body.message || 'Request error');
   }
   return res.json();
 }

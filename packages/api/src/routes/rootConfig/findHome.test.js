@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import findHomePageId from './findHomePageId.js';
+import findHome from './findHome.js';
 import testContext from '../../test/testContext.js';
 
-test('findHomePageId, menu with configured home page id', () => {
+test('findHome, menu with configured home page id', () => {
   const context = testContext({ config: { homePageId: 'homePageId' } });
   const menus = [
     {
@@ -41,11 +41,11 @@ test('findHomePageId, menu with configured home page id', () => {
       ],
     },
   ];
-  const res = findHomePageId(context, { menus });
-  expect(res).toEqual('homePageId');
+  const res = findHome(context, { menus });
+  expect(res).toEqual({ configured: true, pageId: 'homePageId' });
 });
 
-test('findHomePageId, get homePageId at first level', () => {
+test('findHome, get homePageId at first level', () => {
   const context = testContext();
   const menus = [
     {
@@ -61,11 +61,11 @@ test('findHomePageId, get homePageId at first level', () => {
       ],
     },
   ];
-  const res = findHomePageId(context, { menus });
-  expect(res).toEqual('page');
+  const res = findHome(context, { menus });
+  expect(res).toEqual({ configured: false, pageId: 'page' });
 });
 
-test('findHomePageId, get homePageId at second level', () => {
+test('findHome, get homePageId at second level', () => {
   const context = testContext();
   const menus = [
     {
@@ -89,11 +89,11 @@ test('findHomePageId, get homePageId at second level', () => {
       ],
     },
   ];
-  const res = findHomePageId(context, { menus });
-  expect(res).toEqual('page');
+  const res = findHome(context, { menus });
+  expect(res).toEqual({ configured: false, pageId: 'page' });
 });
 
-test('findHomePageId, get homePageId at third level', () => {
+test('findHome, get homePageId at third level', () => {
   const context = testContext();
   const menus = [
     {
@@ -125,11 +125,11 @@ test('findHomePageId, get homePageId at third level', () => {
       ],
     },
   ];
-  const res = findHomePageId(context, { menus });
-  expect(res).toEqual('page');
+  const res = findHome(context, { menus });
+  expect(res).toEqual({ configured: false, pageId: 'page' });
 });
 
-test('findHomePageId, no default menu, no configured homepage', () => {
+test('findHome, no default menu, no configured homepage', () => {
   const context = testContext();
   const menus = [
     {
@@ -145,11 +145,11 @@ test('findHomePageId, no default menu, no configured homepage', () => {
       ],
     },
   ];
-  const res = findHomePageId(context, { menus });
-  expect(res).toEqual('page');
+  const res = findHome(context, { menus });
+  expect(res).toEqual({ configured: false, pageId: 'page' });
 });
 
-test('findHomePageId, more than 1 menu, no configured homepage', () => {
+test('findHome, more than 1 menu, no configured homepage', () => {
   const context = testContext();
   const menus = [
     {
@@ -177,11 +177,11 @@ test('findHomePageId, more than 1 menu, no configured homepage', () => {
       ],
     },
   ];
-  const res = findHomePageId(context, { menus });
-  expect(res).toEqual('default-page');
+  const res = findHome(context, { menus });
+  expect(res).toEqual({ configured: false, pageId: 'default-page' });
 });
 
-test('findHomePageId, default menu has no links', () => {
+test('findHome, default menu has no links', () => {
   const context = testContext();
   const menus = [
     {
@@ -189,6 +189,6 @@ test('findHomePageId, default menu has no links', () => {
       links: [],
     },
   ];
-  const res = findHomePageId(context, { menus });
-  expect(res).toEqual(null);
+  const res = findHome(context, { menus });
+  expect(res).toEqual({ configured: false, pageId: null });
 });

@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import getLowdefyGlobal from './getLowdefyGlobal';
-import testContext from '../../test/testContext';
+import getLowdefyGlobal from './getLowdefyGlobal.js';
+import testContext from '../../test/testContext.js';
 
 const mockReadConfigFile = jest.fn();
 

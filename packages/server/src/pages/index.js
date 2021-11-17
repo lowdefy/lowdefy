@@ -13,20 +13,18 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import createApiContext from '@lowdefy/api/context/createApiContext';
-import getHomePageId from '@lowdefy/api/routes/rootConfig/getHomePageId.js';
-import getPageConfig from '@lowdefy/api/routes/page/getPageConfig';
-import getRootConfig from '@lowdefy/api/routes/rootConfig/getRootConfig';
+
+import { createApiContext, getHome, getPageConfig, getRootConfig } from '@lowdefy/api';
 
 import Page from '../components/Page.js';
 
 export async function getServerSideProps() {
   const apiContext = await createApiContext({ buildDirectory: './.lowdefy/build' });
-  const homePageIdData = await getHomePageId(apiContext);
-  if (homePageIdData.configured === false) {
+  const home = await getHome(apiContext);
+  if (home.configured === false) {
     return {
       redirect: {
-        destination: `/${homePageIdData.homePageId}`,
+        destination: `/${home.pageId}`,
         permanent: false,
       },
     };
@@ -34,7 +32,7 @@ export async function getServerSideProps() {
 
   const [rootConfig, pageConfig] = await Promise.all([
     getRootConfig(apiContext),
-    getPageConfig(apiContext, { pageId: homePageIdData.homePageId }),
+    getPageConfig(apiContext, { pageId: home.pageId }),
   ]);
 
   if (!pageConfig) {
