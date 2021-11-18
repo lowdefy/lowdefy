@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Select } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-tools';
 import { get, type } from '@lowdefy/helpers';
@@ -35,6 +35,7 @@ const MultipleSelector = ({
   validation,
   value,
 }) => {
+  const [fetchState, setFetch] = useState(false);
   const uniqueValueOptions = getUniqueValues(properties.options || []);
   return (
     <Label
@@ -90,7 +91,7 @@ const MultipleSelector = ({
                   .toLowerCase()
                   .indexOf(input.toLowerCase()) >= 0
               }
-              notFoundContent="Not found"
+              notFoundContent={fetchState ? 'Loading' : 'Not found'}
               onChange={(newVal) => {
                 const val = [];
                 newVal.forEach((nv) => {
@@ -102,6 +103,11 @@ const MultipleSelector = ({
                 });
                 methods.setValue(val);
                 methods.triggerEvent({ name: 'onChange' });
+              }}
+              onSearch={async (inputVal) => {
+                setFetch(true);
+                await methods.triggerEvent({ name: 'onSearch', event: { inputVal } });
+                setFetch(false);
               }}
               value={getValueIndex(value, uniqueValueOptions, true)}
             >

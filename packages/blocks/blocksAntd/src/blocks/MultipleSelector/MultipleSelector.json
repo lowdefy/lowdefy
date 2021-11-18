@@ -233,6 +233,10 @@
         "onChange": {
           "type": "array",
           "description": "Trigger actions when selection is changed."
+        },
+        "onSearch": {
+          "type": "array",
+          "description": "Trigger actions when input is changed. The event object is populated with inputVal which is the input value entered."
         }
       }
     }
