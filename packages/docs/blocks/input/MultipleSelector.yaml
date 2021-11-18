@@ -35,3 +35,92 @@ _ref:
 
       > Other selector blocks are `ButtonSelector`, `CheckboxSelector`, `RadioSelector` and `Selector`.
 
+    examples:
+      - title: Listing options from database search
+        block:
+          id: example_selector
+          type: MultipleSelector
+          requests:
+            - id: example_search
+              type: MongoDBAggregation
+              connectionId: companies
+              properties:
+                pipeline:
+                  - $search:
+                      compound:
+                        should:
+                          - text:
+                              query:
+                                _string.concat:
+                                  - '*'
+                                  - _state: search_input
+                                  - '*'
+                              path: # field names to search in the companies collection
+                                - _id
+                                - company_name
+                          - wildcard:
+                              query:
+                                _string.concat:
+                                  - '*'
+                                  - _state: search_input
+                                  - '*'
+                              path: # field names to search in the companies collection
+                                - _id
+                                - company_name
+                              allowAnalyzedField: true
+                  - $addFields:
+                      score:
+                        $meta: searchScore
+                  - $sort:
+                      score: -1
+                  - $limit: 50
+                  - $project:
+                      _id: 0
+                      value: $_id
+                      label:
+                        $concat:
+                          - $_id
+                          - ' - '
+                          - $ifNull:
+                              - $company_name
+                              - ''
+          properties:
+            placeholder: Search
+            options: # search request results will be used as options
+              _array.concat:
+                - _if_none:
+                    - _state: example_options
+                    - []
+                - _if_none:
+                    - _request: example_search
+                    - []
+            label:
+              disabled: true
+          events:
+            onChange: # selector onChange actions - triggered when the value of the selector changes
+              - id: set_state
+                type: SetState
+                params:
+                  example_options:
+                    _mql.aggregate:
+                      on:
+                        _array.concat:
+                          - _state: example_options
+                          - _request: example_search
+                      pipeline:
+                        - $match:
+                            value:
+                              $in:
+                                _state: example_selector
+            onSearch: # selector onSearch actions - triggered when the user types in the search input
+              debounce:
+                ms: 500
+              try:
+                - id: set_state
+                  type: SetState
+                  params:
+                    search_input:
+                      _event: inputVal
+                - id: perform_search
+                  type: Request
+                  params: example_search

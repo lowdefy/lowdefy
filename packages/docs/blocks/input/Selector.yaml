@@ -34,3 +34,74 @@ _ref:
       The options for the selector can be provides as either an array of primitive values (Strings, numbers, booleans or dates), or as an array of label-value pairs, where the label is a string, and the value can be of any type, including objects like dates and arrays.
 
       > Other selector blocks are `ButtonSelector`, `CheckboxSelector`, `MultipleSelector` and `RadioSelector`.
+
+    examples:
+      - title: Listing options from database search
+        block:
+          id: example_selector
+          type: Selector
+          requests:
+            - id: example_search
+              type: MongoDBAggregation
+              connectionId: companies
+              properties:
+                pipeline:
+                  - $search:
+                      compound:
+                        should:
+                          - text:
+                              query:
+                                _string.concat:
+                                  - '*'
+                                  - _state: search_input
+                                  - '*'
+                              path: # field names to search in the companies collection
+                                - _id
+                                - company_name
+                          - wildcard:
+                              query:
+                                _string.concat:
+                                  - '*'
+                                  - _state: search_input
+                                  - '*'
+                              path: # field names to search in the companies collection
+                                - _id
+                                - company_name
+                              allowAnalyzedField: true
+                  - $addFields:
+                      score:
+                        $meta: searchScore
+                  - $sort:
+                      score: -1
+                  - $limit: 50
+                  - $project: # selector options value, label pairs
+                      _id: 0
+                      value: $_id
+                      label:
+                        $concat:
+                          - $_id
+                          - ' - '
+                          - $ifNull:
+                              - $company_name
+                              - ''
+          properties:
+            placeholder: Search
+            options:
+              _if_none: # search request results will be used as options
+                - _request: example_search
+                - []
+            label:
+              disabled: true
+          events:
+            onSearch: # selector onSearch actions
+              debounce:
+                ms: 500
+              try:
+                - id: set_state
+                  type: SetState
+                  params:
+                    search_input:
+                      _event: inputVal
+                - id: perform_search
+                  type: Request
+                  params: example_search
