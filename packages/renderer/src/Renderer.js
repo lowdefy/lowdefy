@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter, Route, Redirect, Switch, useLocation } from 'react-router-dom';
 import { ApolloProvider, useQuery, gql } from '@apollo/client';
 
 import { ErrorBoundary, Loading } from '@lowdefy/block-tools';
-import { get } from '@lowdefy/helpers';
+import { get, type } from '@lowdefy/helpers';
 
 import useGqlClient from './utils/graphql/useGqlClient';
 import createLogin from './utils/auth/createLogin';
@@ -89,6 +89,7 @@ const GET_ROOT = gql`
         }
       }
       homePageId
+      initPageId
     }
   }
 `;
@@ -99,6 +100,7 @@ const RootQuery = ({ children, lowdefy }) => {
   if (error) return <h1>Error</h1>;
 
   lowdefy.homePageId = get(data, 'menu.homePageId');
+  lowdefy.initPageId = get(data, 'menu.initPageId');
   // Make a copy to avoid immutable error when calling setGlobal.
   lowdefy.lowdefyGlobal = JSON.parse(JSON.stringify(get(data, 'lowdefyGlobal', { default: {} })));
   lowdefy.menus = get(data, 'menu.menus');
@@ -122,6 +124,19 @@ const Home = ({ lowdefy }) => {
     return <Redirect to={{ pathname: `${lowdefy.basePath}/${lowdefy.homePageId}`, search }} />;
   }
   return <Redirect to={`${lowdefy.basePath}/404`} />;
+};
+
+const PageLoader = ({ lowdefy }) => {
+  const { initPageId } = lowdefy;
+  const [initEventsTriggered, setInitEventsTriggered] = useState(false);
+
+  if (type.isNone(initPageId) || initEventsTriggered) {
+    return <Page lowdefy={lowdefy} initEventsTriggered={setInitEventsTriggered} />;
+  } else {
+    return (
+      <Page lowdefy={lowdefy} pageId={initPageId} initEventsTriggered={setInitEventsTriggered} />
+    );
+  }
 };
 
 const Root = ({ gqlUri }) => {
@@ -151,7 +166,7 @@ const Root = ({ gqlUri }) => {
               <OpenIdCallback lowdefy={lowdefy} />
             </Route>
             <Route exact path={`${lowdefy.basePath}/:pageId`}>
-              <Page lowdefy={lowdefy} />
+              <PageLoader lowdefy={lowdefy} />
             </Route>
           </Switch>
         </RootQuery>

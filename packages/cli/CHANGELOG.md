@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.23.0](https://github.com/lowdefy/lowdefy/compare/v3.23.0-alpha.0...v3.23.0) (2021-11-19)
+
+**Note:** Version bump only for package lowdefy
+
+
+
+
+
+# [3.23.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.22.0...v3.23.0-alpha.0) (2021-11-09)
+
+
+### Bug Fixes
+
+* Support .yml in lowdefy.yaml file. ([0f7cc2a](https://github.com/lowdefy/lowdefy/commit/0f7cc2a7612a5ad9a8164d5a5437dde5c6d7da49)), closes [#902](https://github.com/lowdefy/lowdefy/issues/902)
+
+
+
+
+
 # [3.22.0](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.1...v3.22.0) (2021-09-27)
 
 

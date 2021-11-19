@@ -43,7 +43,19 @@ _ref:
             The config object has the following properties:
 
             - `homePageId: string`: The pageId of the page that should be loaded when a user loads the app without a pageId in the url route. This is the page that is loaded when you navigate to `yourdomain.com`.
+            - `experimental_initPageId: string`: The pageId of the page that should be loaded when app is initialized. User is then redirected to requeted page. You can use onInit/onInitAsync/onEnter/onEnterAsync events to fetch and prepare global variables for other parts of the app.
 
+      - id: alert1
+        type: Alert
+        properties:
+          type: warning
+          showIcon: false
+          message: Init page is an experimental feature, that may disappear in future releases as well as the flag itself can be changed. Use at your own risk.
+
+      - id: md2
+        type: MarkdownWithCode
+        properties:
+          content: |
             # Global
 
             Any data that you wish to use in your app can be stored in the __global__ object, and accessed using the [`_global`](/_global) operator. This is a good place to store data or configuration that is used throughout the app, for example the url of a logo or configuration of a page, since then these are only written once, and can be updated easily.
@@ -200,6 +212,10 @@ _ref:
             Templating is used extensively to create the Lowdefy docs (these docs are a Lowdefy app). You can look at how they are used [here](https://github.com/lowdefy/lowdefy/tree/main/packages/docs).
 
             The `_ref` operator can also be extended with custom JavaScript functions. A `resolver` function can be specified, which can overwrite the default way configuration files are read from the filesystem. A `transformer` function can be used to transform the value returned by the `_ref` operator.
+
+            ## YAML file extensions
+
+            Both files with the `.yaml` and `.yml` file extensions are supported as YAML files.
 
             ## JSON instead of YAML
 

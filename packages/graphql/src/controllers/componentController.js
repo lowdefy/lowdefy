@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { get } from '@lowdefy/helpers';
+import { get, type } from '@lowdefy/helpers';
 
 class ComponentController {
   constructor({ getController, getLoader }) {
@@ -30,27 +30,32 @@ class ComponentController {
 
   async getMenus() {
     const loadedMenus = await this.componentLoader.load('menus');
-    const menus = this.filterMenus({ menus: loadedMenus || [] });
+    const initPageId = await this.getInitPageId();
+    const menus = this.filterMenus({ menus: loadedMenus || [], initPageId });
     const homePageId = await this.getHomePageId({ menus });
     return {
       menus,
       homePageId,
+      initPageId,
     };
   }
 
-  filterMenus({ menus }) {
+  filterMenus({ menus, initPageId }) {
     return menus.map((menu) => {
       return {
         ...menu,
-        links: this.filterMenuList({ menuList: get(menu, 'links', { default: [] }) }),
+        links: this.filterMenuList({ menuList: get(menu, 'links', { default: [] }), initPageId }),
       };
     });
   }
 
-  filterMenuList({ menuList }) {
+  filterMenuList({ menuList, initPageId }) {
     return menuList
       .map((item) => {
         if (item.type === 'MenuLink') {
+          if (!type.isNone(initPageId) && item.pageId === initPageId) {
+            return null;
+          }
           if (this.authorizationController.authorize(item)) {
             return item;
           }
@@ -58,7 +63,8 @@ class ComponentController {
         }
         if (item.type === 'MenuGroup') {
           const filteredSubItems = this.filterMenuList({
-            menuList: get(item, 'links', { default: [] }),
+            menuList: get(item, 'links', { default: [] },),
+            initPageId: initPageId,
           });
           if (filteredSubItems.length > 0) {
             return {
@@ -70,6 +76,15 @@ class ComponentController {
         return null;
       })
       .filter((item) => item !== null);
+  }
+
+  async getInitPageId() {
+    const configData = await this.componentLoader.load('config');
+    if (configData && get(configData, 'experimental_initPageId')) {
+      return get(configData, 'experimental_initPageId');
+    } else {
+      return null;
+    }
   }
 
   async getHomePageId({ menus }) {

@@ -67,6 +67,7 @@ const mockGetMenus = jest.fn(() => {
       },
     ],
     homePageId: 'page',
+    initPageId: 'initPage',
   };
 });
 
@@ -115,6 +116,7 @@ const GET_MENUS = gql`
         }
       }
       homePageId
+      initPageId
     }
   }
 `;
@@ -142,6 +144,7 @@ test('menu resolver', async () => {
       },
     ],
     homePageId: 'page',
+    initPageId: 'initPage',
   });
 });
 
@@ -177,6 +180,7 @@ test('menu graphql', async () => {
         },
       ],
       homePageId: 'page',
+      initPageId: null,
     },
   });
 });

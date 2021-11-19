@@ -169,6 +169,14 @@
               "errorMessage": {
                 "type": "App \"config.auth.jwt.expiresIn\" should be a string or number."
               }
+            },
+            "loginStateExpiresIn": {
+              "type": ["string", "number"],
+              "default": "5min",
+              "description": "The length of time an authorization request token should be valid. Can be expressed as a number in seconds, or a vercel/ms string (https://github.com/vercel/ms)",
+              "errorMessage": {
+                "type": "App \"config.auth.jwt.loginStateExpiresIn\" should be a string or number."
+              }
             }
           }
         }
@@ -581,6 +589,13 @@
           "description": "Page id to use as homepage. When visiting home route \"/\", the router will redirect to this page. If not provided, the first page in default or first menu will be used as the homePageId.",
           "errorMessage": {
             "type": "App \"config.homePageId\" should be a string."
+          }
+        },
+        "experimental_initPageId": {
+          "type": "string",
+          "description": "Id of the page to load when app is first run. After loading it, app will redirect to the requested page.",
+          "errorMessage": {
+            "type": "App \"config.experimental_initPageId\" should be a string."
           }
         },
         "auth": {

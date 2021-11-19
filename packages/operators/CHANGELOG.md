@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.23.0](https://github.com/lowdefy/lowdefy/compare/v3.23.0-alpha.0...v3.23.0) (2021-11-19)
+
+**Note:** Version bump only for package @lowdefy/operators
+
+
+
+
+
+# [3.23.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.22.0...v3.23.0-alpha.0) (2021-11-09)
+
+
+### Bug Fixes
+
+* **operators:** Added tests for switch operator to Node and Web Parsers. ([249ab6b](https://github.com/lowdefy/lowdefy/commit/249ab6bb475bb0d945e48d4f5b90d2308fd00e16))
+* **operators:** Added tests for switch operator. ([ce31fa3](https://github.com/lowdefy/lowdefy/commit/ce31fa30c05023f7a15c944abfc93a7ecb9f6b56))
+* **operators:** Updated switch operator to for... ...of syntax. ([cdbd0e0](https://github.com/lowdefy/lowdefy/commit/cdbd0e0d229933d6b0e497f90cf755ccd04b89c9))
+
+
+### Features
+
+* **operators:** Added switch operator. ([436170c](https://github.com/lowdefy/lowdefy/commit/436170c2ec88e6a8ddbd5a34c791cd7eacc5f72b))
+
+
+
+
+
 # [3.22.0](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.1...v3.22.0) (2021-09-27)
 
 **Note:** Version bump only for package @lowdefy/operators
