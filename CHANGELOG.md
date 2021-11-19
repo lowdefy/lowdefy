@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.23.0](https://github.com/lowdefy/lowdefy/compare/v3.23.0-alpha.0...v3.23.0) (2021-11-19)
+
+## Changes
+
+### Blocks
+
+- Added onSearch event to `MultipleSelector` and `Selector`.
+
+### Build
+
+- Better error messages on build.
+
+### Operators
+
+- Added `_switch` operator.
+
+### General
+
+- Added experimental feature `config.experimental_initPageId`.
+- Added `auth.jwt.loginStateExpiresIn` parameter to configure OpenID connect state token expiry.
+
+## Commits
+
+### Bug Fixes
+
+* **blocksAntd:** Update test snapshots for Selector and MultipleSelector. ([67202c4](https://github.com/lowdefy/lowdefy/commit/67202c452e2187d6c342cd1e5487c8d28b050004))
+* **docs:** Included onSearch event example in MultipleSelector and Selector docs. ([0e53cb8](https://github.com/lowdefy/lowdefy/commit/0e53cb8f93ed49e0122ac038113d7378f67501f7))
+* Updated MultipleSelector block to include onSearch event. ([0339e63](https://github.com/lowdefy/lowdefy/commit/0339e63ab6ce3fb1c8c95d203e341cbec1eb4660))
+* **blocksAntd:** Updated Selector block to include onSearch event. ([5e9ec14](https://github.com/lowdefy/lowdefy/commit/5e9ec1470d9920b8340247ac1ff8d9a681798f1d))
+* **docs:** Fix _ref resolver function example. ([0903094](https://github.com/lowdefy/lowdefy/commit/0903094ce531f4d8ab7849deb91ab3d6b7e5fd82))
+
+
+### Features
+
+* **build:** Better error messages on build. ([9934d07](https://github.com/lowdefy/lowdefy/commit/9934d07430aef93d4f992c048b3f7101b4934217))
+
+
+
+
+
 # [3.23.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.22.0...v3.23.0-alpha.0) (2021-11-09)
 
 

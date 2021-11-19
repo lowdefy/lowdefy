@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/server",
-  "version": "3.23.0-alpha.0",
+  "version": "3.23.0",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -37,9 +37,9 @@
     "start": "nodemon dist/server.js"
   },
   "dependencies": {
-    "@lowdefy/graphql": "3.23.0-alpha.0",
-    "@lowdefy/helpers": "3.23.0-alpha.0",
-    "@lowdefy/node-utils": "3.23.0-alpha.0",
+    "@lowdefy/graphql": "3.23.0",
+    "@lowdefy/helpers": "3.23.0",
+    "@lowdefy/node-utils": "3.23.0",
     "apollo-server-express": "2.25.0",
     "dotenv": "10.0.0",
     "express": "4.17.1",
@@ -50,7 +50,7 @@
     "@babel/core": "7.14.3",
     "@babel/preset-env": "7.14.4",
     "@babel/preset-react": "7.13.13",
-    "@lowdefy/block-tools": "3.23.0-alpha.0",
+    "@lowdefy/block-tools": "3.23.0",
     "babel-jest": "26.6.3",
     "babel-loader": "8.2.2",
     "jest": "26.6.3",
