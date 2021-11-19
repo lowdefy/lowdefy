@@ -93,9 +93,9 @@ const Selector = ({
                 );
                 methods.triggerEvent({ name: 'onChange' });
               }}
-              onSearch={async (inputVal) => {
+              onSearch={async (value) => {
                 setFetch(true);
-                await methods.triggerEvent({ name: 'onSearch', event: { inputVal } });
+                await methods.triggerEvent({ name: 'onSearch', event: { value } });
                 setFetch(false);
               }}
               value={getValueIndex(value, uniqueValueOptions)}

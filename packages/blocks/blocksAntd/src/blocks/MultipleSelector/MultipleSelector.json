@@ -236,7 +236,7 @@
         },
         "onSearch": {
           "type": "array",
-          "description": "Trigger actions when input is changed. The event object is populated with inputVal which is the input value entered."
+          "description": "Trigger actions when input is changed. 'value' is passed to the _event operator to be used in actions such as search queries."
         }
       }
     }

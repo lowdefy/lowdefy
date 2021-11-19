@@ -49,15 +49,6 @@ _ref:
                   - $search:
                       compound:
                         should:
-                          - text:
-                              query:
-                                _string.concat:
-                                  - '*'
-                                  - _state: search_input
-                                  - '*'
-                              path: # field names to search in the companies collection
-                                - _id
-                                - company_name
                           - wildcard:
                               query:
                                 _string.concat:
@@ -120,7 +111,7 @@ _ref:
                   type: SetState
                   params:
                     search_input:
-                      _event: inputVal
+                      _event: value
                 - id: perform_search
                   type: Request
                   params: example_search
