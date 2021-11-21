@@ -3,6 +3,84 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.23.1](https://github.com/lowdefy/lowdefy/compare/v3.23.0...v3.23.1) (2021-11-20)
+
+### Fixes
+- Release to fix Docker builds.
+
+
+
+
+
+# [3.23.0](https://github.com/lowdefy/lowdefy/compare/v3.23.0-alpha.0...v3.23.0) (2021-11-19)
+
+## Changes
+
+### Blocks
+
+- Added onSearch event to `MultipleSelector` and `Selector`.
+
+### Build
+
+- Better error messages on build.
+
+### Operators
+
+- Added `_switch` operator.
+
+### General
+
+- Added experimental feature `config.experimental_initPageId`.
+- Added `auth.jwt.loginStateExpiresIn` parameter to configure OpenID connect state token expiry.
+
+## Commits
+
+### Bug Fixes
+
+* **blocksAntd:** Update test snapshots for Selector and MultipleSelector. ([67202c4](https://github.com/lowdefy/lowdefy/commit/67202c452e2187d6c342cd1e5487c8d28b050004))
+* **docs:** Included onSearch event example in MultipleSelector and Selector docs. ([0e53cb8](https://github.com/lowdefy/lowdefy/commit/0e53cb8f93ed49e0122ac038113d7378f67501f7))
+* Updated MultipleSelector block to include onSearch event. ([0339e63](https://github.com/lowdefy/lowdefy/commit/0339e63ab6ce3fb1c8c95d203e341cbec1eb4660))
+* **blocksAntd:** Updated Selector block to include onSearch event. ([5e9ec14](https://github.com/lowdefy/lowdefy/commit/5e9ec1470d9920b8340247ac1ff8d9a681798f1d))
+* **docs:** Fix _ref resolver function example. ([0903094](https://github.com/lowdefy/lowdefy/commit/0903094ce531f4d8ab7849deb91ab3d6b7e5fd82))
+
+
+### Features
+
+* **build:** Better error messages on build. ([9934d07](https://github.com/lowdefy/lowdefy/commit/9934d07430aef93d4f992c048b3f7101b4934217))
+
+
+
+
+
+# [3.23.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.22.0...v3.23.0-alpha.0) (2021-11-09)
+
+
+### Bug Fixes
+
+* Add _switch operator to docs. ([c5c6f0c](https://github.com/lowdefy/lowdefy/commit/c5c6f0c9a5b0dfc89e09835d3ab940195a077504))
+* Support .yml in lowdefy.yaml file. ([0f7cc2a](https://github.com/lowdefy/lowdefy/commit/0f7cc2a7612a5ad9a8164d5a5437dde5c6d7da49)), closes [#902](https://github.com/lowdefy/lowdefy/issues/902)
+* **docs:** Add avatar and links to blog template. ([d855599](https://github.com/lowdefy/lowdefy/commit/d855599398cae041933dd8b11aaf77648f87d4c2))
+* **docs:** Fix the iframe videos in the docs. ([c4a957a](https://github.com/lowdefy/lowdefy/commit/c4a957a12ea5adf018b373d8da8c5116e064205f))
+* improvements on blog template. ([30e2291](https://github.com/lowdefy/lowdefy/commit/30e22917fed9932e43cde942532654aa4a6aeac6))
+* **docs:** Add how to generate CSVs. ([2cc8e45](https://github.com/lowdefy/lowdefy/commit/2cc8e45b165aa755dceb9e40525f8a0511fb3485))
+* **docs:** Add how to generate pdfs. ([7b35550](https://github.com/lowdefy/lowdefy/commit/7b35550fa944995be8f8a9d0e809971cabcf12af))
+* **operators:** Added tests for switch operator to Node and Web Parsers. ([249ab6b](https://github.com/lowdefy/lowdefy/commit/249ab6bb475bb0d945e48d4f5b90d2308fd00e16))
+* **operators:** Added tests for switch operator. ([ce31fa3](https://github.com/lowdefy/lowdefy/commit/ce31fa30c05023f7a15c944abfc93a7ecb9f6b56))
+* **operators:** Updated switch operator to for... ...of syntax. ([cdbd0e0](https://github.com/lowdefy/lowdefy/commit/cdbd0e0d229933d6b0e497f90cf755ccd04b89c9))
+
+
+### Features
+
+* **docs:** Add how to generate csv. ([3257f51](https://github.com/lowdefy/lowdefy/commit/3257f514b95f7cafb8ac30998194e7ae0a327862))
+* **docs:** Add videos to how tos. ([57c7779](https://github.com/lowdefy/lowdefy/commit/57c77798f0356c606cf90bfd36a4f63ab8d0ff36))
+* Add generate pdf how to. ([5bde460](https://github.com/lowdefy/lowdefy/commit/5bde460934e2dc94d677af5f287e3c85c0ff4c34))
+* **docs:** Added switch operator documentation. ([7c42c78](https://github.com/lowdefy/lowdefy/commit/7c42c7882422ea89332b32bcef985b5bc5059ec8))
+* **operators:** Added switch operator. ([436170c](https://github.com/lowdefy/lowdefy/commit/436170c2ec88e6a8ddbd5a34c791cd7eacc5f72b))
+
+
+
+
+
 # [3.22.0](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.1...v3.22.0) (2021-09-27)
 
 ## Changes

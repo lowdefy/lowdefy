@@ -740,10 +740,9 @@
         - id: _sum
           type: MenuLink
           pageId: _sum
-        # TODO NEXT v3.22.0 INCLUDE
-        # - id: _switch
-        #   type: MenuLink
-        #   pageId: _switch
+        - id: _switch
+          type: MenuLink
+          pageId: _switch
         - id: _type
           type: MenuLink
           pageId: _type
@@ -771,9 +770,14 @@
         title: Lowdefy Versions
         icon: BranchesOutlined
       links:
-        - id: v3.22.0
+        - id: v3.23.1
           type: MenuLink
           url: https://docs.lowdefy.com
+          properties:
+            title: v3.23.1
+        - id: v3.22.0
+          type: MenuLink
+          url: https://61519bcb8b8ed4412aae3057--lowdefy-docs.netlify.app
           properties:
             title: v3.22.0
         - id: v3.21.2
