@@ -17,7 +17,7 @@
 import { serializer } from '@lowdefy/helpers';
 
 import authorizeRequest from './authorizeRequest.js';
-import callRequestHandler from './callRequestHandler.js';
+import callRequestResolver from './callRequestResolver.js';
 import checkConnectionRead from './checkConnectionRead.js';
 import checkConnectionWrite from './checkConnectionWrite.js';
 import evaluateOperators from './evaluateOperators.js';
@@ -53,14 +53,14 @@ async function callRequest(context, { pageId, payload, requestId }) {
     requestConfig,
     requestHandler,
   });
-  validateSchemas(context, {
-    connectionHandler,
-    connectionProperties,
-    requestConfig,
-    requestHandler,
-    requestProperties,
-  });
-  const response = await callRequestHandler(context, {
+  // validateSchemas(context, {
+  //   connectionHandler,
+  //   connectionProperties,
+  //   requestConfig,
+  //   requestHandler,
+  //   requestProperties,
+  // });
+  const response = await callRequestResolver(context, {
     connectionProperties,
     requestConfig,
     requestHandler,

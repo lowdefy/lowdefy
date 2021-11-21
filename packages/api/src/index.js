@@ -16,7 +16,7 @@
 
 import callRequest from './routes/request/callRequest.js';
 import createApiContext from './context/createApiContext.js';
-import getHomePageId from './routes/rootConfig/getHomePageId.js';
+import getHome from './routes/rootConfig/getHome.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
 
@@ -31,7 +31,7 @@ import {
 export {
   callRequest,
   createApiContext,
-  getHomePageId,
+  getHome,
   getPageConfig,
   getRootConfig,
   AuthenticationError,

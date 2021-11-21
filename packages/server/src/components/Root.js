@@ -24,7 +24,7 @@ const Root = ({ children, lowdefy, rootConfig }) => {
     setLoading(false);
   }, [lowdefy]);
 
-  lowdefy.homePageId = rootConfig.homePageId;
+  lowdefy.home = rootConfig.home;
   lowdefy.lowdefyGlobal = rootConfig.lowdefyGlobal;
   lowdefy.menus = rootConfig.menus;
 

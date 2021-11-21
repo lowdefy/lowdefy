@@ -22,7 +22,14 @@ export default async function handler(req, res) {
     if (req.method !== 'POST') {
       throw new Error('Only POST requests are supported.');
     }
-    const apiContext = await createApiContext({ buildDirectory: './.lowdefy/build', connections });
+    const apiContext = await createApiContext({
+      buildDirectory: './.lowdefy/build',
+      connections,
+      // TODO
+      logger: console,
+      // TODO
+      secrets: {},
+    });
     const { pageId, requestId } = req.query;
     const { payload } = req.body;
 

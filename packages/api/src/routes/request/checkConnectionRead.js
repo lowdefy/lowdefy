@@ -19,7 +19,7 @@ function checkConnectionRead(
   { logger },
   { connectionConfig, connectionProperties, requestConfig, requestHandler }
 ) {
-  if (requestHandler.checkRead && connectionProperties.read === false) {
+  if (requestHandler.meta.checkRead && connectionProperties.read === false) {
     const err = new ConfigurationError(
       `Connection "${connectionConfig.connectionId}" does not allow reads.`
     );

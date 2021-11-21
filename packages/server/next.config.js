@@ -12,6 +12,7 @@ module.exports = withLess({
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
+        assert: false,
         buffer: false,
         crypto: false,
         events: false,

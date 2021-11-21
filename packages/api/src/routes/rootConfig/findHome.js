@@ -16,10 +16,10 @@
 
 import { get } from '@lowdefy/helpers';
 
-function findHomePageId({ config }, { menus }) {
+function findHome({ config }, { menus }) {
   if (get(config, 'homePageId')) {
     return {
-      homePageId: config.homePageId,
+      pageId: config.homePageId,
       configured: true,
     };
   }
@@ -28,18 +28,18 @@ function findHomePageId({ config }, { menus }) {
     // eslint-disable-next-line prefer-destructuring
     defaultMenu = menus[0];
   }
-  let homePageId = null;
-  homePageId = get(defaultMenu, 'links.0.pageId', { default: null });
-  if (!homePageId) {
-    homePageId = get(defaultMenu, 'links.0.links.0.pageId', { default: null });
+  let pageId = null;
+  pageId = get(defaultMenu, 'links.0.pageId', { default: null });
+  if (!pageId) {
+    pageId = get(defaultMenu, 'links.0.links.0.pageId', { default: null });
   }
-  if (!homePageId) {
-    homePageId = get(defaultMenu, 'links.0.links.0.links.0.pageId', { default: null });
+  if (!pageId) {
+    pageId = get(defaultMenu, 'links.0.links.0.links.0.pageId', { default: null });
   }
   return {
-    homePageId: homePageId,
+    pageId,
     configured: false,
   };
 }
 
-export default findHomePageId;
+export default findHome;

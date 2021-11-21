@@ -19,7 +19,7 @@ function checkConnectionWrite(
   { logger },
   { connectionConfig, connectionProperties, requestConfig, requestHandler }
 ) {
-  if (requestHandler.checkWrite && connectionProperties.write !== true) {
+  if (requestHandler.meta.checkWrite && connectionProperties.write !== true) {
     const err = new ConfigurationError(
       `Connection "${connectionConfig.connectionId}" does not allow writes.`
     );

@@ -20,10 +20,48 @@ import Button from '@lowdefy/blocks-antd/blocks/Button/Button.js';
 import Html from '@lowdefy/blocks-basic/blocks/Html/Html.js';
 
 const blocks = {
-  Anchor,
-  Box,
-  Button,
-  Html,
+  Anchor: {
+    Component: Anchor,
+    meta: {
+      category: 'display',
+      loading: {
+        type: 'SkeletonParagraph',
+        properties: {
+          lines: 1,
+        },
+      },
+    },
+  },
+  Box: {
+    Component: Box,
+    meta: {
+      category: 'container',
+      loading: false,
+    },
+  },
+  Button: {
+    Component: Button,
+    meta: {
+      category: 'display',
+      loading: {
+        type: 'SkeletonButton',
+      },
+    },
+  },
+  Html: {
+    Component: Html,
+    meta: {
+      category: 'display',
+      loading: false,
+    },
+  },
 };
+
+// const blocks = {
+//   Anchor,
+//   Box,
+//   Button,
+//   Html,
+// };
 
 export default blocks;

@@ -14,9 +14,7 @@
   limitations under the License.
 */
 
-import createApiContext from '@lowdefy/api/context/createApiContext';
-import getPageConfig from '@lowdefy/api/routes/page/getPageConfig';
-import getRootConfig from '@lowdefy/api/routes/rootConfig/getRootConfig';
+import { createApiContext, getPageConfig, getRootConfig } from '@lowdefy/api';
 
 import Page from '../components/Page.js';
 

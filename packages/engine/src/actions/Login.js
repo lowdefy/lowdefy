@@ -15,7 +15,7 @@
 */
 
 async function Login({ context, params }) {
-  return context.lowdefy.auth.login(params);
+  return context._internal.lowdefy._internal.auth.login(params);
 }
 
 export default Login;

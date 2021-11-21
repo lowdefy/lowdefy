@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import findHomePageId from '../rootConfig/findHomePageId.js';
-import getMenus from '../rootConfig/menus/getMenus.js';
+import findHome from './findHome.js';
+import getMenus from './menus/getMenus.js';
 
-async function getHomePageId(context) {
+async function getHome(context) {
   // TODO: We can optimise here as we don't need to read menus if homepageId is configured
   // but not sure if it is worth the added complexity
   const menus = await getMenus(context);
-  return findHomePageId(context, { menus });
+  return findHome(context, { menus });
 }
 
-export default getHomePageId;
+export default getHome;

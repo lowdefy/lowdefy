@@ -14,10 +14,11 @@
   limitations under the License.
 */
 
-import AxiosHttp from './AxiosHttpRequest/AxiosHttpRequest.js';
+import AxiosHttp from './AxiosHttpRequest/index.js';
 
 export default {
   import: {
+    path: 'connections/AxiosHttp/AxiosHttpConnection.js',
     schema: 'connections/AxiosHttp/AxiosHttpConnectionSchema.json',
   },
   requests: {
