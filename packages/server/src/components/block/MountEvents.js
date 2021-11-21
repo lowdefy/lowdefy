@@ -40,9 +40,7 @@ const MountEvents = ({ asyncEventName, context, eventName, triggerEvent, childre
 
   if (error) throw error;
 
-  if (loading) return <>{children(false)}</>;
-
-  return <>{children(true)}</>;
+  return <>{children(loading)}</>;
 };
 
 export default MountEvents;

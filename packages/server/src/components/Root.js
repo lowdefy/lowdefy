@@ -13,24 +13,15 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 const Root = ({ children, lowdefy, rootConfig }) => {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    lowdefy.document = document;
-    lowdefy.window = window;
-    setLoading(false);
-  }, [lowdefy]);
-
+  lowdefy.document = document;
+  lowdefy.window = window;
   lowdefy.home = rootConfig.home;
   lowdefy.lowdefyGlobal = rootConfig.lowdefyGlobal;
   lowdefy.menus = rootConfig.menus;
-
-  if (loading) return <div>Loading...</div>;
-
-  return <>{children(true)}</>;
+  return <>{children}</>;
 };
 
 export default Root;
