@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import AxiosHttp from '@lowdefy/connection-axios-http/connections/AxiosHttp/AxiosHttpConnection.js';
+import { AxiosHttp } from '@lowdefy/connection-axios-http/connections.js';
 
 export default {
   AxiosHttp,

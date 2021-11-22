@@ -72,8 +72,9 @@ const List = ({ block, Blocks, Component, context, lowdefy }) => {
           triggerEvent: block.triggerEvent,
           unshiftItem: block.unshiftItem,
         })}
-        basePath={lowdefy.basePath}
+        basePath={lowdefy._internal.basePath}
         blockId={block.blockId}
+        components={lowdefy._internal.components}
         events={block.eval.events}
         homePageId={lowdefy.homePageId}
         key={block.blockId}

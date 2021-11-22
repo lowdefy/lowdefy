@@ -17,9 +17,9 @@ import { ConfigurationError } from '../../context/errors.js';
 
 function checkConnectionRead(
   { logger },
-  { connectionConfig, connectionProperties, requestConfig, requestHandler }
+  { connectionConfig, connectionProperties, requestConfig, requestResolver }
 ) {
-  if (requestHandler.meta.checkRead && connectionProperties.read === false) {
+  if (requestResolver.meta.checkRead && connectionProperties.read === false) {
     const err = new ConfigurationError(
       `Connection "${connectionConfig.connectionId}" does not allow reads.`
     );

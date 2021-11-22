@@ -1,0 +1,135 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render default - value[0] 1`] = `
+<svg
+  class="emotion-0"
+  data-testid="AiOutlineExclamationCircle"
+  id="default"
+  type="Icon"
+/>
+`;
+
+exports[`Render properties.color - value[0] 1`] = `
+<svg
+  class="emotion-0"
+  data-testid="AiOutlineExclamationCircle"
+  id="properties.color"
+  size="25"
+  type="Icon"
+/>
+`;
+
+exports[`Render properties.disableLoadingIcon: true - value[0] 1`] = `
+<svg
+  class="emotion-0"
+  data-testid="AiOutlineExclamationCircle"
+  id="properties.disableLoadingIcon: true"
+  type="Icon"
+/>
+`;
+
+exports[`Render properties.icon - value[0] 1`] = `
+<svg
+  class="emotion-0"
+  data-testid="AiOutlineExclamationCircle"
+  id="properties.icon"
+  type="Icon"
+/>
+`;
+
+exports[`Render properties.rotate: 90 - value[0] 1`] = `
+<svg
+  class="emotion-0"
+  data-testid="AiOutlineExclamationCircle"
+  id="properties.rotate: 90"
+  rotate="90"
+  size="30"
+  type="Icon"
+/>
+`;
+
+exports[`Render properties.size: 30 - value[0] 1`] = `
+<svg
+  class="emotion-0"
+  data-testid="AiOutlineExclamationCircle"
+  id="properties.size: 30"
+  size="30"
+  type="Icon"
+/>
+`;
+
+exports[`Render properties.spin: true - value[0] 1`] = `
+@keyframes animation-0 {
+  {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+   {
+    -webkit-transform: rotate(359deg);
+    -moz-transform: rotate(359deg);
+    -ms-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+
+.emotion-1 {
+  -webkit-animation: animation-0 2s infinite linear;
+  animation: animation-0 2s infinite linear;
+}
+
+<svg
+  class="emotion-0 emotion-1"
+  data-testid="AiOutlineExclamationCircle"
+  id="properties.spin: true"
+  size="30"
+  type="Icon"
+/>
+`;
+
+exports[`Render properties.style: border: 1px solid red - value[0] 1`] = `
+.emotion-0 {
+  border: 1px solid red;
+}
+
+<svg
+  class="emotion-0"
+  data-testid="AiOutlineExclamationCircle"
+  id="properties.style: border: 1px solid red"
+  type="Icon"
+/>
+`;
+
+exports[`Test Schema default 1`] = `true`;
+
+exports[`Test Schema default 2`] = `null`;
+
+exports[`Test Schema properties.color 1`] = `true`;
+
+exports[`Test Schema properties.color 2`] = `null`;
+
+exports[`Test Schema properties.disableLoadingIcon: true 1`] = `true`;
+
+exports[`Test Schema properties.disableLoadingIcon: true 2`] = `null`;
+
+exports[`Test Schema properties.icon 1`] = `true`;
+
+exports[`Test Schema properties.icon 2`] = `null`;
+
+exports[`Test Schema properties.rotate: 90 1`] = `true`;
+
+exports[`Test Schema properties.rotate: 90 2`] = `null`;
+
+exports[`Test Schema properties.size: 30 1`] = `true`;
+
+exports[`Test Schema properties.size: 30 2`] = `null`;
+
+exports[`Test Schema properties.spin: true 1`] = `true`;
+
+exports[`Test Schema properties.spin: true 2`] = `null`;
+
+exports[`Test Schema properties.style: border: 1px solid red 1`] = `true`;
+
+exports[`Test Schema properties.style: border: 1px solid red 2`] = `null`;

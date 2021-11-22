@@ -21,10 +21,10 @@ import callRequestResolver from './callRequestResolver.js';
 import checkConnectionRead from './checkConnectionRead.js';
 import checkConnectionWrite from './checkConnectionWrite.js';
 import evaluateOperators from './evaluateOperators.js';
+import getConnection from './getConnection.js';
 import getConnectionConfig from './getConnectionConfig.js';
-import getConnectionHandler from './getConnectionHandler.js';
 import getRequestConfig from './getRequestConfig.js';
-import getRequestHandler from './getRequestHandler.js';
+import getRequestResolver from './getRequestResolver.js';
 import validateSchemas from './validateSchemas.js';
 
 async function callRequest(context, { pageId, payload, requestId }) {
@@ -34,8 +34,9 @@ async function callRequest(context, { pageId, payload, requestId }) {
   const connectionConfig = await getConnectionConfig(context, { requestConfig });
   authorizeRequest(context, { requestConfig });
 
-  const connectionHandler = getConnectionHandler(context, { connectionConfig });
-  const requestHandler = getRequestHandler(context, { connectionHandler, requestConfig });
+  const connection = getConnection(context, { connectionConfig });
+  const requestResolver = getRequestResolver(context, { connection, requestConfig });
+
   const { connectionProperties, requestProperties } = await evaluateOperators(context, {
     connectionConfig,
     payload: serializer.deserialize(payload),
@@ -45,25 +46,25 @@ async function callRequest(context, { pageId, payload, requestId }) {
     connectionConfig,
     connectionProperties,
     requestConfig,
-    requestHandler,
+    requestResolver,
   });
   checkConnectionWrite(context, {
     connectionConfig,
     connectionProperties,
     requestConfig,
-    requestHandler,
+    requestResolver,
   });
-  // validateSchemas(context, {
-  //   connectionHandler,
-  //   connectionProperties,
-  //   requestConfig,
-  //   requestHandler,
-  //   requestProperties,
-  // });
+  validateSchemas(context, {
+    connection,
+    connectionProperties,
+    requestConfig,
+    requestResolver,
+    requestProperties,
+  });
   const response = await callRequestResolver(context, {
     connectionProperties,
     requestConfig,
-    requestHandler,
+    requestResolver,
     requestProperties,
   });
   return {

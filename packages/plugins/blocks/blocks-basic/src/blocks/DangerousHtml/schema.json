@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "html": {
+        "type": "string",
+        "description": "Content to be rendered as Html.",
+        "docs": {
+          "displayType": "text-area"
+        }
+      },
+      "DOMPurifyOptions": {
+        "type": "object",
+        "description": "Customize DOMPurify options. Options are only applied when the block is mounted, thus any parsed settings is only applied at first render.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "style": {
+        "type": "object",
+        "description": "Css style object to apply to Html div.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  }
+}

@@ -3473,9 +3473,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/blocks-basic@3.22.0, @lowdefy/blocks-basic@workspace:packages/blocks/blocks-basic":
+"@lowdefy/blocks-basic@3.22.0, @lowdefy/blocks-basic@workspace:packages/plugins/blocks/blocks-basic":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/blocks-basic@workspace:packages/blocks/blocks-basic"
+  resolution: "@lowdefy/blocks-basic@workspace:packages/plugins/blocks/blocks-basic"
   dependencies:
     "@babel/preset-react": 7.16.0
     "@emotion/jest": 11.5.0
@@ -4014,6 +4014,7 @@ __metadata:
     next-with-less: 2.0.2
     react: 18.0.0-alpha-327d5c484-20211106
     react-dom: 18.0.0-alpha-327d5c484-20211106
+    react-icons: 4.3.1
   languageName: unknown
   linkType: soft
 
@@ -17851,6 +17852,15 @@ __metadata:
   peerDependencies:
     react: ">=16.3.0"
   checksum: a4998479dab7fc1c2799eddefb1870a9d881b5f71cfdf97979a9882e42f4bb50402d55335f308f461e735e01a06f46b16cc7b4e6bcb22c7a4a6f85a753c5c106
+  languageName: node
+  linkType: hard
+
+"react-icons@npm:4.3.1":
+  version: 4.3.1
+  resolution: "react-icons@npm:4.3.1"
+  peerDependencies:
+    react: "*"
+  checksum: 2cc608acdd3e906aa3aaee290b8398220639677c949382d86e554020e5dab6a9f1ed7484418aa5272cb5c5c018e1fc9a323d433d901697a76530029f9ecb1263
   languageName: node
   linkType: hard
 

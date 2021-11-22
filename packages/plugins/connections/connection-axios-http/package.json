@@ -27,8 +27,7 @@
   },
   "type": "module",
   "exports": {
-    ".": "./dist/index.js",
-    "./connections/*": "./dist/connections/*"
+    "./connections.js": "./dist/connections.js"
   },
   "files": [
     "dist/*"
