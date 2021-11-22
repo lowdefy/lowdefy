@@ -18,7 +18,8 @@ import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import { Menu } from 'antd';
 import { type, get } from '@lowdefy/helpers';
-import color from '@lowdefy/color';
+
+import color from '../../color.js';
 
 const getDefaultMenu = (menus, menuId = 'default', links) => {
   if (type.isArray(links)) return links;
