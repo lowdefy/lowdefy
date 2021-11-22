@@ -17,8 +17,7 @@
 import React, { useEffect, useState } from 'react';
 import getContext from '@lowdefy/engine';
 
-// import MountEvents from './MountEvents';
-const LoadingBlock = () => <div>Loading...</div>;
+import MountEvents from './block/MountEvents.js';
 
 const Context = ({ children, lowdefy, config }) => {
   const [context, setContext] = useState({});
@@ -39,23 +38,24 @@ const Context = ({ children, lowdefy, config }) => {
       mounted = false;
     };
   }, [config, lowdefy]);
+  const loadingPage = context.id !== config.id;
 
-  if (context.id !== config.id) return <LoadingBlock />;
+  if (loadingPage) {
+    return children(context, loadingPage, 'pager');
+  }
 
-  return children(context);
-
-  // return (
-  //   <MountEvents
-  //     asyncEventName="onEnterAsync"
-  //     context={context}
-  //     eventName="onEnter"
-  //     triggerEvent={({ name, context }) =>
-  //       context.RootBlocks.areas.root.blocks[0].triggerEvent({ name })
-  //     }
-  //   >
-  //     {(loaded) => (!loaded ? <LoadingBlock block={page} lowdefy={lowdefy} /> : children(context))}
-  //   </MountEvents>
-  // );
+  return (
+    <MountEvents
+      asyncEventName="onEnterAsync"
+      context={context}
+      eventName="onEnter"
+      triggerEvent={({ name, context }) =>
+        context._internal.RootBlocks.areas.root.blocks[0].triggerEvent({ name })
+      }
+    >
+      {(loading) => children(context, loading, 'mounter')}
+    </MountEvents>
+  );
 };
 
 export default Context;
