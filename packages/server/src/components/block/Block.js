@@ -34,8 +34,8 @@ const Block = ({ block, Blocks, context, isRoot, lowdefy }) => {
           eventName="onMount"
           triggerEvent={block.triggerEvent}
         >
-          {(loaded) =>
-            !loaded ? (
+          {(loading) =>
+            loading ? (
               <LoadingBlock block={block} lowdefy={lowdefy} />
             ) : (
               <CategorySwitch
