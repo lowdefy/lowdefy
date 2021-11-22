@@ -18,7 +18,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { makeCssClass } from '@lowdefy/block-utils';
 
-import AutoBlockSim from '../demo/AutoBlockSim';
+import AutoBlockSim from './blocks/AutoBlockSim.js';
 
 const mockMath = Object.create(global.Math);
 mockMath.random = () => 0.123456789;

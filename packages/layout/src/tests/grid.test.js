@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import complex from '../demo/examples/complex.yaml';
-import runExampleTests from './runExampleTests';
+import grid from './grid.yaml';
+import runExampleTests from './runExampleTests.js';
 
-runExampleTests(complex);
+runExampleTests(grid);

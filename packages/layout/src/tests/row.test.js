@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import row from '../demo/examples/row.yaml';
-import runExampleTests from './runExampleTests';
+import row from './row.yaml';
+import runExampleTests from './runExampleTests.js';
 
 runExampleTests(row);
 runExampleTests(row, { highlightBorders: false });

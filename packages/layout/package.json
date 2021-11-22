@@ -35,8 +35,9 @@
   "scripts": {
     "build": "yarn swc",
     "clean": "rm -rf dist",
+    "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.yaml\" -e \"./src/**/*.snap\"",
     "prepare": "yarn build",
-    "swc": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start --copy-files",
+    "swc": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start && yarn copyfiles",
     "test": "jest --coverage"
   },
   "dependencies": {
@@ -56,6 +57,7 @@
     "@testing-library/dom": "8.10.1",
     "@testing-library/react": "13.0.0-alpha.4",
     "@testing-library/user-event": "14.0.0-alpha.14",
+    "copyfiles": "2.4.1",
     "jest": "27.3.1",
     "jest-serializer-html": "7.1.0",
     "jest-transform-yaml": "0.1.2"
