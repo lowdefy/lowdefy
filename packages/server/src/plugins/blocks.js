@@ -19,9 +19,11 @@
 import { Anchor } from '@lowdefy/blocks-basic/blocks.js';
 import { Box } from '@lowdefy/blocks-basic/blocks.js';
 import { Html } from '@lowdefy/blocks-basic/blocks.js';
+import { Icon } from '@lowdefy/blocks-basic/blocks.js';
 
 export default {
   Anchor,
   Box,
   Html,
+  Icon,
 };

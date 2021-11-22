@@ -65,8 +65,9 @@ const Container = ({ block, Blocks, Component, context, lowdefy }) => {
           registerMethod: block.registerMethod,
           triggerEvent: block.triggerEvent,
         })}
-        basePath={lowdefy.basePath}
+        basePath={lowdefy._internal.basePath}
         blockId={block.blockId}
+        components={lowdefy._internal.components}
         content={content}
         events={block.eval.events}
         homePageId={lowdefy.homePageId}

@@ -65,8 +65,9 @@ const CategorySwitch = ({ block, Blocks, context, lowdefy }) => {
               triggerEvent: block.triggerEvent,
             })}
             // TODO: React throws a  basePath warning
-            basePath={lowdefy.basePath}
+            basePath={lowdefy._internal.basePath}
             blockId={block.blockId}
+            components={lowdefy._internal.components}
             events={block.eval.events}
             homePageId={lowdefy.homePageId}
             key={block.blockId}
@@ -97,8 +98,9 @@ const CategorySwitch = ({ block, Blocks, context, lowdefy }) => {
               registerMethod: block.registerMethod,
               triggerEvent: block.triggerEvent,
             })}
-            basePath={lowdefy.basePath}
+            basePath={lowdefy._internal.basePath}
             blockId={block.blockId}
+            components={lowdefy._internal.components}
             events={block.eval.events}
             homePageId={lowdefy.homePageId}
             key={block.blockId}

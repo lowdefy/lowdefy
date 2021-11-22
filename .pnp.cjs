@@ -5747,7 +5747,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["next-auth", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:4.0.0-beta.6"],
             ["next-with-less", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:2.0.2"],
             ["react", "npm:18.0.0-alpha-327d5c484-20211106"],
-            ["react-dom", "virtual:04055f037dce009b6d437327a3df2c0a05f0436e14e2b705672dd0d1e0a3dfd29d8d62e0db8cb7e152c4b95e36ad3ccd6a68c9e962121dec9e597b25e0481519#npm:18.0.0-alpha-327d5c484-20211106"]
+            ["react-dom", "virtual:04055f037dce009b6d437327a3df2c0a05f0436e14e2b705672dd0d1e0a3dfd29d8d62e0db8cb7e152c4b95e36ad3ccd6a68c9e962121dec9e597b25e0481519#npm:18.0.0-alpha-327d5c484-20211106"],
+            ["react-icons", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:4.3.1"]
           ],
           "linkType": "SOFT",
         }]
@@ -22620,6 +22621,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react", "npm:18.0.0-alpha-327d5c484-20211106"],
             ["react-fast-compare", "npm:3.2.0"],
             ["react-side-effect", "virtual:b3cec26b3672a881715ea375bf35495e6f03cfb855deb94c7b65e06fdefd19ce840575299fb07e400a1f1a7e3329dedf70a200c9557e94347bc2eb33e32eae6a#npm:2.1.1"]
+          ],
+          "packagePeers": [
+            "@types/react",
+            "react"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["react-icons", [
+        ["npm:4.3.1", {
+          "packageLocation": "./.yarn/cache/react-icons-npm-4.3.1-46cb955834-2cc608acdd.zip/node_modules/react-icons/",
+          "packageDependencies": [
+            ["react-icons", "npm:4.3.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:4.3.1", {
+          "packageLocation": "./.yarn/__virtual__/react-icons-virtual-0dd268c70d/0/cache/react-icons-npm-4.3.1-46cb955834-2cc608acdd.zip/node_modules/react-icons/",
+          "packageDependencies": [
+            ["react-icons", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:4.3.1"],
+            ["@types/react", null],
+            ["react", "npm:18.0.0-alpha-327d5c484-20211106"]
           ],
           "packagePeers": [
             "@types/react",
