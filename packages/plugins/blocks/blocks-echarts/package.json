@@ -1,12 +1,14 @@
 {
-  "name": "@lowdefy/layout",
+  "name": "@lowdefy/blocks-echarts",
   "version": "3.22.0",
-  "licence": "Apache-2.0",
-  "description": "",
+  "license": "Apache-2.0",
+  "description": "ECharts Blocks for Lowdefy.",
   "homepage": "https://lowdefy.com",
   "keywords": [
     "lowdefy",
-    "utils"
+    "lowdefy blocks",
+    "echarts",
+    "charts"
   ],
   "bugs": {
     "url": "https://github.com/lowdefy/lowdefy/issues"
@@ -26,9 +28,7 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "type": "module",
-  "exports": {
-    ".": "./dist/index.js"
-  },
+  "exports": "./dist/index.js",
   "files": [
     "dist/*"
   ],
@@ -36,13 +36,14 @@
     "build": "yarn swc",
     "clean": "rm -rf dist",
     "prepare": "yarn build",
-    "swc": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start --copy-files",
+    "swc": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start --copy-files",
+    "test:watch": "jest --coverage --watch",
     "test": "jest --coverage"
   },
   "dependencies": {
     "@lowdefy/block-utils": "3.22.0",
-    "@lowdefy/helpers": "3.22.0",
-    "antd": "4.17.0-alpha.7",
+    "echarts": "5.2.1",
+    "echarts-for-react": "3.0.1",
     "react": "18.0.0-alpha-327d5c484-20211106",
     "react-dom": "18.0.0-alpha-327d5c484-20211106"
   },

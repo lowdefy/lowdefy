@@ -27,7 +27,7 @@
     "packages/blocks/*",
     "packages/connections/*",
     "packages/plugins/**",
-    "packages/servers/*"
+    "packages/utils/*"
   ],
   "scripts": {
     "build": "lerna run build",
