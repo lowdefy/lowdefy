@@ -14,8 +14,16 @@
   limitations under the License.
 */
 
-import { AxiosHttp } from '@lowdefy/connection-axios-http/connections.js';
+import React from 'react';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 
-export default {
-  AxiosHttp,
+const IconBlock = ({ components: { Icon }, ...props }) => <Icon {...props} />;
+
+IconBlock.defaultProps = blockDefaultProps;
+IconBlock.meta = {
+  category: 'display',
+  loading: false,
 };
+IconBlock.styles = [];
+
+export default IconBlock;

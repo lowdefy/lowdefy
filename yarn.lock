@@ -3473,9 +3473,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/blocks-basic@3.22.0, @lowdefy/blocks-basic@workspace:packages/blocks/blocks-basic":
+"@lowdefy/blocks-basic@3.22.0, @lowdefy/blocks-basic@workspace:packages/plugins/blocks/blocks-basic":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/blocks-basic@workspace:packages/blocks/blocks-basic"
+  resolution: "@lowdefy/blocks-basic@workspace:packages/plugins/blocks/blocks-basic"
   dependencies:
     "@babel/preset-react": 7.16.0
     "@emotion/jest": 11.5.0

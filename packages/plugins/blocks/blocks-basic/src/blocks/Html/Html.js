@@ -14,8 +14,24 @@
   limitations under the License.
 */
 
-import { AxiosHttp } from '@lowdefy/connection-axios-http/connections.js';
+import React from 'react';
+import { blockDefaultProps, HtmlComponent } from '@lowdefy/block-utils';
 
-export default {
-  AxiosHttp,
+const HtmlBlock = ({ blockId, properties, methods }) => (
+  <HtmlComponent
+    div={true}
+    html={properties.html}
+    id={blockId}
+    methods={methods}
+    style={properties.style}
+  />
+);
+
+HtmlBlock.defaultProps = blockDefaultProps;
+HtmlBlock.meta = {
+  category: 'display',
+  loading: false,
 };
+HtmlBlock.styles = [];
+
+export default HtmlBlock;

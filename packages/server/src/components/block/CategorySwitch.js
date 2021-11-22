@@ -25,9 +25,8 @@ const CategorySwitch = ({ block, Blocks, context, lowdefy }) => {
   if (!block.eval) return null; // Renderer updates before eval is executed for the first time on lists. See #520
   if (block.eval.visible === false)
     return <div id={`vs-${block.blockId}`} style={{ display: 'none' }} />;
-  const Component = lowdefy._internal.blockComponents[block.type].Component;
-  const meta = lowdefy._internal.blockComponents[block.type].meta;
-  switch (meta.category) {
+  const Component = lowdefy._internal.blockComponents[block.type];
+  switch (Component.meta.category) {
     case 'list':
       return (
         <List

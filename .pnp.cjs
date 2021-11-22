@@ -43,10 +43,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/blocks/blocks-antd"
       },
       {
-        "name": "@lowdefy/blocks-basic",
-        "reference": "workspace:packages/blocks/blocks-basic"
-      },
-      {
         "name": "@lowdefy/blocks-color-selectors",
         "reference": "workspace:packages/blocks/blocks-color-selectors"
       },
@@ -111,6 +107,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/operators"
       },
       {
+        "name": "@lowdefy/blocks-basic",
+        "reference": "workspace:packages/plugins/blocks/blocks-basic"
+      },
+      {
         "name": "@lowdefy/connection-axios-http",
         "reference": "workspace:packages/plugins/connections/connection-axios-http"
       },
@@ -159,7 +159,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@lowdefy/block-dev", ["workspace:packages/block-dev"]],
       ["@lowdefy/block-utils", ["workspace:packages/block-utils"]],
       ["@lowdefy/blocks-antd", ["workspace:packages/blocks/blocks-antd"]],
-      ["@lowdefy/blocks-basic", ["workspace:packages/blocks/blocks-basic"]],
+      ["@lowdefy/blocks-basic", ["workspace:packages/plugins/blocks/blocks-basic"]],
       ["@lowdefy/blocks-color-selectors", ["workspace:packages/blocks/blocks-color-selectors"]],
       ["@lowdefy/blocks-echarts", ["workspace:packages/blocks/blocks-echarts"]],
       ["@lowdefy/blocks-loaders", ["workspace:packages/blocks/blocks-loaders"]],
@@ -5234,10 +5234,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@lowdefy/blocks-basic", [
-        ["workspace:packages/blocks/blocks-basic", {
-          "packageLocation": "./packages/blocks/blocks-basic/",
+        ["workspace:packages/plugins/blocks/blocks-basic", {
+          "packageLocation": "./packages/plugins/blocks/blocks-basic/",
           "packageDependencies": [
-            ["@lowdefy/blocks-basic", "workspace:packages/blocks/blocks-basic"],
+            ["@lowdefy/blocks-basic", "workspace:packages/plugins/blocks/blocks-basic"],
             ["@babel/preset-react", "virtual:04055f037dce009b6d437327a3df2c0a05f0436e14e2b705672dd0d1e0a3dfd29d8d62e0db8cb7e152c4b95e36ad3ccd6a68c9e962121dec9e597b25e0481519#npm:7.16.0"],
             ["@emotion/jest", "virtual:04055f037dce009b6d437327a3df2c0a05f0436e14e2b705672dd0d1e0a3dfd29d8d62e0db8cb7e152c4b95e36ad3ccd6a68c9e962121dec9e597b25e0481519#npm:11.5.0"],
             ["@lowdefy/block-dev", "workspace:packages/block-dev"],
@@ -5735,7 +5735,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/api", "workspace:packages/api"],
             ["@lowdefy/block-utils", "workspace:packages/block-utils"],
             ["@lowdefy/blocks-antd", "workspace:packages/blocks/blocks-antd"],
-            ["@lowdefy/blocks-basic", "workspace:packages/blocks/blocks-basic"],
+            ["@lowdefy/blocks-basic", "workspace:packages/plugins/blocks/blocks-basic"],
             ["@lowdefy/connection-axios-http", "workspace:packages/plugins/connections/connection-axios-http"],
             ["@lowdefy/engine", "workspace:packages/engine"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],

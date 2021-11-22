@@ -14,25 +14,21 @@
   limitations under the License.
 */
 
-import { validate } from '@lowdefy/ajv';
-
 import { ConfigurationError } from '../../context/errors.js';
 
-function validateSchemas(
-  { logger },
-  { connection, connectionProperties, requestConfig, requestResolver, requestProperties }
-) {
-  try {
-    validate({ schema: connection.schema, data: connectionProperties });
-    validate({ schema: requestResolver.schema, data: requestProperties });
-  } catch (error) {
-    const err = new ConfigurationError(error.message);
+function getRequestResolver({ logger }, { connection, requestConfig }) {
+  const requestResolver = connection.requests[requestConfig.type];
+
+  if (!requestResolver) {
+    const err = new ConfigurationError(`Request type "${requestConfig.type}" can not be found.`);
     logger.debug(
       { params: { id: requestConfig.requestId, type: requestConfig.type }, err },
       err.message
     );
     throw err;
   }
+
+  return requestResolver;
 }
 
-export default validateSchemas;
+export default getRequestResolver;

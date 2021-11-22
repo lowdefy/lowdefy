@@ -14,54 +14,14 @@
   limitations under the License.
 */
 
-import Anchor from '@lowdefy/blocks-basic/blocks/Anchor/Anchor.js';
-import Box from '@lowdefy/blocks-basic/blocks/Box/Box.js';
-import Button from '@lowdefy/blocks-antd/blocks/Button/Button.js';
-import Html from '@lowdefy/blocks-basic/blocks/Html/Html.js';
+/* eslint-disable import/no-duplicates */
 
-const blocks = {
-  Anchor: {
-    Component: Anchor,
-    meta: {
-      category: 'display',
-      loading: {
-        type: 'SkeletonParagraph',
-        properties: {
-          lines: 1,
-        },
-      },
-    },
-  },
-  Box: {
-    Component: Box,
-    meta: {
-      category: 'container',
-      loading: false,
-    },
-  },
-  Button: {
-    Component: Button,
-    meta: {
-      category: 'display',
-      loading: {
-        type: 'SkeletonButton',
-      },
-    },
-  },
-  Html: {
-    Component: Html,
-    meta: {
-      category: 'display',
-      loading: false,
-    },
-  },
+import { Anchor } from '@lowdefy/blocks-basic/blocks.js';
+import { Box } from '@lowdefy/blocks-basic/blocks.js';
+import { Html } from '@lowdefy/blocks-basic/blocks.js';
+
+export default {
+  Anchor,
+  Box,
+  Html,
 };
-
-// const blocks = {
-//   Anchor,
-//   Box,
-//   Button,
-//   Html,
-// };
-
-export default blocks;
