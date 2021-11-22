@@ -1,12 +1,12 @@
 {
-  "name": "@lowdefy/connection-axios-http",
+  "name": "@lowdefy/node-utils",
   "version": "4.0.0-alpha.0",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
   "keywords": [
     "lowdefy",
-    "lowdefy connection"
+    "utils"
   ],
   "bugs": {
     "url": "https://github.com/lowdefy/lowdefy/issues"
@@ -27,7 +27,8 @@
   },
   "type": "module",
   "exports": {
-    "./connections.js": "./dist/connections.js"
+    ".": "./dist/index.js",
+    "./*": "./dist/*"
   },
   "files": [
     "dist/*"
@@ -36,15 +37,14 @@
     "build": "yarn swc",
     "clean": "rm -rf dist",
     "prepare": "yarn build",
-    "swc": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start --copy-files",
+    "swc": "swc src --out-dir dist --config-file ../../../.swcrc --delete-dir-on-start",
     "test": "jest --coverage"
   },
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-alpha.0",
-    "axios": "0.23.0"
+    "rimraf": "3.0.2"
   },
   "devDependencies": {
-    "@lowdefy/ajv": "4.0.0-alpha.0",
     "@swc/cli": "0.1.51",
     "@swc/core": "1.2.107",
     "@swc/jest": "0.2.5",

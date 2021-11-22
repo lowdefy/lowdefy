@@ -49,7 +49,7 @@ function createContext(options) {
     logger,
     readConfigFile: createReadConfigFile({ configDirectory }),
     refResolver,
-    version: '3.22.0',
+    version: '4.0.0-alpha.0',
     // version: packageJson.version,
     writeBuildArtifact: createWriteBuildArtifact({ buildDirectory }),
   };
