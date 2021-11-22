@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { get, type } from '@lowdefy/helpers';
 import { Select } from 'antd';
@@ -36,6 +36,7 @@ const MultipleSelector = ({
   validation,
   value,
 }) => {
+  const [fetchState, setFetch] = useState(false);
   const uniqueValueOptions = getUniqueValues(properties.options || []);
   return (
     <Label
@@ -58,7 +59,7 @@ const MultipleSelector = ({
               disabled={properties.disabled}
               getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
               mode="multiple"
-              notFoundContent="Not found"
+              notFoundContent={fetchState ? 'Loading' : 'Not found'}
               placeholder={get(properties, 'placeholder', { default: 'Select items' })}
               showArrow={get(properties, 'showArrow', { default: true })}
               size={properties.size}
@@ -106,6 +107,11 @@ const MultipleSelector = ({
                 });
                 methods.setValue(val);
                 methods.triggerEvent({ name: 'onChange' });
+              }}
+              onSearch={async (value) => {
+                setFetch(true);
+                await methods.triggerEvent({ name: 'onSearch', event: { value } });
+                setFetch(false);
               }}
             >
               {uniqueValueOptions.map((opt, i) =>

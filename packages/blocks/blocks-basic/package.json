@@ -56,8 +56,8 @@
     "@swc/core": "1.2.107",
     "@swc/jest": "0.2.5",
     "@testing-library/dom": "8.10.1",
-    "@testing-library/react": "12.1.2",
-    "@testing-library/user-event": "13.5.0",
+    "@testing-library/react": "13.0.0-alpha.4",
+    "@testing-library/user-event": "14.0.0-alpha.14",
     "jest": "27.3.1",
     "jest-serializer-html": "7.1.0",
     "jest-transform-yaml": "0.1.2"

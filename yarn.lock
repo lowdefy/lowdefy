@@ -3406,8 +3406,8 @@ __metadata:
     "@swc/cli": 0.1.51
     "@swc/core": 1.2.107
     "@testing-library/dom": 8.10.1
-    "@testing-library/react": 12.1.2
-    "@testing-library/user-event": 13.5.0
+    "@testing-library/react": 13.0.0-alpha.4
+    "@testing-library/user-event": 14.0.0-alpha.14
     ajv: 8.6.3
     ajv-errors: 3.0.0
     jest: 27.3.1
@@ -3431,8 +3431,8 @@ __metadata:
     "@swc/core": 1.2.107
     "@swc/jest": 0.2.5
     "@testing-library/dom": 8.10.1
-    "@testing-library/react": 12.1.2
-    "@testing-library/user-event": 13.5.0
+    "@testing-library/react": 13.0.0-alpha.4
+    "@testing-library/user-event": 14.0.0-alpha.14
     classnames: 2.3.1
     dompurify: 2.3.3
     jest: 27.3.1
@@ -3457,9 +3457,9 @@ __metadata:
     "@swc/cli": 0.1.51
     "@swc/core": 1.2.107
     "@swc/jest": 0.2.5
-    "@testing-library/dom": 8.10.1
-    "@testing-library/react": 12.1.2
-    "@testing-library/user-event": 13.5.0
+    "@testing-library/dom": 8.11.1
+    "@testing-library/react": 13.0.0-alpha.4
+    "@testing-library/user-event": 14.0.0-alpha.14
     antd: 4.17.0-alpha.7
     classnames: 2.3.1
     jest: 27.3.1
@@ -3486,8 +3486,8 @@ __metadata:
     "@swc/core": 1.2.107
     "@swc/jest": 0.2.5
     "@testing-library/dom": 8.10.1
-    "@testing-library/react": 12.1.2
-    "@testing-library/user-event": 13.5.0
+    "@testing-library/react": 13.0.0-alpha.4
+    "@testing-library/user-event": 14.0.0-alpha.14
     dompurify: 2.3.3
     jest: 27.3.1
     jest-serializer-html: 7.1.0
@@ -3510,8 +3510,8 @@ __metadata:
     "@swc/core": 1.2.107
     "@swc/jest": 0.2.5
     "@testing-library/dom": 8.10.1
-    "@testing-library/react": 12.1.2
-    "@testing-library/user-event": 13.5.0
+    "@testing-library/react": 13.0.0-alpha.4
+    "@testing-library/user-event": 14.0.0-alpha.14
     jest: 27.3.1
     jest-canvas-mock: 2.3.1
     jest-serializer-html: 7.1.0
@@ -3534,8 +3534,8 @@ __metadata:
     "@swc/core": 1.2.107
     "@swc/jest": 0.2.5
     "@testing-library/dom": 8.10.1
-    "@testing-library/react": 12.1.2
-    "@testing-library/user-event": 13.5.0
+    "@testing-library/react": 13.0.0-alpha.4
+    "@testing-library/user-event": 14.0.0-alpha.14
     echarts: 5.2.1
     echarts-for-react: 3.0.1
     jest: 27.3.1
@@ -3559,8 +3559,8 @@ __metadata:
     "@swc/core": 1.2.107
     "@swc/jest": 0.2.5
     "@testing-library/dom": 8.10.1
-    "@testing-library/react": 12.1.2
-    "@testing-library/user-event": 13.5.0
+    "@testing-library/react": 13.0.0-alpha.4
+    "@testing-library/user-event": 14.0.0-alpha.14
     jest: 27.3.1
     jest-serializer-html: 7.1.0
     jest-transform-yaml: 0.1.2
@@ -3581,8 +3581,8 @@ __metadata:
     "@swc/core": 1.2.107
     "@swc/jest": 0.2.5
     "@testing-library/dom": 8.10.1
-    "@testing-library/react": 12.1.2
-    "@testing-library/user-event": 13.5.0
+    "@testing-library/react": 13.0.0-alpha.4
+    "@testing-library/user-event": 14.0.0-alpha.14
     dompurify: 2.3.3
     jest: 27.3.1
     jest-serializer-html: 7.1.0
@@ -3646,7 +3646,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/color@3.22.0, @lowdefy/color@workspace:packages/color":
+"@lowdefy/color@npm:3.22.0":
+  version: 3.22.0
+  resolution: "@lowdefy/color@npm:3.22.0"
+  dependencies:
+    tinycolor2: 1.4.2
+  checksum: 441c0a416e4ad2ada0c4ec9474792b95d9a0ef1e349ca09fbb624e5fc9d5a986910d0d0646ca5e78006e9ab57865ecec988e9a6a10394f61d44e2403686169e0
+  languageName: node
+  linkType: hard
+
+"@lowdefy/color@workspace:packages/color":
   version: 0.0.0-use.local
   resolution: "@lowdefy/color@workspace:packages/color"
   dependencies:
@@ -3789,7 +3798,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/format@3.22.0, @lowdefy/format@workspace:packages/format":
+"@lowdefy/format@3.23.1, @lowdefy/format@workspace:packages/format":
   version: 0.0.0-use.local
   resolution: "@lowdefy/format@workspace:packages/format"
   dependencies:
@@ -3802,7 +3811,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/helpers@3.22.0, @lowdefy/helpers@workspace:packages/helpers":
+"@lowdefy/format@npm:3.22.0":
+  version: 3.22.0
+  resolution: "@lowdefy/format@npm:3.22.0"
+  dependencies:
+    moment: 2.29.1
+  checksum: 79f9e7cdbaabba2bc105eac111a12b602f3634ea170c70a0666d35aabe61b3c64b3a4f659a86df1a9c997868c7a990e713398c2d1b0d7528420ca9d91925c747
+  languageName: node
+  linkType: hard
+
+"@lowdefy/helpers@3.23.1, @lowdefy/helpers@workspace:packages/helpers":
   version: 0.0.0-use.local
   resolution: "@lowdefy/helpers@workspace:packages/helpers"
   dependencies:
@@ -3815,6 +3833,16 @@ __metadata:
     query-string: 7.0.1
   languageName: unknown
   linkType: soft
+
+"@lowdefy/helpers@npm:3.22.0":
+  version: 3.22.0
+  resolution: "@lowdefy/helpers@npm:3.22.0"
+  dependencies:
+    lodash.merge: 4.6.2
+    query-string: 7.0.0
+  checksum: e3ee4c10b49f4de4733b81d719595d46e5c7966437e6bb10b1d530c6747a0a6946099f55197e8a17437d1ef12b78b3c0695e2c0f7f8fe02569dcc106747a81c2
+  languageName: node
+  linkType: hard
 
 "@lowdefy/layout@3.22.0, @lowdefy/layout@workspace:packages/layout":
   version: 0.0.0-use.local
@@ -3829,8 +3857,8 @@ __metadata:
     "@swc/core": 1.2.107
     "@swc/jest": 0.2.5
     "@testing-library/dom": 8.10.1
-    "@testing-library/react": 12.1.2
-    "@testing-library/user-event": 13.5.0
+    "@testing-library/react": 13.0.0-alpha.4
+    "@testing-library/user-event": 14.0.0-alpha.14
     antd: 4.17.0-alpha.7
     jest: 27.3.1
     jest-serializer-html: 7.1.0
@@ -3871,11 +3899,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/nunjucks@3.22.0, @lowdefy/nunjucks@workspace:packages/nunjucks":
+"@lowdefy/nunjucks@3.23.1, @lowdefy/nunjucks@workspace:packages/nunjucks":
   version: 0.0.0-use.local
   resolution: "@lowdefy/nunjucks@workspace:packages/nunjucks"
   dependencies:
-    "@lowdefy/helpers": 3.22.0
+    "@lowdefy/helpers": 3.23.1
     "@swc/cli": 0.1.51
     "@swc/core": 1.2.107
     "@swc/jest": 0.2.5
@@ -3885,13 +3913,40 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/operators@3.22.0, @lowdefy/operators@workspace:packages/operators":
-  version: 0.0.0-use.local
-  resolution: "@lowdefy/operators@workspace:packages/operators"
+"@lowdefy/nunjucks@npm:3.22.0":
+  version: 3.22.0
+  resolution: "@lowdefy/nunjucks@npm:3.22.0"
+  dependencies:
+    "@lowdefy/helpers": 3.22.0
+    moment: 2.29.1
+    nunjucks: 3.2.3
+  checksum: 026e850067436aa7e0836e44e82452698a630945510a4b15e0df81490ffda398848676ace15e5de03144cb9861bb9951157a90fc9b28b85031b9f30b0618f568
+  languageName: node
+  linkType: hard
+
+"@lowdefy/operators@npm:3.22.0":
+  version: 3.22.0
+  resolution: "@lowdefy/operators@npm:3.22.0"
   dependencies:
     "@lowdefy/format": 3.22.0
     "@lowdefy/helpers": 3.22.0
     "@lowdefy/nunjucks": 3.22.0
+    change-case: 4.1.2
+    deep-diff: 1.0.2
+    js-yaml: 4.1.0
+    mingo: 4.1.2
+    uuid: 8.3.2
+  checksum: 1432ef12a5b755ee0b9c942f56f798b315e54177ae576b520e217f0495813c0dcc687050edae3a881e545cea15c13aeb7ab478e48ddd8b70eea317d7ee64a936
+  languageName: node
+  linkType: hard
+
+"@lowdefy/operators@workspace:packages/operators":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/operators@workspace:packages/operators"
+  dependencies:
+    "@lowdefy/format": 3.23.1
+    "@lowdefy/helpers": 3.23.1
+    "@lowdefy/nunjucks": 3.23.1
     "@swc/cli": 0.1.51
     "@swc/core": 1.2.107
     "@swc/jest": 0.2.5
@@ -4718,7 +4773,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/dom@npm:8.10.1, @testing-library/dom@npm:^8.0.0":
+"@testing-library/dom@npm:8.10.1":
   version: 8.10.1
   resolution: "@testing-library/dom@npm:8.10.1"
   dependencies:
@@ -4734,27 +4789,43 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react@npm:12.1.2":
-  version: 12.1.2
-  resolution: "@testing-library/react@npm:12.1.2"
+"@testing-library/dom@npm:8.11.1, @testing-library/dom@npm:^8.5.0":
+  version: 8.11.1
+  resolution: "@testing-library/dom@npm:8.11.1"
   dependencies:
+    "@babel/code-frame": ^7.10.4
     "@babel/runtime": ^7.12.5
-    "@testing-library/dom": ^8.0.0
-  peerDependencies:
-    react: "*"
-    react-dom: "*"
-  checksum: 70b0f7f27c83fe1a33e7df01b1e64850fbab4050c403848d611d852cadaa25ccde58518773002ae569a1350b2282c2ccbcbe5eb6af8b29ab377ab2a8ab573b3b
+    "@types/aria-query": ^4.2.0
+    aria-query: ^5.0.0
+    chalk: ^4.1.0
+    dom-accessibility-api: ^0.5.9
+    lz-string: ^1.4.4
+    pretty-format: ^27.0.2
+  checksum: 082104b104def94db071fe35f967124c52d387d995a61327cd60ed39c310126f4cde2fa51054c37977cd3a2082311795417413506ad1a14df1010bd1cbb02bc5
   languageName: node
   linkType: hard
 
-"@testing-library/user-event@npm:13.5.0":
-  version: 13.5.0
-  resolution: "@testing-library/user-event@npm:13.5.0"
+"@testing-library/react@npm:13.0.0-alpha.4":
+  version: 13.0.0-alpha.4
+  resolution: "@testing-library/react@npm:13.0.0-alpha.4"
+  dependencies:
+    "@babel/runtime": ^7.12.5
+    "@testing-library/dom": ^8.5.0
+  peerDependencies:
+    react: "*"
+    react-dom: "*"
+  checksum: a3dd131f3beae549991d54dcf5a937fb5688b204dd51b451ee13a4bad09fead3e340ab70bec2860d91a09362b7e72814095db3fb5f032bf69a38509bda6e429d
+  languageName: node
+  linkType: hard
+
+"@testing-library/user-event@npm:14.0.0-alpha.14":
+  version: 14.0.0-alpha.14
+  resolution: "@testing-library/user-event@npm:14.0.0-alpha.14"
   dependencies:
     "@babel/runtime": ^7.12.5
   peerDependencies:
     "@testing-library/dom": ">=7.21.4"
-  checksum: 16319de685fbb7008f1ba667928f458b2d08196918002daca56996de80ef35e6d9de26e9e1ece7d00a004692b95a597cf9142fff0dc53f2f51606a776584f549
+  checksum: be1c8e7ea07af4ac6a15886bb0f967d7f329bc1e208b1281f3d10b7219a73b8117d209dfda267a86f37ca02a1aeb37d26b61d545208253e9ff051547b336fef7
   languageName: node
   linkType: hard
 
@@ -14400,6 +14471,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mingo@npm:4.1.2":
+  version: 4.1.2
+  resolution: "mingo@npm:4.1.2"
+  checksum: 6708401f8edff72d0dcb6ef56e95b03ec0b46e35cb459993a21b5b882adef63a4d62347713d6fa062a3efdef732691bbc7f267e0d31a23a5d65657590d0de085
+  languageName: node
+  linkType: hard
+
 "mingo@npm:4.2.0":
   version: 4.2.0
   resolution: "mingo@npm:4.2.0"
@@ -16995,6 +17073,18 @@ __metadata:
   version: 6.5.2
   resolution: "qs@npm:6.5.2"
   checksum: 24af7b9928ba2141233fba2912876ff100403dba1b08b20c3b490da9ea6c636760445ea2211a079e7dfa882a5cf8f738337b3748c8bdd0f93358fa8881d2db8f
+  languageName: node
+  linkType: hard
+
+"query-string@npm:7.0.0":
+  version: 7.0.0
+  resolution: "query-string@npm:7.0.0"
+  dependencies:
+    decode-uri-component: ^0.2.0
+    filter-obj: ^1.1.0
+    split-on-first: ^1.0.0
+    strict-uri-encode: ^2.0.0
+  checksum: 6e3c4376ff01f49bf2300b36e37291e2d3be8df4fe1839d048dd89d4166b92ecd67525c88ca66b61cbc5612ca29fa4e40002d25a74f59b99f7022045b9e7abd2
   languageName: node
   linkType: hard
 
