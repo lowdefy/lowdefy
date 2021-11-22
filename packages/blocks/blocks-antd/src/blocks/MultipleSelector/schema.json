@@ -229,6 +229,10 @@
       "onChange": {
         "type": "array",
         "description": "Trigger actions when selection is changed."
+      },
+      "onSearch": {
+        "type": "array",
+        "description": "Trigger actions when input is changed. 'value' is passed to the _event operator to be used in actions such as search queries."
       }
     }
   }

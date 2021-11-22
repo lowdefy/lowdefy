@@ -3,6 +3,51 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.23.1](https://github.com/lowdefy/lowdefy/compare/v3.23.0...v3.23.1) (2021-11-20)
+
+**Note:** Version bump only for package @lowdefy/docs
+
+
+
+
+
+# [3.23.0](https://github.com/lowdefy/lowdefy/compare/v3.23.0-alpha.0...v3.23.0) (2021-11-19)
+
+
+### Bug Fixes
+
+* **docs:** Fix _ref resolver function example. ([0903094](https://github.com/lowdefy/lowdefy/commit/0903094ce531f4d8ab7849deb91ab3d6b7e5fd82))
+* **docs:** Included onSearch event example in MultipleSelector and Selector docs. ([0e53cb8](https://github.com/lowdefy/lowdefy/commit/0e53cb8f93ed49e0122ac038113d7378f67501f7))
+
+
+
+
+
+# [3.23.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.22.0...v3.23.0-alpha.0) (2021-11-09)
+
+
+### Bug Fixes
+
+* Add _switch operator to docs. ([c5c6f0c](https://github.com/lowdefy/lowdefy/commit/c5c6f0c9a5b0dfc89e09835d3ab940195a077504))
+* Support .yml in lowdefy.yaml file. ([0f7cc2a](https://github.com/lowdefy/lowdefy/commit/0f7cc2a7612a5ad9a8164d5a5437dde5c6d7da49)), closes [#902](https://github.com/lowdefy/lowdefy/issues/902)
+* **docs:** Add avatar and links to blog template. ([d855599](https://github.com/lowdefy/lowdefy/commit/d855599398cae041933dd8b11aaf77648f87d4c2))
+* **docs:** Add how to generate pdfs. ([7b35550](https://github.com/lowdefy/lowdefy/commit/7b35550fa944995be8f8a9d0e809971cabcf12af))
+* **docs:** Fix the iframe videos in the docs. ([c4a957a](https://github.com/lowdefy/lowdefy/commit/c4a957a12ea5adf018b373d8da8c5116e064205f))
+* improvements on blog template. ([30e2291](https://github.com/lowdefy/lowdefy/commit/30e22917fed9932e43cde942532654aa4a6aeac6))
+* **docs:** Add how to generate CSVs. ([2cc8e45](https://github.com/lowdefy/lowdefy/commit/2cc8e45b165aa755dceb9e40525f8a0511fb3485))
+
+
+### Features
+
+* **docs:** Add how to generate csv. ([3257f51](https://github.com/lowdefy/lowdefy/commit/3257f514b95f7cafb8ac30998194e7ae0a327862))
+* **docs:** Add videos to how tos. ([57c7779](https://github.com/lowdefy/lowdefy/commit/57c77798f0356c606cf90bfd36a4f63ab8d0ff36))
+* Add generate pdf how to. ([5bde460](https://github.com/lowdefy/lowdefy/commit/5bde460934e2dc94d677af5f287e3c85c0ff4c34))
+* **docs:** Added switch operator documentation. ([7c42c78](https://github.com/lowdefy/lowdefy/commit/7c42c7882422ea89332b32bcef985b5bc5059ec8))
+
+
+
+
+
 # [3.22.0](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.1...v3.22.0) (2021-09-27)
 
 
