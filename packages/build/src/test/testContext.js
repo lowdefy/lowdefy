@@ -14,13 +14,7 @@
   limitations under the License.
 */
 
-function testContext({
-  writeBuildArtifact,
-  configDirectory,
-  readConfigFile,
-  logger = {},
-  getMeta,
-} = {}) {
+function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logger = {} } = {}) {
   const defaultLogger = {
     info: () => {},
     log: () => {},
@@ -31,7 +25,7 @@ function testContext({
 
   const context = {
     configDirectory: configDirectory || '',
-    getMeta: getMeta || (() => {}),
+
     writeBuildArtifact: writeBuildArtifact || (() => {}),
     readConfigFile: readConfigFile || (() => {}),
   };

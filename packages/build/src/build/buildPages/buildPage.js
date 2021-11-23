@@ -35,7 +35,6 @@ async function buildPage({ page, index, context, checkDuplicatePageId }) {
   const operators = new Set();
   await buildBlock(page, {
     auth: page.auth,
-    getMeta: context.getMeta,
     operators,
     pageId: page.pageId,
     requests,
