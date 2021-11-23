@@ -16,7 +16,6 @@
   limitations under the License.
 */
 
-import createGetMeta from './utils/meta/getMeta.js';
 import createWriteBuildArtifact from './utils/files/writeBuildArtifact.js';
 import createReadConfigFile from './utils/files/readConfigFile.js';
 
@@ -61,7 +60,6 @@ async function build(options) {
   try {
     let components = await buildRefs({ context });
     await testSchema({ components, context });
-    context.getMeta = createGetMeta({ components, context });
     await validateApp({ components, context });
     await validateConfig({ components, context });
     await addDefaultPages({ components, context });

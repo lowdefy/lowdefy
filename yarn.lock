@@ -3600,7 +3600,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/build@workspace:packages/build":
+"@lowdefy/build@4.0.0-alpha.0, @lowdefy/build@workspace:packages/build":
   version: 0.0.0-use.local
   resolution: "@lowdefy/build@workspace:packages/build"
   dependencies:
@@ -3617,6 +3617,8 @@ __metadata:
     js-yaml: 4.1.0
     json5: 2.2.0
     uuid: 8.3.2
+  bin:
+    lowdefy-build: ./dist/run.js
   languageName: unknown
   linkType: soft
 
@@ -3890,6 +3892,7 @@ __metadata:
     "@lowdefy/block-utils": 4.0.0-alpha.0
     "@lowdefy/blocks-antd": 4.0.0-alpha.0
     "@lowdefy/blocks-basic": 4.0.0-alpha.0
+    "@lowdefy/build": 4.0.0-alpha.0
     "@lowdefy/connection-axios-http": 4.0.0-alpha.0
     "@lowdefy/engine": 4.0.0-alpha.0
     "@lowdefy/helpers": 4.0.0-alpha.0

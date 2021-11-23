@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -15,18 +16,15 @@
 */
 
 import path from 'path';
-import { writeFile } from '@lowdefy/node-utils';
-import createCacheKey from './createCacheKey.js';
+import build from './index.js';
 
-function createWriteMetaCache({ cacheDirectory }) {
-  async function writeMetaCache({ location, meta }) {
-    const cacheKey = createCacheKey(location);
-    return writeFile({
-      filePath: path.resolve(cacheDirectory, 'meta/', cacheKey),
-      content: JSON.stringify(meta, null, 2),
-    });
-  }
-  return writeMetaCache;
+async function run() {
+  await build({
+    logger: console,
+    buildDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
+    cacheDirectory: path.resolve(process.cwd(), './.lowdefy/.cache'),
+    configDirectory: process.cwd(),
+  });
 }
 
-export default createWriteMetaCache;
+run();
