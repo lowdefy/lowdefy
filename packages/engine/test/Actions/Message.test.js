@@ -18,15 +18,16 @@ import testContext from '../testContext.js';
 
 // Mock message
 const mockMessage = jest.fn(() => () => undefined);
-const pageId = 'one';
 
 const lowdefy = {
-  displayMessage: mockMessage,
-  pageId,
+  _internal: {
+    displayMessage: mockMessage,
+  },
 };
 
 test('Message with content', async () => {
   const rootBlock = {
+    id: 'block:root:root:0',
     blockId: 'root',
     meta: {
       category: 'container',
@@ -35,6 +36,7 @@ test('Message with content', async () => {
       content: {
         blocks: [
           {
+            id: 'block:root:button:0',
             blockId: 'button',
             type: 'Button',
             meta: {
@@ -59,7 +61,7 @@ test('Message with content', async () => {
     lowdefy,
     rootBlock,
   });
-  const { button } = context.RootBlocks.map;
+  const button = context._internal.RootBlocks.map['block:root:button:0'];
   button.triggerEvent({ name: 'onClick' });
   expect(mockMessage.mock.calls).toEqual([
     [
@@ -72,6 +74,7 @@ test('Message with content', async () => {
 
 test('Message with all params', async () => {
   const rootBlock = {
+    id: 'block:root:root:0',
     blockId: 'root',
     meta: {
       category: 'container',
@@ -80,6 +83,7 @@ test('Message with all params', async () => {
       content: {
         blocks: [
           {
+            id: 'block:root:button:0',
             blockId: 'button',
             type: 'Button',
             meta: {
@@ -109,7 +113,7 @@ test('Message with all params', async () => {
     lowdefy,
     rootBlock,
   });
-  const { button } = context.RootBlocks.map;
+  const button = context._internal.RootBlocks.map['block:root:button:0'];
   button.triggerEvent({ name: 'onClick' });
   expect(mockMessage.mock.calls).toEqual([
     [
@@ -125,6 +129,7 @@ test('Message with all params', async () => {
 
 test('Message with no params', async () => {
   const rootBlock = {
+    id: 'block:root:root:0',
     blockId: 'root',
     meta: {
       category: 'container',
@@ -133,6 +138,7 @@ test('Message with no params', async () => {
       content: {
         blocks: [
           {
+            id: 'block:root:button:0',
             blockId: 'button',
             type: 'Button',
             meta: {
@@ -156,7 +162,7 @@ test('Message with no params', async () => {
     lowdefy,
     rootBlock,
   });
-  const { button } = context.RootBlocks.map;
+  const button = context._internal.RootBlocks.map['block:root:button:0'];
   button.triggerEvent({ name: 'onClick' });
   expect(mockMessage.mock.calls).toEqual([
     [
