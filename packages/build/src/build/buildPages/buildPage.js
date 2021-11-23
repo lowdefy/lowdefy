@@ -19,8 +19,9 @@
 import { type } from '@lowdefy/helpers';
 import buildBlock from './buildBlock/buildBlock.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
+import createCounter from '../../utils/createCounter.js';
 
-async function buildPage({ page, index, context, checkDuplicatePageId }) {
+async function buildPage({ page, index, checkDuplicatePageId }) {
   if (type.isUndefined(page.id)) {
     throw new Error(`Page id missing at page ${index}.`);
   }
@@ -38,6 +39,7 @@ async function buildPage({ page, index, context, checkDuplicatePageId }) {
     operators,
     pageId: page.pageId,
     requests,
+    blockIdCounter: createCounter(),
     checkDuplicateRequestId: createCheckDuplicateId({
       message: 'Duplicate requestId "{{ id }}" on page "{{ pageId }}".',
     }),

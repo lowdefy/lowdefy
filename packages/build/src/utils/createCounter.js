@@ -14,10 +14,27 @@
   limitations under the License.
 */
 
-function setBlockId(block, { pageId, blockIdCounter }) {
-  block.blockId = block.id;
-  block.id = `block:${pageId}:${block.blockId}:${blockIdCounter.getCount(block.blockId)}`;
-  blockIdCounter.add(block.blockId);
+function createCounter() {
+  const counts = new Map();
+
+  function add(key) {
+    const count = counts.get(key) || 0;
+    counts.set(key, count + 1);
+  }
+
+  function getCount(key) {
+    return counts.get(key) || 0;
+  }
+
+  function getCounts() {
+    return Object.fromEntries(counts);
+  }
+
+  return {
+    add,
+    getCount,
+    getCounts,
+  };
 }
 
-export default setBlockId;
+export default createCounter;
