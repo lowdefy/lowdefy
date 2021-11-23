@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -15,18 +16,13 @@
 */
 
 import path from 'path';
-import build from './dist/index.js';
+import build from './index.js';
 
 async function run() {
   await build({
-    // blocksServerUrl: 'https://blocks-cdn.lowdefy.com/v3.16.0',
     logger: console,
-    buildDirectory: path.resolve(process.cwd(), '../server/.lowdefy/build'),
-    // buildDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
-    // cacheDirectory: path.resolve(process.cwd(), '../servers/serverDev/.lowdefy/.cache'),
+    buildDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
     cacheDirectory: path.resolve(process.cwd(), './.lowdefy/.cache'),
-    // configDirectory: path.resolve(process.cwd(), '../docs'),
-    // configDirectory: path.resolve(process.cwd(), '../servers/serverDev'),
     configDirectory: process.cwd(),
   });
 }
