@@ -32,8 +32,6 @@ const Page = ({ lowdefy, pageConfig, rootConfig }) => {
   lowdefy._internal.query = router.query;
   lowdefy._internal.router = router;
   lowdefy._internal.link = setupLink({ lowdefy });
-  lowdefy._internal.document = document;
-  lowdefy._internal.window = window;
   lowdefy.home = rootConfig.home;
   lowdefy.lowdefyGlobal = rootConfig.lowdefyGlobal;
   lowdefy.menus = rootConfig.menus;
