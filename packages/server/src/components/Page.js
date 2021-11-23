@@ -45,11 +45,9 @@ const Page = ({ lowdefy, pageConfig, rootConfig }) => {
         }
         return (
           <>
-            <Head
-              properties={context._internal.RootBlocks.map[pageConfig.pageId].eval.properties}
-            />
+            <Head properties={context._internal.RootBlocks.map[pageConfig.id].eval.properties} />
             <Block
-              block={context._internal.RootBlocks.map[pageConfig.pageId]}
+              block={context._internal.RootBlocks.map[pageConfig.id]}
               Blocks={context._internal.RootBlocks}
               context={context}
               lowdefy={lowdefy}
