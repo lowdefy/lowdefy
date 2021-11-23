@@ -5,14 +5,14 @@
       type: Box
       blocks:
         - id: heading
-          type: Markdown
+          type: Paragraph
           layout:
             flex: 1 0 auto
           properties:
             content: |
               # Issues
         - id: feedback
-          type: Markdown
+          type: Paragraph
           layout:
             flex: 0 1 auto
             align: center
@@ -43,7 +43,7 @@
           layout:
             flex: 1 0 auto
         - id: advanced
-          type: Markdown
+          type: Paragraph
           layout:
             flex: 0 0 auto
           properties:
@@ -99,7 +99,7 @@
             # align: start
           blocks:
             - id: content
-              type: Markdown
+              type: Paragraph
               properties:
                 content: |
                   ## Validate still a heading
@@ -124,22 +124,22 @@
             flex: 0 1 200px
           blocks:
             - id: content
-              type: Markdown
+              type: Paragraph
               properties:
                 content: |
                   ### One
             - id: content
-              type: Markdown
+              type: Paragraph
               properties:
                 content: |
                   Two
             - id: content
-              type: Markdown
+              type: Paragraph
               properties:
                 content: |
                   ### three
             - id: content
-              type: Markdown
+              type: Paragraph
               properties:
                 content: |
                   Four
@@ -151,14 +151,14 @@
       type: Box
       blocks:
         - id: heading
-          type: Markdown
+          type: Paragraph
           layout:
             grow: 1
           properties:
             content: |
               # Issues
         - id: feedback
-          type: Markdown
+          type: Paragraph
           layout:
             size: auto
             align: center
@@ -190,7 +190,7 @@
           layout:
             grow: 1
         - id: advanced
-          type: Markdown
+          type: Paragraph
           layout:
             size: auto
           properties:
@@ -246,7 +246,7 @@
             grow: 1
           blocks:
             - id: content
-              type: Markdown
+              type: Paragraph
               properties:
                 content: |
                   ## Validate still a heading
@@ -271,22 +271,22 @@
             size: 200
           blocks:
             - id: content
-              type: Markdown
+              type: Paragraph
               properties:
                 content: |
                   ### One
             - id: content
-              type: Markdown
+              type: Paragraph
               properties:
                 content: |
                   Two
             - id: content
-              type: Markdown
+              type: Paragraph
               properties:
                 content: |
                   ### three
             - id: content
-              type: Markdown
+              type: Paragraph
               properties:
                 content: |
                   Four

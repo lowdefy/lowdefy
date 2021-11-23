@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import kanban from '../demo/examples/kanban.yaml';
-import runExampleTests from './runExampleTests';
+import col from './col.yaml';
+import runExampleTests from './runExampleTests.js';
 
-runExampleTests(kanban);
+runExampleTests(col);
+runExampleTests(col, { highlightBorders: false });

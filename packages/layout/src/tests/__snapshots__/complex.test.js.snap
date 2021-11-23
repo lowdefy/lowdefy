@@ -48,13 +48,8 @@ exports[`Complex Example 1`] = `
                 <div
                   id="heading23456"
                 >
-                  <div
-                    class="markdown-body"
-                  >
-                    <h1>
-                      Issues
-                    </h1>
-                  </div>
+                  # Issues
+
                 </div>
               </div>
               <div
@@ -65,13 +60,8 @@ exports[`Complex Example 1`] = `
                 <div
                   id="feedback23456"
                 >
-                  <div
-                    class="markdown-body"
-                  >
-                    <p>
-                      Give Feedback
-                    </p>
-                  </div>
+                  Give Feedback
+
                 </div>
               </div>
             </div>
@@ -170,13 +160,8 @@ exports[`Complex Example 1`] = `
                 <div
                   id="advanced23456"
                 >
-                  <div
-                    class="markdown-body"
-                  >
-                    <p>
-                      Advanced Search
-                    </p>
-                  </div>
+                  Advanced Search
+
                 </div>
               </div>
             </div>
@@ -357,16 +342,10 @@ exports[`Complex Example 1`] = `
                       <div
                         id="content23456"
                       >
-                        <div
-                          class="markdown-body"
-                        >
-                          <h2>
-                            Validate still a heading
-                          </h2>
-                          <p>
-                            The below config will fail for both the field on root and the field in the object when the context is validated.
-                          </p>
-                        </div>
+                        ## Validate still a heading
+
+The below config will fail for both the field on root and the field in the object when the context is validated.
+
                       </div>
                     </div>
                     <div
@@ -433,13 +412,8 @@ exports[`Complex Example 1`] = `
                       <div
                         id="content23456"
                       >
-                        <div
-                          class="markdown-body"
-                        >
-                          <h3>
-                            One
-                          </h3>
-                        </div>
+                        ### One
+
                       </div>
                     </div>
                     <div
@@ -450,13 +424,8 @@ exports[`Complex Example 1`] = `
                       <div
                         id="content23456"
                       >
-                        <div
-                          class="markdown-body"
-                        >
-                          <p>
-                            Two
-                          </p>
-                        </div>
+                        Two
+
                       </div>
                     </div>
                     <div
@@ -467,13 +436,8 @@ exports[`Complex Example 1`] = `
                       <div
                         id="content23456"
                       >
-                        <div
-                          class="markdown-body"
-                        >
-                          <h3>
-                            three
-                          </h3>
-                        </div>
+                        ### three
+
                       </div>
                     </div>
                     <div
@@ -484,13 +448,8 @@ exports[`Complex Example 1`] = `
                       <div
                         id="content23456"
                       >
-                        <div
-                          class="markdown-body"
-                        >
-                          <p>
-                            Four
-                          </p>
-                        </div>
+                        Four
+
                       </div>
                     </div>
                   </div>
@@ -553,13 +512,8 @@ exports[`Complex No Flex Field Example 1`] = `
                 <div
                   id="heading23456"
                 >
-                  <div
-                    class="markdown-body"
-                  >
-                    <h1>
-                      Issues
-                    </h1>
-                  </div>
+                  # Issues
+
                 </div>
               </div>
               <div
@@ -570,13 +524,8 @@ exports[`Complex No Flex Field Example 1`] = `
                 <div
                   id="feedback23456"
                 >
-                  <div
-                    class="markdown-body"
-                  >
-                    <p>
-                      Give Feedback
-                    </p>
-                  </div>
+                  Give Feedback
+
                 </div>
               </div>
             </div>
@@ -675,13 +624,8 @@ exports[`Complex No Flex Field Example 1`] = `
                 <div
                   id="advanced23456"
                 >
-                  <div
-                    class="markdown-body"
-                  >
-                    <p>
-                      Advanced Search
-                    </p>
-                  </div>
+                  Advanced Search
+
                 </div>
               </div>
             </div>
@@ -862,16 +806,10 @@ exports[`Complex No Flex Field Example 1`] = `
                       <div
                         id="content23456"
                       >
-                        <div
-                          class="markdown-body"
-                        >
-                          <h2>
-                            Validate still a heading
-                          </h2>
-                          <p>
-                            The below config will fail for both the field on root and the field in the object when the context is validated.
-                          </p>
-                        </div>
+                        ## Validate still a heading
+
+The below config will fail for both the field on root and the field in the object when the context is validated.
+
                       </div>
                     </div>
                     <div
@@ -938,13 +876,8 @@ exports[`Complex No Flex Field Example 1`] = `
                       <div
                         id="content23456"
                       >
-                        <div
-                          class="markdown-body"
-                        >
-                          <h3>
-                            One
-                          </h3>
-                        </div>
+                        ### One
+
                       </div>
                     </div>
                     <div
@@ -955,13 +888,8 @@ exports[`Complex No Flex Field Example 1`] = `
                       <div
                         id="content23456"
                       >
-                        <div
-                          class="markdown-body"
-                        >
-                          <p>
-                            Two
-                          </p>
-                        </div>
+                        Two
+
                       </div>
                     </div>
                     <div
@@ -972,13 +900,8 @@ exports[`Complex No Flex Field Example 1`] = `
                       <div
                         id="content23456"
                       >
-                        <div
-                          class="markdown-body"
-                        >
-                          <h3>
-                            three
-                          </h3>
-                        </div>
+                        ### three
+
                       </div>
                     </div>
                     <div
@@ -989,13 +912,8 @@ exports[`Complex No Flex Field Example 1`] = `
                       <div
                         id="content23456"
                       >
-                        <div
-                          class="markdown-body"
-                        >
-                          <p>
-                            Four
-                          </p>
-                        </div>
+                        Four
+
                       </div>
                     </div>
                   </div>

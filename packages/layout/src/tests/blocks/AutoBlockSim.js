@@ -17,27 +17,23 @@
 import React from 'react';
 import { type } from '@lowdefy/helpers';
 import { ErrorBoundary } from '@lowdefy/block-utils';
-import { Area, BlockLayout, layoutParamsToArea } from '../src';
+import { Area, BlockLayout, layoutParamsToArea } from '../../../src/index.js';
 
-import Block from './blocks/Block';
-import Box from './blocks/Box';
-import Button from './blocks/Button';
-import Input from './blocks/Input';
-import Page from './blocks/Page';
-import Paragraph from './blocks/Paragraph';
-import List from './blocks/List';
-import Markdown from './blocks/Markdown';
+import Block from './Block.js';
+import Box from './Box.js';
+import Button from './Button.js';
+import Input from './Input.js';
+import Paragraph from './Paragraph.js';
+import List from './List.js';
 
 const Blocks = {
   Block,
   Button,
   Input,
   Paragraph,
-  Markdown,
 };
 const Containers = {
   Box,
-  Page,
 };
 const Lists = {
   List,
