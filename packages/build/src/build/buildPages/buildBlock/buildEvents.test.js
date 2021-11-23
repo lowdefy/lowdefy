@@ -25,132 +25,11 @@ const logger = {
   log: mockLog,
 };
 
-const blockMetas = {
-  Container: {
-    category: 'container',
-    loading: {
-      type: 'Spinner',
-    },
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Container',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    schema: {
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      $id: 'https://example.com/Container.json',
-    },
-  },
-  List: {
-    category: 'list',
-    loading: {
-      type: 'Spinner',
-    },
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'List',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    schema: {
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      $id: 'https://example.com/Container.json',
-    },
-  },
-  Input: {
-    category: 'input',
-    valueType: 'string',
-    loading: {
-      type: 'SkeletonInput',
-    },
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Input',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    schema: {
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      $id: 'https://example.com/Container.json',
-    },
-  },
-  Display: {
-    category: 'display',
-    loading: {
-      type: 'Spinner',
-    },
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Display',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    schema: {
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      $id: 'https://example.com/Container.json',
-    },
-  },
-};
-
-const outputMetas = {
-  Container: {
-    category: 'container',
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Container',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    loading: {
-      type: 'Spinner',
-    },
-  },
-  List: {
-    category: 'list',
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'List',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    loading: {
-      type: 'Spinner',
-    },
-    valueType: 'array',
-  },
-  Input: {
-    category: 'input',
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Input',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    valueType: 'string',
-    loading: {
-      type: 'SkeletonInput',
-    },
-  },
-  Display: {
-    category: 'display',
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Display',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    loading: {
-      type: 'Spinner',
-    },
-  },
-};
-
 const auth = {
   public: true,
 };
 
-const getMeta = (type) => {
-  const meta = blockMetas[type];
-  if (!meta) {
-    return null;
-  }
-  return Promise.resolve(meta);
-};
-
-const context = testContext({ logger, getMeta });
+const context = testContext({ logger });
 
 beforeEach(() => {
   mockLogWarn.mockReset();
@@ -496,16 +375,6 @@ test("don't throw on Duplicate separate block events action ids", async () => {
       },
     },
     id: 'block:page_1:block_1',
-    meta: {
-      category: 'input',
-      loading: { type: 'SkeletonInput' },
-      moduleFederation: {
-        module: 'Input',
-        scope: 'blocks',
-        url: 'https://example.com/remoteEntry.js',
-      },
-      valueType: 'string',
-    },
     type: 'Input',
   });
 });

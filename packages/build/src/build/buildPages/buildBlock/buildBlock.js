@@ -20,14 +20,12 @@ import buildSubBlocks from './buildSubBlocks.js';
 import getOperators from './getOperators.js';
 import moveSubBlocksToArea from './moveSubBlocksToArea.js';
 import setBlockId from './setBlockId.js';
-import setBlockMeta from './setBlockMeta.js';
 import validateBlock from './validateBlock.js';
 
 async function buildBlock(block, pageContext) {
   validateBlock(block, pageContext);
   getOperators(block, pageContext);
   setBlockId(block, pageContext);
-  await setBlockMeta(block, pageContext);
   buildEvents(block, pageContext);
   buildRequests(block, pageContext);
   moveSubBlocksToArea(block, pageContext);

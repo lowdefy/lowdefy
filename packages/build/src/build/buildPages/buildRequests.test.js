@@ -24,132 +24,11 @@ const logger = {
   log: mockLog,
 };
 
-const blockMetas = {
-  Container: {
-    category: 'container',
-    loading: {
-      type: 'Spinner',
-    },
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Container',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    schema: {
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      $id: 'https://example.com/Container.json',
-    },
-  },
-  List: {
-    category: 'list',
-    loading: {
-      type: 'Spinner',
-    },
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'List',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    schema: {
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      $id: 'https://example.com/Container.json',
-    },
-  },
-  Input: {
-    category: 'input',
-    valueType: 'string',
-    loading: {
-      type: 'SkeletonInput',
-    },
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Input',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    schema: {
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      $id: 'https://example.com/Container.json',
-    },
-  },
-  Display: {
-    category: 'display',
-    loading: {
-      type: 'Spinner',
-    },
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Display',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    schema: {
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      $id: 'https://example.com/Container.json',
-    },
-  },
-};
-
-const outputMetas = {
-  Container: {
-    category: 'container',
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Container',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    loading: {
-      type: 'Spinner',
-    },
-  },
-  List: {
-    category: 'list',
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'List',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    loading: {
-      type: 'Spinner',
-    },
-    valueType: 'array',
-  },
-  Input: {
-    category: 'input',
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Input',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    valueType: 'string',
-    loading: {
-      type: 'SkeletonInput',
-    },
-  },
-  Display: {
-    category: 'display',
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Display',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    loading: {
-      type: 'Spinner',
-    },
-  },
-};
-
 const auth = {
   public: true,
 };
 
-const getMeta = (type) => {
-  const meta = blockMetas[type];
-  if (!meta) {
-    return null;
-  }
-  return Promise.resolve(meta);
-};
-
-const context = testContext({ logger, getMeta });
+const context = testContext({ logger });
 
 beforeEach(() => {
   mockLogWarn.mockReset();
@@ -309,7 +188,6 @@ test('give request an id', async () => {
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Container',
-        meta: outputMetas.Container,
         requests: [
           {
             id: 'request:page_1:request_1',
@@ -355,7 +233,6 @@ test('request on a sub-block', async () => {
         operators: [],
         pageId: 'page_1',
         type: 'Container',
-        meta: outputMetas.Container,
         requests: [
           {
             id: 'request:page_1:request_1',
@@ -372,7 +249,6 @@ test('request on a sub-block', async () => {
                 id: 'block:page_1:box',
                 blockId: 'box',
                 type: 'Container',
-                meta: outputMetas.Container,
               },
             ],
           },
@@ -410,7 +286,6 @@ test('multiple requests', async () => {
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Container',
-        meta: outputMetas.Container,
         requests: [
           {
             id: 'request:page_1:request_1',
@@ -467,7 +342,6 @@ test('set auth to request', async () => {
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Container',
-        meta: outputMetas.Container,
         requests: [
           {
             id: 'request:page_1:request_1',
@@ -485,7 +359,6 @@ test('set auth to request', async () => {
         pageId: 'page_2',
         blockId: 'page_2',
         type: 'Container',
-        meta: outputMetas.Container,
         requests: [
           {
             id: 'request:page_2:request_2',
