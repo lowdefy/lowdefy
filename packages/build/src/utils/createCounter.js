@@ -13,15 +13,28 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import React from 'react';
 
-const Root = ({ children, lowdefy, rootConfig }) => {
-  lowdefy.document = document;
-  lowdefy.window = window;
-  lowdefy.home = rootConfig.home;
-  lowdefy.lowdefyGlobal = rootConfig.lowdefyGlobal;
-  lowdefy.menus = rootConfig.menus;
-  return <>{children}</>;
-};
+function createCounter() {
+  const counts = new Map();
 
-export default Root;
+  function add(key) {
+    const count = counts.get(key) || 0;
+    counts.set(key, count + 1);
+  }
+
+  function getCount(key) {
+    return counts.get(key) || 0;
+  }
+
+  function getCounts() {
+    return Object.fromEntries(counts);
+  }
+
+  return {
+    add,
+    getCount,
+    getCounts,
+  };
+}
+
+export default createCounter;

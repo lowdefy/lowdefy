@@ -14,10 +14,17 @@
   limitations under the License.
 */
 
-function setBlockId(block, { pageId, blockIdCounter }) {
-  block.blockId = block.id;
-  block.id = `block:${pageId}:${block.blockId}:${blockIdCounter.getCount(block.blockId)}`;
-  blockIdCounter.add(block.blockId);
-}
+import createCounter from './createCounter.js';
 
-export default setBlockId;
+test('counter', async () => {
+  const counter = createCounter();
+  expect(counter.getCount('a')).toBe(0);
+  counter.add('a');
+  expect(counter.getCount('a')).toBe(1);
+  counter.add('a');
+  counter.add('b');
+  counter.add('a');
+  expect(counter.getCount('a')).toBe(3);
+  expect(counter.getCount('b')).toBe(1);
+  expect(counter.getCounts()).toEqual({ a: 3, b: 1 });
+});

@@ -92,8 +92,7 @@ class Requests {
 
     try {
       const response = await this.context._internal.lowdefy._internal.callRequest({
-        // TODO:
-        pageId: this.context.rootId,
+        pageId: this.context.pageId,
         payload: serializer.serialize(payload),
         requestId,
       });

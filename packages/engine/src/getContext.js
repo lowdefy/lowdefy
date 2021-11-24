@@ -75,8 +75,7 @@ async function getContext({ config, lowdefy }) {
   const operatorsSet = new Set([...config.operators, '_not', '_type']);
   const ctx = {
     id: id,
-    // TODO: What about app object?
-    rootId: config.pageId,
+    pageId: config.pageId,
     eventLog: [],
     requests: {},
     state: {},
@@ -101,10 +100,10 @@ async function getContext({ config, lowdefy }) {
   _internal.update = () => {
     _internal.RootBlocks.update();
   };
-  await _internal.RootBlocks.map[ctx.rootId].triggerEvent({ name: 'onInit' });
+  await _internal.RootBlocks.map[ctx.id].triggerEvent({ name: 'onInit' });
   _internal.update();
   _internal.State.freezeState();
-  _internal.RootBlocks.map[ctx.rootId].triggerEvent({ name: 'onInitAsync' });
+  _internal.RootBlocks.map[ctx.id].triggerEvent({ name: 'onInitAsync' });
   lowdefy.contexts[id] = ctx;
   return ctx;
 }

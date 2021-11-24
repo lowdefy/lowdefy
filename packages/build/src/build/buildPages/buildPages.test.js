@@ -300,14 +300,14 @@ test('nested blocks', async () => {
           content: {
             blocks: [
               {
-                id: 'block:page_1:block_1',
+                id: 'block:page_1:block_1:0',
                 blockId: 'block_1',
                 type: 'Container',
                 areas: {
                   content: {
                     blocks: [
                       {
-                        id: 'block:page_1:block_2',
+                        id: 'block:page_1:block_2:0',
                         blockId: 'block_2',
                         type: 'Input',
                       },
@@ -413,7 +413,7 @@ describe('block areas', () => {
             content: {
               blocks: [
                 {
-                  id: 'block:1:block1',
+                  id: 'block:1:block1:0',
                   blockId: 'block1',
                   type: 'Input',
                 },
@@ -462,7 +462,7 @@ describe('block areas', () => {
               gutter: 20,
               blocks: [
                 {
-                  id: 'block:1:block1',
+                  id: 'block:1:block1:0',
                   blockId: 'block1',
                   type: 'Input',
                 },
@@ -517,7 +517,7 @@ describe('block areas', () => {
             content: {
               blocks: [
                 {
-                  id: 'block:1:textInput',
+                  id: 'block:1:textInput:0',
                   blockId: 'textInput',
                   type: 'Input',
                 },
@@ -526,7 +526,7 @@ describe('block areas', () => {
             header: {
               blocks: [
                 {
-                  id: 'block:1:avatar',
+                  id: 'block:1:avatar:0',
                   blockId: 'avatar',
                   type: 'Display',
                 },
@@ -579,7 +579,7 @@ describe('block areas', () => {
             content: {
               blocks: [
                 {
-                  id: 'block:1:textInput',
+                  id: 'block:1:textInput:0',
                   blockId: 'textInput',
                   type: 'Input',
                 },
@@ -588,7 +588,7 @@ describe('block areas', () => {
             header: {
               blocks: [
                 {
-                  id: 'block:1:avatar',
+                  id: 'block:1:avatar:0',
                   blockId: 'avatar',
                   type: 'Display',
                 },
@@ -649,7 +649,7 @@ describe('block areas', () => {
             content: {
               blocks: [
                 {
-                  id: 'block:1:textInput',
+                  id: 'block:1:textInput:0',
                   blockId: 'textInput',
                   type: 'Input',
                 },
@@ -658,7 +658,7 @@ describe('block areas', () => {
             header: {
               blocks: [
                 {
-                  id: 'block:1:avatar',
+                  id: 'block:1:avatar:0',
                   blockId: 'avatar',
                   type: 'Display',
                 },
@@ -735,21 +735,21 @@ describe('block areas', () => {
             content: {
               blocks: [
                 {
-                  id: 'block:1:card',
+                  id: 'block:1:card:0',
                   blockId: 'card',
                   type: 'Container',
                   areas: {
                     content: {
                       blocks: [
                         {
-                          id: 'block:1:card2',
+                          id: 'block:1:card2:0',
                           blockId: 'card2',
                           type: 'Container',
                           areas: {
                             title: {
                               blocks: [
                                 {
-                                  id: 'block:1:title',
+                                  id: 'block:1:title:0',
                                   blockId: 'title',
                                   type: 'Display',
                                 },
@@ -758,7 +758,7 @@ describe('block areas', () => {
                             content: {
                               blocks: [
                                 {
-                                  id: 'block:1:textInput',
+                                  id: 'block:1:textInput:0',
                                   blockId: 'textInput',
                                   type: 'Input',
                                 },
@@ -771,7 +771,7 @@ describe('block areas', () => {
                     header: {
                       blocks: [
                         {
-                          id: 'block:1:avatar',
+                          id: 'block:1:avatar:0',
                           blockId: 'avatar',
                           type: 'Display',
                         },
@@ -828,12 +828,165 @@ test('user defined loading', async () => {
           content: {
             blocks: [
               {
-                id: 'block:page_1:block_1',
+                id: 'block:page_1:block_1:0',
                 blockId: 'block_1',
                 type: 'Input',
                 loading: {
                   custom: true,
                 },
+              },
+            ],
+          },
+        },
+      },
+    ],
+  });
+});
+
+test('create unique block ids', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block',
+            type: 'Display',
+          },
+          {
+            id: 'block',
+            type: 'Display',
+          },
+          {
+            id: 'block',
+            type: 'Display',
+          },
+        ],
+      },
+    ],
+  };
+  const res = await buildPages({ components, context });
+  expect(res).toEqual({
+    pages: [
+      {
+        id: 'page:page_1',
+        auth: { public: true },
+        operators: [],
+        pageId: 'page_1',
+        blockId: 'page_1',
+        type: 'Container',
+        requests: [],
+        areas: {
+          content: {
+            blocks: [
+              {
+                id: 'block:page_1:block:0',
+                blockId: 'block',
+                type: 'Display',
+              },
+              {
+                id: 'block:page_1:block:1',
+                blockId: 'block',
+                type: 'Display',
+              },
+              {
+                id: 'block:page_1:block:2',
+                blockId: 'block',
+                type: 'Display',
+              },
+            ],
+          },
+        },
+      },
+    ],
+  });
+});
+
+test('different blockId counter for each page', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block',
+            type: 'Display',
+          },
+          {
+            id: 'block',
+            type: 'Display',
+          },
+        ],
+      },
+      {
+        id: 'page_2',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block',
+            type: 'Display',
+          },
+          {
+            id: 'block',
+            type: 'Display',
+          },
+        ],
+      },
+    ],
+  };
+  const res = await buildPages({ components, context });
+  expect(res).toEqual({
+    pages: [
+      {
+        id: 'page:page_1',
+        auth: { public: true },
+        operators: [],
+        pageId: 'page_1',
+        blockId: 'page_1',
+        type: 'Container',
+        requests: [],
+        areas: {
+          content: {
+            blocks: [
+              {
+                id: 'block:page_1:block:0',
+                blockId: 'block',
+                type: 'Display',
+              },
+              {
+                id: 'block:page_1:block:1',
+                blockId: 'block',
+                type: 'Display',
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'page:page_2',
+        auth: { public: true },
+        operators: [],
+        pageId: 'page_2',
+        blockId: 'page_2',
+        type: 'Container',
+        requests: [],
+        areas: {
+          content: {
+            blocks: [
+              {
+                id: 'block:page_2:block:0',
+                blockId: 'block',
+                type: 'Display',
+              },
+              {
+                id: 'block:page_2:block:1',
+                blockId: 'block',
+                type: 'Display',
               },
             ],
           },

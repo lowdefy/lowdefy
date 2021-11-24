@@ -20,8 +20,8 @@ async function SetGlobal({ arrayIndices, context, params }) {
   Object.keys(params).forEach((key) => {
     set(context._internal.lowdefy.lowdefyGlobal, applyArrayIndices(arrayIndices, key), params[key]);
   });
-  context.RootBlocks.reset();
-  context.update();
+  context._internal.RootBlocks.reset();
+  context._internal.update();
 }
 
 export default SetGlobal;

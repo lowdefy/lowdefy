@@ -26,7 +26,9 @@ const LowdefyContext = ({ children }) => {
       blockComponents,
       callRequest,
       components,
+      document,
       updaters: {},
+      window,
       displayMessage: ({ content }) => {
         alert(content);
         return () => undefined;
