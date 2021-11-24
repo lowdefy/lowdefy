@@ -27,8 +27,8 @@
   },
   "type": "module",
   "exports": {
-    "./blocks.js": "./dist/blocks.js",
-    "./types.js": "./dist/types.js"
+    "./blocks": "./dist/blocks.js",
+    "./types": "./dist/types.js"
   },
   "files": [
     "dist/*"

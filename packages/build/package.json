@@ -46,7 +46,6 @@
     "@lowdefy/node-utils": "4.0.0-alpha.0",
     "@lowdefy/nunjucks": "4.0.0-alpha.0",
     "ajv": "8.6.3",
-    "axios": "0.23.0",
     "js-yaml": "4.1.0",
     "json5": "2.2.0",
     "uuid": "8.3.2"

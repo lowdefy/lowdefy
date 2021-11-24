@@ -14,11 +14,28 @@
   limitations under the License.
 */
 
-async function writeTypes({ components, context }) {
+import { nunjucksFunction } from '@lowdefy/nunjucks';
+
+const template = `{%- for block in blocks -%}
+import { {{ block.type }} } from '{{ block.package }}/blocks';
+{% endfor -%}
+export default {
+  {%- for block in blocks -%}
+  {{ block.type }},
+  {% endfor -%}
+};
+`;
+
+async function writeBlocksImports({ components, context }) {
+  const templateFn = nunjucksFunction(template);
+  const blocks = Object.keys(components.types.blocks).map((type) => ({
+    type,
+    ...components.types.blocks[type],
+  }));
   await context.writeBuildArtifact({
-    filePath: 'types.json',
-    content: JSON.stringify(components.types, null, 2),
+    filePath: 'plugins/blocks.js',
+    content: templateFn({ blocks }),
   });
 }
 
-export default writeTypes;
+export default writeBlocksImports;

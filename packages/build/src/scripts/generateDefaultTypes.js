@@ -21,12 +21,24 @@ import { readFile, writeFile } from '@lowdefy/node-utils';
 
 const defaultPackages = ['@lowdefy/blocks-basic', '@lowdefy/connection-axios-http'];
 
+function createTypeDefinitions({ typeNames, store, packageName, version }) {
+  if (type.isArray(typeNames)) {
+    typeNames.forEach((typeName) => {
+      store[typeName] = {
+        package: packageName,
+        version,
+      };
+    });
+  }
+}
+
 async function generateDefaultTypes() {
   const packageFile = JSON.parse(await readFile(path.resolve(process.cwd(), './package.json')));
   const defaultTypes = {
     actions: {},
     blocks: {},
     connections: {},
+    requests: {},
     operators: {
       client: {},
       server: {},
@@ -36,48 +48,51 @@ async function generateDefaultTypes() {
 
   await Promise.all(
     defaultPackages.map(async (packageName) => {
-      const { default: types } = await import(`${packageName}/types.js`);
-      if (type.isArray(types.actions)) {
-        types.actions.forEach((typeName) => {
-          defaultTypes.actions[typeName] = {
-            package: packageName,
-            version: packageFile.devDependencies[packageName],
-          };
-        });
-      }
-      if (type.isArray(types.blocks)) {
-        types.blocks.forEach((typeName) => {
-          defaultTypes.blocks[typeName] = {
-            package: packageName,
-            version: packageFile.devDependencies[packageName],
-          };
-        });
-      }
-      if (type.isObject(types.connections)) {
-        Object.keys(types.connections).forEach((typeName) => {
-          defaultTypes.connections[typeName] = {
-            package: packageName,
-            version: packageFile.devDependencies[packageName],
-            requests: types.connections[typeName].requests,
-          };
-        });
-      }
-      if (type.isObject(types.operators) && type.isArray(types.operators.client)) {
-        types.operators.client.forEach((typeName) => {
-          defaultTypes.operators.client[typeName] = {
-            package: packageName,
-            version: packageFile.devDependencies[packageName],
-          };
-        });
-      }
-      if (type.isObject(types.operators) && type.isArray(types.operators.server)) {
-        types.operators.server.forEach((typeName) => {
-          defaultTypes.operators.server[typeName] = {
-            package: packageName,
-            version: packageFile.devDependencies[packageName],
-          };
-        });
-      }
+      const { default: types } = await import(`${packageName}/types`);
+      const version = packageFile.devDependencies[packageName];
+
+      createTypeDefinitions({
+        typeNames: types.actions,
+        store: defaultTypes.actions,
+        packageName,
+        version,
+      });
+
+      createTypeDefinitions({
+        typeNames: types.blocks,
+        store: defaultTypes.blocks,
+        packageName,
+        version,
+      });
+
+      createTypeDefinitions({
+        typeNames: types.connections,
+        store: defaultTypes.connections,
+        packageName,
+        version,
+      });
+
+      createTypeDefinitions({
+        typeNames: types.requests,
+        store: defaultTypes.requests,
+        packageName,
+        version,
+      });
+
+      createTypeDefinitions({
+        typeNames: type.isObject(types.operators) ? types.operators.client : [],
+        store: defaultTypes.operators.client,
+        packageName,
+        version,
+      });
+
+      createTypeDefinitions({
+        typeNames: type.isObject(types.operators) ? types.operators.server : [],
+        store: defaultTypes.operators.server,
+        packageName,
+        version,
+      });
+
       if (type.isArray(types.styles)) {
         types.styles.forEach((pathName) => {
           defaultTypes.styles.push({

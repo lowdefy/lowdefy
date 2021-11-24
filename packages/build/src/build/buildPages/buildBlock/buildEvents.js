@@ -17,7 +17,7 @@
 import { type } from '@lowdefy/helpers';
 import createCheckDuplicateId from '../../../utils/createCheckDuplicateId.js';
 
-function checkAction(action, { blockId, checkDuplicateActionId, counters, eventId, pageId }) {
+function checkAction(action, { blockId, checkDuplicateActionId, eventId, pageId, typeCounters }) {
   if (type.isUndefined(action.id)) {
     throw new Error(
       `Action id missing on event "${eventId}" on block "${blockId}" on page "${pageId}".`
@@ -45,7 +45,7 @@ function checkAction(action, { blockId, checkDuplicateActionId, counters, eventI
       )}.`
     );
   }
-  counters.actionTypes.increment(action.type);
+  typeCounters.actions.increment(action.type);
 }
 
 function buildEvents(block, pageContext) {
@@ -81,7 +81,7 @@ function buildEvents(block, pageContext) {
         checkAction(action, {
           eventId: key,
           blockId: block.blockId,
-          counters: pageContext.counters,
+          typeCounters: pageContext.typeCounters,
           pageId: pageContext.pageId,
           checkDuplicateActionId,
         })
@@ -90,7 +90,7 @@ function buildEvents(block, pageContext) {
         checkAction(action, {
           eventId: key,
           blockId: block.blockId,
-          counters: pageContext.counters,
+          typeCounters: pageContext.typeCounters,
           pageId: pageContext.pageId,
           checkDuplicateActionId,
         })

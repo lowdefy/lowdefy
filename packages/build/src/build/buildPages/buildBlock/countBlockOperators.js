@@ -16,14 +16,16 @@
 
 import countOperators from '../../../utils/countOperators.js';
 
-function countBlockOperators(block, pageContext) {
+function countBlockOperators(block, { typeCounters }) {
   // eslint-disable-next-line no-unused-vars
   const { requests, blocks, areas, ...webBlock } = block;
 
-  countOperators(webBlock, { counter: pageContext.counters.clientOperatorTypes });
+  countOperators(webBlock, { counter: typeCounters.operators.client });
   (requests || []).forEach((request) => {
-    countOperators(request.payload || {}, { counter: pageContext.counters.clientOperatorTypes });
-    countOperators(request.properties || {}, { counter: pageContext.counters.serverOperatorTypes });
+    countOperators(request.payload || {}, { counter: typeCounters.operators.client });
+    countOperators(request.properties || {}, {
+      counter: typeCounters.operators.server,
+    });
   });
 }
 
