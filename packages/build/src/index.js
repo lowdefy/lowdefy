@@ -16,8 +16,6 @@
   limitations under the License.
 */
 
-import path from 'path';
-import { fileURLToPath } from 'url';
 import { readFile } from '@lowdefy/node-utils';
 
 import createCounter from './utils/createCounter.js';
@@ -36,7 +34,7 @@ import testSchema from './build/testSchema.js';
 import validateApp from './build/validateApp.js';
 import validateConfig from './build/validateConfig.js';
 import writeApp from './build/writeApp.js';
-import writeBlocksImports from './build/writePluginImports/writeBlocksImports.js';
+import writeBlockImports from './build/writePluginImports/writeBlockImports.js';
 import writeConnectionImports from './build/writePluginImports/writeConnectionImports.js';
 import writeConfig from './build/writeConfig.js';
 import writeConnections from './build/writeConnections.js';
@@ -102,7 +100,7 @@ async function build(options) {
     await writeGlobal({ components, context });
     await writeMenus({ components, context });
     await writeTypes({ components, context });
-    await writeBlocksImports({ components, context });
+    await writeBlockImports({ components, context });
     await writeConnectionImports({ components, context });
     // TODO: write style file
     // TODO: write icons file

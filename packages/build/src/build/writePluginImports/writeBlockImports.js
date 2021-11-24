@@ -26,7 +26,7 @@ export default {
 };
 `;
 
-async function writeBlocksImports({ components, context }) {
+async function writeBlockImports({ components, context }) {
   const templateFn = nunjucksFunction(template);
   const blocks = Object.keys(components.types.blocks).map((type) => ({
     type,
@@ -38,4 +38,4 @@ async function writeBlocksImports({ components, context }) {
   });
 }
 
-export default writeBlocksImports;
+export default writeBlockImports;
