@@ -14,10 +14,17 @@
   limitations under the License.
 */
 
-function setBlockId(block, { pageId, blockIdCounter }) {
-  block.blockId = block.id;
-  block.id = `block:${pageId}:${block.blockId}:${blockIdCounter.getCount(block.blockId)}`;
-  blockIdCounter.increment(block.blockId);
+import countOperators from '../../../utils/countOperators.js';
+
+function countBlockOperators(block, pageContext) {
+  // eslint-disable-next-line no-unused-vars
+  const { requests, blocks, areas, ...webBlock } = block;
+
+  countOperators(webBlock, { counter: pageContext.counters.clientOperatorTypes });
+  (requests || []).forEach((request) => {
+    countOperators(request.payload || {}, { counter: pageContext.counters.clientOperatorTypes });
+    countOperators(request.properties || {}, { counter: pageContext.counters.serverOperatorTypes });
+  });
 }
 
-export default setBlockId;
+export default countBlockOperators;

@@ -17,14 +17,14 @@
 import buildEvents from './buildEvents.js';
 import buildRequests from './buildRequests.js';
 import buildSubBlocks from './buildSubBlocks.js';
-import getOperators from './getOperators.js';
+import countBlockOperators from './countBlockOperators.js';
 import moveSubBlocksToArea from './moveSubBlocksToArea.js';
 import setBlockId from './setBlockId.js';
 import validateBlock from './validateBlock.js';
 
 async function buildBlock(block, pageContext) {
   validateBlock(block, pageContext);
-  getOperators(block, pageContext);
+  countBlockOperators(block, pageContext);
   setBlockId(block, pageContext);
   buildEvents(block, pageContext);
   buildRequests(block, pageContext);

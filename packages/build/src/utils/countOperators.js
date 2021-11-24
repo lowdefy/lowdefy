@@ -16,27 +16,20 @@
 
 import { type } from '@lowdefy/helpers';
 
-function getOperators(block, pageContext) {
-  // eslint-disable-next-line no-unused-vars
-  const { requests, blocks, areas, ...webBlock } = block;
-
+function countOperators(obj, { counter }) {
   function getOperatorsReviver(_, value) {
     if (type.isObject(value) && Object.keys(value).length === 1) {
       const key = Object.keys(value)[0];
       const [op] = key.split('.');
       const operator = op.replace(/^(_+)/gm, '_');
       if (operator.length > 1 && operator[0] === '_') {
-        pageContext.operators.add(operator);
+        counter.increment(operator);
       }
     }
     return value;
   }
 
-  JSON.parse(JSON.stringify(webBlock), getOperatorsReviver);
-
-  (requests || []).forEach((request) => {
-    JSON.parse(JSON.stringify(request.payload || {}), getOperatorsReviver);
-  });
+  JSON.parse(JSON.stringify(obj), getOperatorsReviver);
 }
 
-export default getOperators;
+export default countOperators;

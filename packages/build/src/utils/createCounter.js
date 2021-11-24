@@ -17,7 +17,7 @@
 function createCounter() {
   const counts = new Map();
 
-  function add(key) {
+  function increment(key) {
     const count = counts.get(key) || 0;
     counts.set(key, count + 1);
   }
@@ -31,7 +31,7 @@ function createCounter() {
   }
 
   return {
-    add,
+    increment,
     getCount,
     getCounts,
   };

@@ -573,10 +573,10 @@ export default {
         type: 'Lowdefy version in field "lowdefy" should be a string.',
       },
     },
-    licence: {
+    license: {
       type: 'string',
       errorMessage: {
-        type: 'App "licence" should be a string.',
+        type: 'App "license" should be a string.',
       },
     },
     app: {

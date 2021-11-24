@@ -19,7 +19,7 @@ function resolver(path, vars, context) {
     resolved: true,
     path,
     vars,
-    context,
+    contextId: context.id,
   };
 }
 

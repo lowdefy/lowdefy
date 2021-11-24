@@ -147,6 +147,22 @@ test('request id contains a "."', async () => {
   );
 });
 
+test('request type is not a string', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [{ id: 'request' }],
+      },
+    ],
+  };
+  await expect(buildPages({ components, context })).rejects.toThrow(
+    'Request type is not a string at at request at "request" at page "page_1". Received undefined.'
+  );
+});
+
 test('request payload not an object', async () => {
   const components = {
     pages: [
@@ -173,6 +189,7 @@ test('give request an id', async () => {
         requests: [
           {
             id: 'request_1',
+            type: 'Request',
           },
         ],
       },
@@ -191,6 +208,7 @@ test('give request an id', async () => {
         requests: [
           {
             id: 'request:page_1:request_1',
+            type: 'Request',
             auth: { public: true },
             requestId: 'request_1',
             pageId: 'page_1',
@@ -216,6 +234,7 @@ test('request on a sub-block', async () => {
             requests: [
               {
                 id: 'request_1',
+                type: 'Request',
               },
             ],
           },
@@ -236,6 +255,7 @@ test('request on a sub-block', async () => {
         requests: [
           {
             id: 'request:page_1:request_1',
+            type: 'Request',
             auth: { public: true },
             requestId: 'request_1',
             pageId: 'page_1',
@@ -246,7 +266,7 @@ test('request on a sub-block', async () => {
           content: {
             blocks: [
               {
-                id: 'block:page_1:box',
+                id: 'block:page_1:box:0',
                 blockId: 'box',
                 type: 'Container',
               },
@@ -268,9 +288,11 @@ test('multiple requests', async () => {
         requests: [
           {
             id: 'request_1',
+            type: 'Request',
           },
           {
             id: 'request_2',
+            type: 'Request',
           },
         ],
       },
@@ -289,6 +311,7 @@ test('multiple requests', async () => {
         requests: [
           {
             id: 'request:page_1:request_1',
+            type: 'Request',
             auth: { public: true },
             requestId: 'request_1',
             pageId: 'page_1',
@@ -296,6 +319,7 @@ test('multiple requests', async () => {
           },
           {
             id: 'request:page_1:request_2',
+            type: 'Request',
             auth: { public: true },
             requestId: 'request_2',
             pageId: 'page_1',
@@ -317,6 +341,7 @@ test('set auth to request', async () => {
         requests: [
           {
             id: 'request_1',
+            type: 'Request',
           },
         ],
       },
@@ -327,6 +352,7 @@ test('set auth to request', async () => {
         requests: [
           {
             id: 'request_2',
+            type: 'Request',
           },
         ],
       },
@@ -345,6 +371,7 @@ test('set auth to request', async () => {
         requests: [
           {
             id: 'request:page_1:request_1',
+            type: 'Request',
             auth: { public: true },
             requestId: 'request_1',
             pageId: 'page_1',
@@ -362,6 +389,7 @@ test('set auth to request', async () => {
         requests: [
           {
             id: 'request:page_2:request_2',
+            type: 'Request',
             auth: { public: false },
             requestId: 'request_2',
             pageId: 'page_2',
