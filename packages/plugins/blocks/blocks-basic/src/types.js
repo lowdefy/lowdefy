@@ -14,4 +14,6 @@
   limitations under the License.
 */
 
-export default [];
+export default {
+  blocks: ['Anchor', 'Box', 'DangerousHtml', 'Html', 'Icon', 'Img', 'List', 'Span'],
+};

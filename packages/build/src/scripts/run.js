@@ -16,15 +16,20 @@
 */
 
 import path from 'path';
-import build from './index.js';
+import build from '../index.js';
 
 async function run() {
-  await build({
-    logger: console,
-    buildDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
-    cacheDirectory: path.resolve(process.cwd(), './.lowdefy/.cache'),
-    configDirectory: process.cwd(),
-  });
+  // TODO: resolve build with no config
+  try {
+    await build({
+      logger: console,
+      buildDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
+      cacheDirectory: path.resolve(process.cwd(), './.lowdefy/.cache'),
+      configDirectory: process.cwd(),
+    });
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 run();

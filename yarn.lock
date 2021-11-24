@@ -3605,6 +3605,8 @@ __metadata:
   resolution: "@lowdefy/build@workspace:packages/build"
   dependencies:
     "@lowdefy/ajv": 4.0.0-alpha.0
+    "@lowdefy/blocks-basic": 4.0.0-alpha.0
+    "@lowdefy/connection-axios-http": 4.0.0-alpha.0
     "@lowdefy/helpers": 4.0.0-alpha.0
     "@lowdefy/node-utils": 4.0.0-alpha.0
     "@lowdefy/nunjucks": 4.0.0-alpha.0
@@ -3618,7 +3620,7 @@ __metadata:
     json5: 2.2.0
     uuid: 8.3.2
   bin:
-    lowdefy-build: ./dist/run.js
+    lowdefy-build: ./dist/scripts/run.js
   languageName: unknown
   linkType: soft
 
