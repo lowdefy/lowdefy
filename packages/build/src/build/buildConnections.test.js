@@ -40,9 +40,11 @@ test('buildConnections', async () => {
     connections: [
       {
         id: 'connection1',
+        type: 'ConnectionType',
       },
       {
         id: 'connection2',
+        type: 'ConnectionType',
       },
     ],
   };
@@ -51,10 +53,12 @@ test('buildConnections', async () => {
     {
       id: 'connection:connection1',
       connectionId: 'connection1',
+      type: 'ConnectionType',
     },
     {
       id: 'connection:connection2',
       connectionId: 'connection2',
+      type: 'ConnectionType',
     },
   ]);
 });
@@ -75,14 +79,25 @@ test('connection id is not a string', async () => {
   );
 });
 
+test('throw on missing type', async () => {
+  const components = {
+    connections: [{ id: 'connection1' }],
+  };
+  await expect(buildConnections({ components, context })).rejects.toThrow(
+    'Connection type is not a string at connection "connection1". Received undefined.'
+  );
+});
+
 test('throw on Duplicate ids', async () => {
   const components = {
     connections: [
       {
         id: 'connection1',
+        type: 'ConnectionType',
       },
       {
         id: 'connection1',
+        type: 'ConnectionType',
       },
     ],
   };

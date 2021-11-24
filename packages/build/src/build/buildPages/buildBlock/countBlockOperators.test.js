@@ -29,14 +29,13 @@ const auth = {
   public: true,
 };
 
-const context = testContext({ logger });
-
 beforeEach(() => {
   mockLogWarn.mockReset();
   mockLog.mockReset();
 });
 
 test('set empty operators array if no operators on page', async () => {
+  const context = testContext({ logger });
   const components = {
     pages: [
       {
@@ -71,11 +70,13 @@ test('set empty operators array if no operators on page', async () => {
       },
     ],
   };
-  const res = await buildPages({ components, context });
-  expect(get(res, 'pages.0.operators')).toEqual([]);
+  await buildPages({ components, context });
+  expect(context.counters.clientOperatorTypes.getCounts()).toEqual({});
+  expect(context.counters.serverOperatorTypes.getCounts()).toEqual({});
 });
 
-test('set all operators for the page', async () => {
+test('count all operators for the page', async () => {
+  const context = testContext({ logger });
   const components = {
     pages: [
       {
@@ -102,13 +103,19 @@ test('set all operators for the page', async () => {
       },
     ],
   };
-  const res = await buildPages({ components, context });
-  expect(new Set(get(res, 'pages.0.operators'))).toEqual(
-    new Set(['_op_1', '_op_2', '_op_3', '_op_4', '_op_5'])
-  );
+  await buildPages({ components, context });
+  expect(context.counters.clientOperatorTypes.getCounts()).toEqual({
+    _op_1: 3,
+    _op_2: 1,
+    _op_3: 1,
+    _op_4: 1,
+    _op_5: 1,
+  });
+  expect(context.counters.serverOperatorTypes.getCounts()).toEqual({});
 });
 
-test('exclude requests operators', async () => {
+test('count requests operators as server operators', async () => {
+  const context = testContext({ logger });
   const components = {
     pages: [
       {
@@ -118,6 +125,7 @@ test('exclude requests operators', async () => {
         requests: [
           {
             id: 'request_1',
+            type: 'Request',
             properties: {
               a: { _r_op_1: {} },
             },
@@ -141,11 +149,19 @@ test('exclude requests operators', async () => {
       },
     ],
   };
-  const res = await buildPages({ components, context });
-  expect(new Set(get(res, 'pages.0.operators'))).toEqual(new Set(['_op_1', '_op_2', '_op_3']));
+  await buildPages({ components, context });
+  expect(context.counters.clientOperatorTypes.getCounts()).toEqual({
+    _op_1: 1,
+    _op_2: 1,
+    _op_3: 1,
+  });
+  expect(context.counters.serverOperatorTypes.getCounts()).toEqual({
+    _r_op_1: 1,
+  });
 });
 
-test('include request payload operators', async () => {
+test('count request payload operators as client operators', async () => {
+  const context = testContext({ logger });
   const components = {
     pages: [
       {
@@ -155,6 +171,7 @@ test('include request payload operators', async () => {
         requests: [
           {
             id: 'request_1',
+            type: 'Request',
             payload: {
               a: { _r_op_1: {} },
             },
@@ -169,6 +186,12 @@ test('include request payload operators', async () => {
       },
     ],
   };
-  const res = await buildPages({ components, context });
-  expect(new Set(get(res, 'pages.0.operators'))).toEqual(new Set(['_op_1', '_r_op_1']));
+  await buildPages({ components, context });
+  expect(context.counters.clientOperatorTypes.getCounts()).toEqual({
+    _r_op_1: 1,
+    _op_1: 1,
+  });
+  expect(context.counters.serverOperatorTypes.getCounts()).toEqual({
+    _r_op_2: 1,
+  });
 });

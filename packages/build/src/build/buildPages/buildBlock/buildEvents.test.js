@@ -215,7 +215,6 @@ test('block events action id is not defined', async () => {
               onClick: {
                 try: [
                   {
-                    id: undefined,
                     type: 'Reset',
                   },
                 ],
@@ -234,6 +233,42 @@ test('block events action id is not defined', async () => {
   };
   await expect(buildPages({ components, context })).rejects.toThrow(
     'Action id missing on event "onClick" on block "block_1" on page "page_1".'
+  );
+});
+
+test('action type is not a string', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            events: {
+              onClick: {
+                try: [
+                  {
+                    id: 'reset',
+                  },
+                ],
+                catch: [
+                  {
+                    id: 'action_1',
+                    type: 'Retry',
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  await expect(buildPages({ components, context })).rejects.toThrow(
+    'Action type is not a string on action "reset" on event "onClick" on block "block_1" on page "page_1". Received undefined.'
   );
 });
 
@@ -374,7 +409,7 @@ test("don't throw on Duplicate separate block events action ids", async () => {
         try: [{ id: 'action_1', type: 'Reset' }],
       },
     },
-    id: 'block:page_1:block_1',
+    id: 'block:page_1:block_1:0',
     type: 'Input',
   });
 });

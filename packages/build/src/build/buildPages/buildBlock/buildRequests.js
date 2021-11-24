@@ -17,7 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 function buildRequest(request, pageContext) {
-  const { auth, pageId, checkDuplicateRequestId } = pageContext;
+  const { auth, counters, pageId, checkDuplicateRequestId } = pageContext;
   if (type.isUndefined(request.id)) {
     throw new Error(`Request id missing at page "${pageId}".`);
   }
@@ -32,6 +32,16 @@ function buildRequest(request, pageContext) {
       `Request id "${request.id}" at page "${pageId}" should not include a period (".").`
     );
   }
+
+  if (!type.isString(request.type)) {
+    throw new Error(
+      `Request type is not a string at at request at "${
+        request.id
+      }" at page "${pageId}". Received ${JSON.stringify(request.type)}.`
+    );
+  }
+  counters.requestTypes.increment(request.type);
+
   if (type.isUndefined(request.payload)) request.payload = {};
 
   if (!type.isObject(request.payload)) {
