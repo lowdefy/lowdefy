@@ -16,8 +16,9 @@
   limitations under the License.
 */
 
-import createWriteBuildArtifact from './utils/files/writeBuildArtifact.js';
+import createCounter from './utils/createCounter.js';
 import createReadConfigFile from './utils/files/readConfigFile.js';
+import createWriteBuildArtifact from './utils/files/writeBuildArtifact.js';
 
 import addDefaultPages from './build/addDefaultPages/addDefaultPages.js';
 import buildAuth from './build/buildAuth/buildAuth.js';
@@ -36,6 +37,7 @@ import writeGlobal from './build/writeGlobal.js';
 import writeMenus from './build/writeMenus.js';
 import writePages from './build/writePages.js';
 import writeRequests from './build/writeRequests.js';
+import writeTypes from './build/writeTypes.js';
 
 function createContext(options) {
   const { blocksServerUrl, buildDirectory, cacheDirectory, configDirectory, logger, refResolver } =
@@ -45,11 +47,17 @@ function createContext(options) {
     buildDirectory,
     cacheDirectory,
     configDirectory,
+    counters: {
+      actionTypes: createCounter(),
+      blockTypes: createCounter(),
+      connectionTypes: createCounter(),
+      requestTypes: createCounter(),
+      clientOperatorTypes: createCounter(),
+      serverOperatorTypes: createCounter(),
+    },
     logger,
     readConfigFile: createReadConfigFile({ configDirectory }),
     refResolver,
-    version: '4.0.0-alpha.0',
-    // version: packageJson.version,
     writeBuildArtifact: createWriteBuildArtifact({ buildDirectory }),
   };
   return context;
@@ -75,6 +83,7 @@ async function build(options) {
     await writeConfig({ components, context });
     await writeGlobal({ components, context });
     await writeMenus({ components, context });
+    await writeTypes({ context });
   } catch (error) {
     context.logger.error(error);
     throw error;

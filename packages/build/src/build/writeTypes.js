@@ -14,17 +14,20 @@
   limitations under the License.
 */
 
-import createCounter from './createCounter.js';
+async function writeTypes({ context }) {
+  const types = {
+    actions: context.counters.actionTypes.getCounts(),
+    blocks: context.counters.blockTypes.getCounts(),
+    connections: context.counters.connectionTypes.getCounts(),
+    requests: context.counters.requestTypes.getCounts(),
+    clientOperators: context.counters.clientOperatorTypes.getCounts(),
+    serverOperators: context.counters.serverOperatorTypes.getCounts(),
+  };
 
-test('counter', async () => {
-  const counter = createCounter();
-  expect(counter.getCount('a')).toBe(0);
-  counter.increment('a');
-  expect(counter.getCount('a')).toBe(1);
-  counter.increment('a');
-  counter.increment('b');
-  counter.increment('a');
-  expect(counter.getCount('a')).toBe(3);
-  expect(counter.getCount('b')).toBe(1);
-  expect(counter.getCounts()).toEqual({ a: 3, b: 1 });
-});
+  await context.writeBuildArtifact({
+    filePath: 'types.json',
+    content: JSON.stringify(types, null, 2),
+  });
+}
+
+export default writeTypes;
