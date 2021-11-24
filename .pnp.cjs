@@ -5361,6 +5361,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@lowdefy/build", "workspace:packages/build"],
             ["@lowdefy/ajv", "workspace:packages/utils/ajv"],
+            ["@lowdefy/blocks-basic", "workspace:packages/plugins/blocks/blocks-basic"],
+            ["@lowdefy/connection-axios-http", "workspace:packages/plugins/connections/connection-axios-http"],
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],
             ["@lowdefy/node-utils", "workspace:packages/utils/node-utils"],
             ["@lowdefy/nunjucks", "workspace:packages/utils/nunjucks"],

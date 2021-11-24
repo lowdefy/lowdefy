@@ -26,17 +26,17 @@
   },
   "type": "module",
   "bin": {
-    "lowdefy-build": "./dist/run.js"
+    "lowdefy-build": "./dist/scripts/run.js"
   },
   "exports": "./dist/index.js",
   "files": [
     "dist/*"
   ],
   "scripts": {
-    "build": "yarn swc",
+    "build": "yarn swc && node dist/scripts/generateDefaultTypes.js",
     "clean": "rm -rf dist",
     "prepare": "yarn build",
-    "start": "node dist/run.js",
+    "start": "node dist/scripts/run.js",
     "swc": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
     "test": "jest --coverage"
   },
@@ -52,6 +52,8 @@
     "uuid": "8.3.2"
   },
   "devDependencies": {
+    "@lowdefy/blocks-basic": "4.0.0-alpha.0",
+    "@lowdefy/connection-axios-http": "4.0.0-alpha.0",
     "@swc/cli": "0.1.51",
     "@swc/core": "1.2.107",
     "@swc/jest": "0.2.5",
