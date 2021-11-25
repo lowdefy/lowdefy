@@ -24,132 +24,11 @@ const logger = {
   log: mockLog,
 };
 
-const blockMetas = {
-  Container: {
-    category: 'container',
-    loading: {
-      type: 'Spinner',
-    },
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Container',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    schema: {
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      $id: 'https://example.com/Container.json',
-    },
-  },
-  List: {
-    category: 'list',
-    loading: {
-      type: 'Spinner',
-    },
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'List',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    schema: {
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      $id: 'https://example.com/Container.json',
-    },
-  },
-  Input: {
-    category: 'input',
-    valueType: 'string',
-    loading: {
-      type: 'SkeletonInput',
-    },
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Input',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    schema: {
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      $id: 'https://example.com/Container.json',
-    },
-  },
-  Display: {
-    category: 'display',
-    loading: {
-      type: 'Spinner',
-    },
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Display',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    schema: {
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      $id: 'https://example.com/Container.json',
-    },
-  },
-};
-
-const outputMetas = {
-  Container: {
-    category: 'container',
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Container',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    loading: {
-      type: 'Spinner',
-    },
-  },
-  List: {
-    category: 'list',
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'List',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    loading: {
-      type: 'Spinner',
-    },
-    valueType: 'array',
-  },
-  Input: {
-    category: 'input',
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Input',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    valueType: 'string',
-    loading: {
-      type: 'SkeletonInput',
-    },
-  },
-  Display: {
-    category: 'display',
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Display',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    loading: {
-      type: 'Spinner',
-    },
-  },
-};
-
 const auth = {
   public: true,
 };
 
-const getMeta = (type) => {
-  const meta = blockMetas[type];
-  if (!meta) {
-    return null;
-  }
-  return Promise.resolve(meta);
-};
-
-const context = testContext({ logger, getMeta });
+const context = testContext({ logger });
 
 beforeEach(() => {
   mockLogWarn.mockReset();
@@ -292,42 +171,6 @@ test('block type missing', async () => {
   );
 });
 
-test('invalid page type', async () => {
-  const components = {
-    pages: [
-      {
-        id: 'page1',
-        type: 'NotABlock',
-        auth,
-      },
-    ],
-  };
-  await expect(buildPages({ components, context })).rejects.toThrow(
-    'Invalid block type at "page1" on page "page1". Received "NotABlock".'
-  );
-});
-
-test('invalid block type', async () => {
-  const components = {
-    pages: [
-      {
-        id: 'page1',
-        type: 'Container',
-        auth,
-        blocks: [
-          {
-            id: 'blockId',
-            type: 'NotABlock',
-          },
-        ],
-      },
-    ],
-  };
-  await expect(buildPages({ components, context })).rejects.toThrow(
-    'Invalid block type at "blockId" on page "page1". Received "NotABlock".'
-  );
-});
-
 test('page type not a string', async () => {
   const components = {
     pages: [
@@ -384,7 +227,6 @@ test('no blocks on page', async () => {
         pageId: '1',
         blockId: '1',
         type: 'Container',
-        meta: outputMetas.Container,
         requests: [],
       },
     ],
@@ -421,71 +263,6 @@ test('block not an object', async () => {
   );
 });
 
-test('block meta should include all meta fields', async () => {
-  const components = {
-    pages: [
-      {
-        id: 'page_1',
-        type: 'Container',
-        auth,
-        blocks: [
-          {
-            id: 'block_1',
-            type: 'Input',
-          },
-          {
-            id: 'block_2',
-            type: 'Display',
-          },
-          {
-            id: 'block_3',
-            type: 'List',
-          },
-        ],
-      },
-    ],
-  };
-  const res = await buildPages({ components, context });
-  expect(res).toEqual({
-    pages: [
-      {
-        id: 'page:page_1',
-        auth: { public: true },
-        operators: [],
-        pageId: 'page_1',
-        blockId: 'page_1',
-        type: 'Container',
-        meta: outputMetas.Container,
-        requests: [],
-        areas: {
-          content: {
-            blocks: [
-              {
-                id: 'block:page_1:block_1',
-                blockId: 'block_1',
-                type: 'Input',
-                meta: outputMetas.Input,
-              },
-              {
-                id: 'block:page_1:block_2',
-                blockId: 'block_2',
-                type: 'Display',
-                meta: outputMetas.Display,
-              },
-              {
-                id: 'block:page_1:block_3',
-                blockId: 'block_3',
-                type: 'List',
-                meta: outputMetas.List,
-              },
-            ],
-          },
-        },
-      },
-    ],
-  });
-});
-
 test('nested blocks', async () => {
   const components = {
     pages: [
@@ -518,24 +295,21 @@ test('nested blocks', async () => {
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Container',
-        meta: outputMetas.Container,
         requests: [],
         areas: {
           content: {
             blocks: [
               {
-                id: 'block:page_1:block_1',
+                id: 'block:page_1:block_1:0',
                 blockId: 'block_1',
                 type: 'Container',
-                meta: outputMetas.Container,
                 areas: {
                   content: {
                     blocks: [
                       {
-                        id: 'block:page_1:block_2',
+                        id: 'block:page_1:block_2:0',
                         blockId: 'block_2',
                         type: 'Input',
-                        meta: outputMetas.Input,
                       },
                     ],
                   },
@@ -593,7 +367,6 @@ describe('block areas', () => {
           operators: [],
           pageId: 'page1',
           type: 'Container',
-          meta: outputMetas.Container,
           requests: [],
           areas: {
             content: {
@@ -635,16 +408,14 @@ describe('block areas', () => {
           operators: [],
           pageId: '1',
           type: 'Container',
-          meta: outputMetas.Container,
           requests: [],
           areas: {
             content: {
               blocks: [
                 {
-                  id: 'block:1:block1',
+                  id: 'block:1:block1:0',
                   blockId: 'block1',
                   type: 'Input',
-                  meta: outputMetas.Input,
                 },
               ],
             },
@@ -685,17 +456,15 @@ describe('block areas', () => {
           operators: [],
           blockId: '1',
           type: 'Container',
-          meta: outputMetas.Container,
           requests: [],
           areas: {
             content: {
               gutter: 20,
               blocks: [
                 {
-                  id: 'block:1:block1',
+                  id: 'block:1:block1:0',
                   blockId: 'block1',
                   type: 'Input',
-                  meta: outputMetas.Input,
                 },
               ],
             },
@@ -743,26 +512,23 @@ describe('block areas', () => {
           pageId: '1',
           blockId: '1',
           type: 'Container',
-          meta: outputMetas.Container,
           requests: [],
           areas: {
             content: {
               blocks: [
                 {
-                  id: 'block:1:textInput',
+                  id: 'block:1:textInput:0',
                   blockId: 'textInput',
                   type: 'Input',
-                  meta: outputMetas.Input,
                 },
               ],
             },
             header: {
               blocks: [
                 {
-                  id: 'block:1:avatar',
+                  id: 'block:1:avatar:0',
                   blockId: 'avatar',
                   type: 'Display',
-                  meta: outputMetas.Display,
                 },
               ],
             },
@@ -808,26 +574,23 @@ describe('block areas', () => {
           pageId: '1',
           blockId: '1',
           type: 'Container',
-          meta: outputMetas.Container,
           requests: [],
           areas: {
             content: {
               blocks: [
                 {
-                  id: 'block:1:textInput',
+                  id: 'block:1:textInput:0',
                   blockId: 'textInput',
                   type: 'Input',
-                  meta: outputMetas.Input,
                 },
               ],
             },
             header: {
               blocks: [
                 {
-                  id: 'block:1:avatar',
+                  id: 'block:1:avatar:0',
                   blockId: 'avatar',
                   type: 'Display',
-                  meta: outputMetas.Display,
                 },
               ],
             },
@@ -881,26 +644,23 @@ describe('block areas', () => {
           pageId: '1',
           blockId: '1',
           type: 'Container',
-          meta: outputMetas.Container,
           requests: [],
           areas: {
             content: {
               blocks: [
                 {
-                  id: 'block:1:textInput',
+                  id: 'block:1:textInput:0',
                   blockId: 'textInput',
                   type: 'Input',
-                  meta: outputMetas.Input,
                 },
               ],
             },
             header: {
               blocks: [
                 {
-                  id: 'block:1:avatar',
+                  id: 'block:1:avatar:0',
                   blockId: 'avatar',
                   type: 'Display',
-                  meta: outputMetas.Display,
                 },
               ],
             },
@@ -970,42 +730,37 @@ describe('block areas', () => {
           pageId: '1',
           blockId: '1',
           type: 'Container',
-          meta: outputMetas.Container,
           requests: [],
           areas: {
             content: {
               blocks: [
                 {
-                  id: 'block:1:card',
+                  id: 'block:1:card:0',
                   blockId: 'card',
                   type: 'Container',
-                  meta: outputMetas.Container,
                   areas: {
                     content: {
                       blocks: [
                         {
-                          id: 'block:1:card2',
+                          id: 'block:1:card2:0',
                           blockId: 'card2',
                           type: 'Container',
-                          meta: outputMetas.Container,
                           areas: {
                             title: {
                               blocks: [
                                 {
-                                  id: 'block:1:title',
+                                  id: 'block:1:title:0',
                                   blockId: 'title',
                                   type: 'Display',
-                                  meta: outputMetas.Display,
                                 },
                               ],
                             },
                             content: {
                               blocks: [
                                 {
-                                  id: 'block:1:textInput',
+                                  id: 'block:1:textInput:0',
                                   blockId: 'textInput',
                                   type: 'Input',
-                                  meta: outputMetas.Input,
                                 },
                               ],
                             },
@@ -1016,10 +771,9 @@ describe('block areas', () => {
                     header: {
                       blocks: [
                         {
-                          id: 'block:1:avatar',
+                          id: 'block:1:avatar:0',
                           blockId: 'avatar',
                           type: 'Display',
-                          meta: outputMetas.Display,
                         },
                       ],
                     },
@@ -1034,7 +788,7 @@ describe('block areas', () => {
   });
 });
 
-test('add user defined loading to meta', async () => {
+test('user defined loading', async () => {
   const components = {
     pages: [
       {
@@ -1069,40 +823,170 @@ test('add user defined loading to meta', async () => {
         loading: {
           custom: true,
         },
-        meta: {
-          category: 'container',
-          moduleFederation: {
-            scope: 'blocks',
-            module: 'Container',
-            url: 'https://example.com/remoteEntry.js',
-          },
-          loading: {
-            custom: true,
-          },
-        },
         requests: [],
         areas: {
           content: {
             blocks: [
               {
-                id: 'block:page_1:block_1',
+                id: 'block:page_1:block_1:0',
                 blockId: 'block_1',
                 type: 'Input',
                 loading: {
                   custom: true,
                 },
-                meta: {
-                  category: 'input',
-                  moduleFederation: {
-                    scope: 'blocks',
-                    module: 'Input',
-                    url: 'https://example.com/remoteEntry.js',
-                  },
-                  valueType: 'string',
-                  loading: {
-                    custom: true,
-                  },
-                },
+              },
+            ],
+          },
+        },
+      },
+    ],
+  });
+});
+
+test('create unique block ids', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block',
+            type: 'Display',
+          },
+          {
+            id: 'block',
+            type: 'Display',
+          },
+          {
+            id: 'block',
+            type: 'Display',
+          },
+        ],
+      },
+    ],
+  };
+  const res = await buildPages({ components, context });
+  expect(res).toEqual({
+    pages: [
+      {
+        id: 'page:page_1',
+        auth: { public: true },
+        operators: [],
+        pageId: 'page_1',
+        blockId: 'page_1',
+        type: 'Container',
+        requests: [],
+        areas: {
+          content: {
+            blocks: [
+              {
+                id: 'block:page_1:block:0',
+                blockId: 'block',
+                type: 'Display',
+              },
+              {
+                id: 'block:page_1:block:1',
+                blockId: 'block',
+                type: 'Display',
+              },
+              {
+                id: 'block:page_1:block:2',
+                blockId: 'block',
+                type: 'Display',
+              },
+            ],
+          },
+        },
+      },
+    ],
+  });
+});
+
+test('different blockId counter for each page', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block',
+            type: 'Display',
+          },
+          {
+            id: 'block',
+            type: 'Display',
+          },
+        ],
+      },
+      {
+        id: 'page_2',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block',
+            type: 'Display',
+          },
+          {
+            id: 'block',
+            type: 'Display',
+          },
+        ],
+      },
+    ],
+  };
+  const res = await buildPages({ components, context });
+  expect(res).toEqual({
+    pages: [
+      {
+        id: 'page:page_1',
+        auth: { public: true },
+        operators: [],
+        pageId: 'page_1',
+        blockId: 'page_1',
+        type: 'Container',
+        requests: [],
+        areas: {
+          content: {
+            blocks: [
+              {
+                id: 'block:page_1:block:0',
+                blockId: 'block',
+                type: 'Display',
+              },
+              {
+                id: 'block:page_1:block:1',
+                blockId: 'block',
+                type: 'Display',
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'page:page_2',
+        auth: { public: true },
+        operators: [],
+        pageId: 'page_2',
+        blockId: 'page_2',
+        type: 'Container',
+        requests: [],
+        areas: {
+          content: {
+            blocks: [
+              {
+                id: 'block:page_2:block:0',
+                blockId: 'block',
+                type: 'Display',
+              },
+              {
+                id: 'block:page_2:block:1',
+                blockId: 'block',
+                type: 'Display',
               },
             ],
           },

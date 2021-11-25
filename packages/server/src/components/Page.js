@@ -21,7 +21,6 @@ import { useRouter } from 'next/router';
 import Context from './Context.js';
 import Head from './Head.js';
 import Block from './block/Block.js';
-import Root from './Root.js';
 import setupLink from '../utils/setupLink.js';
 
 const LoadingBlock = () => <div>Loading...</div>;
@@ -33,29 +32,28 @@ const Page = ({ lowdefy, pageConfig, rootConfig }) => {
   lowdefy._internal.query = router.query;
   lowdefy._internal.router = router;
   lowdefy._internal.link = setupLink({ lowdefy });
+  lowdefy.home = rootConfig.home;
+  lowdefy.lowdefyGlobal = rootConfig.lowdefyGlobal;
+  lowdefy.menus = rootConfig.menus;
   return (
-    <Root lowdefy={lowdefy} rootConfig={rootConfig}>
-      <Context config={pageConfig} lowdefy={lowdefy}>
-        {(context, loading) => {
-          if (loading) {
-            return <LoadingBlock />;
-          }
-          return (
-            <>
-              <Head
-                properties={context._internal.RootBlocks.map[pageConfig.pageId].eval.properties}
-              />
-              <Block
-                block={context._internal.RootBlocks.map[pageConfig.pageId]}
-                Blocks={context._internal.RootBlocks}
-                context={context}
-                lowdefy={lowdefy}
-              />
-            </>
-          );
-        }}
-      </Context>
-    </Root>
+    <Context config={pageConfig} lowdefy={lowdefy}>
+      {(context, loading) => {
+        if (loading) {
+          return <LoadingBlock />;
+        }
+        return (
+          <>
+            <Head properties={context._internal.RootBlocks.map[pageConfig.id].eval.properties} />
+            <Block
+              block={context._internal.RootBlocks.map[pageConfig.id]}
+              Blocks={context._internal.RootBlocks}
+              context={context}
+              lowdefy={lowdefy}
+            />
+          </>
+        );
+      }}
+    </Context>
   );
 };
 

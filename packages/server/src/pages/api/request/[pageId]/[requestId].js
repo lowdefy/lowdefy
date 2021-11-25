@@ -15,7 +15,7 @@
 */
 
 import { callRequest, createApiContext } from '@lowdefy/api';
-import connections from '../../../../plugins/connections.js';
+import connections from '../../../../../.lowdefy/build/plugins/connections.js';
 
 export default async function handler(req, res) {
   try {

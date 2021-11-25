@@ -73,7 +73,7 @@ _ref:
       ###### Reference pages:
       ```yaml
       # lowdefy.yaml
-      lowdefy: '3.22.0'
+      lowdefy: '3.23.1'
       pages:
         - _ref: pages/page1.yaml
         - _ref: pages/page2.yaml
@@ -94,7 +94,7 @@ _ref:
       ```
       Returns:
       ```
-      lowdefy: '3.22.0'
+      lowdefy: '3.23.1'
       pages:
         - id: page1
           type: PageHeaderMenu
@@ -176,12 +176,20 @@ _ref:
 
       const readFilePromise = promisify(fs.readFile);
 
-      async function useLocalOrSharedConfig(path, vars, context) {
-        const localFile =  await readFilePromise(path.resolve(path), 'utf8');
+      async function useLocalOrSharedConfig(refPath, vars, context) {
+        let fileContent
+        try {
+          fileContent =  await readFilePromise(path.resolve(refPath), 'utf8');
+          return fileContent;
+        } catch (error) {
+          if (error.code === 'ENOENT') {
+            fileContent = readFilePromise(path.resolve('../shared', refPath), 'utf8');
+            return fileContent;
+          }
+          throw error;
+        }
 
-        if (localFile) return localFile;
 
-        return readFilePromise(path.resolve('../shared', path), 'utf8');
       }
 
       module.exports = useLocalOrSharedConfig;
@@ -189,7 +197,7 @@ _ref:
 
       ```yaml
       // lowdefy.yaml
-      lowdefy: 3.22.0
+      lowdefy: 3.23.1
 
       cli:
         refResolver: resolvers/useLocalOrSharedConfig.js
@@ -215,7 +223,7 @@ _ref:
       ```
       ```yaml
       // lowdefy.yaml
-      lowdefy: 3.22.0
+      lowdefy: 3.23.1
 
       pages:
         - _ref:

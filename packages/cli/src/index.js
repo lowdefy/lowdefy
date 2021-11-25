@@ -21,7 +21,7 @@ import buildNetlify from './commands/buildNetlify/buildNetlify.js';
 import cleanCache from './commands/cleanCache/cleanCache.js';
 import dev from './commands/dev/dev.js';
 import init from './commands/init/init.js';
-import runCommand from './utils/runCommand';
+import runCommand from './utils/runCommand.js';
 
 const { description, version } = packageJson;
 

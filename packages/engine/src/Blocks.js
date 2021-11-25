@@ -34,7 +34,6 @@ class Blocks {
     this.recCount = 0;
     this.subBlocks = {};
 
-    this.generateBlockId = this.generateBlockId.bind(this);
     this.getValidateRec = this.getValidateRec.bind(this);
     this.init = this.init.bind(this);
     this.newBlocks = this.newBlocks.bind(this);
@@ -66,14 +65,15 @@ class Blocks {
 
   init(initState) {
     this.loopBlocks((block) => {
+      block.idPattern = block.id;
       block.blockIdPattern = block.blockId;
-      block.id = this.generateBlockId(block.blockIdPattern);
       block.fieldPattern = block.field;
+      block.id = applyArrayIndices(this.arrayIndices, block.idPattern);
       block.blockId = applyArrayIndices(this.arrayIndices, block.blockIdPattern);
-      this.context._internal.RootBlocks.map[block.blockId] = block;
       block.field = !type.isNone(block.fieldPattern)
         ? applyArrayIndices(this.arrayIndices, block.fieldPattern)
         : block.blockId;
+      this.context._internal.RootBlocks.map[block.id] = block;
       block.visible = type.isNone(block.visible) ? true : block.visible;
       block.required = type.isNone(block.required) ? false : block.required;
       block.validate = type.isArray(block.validate) ? block.validate : [];
@@ -89,6 +89,8 @@ class Blocks {
       block.styleEval = {};
       block.validationEval = {};
       block.visibleEval = {};
+
+      block.meta = this.context._internal.lowdefy._internal.blockComponents[block.type].meta;
 
       if (!type.isNone(block.areas)) {
         block.areasLayout = {};
@@ -614,14 +616,6 @@ class Blocks {
         subBlock.setBlocksLoadingCache();
       });
     });
-  }
-
-  generateBlockId(blockIdPattern) {
-    // TODO: is rootId correct?
-    return `${this.context.rootId}:${blockIdPattern}:${Math.random()
-      .toString(36)
-      .replace(/[^a-z]+/g, '')
-      .substr(0, 5)}`;
   }
 }
 

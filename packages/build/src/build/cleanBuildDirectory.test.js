@@ -14,23 +14,18 @@
   limitations under the License.
 */
 
-import { cleanDirectory } from '@lowdefy/node-utils';
-import cleanBuildDirectory from './cleanBuildDirectory.js';
-
 jest.mock('@lowdefy/node-utils', () => {
   return {
     cleanDirectory: jest.fn(),
   };
 });
 
-beforeEach(() => {
-  cleanDirectory.mockReset();
-});
-
 test('cleanOutputDirectory calls cleanDirectory', async () => {
+  const nodeUtils = await import('@lowdefy/node-utils');
+  const cleanBuildDirectory = await import('./cleanBuildDirectory.js');
   const context = {
     buildDirectory: 'buildDirectory',
   };
-  await cleanBuildDirectory({ context });
-  expect(cleanDirectory.mock.calls).toEqual([['buildDirectory']]);
+  await cleanBuildDirectory.default({ context });
+  expect(nodeUtils.cleanDirectory.mock.calls).toEqual([['buildDirectory']]);
 });

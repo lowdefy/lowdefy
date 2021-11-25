@@ -17,9 +17,10 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import countOperators from '../utils/countOperators.js';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
 
-async function buildConnections({ components }) {
+async function buildConnections({ components, context }) {
   const checkDuplicateConnectionId = createCheckDuplicateId({
     message: 'Duplicate connectionId "{{ id }}".',
   });
@@ -34,8 +35,19 @@ async function buildConnections({ components }) {
         );
       }
       checkDuplicateConnectionId({ id: connection.id });
+      if (!type.isString(connection.type)) {
+        throw new Error(
+          `Connection type is not a string at connection "${
+            connection.id
+          }". Received ${JSON.stringify(connection.type)}.`
+        );
+      }
+      context.typeCounters.connections.increment(connection.type);
       connection.connectionId = connection.id;
       connection.id = `connection:${connection.id}`;
+      countOperators(connection.properties || {}, {
+        counter: context.typeCounters.operators.server,
+      });
     });
   }
   return components;

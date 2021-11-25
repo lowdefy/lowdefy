@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
-function setBlockId(block, { pageId }) {
+function setBlockId(block, { pageId, blockIdCounter }) {
   block.blockId = block.id;
-  block.id = `block:${pageId}:${block.id}`;
+  block.id = `block:${pageId}:${block.blockId}:${blockIdCounter.getCount(block.blockId)}`;
+  blockIdCounter.increment(block.blockId);
 }
 
 export default setBlockId;

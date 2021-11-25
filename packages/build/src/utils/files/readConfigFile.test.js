@@ -15,9 +15,6 @@
 */
 
 import path from 'path';
-import { readFile } from '@lowdefy/node-utils';
-
-import createReadConfigFile from './readConfigFile.js';
 
 jest.mock('@lowdefy/node-utils', () => {
   return {
@@ -27,25 +24,25 @@ jest.mock('@lowdefy/node-utils', () => {
 
 const configDirectory = './config';
 
-beforeEach(() => {
-  readFile.mockReset();
-});
-
 test('readConfigFile reads a file from the correct dir', async () => {
-  const readConfigFile = createReadConfigFile({ configDirectory });
-  readFile.mockImplementation(() => 'Text file content');
+  const nodeUtils = await import('@lowdefy/node-utils');
+  const createReadConfigFile = await import('./readConfigFile.js');
+  const readConfigFile = createReadConfigFile.default({ configDirectory });
+  nodeUtils.readFile.mockImplementation(() => 'Text file content');
   const res = await readConfigFile('file.txt');
   expect(res).toEqual('Text file content');
-  expect(readFile.mock.calls).toEqual([[path.resolve(configDirectory, 'file.txt')]]);
+  expect(nodeUtils.readFile.mock.calls).toEqual([[path.resolve(configDirectory, 'file.txt')]]);
 });
 
 test('readConfigFile memoizes results', async () => {
-  const readConfigFile = createReadConfigFile({ configDirectory });
-  readFile.mockImplementation(() => 'Text file content');
+  const nodeUtils = await import('@lowdefy/node-utils');
+  const createReadConfigFile = await import('./readConfigFile.js');
+  const readConfigFile = createReadConfigFile.default({ configDirectory });
+  nodeUtils.readFile.mockImplementation(() => 'Text file content');
   const res1 = await readConfigFile('file.txt');
   expect(res1).toEqual('Text file content');
-  expect(readFile.mock.calls).toEqual([[path.resolve(configDirectory, 'file.txt')]]);
+  expect(nodeUtils.readFile.mock.calls).toEqual([[path.resolve(configDirectory, 'file.txt')]]);
   const res2 = await readConfigFile('file.txt');
   expect(res2).toEqual('Text file content');
-  expect(readFile.mock.calls).toEqual([[path.resolve(configDirectory, 'file.txt')]]);
+  expect(nodeUtils.readFile.mock.calls).toEqual([[path.resolve(configDirectory, 'file.txt')]]);
 });

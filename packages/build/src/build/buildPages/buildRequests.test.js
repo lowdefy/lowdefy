@@ -24,132 +24,11 @@ const logger = {
   log: mockLog,
 };
 
-const blockMetas = {
-  Container: {
-    category: 'container',
-    loading: {
-      type: 'Spinner',
-    },
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Container',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    schema: {
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      $id: 'https://example.com/Container.json',
-    },
-  },
-  List: {
-    category: 'list',
-    loading: {
-      type: 'Spinner',
-    },
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'List',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    schema: {
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      $id: 'https://example.com/Container.json',
-    },
-  },
-  Input: {
-    category: 'input',
-    valueType: 'string',
-    loading: {
-      type: 'SkeletonInput',
-    },
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Input',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    schema: {
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      $id: 'https://example.com/Container.json',
-    },
-  },
-  Display: {
-    category: 'display',
-    loading: {
-      type: 'Spinner',
-    },
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Display',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    schema: {
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      $id: 'https://example.com/Container.json',
-    },
-  },
-};
-
-const outputMetas = {
-  Container: {
-    category: 'container',
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Container',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    loading: {
-      type: 'Spinner',
-    },
-  },
-  List: {
-    category: 'list',
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'List',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    loading: {
-      type: 'Spinner',
-    },
-    valueType: 'array',
-  },
-  Input: {
-    category: 'input',
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Input',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    valueType: 'string',
-    loading: {
-      type: 'SkeletonInput',
-    },
-  },
-  Display: {
-    category: 'display',
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Display',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    loading: {
-      type: 'Spinner',
-    },
-  },
-};
-
 const auth = {
   public: true,
 };
 
-const getMeta = (type) => {
-  const meta = blockMetas[type];
-  if (!meta) {
-    return null;
-  }
-  return Promise.resolve(meta);
-};
-
-const context = testContext({ logger, getMeta });
+const context = testContext({ logger });
 
 beforeEach(() => {
   mockLogWarn.mockReset();
@@ -268,6 +147,22 @@ test('request id contains a "."', async () => {
   );
 });
 
+test('request type is not a string', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [{ id: 'request' }],
+      },
+    ],
+  };
+  await expect(buildPages({ components, context })).rejects.toThrow(
+    'Request type is not a string at at request at "request" at page "page_1". Received undefined.'
+  );
+});
+
 test('request payload not an object', async () => {
   const components = {
     pages: [
@@ -294,6 +189,7 @@ test('give request an id', async () => {
         requests: [
           {
             id: 'request_1',
+            type: 'Request',
           },
         ],
       },
@@ -309,10 +205,10 @@ test('give request an id', async () => {
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Container',
-        meta: outputMetas.Container,
         requests: [
           {
             id: 'request:page_1:request_1',
+            type: 'Request',
             auth: { public: true },
             requestId: 'request_1',
             pageId: 'page_1',
@@ -338,6 +234,7 @@ test('request on a sub-block', async () => {
             requests: [
               {
                 id: 'request_1',
+                type: 'Request',
               },
             ],
           },
@@ -355,10 +252,10 @@ test('request on a sub-block', async () => {
         operators: [],
         pageId: 'page_1',
         type: 'Container',
-        meta: outputMetas.Container,
         requests: [
           {
             id: 'request:page_1:request_1',
+            type: 'Request',
             auth: { public: true },
             requestId: 'request_1',
             pageId: 'page_1',
@@ -369,10 +266,9 @@ test('request on a sub-block', async () => {
           content: {
             blocks: [
               {
-                id: 'block:page_1:box',
+                id: 'block:page_1:box:0',
                 blockId: 'box',
                 type: 'Container',
-                meta: outputMetas.Container,
               },
             ],
           },
@@ -392,9 +288,11 @@ test('multiple requests', async () => {
         requests: [
           {
             id: 'request_1',
+            type: 'Request',
           },
           {
             id: 'request_2',
+            type: 'Request',
           },
         ],
       },
@@ -410,10 +308,10 @@ test('multiple requests', async () => {
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Container',
-        meta: outputMetas.Container,
         requests: [
           {
             id: 'request:page_1:request_1',
+            type: 'Request',
             auth: { public: true },
             requestId: 'request_1',
             pageId: 'page_1',
@@ -421,6 +319,7 @@ test('multiple requests', async () => {
           },
           {
             id: 'request:page_1:request_2',
+            type: 'Request',
             auth: { public: true },
             requestId: 'request_2',
             pageId: 'page_1',
@@ -442,6 +341,7 @@ test('set auth to request', async () => {
         requests: [
           {
             id: 'request_1',
+            type: 'Request',
           },
         ],
       },
@@ -452,6 +352,7 @@ test('set auth to request', async () => {
         requests: [
           {
             id: 'request_2',
+            type: 'Request',
           },
         ],
       },
@@ -467,10 +368,10 @@ test('set auth to request', async () => {
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Container',
-        meta: outputMetas.Container,
         requests: [
           {
             id: 'request:page_1:request_1',
+            type: 'Request',
             auth: { public: true },
             requestId: 'request_1',
             pageId: 'page_1',
@@ -485,10 +386,10 @@ test('set auth to request', async () => {
         pageId: 'page_2',
         blockId: 'page_2',
         type: 'Container',
-        meta: outputMetas.Container,
         requests: [
           {
             id: 'request:page_2:request_2',
+            type: 'Request',
             auth: { public: false },
             requestId: 'request_2',
             pageId: 'page_2',

@@ -17,8 +17,7 @@
 import { type } from '@lowdefy/helpers';
 import createCheckDuplicateId from '../../../utils/createCheckDuplicateId.js';
 
-function checkActionId(action, eventContext) {
-  const { eventId, blockId, pageId, checkDuplicateActionId } = eventContext;
+function checkAction(action, { blockId, checkDuplicateActionId, eventId, pageId, typeCounters }) {
   if (type.isUndefined(action.id)) {
     throw new Error(
       `Action id missing on event "${eventId}" on block "${blockId}" on page "${pageId}".`
@@ -37,6 +36,16 @@ function checkActionId(action, eventContext) {
     blockId,
     pageId,
   });
+  if (!type.isString(action.type)) {
+    throw new Error(
+      `Action type is not a string on action "${
+        action.id
+      }" on event "${eventId}" on block "${blockId}" on page "${pageId}". Received ${JSON.stringify(
+        action.type
+      )}.`
+    );
+  }
+  typeCounters.actions.increment(action.type);
 }
 
 function buildEvents(block, pageContext) {
@@ -69,17 +78,19 @@ function buildEvents(block, pageContext) {
           'Duplicate actionId "{{ id }}" on event "{{ eventId }}" on block "{{ blockId }}" on page "{{ pageId }}".',
       });
       block.events[key].try.map((action) =>
-        checkActionId(action, {
+        checkAction(action, {
           eventId: key,
           blockId: block.blockId,
+          typeCounters: pageContext.typeCounters,
           pageId: pageContext.pageId,
           checkDuplicateActionId,
         })
       );
       block.events[key].catch.map((action) =>
-        checkActionId(action, {
+        checkAction(action, {
           eventId: key,
           blockId: block.blockId,
+          typeCounters: pageContext.typeCounters,
           pageId: pageContext.pageId,
           checkDuplicateActionId,
         })

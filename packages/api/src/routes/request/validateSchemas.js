@@ -20,11 +20,11 @@ import { ConfigurationError } from '../../context/errors.js';
 
 function validateSchemas(
   { logger },
-  { connectionHandler, connectionProperties, requestConfig, requestHandler, requestProperties }
+  { connection, connectionProperties, requestConfig, requestResolver, requestProperties }
 ) {
   try {
-    validate({ schema: connectionHandler.schema, data: connectionProperties });
-    validate({ schema: requestHandler.schema, data: requestProperties });
+    validate({ schema: connection.schema, data: connectionProperties });
+    validate({ schema: requestResolver.schema, data: requestProperties });
   } catch (error) {
     const err = new ConfigurationError(error.message);
     logger.debug(
