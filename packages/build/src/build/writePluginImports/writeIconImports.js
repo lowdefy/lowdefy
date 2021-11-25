@@ -16,26 +16,25 @@
 
 import { nunjucksFunction } from '@lowdefy/nunjucks';
 
-const template = `{%- for block in blocks -%}
-import { {{ block.type }} } from '{{ block.package }}/blocks';
+const template = `{%- for package in packages -%}
+{%- for icon in package.icons -%}
+import { {{ icon }} } from '{{ package.package }}';
+{% endfor -%}
 {% endfor -%}
 export default {
-  {% for block in blocks -%}
-  {{ block.type }},
-  {% endfor -%}
+  {% for package in packages -%}
+  {%- for icon in package.icons -%}
+  {{ icon }},
+  {% endfor -%}{%- endfor -%}
 };
 `;
 
-async function writeBlockImports({ components, context }) {
+async function writeIconImports({ components, context }) {
   const templateFn = nunjucksFunction(template);
-  const blocks = Object.keys(components.types.blocks).map((type) => ({
-    type,
-    ...components.types.blocks[type],
-  }));
   await context.writeBuildArtifact({
-    filePath: 'plugins/blocks.js',
-    content: templateFn({ blocks }),
+    filePath: 'plugins/icons.js',
+    content: templateFn({ packages: components.icons }),
   });
 }
 
-export default writeBlockImports;
+export default writeIconImports;

@@ -25,6 +25,7 @@ import createWriteBuildArtifact from './utils/files/writeBuildArtifact.js';
 import addDefaultPages from './build/addDefaultPages/addDefaultPages.js';
 import buildAuth from './build/buildAuth/buildAuth.js';
 import buildConnections from './build/buildConnections.js';
+import buildIcons from './build/buildIcons.js';
 import buildMenu from './build/buildMenu.js';
 import buildPages from './build/buildPages/buildPages.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
@@ -40,6 +41,7 @@ import writeConfig from './build/writeConfig.js';
 import writeConnectionImports from './build/writePluginImports/writeConnectionImports.js';
 import writeConnections from './build/writeConnections.js';
 import writeGlobal from './build/writeGlobal.js';
+import writeIconImports from './build/writePluginImports/writeIconImports.js';
 import writeMenus from './build/writeMenus.js';
 import writePages from './build/writePages.js';
 import writeRequests from './build/writeRequests.js';
@@ -91,6 +93,7 @@ async function build(options) {
     await buildAuth({ components, context });
     await buildConnections({ components, context });
     await buildPages({ components, context });
+    await buildIcons({ components });
     await buildMenu({ components, context });
     await buildTypes({ components, context });
     await buildStyles({ components, context });
@@ -106,7 +109,7 @@ async function build(options) {
     await writeBlockImports({ components, context });
     await writeConnectionImports({ components, context });
     await writeStyleImports({ components, context });
-    // TODO: write icons file
+    await writeIconImports({ components, context });
     // TODO: add plugins to package.json
   } catch (error) {
     context.logger.error(error);
