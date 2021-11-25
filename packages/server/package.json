@@ -29,7 +29,7 @@
     "src/*"
   ],
   "scripts": {
-    "build": "yarn build:lowdefy && yarn build:next",
+    "build": "lowdefy-build && next build",
     "build:lowdefy": "lowdefy-build",
     "build:next": "next build",
     "dev": "next dev",

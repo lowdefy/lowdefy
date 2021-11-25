@@ -14,11 +14,25 @@
   limitations under the License.
 */
 
-function checkChildProcessError({ context, processOutput, message }) {
-  if (processOutput.status === 1) {
-    context.print.error(processOutput.stderr.toString('utf8'));
-    throw new Error(message);
+import util from 'util';
+import { exec } from 'child_process';
+
+const execPromise = util.promisify(exec);
+
+async function execProcess({ context, command, processOptions, silent }) {
+  const { stdout, stderr } = await execPromise(command, processOptions);
+  if (!silent) {
+    stderr.split('\n').forEach((line) => {
+      if (line) {
+        context.print.warn(line);
+      }
+    });
+    stdout.split('\n').forEach((line) => {
+      if (line) {
+        context.print.log(line);
+      }
+    });
   }
 }
 
-export default checkChildProcessError;
+export default execProcess;

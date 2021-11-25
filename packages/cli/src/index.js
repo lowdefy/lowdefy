@@ -17,7 +17,7 @@
 import { readFile } from '@lowdefy/node-utils';
 
 import program from 'commander';
-// import build from './commands/build/build.js';
+import build from './commands/build/build.js';
 // import dev from './commands/dev/dev.js';
 import init from './commands/init/init.js';
 import runCommand from './utils/runCommand.js';
@@ -29,28 +29,32 @@ const { description, version } = packageJson;
 
 program.name('lowdefy').description(description).version(version, '-v, --version');
 
-// program
-//   .command('build')
-//   .description('Build a Lowdefy deployment.')
-//   .usage(`[options]`)
-//   .option(
-//     '--base-directory <base-directory>',
-//     'Change base directory. Default is the current working directory.'
-//   )
-//   .option(
-//     '--blocks-server-url <blocks-server-url>',
-//     'The URL from where Lowdefy blocks will be served.'
-//   )
-//   .option('--disable-telemetry', 'Disable telemetry.')
-//   .option(
-//     '--output-directory <output-directory>',
-//     'Change the directory to which build artifacts are saved. Default is "<base-directory>/.lowdefy/build".'
-//   )
-//   .option(
-//     '--ref-resolver <ref-resolver-function-path>',
-//     'Path to a JavaScript file containing a _ref resolver function to be used as the app default _ref resolver.'
-//   )
-//   .action(runCommand(build));
+program
+  .command('build')
+  .description('Build a Lowdefy deployment.')
+  .usage(`[options]`)
+  .option(
+    '--base-directory <base-directory>',
+    'Change base directory. Default is the current working directory.'
+  )
+  .option(
+    '--blocks-server-url <blocks-server-url>',
+    'The URL from where Lowdefy blocks will be served.'
+  )
+  .option('--disable-telemetry', 'Disable telemetry.')
+  .option(
+    '--output-directory <output-directory>',
+    'Change the directory to which build artifacts are saved. Default is "<base-directory>/.lowdefy/build".'
+  )
+  .option(
+    '--package-manager <package-manager>',
+    'The package manager to user. Options are "npm" or "yarn".'
+  )
+  .option(
+    '--ref-resolver <ref-resolver-function-path>',
+    'Path to a JavaScript file containing a _ref resolver function to be used as the app default _ref resolver.'
+  )
+  .action(runCommand({ cliVersion: version })(build));
 
 // program
 //   .command('dev')
@@ -78,7 +82,7 @@ program.name('lowdefy').description(description).version(version, '-v, --version
 //     '--watch-ignore <paths...>',
 //     'A list of paths to files or directories that should be ignored by the file watcher. Globs are supported.'
 //   )
-//   .action(runCommand(dev));
+//   .action(runCommand({ cliVersion: version })(dev));
 
 program
   .command('init')

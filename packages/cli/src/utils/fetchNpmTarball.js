@@ -59,6 +59,7 @@ async function fetchNpmTarball({ packageName, version, directory }) {
   }
   await decompress(tarball.data, directory, {
     plugins: [decompressTargz()],
+    strip: 1, // Removes leading /package dir from the file path
   });
 }
 

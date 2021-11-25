@@ -22,6 +22,7 @@ import getCliJson from './getCliJson.js';
 import getDirectories from './getDirectories.js';
 import getLowdefyYaml from './getLowdefyYaml.js';
 import getOptions from './getOptions.js';
+import getPackageManager from './getPackageManager.js';
 import getSendTelemetry from './getSendTelemetry.js';
 import createPrint from './print.js';
 
@@ -39,10 +40,8 @@ async function startUp({ context, options = {}, command }) {
   context.appId = appId;
 
   context.options = getOptions(context);
-
-  const { buildDirectory } = getDirectories(context);
-  context.buildDirectory = buildDirectory;
-
+  context.directories = getDirectories(context);
+  context.packageManager = getPackageManager(context);
   await checkForUpdatedVersions(context);
 
   context.sendTelemetry = getSendTelemetry(context);

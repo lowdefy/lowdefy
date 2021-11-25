@@ -14,16 +14,28 @@
   limitations under the License.
 */
 
-import path from 'path';
+import execProcess from '../../utils/execProcess.js';
 
-function getDirectories({ baseDirectory, options }) {
-  let dotLowdefy;
-  if (options.outputDirectory) {
-    dotLowdefy = path.resolve(options.outputDirectory);
-  } else {
-    dotLowdefy = path.resolve(baseDirectory, '.lowdefy');
+const commands = {
+  npm: 'npm run build:lowdefy',
+  yarn: 'yarn run build:lowdefy',
+};
+
+async function runLowdefyBuild({ context }) {
+  context.print.log('Running Lowdefy build.');
+  try {
+    await execProcess({
+      context,
+      command: commands[context.packageManager],
+      processOptions: {
+        cwd: context.directories.server,
+      },
+      silent: false,
+    });
+  } catch (error) {
+    throw new Error('Lowdefy build failed.');
   }
-  return { dotLowdefy, server: path.join(dotLowdefy, 'server') };
+  context.print.log('Lowdefy build successful.');
 }
 
-export default getDirectories;
+export default runLowdefyBuild;
