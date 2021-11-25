@@ -5176,7 +5176,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.52"],
             ["@swc/core", "npm:1.2.112"],
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.9"],
-            ["axios", "npm:0.23.0"],
+            ["axios", "npm:0.24.0"],
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:27.3.1"]
           ],
           "linkType": "SOFT",
@@ -7651,15 +7651,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/axios-npm-0.21.4-e278873748-44245f24ac.zip/node_modules/axios/",
           "packageDependencies": [
             ["axios", "npm:0.21.4"],
-            ["follow-redirects", "virtual:2d08cb78267c7adbf01a2894532f5be5682edd4c2cdfb22db48579eee4b44f83e9e8acc206a1175aa523dd08b68bf491685797782a7e4cfa6e0d8c733cec98bc#npm:1.14.4"]
+            ["follow-redirects", "virtual:39e5c1e79ea63134f0cf339f4463df92854aaf708a45210afd29a0b4b9f67f95b34a1abbcabaae6d0033ad99a1d5f690ab51ed8e5d3283b87ccbc3a9ab3ec05f#npm:1.14.4"]
           ],
           "linkType": "HARD",
         }],
-        ["npm:0.23.0", {
-          "packageLocation": "./.yarn/cache/axios-npm-0.23.0-2d08cb7826-879f61022b.zip/node_modules/axios/",
+        ["npm:0.24.0", {
+          "packageLocation": "./.yarn/cache/axios-npm-0.24.0-39e5c1e79e-468cf496c0.zip/node_modules/axios/",
           "packageDependencies": [
-            ["axios", "npm:0.23.0"],
-            ["follow-redirects", "virtual:2d08cb78267c7adbf01a2894532f5be5682edd4c2cdfb22db48579eee4b44f83e9e8acc206a1175aa523dd08b68bf491685797782a7e4cfa6e0d8c733cec98bc#npm:1.14.4"]
+            ["axios", "npm:0.24.0"],
+            ["follow-redirects", "virtual:39e5c1e79ea63134f0cf339f4463df92854aaf708a45210afd29a0b4b9f67f95b34a1abbcabaae6d0033ad99a1d5f690ab51ed8e5d3283b87ccbc3a9ab3ec05f#npm:1.14.4"]
           ],
           "linkType": "HARD",
         }]
@@ -11447,10 +11447,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:2d08cb78267c7adbf01a2894532f5be5682edd4c2cdfb22db48579eee4b44f83e9e8acc206a1175aa523dd08b68bf491685797782a7e4cfa6e0d8c733cec98bc#npm:1.14.4", {
-          "packageLocation": "./.yarn/__virtual__/follow-redirects-virtual-adf9431ccf/0/cache/follow-redirects-npm-1.14.4-19eb02e590-d4ce74cf5c.zip/node_modules/follow-redirects/",
+        ["virtual:39e5c1e79ea63134f0cf339f4463df92854aaf708a45210afd29a0b4b9f67f95b34a1abbcabaae6d0033ad99a1d5f690ab51ed8e5d3283b87ccbc3a9ab3ec05f#npm:1.14.4", {
+          "packageLocation": "./.yarn/__virtual__/follow-redirects-virtual-85215bccf9/0/cache/follow-redirects-npm-1.14.4-19eb02e590-d4ce74cf5c.zip/node_modules/follow-redirects/",
           "packageDependencies": [
-            ["follow-redirects", "virtual:2d08cb78267c7adbf01a2894532f5be5682edd4c2cdfb22db48579eee4b44f83e9e8acc206a1175aa523dd08b68bf491685797782a7e4cfa6e0d8c733cec98bc#npm:1.14.4"],
+            ["follow-redirects", "virtual:39e5c1e79ea63134f0cf339f4463df92854aaf708a45210afd29a0b4b9f67f95b34a1abbcabaae6d0033ad99a1d5f690ab51ed8e5d3283b87ccbc3a9ab3ec05f#npm:1.14.4"],
             ["@types/debug", null],
             ["debug", null]
           ],
@@ -14745,7 +14745,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@swc/cli", "virtual:dddca670fd0b7758fb2e1b1a3e18ac7ebd1ecd06ecdd7acec2b78bccf1d35802cb22904bfbb233b16515a81f5cb819421786d20887823d98022b367036c1ad51#npm:0.1.52"],
             ["@swc/core", "npm:1.2.112"],
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.9"],
-            ["axios", "npm:0.23.0"],
+            ["axios", "npm:0.24.0"],
             ["chalk", "npm:4.1.2"],
             ["chokidar", "npm:3.5.2"],
             ["commander", "npm:7.2.0"],
