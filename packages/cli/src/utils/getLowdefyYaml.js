@@ -25,7 +25,7 @@ async function getLowdefyYaml({ baseDirectory, command }) {
     lowdefyYaml = await readFile(path.resolve(baseDirectory, 'lowdefy.yml'));
   }
   if (!lowdefyYaml) {
-    if (!['init', 'clean-cache'].includes(command)) {
+    if (!['init'].includes(command)) {
       throw new Error(
         `Could not find "lowdefy.yaml" file in specified base directory ${baseDirectory}.`
       );

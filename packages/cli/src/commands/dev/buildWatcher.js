@@ -15,7 +15,7 @@
 */
 import path from 'path';
 import chokidar from 'chokidar';
-import BatchChanges from '../../utils/BatchChanges';
+import BatchChanges from '../../utils/BatchChanges.js';
 
 function buildWatcher({ build, context, reloadFn }) {
   const { watch = [], watchIgnore = [] } = context.options;

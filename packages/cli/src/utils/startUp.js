@@ -17,19 +17,16 @@
 import path from 'path';
 import { type } from '@lowdefy/helpers';
 
-import checkForUpdatedVersions from './checkForUpdatedVersions';
-import getCliJson from './getCliJson';
-import getDirectories from './getDirectories';
-import getLowdefyYaml from './getLowdefyYaml';
-import getOptions from './getOptions';
-import getSendTelemetry from './getSendTelemetry';
-import createPrint from './print';
-import packageJson from '../../package.json';
-const { version: cliVersion } = packageJson;
+import checkForUpdatedVersions from './checkForUpdatedVersions.js';
+import getCliJson from './getCliJson.js';
+import getDirectories from './getDirectories.js';
+import getLowdefyYaml from './getLowdefyYaml.js';
+import getOptions from './getOptions.js';
+import getSendTelemetry from './getSendTelemetry.js';
+import createPrint from './print.js';
 
 async function startUp({ context, options = {}, command }) {
   context.command = command.name();
-  context.cliVersion = cliVersion;
   context.commandLineOptions = options;
   context.print = createPrint();
   context.baseDirectory = path.resolve(options.baseDirectory || process.cwd());
@@ -43,8 +40,7 @@ async function startUp({ context, options = {}, command }) {
 
   context.options = getOptions(context);
 
-  const { cacheDirectory, buildDirectory } = getDirectories(context);
-  context.cacheDirectory = cacheDirectory;
+  const { buildDirectory } = getDirectories(context);
   context.buildDirectory = buildDirectory;
 
   await checkForUpdatedVersions(context);

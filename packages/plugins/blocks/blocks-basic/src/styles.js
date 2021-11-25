@@ -14,13 +14,16 @@
   limitations under the License.
 */
 
-import fse from 'fs-extra';
+import types from './types.js';
+import * as blocks from './blocks.js';
 
-async function cleanCache({ context }) {
-  context.print.log(`Cleaning cache at "${context.cacheDirectory}".`);
-  await fse.emptyDir(context.cacheDirectory);
-  await context.sendTelemetry();
-  context.print.succeed(`Cache cleaned.`);
-}
 
-export default cleanCache;
+
+Object.keys(blocks).forEach((typename) => {
+  blocks[typename] = ;
+});
+
+export default {
+  blocks,
+  package: ['styles.less'],
+};
