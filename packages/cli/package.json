@@ -1,6 +1,6 @@
 {
   "name": "lowdefy",
-  "version": "4.0.0-alpha.1",
+  "version": "4.0.0-alpha.2",
   "license": "Apache-2.0",
   "description": "Lowdefy CLI",
   "homepage": "https://lowdefy.com",
@@ -40,8 +40,8 @@
     "test": "FORCE_COLOR=3 jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.1",
-    "@lowdefy/node-utils": "4.0.0-alpha.1",
+    "@lowdefy/helpers": "4.0.0-alpha.2",
+    "@lowdefy/node-utils": "4.0.0-alpha.2",
     "axios": "0.24.0",
     "chalk": "4.1.2",
     "chokidar": "3.5.2",
