@@ -15,14 +15,32 @@
 */
 
 /* eslint-disable max-classes-per-file */
-import NodeParser from '../src/nodeParser.js';
+import WebParser from './webParser.js';
 
-const payload = {
-  string: 'Some String',
+const args = [{ args: true }];
+
+const operators = {
+  _test: jest.fn(() => 'test'),
+  _error: jest.fn(() => {
+    throw new Error('Test error.');
+  }),
 };
 
+const payload = {
+  payload: true,
+};
+
+const secrets = {
+  secrets: true,
+};
+
+const user = {
+  user: true,
+};
+const arrayIndices = [1];
+
 test('parse input undefined', async () => {
-  const parser = new NodeParser({ payload });
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({});
   expect(res.output).toEqual();
@@ -30,90 +48,107 @@ test('parse input undefined', async () => {
 });
 
 test('parse object', async () => {
-  const input = { a: { _payload: 'string' } };
-
-  const parser = new NodeParser({ payload });
+  const input = { a: { _state: 'string' } };
+  const parser = new WebParser({ context });
   await parser.init();
-  const res = parser.parse({ input, location: 'locationId' });
-  expect(res.output).toEqual({ a: 'Some String' });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  expect(res.output).toEqual({ a: 'state' });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
-
 test('parse array', async () => {
-  const input = [{ _payload: 'string' }];
-  const parser = new NodeParser({ payload });
+  const input = [{ _state: 'string' }];
+  const parser = new WebParser({ context });
   await parser.init();
-  const res = parser.parse({ input, location: 'locationId' });
-  expect(res.output).toEqual(['Some String']);
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  expect(res.output).toEqual(['state']);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
 test('parse string', async () => {
   const input = 'string';
-  const parser = new NodeParser({ payload });
+  const parser = new WebParser({ context });
   await parser.init();
-  const res = parser.parse({ input, location: 'locationId' });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe('string');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
 test('parse number', async () => {
   const input = 42;
-  const parser = new NodeParser({ payload });
+  const parser = new WebParser({ context });
   await parser.init();
-  const res = parser.parse({ input, location: 'locationId' });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(42);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
 test('parse true', async () => {
   const input = true;
-  const parser = new NodeParser({ payload });
+  const parser = new WebParser({ context });
   await parser.init();
-  const res = parser.parse({ input, location: 'locationId' });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
 test('parse false', async () => {
   const input = false;
-  const parser = new NodeParser({ payload });
+  const parser = new WebParser({ context });
   await parser.init();
-  const res = parser.parse({ input, location: 'locationId' });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
 test('parse null', async () => {
   const input = null;
-  const parser = new NodeParser({ payload });
+  const parser = new WebParser({ context });
   await parser.init();
-  const res = parser.parse({ input, location: 'locationId' });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
 test('parse undefined', async () => {
   const input = undefined;
-  const parser = new NodeParser({ payload });
+  const parser = new WebParser({ context });
   await parser.init();
-  const res = parser.parse({ input, location: 'locationId' });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(undefined);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
 test('operator input with more than one key is ignored.', async () => {
-  const input = { a: { _payload: 'string', key: 'value' } };
-  const parser = new NodeParser({ payload });
+  const input = { a: { _state: 'string', key: 'value' } };
+  const parser = new WebParser({ context });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
-  expect(res.output).toEqual({ a: { _payload: 'string', key: 'value' } });
+  expect(res.output).toEqual({ a: { _state: 'string', key: 'value' } });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('parse args not an array', async () => {
-  const input = { _payload: 'string' };
-  const parser = new NodeParser({ payload });
+test('context.lowdefy not an object', async () => {
+  const parser = new WebParser({ context: {} });
+  await expect(parser.init()).rejects.toThrow('context.lowdefy must be an object.');
+});
+
+test('context.operators not an array', async () => {
+  const parser = new WebParser({ context: { lowdefy: context.lowdefy } });
+  await expect(parser.init()).rejects.toThrow('context.operators must be an array.');
+});
+
+test('parse event not an object', async () => {
+  const input = { _state: 'string' };
+  const parser = new WebParser({ context });
+  await parser.init();
+  expect(() => parser.parse({ input, event: 'String' })).toThrow(
+    'Operator parser event must be a object.'
+  );
+});
+
+test('parse args not an object', async () => {
+  const input = { _state: 'string' };
+  const parser = new WebParser({ context });
   await parser.init();
   expect(() => parser.parse({ input, args: 'String' })).toThrow(
     'Operator parser args must be an array.'
@@ -121,8 +156,8 @@ test('parse args not an array', async () => {
 });
 
 test('parse location not a string', async () => {
-  const input = { _payload: 'string' };
-  const parser = new NodeParser({ payload });
+  const input = { _state: 'string' };
+  const parser = new WebParser({ context });
   await parser.init();
   expect(() => parser.parse({ input, location: true })).toThrow(
     'Operator parser location must be a string.'
@@ -131,25 +166,35 @@ test('parse location not a string', async () => {
 
 test('parse js dates', async () => {
   const input = { a: new Date(1), b: [new Date(2)] };
-  const parser = new NodeParser({ payload });
+  const parser = new WebParser({ context });
   await parser.init();
-  const res = parser.parse({ input, location: 'locationId' });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({ a: new Date(1), b: [new Date(2)] });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
 test('parse js dates, do not modify input', async () => {
   const input = { a: new Date(1) };
-  const parser = new NodeParser({ payload });
+  const parser = new WebParser({ context });
   await parser.init();
-  const res = parser.parse({ input, location: 'locationId' });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(input).toEqual({ a: new Date(1) });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
+
+test('parse location not specified', async () => {
+  const input = { _state: 'string' };
+  const parser = new WebParser({ context });
+  await parser.init();
+  const res = parser.parse({ input, arrayIndices });
+  expect(res.output).toEqual('state');
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
+
 describe('parse operators', () => {
   test('parse _base64.encode operator', async () => {
     const input = { a: { '_base64.encode': 'A string value' } };
-    const parser = new NodeParser({ payload });
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual({ a: 'QSBzdHJpbmcgdmFsdWU=' });
@@ -158,7 +203,7 @@ describe('parse operators', () => {
 
   test('parse _base64.decode operator', async () => {
     const input = { a: { '_base64.decode': 'QSBzdHJpbmcgdmFsdWU=' } };
-    const parser = new NodeParser({ payload });
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual({ a: 'A string value' });
@@ -167,7 +212,7 @@ describe('parse operators', () => {
 
   test('parse _uri.encode operator', async () => {
     const input = { a: { '_uri.encode': 'ABC abc 123' } };
-    const parser = new NodeParser({ payload });
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual({ a: 'ABC%20abc%20123' });
@@ -176,7 +221,7 @@ describe('parse operators', () => {
 
   test('parse _uri.decode operator', async () => {
     const input = { a: { '_uri.decode': 'ABC%20abc%20123' } };
-    const parser = new NodeParser({ payload });
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual({ a: 'ABC abc 123' });
@@ -185,7 +230,7 @@ describe('parse operators', () => {
 
   test('parse _lt operator', async () => {
     const input = { a: { _lt: [4, 5] } };
-    const parser = new NodeParser({ payload });
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual({ a: true });
@@ -194,7 +239,7 @@ describe('parse operators', () => {
 
   test('parse _lte operator', async () => {
     const input = { a: { _lte: [5, 5] } };
-    const parser = new NodeParser({ payload });
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual({ a: true });
@@ -203,7 +248,7 @@ describe('parse operators', () => {
 
   test('parse _gt operator', async () => {
     const input = { a: { _gt: [5, 3] } };
-    const parser = new NodeParser({ payload });
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual({ a: true });
@@ -212,7 +257,7 @@ describe('parse operators', () => {
 
   test('parse _gte operator', async () => {
     const input = { a: { _gte: [5, 5] } };
-    const parser = new NodeParser({ payload });
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual({ a: true });
@@ -221,10 +266,47 @@ describe('parse operators', () => {
 
   test('parse _if_none operator', async () => {
     const input = { a: { _if_none: [null, 'default'] } };
-    const parser = new NodeParser({ payload });
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual({ a: 'default' });
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
+
+  test('parse _media operator', async () => {
+    Object.defineProperty(window, 'innerHeight', {
+      writable: true,
+      configurable: true,
+      value: 300,
+    });
+    Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 500 });
+    const input = { a: { _media: true } };
+    const parser = new WebParser({ context });
+    await parser.init();
+    const res = parser.parse({ input, location: 'locationId' });
+    expect(res.output).toEqual({
+      a: {
+        height: 300,
+        size: 'xs',
+        width: 500,
+      },
+    });
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
+
+  test('parse _location operator', async () => {
+    Object.defineProperty(window, 'location', {
+      writable: true,
+      configurable: true,
+      value: { origin: 'http://test.com' },
+    });
+    const input = { a: { _location: 'origin' } };
+    const parser = new WebParser({ context });
+    await parser.init();
+    const res = parser.parse({ input, location: 'locationId' });
+    expect(res.output).toEqual({
+      a: 'http://test.com',
+    });
     expect(res.errors).toMatchInlineSnapshot(`Array []`);
   });
 
@@ -232,7 +314,7 @@ describe('parse operators', () => {
     const mathRandomFn = Math.random;
     Math.random = () => 0.5678;
     const input = { a: { _random: 'string' } };
-    const parser = new NodeParser({ payload });
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual({ a: 'kfv9yqdp' });
@@ -240,18 +322,9 @@ describe('parse operators', () => {
     Math.random = mathRandomFn;
   });
 
-  test('parse _uuid operator', async () => {
-    const input = { a: { _uuid: true } };
-    const parser = new NodeParser({ payload });
-    await parser.init();
-    const res = parser.parse({ input, location: 'locationId' });
-    expect(res.output.a.length).toEqual(36);
-    expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  });
-
   test('parse _math operator', async () => {
     const input = { a: { '_math.min': [9, 4, 2] } };
-    const parser = new NodeParser({ payload });
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual({ a: 2 });
@@ -260,7 +333,7 @@ describe('parse operators', () => {
 
   test('parse _sum operator', async () => {
     const input = { a: { _sum: [1, 1] } };
-    const parser = new NodeParser({ payload });
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual({ a: 2 });
@@ -269,7 +342,7 @@ describe('parse operators', () => {
 
   test('parse _product operator', async () => {
     const input = { a: { _product: [2, -3] } };
-    const parser = new NodeParser({ payload });
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual({ a: -6 });
@@ -278,7 +351,7 @@ describe('parse operators', () => {
 
   test('parse _subtract operator', async () => {
     const input = { a: { _subtract: [2, -3] } };
-    const parser = new NodeParser({ payload });
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual({ a: 5 });
@@ -287,7 +360,7 @@ describe('parse operators', () => {
 
   test('parse _divide operator', async () => {
     const input = { a: { _divide: [2, 4] } };
-    const parser = new NodeParser({ payload });
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual({ a: 0.5 });
@@ -296,7 +369,7 @@ describe('parse operators', () => {
 
   test('parse _array operator', async () => {
     const input = { a: { '_array.length': [2, 4] } };
-    const parser = new NodeParser({ payload });
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual({ a: 2 });
@@ -305,7 +378,7 @@ describe('parse operators', () => {
 
   test('parse _object operator', async () => {
     const input = { a: { '_object.keys': { a: 1, b: 2 } } };
-    const parser = new NodeParser({ payload });
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual({ a: ['a', 'b'] });
@@ -314,7 +387,7 @@ describe('parse operators', () => {
 
   test('parse _string operator', async () => {
     const input = { a: { '_string.concat': ['a new ', 'string'] } };
-    const parser = new NodeParser({ payload });
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual({ a: 'a new string' });
@@ -332,9 +405,9 @@ describe('parse operators', () => {
       g: 0,
     };
     const input = { x: { '_json.parse': { '_json.stringify': [value] } } };
-    const parser = new NodeParser({ payload });
+    const parser = new WebParser({ context });
     await parser.init();
-    const res = parser.parse({ input, location: 'locationId' });
+    const res = parser.parse({ input, location: 'locationId', arrayIndices });
     expect(res.output).toEqual({ x: value });
     expect(res.errors).toMatchInlineSnapshot(`Array []`);
   });
@@ -342,9 +415,9 @@ describe('parse operators', () => {
   test('_json.stringify then _json.parse date', async () => {
     const value = new Date();
     const input = { '_json.parse': { '_json.stringify': [value] } };
-    const parser = new NodeParser({ payload });
+    const parser = new WebParser({ context });
     await parser.init();
-    const res = parser.parse({ input, location: 'locationId' });
+    const res = parser.parse({ input, location: 'locationId', arrayIndices });
     expect(res.output).toEqual(value);
     expect(res.errors).toMatchInlineSnapshot(`Array []`);
   });
@@ -360,7 +433,7 @@ describe('parse operators', () => {
       g: 0,
     };
     const input = { x: { '_yaml.parse': { '_yaml.stringify': [value] } } };
-    const parser = new NodeParser({ payload });
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual({ x: value });
@@ -370,7 +443,7 @@ describe('parse operators', () => {
   test('_yaml.stringify then _yaml.parse date', async () => {
     const value = new Date();
     const input = { '_yaml.parse': { '_yaml.stringify': [value] } };
-    const parser = new NodeParser({ payload });
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual(value);
@@ -378,56 +451,71 @@ describe('parse operators', () => {
   });
 
   test('parse _mql operator', async () => {
-    const input = { '_mql.test': { on: { _payload: true }, test: { string: 'Some String' } } };
-    const parser = new NodeParser({ payload });
+    const input = { '_mql.test': { on: { _state: true }, test: { string: 'state' } } };
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual(true);
     expect(res.errors).toMatchInlineSnapshot(`Array []`);
   });
 
-  test('parse _diff operator', async () => {
-    const input = { '_diff.deep': { rhs: { a: 1 }, lhs: { b: 2 } } };
-    const parser = new NodeParser({ payload });
+  test('parse _global operator', async () => {
+    const input = { _global: 'string' };
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
-    expect(res.output).toEqual([
-      { kind: 'D', lhs: 2, path: ['b'] },
-      { kind: 'N', path: ['a'], rhs: 1 },
-    ]);
+    expect(res.output).toEqual('global');
     expect(res.errors).toMatchInlineSnapshot(`Array []`);
   });
 
-  test('parse _secret operator', async () => {
-    const input = { _secret: 'key' };
-    const parser = new NodeParser({ secrets: { key: 'value' } });
+  test('parse _input operator', async () => {
+    const input = { _input: 'string' };
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
-    expect(res.output).toEqual('value');
+    expect(res.output).toEqual('input');
     expect(res.errors).toMatchInlineSnapshot(`Array []`);
   });
 
-  test('parse _payload operator', async () => {
-    const input = { _payload: 'key' };
-    const parser = new NodeParser({ payload: { key: 'value' } });
+  test('parse _state operator', async () => {
+    const input = { _state: 'string' };
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
-    expect(res.output).toEqual('value');
+    expect(res.output).toEqual('state');
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
+
+  test('parse _url_query operator', async () => {
+    const input = { _url_query: 'string' };
+    const parser = new WebParser({ context });
+    await parser.init();
+    const res = parser.parse({ input, location: 'locationId' });
+    expect(res.output).toEqual('urlQuery');
     expect(res.errors).toMatchInlineSnapshot(`Array []`);
   });
 
   test('parse _user operator', async () => {
     const input = { _user: 'name' };
-    const parser = new NodeParser({ user: { name: 'user' } });
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual('user');
     expect(res.errors).toMatchInlineSnapshot(`Array []`);
   });
 
+  test('parse _uuid operator', async () => {
+    const input = { a: { _uuid: true } };
+    const parser = new WebParser({ context });
+    await parser.init();
+    const res = parser.parse({ input, location: 'locationId' });
+    expect(res.output.a.length).toEqual(36);
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
+
   test('parse _get operator', async () => {
     const input = { _get: { key: 'key', from: { key: 'value' } } };
-    const parser = new NodeParser({});
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual('value');
@@ -435,18 +523,53 @@ describe('parse operators', () => {
   });
 
   test('parse _function operator', async () => {
-    const input = { _function: { payload: { __payload: 'key' }, args: { __args: true } } };
-    const parser = new NodeParser({ payload: { key: 'value' } });
+    const input = { _function: { state: { __state: 'string' }, args: { __args: true } } };
+    const parser = new WebParser({ context });
     await parser.init();
     const { output, errors } = parser.parse({ input, location: 'locationId' });
     expect(output).toBeInstanceOf(Function);
-    expect(output(1, 2)).toEqual({ payload: 'value', args: [1, 2] });
+    expect(output(1, 2)).toEqual({ state: 'state', args: [1, 2] });
     expect(errors).toEqual([]);
+  });
+
+  test('parse _format operator', async () => {
+    const input = {
+      '_format.momentFormat': { params: { format: 'D MMM YYYY' }, on: { _date: 0 } },
+    };
+    const parser = new WebParser({ context });
+    await parser.init();
+    const { output, errors } = parser.parse({ input, location: 'locationId' });
+    expect(output).toMatchInlineSnapshot(`"1 Jan 1970"`);
+    expect(errors).toEqual([]);
+  });
+
+  test('parse _js operator retuning a function', async () => {
+    const test_fn = () => (a, b) => a + b;
+    const mockFn = jest.fn().mockImplementation(test_fn);
+    context.lowdefy.imports.jsOperators.test_fn = mockFn;
+    const input = {
+      '_js.test_fn': [],
+    };
+    const parser = new WebParser({ context });
+    await parser.init();
+    const { output, errors } = parser.parse({ input, location: 'locationId' });
+    expect(output).toBeInstanceOf(Function);
+    expect(output(4, 2)).toEqual(6);
+    expect(errors).toEqual([]);
+  });
+
+  test('parse _index operator', async () => {
+    const input = { _index: 0 };
+    const parser = new WebParser({ context });
+    await parser.init();
+    const res = parser.parse({ input, location: 'locationId', arrayIndices: [3, 2] });
+    expect(res.output).toEqual(3);
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
   });
 
   test('parse _change_case operator', async () => {
     const input = { '_change_case.camelCase': { on: 'test string' } };
-    const parser = new NodeParser({ payload });
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual('testString');
@@ -455,7 +578,7 @@ describe('parse operators', () => {
 
   test('parse _number operator', async () => {
     const input = { '_number.toFixed': { on: 12.33666, digits: 2 } };
-    const parser = new NodeParser({ payload });
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual('12.34');
@@ -472,7 +595,7 @@ describe('parse operators', () => {
         default: 'C',
       },
     };
-    const parser = new NodeParser({ payload });
+    const parser = new WebParser({ context });
     await parser.init();
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual('A');

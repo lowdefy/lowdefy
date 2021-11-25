@@ -16,38 +16,27 @@
 
 import { serializer, type } from '@lowdefy/helpers';
 
-import commonOperators from './common/index.js';
-import nodeOperators from './node/index.js';
-
 class NodeParser {
-  constructor({ payload, secrets, user } = {}) {
+  constructor({ payload, secrets, user, operators } = {}) {
     this.payload = payload;
     this.secrets = secrets;
     this.user = user;
     this.parse = this.parse.bind(this);
-    this.operators = {
-      ...commonOperators,
-      ...nodeOperators,
-    };
-    this.operations = {};
+    this.operators = operators;
   }
 
   async init() {
-    const operators = this.operators;
-    const operations = this.operations;
     await Promise.all(
-      Object.keys(operators).map(async (operator) => {
-        const fn = await import(`./${operators[operator]}.js`);
-        operations[operator] = fn.default;
-        if (operations[operator].init) {
-          await operations[operator].init();
+      Object.values(this.operators).map(async (operator) => {
+        if (operator.init) {
+          await operator.init();
         }
       })
     );
   }
 
   parse({ args, input, location }) {
-    const operations = this.operations;
+    const operators = this.operators;
     const secrets = this.secrets;
     const payload = this.payload;
     const user = this.user;
@@ -67,14 +56,14 @@ class NodeParser {
         const key = Object.keys(value)[0];
         const [op, methodName] = key.split('.');
         try {
-          if (!type.isUndefined(operations[op])) {
-            const res = operations[op]({
+          if (!type.isUndefined(operators[op])) {
+            const res = operators[op]({
               args,
               arrayIndices: [],
               env: 'node',
               location,
               methodName,
-              operations: operations,
+              operators: operators,
               params: value[key],
               secrets,
               payload,
