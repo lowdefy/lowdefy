@@ -3256,7 +3256,7 @@ __metadata:
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
-    ajv: 8.6.3
+    ajv: 8.8.2
     ajv-errors: 3.0.0
     jest: 27.3.1
   languageName: unknown
@@ -3290,7 +3290,7 @@ __metadata:
     "@testing-library/dom": 8.10.1
     "@testing-library/react": 13.0.0-alpha.4
     "@testing-library/user-event": 14.0.0-alpha.14
-    ajv: 8.6.3
+    ajv: 8.8.2
     ajv-errors: 3.0.0
     jest: 27.3.1
     jest-serializer-html: 7.1.0
@@ -3495,7 +3495,7 @@ __metadata:
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
-    ajv: 8.6.3
+    ajv: 8.8.2
     jest: 27.3.1
     js-yaml: 4.1.0
     json5: 2.2.0
@@ -5114,15 +5114,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ajv@npm:8.6.3":
-  version: 8.6.3
-  resolution: "ajv@npm:8.6.3"
+"ajv@npm:8.8.2":
+  version: 8.8.2
+  resolution: "ajv@npm:8.8.2"
   dependencies:
     fast-deep-equal: ^3.1.1
     json-schema-traverse: ^1.0.0
     require-from-string: ^2.0.2
     uri-js: ^4.2.2
-  checksum: 690ffb9408415fdab43686b3f92037ba0c8362f5d0709a123ba3fb546e6ad81414455f80a2b5cc432ce924afe9864671198f022bc331a19c072d4ede152ec3ca
+  checksum: 90849ef03c4f4f7051d15f655120137b89e3205537d683beebd39d95f40c0ca00ea8476cd999602d2f433863e7e4bf1b81d1869d1e07f4dcf56d71b6430a605c
   languageName: node
   linkType: hard
 

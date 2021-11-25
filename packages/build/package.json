@@ -45,7 +45,7 @@
     "@lowdefy/helpers": "4.0.0-alpha.0",
     "@lowdefy/node-utils": "4.0.0-alpha.0",
     "@lowdefy/nunjucks": "4.0.0-alpha.0",
-    "ajv": "8.6.3",
+    "ajv": "8.8.2",
     "js-yaml": "4.1.0",
     "json5": "2.2.0",
     "uuid": "8.3.2"
