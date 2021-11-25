@@ -1,0 +1,57 @@
+{
+  "name": "@lowdefy/operators-js",
+  "version": "3.22.0",
+  "licence": "Apache-2.0",
+  "description": "",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "lowdefy operator"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Sam Tolmay",
+      "url": "https://github.com/SamTolmay"
+    },
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "type": "module",
+  "exports": {
+    "./operators/client": "./dist/operatorsClient.js",
+    "./operators/server": "./dist/operatorsServer.js",
+    "./types": "./dist/types.js"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "build": "yarn swc",
+    "clean": "rm -rf dist",
+    "prepare": "yarn build",
+    "swc": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start --copy-files",
+    "test": "jest --coverage"
+  },
+  "dependencies": {
+    "@lowdefy/helpers": "3.22.0",
+    "@lowdefy/operators": "3.22.0"
+  },
+  "devDependencies": {
+    "@swc/cli": "0.1.51",
+    "@swc/core": "1.2.107",
+    "@swc/jest": "0.2.5",
+    "jest": "27.3.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
