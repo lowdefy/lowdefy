@@ -15,7 +15,7 @@
 */
 
 import { get } from '@lowdefy/helpers';
-import filterMenuList from './filterMenuList';
+import filterMenuList from './filterMenuList.js';
 
 function filterMenus(context, { menus }) {
   return menus.map((menu) => {

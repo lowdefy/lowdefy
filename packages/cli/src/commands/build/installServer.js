@@ -14,13 +14,7 @@
   limitations under the License.
 */
 
-import execProcess from '../../utils/execProcess.js';
 import spawnProcess from '../../utils/spawnProcess.js';
-
-// const commands = {
-//   npm: 'npm install --legacy-peer-deps',
-//   yarn: 'yarn install',
-// };
 
 const args = {
   npm: ['install', '--legacy-peer-deps'],

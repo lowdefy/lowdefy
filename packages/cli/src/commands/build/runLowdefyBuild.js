@@ -14,21 +14,22 @@
   limitations under the License.
 */
 
-import execProcess from '../../utils/execProcess.js';
-
-const commands = {
-  npm: 'npm run build:lowdefy',
-  yarn: 'yarn run build:lowdefy',
-};
+import spawnProcess from '../../utils/spawnProcess.js';
 
 async function runLowdefyBuild({ context }) {
   context.print.log('Running Lowdefy build.');
   try {
-    await execProcess({
+    await spawnProcess({
       context,
-      command: commands[context.packageManager],
+      command: context.packageManager, // npm or yarn
+      args: ['run', 'build:lowdefy'],
       processOptions: {
         cwd: context.directories.server,
+        env: {
+          ...process.env,
+          LOWDEFY_BUILD_DIRECTORY: context.directories.build,
+          LOWDEFY_CONFIG_DIRECTORY: context.directories.base,
+        },
       },
       silent: false,
     });

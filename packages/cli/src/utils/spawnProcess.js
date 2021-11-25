@@ -46,6 +46,11 @@ async function spawnProcess({ context, command, args, processOptions, silent }) 
       }
     });
 
+    process.on('error', (error) => {
+      console.log(error);
+      reject(error);
+    });
+
     process.on('exit', (code) => {
       if (code !== 0) {
         reject(new Error(`${command} exited with code ${code}`));

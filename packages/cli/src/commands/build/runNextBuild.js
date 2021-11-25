@@ -14,25 +14,24 @@
   limitations under the License.
 */
 
-import util from 'util';
-import { exec } from 'child_process';
+import spawnProcess from '../../utils/spawnProcess.js';
 
-const execPromise = util.promisify(exec);
-
-async function execProcess({ context, command, processOptions, silent }) {
-  const { stdout, stderr } = await execPromise(command, processOptions);
-  if (!silent) {
-    stderr.split('\n').forEach((line) => {
-      if (line) {
-        context.print.warn(line);
-      }
+async function runNextBuild({ context }) {
+  context.print.log('Running Next build.');
+  try {
+    await spawnProcess({
+      context,
+      command: context.packageManager, // npm or yarn
+      args: ['run', 'build:next'],
+      processOptions: {
+        cwd: context.directories.server,
+      },
+      silent: false,
     });
-    stdout.split('\n').forEach((line) => {
-      if (line) {
-        context.print.log(line);
-      }
-    });
+  } catch (error) {
+    throw new Error('Next build failed.');
   }
+  context.print.log('Next build successful.');
 }
 
-export default execProcess;
+export default runNextBuild;

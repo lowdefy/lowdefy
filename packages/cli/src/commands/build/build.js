@@ -17,13 +17,15 @@
 import getServer from './getServer.js';
 import installServer from './installServer.js';
 import runLowdefyBuild from './runLowdefyBuild.js';
+import runNextBuild from './runNextBuild.js';
 
 async function build({ context }) {
   context.print.info('Starting build.');
   await getServer({ context });
   await installServer({ context });
   await runLowdefyBuild({ context });
-
+  await installServer({ context });
+  await runNextBuild({ context });
   await context.sendTelemetry();
   context.print.succeed(`Build successful.`);
 }

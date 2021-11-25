@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import getMenus from './getMenus';
-import testContext from '../../../test/testContext';
+import getMenus from './getMenus.js';
+import testContext from '../../../test/testContext.js';
 
 const mockReadConfigFile = jest.fn();
 

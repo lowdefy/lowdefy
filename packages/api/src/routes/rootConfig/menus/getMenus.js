@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import filterMenus from './filterMenus';
+import filterMenus from './filterMenus.js';
 
 async function getMenus(context) {
   const unfilteredMenus = await context.readConfigFile('menus.json');

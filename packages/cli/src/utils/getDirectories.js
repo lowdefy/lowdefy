@@ -23,7 +23,12 @@ function getDirectories({ baseDirectory, options }) {
   } else {
     dotLowdefy = path.resolve(baseDirectory, '.lowdefy');
   }
-  return { dotLowdefy, server: path.join(dotLowdefy, 'server') };
+  return {
+    base: baseDirectory,
+    build: path.join(dotLowdefy, 'server', 'build'),
+    dotLowdefy,
+    server: path.join(dotLowdefy, 'server'),
+  };
 }
 
 export default getDirectories;
