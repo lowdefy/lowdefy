@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getDirectories from './getDirectories';
+import getDirectories from './getDirectories.js';
 
 test('default directories', () => {
   const { cacheDirectory, buildDirectory } = getDirectories({

@@ -25,7 +25,7 @@ async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
     if (cliVersion !== latestVersion) {
       print.warn(`
 -------------------------------------------------------------
-  You are using an outdated Lowdefy CLI.
+  You are not using the latest version of the Lowdefy CLI.
   Please update to version ${latestVersion}.
   To always use the latest version, run 'npx lowdefy@latest'.
 -------------------------------------------------------------`);
@@ -33,7 +33,7 @@ async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
     if (lowdefyVersion && lowdefyVersion !== latestVersion) {
       print.warn(`
 -------------------------------------------------------------
-  Your app is using an outdated Lowdefy version, ${lowdefyVersion}.
+  Your app is not using the latest Lowdefy version, ${lowdefyVersion}.
   Please update your app to version ${latestVersion}.
   View the changelog here:
     https://github.com/lowdefy/lowdefy/blob/main/CHANGELOG.md

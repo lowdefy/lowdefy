@@ -15,7 +15,7 @@
 */
 
 import axios from 'axios';
-import getSendTelemetry from './getSendTelemetry';
+import getSendTelemetry from './getSendTelemetry.js';
 
 jest.mock('axios', () => ({
   request: jest.fn(),

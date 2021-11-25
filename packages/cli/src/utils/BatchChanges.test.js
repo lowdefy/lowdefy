@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import BatchChanges from './BatchChanges';
+import BatchChanges from './BatchChanges.js';
 
 async function wait(ms) {
   return new Promise((resolve) => {

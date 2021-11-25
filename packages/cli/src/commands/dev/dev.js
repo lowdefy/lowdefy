@@ -16,13 +16,13 @@
 
 import opener from 'opener';
 
-import buildWatcher from './buildWatcher';
-import envWatcher from './envWatcher';
-import getBuild from './getBuild';
-import getExpress from './getExpress';
-import getGraphQL from './getGraphQL';
-import prepare from './prepare';
-import versionWatcher from './versionWatcher';
+import buildWatcher from './buildWatcher.js';
+import envWatcher from './envWatcher.js';
+import getBuild from './getBuild.js';
+import getExpress from './getExpress.js';
+import getGraphQL from './getGraphQL.js';
+import prepare from './prepare.js';
+import versionWatcher from './versionWatcher.js';
 
 async function initialBuild({ context }) {
   const build = await getBuild({ context });

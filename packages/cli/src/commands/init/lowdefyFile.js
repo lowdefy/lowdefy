@@ -14,10 +14,7 @@
   limitations under the License.
 */
 
-import packageJson from '../../../package.json';
-const { version } = packageJson;
-
-export default `
+export default ({ version }) => `
 lowdefy: ${version}
 name: Lowdefy starter
 

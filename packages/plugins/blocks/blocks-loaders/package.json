@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-loaders",
-  "version": "4.0.0-alpha.0",
+  "version": "4.0.0-alpha.1",
   "license": "Apache-2.0",
   "description": "Lowdefy loader blocks.",
   "homepage": "https://lowdefy.com",
@@ -40,18 +40,18 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/block-utils": "4.0.0-alpha.0",
-    "@lowdefy/helpers": "4.0.0-alpha.0",
+    "@lowdefy/block-utils": "4.0.0-alpha.1",
+    "@lowdefy/helpers": "4.0.0-alpha.1",
     "react": "18.0.0-alpha-327d5c484-20211106",
     "react-dom": "18.0.0-alpha-327d5c484-20211106"
   },
   "devDependencies": {
     "@babel/preset-react": "7.16.0",
     "@emotion/jest": "11.5.0",
-    "@lowdefy/block-dev": "4.0.0-alpha.0",
-    "@swc/cli": "0.1.51",
-    "@swc/core": "1.2.107",
-    "@swc/jest": "0.2.5",
+    "@lowdefy/block-dev": "4.0.0-alpha.1",
+    "@swc/cli": "0.1.52",
+    "@swc/core": "1.2.112",
+    "@swc/jest": "0.2.9",
     "@testing-library/dom": "8.10.1",
     "@testing-library/react": "13.0.0-alpha.4",
     "@testing-library/user-event": "14.0.0-alpha.14",
