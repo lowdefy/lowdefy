@@ -49,7 +49,7 @@ program
   )
   .option(
     '--package-manager <package-manager>',
-    'The package manager to user. Options are "npm" or "yarn".'
+    'The package manager to use. Options are "npm" or "yarn".'
   )
   .option(
     '--ref-resolver <ref-resolver-function-path>',

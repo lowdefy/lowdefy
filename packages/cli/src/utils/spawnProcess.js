@@ -47,7 +47,6 @@ async function spawnProcess({ context, command, args, processOptions, silent }) 
     });
 
     process.on('error', (error) => {
-      console.log(error);
       reject(error);
     });
 

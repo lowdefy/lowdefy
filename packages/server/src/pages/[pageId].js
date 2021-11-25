@@ -20,7 +20,8 @@ import Page from '../components/Page.js';
 
 export async function getServerSideProps(context) {
   const { pageId } = context.params;
-  const apiContext = await createApiContext({ buildDirectory: './.lowdefy/build' });
+  // TODO: get the write api context options
+  const apiContext = await createApiContext({ buildDirectory: './build' });
 
   // TODO: Maybe we can only get rootConfig once?
   // We can't do getServerSideProps on _app :(
