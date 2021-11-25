@@ -16,6 +16,8 @@
   limitations under the License.
 */
 
+import { readFile } from '@lowdefy/node-utils';
+
 import createCounter from './utils/createCounter.js';
 import createReadConfigFile from './utils/files/readConfigFile.js';
 import createWriteBuildArtifact from './utils/files/writeBuildArtifact.js';
@@ -26,11 +28,14 @@ import buildConnections from './build/buildConnections.js';
 import buildMenu from './build/buildMenu.js';
 import buildPages from './build/buildPages/buildPages.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
+import buildTypes from './build/buildTypes.js';
 import cleanBuildDirectory from './build/cleanBuildDirectory.js';
 import testSchema from './build/testSchema.js';
 import validateApp from './build/validateApp.js';
 import validateConfig from './build/validateConfig.js';
 import writeApp from './build/writeApp.js';
+import writeBlockImports from './build/writePluginImports/writeBlockImports.js';
+import writeConnectionImports from './build/writePluginImports/writeConnectionImports.js';
 import writeConfig from './build/writeConfig.js';
 import writeConnections from './build/writeConnections.js';
 import writeGlobal from './build/writeGlobal.js';
@@ -39,32 +44,42 @@ import writePages from './build/writePages.js';
 import writeRequests from './build/writeRequests.js';
 import writeTypes from './build/writeTypes.js';
 
-function createContext(options) {
+async function createContext(options) {
   const { blocksServerUrl, buildDirectory, cacheDirectory, configDirectory, logger, refResolver } =
     options;
+
+  const defaultTypes = JSON.parse(
+    await readFile(new URL('./defaultTypes.json', import.meta.url).pathname)
+  );
+
+  // TODO: resolve custom plugin types
+
   const context = {
     blocksServerUrl,
     buildDirectory,
     cacheDirectory,
     configDirectory,
-    counters: {
-      actionTypes: createCounter(),
-      blockTypes: createCounter(),
-      connectionTypes: createCounter(),
-      requestTypes: createCounter(),
-      clientOperatorTypes: createCounter(),
-      serverOperatorTypes: createCounter(),
+    typeCounters: {
+      actions: createCounter(),
+      blocks: createCounter(),
+      connections: createCounter(),
+      requests: createCounter(),
+      operators: {
+        client: createCounter(),
+        server: createCounter(),
+      },
     },
     logger,
     readConfigFile: createReadConfigFile({ configDirectory }),
     refResolver,
+    types: defaultTypes,
     writeBuildArtifact: createWriteBuildArtifact({ buildDirectory }),
   };
   return context;
 }
 
 async function build(options) {
-  const context = createContext(options);
+  const context = await createContext(options);
   try {
     let components = await buildRefs({ context });
     await testSchema({ components, context });
@@ -75,6 +90,7 @@ async function build(options) {
     await buildConnections({ components, context });
     await buildPages({ components, context });
     await buildMenu({ components, context });
+    await buildTypes({ components, context });
     await cleanBuildDirectory({ context });
     await writeApp({ components, context });
     await writeConnections({ components, context });
@@ -83,7 +99,12 @@ async function build(options) {
     await writeConfig({ components, context });
     await writeGlobal({ components, context });
     await writeMenus({ components, context });
-    await writeTypes({ context });
+    await writeTypes({ components, context });
+    await writeBlockImports({ components, context });
+    await writeConnectionImports({ components, context });
+    // TODO: write style file
+    // TODO: write icons file
+    // TODO: add plugins to package.json
   } catch (error) {
     context.logger.error(error);
     throw error;

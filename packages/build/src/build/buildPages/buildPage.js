@@ -36,14 +36,14 @@ async function buildPage({ page, index, context, checkDuplicatePageId }) {
   const operators = new Set();
   await buildBlock(page, {
     auth: page.auth,
-    counters: context.counters,
-    operators,
-    pageId: page.pageId,
-    requests,
     blockIdCounter: createCounter(),
     checkDuplicateRequestId: createCheckDuplicateId({
       message: 'Duplicate requestId "{{ id }}" on page "{{ pageId }}".',
     }),
+    operators,
+    pageId: page.pageId,
+    requests,
+    typeCounters: context.typeCounters,
   });
   // set page.id since buildBlock sets id as well.
   page.id = `page:${page.pageId}`;

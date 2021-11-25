@@ -28,13 +28,15 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
   const context = {
     id: 'test',
     configDirectory: configDirectory || '',
-    counters: {
-      actionTypes: createCounter(),
-      blockTypes: createCounter(),
-      connectionTypes: createCounter(),
-      requestTypes: createCounter(),
-      clientOperatorTypes: createCounter(),
-      serverOperatorTypes: createCounter(),
+    typeCounters: {
+      actions: createCounter(),
+      blocks: createCounter(),
+      connections: createCounter(),
+      requests: createCounter(),
+      operators: {
+        client: createCounter(),
+        server: createCounter(),
+      },
     },
     writeBuildArtifact: writeBuildArtifact || (() => {}),
     readConfigFile: readConfigFile || (() => {}),

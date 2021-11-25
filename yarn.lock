@@ -3614,7 +3614,6 @@ __metadata:
     "@swc/core": 1.2.107
     "@swc/jest": 0.2.5
     ajv: 8.6.3
-    axios: 0.23.0
     jest: 27.3.1
     js-yaml: 4.1.0
     json5: 2.2.0

@@ -17,7 +17,7 @@
 import React from 'react';
 
 import callRequest from '../utils/callRequest.js';
-import blockComponents from '../plugins/blocks.js';
+import blockComponents from '../../.lowdefy/build/plugins/blocks.js';
 import components from './components.js';
 
 const LowdefyContext = ({ children }) => {

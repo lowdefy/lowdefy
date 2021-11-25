@@ -15,9 +15,6 @@
 */
 
 export default {
-  connections: {
-    AxiosHttp: {
-      requests: ['AxiosHttp'],
-    },
-  },
+  connections: ['AxiosHttp'],
+  requests: ['AxiosHttp'],
 };

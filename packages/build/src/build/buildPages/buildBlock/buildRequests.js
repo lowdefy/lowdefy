@@ -17,7 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 function buildRequest(request, pageContext) {
-  const { auth, counters, pageId, checkDuplicateRequestId } = pageContext;
+  const { auth, checkDuplicateRequestId, pageId, typeCounters } = pageContext;
   if (type.isUndefined(request.id)) {
     throw new Error(`Request id missing at page "${pageId}".`);
   }
@@ -40,7 +40,7 @@ function buildRequest(request, pageContext) {
       }" at page "${pageId}". Received ${JSON.stringify(request.type)}.`
     );
   }
-  counters.requestTypes.increment(request.type);
+  typeCounters.requests.increment(request.type);
 
   if (type.isUndefined(request.payload)) request.payload = {};
 

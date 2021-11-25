@@ -16,4 +16,5 @@
 
 export default {
   blocks: ['Anchor', 'Box', 'DangerousHtml', 'Html', 'Icon', 'Img', 'List', 'Span'],
+  styles: ['style.less'],
 };

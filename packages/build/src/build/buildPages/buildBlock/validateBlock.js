@@ -16,7 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-function validateBlock(block, { pageId, counters }) {
+function validateBlock(block, { pageId, typeCounters }) {
   if (!type.isObject(block)) {
     throw new Error(
       `Expected block to be an object on page "${pageId}". Received ${JSON.stringify(block)}.`
@@ -40,7 +40,7 @@ function validateBlock(block, { pageId, counters }) {
       )}.`
     );
   }
-  counters.blockTypes.increment(block.type);
+  typeCounters.blocks.increment(block.type);
   if (!type.isNone(block.requests)) {
     if (!type.isArray(block.requests)) {
       throw new Error(
