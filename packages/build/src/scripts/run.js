@@ -22,7 +22,7 @@ async function run() {
   await build({
     logger: console,
     buildDirectory: path.resolve(
-      process.env.LOWDEFY_BUILD_DIRECTORY || path.join(process.cwd(), './.lowdefy/server/build')
+      process.env.LOWDEFY_BUILD_DIRECTORY || path.join(process.cwd(), 'build')
     ),
     configDirectory: path.resolve(process.env.LOWDEFY_CONFIG_DIRECTORY || process.cwd()),
   });
