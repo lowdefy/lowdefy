@@ -81,7 +81,7 @@ async function createContext(options) {
 async function build(options) {
   const context = await createContext(options);
   try {
-    let components = await buildRefs({ context });
+    const components = await buildRefs({ context });
     await testSchema({ components, context });
     await validateApp({ components, context });
     await validateConfig({ components, context });
