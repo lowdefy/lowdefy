@@ -20,7 +20,7 @@ const template = `{%- for connection in connections -%}
 import { {{ connection.type }} } from '{{ connection.package }}/connections';
 {% endfor -%}
 export default {
-  {%- for connection in connections -%}
+  {% for connection in connections -%}
   {{ connection.type }},
   {% endfor -%}
 };
