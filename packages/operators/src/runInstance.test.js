@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import runInstance from '../src/runInstance.js';
+import runInstance from './runInstance.js';
 
 const location = 'locationId';
 const operator = '_op';

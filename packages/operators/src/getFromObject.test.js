@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getFromObject from '../src/getFromObject.js';
+import getFromObject from './getFromObject.js';
 // eslint-disable-next-line no-unused-vars
 
 const location = 'location';
