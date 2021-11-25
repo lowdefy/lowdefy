@@ -17,12 +17,12 @@
 import { serializer, type } from '@lowdefy/helpers';
 
 class NodeParser {
-  constructor({ payload, secrets, user, operators } = {}) {
+  constructor({ payload, secrets, user, operators }) {
+    this.operators = operators;
     this.payload = payload;
     this.secrets = secrets;
     this.user = user;
     this.parse = this.parse.bind(this);
-    this.operators = operators;
   }
 
   async init() {
@@ -47,7 +47,7 @@ class NodeParser {
     if (args && !type.isArray(args)) {
       throw new Error('Operator parser args must be an array.');
     }
-    if (location && !type.isString(location)) {
+    if (!type.isString(location)) {
       throw new Error('Operator parser location must be a string.');
     }
     const errors = [];

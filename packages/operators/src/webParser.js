@@ -50,7 +50,7 @@ class WebParser {
     if (args && !type.isArray(args)) {
       throw new Error('Operator parser args must be an array.');
     }
-    if (location && !type.isString(location)) {
+    if (!type.isString(location)) {
       throw new Error('Operator parser location must be a string.');
     }
     const errors = [];
@@ -70,7 +70,7 @@ class WebParser {
               env: 'web',
               event,
               input: inputs ? inputs[context.id] : {},
-              location: location ? applyArrayIndices(arrayIndices, location) : null,
+              location: applyArrayIndices(arrayIndices, location),
               lowdefyGlobal: lowdefyGlobal || {},
               menus: menus || {},
               methodName,
