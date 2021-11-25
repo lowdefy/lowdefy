@@ -52,8 +52,8 @@
     "yaml-loader": "0.6.0"
   },
   "devDependencies": {
-    "@swc/cli": "0.1.51",
-    "@swc/core": "1.2.107"
+    "@swc/cli": "0.1.52",
+    "@swc/core": "1.2.112"
   },
   "publishConfig": {
     "access": "public"
