@@ -17,15 +17,13 @@
 import path from 'path';
 
 function getDirectories({ baseDirectory, options }) {
-  const cacheDirectory = path.resolve(baseDirectory, './.lowdefy/.cache');
-
   let buildDirectory;
   if (options.outputDirectory) {
     buildDirectory = path.resolve(options.outputDirectory);
   } else {
     buildDirectory = path.resolve(baseDirectory, './.lowdefy/build');
   }
-  return { cacheDirectory, buildDirectory };
+  return { buildDirectory };
 }
 
 export default getDirectories;

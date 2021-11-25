@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import checkChildProcessError from './checkChildProcessError';
+import checkChildProcessError from './checkChildProcessError.js';
 
 const mockError = jest.fn();
 const context = {

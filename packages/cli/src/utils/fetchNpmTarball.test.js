@@ -19,7 +19,7 @@
 import axios from 'axios';
 import decompress from 'decompress';
 import decompressTargz from 'decompress-targz';
-import fetchNpmTarball from './fetchNpmTarball';
+import fetchNpmTarball from './fetchNpmTarball.js';
 
 // TODO: not testing decompress
 

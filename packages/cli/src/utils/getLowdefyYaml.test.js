@@ -16,7 +16,7 @@
 
 import path from 'path';
 import { readFile } from '@lowdefy/node-utils';
-import getLowdefyYaml from './getLowdefyYaml';
+import getLowdefyYaml from './getLowdefyYaml.js';
 
 jest.mock('@lowdefy/node-utils', () => {
   const readFile = jest.fn();

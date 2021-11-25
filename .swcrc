@@ -1,5 +1,5 @@
 {
-  "exclude": [".*.test.js$", ".*/tests/.*"],
+  "exclude": [".*.test.js$", ".*/tests/.*", ".*/__mocks__/.*"],
   "jsc": {
     "parser": {
       "syntax": "ecmascript",
