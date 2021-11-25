@@ -17,13 +17,18 @@
 import path from 'path';
 
 function getDirectories({ baseDirectory, options }) {
-  let buildDirectory;
+  let dotLowdefy;
   if (options.outputDirectory) {
-    buildDirectory = path.resolve(options.outputDirectory);
+    dotLowdefy = path.resolve(options.outputDirectory);
   } else {
-    buildDirectory = path.resolve(baseDirectory, './.lowdefy/build');
+    dotLowdefy = path.resolve(baseDirectory, '.lowdefy');
   }
-  return { buildDirectory };
+  return {
+    base: baseDirectory,
+    build: path.join(dotLowdefy, 'server', 'build'),
+    dotLowdefy,
+    server: path.join(dotLowdefy, 'server'),
+  };
 }
 
 export default getDirectories;

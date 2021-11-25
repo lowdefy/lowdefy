@@ -14,11 +14,24 @@
   limitations under the License.
 */
 
-function checkChildProcessError({ context, processOutput, message }) {
-  if (processOutput.status === 1) {
-    context.print.error(processOutput.stderr.toString('utf8'));
-    throw new Error(message);
+import spawnProcess from '../../utils/spawnProcess.js';
+
+async function runNextBuild({ context }) {
+  context.print.log('Running Next build.');
+  try {
+    await spawnProcess({
+      context,
+      command: context.packageManager, // npm or yarn
+      args: ['run', 'build:next'],
+      processOptions: {
+        cwd: context.directories.server,
+      },
+      silent: false,
+    });
+  } catch (error) {
+    throw new Error('Next build failed.');
   }
+  context.print.log('Next build successful.');
 }
 
-export default checkChildProcessError;
+export default runNextBuild;

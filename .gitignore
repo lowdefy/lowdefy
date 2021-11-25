@@ -12,6 +12,8 @@
 **/.next/*
 **/.env
 **/lowdefy.yaml
+
+packages/server/build/**
 !packages/docs/lowdefy.yaml
 !packages/docs/howto/**/lowdefy.yaml
 

@@ -23,7 +23,7 @@ Object.keys(blocks).forEach((block) => {
 });
 export default {
   blocks: Object.keys(blocks),
-  styles: { default: ['style.less'], ...styles },
+  styles: { default: [], ...styles },
 };
 
 // export default {

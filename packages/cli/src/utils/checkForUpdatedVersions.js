@@ -17,6 +17,14 @@
 import axios from 'axios';
 
 async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
+  if (isExperimentalVersion(cliVersion) || isExperimentalVersion(lowdefyVersion)) {
+    print.warn(`
+---------------------------------------------------
+  You are using an experimental version of Lowdefy.
+  Features may change at any time.
+---------------------------------------------------`);
+    return;
+  }
   const registryUrl = 'https://registry.npmjs.org/lowdefy';
   try {
     const packageInfo = await axios.get(registryUrl);
@@ -42,6 +50,10 @@ async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
   } catch (error) {
     print.warn('Failed to check for latest Lowdefy version.');
   }
+}
+
+function isExperimentalVersion(version) {
+  return version.includes('alpha') || version.includes('beta') || version.includes('rc');
 }
 
 export default checkForUpdatedVersions;
