@@ -28,6 +28,7 @@ import buildConnections from './build/buildConnections.js';
 import buildMenu from './build/buildMenu.js';
 import buildPages from './build/buildPages/buildPages.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
+import buildStyles from './build/buildStyles.js';
 import buildTypes from './build/buildTypes.js';
 import cleanBuildDirectory from './build/cleanBuildDirectory.js';
 import testSchema from './build/testSchema.js';
@@ -35,13 +36,14 @@ import validateApp from './build/validateApp.js';
 import validateConfig from './build/validateConfig.js';
 import writeApp from './build/writeApp.js';
 import writeBlockImports from './build/writePluginImports/writeBlockImports.js';
-import writeConnectionImports from './build/writePluginImports/writeConnectionImports.js';
 import writeConfig from './build/writeConfig.js';
+import writeConnectionImports from './build/writePluginImports/writeConnectionImports.js';
 import writeConnections from './build/writeConnections.js';
 import writeGlobal from './build/writeGlobal.js';
 import writeMenus from './build/writeMenus.js';
 import writePages from './build/writePages.js';
 import writeRequests from './build/writeRequests.js';
+import writeStyleImports from './build/writePluginImports/writeStyleImports.js';
 import writeTypes from './build/writeTypes.js';
 
 async function createContext(options) {
@@ -91,6 +93,7 @@ async function build(options) {
     await buildPages({ components, context });
     await buildMenu({ components, context });
     await buildTypes({ components, context });
+    await buildStyles({ components, context });
     await cleanBuildDirectory({ context });
     await writeApp({ components, context });
     await writeConnections({ components, context });
@@ -102,7 +105,7 @@ async function build(options) {
     await writeTypes({ components, context });
     await writeBlockImports({ components, context });
     await writeConnectionImports({ components, context });
-    // TODO: write style file
+    await writeStyleImports({ components, context });
     // TODO: write icons file
     // TODO: add plugins to package.json
   } catch (error) {

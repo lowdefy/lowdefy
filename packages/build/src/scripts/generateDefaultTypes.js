@@ -43,7 +43,7 @@ async function generateDefaultTypes() {
       client: {},
       server: {},
     },
-    styles: [],
+    styles: {},
   };
 
   await Promise.all(
@@ -93,14 +93,8 @@ async function generateDefaultTypes() {
         version,
       });
 
-      if (type.isArray(types.styles)) {
-        types.styles.forEach((pathName) => {
-          defaultTypes.styles.push({
-            path: pathName,
-            package: packageName,
-            version: packageFile.devDependencies[packageName],
-          });
-        });
+      if (type.isObject(types.styles)) {
+        defaultTypes.styles[packageName] = types.styles;
       }
     })
   );
