@@ -17,7 +17,7 @@
 import Link from 'next/link';
 import { createIcon } from '@lowdefy/block-utils';
 
-import icons from '../plugins/icons.js';
+import icons from '../../build/plugins/icons.js';
 
 export default {
   Link,
