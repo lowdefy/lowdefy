@@ -9021,6 +9021,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["commander", "npm:7.2.0"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:8.3.0", {
+          "packageLocation": "./.yarn/cache/commander-npm-8.3.0-c0d18c66d5-0f82321821.zip/node_modules/commander/",
+          "packageDependencies": [
+            ["commander", "npm:8.3.0"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["commondir", [
@@ -14763,7 +14770,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["axios", "npm:0.24.0"],
             ["chalk", "npm:4.1.2"],
             ["chokidar", "npm:3.5.2"],
-            ["commander", "npm:7.2.0"],
+            ["commander", "npm:8.3.0"],
             ["decompress", "npm:4.2.1"],
             ["decompress-targz", "npm:4.1.1"],
             ["dotenv", "npm:10.0.0"],
