@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/build",
-  "version": "4.0.0-alpha.2",
+  "version": "4.0.0-alpha.3",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -41,18 +41,18 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/ajv": "4.0.0-alpha.2",
-    "@lowdefy/helpers": "4.0.0-alpha.2",
-    "@lowdefy/node-utils": "4.0.0-alpha.2",
-    "@lowdefy/nunjucks": "4.0.0-alpha.2",
+    "@lowdefy/ajv": "4.0.0-alpha.3",
+    "@lowdefy/helpers": "4.0.0-alpha.3",
+    "@lowdefy/node-utils": "4.0.0-alpha.3",
+    "@lowdefy/nunjucks": "4.0.0-alpha.3",
     "ajv": "8.8.2",
     "js-yaml": "4.1.0",
     "json5": "2.2.0",
     "uuid": "8.3.2"
   },
   "devDependencies": {
-    "@lowdefy/blocks-basic": "4.0.0-alpha.2",
-    "@lowdefy/connection-axios-http": "4.0.0-alpha.2",
+    "@lowdefy/blocks-basic": "4.0.0-alpha.3",
+    "@lowdefy/connection-axios-http": "4.0.0-alpha.3",
     "@swc/cli": "0.1.52",
     "@swc/core": "1.2.112",
     "@swc/jest": "0.2.9",

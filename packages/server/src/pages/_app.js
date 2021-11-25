@@ -20,7 +20,7 @@ import { ErrorBoundary } from '@lowdefy/block-utils';
 
 import LowdefyContext from '../components/LowdefyContext.js';
 
-import '../plugins/style.less';
+import '../../build/plugins/styles.less';
 
 function App({ Component, pageProps }) {
   return (

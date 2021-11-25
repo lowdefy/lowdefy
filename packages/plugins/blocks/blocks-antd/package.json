@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-antd",
-  "version": "4.0.0-alpha.2",
+  "version": "4.0.0-alpha.3",
   "license": "Apache-2.0",
   "description": "Lowdefy Ant Design Blocks",
   "homepage": "https://lowdefy.com",
@@ -47,8 +47,8 @@
   },
   "dependencies": {
     "@ant-design/icons": "4.7.0",
-    "@lowdefy/block-utils": "4.0.0-alpha.2",
-    "@lowdefy/helpers": "4.0.0-alpha.2",
+    "@lowdefy/block-utils": "4.0.0-alpha.3",
+    "@lowdefy/helpers": "4.0.0-alpha.3",
     "antd": "4.17.0-alpha.7",
     "classnames": "2.3.1",
     "moment": "2.29.1",
@@ -61,7 +61,7 @@
     "@babel/core": "7.16.0",
     "@babel/preset-react": "7.16.0",
     "@emotion/jest": "11.5.0",
-    "@lowdefy/block-dev": "4.0.0-alpha.2",
+    "@lowdefy/block-dev": "4.0.0-alpha.3",
     "@swc/cli": "0.1.52",
     "@swc/core": "1.2.112",
     "@swc/jest": "0.2.9",
