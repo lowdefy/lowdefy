@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.4](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.3...v4.0.0-alpha.4) (2021-11-25)
+
+
+### Bug Fixes
+
+* Plugin import fixes. ([e1becad](https://github.com/lowdefy/lowdefy/commit/e1becad08704833b2a8f559e8c88bcd7172ea622))
+
+
+
+
+
 # [4.0.0-alpha.3](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.2...v4.0.0-alpha.3) (2021-11-25)
 
 

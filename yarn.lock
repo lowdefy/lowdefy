@@ -3248,11 +3248,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lowdefy/ajv@4.0.0-alpha.3, @lowdefy/ajv@workspace:packages/utils/ajv":
+"@lowdefy/ajv@4.0.0-alpha.4, @lowdefy/ajv@workspace:packages/utils/ajv":
   version: 0.0.0-use.local
   resolution: "@lowdefy/ajv@workspace:packages/utils/ajv"
   dependencies:
-    "@lowdefy/nunjucks": 4.0.0-alpha.3
+    "@lowdefy/nunjucks": 4.0.0-alpha.4
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
@@ -3262,15 +3262,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/api@4.0.0-alpha.3, @lowdefy/api@workspace:packages/api":
+"@lowdefy/api@4.0.0-alpha.4, @lowdefy/api@workspace:packages/api":
   version: 0.0.0-use.local
   resolution: "@lowdefy/api@workspace:packages/api"
   dependencies:
-    "@lowdefy/ajv": 4.0.0-alpha.3
-    "@lowdefy/helpers": 4.0.0-alpha.3
-    "@lowdefy/node-utils": 4.0.0-alpha.3
-    "@lowdefy/nunjucks": 4.0.0-alpha.3
-    "@lowdefy/operators": 4.0.0-alpha.3
+    "@lowdefy/ajv": 4.0.0-alpha.4
+    "@lowdefy/helpers": 4.0.0-alpha.4
+    "@lowdefy/node-utils": 4.0.0-alpha.4
+    "@lowdefy/nunjucks": 4.0.0-alpha.4
+    "@lowdefy/operators": 4.0.0-alpha.4
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
@@ -3278,13 +3278,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/block-dev@4.0.0-alpha.3, @lowdefy/block-dev@workspace:packages/utils/block-dev":
+"@lowdefy/block-dev@4.0.0-alpha.4, @lowdefy/block-dev@workspace:packages/utils/block-dev":
   version: 0.0.0-use.local
   resolution: "@lowdefy/block-dev@workspace:packages/utils/block-dev"
   dependencies:
     "@emotion/jest": 11.5.0
-    "@lowdefy/block-utils": 4.0.0-alpha.3
-    "@lowdefy/helpers": 4.0.0-alpha.3
+    "@lowdefy/block-utils": 4.0.0-alpha.4
+    "@lowdefy/helpers": 4.0.0-alpha.4
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@testing-library/dom": 8.10.1
@@ -3300,7 +3300,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/block-utils@4.0.0-alpha.3, @lowdefy/block-utils@workspace:packages/utils/block-utils":
+"@lowdefy/block-utils@4.0.0-alpha.4, @lowdefy/block-utils@workspace:packages/utils/block-utils":
   version: 0.0.0-use.local
   resolution: "@lowdefy/block-utils@workspace:packages/utils/block-utils"
   dependencies:
@@ -3308,7 +3308,7 @@ __metadata:
     "@emotion/css": 11.5.0
     "@emotion/jest": 11.5.0
     "@emotion/react": 11.5.0
-    "@lowdefy/helpers": 4.0.0-alpha.3
+    "@lowdefy/helpers": 4.0.0-alpha.4
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
@@ -3324,7 +3324,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/blocks-antd@4.0.0-alpha.3, @lowdefy/blocks-antd@workspace:packages/plugins/blocks/blocks-antd":
+"@lowdefy/blocks-antd@4.0.0-alpha.4, @lowdefy/blocks-antd@workspace:packages/plugins/blocks/blocks-antd":
   version: 0.0.0-use.local
   resolution: "@lowdefy/blocks-antd@workspace:packages/plugins/blocks/blocks-antd"
   dependencies:
@@ -3332,9 +3332,9 @@ __metadata:
     "@babel/core": 7.16.0
     "@babel/preset-react": 7.16.0
     "@emotion/jest": 11.5.0
-    "@lowdefy/block-dev": 4.0.0-alpha.3
-    "@lowdefy/block-utils": 4.0.0-alpha.3
-    "@lowdefy/helpers": 4.0.0-alpha.3
+    "@lowdefy/block-dev": 4.0.0-alpha.4
+    "@lowdefy/block-utils": 4.0.0-alpha.4
+    "@lowdefy/helpers": 4.0.0-alpha.4
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
@@ -3355,15 +3355,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/blocks-basic@4.0.0-alpha.3, @lowdefy/blocks-basic@workspace:packages/plugins/blocks/blocks-basic":
+"@lowdefy/blocks-basic@4.0.0-alpha.4, @lowdefy/blocks-basic@workspace:packages/plugins/blocks/blocks-basic":
   version: 0.0.0-use.local
   resolution: "@lowdefy/blocks-basic@workspace:packages/plugins/blocks/blocks-basic"
   dependencies:
     "@babel/preset-react": 7.16.0
     "@emotion/jest": 11.5.0
-    "@lowdefy/block-dev": 4.0.0-alpha.3
-    "@lowdefy/block-utils": 4.0.0-alpha.3
-    "@lowdefy/helpers": 4.0.0-alpha.3
+    "@lowdefy/block-dev": 4.0.0-alpha.4
+    "@lowdefy/block-utils": 4.0.0-alpha.4
+    "@lowdefy/helpers": 4.0.0-alpha.4
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
@@ -3386,9 +3386,9 @@ __metadata:
   dependencies:
     "@babel/preset-react": 7.16.0
     "@emotion/jest": 11.5.0
-    "@lowdefy/block-dev": 4.0.0-alpha.3
-    "@lowdefy/block-utils": 4.0.0-alpha.3
-    "@lowdefy/blocks-antd": 4.0.0-alpha.3
+    "@lowdefy/block-dev": 4.0.0-alpha.4
+    "@lowdefy/block-utils": 4.0.0-alpha.4
+    "@lowdefy/blocks-antd": 4.0.0-alpha.4
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
@@ -3412,8 +3412,8 @@ __metadata:
   dependencies:
     "@babel/preset-react": 7.16.0
     "@emotion/jest": 11.5.0
-    "@lowdefy/block-dev": 4.0.0-alpha.3
-    "@lowdefy/block-utils": 4.0.0-alpha.3
+    "@lowdefy/block-dev": 4.0.0-alpha.4
+    "@lowdefy/block-utils": 4.0.0-alpha.4
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
@@ -3437,9 +3437,9 @@ __metadata:
   dependencies:
     "@babel/preset-react": 7.16.0
     "@emotion/jest": 11.5.0
-    "@lowdefy/block-dev": 4.0.0-alpha.3
-    "@lowdefy/block-utils": 4.0.0-alpha.3
-    "@lowdefy/helpers": 4.0.0-alpha.3
+    "@lowdefy/block-dev": 4.0.0-alpha.4
+    "@lowdefy/block-utils": 4.0.0-alpha.4
+    "@lowdefy/helpers": 4.0.0-alpha.4
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
@@ -3461,8 +3461,8 @@ __metadata:
   dependencies:
     "@babel/preset-react": 7.16.0
     "@emotion/jest": 11.5.0
-    "@lowdefy/block-dev": 4.0.0-alpha.3
-    "@lowdefy/block-utils": 4.0.0-alpha.3
+    "@lowdefy/block-dev": 4.0.0-alpha.4
+    "@lowdefy/block-utils": 4.0.0-alpha.4
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
@@ -3482,16 +3482,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/build@4.0.0-alpha.3, @lowdefy/build@workspace:packages/build":
+"@lowdefy/build@4.0.0-alpha.4, @lowdefy/build@workspace:packages/build":
   version: 0.0.0-use.local
   resolution: "@lowdefy/build@workspace:packages/build"
   dependencies:
-    "@lowdefy/ajv": 4.0.0-alpha.3
-    "@lowdefy/blocks-basic": 4.0.0-alpha.3
-    "@lowdefy/connection-axios-http": 4.0.0-alpha.3
-    "@lowdefy/helpers": 4.0.0-alpha.3
-    "@lowdefy/node-utils": 4.0.0-alpha.3
-    "@lowdefy/nunjucks": 4.0.0-alpha.3
+    "@lowdefy/ajv": 4.0.0-alpha.4
+    "@lowdefy/blocks-basic": 4.0.0-alpha.4
+    "@lowdefy/connection-axios-http": 4.0.0-alpha.4
+    "@lowdefy/helpers": 4.0.0-alpha.4
+    "@lowdefy/node-utils": 4.0.0-alpha.4
+    "@lowdefy/nunjucks": 4.0.0-alpha.4
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
@@ -3505,12 +3505,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-axios-http@4.0.0-alpha.3, @lowdefy/connection-axios-http@workspace:packages/plugins/connections/connection-axios-http":
+"@lowdefy/connection-axios-http@4.0.0-alpha.4, @lowdefy/connection-axios-http@workspace:packages/plugins/connections/connection-axios-http":
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-axios-http@workspace:packages/plugins/connections/connection-axios-http"
   dependencies:
-    "@lowdefy/ajv": 4.0.0-alpha.3
-    "@lowdefy/helpers": 4.0.0-alpha.3
+    "@lowdefy/ajv": 4.0.0-alpha.4
+    "@lowdefy/helpers": 4.0.0-alpha.4
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
@@ -3524,8 +3524,8 @@ __metadata:
   resolution: "@lowdefy/connection-elasticsearch@workspace:packages/plugins/connections/connection-elasticsearch"
   dependencies:
     "@elastic/elasticsearch": 7.15.0
-    "@lowdefy/ajv": 4.0.0-alpha.3
-    "@lowdefy/helpers": 4.0.0-alpha.3
+    "@lowdefy/ajv": 4.0.0-alpha.4
+    "@lowdefy/helpers": 4.0.0-alpha.4
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
@@ -3537,8 +3537,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-google-sheets@workspace:packages/plugins/connections/connection-google-sheets"
   dependencies:
-    "@lowdefy/ajv": 4.0.0-alpha.3
-    "@lowdefy/helpers": 4.0.0-alpha.3
+    "@lowdefy/ajv": 4.0.0-alpha.4
+    "@lowdefy/helpers": 4.0.0-alpha.4
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
@@ -3553,8 +3553,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-knex@workspace:packages/plugins/connections/connection-knex"
   dependencies:
-    "@lowdefy/ajv": 4.0.0-alpha.3
-    "@lowdefy/helpers": 4.0.0-alpha.3
+    "@lowdefy/ajv": 4.0.0-alpha.4
+    "@lowdefy/helpers": 4.0.0-alpha.4
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
@@ -3571,8 +3571,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-mongodb@workspace:packages/plugins/connections/connection-mongodb"
   dependencies:
-    "@lowdefy/ajv": 4.0.0-alpha.3
-    "@lowdefy/helpers": 4.0.0-alpha.3
+    "@lowdefy/ajv": 4.0.0-alpha.4
+    "@lowdefy/helpers": 4.0.0-alpha.4
     "@shelf/jest-mongodb": 2.1.0
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
@@ -3587,8 +3587,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-sendgrid@workspace:packages/plugins/connections/connection-sendgrid"
   dependencies:
-    "@lowdefy/ajv": 4.0.0-alpha.3
-    "@lowdefy/helpers": 4.0.0-alpha.3
+    "@lowdefy/ajv": 4.0.0-alpha.4
+    "@lowdefy/helpers": 4.0.0-alpha.4
     "@sendgrid/mail": 7.5.0
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
@@ -3601,8 +3601,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-stripe@workspace:packages/plugins/connections/connection-stripe"
   dependencies:
-    "@lowdefy/ajv": 4.0.0-alpha.3
-    "@lowdefy/helpers": 4.0.0-alpha.3
+    "@lowdefy/ajv": 4.0.0-alpha.4
+    "@lowdefy/helpers": 4.0.0-alpha.4
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
@@ -3623,12 +3623,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/engine@4.0.0-alpha.3, @lowdefy/engine@workspace:packages/engine":
+"@lowdefy/engine@4.0.0-alpha.4, @lowdefy/engine@workspace:packages/engine":
   version: 0.0.0-use.local
   resolution: "@lowdefy/engine@workspace:packages/engine"
   dependencies:
-    "@lowdefy/helpers": 4.0.0-alpha.3
-    "@lowdefy/operators": 4.0.0-alpha.3
+    "@lowdefy/helpers": 4.0.0-alpha.4
+    "@lowdefy/operators": 4.0.0-alpha.4
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
@@ -3636,7 +3636,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/format@4.0.0-alpha.3, @lowdefy/format@workspace:packages/format":
+"@lowdefy/format@4.0.0-alpha.4, @lowdefy/format@workspace:packages/format":
   version: 0.0.0-use.local
   resolution: "@lowdefy/format@workspace:packages/format"
   dependencies:
@@ -3649,7 +3649,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/helpers@4.0.0-alpha.3, @lowdefy/helpers@workspace:packages/utils/helpers":
+"@lowdefy/helpers@4.0.0-alpha.4, @lowdefy/helpers@workspace:packages/utils/helpers":
   version: 0.0.0-use.local
   resolution: "@lowdefy/helpers@workspace:packages/utils/helpers"
   dependencies:
@@ -3663,15 +3663,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/layout@4.0.0-alpha.3, @lowdefy/layout@workspace:packages/layout":
+"@lowdefy/layout@4.0.0-alpha.4, @lowdefy/layout@workspace:packages/layout":
   version: 0.0.0-use.local
   resolution: "@lowdefy/layout@workspace:packages/layout"
   dependencies:
     "@babel/preset-react": 7.16.0
     "@emotion/jest": 11.5.0
-    "@lowdefy/block-dev": 4.0.0-alpha.3
-    "@lowdefy/block-utils": 4.0.0-alpha.3
-    "@lowdefy/helpers": 4.0.0-alpha.3
+    "@lowdefy/block-dev": 4.0.0-alpha.4
+    "@lowdefy/block-utils": 4.0.0-alpha.4
+    "@lowdefy/helpers": 4.0.0-alpha.4
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
@@ -3706,11 +3706,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/node-utils@4.0.0-alpha.3, @lowdefy/node-utils@workspace:packages/utils/node-utils":
+"@lowdefy/node-utils@4.0.0-alpha.4, @lowdefy/node-utils@workspace:packages/utils/node-utils":
   version: 0.0.0-use.local
   resolution: "@lowdefy/node-utils@workspace:packages/utils/node-utils"
   dependencies:
-    "@lowdefy/helpers": 4.0.0-alpha.3
+    "@lowdefy/helpers": 4.0.0-alpha.4
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
@@ -3719,11 +3719,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/nunjucks@4.0.0-alpha.3, @lowdefy/nunjucks@workspace:packages/utils/nunjucks":
+"@lowdefy/nunjucks@4.0.0-alpha.4, @lowdefy/nunjucks@workspace:packages/utils/nunjucks":
   version: 0.0.0-use.local
   resolution: "@lowdefy/nunjucks@workspace:packages/utils/nunjucks"
   dependencies:
-    "@lowdefy/helpers": 4.0.0-alpha.3
+    "@lowdefy/helpers": 4.0.0-alpha.4
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
@@ -3733,13 +3733,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/operators@4.0.0-alpha.3, @lowdefy/operators@workspace:packages/operators":
+"@lowdefy/operators@4.0.0-alpha.4, @lowdefy/operators@workspace:packages/operators":
   version: 0.0.0-use.local
   resolution: "@lowdefy/operators@workspace:packages/operators"
   dependencies:
-    "@lowdefy/format": 4.0.0-alpha.3
-    "@lowdefy/helpers": 4.0.0-alpha.3
-    "@lowdefy/nunjucks": 4.0.0-alpha.3
+    "@lowdefy/format": 4.0.0-alpha.4
+    "@lowdefy/helpers": 4.0.0-alpha.4
+    "@lowdefy/nunjucks": 4.0.0-alpha.4
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
@@ -3756,7 +3756,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/plugin-aws@workspace:packages/plugins/plugins/plugin-aws"
   dependencies:
-    "@lowdefy/ajv": 4.0.0-alpha.3
+    "@lowdefy/ajv": 4.0.0-alpha.4
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
@@ -3771,15 +3771,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/server@workspace:packages/server"
   dependencies:
-    "@lowdefy/api": 4.0.0-alpha.3
-    "@lowdefy/block-utils": 4.0.0-alpha.3
-    "@lowdefy/blocks-antd": 4.0.0-alpha.3
-    "@lowdefy/blocks-basic": 4.0.0-alpha.3
-    "@lowdefy/build": 4.0.0-alpha.3
-    "@lowdefy/connection-axios-http": 4.0.0-alpha.3
-    "@lowdefy/engine": 4.0.0-alpha.3
-    "@lowdefy/helpers": 4.0.0-alpha.3
-    "@lowdefy/layout": 4.0.0-alpha.3
+    "@lowdefy/api": 4.0.0-alpha.4
+    "@lowdefy/block-utils": 4.0.0-alpha.4
+    "@lowdefy/blocks-antd": 4.0.0-alpha.4
+    "@lowdefy/blocks-basic": 4.0.0-alpha.4
+    "@lowdefy/build": 4.0.0-alpha.4
+    "@lowdefy/connection-axios-http": 4.0.0-alpha.4
+    "@lowdefy/engine": 4.0.0-alpha.4
+    "@lowdefy/helpers": 4.0.0-alpha.4
+    "@lowdefy/layout": 4.0.0-alpha.4
     "@next/eslint-plugin-next": 12.0.4
     less: 4.1.2
     less-loader: 10.2.0
@@ -11698,8 +11698,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "lowdefy@workspace:packages/cli"
   dependencies:
-    "@lowdefy/helpers": 4.0.0-alpha.3
-    "@lowdefy/node-utils": 4.0.0-alpha.3
+    "@lowdefy/helpers": 4.0.0-alpha.4
+    "@lowdefy/node-utils": 4.0.0-alpha.4
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
