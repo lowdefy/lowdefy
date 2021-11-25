@@ -1,4 +1,3 @@
-/* eslint-disable import/namespace */
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -15,16 +14,23 @@
   limitations under the License.
 */
 
-import * as connections from './connections.js';
+function buildStyles({ components, context }) {
+  components.styles = [];
+  const styles = new Set();
 
-export default {
-  connections: Object.keys(connections),
-  requests: Object.keys(connections)
-    .map((connection) => Object.keys(connections[connection].requests))
-    .flat(),
-};
+  Object.entries(components.types.blocks).forEach(([blockName, block]) => {
+    styles.add(
+      ...(context.types.styles[block.package].default || []).map(
+        (style) => `${block.package}/${style}`
+      )
+    );
+    styles.add(
+      ...(context.types.styles[block.package][blockName] || []).map(
+        (style) => `${block.package}/${style}`
+      )
+    );
+  });
+  components.styles = [...styles].filter((style) => !!style);
+}
 
-// export default {
-//   connections: ['AxiosHttp'],
-//   requests: ['AxiosHttp'],
-// };
+export default buildStyles;
