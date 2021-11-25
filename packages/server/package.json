@@ -26,7 +26,7 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "files": [
-    "dist/*"
+    "src/*"
   ],
   "scripts": {
     "build": "yarn build:lowdefy && yarn build:next",
