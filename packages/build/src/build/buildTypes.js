@@ -83,13 +83,6 @@ function buildTypes({ components, context }) {
   //   store: components.types.operators.server,
   //   typeClass: 'Operator',
   // });
-
-  // TODO: Handle styles
-  const blocksPackages = new Set();
-  Object.values(components.types.blocks).forEach((typeDef) => {
-    blocksPackages.add(typeDef.package);
-  });
-  components.styles = context.types.styles.filter((style) => blocksPackages.has(style.package));
 }
 
 export default buildTypes;

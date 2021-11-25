@@ -1,4 +1,3 @@
-/* eslint-disable import/namespace */
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -15,16 +14,20 @@
   limitations under the License.
 */
 
-import * as connections from './connections.js';
+import { nunjucksFunction } from '@lowdefy/nunjucks';
 
-export default {
-  connections: Object.keys(connections),
-  requests: Object.keys(connections)
-    .map((connection) => Object.keys(connections[connection].requests))
-    .flat(),
-};
+const template = `@import '@lowdefy/layout/style.less';
+{% for style in styles -%}
+@import '{{ style }}';
+{% endfor -%}
+`;
 
-// export default {
-//   connections: ['AxiosHttp'],
-//   requests: ['AxiosHttp'],
-// };
+async function writeStyleImports({ components, context }) {
+  const templateFn = nunjucksFunction(template);
+  await context.writeBuildArtifact({
+    filePath: 'plugins/styles.less',
+    content: templateFn({ styles: components.styles }),
+  });
+}
+
+export default writeStyleImports;
