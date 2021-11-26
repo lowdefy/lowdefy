@@ -31,7 +31,6 @@
     ".eslintrc.yaml"
   ],
   "scripts": {
-    "build": "lowdefy-build && next build",
     "build:lowdefy": "lowdefy-build",
     "build:next": "next build",
     "dev": "next dev",
@@ -42,9 +41,6 @@
   "dependencies": {
     "@lowdefy/api": "4.0.0-alpha.4",
     "@lowdefy/block-utils": "4.0.0-alpha.4",
-    "@lowdefy/blocks-antd": "4.0.0-alpha.4",
-    "@lowdefy/blocks-basic": "4.0.0-alpha.4",
-    "@lowdefy/connection-axios-http": "4.0.0-alpha.4",
     "@lowdefy/engine": "4.0.0-alpha.4",
     "@lowdefy/helpers": "4.0.0-alpha.4",
     "@lowdefy/layout": "4.0.0-alpha.4",

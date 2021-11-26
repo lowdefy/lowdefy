@@ -35,6 +35,7 @@ import cleanBuildDirectory from './build/cleanBuildDirectory.js';
 import testSchema from './build/testSchema.js';
 import validateApp from './build/validateApp.js';
 import validateConfig from './build/validateConfig.js';
+import updateServerPackageJson from './build/updateServerPackageJson.js';
 import writeApp from './build/writeApp.js';
 import writeBlockImports from './build/writePluginImports/writeBlockImports.js';
 import writeConfig from './build/writeConfig.js';
@@ -49,8 +50,7 @@ import writeStyleImports from './build/writePluginImports/writeStyleImports.js';
 import writeTypes from './build/writeTypes.js';
 
 async function createContext(options) {
-  const { blocksServerUrl, buildDirectory, cacheDirectory, configDirectory, logger, refResolver } =
-    options;
+  const { blocksServerUrl, directories, logger, refResolver } = options;
 
   const defaultTypes = JSON.parse(
     await readFile(new URL('./defaultTypes.json', import.meta.url).pathname)
@@ -60,9 +60,7 @@ async function createContext(options) {
 
   const context = {
     blocksServerUrl,
-    buildDirectory,
-    cacheDirectory,
-    configDirectory,
+    directories,
     typeCounters: {
       actions: createCounter(),
       blocks: createCounter(),
@@ -74,10 +72,10 @@ async function createContext(options) {
       },
     },
     logger,
-    readConfigFile: createReadConfigFile({ configDirectory }),
+    readConfigFile: createReadConfigFile({ directories }),
     refResolver,
     types: defaultTypes,
-    writeBuildArtifact: createWriteBuildArtifact({ buildDirectory }),
+    writeBuildArtifact: createWriteBuildArtifact({ directories }),
   };
   return context;
 }
@@ -110,7 +108,7 @@ async function build(options) {
     await writeConnectionImports({ components, context });
     await writeStyleImports({ components, context });
     await writeIconImports({ components, context });
-    // TODO: add plugins to package.json
+    await updateServerPackageJson({ components, context });
   } catch (error) {
     context.logger.error(error);
     throw error;
