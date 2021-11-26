@@ -148,5 +148,13 @@ const MultipleSelector = ({
 };
 
 MultipleSelector.defaultProps = blockDefaultProps;
+MultipleSelector.meta = {
+  valueType: 'array',
+  category: 'input',
+  loading: {
+    type: 'SkeletonInput',
+  },
+};
+MultipleSelector.styles = ['blocks/MultipleSelector/style.less'];
 
 export default MultipleSelector;

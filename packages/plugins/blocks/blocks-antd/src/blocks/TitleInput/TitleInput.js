@@ -128,5 +128,16 @@ const TitleInput = ({ blockId, components: { Icon }, events, methods, properties
   );
 };
 TitleInput.defaultProps = blockDefaultProps;
+TitleInput.meta = {
+  valueType: 'string',
+  category: 'input',
+  loading: {
+    type: 'SkeletonParagraph',
+    properties: {
+      lines: 1,
+    },
+  },
+};
+TitleInput.styles = ['blocks/TitleInput/style.less'];
 
 export default TitleInput;

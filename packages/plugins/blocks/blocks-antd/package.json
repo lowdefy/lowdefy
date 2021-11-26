@@ -29,9 +29,9 @@
   },
   "type": "module",
   "exports": {
-    ".": "./dist/index.js",
-    "./blocks/*": "./dist/blocks/*",
-    "./style.less": "./dist/style.less"
+    "./*": "./dist/*",
+    "./blocks": "./dist/blocks.js",
+    "./types": "./dist/types.js"
   },
   "files": [
     "dist/*"

@@ -250,5 +250,15 @@ const PageHeaderMenu = ({
 };
 
 PageHeaderMenu.defaultProps = blockDefaultProps;
+PageHeaderMenu.meta = {
+  category: 'container',
+  loading: {
+    type: 'Spinner',
+    properties: {
+      height: '100vh',
+    },
+  },
+};
+PageHeaderMenu.styles = ['blocks/PageHeaderMenu/style.less'];
 
 export default PageHeaderMenu;

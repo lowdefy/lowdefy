@@ -111,5 +111,13 @@ const AutoCompleteInput = ({
 };
 
 AutoCompleteInput.defaultProps = blockDefaultProps;
+AutoCompleteInput.meta = {
+  valueType: 'string',
+  category: 'input',
+  loading: {
+    type: 'SkeletonInput',
+  },
+};
+AutoCompleteInput.styles = ['blocks/AutoComplete/style.less'];
 
 export default AutoCompleteInput;

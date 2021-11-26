@@ -378,5 +378,15 @@ const PageSiderMenu = ({
 };
 
 PageSiderMenu.defaultProps = blockDefaultProps;
+PageSiderMenu.meta = {
+  category: 'container',
+  loading: {
+    type: 'Spinner',
+    properties: {
+      height: '100vh',
+    },
+  },
+};
+PageSiderMenu.styles = ['blocks/PageSiderMenu/style.less'];
 
 export default PageSiderMenu;

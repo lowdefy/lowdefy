@@ -52,5 +52,17 @@ const Selector = ({ blockId, loading, methods, properties, required, validation,
 };
 
 Selector.defaultProps = blockDefaultProps;
+Selector.meta = {
+  valueType: 'string',
+  category: 'input',
+  loading: {
+    type: 'Skeleton',
+    properties: {
+      width: 216,
+      height: 62,
+    },
+  },
+};
+Selector.styles = ['blocks/GithubColorSelector/style.less'];
 
 export default Selector;

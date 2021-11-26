@@ -147,5 +147,13 @@ const S3UploadButtonBlock = ({ blockId, components, events, methods, properties,
 };
 
 S3UploadButtonBlock.defaultProps = blockDefaultProps;
+S3UploadButtonBlock.meta = {
+  valueType: 'object',
+  category: 'input',
+  loading: {
+    type: 'SkeletonButton',
+  },
+};
+S3UploadButtonBlock.styles = ['blocks/S3UploadButton/style.less'];
 
 export default S3UploadButtonBlock;

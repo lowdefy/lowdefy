@@ -143,5 +143,16 @@ const ControlledListBlock = ({
 };
 
 ControlledListBlock.defaultProps = blockDefaultProps;
+ControlledListBlock.meta = {
+  valueType: 'array',
+  category: 'list',
+  loading: {
+    type: 'Skeleton',
+    properties: {
+      height: 80,
+    },
+  },
+};
+ControlledListBlock.styles = ['blocks/ControlledList/style.less'];
 
 export default ControlledListBlock;

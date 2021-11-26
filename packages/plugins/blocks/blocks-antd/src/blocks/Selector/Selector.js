@@ -137,5 +137,13 @@ const Selector = ({
 };
 
 Selector.defaultProps = blockDefaultProps;
+Selector.meta = {
+  valueType: 'any',
+  category: 'input',
+  loading: {
+    type: 'SkeletonInput',
+  },
+};
+Selector.styles = ['blocks/Selector/style.less'];
 
 export default Selector;

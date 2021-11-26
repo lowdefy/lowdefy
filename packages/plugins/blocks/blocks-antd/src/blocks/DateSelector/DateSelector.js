@@ -87,5 +87,13 @@ const DateSelector = ({
 };
 
 DateSelector.defaultProps = blockDefaultProps;
+DateSelector.meta = {
+  valueType: 'date',
+  category: 'input',
+  loading: {
+    type: 'SkeletonInput',
+  },
+};
+DateSelector.styles = ['blocks/DateSelector/style.less'];
 
 export default DateSelector;

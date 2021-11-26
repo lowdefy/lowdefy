@@ -26,7 +26,11 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "type": "module",
-  "exports": "./dist/index.js",
+  "exports": {
+    "./*": "./dist/*",
+    "./blocks": "./dist/blocks.js",
+    "./types": "./dist/types.js"
+  },
   "files": [
     "dist/*"
   ],

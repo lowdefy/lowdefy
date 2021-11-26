@@ -51,7 +51,7 @@ import writeStyleImports from './build/writePluginImports/writeStyleImports.js';
 import writeTypes from './build/writeTypes.js';
 
 async function createContext(options) {
-  const { blocksServerUrl, directories, logger, refResolver } = options;
+  const { directories, logger, refResolver } = options;
 
   const defaultTypes = JSON.parse(
     await readFile(new URL('./defaultTypes.json', import.meta.url).pathname)
@@ -60,7 +60,6 @@ async function createContext(options) {
   // TODO: resolve custom plugin types
 
   const context = {
-    blocksServerUrl,
     directories,
     typeCounters: {
       actions: createCounter(),

@@ -103,5 +103,12 @@ const Label = ({
 };
 
 Label.defaultProps = blockDefaultProps;
+Label.meta = {
+  category: 'container',
+  loading: {
+    type: 'SkeletonInput',
+  },
+};
+Label.styles = ['blocks/Label/style.less'];
 
 export default Label;

@@ -1,3 +1,17 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 - id: default
   type: DangerousMarkdown
 - id: properties.content
@@ -24,7 +38,7 @@
 
       | a | b |
       | - | - |
-      
+
 - id: properties.style and headings
   type: DangerousMarkdown
   properties:
@@ -35,13 +49,13 @@
       #### Four
       ##### Five
       ###### Six
-    style: 
+    style:
       border: '1px solid blue'
 - id: properties.content = table
   type: DangerousMarkdown
   properties:
     content: |
-      ### Table 
+      ### Table
 
       | A | B | C |
       |---:|:---:|:---|
@@ -53,13 +67,13 @@
   type: DangerousMarkdown
   properties:
     content: |
-      ### Link 
+      ### Link
 
       <a href="https://lowdefy.com">Lowdefy link</a>
 
       <font size="+10">Description</font>
 
-      ### Bad HTML 
+      ### Bad HTML
 
       <div onmouseover="alert('alpha')">
         <a href="javascript:alert('bravo')">delta</a>
@@ -77,13 +91,13 @@
   type: DangerousMarkdown
   properties:
     content: |
-      ### Code 
+      ### Code
 
       Default
       ```
         <a href="https://lowdefy.com">Default style</a>
       ```
-      
+
       Html
       ```html
         <a href="">html style</a>
@@ -103,7 +117,7 @@
         }
       ```
 
-      Bad HTML 
+      Bad HTML
       ```html
       <div onmouseover="alert('alpha')">
         <a href="javascript:alert('bravo')">delta</a>
@@ -126,12 +140,10 @@
 - id: properties.html-DOMPurifyOptions.ADD_TAGS-iframe
   type: DangerousMarkdown
   properties:
-    DOMPurifyOptions: 
-      ADD_TAGS: 
+    DOMPurifyOptions:
+      ADD_TAGS:
         - iframe
     content: |
       ## With iframe ADD_TAGS:
 
       <iframe width="560" height="315" src="https://www.youtube.com/embed/7N7GWdlQJlU" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-

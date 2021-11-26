@@ -21,6 +21,31 @@ import Block from './PageSiderMenu.js';
 import examples from './examples.yaml';
 import schema from './schema.json';
 
+// test: {
+//   methods: [
+//     {
+//       name: 'toggleMobileMenuOpen',
+//       args: {},
+//     },
+//     {
+//       name: 'setMobileMenuOpen',
+//       args: {
+//         open: true,
+//       },
+//     },
+//     {
+//       name: 'toggleSiderOpen',
+//       args: {},
+//     },
+//     {
+//       name: 'setSiderOpen',
+//       args: {
+//         open: true,
+//       },
+//     },
+//   ],
+// }
+
 const { meta, tests } = block;
 
 runRenderTests({ examples, Block, meta, schema, tests });

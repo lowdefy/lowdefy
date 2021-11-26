@@ -21,6 +21,21 @@ import Block from './Sider.js';
 import examples from './examples.yaml';
 import schema from './schema.json';
 
+// test: {
+//   methods: [
+//     {
+//       name: 'toggleOpen',
+//       args: {},
+//     },
+//     {
+//       name: 'setOpen',
+//       args: {
+//         open: true,
+//       },
+//     },
+//   ],
+// }
+
 const { meta, tests } = block;
 
 runRenderTests({ examples, Block, meta, schema, tests });

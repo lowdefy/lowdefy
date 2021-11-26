@@ -52,5 +52,16 @@ const Selector = ({ blockId, loading, methods, properties, required, validation,
 };
 
 Selector.defaultProps = blockDefaultProps;
+Selector.meta = {
+  valueType: 'string',
+  category: 'input',
+  loading: {
+    type: 'Skeleton',
+    properties: {
+      height: 175,
+    },
+  },
+};
+Selector.styles = ['blocks/SwatchesColorSelector/style.less'];
 
 export default Selector;

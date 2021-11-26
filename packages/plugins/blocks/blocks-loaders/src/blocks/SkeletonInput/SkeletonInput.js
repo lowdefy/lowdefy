@@ -56,5 +56,10 @@ const SkeletonInput = ({ properties, methods }) => {
 };
 
 SkeletonInput.defaultProps = blockDefaultProps;
+SkeletonInput.meta = {
+  category: 'display',
+  loading: false,
+};
+SkeletonInput.styles: ['blocks/SkeletonInput/style.less'];
 
 export default SkeletonInput;

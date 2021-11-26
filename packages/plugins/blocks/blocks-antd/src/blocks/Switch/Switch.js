@@ -104,5 +104,13 @@ const SwitchBlock = ({
 };
 
 SwitchBlock.defaultProps = blockDefaultProps;
+SwitchBlock.meta = {
+  valueType: 'boolean',
+  category: 'input',
+  loading: {
+    type: 'SkeletonInput',
+  },
+};
+SwitchBlock.styles = ['blocks/Switch/style.less'];
 
 export default SwitchBlock;

@@ -14,13 +14,23 @@
   limitations under the License.
 */
 
+import path from 'path';
 import axios from 'axios';
+import { readFile } from '@lowdefy/node-utils';
 
-function getSendTelemetry({ appId, cliVersion, command, lowdefyVersion, options }) {
+async function getTypes({ directories }) {
+  return JSON.parse(await readFile(path.join(directories.build, 'types.json')));
+}
+
+function getSendTelemetry({ appId, cliVersion, command, directories, lowdefyVersion, options }) {
   if (options.disableTelemetry) {
     return () => {};
   }
-  async function sendTelemetry({ data = {} } = {}) {
+  async function sendTelemetry({ data = {}, sendTypes = false } = {}) {
+    let types;
+    if (sendTypes) {
+      types = await getTypes({ directories });
+    }
     try {
       await axios.request({
         method: 'post',
@@ -34,6 +44,7 @@ function getSendTelemetry({ appId, cliVersion, command, lowdefyVersion, options 
           cli_version: cliVersion,
           command,
           lowdefy_version: lowdefyVersion,
+          types,
         },
       });
     } catch (error) {
