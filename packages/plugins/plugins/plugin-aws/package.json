@@ -51,7 +51,7 @@
     "jest": "27.3.1"
   },
   "peerDependencies": {
-    "@lowdefy/api": "4.0.0-alpha.0"
+    "@lowdefy/api": "4.0.0-alpha.4"
   },
   "publishConfig": {
     "access": "public"
