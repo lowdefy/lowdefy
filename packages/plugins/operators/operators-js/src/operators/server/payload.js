@@ -14,11 +14,15 @@
   limitations under the License.
 */
 
-import getFromArray from './getFromArray.js';
-import getFromObject from './getFromObject.js';
-import NodeParser from './nodeParser.js';
-import runClass from './runClass.js';
-import runInstance from './runInstance.js';
-import WebParser from './webParser.js';
+import { getFromObject } from '@lowdefy/operators';
 
-export { getFromArray, getFromObject, NodeParser, runClass, runInstance, WebParser };
+function _payload({ location, params, payload }) {
+  return getFromObject({
+    location,
+    object: payload,
+    operator: '_payload',
+    params,
+  });
+}
+
+export default _payload;

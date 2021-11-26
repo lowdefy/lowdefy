@@ -14,11 +14,16 @@
   limitations under the License.
 */
 
-import getFromArray from './getFromArray.js';
-import getFromObject from './getFromObject.js';
-import NodeParser from './nodeParser.js';
-import runClass from './runClass.js';
-import runInstance from './runInstance.js';
-import WebParser from './webParser.js';
+import { getFromObject } from '@lowdefy/operators';
 
-export { getFromArray, getFromObject, NodeParser, runClass, runInstance, WebParser };
+function _global({ arrayIndices, location, lowdefyGlobal, params }) {
+  return getFromObject({
+    arrayIndices,
+    location,
+    object: lowdefyGlobal,
+    operator: '_global',
+    params,
+  });
+}
+
+export default _global;

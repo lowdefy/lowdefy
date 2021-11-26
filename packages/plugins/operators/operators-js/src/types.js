@@ -13,12 +13,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import * as client from './operatorsClient.js';
+import * as server from './operatorsServer.js';
 
-import getFromArray from './getFromArray.js';
-import getFromObject from './getFromObject.js';
-import NodeParser from './nodeParser.js';
-import runClass from './runClass.js';
-import runInstance from './runInstance.js';
-import WebParser from './webParser.js';
-
-export { getFromArray, getFromObject, NodeParser, runClass, runInstance, WebParser };
+export default {
+  operators: {
+    client: Object.keys(client),
+    server: Object.keys(server),
+  },
+};

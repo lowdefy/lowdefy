@@ -1,12 +1,12 @@
 {
-  "name": "@lowdefy/plugin-aws",
+  "name": "@lowdefy/operators-js",
   "version": "4.0.0-alpha.4",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
   "keywords": [
     "lowdefy",
-    "lowdefy plugin"
+    "lowdefy operator"
   ],
   "bugs": {
     "url": "https://github.com/lowdefy/lowdefy/issues"
@@ -27,8 +27,9 @@
   },
   "type": "module",
   "exports": {
-    ".": "./dist/index.js",
-    "./connections/*": "./dist/connections/*"
+    "./operators/client": "./dist/operatorsClient.js",
+    "./operators/server": "./dist/operatorsServer.js",
+    "./types": "./dist/types.js"
   },
   "files": [
     "dist/*"
@@ -41,13 +42,13 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "aws-sdk": "2.1021.0"
+    "@lowdefy/helpers": "4.0.0-alpha.4",
+    "@lowdefy/operators": "4.0.0-alpha.4"
   },
   "devDependencies": {
-    "@lowdefy/ajv": "4.0.0-alpha.4",
-    "@swc/cli": "0.1.52",
-    "@swc/core": "1.2.112",
-    "@swc/jest": "0.2.9",
+    "@swc/cli": "0.1.51",
+    "@swc/core": "1.2.107",
+    "@swc/jest": "0.2.5",
     "jest": "27.3.1"
   },
   "publishConfig": {

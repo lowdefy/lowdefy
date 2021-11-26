@@ -14,11 +14,30 @@
   limitations under the License.
 */
 
-import getFromArray from './getFromArray.js';
-import getFromObject from './getFromObject.js';
-import NodeParser from './nodeParser.js';
-import runClass from './runClass.js';
-import runInstance from './runInstance.js';
-import WebParser from './webParser.js';
+import state from './state.js';
+jest.mock('@lowdefy/operators');
 
-export { getFromArray, getFromObject, NodeParser, runClass, runInstance, WebParser };
+const input = {
+  arrayIndices: [0],
+  location: 'location',
+  params: 'params',
+  state: { state: true },
+};
+
+test('state calls getFromObject', () => {
+  const lowdefyOperators = import('@lowdefy/operators');
+  state(input);
+  expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
+    [
+      {
+        arrayIndices: [0],
+        location: 'location',
+        object: {
+          state: true,
+        },
+        operator: '_state',
+        params: 'params',
+      },
+    ],
+  ]);
+});

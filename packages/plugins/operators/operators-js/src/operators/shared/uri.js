@@ -14,11 +14,31 @@
   limitations under the License.
 */
 
-import getFromArray from './getFromArray.js';
-import getFromObject from './getFromObject.js';
-import NodeParser from './nodeParser.js';
-import runClass from './runClass.js';
-import runInstance from './runInstance.js';
-import WebParser from './webParser.js';
+import { runClass } from '@lowdefy/operators';
 
-export { getFromArray, getFromObject, NodeParser, runClass, runInstance, WebParser };
+function decode(input) {
+  return decodeURIComponent(input);
+}
+
+function encode(input) {
+  return encodeURIComponent(input);
+}
+
+const functions = { encode, decode };
+const meta = {
+  encode: { singleArg: true, validTypes: ['string'] },
+  decode: { singleArg: true, validTypes: ['string'] },
+};
+
+function _uri({ params, location, methodName }) {
+  return runClass({
+    functions,
+    location,
+    meta,
+    methodName,
+    operator: '_uri',
+    params,
+  });
+}
+
+export default _uri;
