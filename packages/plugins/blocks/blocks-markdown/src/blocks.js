@@ -14,20 +14,6 @@
   limitations under the License.
 */
 
-export default {
-  import: {
-    block: 'blocks/WeekSelector/WeekSelector.js',
-    styles: ['blocks/WeekSelector/style.less'],
-  },
-  meta: {
-    valueType: 'date',
-    category: 'input',
-    loading: {
-      type: 'SkeletonInput',
-    },
-  },
-  test: {
-    validation: true,
-    required: true,
-  },
-};
+export { default as DangerousMarkdown } from './blocks/DangerousMarkdown/DangerousMarkdown.js';
+export { default as Markdown } from './blocks/Markdown/Markdown.js';
+export { default as MarkdownWithCode } from './blocks/MarkdownWithCode/MarkdownWithCode.js';

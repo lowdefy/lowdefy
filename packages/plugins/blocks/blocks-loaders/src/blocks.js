@@ -14,18 +14,10 @@
   limitations under the License.
 */
 
-export default {
-  import: {
-    block: 'blocks/Title/Title.js',
-    styles: ['blocks/Title/style.less'],
-  },
-  meta: {
-    category: 'display',
-    loading: {
-      type: 'SkeletonParagraph',
-      properties: {
-        lines: 1,
-      },
-    },
-  },
-};
+export { default as IconSpinner } from './blocks/IconSpinner/IconSpinner.js';
+export { default as Skeleton } from './blocks/Skeleton/Skeleton.js';
+export { default as SkeletonAvatar } from './blocks/SkeletonAvatar/SkeletonAvatar.js';
+export { default as SkeletonButton } from './blocks/SkeletonButton/SkeletonButton.js';
+export { default as SkeletonInput } from './blocks/SkeletonInput/SkeletonInput.js';
+export { default as SkeletonParagraph } from './blocks/SkeletonParagraph/SkeletonParagraph.js';
+export { default as Spinner } from './blocks/Spinner/Spinner.js';

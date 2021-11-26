@@ -32,5 +32,15 @@ const DividerBlock = ({ blockId, properties, methods }) => (
 );
 
 DividerBlock.defaultProps = blockDefaultProps;
+DividerBlock.meta = {
+  category: 'display',
+  loading: {
+    type: 'Skeleton',
+    properties: {
+      height: 5,
+    },
+  },
+};
+DividerBlock.styles = ['blocks/Divider/style.less'];
 
 export default DividerBlock;

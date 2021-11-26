@@ -75,5 +75,13 @@ const NumberInput = ({
 };
 
 NumberInput.defaultProps = blockDefaultProps;
+NumberInput.meta = {
+  valueType: 'number',
+  category: 'input',
+  loading: {
+    type: 'SkeletonInput',
+  },
+};
+NumberInput.styles = ['blocks/NumberInput/style.less'];
 
 export default NumberInput;

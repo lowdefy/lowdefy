@@ -42,5 +42,10 @@ const MessageBlock = ({ blockId, components: { Icon }, events, methods, properti
 };
 
 MessageBlock.defaultProps = blockDefaultProps;
+MessageBlock.meta = {
+  category: 'display',
+  loading: false,
+};
+MessageBlock.styles = ['blocks/Message/style.less'];
 
 export default MessageBlock;

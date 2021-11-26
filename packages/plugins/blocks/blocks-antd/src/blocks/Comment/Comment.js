@@ -48,5 +48,12 @@ const CommentBlock = ({ blockId, components, content, properties, methods }) => 
 };
 
 CommentBlock.defaultProps = blockDefaultProps;
+CommentBlock.meta = {
+  category: 'container',
+  loading: {
+    type: 'SkeletonParagraph',
+  },
+};
+CommentBlock.styles = ['blocks/Comment/style.less'];
 
 export default CommentBlock;

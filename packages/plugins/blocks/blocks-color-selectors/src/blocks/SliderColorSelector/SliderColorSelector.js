@@ -49,5 +49,16 @@ const Selector = ({ blockId, loading, methods, properties, required, validation,
 };
 
 Selector.defaultProps = blockDefaultProps;
+Selector.meta = {
+  valueType: 'string',
+  category: 'input',
+  loading: {
+    type: 'Skeleton',
+    properties: {
+      height: 44,
+    },
+  },
+};
+Selector.styles = ['blocks/SliderColorSelector/style.less'];
 
 export default Selector;

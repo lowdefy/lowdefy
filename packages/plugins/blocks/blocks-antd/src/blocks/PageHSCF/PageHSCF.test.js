@@ -21,6 +21,21 @@ import Block from './PageHSCF.js';
 import examples from './examples.yaml';
 import schema from './schema.json';
 
+// test: {
+//   methods: [
+//     {
+//       name: 'toggleSiderOpen',
+//       args: {},
+//     },
+//     {
+//       name: 'setSiderOpen',
+//       args: {
+//         open: true,
+//       },
+//     },
+//   ],
+// }
+
 const { meta, tests } = block;
 
 runRenderTests({ examples, Block, meta, schema, tests });

@@ -1,3 +1,4 @@
+/* eslint-disable import/namespace */
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -14,13 +15,13 @@
   limitations under the License.
 */
 
-import EChart from './blocks/EChart';
+import * as blocks from './blocks.js';
 
+const styles = {};
+Object.keys(blocks).forEach((block) => {
+  styles[block] = blocks[block].styles || [];
+});
 export default {
-  blocks: {
-    EChart,
-  },
-  import: {
-    styles: [],
-  },
+  blocks: Object.keys(blocks),
+  styles: { default: [], ...styles },
 };

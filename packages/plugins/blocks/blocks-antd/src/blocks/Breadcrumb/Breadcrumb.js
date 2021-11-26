@@ -92,5 +92,15 @@ const BreadcrumbBlock = ({
 };
 
 BreadcrumbBlock.defaultProps = blockDefaultProps;
+BreadcrumbBlock.meta = {
+  category: 'display',
+  loading: {
+    type: 'SkeletonParagraph',
+    properties: {
+      lines: 1,
+    },
+  },
+};
+BreadcrumbBlock.styles = ['blocks/Breadcrumb/style.less'];
 
 export default BreadcrumbBlock;

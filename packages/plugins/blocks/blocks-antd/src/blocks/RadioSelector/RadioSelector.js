@@ -105,5 +105,13 @@ const RadioSelector = ({
 };
 
 RadioSelector.defaultProps = blockDefaultProps;
+RadioSelector.meta = {
+  valueType: 'any',
+  category: 'input',
+  loading: {
+    type: 'SkeletonInput',
+  },
+};
+RadioSelector.styles = ['blocks/RadioSelector/style.less'];
 
 export default RadioSelector;
