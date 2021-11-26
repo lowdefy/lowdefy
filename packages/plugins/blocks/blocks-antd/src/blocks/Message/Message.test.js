@@ -21,6 +21,33 @@ import examples from './examples.yaml';
 import Block from './Message.js';
 import schema from './schema.json';
 
+// test: {
+//   methods: [
+//     {
+//       name: 'open',
+//       args: {},
+//     },
+//     {
+//       name: 'open',
+//       args: {
+//         status: 'warning',
+//       },
+//     },
+//     {
+//       name: 'open',
+//       args: {
+//         content: 'Args message content',
+//       },
+//     },
+//     {
+//       name: 'open',
+//       args: {
+//         duration: 1,
+//       },
+//     },
+//   ],
+// }
+
 const { meta, tests } = block;
 
 jest.mock('antd', () => {

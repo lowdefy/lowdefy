@@ -77,5 +77,10 @@ const DrawerBlock = ({ blockId, content, properties, methods, rename, onClose })
 };
 
 DrawerBlock.defaultProps = blockDefaultProps;
+DrawerBlock.meta = {
+  category: 'container',
+  loading: false,
+};
+DrawerBlock.styles = ['blocks/Drawer/style.less'];
 
 export default DrawerBlock;

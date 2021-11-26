@@ -22,6 +22,21 @@ import examples from './examples.yaml';
 import block from './index.js';
 import schema from './schema.json';
 
+// test: {
+//   methods: [
+//     {
+//       name: 'toggleOpen',
+//       args: {},
+//     },
+//     {
+//       name: 'setOpen',
+//       args: {
+//         open: true,
+//       },
+//     },
+//   ],
+// }
+
 const { meta, tests } = block;
 
 jest.mock('antd/lib/modal', () => {

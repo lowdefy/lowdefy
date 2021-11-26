@@ -76,5 +76,12 @@ const ButtonBlock = ({
 };
 
 ButtonBlock.defaultProps = blockDefaultProps;
+ButtonBlock.meta = {
+  category: 'display',
+  loading: {
+    type: 'SkeletonButton',
+  },
+};
+ButtonBlock.styles = ['blocks/Button/style.less'];
 
 export default ButtonBlock;

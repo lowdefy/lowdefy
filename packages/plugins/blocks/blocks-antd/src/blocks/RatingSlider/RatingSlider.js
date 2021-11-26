@@ -233,5 +233,13 @@ const RatingSlider = ({
 };
 
 RatingSlider.defaultProps = blockDefaultProps;
+RatingSlider.meta = {
+  valueType: 'any',
+  category: 'input',
+  loading: {
+    type: 'SkeletonInput',
+  },
+};
+RatingSlider.styles = ['blocks/RatingSlider/style.less'];
 
 export default RatingSlider;

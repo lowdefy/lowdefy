@@ -20,6 +20,39 @@ import block from './index.js';
 import examples from './examples.yaml';
 import schema from './schema.json';
 
+// tests: {
+//   methods: [
+//     {
+//       name: 'open',
+//       args: {},
+//     },
+//     {
+//       name: 'open',
+//       args: {
+//         status: 'warning',
+//       },
+//     },
+//     {
+//       name: 'open',
+//       args: {
+//         message: 'Args message',
+//       },
+//     },
+//     {
+//       name: 'open',
+//       args: {
+//         description: 'Args description',
+//       },
+//     },
+//     {
+//       name: 'open',
+//       args: {
+//         duration: 1,
+//       },
+//     },
+//   ],
+// }
+
 const { meta, tests } = block;
 
 jest.mock('antd', () => {

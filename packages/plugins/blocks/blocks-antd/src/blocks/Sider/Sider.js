@@ -65,5 +65,10 @@ const SiderBlock = ({ blockId, properties, content, methods, rename }) => {
 };
 
 SiderBlock.defaultProps = blockDefaultProps;
+SiderBlock.meta = {
+  category: 'container',
+  loading: false,
+};
+SiderBlock.styles = ['blocks/Sider/style.less'];
 
 export default SiderBlock;

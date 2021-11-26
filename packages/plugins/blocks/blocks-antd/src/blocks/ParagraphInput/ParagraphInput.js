@@ -132,5 +132,13 @@ const ParagraphInput = ({ blockId, events, components: { Icon }, properties, met
 };
 
 ParagraphInput.defaultProps = blockDefaultProps;
+ParagraphInput.meta = {
+  valueType: 'string',
+  category: 'input',
+  loading: {
+    type: 'SkeletonParagraph',
+  },
+};
+ParagraphInput.styles = ['blocks/ParagraphInput/style.less'];
 
 export default ParagraphInput;

@@ -76,5 +76,13 @@ const PasswordInput = ({
 };
 
 PasswordInput.defaultProps = blockDefaultProps;
+PasswordInput.meta = {
+  valueType: 'string',
+  category: 'input',
+  loading: {
+    type: 'SkeletonInput',
+  },
+};
+PasswordInput.styles = ['blocks/PasswordInput/style.less'];
 
 export default PasswordInput;

@@ -72,5 +72,13 @@ const CheckboxSwitch = ({
 };
 
 CheckboxSwitch.defaultProps = blockDefaultProps;
+CheckboxSwitch.meta = {
+  valueType: 'boolean',
+  category: 'input',
+  loading: {
+    type: 'SkeletonInput',
+  },
+};
+CheckboxSwitch.styles = ['blocks/CheckboxSwitch/style.less'];
 
 export default CheckboxSwitch;

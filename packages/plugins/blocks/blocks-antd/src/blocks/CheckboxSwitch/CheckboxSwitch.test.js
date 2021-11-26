@@ -22,6 +22,12 @@ import examples from './examples.yaml';
 import schema from './schema.json';
 import validationsExamples from '../../validationExamples.js';
 
+// test: {
+//   validation: true,
+//   required: true,
+//   values: [true],
+// }
+
 const { meta, tests } = block;
 
 runRenderTests({ Block, examples, meta, schema, tests, validationsExamples });

@@ -45,5 +45,12 @@ const AvatarBlock = ({ blockId, events, components: { Icon }, methods, propertie
 );
 
 AvatarBlock.defaultProps = blockDefaultProps;
+AvatarBlock.meta = {
+  category: 'display',
+  loading: {
+    type: 'SkeletonAvatar',
+  },
+};
+AvatarBlock.styles = ['blocks/Avatar/style.less'];
 
 export default AvatarBlock;

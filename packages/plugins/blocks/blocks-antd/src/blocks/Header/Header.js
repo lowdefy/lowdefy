@@ -36,5 +36,10 @@ const HeaderBlock = ({ blockId, content, methods, properties }) => (
 );
 
 HeaderBlock.defaultProps = blockDefaultProps;
+HeaderBlock.meta = {
+  category: 'container',
+  loading: false,
+};
+HeaderBlock.styles = ['blocks/Header/style.less'];
 
 export default HeaderBlock;

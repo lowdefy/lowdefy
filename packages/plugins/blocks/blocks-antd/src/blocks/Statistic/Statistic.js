@@ -56,5 +56,15 @@ const StatisticBlock = ({ blockId, components: { Icon }, events, properties, met
 );
 
 StatisticBlock.defaultProps = blockDefaultProps;
+StatisticBlock.meta = {
+  category: 'display',
+  loading: {
+    type: 'Skeleton',
+    properties: {
+      height: 80,
+    },
+  },
+};
+StatisticBlock.styles = ['blocks/Statistic/style.less'];
 
 export default StatisticBlock;

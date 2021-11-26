@@ -97,5 +97,13 @@ const TextInput = ({
 };
 
 TextInput.defaultProps = blockDefaultProps;
+TextInput.meta = {
+  valueType: 'string',
+  category: 'input',
+  loading: {
+    type: 'SkeletonInput',
+  },
+};
+TextInput.styles = ['blocks/TextInput/style.less'];
 
 export default TextInput;

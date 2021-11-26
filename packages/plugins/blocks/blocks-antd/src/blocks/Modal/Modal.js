@@ -91,5 +91,10 @@ const ModalBlock = ({ blockId, content, events, methods, properties }) => {
 };
 
 ModalBlock.defaultProps = blockDefaultProps;
+ModalBlock.meta = {
+  category: 'container',
+  loading: false,
+};
+ModalBlock.styles = ['blocks/Modal/style.less'];
 
 export default ModalBlock;
