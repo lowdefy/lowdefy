@@ -1,3 +1,4 @@
+/* eslint-disable import/namespace */
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -14,7 +15,16 @@
   limitations under the License.
 */
 
+import * as connections from './connections.js';
+
 export default {
-  connections: ['AxiosHttp'],
-  requests: ['AxiosHttp'],
+  connections: Object.keys(connections),
+  requests: Object.keys(connections)
+    .map((connection) => Object.keys(connections[connection].requests))
+    .flat(),
 };
+
+// export default {
+//   connections: ['AxiosHttp'],
+//   requests: ['AxiosHttp'],
+// };

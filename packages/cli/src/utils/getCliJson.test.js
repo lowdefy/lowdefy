@@ -20,7 +20,7 @@ import path from 'path';
 // eslint-disable-next-line no-unused-vars
 import { v4 as uuid } from 'uuid';
 import { readFile, writeFile } from '@lowdefy/node-utils';
-import getCliJson from './getCliJson';
+import getCliJson from './getCliJson.js';
 
 jest.mock('@lowdefy/node-utils', () => {
   const readFile = jest.fn();

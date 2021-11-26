@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import errorHandler from './errorHandler';
-import runCommand from './runCommand';
-import startUp from './startUp';
+import errorHandler from './errorHandler.js';
+import runCommand from './runCommand.js';
+import startUp from './startUp.js';
 
 jest.mock('./errorHandler');
 jest.mock('./startUp');

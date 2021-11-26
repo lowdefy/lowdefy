@@ -25,7 +25,7 @@ async function getLowdefyYaml({ baseDirectory, command }) {
     lowdefyYaml = await readFile(path.resolve(baseDirectory, 'lowdefy.yml'));
   }
   if (!lowdefyYaml) {
-    if (!['init', 'clean-cache'].includes(command)) {
+    if (!['init'].includes(command)) {
       throw new Error(
         `Could not find "lowdefy.yaml" file in specified base directory ${baseDirectory}.`
       );
@@ -43,9 +43,9 @@ async function getLowdefyYaml({ baseDirectory, command }) {
       `No version specified in "lowdefy.yaml" file. Specify a version in the "lowdefy" field.`
     );
   }
-  if (!type.isString(lowdefy.lowdefy) || !lowdefy.lowdefy.match(/\d+\.\d+\.\d+(-\w+\.\d+)?/)) {
+  if (!type.isString(lowdefy.lowdefy)) {
     throw new Error(
-      `Version number specified in "lowdefy.yaml" file is not valid. Received ${JSON.stringify(
+      `Version number specified in "lowdefy.yaml" file should be a string. Received ${JSON.stringify(
         lowdefy.lowdefy
       )}.`
     );

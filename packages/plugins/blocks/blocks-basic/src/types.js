@@ -1,3 +1,4 @@
+/* eslint-disable import/namespace */
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -14,7 +15,18 @@
   limitations under the License.
 */
 
+import * as blocks from './blocks.js';
+
+const styles = {};
+Object.keys(blocks).forEach((block) => {
+  styles[block] = blocks[block].styles || [];
+});
 export default {
-  blocks: ['Anchor', 'Box', 'DangerousHtml', 'Html', 'Icon', 'Img', 'List', 'Span'],
-  styles: ['style.less'],
+  blocks: Object.keys(blocks),
+  styles: { default: [], ...styles },
 };
+
+// export default {
+//   blocks: ['Anchor', 'Box', 'DangerousHtml', 'Html', 'Icon', 'Img', 'List', 'Span'],
+//   styles: { default: ['style.less'], Anchor: ['blocks/Anchor/style.less']  },
+// };

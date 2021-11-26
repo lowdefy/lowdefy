@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/ajv",
-  "version": "4.0.0-alpha.0",
+  "version": "4.0.0-alpha.4",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -40,14 +40,14 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/nunjucks": "4.0.0-alpha.0",
-    "ajv": "8.6.3",
+    "@lowdefy/nunjucks": "4.0.0-alpha.4",
+    "ajv": "8.8.2",
     "ajv-errors": "3.0.0"
   },
   "devDependencies": {
-    "@swc/cli": "0.1.51",
-    "@swc/core": "1.2.107",
-    "@swc/jest": "0.2.5",
+    "@swc/cli": "0.1.52",
+    "@swc/core": "1.2.112",
+    "@swc/jest": "0.2.9",
     "jest": "27.3.1"
   },
   "publishConfig": {

@@ -17,6 +17,14 @@
 import axios from 'axios';
 
 async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
+  if (isExperimentalVersion(cliVersion) || isExperimentalVersion(lowdefyVersion)) {
+    print.warn(`
+---------------------------------------------------
+  You are using an experimental version of Lowdefy.
+  Features may change at any time.
+---------------------------------------------------`);
+    return;
+  }
   const registryUrl = 'https://registry.npmjs.org/lowdefy';
   try {
     const packageInfo = await axios.get(registryUrl);
@@ -25,7 +33,7 @@ async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
     if (cliVersion !== latestVersion) {
       print.warn(`
 -------------------------------------------------------------
-  You are using an outdated Lowdefy CLI.
+  You are not using the latest version of the Lowdefy CLI.
   Please update to version ${latestVersion}.
   To always use the latest version, run 'npx lowdefy@latest'.
 -------------------------------------------------------------`);
@@ -33,7 +41,7 @@ async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
     if (lowdefyVersion && lowdefyVersion !== latestVersion) {
       print.warn(`
 -------------------------------------------------------------
-  Your app is using an outdated Lowdefy version, ${lowdefyVersion}.
+  Your app is not using the latest Lowdefy version, ${lowdefyVersion}.
   Please update your app to version ${latestVersion}.
   View the changelog here:
     https://github.com/lowdefy/lowdefy/blob/main/CHANGELOG.md
@@ -42,6 +50,10 @@ async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
   } catch (error) {
     print.warn('Failed to check for latest Lowdefy version.');
   }
+}
+
+function isExperimentalVersion(version) {
+  return version.includes('alpha') || version.includes('beta') || version.includes('rc');
 }
 
 export default checkForUpdatedVersions;

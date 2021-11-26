@@ -20,7 +20,7 @@ const template = `{%- for block in blocks -%}
 import { {{ block.type }} } from '{{ block.package }}/blocks';
 {% endfor -%}
 export default {
-  {%- for block in blocks -%}
+  {% for block in blocks -%}
   {{ block.type }},
   {% endfor -%}
 };

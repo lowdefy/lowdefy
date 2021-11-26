@@ -24,7 +24,9 @@ test('cleanOutputDirectory calls cleanDirectory', async () => {
   const nodeUtils = await import('@lowdefy/node-utils');
   const cleanBuildDirectory = await import('./cleanBuildDirectory.js');
   const context = {
-    buildDirectory: 'buildDirectory',
+    directories: {
+      build: 'buildDirectory',
+    },
   };
   await cleanBuildDirectory.default({ context });
   expect(nodeUtils.cleanDirectory.mock.calls).toEqual([['buildDirectory']]);

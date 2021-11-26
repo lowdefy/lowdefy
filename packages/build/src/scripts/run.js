@@ -19,17 +19,14 @@ import path from 'path';
 import build from '../index.js';
 
 async function run() {
-  // TODO: resolve build with no config
-  try {
-    await build({
-      logger: console,
-      buildDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
-      cacheDirectory: path.resolve(process.cwd(), './.lowdefy/.cache'),
-      configDirectory: process.cwd(),
-    });
-  } catch (e) {
-    console.error(e);
-  }
+  await build({
+    logger: console,
+    directories: {
+      build: path.resolve(process.env.LOWDEFY_BUILD_DIRECTORY || path.join(process.cwd(), 'build')),
+      config: path.resolve(process.env.LOWDEFY_CONFIG_DIRECTORY || process.cwd()),
+      server: path.resolve(process.env.LOWDEFY_SERVER_DIRECTORY || process.cwd()),
+    },
+  });
 }
 
 run();

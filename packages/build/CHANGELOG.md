@@ -3,6 +3,100 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.4](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.3...v4.0.0-alpha.4) (2021-11-25)
+
+
+### Features
+
+* **build:** Add build icons.js. ([e3b7eb7](https://github.com/lowdefy/lowdefy/commit/e3b7eb7bf45e3dd237da47a9dfa783cb9e1174e8))
+
+
+
+
+
+# [4.0.0-alpha.3](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.2...v4.0.0-alpha.3) (2021-11-25)
+
+
+### Bug Fixes
+
+* **build:** Fix build default build directory. ([f6efc19](https://github.com/lowdefy/lowdefy/commit/f6efc19f00a78cda46e04762b3ea89f4da1eda25))
+
+
+### Features
+
+* **build:** Add styles.less in build. ([d014774](https://github.com/lowdefy/lowdefy/commit/d0147743ecca045858331cbec409059386a35e60))
+
+
+
+
+
+# [4.0.0-alpha.2](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.1...v4.0.0-alpha.2) (2021-11-25)
+
+
+### Bug Fixes
+
+* Fixes for CLI build. ([3e58d59](https://github.com/lowdefy/lowdefy/commit/3e58d599829e1393de52e94e6e1e82f6876231ec))
+
+
+
+
+
+# [4.0.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.23.1...v4.0.0-alpha.1) (2021-11-25)
+
+
+### Bug Fixes
+
+* **ajv:** Build @lowdefy/ajv with swc and update dep ajv to v8.6.3. ([f231fcb](https://github.com/lowdefy/lowdefy/commit/f231fcb3219d5210f0c7c597323511b706b610dc))
+* **api:** JSON web token tests and fixes. ([30f7267](https://github.com/lowdefy/lowdefy/commit/30f7267c3e2435647b1b5f0b4b48137d6c3357d6))
+* **build:** Fix build if no lowdefy.yaml file is found. ([86f32a1](https://github.com/lowdefy/lowdefy/commit/86f32a18643924cf29d16ddf4c1903a385d6efb5))
+* **build:** Fix build tests. ([509d71a](https://github.com/lowdefy/lowdefy/commit/509d71a9b4f21e1094744dc4fa94732d99dfe351))
+* **build:** Remove getMeta from context. ([a982fd8](https://github.com/lowdefy/lowdefy/commit/a982fd8fd00d26f14b82e4a56f9dd2ed4c40293f))
+* **build:** Remove nested if statements. ([e4771f9](https://github.com/lowdefy/lowdefy/commit/e4771f9e494b4ef1f313782d7b64a9657b0d6a52))
+* **build:** Removed check and test for duplicate block id. ([8fe5cdd](https://github.com/lowdefy/lowdefy/commit/8fe5cdd65f60fd4b87c820aa0eb1b9a106ce077f))
+* **build:** Update build tests for payload change. ([43c2507](https://github.com/lowdefy/lowdefy/commit/43c2507b95eb9c87ddb6ed63057e7fb8c42ce840))
+* **build:** Update duplicate id tests. ([ed2f983](https://github.com/lowdefy/lowdefy/commit/ed2f983841be4c6e6211fd8e5e06c9283e4fcbd2))
+* **build:** Updated formatErrorMessage and testSchema tests. ([751814c](https://github.com/lowdefy/lowdefy/commit/751814cec6950dee06dfb2844e952c7a985c691a))
+* **build:** Updated formatErrorMessage function to show descriptive error paths. ([5096554](https://github.com/lowdefy/lowdefy/commit/509655409ea81aed398e67e45829d0c8603fc56f))
+* Clean up server configuration. ([dea25de](https://github.com/lowdefy/lowdefy/commit/dea25dec2303f19937253a0d9c699b56b28fb82b))
+* Cleanup build script. ([ca0b4b0](https://github.com/lowdefy/lowdefy/commit/ca0b4b0d91bb77098d9295f0a071bb05a19e3781))
+* **deps:** Update dependency axios to v0.23.0. ([f04f720](https://github.com/lowdefy/lowdefy/commit/f04f7208d2e00e2f8d9d2418514ecbe2bbab5cbc))
+* **deps:** Update package ajv to v8.8.2. ([2ded889](https://github.com/lowdefy/lowdefy/commit/2ded889ef7970554b4028bfbddbe4c754a49fb40))
+* ES module and next server fixes. ([83bca45](https://github.com/lowdefy/lowdefy/commit/83bca458e4ba5a5d2f62a23f603b69672bc0418b))
+* Fix tests ([80c00f4](https://github.com/lowdefy/lowdefy/commit/80c00f4403067493351347ca91cb953586bb97da))
+* Remove block metadata from build. ([06a4fba](https://github.com/lowdefy/lowdefy/commit/06a4fba06ce1f15781a12321d34b7f8e346a0af8))
+* Remove nested contexts code review fixes. ([ceb266d](https://github.com/lowdefy/lowdefy/commit/ceb266d5e09afcaacceaef0690d76eeaceb8e5ae))
+* Test fixes. ([67bf2d4](https://github.com/lowdefy/lowdefy/commit/67bf2d444884232369eea5f9b9db418b4cf3a25b))
+
+
+### Features
+
+* Add authentication flows ([15e1be9](https://github.com/lowdefy/lowdefy/commit/15e1be90d063ca4e0b315ed8be1641897b694d5c))
+* **api:** Init package @lowdefy/api ([cbe7569](https://github.com/lowdefy/lowdefy/commit/cbe75694f1f348e3e89ac38b45ca075f8ece0241))
+* Build html files for each page, and serve from api ([3f53d8b](https://github.com/lowdefy/lowdefy/commit/3f53d8b20f89b2179ffe18a510e8d5415de2be39))
+* **build:** Add generateDefaultTypes script. ([18a4863](https://github.com/lowdefy/lowdefy/commit/18a486384d315d661e957e4d23c4efbae47a3ec7))
+* **build:** Added createCheckDuplicateId test. ([414eaa1](https://github.com/lowdefy/lowdefy/commit/414eaa15c152a4b1261a5c7a34d3c423279018d3))
+* **build:** Build now throws on duplicate ids. ([45fd393](https://github.com/lowdefy/lowdefy/commit/45fd393c4e605964ec8daeb8c8260945952751ab)), closes [#529](https://github.com/lowdefy/lowdefy/issues/529)
+* **build:** Count types during build. ([6550f76](https://github.com/lowdefy/lowdefy/commit/6550f76ec0f1e2ce94300911eb605551c9a8738d))
+* **build:** Remove support for nested contexts on a page. ([b003b76](https://github.com/lowdefy/lowdefy/commit/b003b76182ad8b8ba4e7f895247ace4881bce230))
+* **build:** Write plugin imports and types.json during build. ([14247ea](https://github.com/lowdefy/lowdefy/commit/14247eab075cea1ffde8e84f134b0f3b66920cbe))
+* Generate unique block ids at build. ([1503970](https://github.com/lowdefy/lowdefy/commit/1503970896088eb0d6988fbe657e66e477f62c8f)), closes [#920](https://github.com/lowdefy/lowdefy/issues/920)
+* Make @lowdefy/build a dev dependency of server. ([fa97eb6](https://github.com/lowdefy/lowdefy/commit/fa97eb6a34ae0ea08ae341959c461d5be4f4ba49))
+* Next server fixes. ([9e6518a](https://github.com/lowdefy/lowdefy/commit/9e6518a89e95a894b2c680146e0de15aa6f3513e))
+* Next server rendering blocks ([e625e07](https://github.com/lowdefy/lowdefy/commit/e625e07a29b5ae3f09f74c629f35fe52ce73dace))
+* Remove @lowdefy/renderer package ([c584778](https://github.com/lowdefy/lowdefy/commit/c58477852d36f101dd38a0e48143b4a483273ee2))
+* Render Lowdefy blocks in client package. ([c24bcf1](https://github.com/lowdefy/lowdefy/commit/c24bcf193123bf1b09b886160df4dafd9298d750))
+* Replace server side state with payload and _payload operator. ([1f928d9](https://github.com/lowdefy/lowdefy/commit/1f928d93db4cbe886d322a1a3998a817d769485f))
+* **server:** Convert server to fastify. ([0d2c1c3](https://github.com/lowdefy/lowdefy/commit/0d2c1c34d969fab5049fb501f027bea60bce54ed))
+
+
+### BREAKING CHANGES
+
+* The _event, _global, _input, _state, and _url_query operators are no longer evaluated in connections or requests.
+
+
+
+
+
 ## [3.23.1](https://github.com/lowdefy/lowdefy/compare/v3.23.0...v3.23.1) (2021-11-20)
 
 **Note:** Version bump only for package @lowdefy/build

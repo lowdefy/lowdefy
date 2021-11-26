@@ -15,15 +15,15 @@
 */
 
 import path from 'path';
-import startUp from './startUp';
-import checkForUpdatedVersions from './checkForUpdatedVersions';
-import createPrint from './print';
+import startUp from './startUp.js';
+import checkForUpdatedVersions from './checkForUpdatedVersions.js';
+import createPrint from './print.js';
 // eslint-disable-next-line no-unused-vars
-import getLowdefyYaml from './getLowdefyYaml';
+import getLowdefyYaml from './getLowdefyYaml.js';
 // eslint-disable-next-line no-unused-vars
-import getCliJson from './getCliJson';
+import getCliJson from './getCliJson.js';
 // eslint-disable-next-line no-unused-vars
-import getSendTelemetry from './getSendTelemetry';
+import getSendTelemetry from './getSendTelemetry.js';
 // eslint-disable-next-line no-unused-vars
 import packageJson from '../../package.json';
 

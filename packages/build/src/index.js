@@ -25,28 +25,32 @@ import createWriteBuildArtifact from './utils/files/writeBuildArtifact.js';
 import addDefaultPages from './build/addDefaultPages/addDefaultPages.js';
 import buildAuth from './build/buildAuth/buildAuth.js';
 import buildConnections from './build/buildConnections.js';
+import buildIcons from './build/buildIcons.js';
 import buildMenu from './build/buildMenu.js';
 import buildPages from './build/buildPages/buildPages.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
+import buildStyles from './build/buildStyles.js';
 import buildTypes from './build/buildTypes.js';
 import cleanBuildDirectory from './build/cleanBuildDirectory.js';
 import testSchema from './build/testSchema.js';
 import validateApp from './build/validateApp.js';
 import validateConfig from './build/validateConfig.js';
+import updateServerPackageJson from './build/updateServerPackageJson.js';
 import writeApp from './build/writeApp.js';
 import writeBlockImports from './build/writePluginImports/writeBlockImports.js';
-import writeConnectionImports from './build/writePluginImports/writeConnectionImports.js';
 import writeConfig from './build/writeConfig.js';
+import writeConnectionImports from './build/writePluginImports/writeConnectionImports.js';
 import writeConnections from './build/writeConnections.js';
 import writeGlobal from './build/writeGlobal.js';
+import writeIconImports from './build/writePluginImports/writeIconImports.js';
 import writeMenus from './build/writeMenus.js';
 import writePages from './build/writePages.js';
 import writeRequests from './build/writeRequests.js';
+import writeStyleImports from './build/writePluginImports/writeStyleImports.js';
 import writeTypes from './build/writeTypes.js';
 
 async function createContext(options) {
-  const { blocksServerUrl, buildDirectory, cacheDirectory, configDirectory, logger, refResolver } =
-    options;
+  const { blocksServerUrl, directories, logger, refResolver } = options;
 
   const defaultTypes = JSON.parse(
     await readFile(new URL('./defaultTypes.json', import.meta.url).pathname)
@@ -56,9 +60,7 @@ async function createContext(options) {
 
   const context = {
     blocksServerUrl,
-    buildDirectory,
-    cacheDirectory,
-    configDirectory,
+    directories,
     typeCounters: {
       actions: createCounter(),
       blocks: createCounter(),
@@ -70,10 +72,10 @@ async function createContext(options) {
       },
     },
     logger,
-    readConfigFile: createReadConfigFile({ configDirectory }),
+    readConfigFile: createReadConfigFile({ directories }),
     refResolver,
     types: defaultTypes,
-    writeBuildArtifact: createWriteBuildArtifact({ buildDirectory }),
+    writeBuildArtifact: createWriteBuildArtifact({ directories }),
   };
   return context;
 }
@@ -81,7 +83,7 @@ async function createContext(options) {
 async function build(options) {
   const context = await createContext(options);
   try {
-    let components = await buildRefs({ context });
+    const components = await buildRefs({ context });
     await testSchema({ components, context });
     await validateApp({ components, context });
     await validateConfig({ components, context });
@@ -89,8 +91,10 @@ async function build(options) {
     await buildAuth({ components, context });
     await buildConnections({ components, context });
     await buildPages({ components, context });
+    await buildIcons({ components });
     await buildMenu({ components, context });
     await buildTypes({ components, context });
+    await buildStyles({ components, context });
     await cleanBuildDirectory({ context });
     await writeApp({ components, context });
     await writeConnections({ components, context });
@@ -102,9 +106,9 @@ async function build(options) {
     await writeTypes({ components, context });
     await writeBlockImports({ components, context });
     await writeConnectionImports({ components, context });
-    // TODO: write style file
-    // TODO: write icons file
-    // TODO: add plugins to package.json
+    await writeStyleImports({ components, context });
+    await writeIconImports({ components, context });
+    await updateServerPackageJson({ components, context });
   } catch (error) {
     context.logger.error(error);
     throw error;

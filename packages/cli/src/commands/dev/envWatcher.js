@@ -14,7 +14,7 @@
   limitations under the License.
 */
 import chokidar from 'chokidar';
-import BatchChanges from '../../utils/BatchChanges';
+import BatchChanges from '../../utils/BatchChanges.js';
 
 function envWatcher({ context }) {
   const changeEnvCallback = async () => {

@@ -3,6 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.4](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.3...v4.0.0-alpha.4) (2021-11-25)
+
+**Note:** Version bump only for package lowdefy
+
+
+
+
+
+# [4.0.0-alpha.3](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.2...v4.0.0-alpha.3) (2021-11-25)
+
+**Note:** Version bump only for package lowdefy
+
+
+
+
+
+# [4.0.0-alpha.2](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.1...v4.0.0-alpha.2) (2021-11-25)
+
+
+### Bug Fixes
+
+* Fixes for CLI build. ([3e58d59](https://github.com/lowdefy/lowdefy/commit/3e58d599829e1393de52e94e6e1e82f6876231ec))
+
+
+### Features
+
+* Fetch, install and build @lowdefy/server from CLI. ([7966538](https://github.com/lowdefy/lowdefy/commit/7966538468b4e9ac65003876b30ad1302132f1c3))
+
+
+
+
+
+# [4.0.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.23.1...v4.0.0-alpha.1) (2021-11-25)
+
+
+### Bug Fixes
+
+* Clean up server configuration. ([dea25de](https://github.com/lowdefy/lowdefy/commit/dea25dec2303f19937253a0d9c699b56b28fb82b))
+* **deps:** Update dependency axios to v0.23.0. ([f04f720](https://github.com/lowdefy/lowdefy/commit/f04f7208d2e00e2f8d9d2418514ecbe2bbab5cbc))
+* **deps:** Update dependency chalk to v4.1.2. ([5a80923](https://github.com/lowdefy/lowdefy/commit/5a8092303ecf1abe93c307396ddd2f2af5a04349))
+* **deps:** Update dependency chokidar to v3.5.2. ([ea8300a](https://github.com/lowdefy/lowdefy/commit/ea8300a2958b7cf74185446ba6503a2b15c49dc7))
+* **deps:** Update dependency commander to v8.3.0. ([45489e6](https://github.com/lowdefy/lowdefy/commit/45489e68cd37d9d3b5f1dd7464fe6adf68c52b73))
+* **deps:** Update dependency mssql to v7.2.1. ([c9acf42](https://github.com/lowdefy/lowdefy/commit/c9acf42dc081c282c259afdd7c3d795b3920c682))
+* **deps:** Update dependency ora to v6.0.1. ([25e82f5](https://github.com/lowdefy/lowdefy/commit/25e82f515f80576a08d1548d5041989aeefd2014))
+* **deps:** Update dependency pg to v8.7.1. ([cc2e30a](https://github.com/lowdefy/lowdefy/commit/cc2e30a5a8bb4ce3569034b9ee6a3523602cbed2))
+* **deps:** Update dependency reload to v3.2.0. ([101ca3c](https://github.com/lowdefy/lowdefy/commit/101ca3ca6b71c8415463db7b8c2249c058efd618))
+* **deps:** Update package axios to v0.24.0. ([ea4f077](https://github.com/lowdefy/lowdefy/commit/ea4f07784f5020eb12c95b3d2885e74044fc3fb9))
+* Fix tests ([80c00f4](https://github.com/lowdefy/lowdefy/commit/80c00f4403067493351347ca91cb953586bb97da))
+* Next server fixes ([d5ab3d9](https://github.com/lowdefy/lowdefy/commit/d5ab3d92f24b09a59e6c20e31a8b01dce9d1056f))
+* Replace all front end testing with @testing-library/react, jest and other updates. ([22ec295](https://github.com/lowdefy/lowdefy/commit/22ec2954047853096aabcddba7a2c509342f95f2))
+
+
+### Features
+
+* Make @lowdefy/build a dev dependency of server. ([fa97eb6](https://github.com/lowdefy/lowdefy/commit/fa97eb6a34ae0ea08ae341959c461d5be4f4ba49))
+
+
+
+
+
 ## [3.23.1](https://github.com/lowdefy/lowdefy/compare/v3.23.0...v3.23.1) (2021-11-20)
 
 **Note:** Version bump only for package lowdefy

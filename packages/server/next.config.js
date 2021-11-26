@@ -1,11 +1,10 @@
 const withLess = require('next-with-less');
+const appConfig = require('./build/app.json');
 
 module.exports = withLess({
   lessLoaderOptions: {
     lessOptions: {
-      modifyVars: {
-        'primary-color': '#9900FF',
-      },
+      modifyVars: appConfig.styles.lessVariables,
     },
   },
   reactStrictMode: true,

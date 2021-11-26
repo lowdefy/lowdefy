@@ -15,10 +15,7 @@
 */
 
 import axios from 'axios';
-import createPrint from './print';
-import packageJson from '../../package.json';
-
-const { version: cliVersion } = packageJson;
+import createPrint from './print.js';
 
 async function logError({ error, context = {} }) {
   try {
@@ -26,11 +23,11 @@ async function logError({ error, context = {} }) {
       method: 'post',
       url: 'https://api.lowdefy.net/errors',
       headers: {
-        'User-Agent': `Lowdefy CLI v${cliVersion}`,
+        'User-Agent': `Lowdefy CLI v${context.cliVersion}`,
       },
       data: {
         source: 'cli',
-        cliVersion,
+        cliVersion: context.cliVersion,
         command: context.command,
         lowdefyVersion: context.lowdefyVersion,
         message: error.message,

@@ -63,6 +63,12 @@ export default {
             },
           },
         },
+        styles: {
+          type: 'object',
+          errorMessage: {
+            type: 'App "app.styles" should be an object.',
+          },
+        },
       },
     },
     authConfig: {

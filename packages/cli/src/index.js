@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -14,15 +15,17 @@
   limitations under the License.
 */
 
+import { readFile } from '@lowdefy/node-utils';
+
 import program from 'commander';
-import packageJson from '../package.json';
 import build from './commands/build/build.js';
-import buildNetlify from './commands/buildNetlify/buildNetlify.js';
-import cleanCache from './commands/cleanCache/cleanCache.js';
-import dev from './commands/dev/dev.js';
+// import dev from './commands/dev/dev.js';
 import init from './commands/init/init.js';
 import runCommand from './utils/runCommand.js';
 
+const packageJson = JSON.parse(
+  await readFile(new URL('../package.json', import.meta.url).pathname)
+);
 const { description, version } = packageJson;
 
 program.name('lowdefy').description(description).version(version, '-v, --version');
@@ -45,73 +48,47 @@ program
     'Change the directory to which build artifacts are saved. Default is "<base-directory>/.lowdefy/build".'
   )
   .option(
-    '--ref-resolver <ref-resolver-function-path>',
-    'Path to a JavaScript file containing a _ref resolver function to be used as the app default _ref resolver.'
+    '--package-manager <package-manager>',
+    'The package manager to use. Options are "npm" or "yarn".'
   )
-  .action(runCommand(build));
-
-program
-  .command('build-netlify')
-  .description('Build a Lowdefy deployment to deploy in netlify.')
-  .usage(`[options]`)
-  .option(
-    '--base-directory <base-directory>',
-    'Change base directory. Default is the current working directory.'
-  )
-  .option(
-    '--blocks-server-url <blocks-server-url>',
-    'The URL from where Lowdefy blocks will be served.'
-  )
-  .option('--disable-telemetry', 'Disable telemetry.')
   .option(
     '--ref-resolver <ref-resolver-function-path>',
     'Path to a JavaScript file containing a _ref resolver function to be used as the app default _ref resolver.'
   )
-  .action(runCommand(buildNetlify));
+  .action(runCommand({ cliVersion: version })(build));
 
-program
-  .command('clean-cache')
-  .description('Clean cached scripts and block meta descriptions.')
-  .usage(`[options]`)
-  .option(
-    '--base-directory <base-directory>',
-    'Change base directory. Default is the current working directory.'
-  )
-  .option('--disable-telemetry', 'Disable telemetry.')
-  .action(runCommand(cleanCache));
-
-program
-  .command('dev')
-  .description('Start a Lowdefy development server.')
-  .usage(`[options]`)
-  .option(
-    '--base-directory <base-directory>',
-    'Change base directory. Default is the current working directory.'
-  )
-  .option(
-    '--blocks-server-url <blocks-server-url>',
-    'The URL from where Lowdefy blocks will be served.'
-  )
-  .option('--disable-telemetry', 'Disable telemetry.')
-  .option('--port <port>', 'Change the port the server is hosted at. Default is 3000.')
-  .option(
-    '--ref-resolver <ref-resolver-function-path>',
-    'Path to a JavaScript file containing a _ref resolver function to be used as the app default _ref resolver.'
-  )
-  .option(
-    '--watch <paths...>',
-    'A list of paths to files or directories that should be watched for changes.'
-  )
-  .option(
-    '--watch-ignore <paths...>',
-    'A list of paths to files or directories that should be ignored by the file watcher. Globs are supported.'
-  )
-  .action(runCommand(dev));
+// program
+//   .command('dev')
+//   .description('Start a Lowdefy development server.')
+//   .usage(`[options]`)
+//   .option(
+//     '--base-directory <base-directory>',
+//     'Change base directory. Default is the current working directory.'
+//   )
+//   .option(
+//     '--blocks-server-url <blocks-server-url>',
+//     'The URL from where Lowdefy blocks will be served.'
+//   )
+//   .option('--disable-telemetry', 'Disable telemetry.')
+//   .option('--port <port>', 'Change the port the server is hosted at. Default is 3000.')
+//   .option(
+//     '--ref-resolver <ref-resolver-function-path>',
+//     'Path to a JavaScript file containing a _ref resolver function to be used as the app default _ref resolver.'
+//   )
+//   .option(
+//     '--watch <paths...>',
+//     'A list of paths to files or directories that should be watched for changes.'
+//   )
+//   .option(
+//     '--watch-ignore <paths...>',
+//     'A list of paths to files or directories that should be ignored by the file watcher. Globs are supported.'
+//   )
+//   .action(runCommand({ cliVersion: version })(dev));
 
 program
   .command('init')
   .description('Initialize a Lowdefy project.')
   .usage(`[options]`)
-  .action(runCommand(init));
+  .action(runCommand({ cliVersion: version })(init));
 
 program.parse(process.argv);
