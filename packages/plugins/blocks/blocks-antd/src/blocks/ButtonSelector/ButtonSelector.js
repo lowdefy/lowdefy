@@ -98,5 +98,13 @@ const ButtonSelector = ({
 };
 
 ButtonSelector.defaultProps = blockDefaultProps;
+ButtonSelector.meta = {
+  valueType: 'any',
+  category: 'input',
+  loading: {
+    type: 'SkeletonInput',
+  },
+};
+ButtonSelector.styles = ['blocks/ButtonSelector/style.less'];
 
 export default ButtonSelector;

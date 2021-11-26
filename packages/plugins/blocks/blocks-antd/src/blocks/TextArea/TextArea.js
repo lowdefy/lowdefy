@@ -88,5 +88,13 @@ const TextAreaBlock = ({
 };
 
 TextAreaBlock.defaultProps = blockDefaultProps;
+TextAreaBlock.meta = {
+  valueType: 'string',
+  category: 'input',
+  loading: {
+    type: 'SkeletonInput',
+  },
+};
+TextAreaBlock.styles = ['blocks/TextArea/style.less'];
 
 export default TextAreaBlock;

@@ -76,5 +76,21 @@ const PaginationBlock = ({ blockId, methods, properties, value }) => {
 };
 
 PaginationBlock.defaultProps = blockDefaultProps;
+PaginationBlock.meta = {
+  valueType: 'object',
+  initValue: {
+    current: 0,
+    pageSize: 10,
+    skip: 0,
+  },
+  category: 'input',
+  loading: {
+    type: 'Skeleton',
+    properties: {
+      height: 33,
+    },
+  },
+};
+PaginationBlock.styles = ['blocks/Pagination/style.less'];
 
 export default PaginationBlock;

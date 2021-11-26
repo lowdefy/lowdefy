@@ -36,5 +36,15 @@ const ResultBlock = ({ blockId, components: { Icon }, events, content, methods, 
 );
 
 ResultBlock.defaultProps = blockDefaultProps;
+ResultBlock.meta = {
+  category: 'container',
+  loading: {
+    type: 'Spinner',
+    properties: {
+      height: '100vh',
+    },
+  },
+};
+ResultBlock.styles = ['blocks/Result/style.less'];
 
 export default ResultBlock;

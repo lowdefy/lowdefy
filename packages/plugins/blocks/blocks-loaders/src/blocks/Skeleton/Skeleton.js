@@ -27,5 +27,10 @@ const Skeleton = ({ properties, methods }) => {
 };
 
 Skeleton.defaultProps = blockDefaultProps;
+Skeleton.meta = {
+  category: 'display',
+  loading: false,
+};
+Skeleton.styles = ['blocks/Skeleton/style.less'];
 
 export default Skeleton;

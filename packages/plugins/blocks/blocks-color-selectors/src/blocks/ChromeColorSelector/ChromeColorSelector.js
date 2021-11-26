@@ -53,5 +53,17 @@ const Selector = ({ blockId, loading, methods, properties, required, validation,
 };
 
 Selector.defaultProps = blockDefaultProps;
+Selector.meta = {
+  valueType: 'object',
+  category: 'input',
+  loading: {
+    type: 'Skeleton',
+    properties: {
+      width: 225,
+      height: 240,
+    },
+  },
+};
+Selector.styles = ['blocks/ChromeColorSelector/style.less'];
 
 export default Selector;

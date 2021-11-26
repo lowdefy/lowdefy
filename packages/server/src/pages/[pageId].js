@@ -20,7 +20,7 @@ import Page from '../components/Page.js';
 
 export async function getServerSideProps(context) {
   const { pageId } = context.params;
-  // TODO: get the write api context options
+  // TODO: get the right api context options
   const apiContext = await createApiContext({ buildDirectory: './build' });
 
   // TODO: Maybe we can only get rootConfig once?

@@ -60,5 +60,10 @@ const NotificationBlock = ({ blockId, components: { Icon }, events, methods, pro
 };
 
 NotificationBlock.defaultProps = blockDefaultProps;
+NotificationBlock.meta = {
+  category: 'display',
+  loading: false,
+};
+NotificationBlock.styles = ['blocks/Notification/style.less'];
 
 export default NotificationBlock;

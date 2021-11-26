@@ -110,5 +110,13 @@ const DateTimeSelector = ({
 };
 
 DateTimeSelector.defaultProps = blockDefaultProps;
+DateTimeSelector.meta = {
+  valueType: 'date',
+  category: 'input',
+  loading: {
+    type: 'SkeletonInput',
+  },
+};
+DateTimeSelector.styles = ['blocks/DateTimeSelector/style.less'];
 
 export default DateTimeSelector;

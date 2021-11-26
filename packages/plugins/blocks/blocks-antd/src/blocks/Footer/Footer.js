@@ -30,5 +30,10 @@ const FooterBlock = ({ blockId, content, methods, properties }) => (
 );
 
 FooterBlock.defaultProps = blockDefaultProps;
+FooterBlock.meta = {
+  category: 'container',
+  loading: false,
+};
+FooterBlock.styles = ['blocks/Footer/style.less'];
 
 export default FooterBlock;

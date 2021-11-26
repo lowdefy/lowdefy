@@ -43,5 +43,10 @@ const BadgeBlock = ({ blockId, events, content, components: { Icon }, properties
 );
 
 BadgeBlock.defaultProps = blockDefaultProps;
+BadgeBlock.meta = {
+  category: 'container',
+  loading: false,
+};
+BadgeBlock.styles = ['blocks/Badge/style.less'];
 
 export default BadgeBlock;

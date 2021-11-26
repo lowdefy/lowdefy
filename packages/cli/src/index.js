@@ -21,6 +21,7 @@ import program from 'commander';
 import build from './commands/build/build.js';
 // import dev from './commands/dev/dev.js';
 import init from './commands/init/init.js';
+import start from './commands/start/start.js';
 import runCommand from './utils/runCommand.js';
 
 const packageJson = JSON.parse(
@@ -32,20 +33,16 @@ program.name('lowdefy').description(description).version(version, '-v, --version
 
 program
   .command('build')
-  .description('Build a Lowdefy deployment.')
+  .description('Build a Lowdefy production app.')
   .usage(`[options]`)
   .option(
     '--base-directory <base-directory>',
     'Change base directory. Default is the current working directory.'
   )
-  .option(
-    '--blocks-server-url <blocks-server-url>',
-    'The URL from where Lowdefy blocks will be served.'
-  )
   .option('--disable-telemetry', 'Disable telemetry.')
   .option(
     '--output-directory <output-directory>',
-    'Change the directory to which build artifacts are saved. Default is "<base-directory>/.lowdefy/build".'
+    'Change the directory to which build artifacts are saved. Default is "<base-directory>/.lowdefy".'
   )
   .option(
     '--package-manager <package-manager>',
@@ -90,5 +87,24 @@ program
   .description('Initialize a Lowdefy project.')
   .usage(`[options]`)
   .action(runCommand({ cliVersion: version })(init));
+
+program
+  .command('start')
+  .description('Start a Lowdefy production app.')
+  .usage(`[options]`)
+  .option(
+    '--base-directory <base-directory>',
+    'Change base directory. Default is the current working directory.'
+  )
+  .option('--disable-telemetry', 'Disable telemetry.')
+  .option(
+    '--output-directory <output-directory>',
+    'Change the directory to which build artifacts are saved. Default is "<base-directory>/.lowdefy".'
+  )
+  .option(
+    '--package-manager <package-manager>',
+    'The package manager to use. Options are "npm" or "yarn".'
+  )
+  .action(runCommand({ cliVersion: version })(start));
 
 program.parse(process.argv);

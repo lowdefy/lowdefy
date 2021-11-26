@@ -72,5 +72,15 @@ const PageHCF = ({ blockId, components, content, events, properties }) => (
 );
 
 PageHCF.defaultProps = blockDefaultProps;
+PageHCF.meta = {
+  category: 'container',
+  loading: {
+    type: 'Spinner',
+    properties: {
+      height: '100vh',
+    },
+  },
+};
+PageHCF.styles = ['blocks/PageHCF/style.less'];
 
 export default PageHCF;

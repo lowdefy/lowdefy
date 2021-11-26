@@ -26,7 +26,7 @@ async function build({ context }) {
   await runLowdefyBuild({ context });
   await installServer({ context });
   await runNextBuild({ context });
-  await context.sendTelemetry();
+  await context.sendTelemetry({ sendTypes: true });
   context.print.succeed(`Build successful.`);
 }
 

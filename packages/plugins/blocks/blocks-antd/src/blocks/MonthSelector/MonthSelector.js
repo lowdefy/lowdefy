@@ -91,5 +91,13 @@ const MonthSelector = ({
 };
 
 MonthSelector.defaultProps = blockDefaultProps;
+MonthSelector.meta = {
+  valueType: 'date',
+  category: 'input',
+  loading: {
+    type: 'SkeletonInput',
+  },
+};
+MonthSelector.styles = ['blocks/MonthSelector/style.less'];
 
 export default MonthSelector;

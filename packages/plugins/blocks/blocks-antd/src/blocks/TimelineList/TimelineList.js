@@ -79,5 +79,15 @@ const TimelineList = ({ blockId, components: { Icon }, events, list, methods, pr
 };
 
 TimelineList.defaultProps = blockDefaultProps;
+TimelineList.meta = {
+  category: 'list',
+  loading: {
+    type: 'Skeleton',
+    properties: {
+      height: 80,
+    },
+  },
+};
+TimelineList.styles = ['blocks/TimelineList/style.less'];
 
 export default TimelineList;

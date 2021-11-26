@@ -119,5 +119,10 @@ const MobileMenu = ({
 };
 
 MobileMenu.defaultProps = blockDefaultProps;
+MobileMenu.meta = {
+  category: 'display',
+  loading: false,
+};
+MobileMenu.styles = ['blocks/MobileMenu/style.less'];
 
 export default MobileMenu;

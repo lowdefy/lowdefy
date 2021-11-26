@@ -102,5 +102,13 @@ const DateRangeSelector = ({
 };
 
 DateRangeSelector.defaultProps = blockDefaultProps;
+DateRangeSelector.meta = {
+  valueType: 'array',
+  category: 'input',
+  loading: {
+    type: 'SkeletonInput',
+  },
+};
+DateRangeSelector.styles = ['blocks/DateRangeSelector/style.less'];
 
 export default DateRangeSelector;
