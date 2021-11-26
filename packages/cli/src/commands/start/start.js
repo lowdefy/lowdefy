@@ -14,20 +14,12 @@
   limitations under the License.
 */
 
-import getServer from './getServer.js';
-import installServer from './installServer.js';
-import runLowdefyBuild from './runLowdefyBuild.js';
-import runNextBuild from './runNextBuild.js';
+import runStart from './runStart.js';
 
 async function build({ context }) {
-  context.print.info('Starting build.');
-  await getServer({ context });
-  await installServer({ context });
-  await runLowdefyBuild({ context });
-  await installServer({ context });
-  await runNextBuild({ context });
-  await context.sendTelemetry({ sendTypes: true });
-  context.print.succeed(`Build successful.`);
+  context.print.info('Starting server.');
+  context.sendTelemetry({ sendTypes: true });
+  await runStart({ context });
 }
 
 export default build;

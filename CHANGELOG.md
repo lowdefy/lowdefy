@@ -252,7 +252,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### BREAKING CHANGES
 
-* **render:** Multple contexts on a page are no longer supported. Context category blocks no longer exist, and the first block on a bage no longer needs to be of category context.
+* **render:** Multiple contexts on a page are no longer supported. Context category blocks no longer exist, and the first block on a page no longer needs to be of category context.
 * **operators:** Getter operators can no longer get from another context.
 * **operators:** The _index operator is no longer supported in node env.
 * The _event, _global, _input, _state, and _url_query operators are no longer evaluated in connections or requests.
