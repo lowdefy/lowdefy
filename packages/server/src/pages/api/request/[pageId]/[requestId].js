@@ -16,18 +16,21 @@
 
 import { callRequest, createApiContext } from '@lowdefy/api';
 import connections from '../../../../../build/plugins/connections.js';
+import operators from '../../../../../build/plugins/operatorsServer.js';
 
 export default async function handler(req, res) {
   try {
     if (req.method !== 'POST') {
       throw new Error('Only POST requests are supported.');
     }
+    // TODO: configure API context
     const apiContext = await createApiContext({
-      buildDirectory: './.lowdefy/build',
+      buildDirectory: './build',
       connections,
-      // TODO
+      // TODO: use a logger like pino
       logger: console,
-      // TODO
+      operators,
+      // TODO: get secrets
       secrets: {},
     });
     const { pageId, requestId } = req.query;

@@ -45,7 +45,6 @@ test('memoize context', async () => {
     meta: {
       type: 'container',
     },
-    operators: [],
   };
   const c1 = await getContext({ page, lowdefy });
   const c2 = await getContext({ page, lowdefy });
@@ -72,7 +71,6 @@ test('create context', async () => {
     meta: {
       type: 'container',
     },
-    operators: [],
   };
   const context = await getContext({ page, lowdefy });
   expect(context.Actions).toBeDefined();
@@ -82,7 +80,6 @@ test('create context', async () => {
   expect(context.lowdefy).toEqual(lowdefy);
   expect(context.eventLog).toEqual([]);
   expect(context.id).toEqual('pageId');
-  expect(context.operators).toBeInstanceOf(Array);
   expect(context.lowdefy.pageId).toEqual('pageId');
   expect(context.parser).toBeDefined();
   expect(context.requests).toEqual({});
@@ -112,7 +109,6 @@ test('create context, initialize input', async () => {
     meta: {
       type: 'container',
     },
-    operators: [],
   };
   const context = await getContext({ page, lowdefy });
   expect(context.lowdefy.inputs.pageId).toEqual({});
@@ -132,31 +128,10 @@ test('update memoized context', async () => {
     meta: {
       type: 'container',
     },
-    operators: [],
   };
   const mockUpdate = jest.fn();
   const c1 = await getContext({ page, lowdefy });
   c1.update = mockUpdate;
   await getContext({ page, lowdefy });
   expect(mockUpdate.mock.calls.length).toBe(1);
-});
-
-test('Add operators for required validation', async () => {
-  const lowdefy = {
-    client,
-    contexts: {},
-    inputs: {},
-    pageId,
-    updateBlock,
-  };
-  const page = {
-    pageId: 'pageId',
-    blockId: 'pageId',
-    meta: {
-      type: 'container',
-    },
-    operators: [],
-  };
-  const context = await getContext({ page, lowdefy });
-  expect(context.operators).toEqual(expect.arrayContaining(['_not', '_type']));
 });

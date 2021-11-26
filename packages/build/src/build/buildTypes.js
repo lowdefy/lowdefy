@@ -70,19 +70,19 @@ function buildTypes({ components, context }) {
     typeClass: 'Request',
   });
 
-  // buildTypeClass({
-  //   counter: typeCounters.operators.client,
-  //   definitions: context.types.operators.client,
-  //   store: components.types.operators.client,
-  //   typeClass: 'Operator',
-  // });
+  buildTypeClass({
+    counter: typeCounters.operators.client,
+    definitions: context.types.operators.client,
+    store: components.types.operators.client,
+    typeClass: 'Operator',
+  });
 
-  // buildTypeClass({
-  //   counter: typeCounters.operators.server,
-  //   definitions: context.types.operators.server,
-  //   store: components.types.operators.server,
-  //   typeClass: 'Operator',
-  // });
+  buildTypeClass({
+    counter: typeCounters.operators.server,
+    definitions: context.types.operators.server,
+    store: components.types.operators.server,
+    typeClass: 'Operator',
+  });
 }
 
 export default buildTypes;

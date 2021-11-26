@@ -13,22 +13,24 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { nunjucksFunction } from '@lowdefy/nunjucks';
 
-import createReadConfigFile from './readConfigFile.js';
+const template = `{%- for import in imports -%}
+import { {{ import.type }} } from '{{ import.package }}/{{ importPath }}';
+{% endfor -%}
+export default {
+  {% for import in imports -%}
+  {{ import.type }},
+  {% endfor -%}
+}`;
 
-async function createApiContext({ buildDirectory, connections, logger, operators, secrets }) {
-  const readConfigFile = createReadConfigFile({ buildDirectory });
-  const config = await readConfigFile('config.json');
-  return {
-    authenticated: false,
-    authorize: () => true,
-    config,
-    connections,
-    logger,
-    operators,
-    readConfigFile,
-    secrets,
-  };
+function generateImportFile({ types, importPath }) {
+  const templateFn = nunjucksFunction(template);
+  const imports = Object.keys(types).map((type) => ({
+    type,
+    ...types[type],
+  }));
+  return templateFn({ imports, importPath });
 }
 
-export default createApiContext;
+export default generateImportFile;
