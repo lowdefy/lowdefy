@@ -14,23 +14,19 @@
   limitations under the License.
 */
 
-import path from 'path';
+import spawnProcess from '../../utils/spawnProcess.js';
 
-function getDirectories({ options }) {
-  const base = path.resolve(options.baseDirectory || process.cwd());
-
-  let dotLowdefy;
-  if (options.outputDirectory) {
-    dotLowdefy = path.resolve(options.outputDirectory);
-  } else {
-    dotLowdefy = path.resolve(base, '.lowdefy');
-  }
-  return {
-    base,
-    build: path.join(dotLowdefy, 'server', 'build'),
-    dotLowdefy,
-    server: path.join(dotLowdefy, 'server'),
-  };
+async function runStart({ context }) {
+  context.print.spin(`Running "${context.packageManager} run start".`);
+  await spawnProcess({
+    context,
+    command: context.packageManager, // npm or yarn
+    args: ['run', 'start'],
+    processOptions: {
+      cwd: context.directories.server,
+    },
+    silent: false,
+  });
 }
 
-export default getDirectories;
+export default runStart;

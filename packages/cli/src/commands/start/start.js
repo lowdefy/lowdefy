@@ -14,23 +14,12 @@
   limitations under the License.
 */
 
-import path from 'path';
+import runStart from './runStart.js';
 
-function getDirectories({ options }) {
-  const base = path.resolve(options.baseDirectory || process.cwd());
-
-  let dotLowdefy;
-  if (options.outputDirectory) {
-    dotLowdefy = path.resolve(options.outputDirectory);
-  } else {
-    dotLowdefy = path.resolve(base, '.lowdefy');
-  }
-  return {
-    base,
-    build: path.join(dotLowdefy, 'server', 'build'),
-    dotLowdefy,
-    server: path.join(dotLowdefy, 'server'),
-  };
+async function build({ context }) {
+  context.print.info('Starting server.');
+  context.sendTelemetry();
+  await runStart({ context });
 }
 
-export default getDirectories;
+export default build;
