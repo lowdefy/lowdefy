@@ -5467,7 +5467,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/server", "workspace:packages/server"],
             ["@lowdefy/api", "workspace:packages/api"],
             ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],
-            ["@lowdefy/blocks-antd", "workspace:packages/plugins/blocks/blocks-antd"],
             ["@lowdefy/build", "workspace:packages/build"],
             ["@lowdefy/engine", "workspace:packages/engine"],
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],

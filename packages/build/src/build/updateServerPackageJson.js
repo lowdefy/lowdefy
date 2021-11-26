@@ -43,7 +43,7 @@ async function updateServerPackageJson({ components, context }) {
       packageJson.dependencies[name] = dependencies[name];
     });
 
-  const newPackageJsonContent = JSON.stringify(packageJson, null, 2);
+  const newPackageJsonContent = JSON.stringify(packageJson, null, 2).concat('\n');
 
   // Only write package.json if it has changed since dev server will
   // be watching the file to trigger reinstalls

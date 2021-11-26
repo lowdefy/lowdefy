@@ -3773,7 +3773,6 @@ __metadata:
   dependencies:
     "@lowdefy/api": 4.0.0-alpha.4
     "@lowdefy/block-utils": 4.0.0-alpha.4
-    "@lowdefy/blocks-antd": 4.0.0-alpha.4
     "@lowdefy/build": 4.0.0-alpha.4
     "@lowdefy/engine": 4.0.0-alpha.4
     "@lowdefy/helpers": 4.0.0-alpha.4
