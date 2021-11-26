@@ -18,9 +18,9 @@ import path from 'path';
 import { cachedPromises } from '@lowdefy/helpers';
 import { readFile } from '@lowdefy/node-utils';
 
-function createReadConfigFile({ configDirectory }) {
+function createReadConfigFile({ directories }) {
   async function readConfigFile(filePath) {
-    return readFile(path.resolve(configDirectory, filePath));
+    return readFile(path.resolve(directories.config, filePath));
   }
   return cachedPromises(readConfigFile);
 }

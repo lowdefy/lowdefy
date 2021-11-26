@@ -107,6 +107,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/plugins/connections/connection-stripe"
       },
       {
+        "name": "@lowdefy/operators-js",
+        "reference": "workspace:packages/plugins/operators/operators-js"
+      },
+      {
         "name": "@lowdefy/plugin-aws",
         "reference": "workspace:packages/plugins/plugins/plugin-aws"
       },
@@ -169,6 +173,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@lowdefy/node-utils", ["workspace:packages/utils/node-utils"]],
       ["@lowdefy/nunjucks", ["workspace:packages/utils/nunjucks"]],
       ["@lowdefy/operators", ["workspace:packages/operators"]],
+      ["@lowdefy/operators-js", ["workspace:packages/plugins/operators/operators-js"]],
       ["@lowdefy/plugin-aws", ["workspace:packages/plugins/plugins/plugin-aws"]],
       ["@lowdefy/server", ["workspace:packages/server"]],
       ["lowdefy", ["workspace:packages/cli"]]
@@ -5445,6 +5450,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT",
         }]
       ]],
+      ["@lowdefy/operators-js", [
+        ["workspace:packages/plugins/operators/operators-js", {
+          "packageLocation": "./packages/plugins/operators/operators-js/",
+          "packageDependencies": [
+            ["@lowdefy/operators-js", "workspace:packages/plugins/operators/operators-js"],
+            ["@lowdefy/helpers", "workspace:packages/utils/helpers"],
+            ["@lowdefy/operators", "workspace:packages/operators"],
+            ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.51"],
+            ["@swc/core", "npm:1.2.107"],
+            ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.5"],
+            ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:27.3.1"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
       ["@lowdefy/plugin-aws", [
         ["workspace:packages/plugins/plugins/plugin-aws", {
           "packageLocation": "./packages/plugins/plugins/plugin-aws/",
@@ -5467,10 +5487,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/server", "workspace:packages/server"],
             ["@lowdefy/api", "workspace:packages/api"],
             ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],
-            ["@lowdefy/blocks-antd", "workspace:packages/plugins/blocks/blocks-antd"],
-            ["@lowdefy/blocks-basic", "workspace:packages/plugins/blocks/blocks-basic"],
             ["@lowdefy/build", "workspace:packages/build"],
-            ["@lowdefy/connection-axios-http", "workspace:packages/plugins/connections/connection-axios-http"],
             ["@lowdefy/engine", "workspace:packages/engine"],
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],
             ["@lowdefy/layout", "workspace:packages/layout"],

@@ -21,10 +21,11 @@ import build from '../index.js';
 async function run() {
   await build({
     logger: console,
-    buildDirectory: path.resolve(
-      process.env.LOWDEFY_BUILD_DIRECTORY || path.join(process.cwd(), 'build')
-    ),
-    configDirectory: path.resolve(process.env.LOWDEFY_CONFIG_DIRECTORY || process.cwd()),
+    directories: {
+      build: path.resolve(process.env.LOWDEFY_BUILD_DIRECTORY || path.join(process.cwd(), 'build')),
+      config: path.resolve(process.env.LOWDEFY_CONFIG_DIRECTORY || process.cwd()),
+      server: path.resolve(process.env.LOWDEFY_SERVER_DIRECTORY || process.cwd()),
+    },
   });
 }
 

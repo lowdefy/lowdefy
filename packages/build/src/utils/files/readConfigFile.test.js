@@ -22,27 +22,27 @@ jest.mock('@lowdefy/node-utils', () => {
   };
 });
 
-const configDirectory = './config';
+const directories = { config: './config' };
 
 test('readConfigFile reads a file from the correct dir', async () => {
   const nodeUtils = await import('@lowdefy/node-utils');
   const createReadConfigFile = await import('./readConfigFile.js');
-  const readConfigFile = createReadConfigFile.default({ configDirectory });
+  const readConfigFile = createReadConfigFile.default({ directories });
   nodeUtils.readFile.mockImplementation(() => 'Text file content');
   const res = await readConfigFile('file.txt');
   expect(res).toEqual('Text file content');
-  expect(nodeUtils.readFile.mock.calls).toEqual([[path.resolve(configDirectory, 'file.txt')]]);
+  expect(nodeUtils.readFile.mock.calls).toEqual([[path.resolve(directories.config, 'file.txt')]]);
 });
 
 test('readConfigFile memoizes results', async () => {
   const nodeUtils = await import('@lowdefy/node-utils');
   const createReadConfigFile = await import('./readConfigFile.js');
-  const readConfigFile = createReadConfigFile.default({ configDirectory });
+  const readConfigFile = createReadConfigFile.default({ directories });
   nodeUtils.readFile.mockImplementation(() => 'Text file content');
   const res1 = await readConfigFile('file.txt');
   expect(res1).toEqual('Text file content');
-  expect(nodeUtils.readFile.mock.calls).toEqual([[path.resolve(configDirectory, 'file.txt')]]);
+  expect(nodeUtils.readFile.mock.calls).toEqual([[path.resolve(directories.config, 'file.txt')]]);
   const res2 = await readConfigFile('file.txt');
   expect(res2).toEqual('Text file content');
-  expect(nodeUtils.readFile.mock.calls).toEqual([[path.resolve(configDirectory, 'file.txt')]]);
+  expect(nodeUtils.readFile.mock.calls).toEqual([[path.resolve(directories.config, 'file.txt')]]);
 });
