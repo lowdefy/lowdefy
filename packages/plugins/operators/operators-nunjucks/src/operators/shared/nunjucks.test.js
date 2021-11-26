@@ -14,27 +14,48 @@
   limitations under the License.
 */
 
-import WebParser from '../../src/webParser.js';
-import { context } from '../testContext.js';
+import { NodeParser, WebParser } from '@lowdefy/operators';
 
 const arrayIndices = [1];
+
+const context = {
+  _internal: {
+    lowdefy: {
+      inputs: { id: true },
+      lowdefyGlobal: { global: true },
+      menus: [{ menus: true }],
+      urlQuery: { urlQuery: true },
+      user: { user: true },
+    },
+  },
+  eventLog: [{ eventLog: true }],
+  id: 'id',
+  requests: [{ requests: true }],
+  state: { state: true },
+};
+
+const payload = {
+  string: 'Some String',
+  number: 42,
+  arr: [{ a: 'a1' }, { a: 'a2' }],
+};
 
 console.error = () => {};
 
 test('_nunjucks string template', async () => {
   const input = { _nunjucks: 'String with {{ string }} embedded' };
-  const parser = new WebParser({ context });
+  const parser = new NodeParser({ payload });
   await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual('String with state embedded');
+  const res = parser.parse({ input, location: 'locationId' });
+  expect(res.output).toEqual('String with Some String embedded');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
 test('_nunjucks null', async () => {
   const input = { _nunjucks: null };
-  const parser = new WebParser({ context });
+  const parser = new NodeParser({ payload });
   await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -43,18 +64,18 @@ test('_nunjucks { template: , on: }', async () => {
   const input = {
     _nunjucks: { template: 'String with {{ string }} embedded', on: { string: 'test' } },
   };
-  const parser = new WebParser({ context });
+  const parser = new NodeParser({ payload });
   await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual('String with test embedded');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
 test('_nunjucks template not a string', async () => {
   const input = { _nunjucks: ['String with {{ string }} embedded'] };
-  const parser = new WebParser({ context });
+  const parser = new NodeParser({ payload });
   await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -63,9 +84,9 @@ test('_nunjucks params on template not a string', async () => {
   const input = {
     _nunjucks: { template: ['String with {{ string }} embedded'], on: { string: 'test' } },
   };
-  const parser = new WebParser({ context });
+  const parser = new NodeParser({ payload });
   await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -74,9 +95,9 @@ test('_nunjucks on not a object', async () => {
   const input = {
     _nunjucks: { template: 'String with {{ string }} embedded', on: [{ string: 'test' }] },
   };
-  const parser = new WebParser({ context });
+  const parser = new NodeParser({ payload });
   await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe('String with  embedded');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -85,18 +106,18 @@ test('_nunjucks on null', async () => {
   const input = {
     _nunjucks: { template: 'String with {{ string }} embedded', on: null },
   };
-  const parser = new WebParser({ context });
+  const parser = new NodeParser({ payload });
   await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe('String with  embedded');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
 test('_nunjucks invalid template', async () => {
   const input = { _nunjucks: 'String with {{ string  embedded' };
-  const parser = new WebParser({ context });
+  const parser = new NodeParser({ payload });
   await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
