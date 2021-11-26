@@ -14,10 +14,8 @@
   limitations under the License.
 */
 
-import location from '../../src/web/location.js';
-import getFromObject from '../../src/getFromObject.js';
-
-jest.mock('../../src/getFromObject');
+import location from './location.js';
+jest.mock('@lowdefy/operators');
 
 beforeEach(() => {
   Object.defineProperty(window, 'location', {
@@ -46,8 +44,9 @@ const input = {
 };
 
 test('location calls getFromObject', () => {
+  const lowdefyOperators = import('@lowdefy/operators');
   location(input);
-  expect(getFromObject.mock.calls).toEqual([
+  expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
         arrayIndices: [0],

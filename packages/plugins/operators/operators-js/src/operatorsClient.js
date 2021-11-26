@@ -48,4 +48,17 @@ export { default as _type } from './operators/shared/type.js';
 export { default as _uri } from './operators/shared/uri.js';
 export { default as _user } from './operators/shared/user.js';
 
+export { default as _index } from './operators/client/_index.js';
+export { default as _actions } from './operators/client/actions.js';
+export { default as _base64 } from './operators/client/base64.js';
+export { default as _event_log } from './operators/client/event_log.js';
+export { default as _event } from './operators/client/event.js';
+export { default as _global } from './operators/client/global.js';
+export { default as _input } from './operators/client/input.js';
+export { default as _location } from './operators/client/location.js';
 export { default as _media } from './operators/client/media.js';
+export { default as _menu } from './operators/client/menu.js';
+export { default as _request_details } from './operators/client/request_details.js';
+export { default as _request } from './operators/client/request.js';
+export { default as _state } from './operators/client/state.js';
+export { default as _url_query } from './operators/client/url_query.js';

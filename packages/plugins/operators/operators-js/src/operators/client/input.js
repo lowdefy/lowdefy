@@ -14,31 +14,16 @@
   limitations under the License.
 */
 
-import input from '../../src/web/input.js';
-import getFromObject from '../../src/getFromObject.js';
+import { getFromObject } from '@lowdefy/operators';
 
-jest.mock('../../src/getFromObject');
+function _input({ arrayIndices, input, location, params }) {
+  return getFromObject({
+    arrayIndices,
+    location,
+    object: input,
+    operator: '_input',
+    params,
+  });
+}
 
-const inputParams = {
-  arrayIndices: [0],
-  input: { input: true },
-  location: 'location',
-  params: 'params',
-};
-
-test('input calls getFromObject', () => {
-  input(inputParams);
-  expect(getFromObject.mock.calls).toEqual([
-    [
-      {
-        arrayIndices: [0],
-        location: 'location',
-        object: {
-          input: true,
-        },
-        operator: '_input',
-        params: 'params',
-      },
-    ],
-  ]);
-});
+export default _input;

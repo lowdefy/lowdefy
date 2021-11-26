@@ -15,10 +15,25 @@
 */
 
 /* eslint-disable max-classes-per-file */
-import WebParser from '../../src/webParser.js';
-import { context } from '../testContext.js';
+import { WebParser } from '@lowdefy/operators';
 
 const arrayIndices = [1];
+
+const context = {
+  _internal: {
+    lowdefy: {
+      inputs: { id: true },
+      lowdefyGlobal: { global: true },
+      menus: [{ menus: true }],
+      urlQuery: { urlQuery: true },
+      user: { user: true },
+    },
+  },
+  eventLog: [{ eventLog: true }],
+  id: 'id',
+  requests: [{ requests: true }],
+  state: { state: true },
+};
 
 console.error = () => {};
 

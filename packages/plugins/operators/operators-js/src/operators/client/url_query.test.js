@@ -14,29 +14,29 @@
   limitations under the License.
 */
 
-import state from '../../src/web/state.js';
-import getFromObject from '../../src/getFromObject.js';
-
-jest.mock('../../src/getFromObject');
+import url_query from './url_query.js';
+jest.mock('@lowdefy/operators');
 
 const input = {
   arrayIndices: [0],
   location: 'location',
   params: 'params',
-  state: { state: true },
+  secrets: { secrets: true },
+  urlQuery: { urlQuery: true },
 };
 
-test('state calls getFromObject', () => {
-  state(input);
-  expect(getFromObject.mock.calls).toEqual([
+test('url_query calls getFromObject', () => {
+  const lowdefyOperators = import('@lowdefy/operators');
+  url_query(input);
+  expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
         arrayIndices: [0],
         location: 'location',
         object: {
-          state: true,
+          urlQuery: true,
         },
-        operator: '_state',
+        operator: '_url_query',
         params: 'params',
       },
     ],

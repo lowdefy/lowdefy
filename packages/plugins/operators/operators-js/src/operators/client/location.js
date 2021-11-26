@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getFromObject from '../getFromObject.js';
+import { getFromObject } from '@lowdefy/operators';
 
 const validProperties = [
   'basePath',

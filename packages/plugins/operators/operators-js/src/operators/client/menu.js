@@ -14,16 +14,10 @@
   limitations under the License.
 */
 
-import getFromObject from '../getFromObject.js';
+import { getFromArray } from '@lowdefy/operators';
 
-function _index({ arrayIndices, location, params }) {
-  return getFromObject({
-    arrayIndices,
-    location,
-    object: arrayIndices,
-    operator: '_index',
-    params,
-  });
+function _menu({ params, menus, location }) {
+  return getFromArray({ params, array: menus, key: 'menuId', operator: '_menu', location });
 }
 
-export default _index;
+export default _menu;

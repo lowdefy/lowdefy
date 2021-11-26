@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getFromObject from '../getFromObject.js';
+import { getFromObject } from '@lowdefy/operators';
 
 function _state({ arrayIndices, location, params, state }) {
   return getFromObject({

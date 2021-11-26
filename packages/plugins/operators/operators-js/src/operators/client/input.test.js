@@ -14,35 +14,28 @@
   limitations under the License.
 */
 
-import actions from '../../src/web/actions.js';
-import getFromObject from '../../src/getFromObject.js';
+import input from './input.js';
+jest.mock('@lowdefy/operators');
 
-jest.mock('../../src/getFromObject');
-
-const input = {
-  actions: {
-    action_id: {
-      response: 'returned from action',
-    },
-  },
+const inputParams = {
   arrayIndices: [0],
+  input: { input: true },
   location: 'location',
   params: 'params',
 };
 
-test('actions calls getFromObject', () => {
-  actions(input);
-  expect(getFromObject.mock.calls).toEqual([
+test('input calls getFromObject', () => {
+  const lowdefyOperators = import('@lowdefy/operators');
+  input(inputParams);
+  expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
         arrayIndices: [0],
         location: 'location',
         object: {
-          action_id: {
-            response: 'returned from action',
-          },
+          input: true,
         },
-        operator: '_actions',
+        operator: '_input',
         params: 'params',
       },
     ],

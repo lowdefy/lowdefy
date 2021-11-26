@@ -14,10 +14,31 @@
   limitations under the License.
 */
 
-import getFromArray from '../getFromArray.js';
+import { runClass } from '@lowdefy/operators';
 
-function _menu({ params, menus, location }) {
-  return getFromArray({ params, array: menus, key: 'menuId', operator: '_menu', location });
+function decode(input) {
+  return atob(input);
 }
 
-export default _menu;
+function encode(input) {
+  return btoa(input);
+}
+
+const functions = { encode, decode };
+const meta = {
+  encode: { singleArg: true, validTypes: ['string'] },
+  decode: { singleArg: true, validTypes: ['string'] },
+};
+
+function _base64({ params, location, methodName }) {
+  return runClass({
+    functions,
+    location,
+    meta,
+    methodName,
+    operator: '_base64',
+    params,
+  });
+}
+
+export default _base64;

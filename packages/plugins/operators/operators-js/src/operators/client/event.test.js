@@ -14,16 +14,30 @@
   limitations under the License.
 */
 
-import getFromObject from '../getFromObject.js';
+import event from './event.js';
+jest.mock('@lowdefy/operators');
 
-function _event({ arrayIndices, event, location, params }) {
-  return getFromObject({
-    arrayIndices,
-    location,
-    object: event,
-    operator: '_event',
-    params,
-  });
-}
+const input = {
+  arrayIndices: [0],
+  event: { event: true },
+  location: 'location',
+  params: 'params',
+};
 
-export default _event;
+test('event calls getFromObject', () => {
+  const lowdefyOperators = import('@lowdefy/operators');
+  event(input);
+  expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
+    [
+      {
+        arrayIndices: [0],
+        location: 'location',
+        object: {
+          event: true,
+        },
+        operator: '_event',
+        params: 'params',
+      },
+    ],
+  ]);
+});

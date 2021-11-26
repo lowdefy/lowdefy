@@ -14,31 +14,16 @@
   limitations under the License.
 */
 
-import runClass from '../runClass.js';
+import { getFromObject } from '@lowdefy/operators';
 
-function decode(input) {
-  return atob(input);
-}
-
-function encode(input) {
-  return btoa(input);
-}
-
-const functions = { encode, decode };
-const meta = {
-  encode: { singleArg: true, validTypes: ['string'] },
-  decode: { singleArg: true, validTypes: ['string'] },
-};
-
-function _base64({ params, location, methodName }) {
-  return runClass({
-    functions,
+function _event_log({ arrayIndices, eventLog, location, params }) {
+  return getFromObject({
+    arrayIndices,
     location,
-    meta,
-    methodName,
-    operator: '_base64',
+    object: eventLog,
+    operator: '_event_log',
     params,
   });
 }
 
-export default _base64;
+export default _event_log;

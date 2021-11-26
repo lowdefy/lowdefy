@@ -14,30 +14,25 @@
   limitations under the License.
 */
 
-import url_query from '../../src/web/url_query.js';
-import getFromObject from '../../src/getFromObject.js';
-
-jest.mock('../../src/getFromObject');
+import _index from './_index.js';
+jest.mock('@lowdefy/operators');
 
 const input = {
   arrayIndices: [0],
   location: 'location',
   params: 'params',
-  secrets: { secrets: true },
-  urlQuery: { urlQuery: true },
 };
 
-test('url_query calls getFromObject', () => {
-  url_query(input);
-  expect(getFromObject.mock.calls).toEqual([
+test('args calls getFromObject', () => {
+  const lowdefyOperators = import('@lowdefy/operators');
+  _index(input);
+  expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
         arrayIndices: [0],
         location: 'location',
-        object: {
-          urlQuery: true,
-        },
-        operator: '_url_query',
+        object: [0],
+        operator: '_index',
         params: 'params',
       },
     ],

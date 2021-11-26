@@ -14,16 +14,16 @@
   limitations under the License.
 */
 
-import getFromObject from '../getFromObject.js';
+import { getFromObject } from '@lowdefy/operators';
 
-function _url_query({ arrayIndices, location, params, urlQuery }) {
+function _actions({ actions, arrayIndices, location, params }) {
   return getFromObject({
     arrayIndices,
     location,
-    object: urlQuery,
-    operator: '_url_query',
+    object: actions,
+    operator: '_actions',
     params,
   });
 }
 
-export default _url_query;
+export default _actions;

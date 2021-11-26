@@ -14,16 +14,30 @@
   limitations under the License.
 */
 
-import getFromObject from '../getFromObject.js';
+import state from './state.js';
+jest.mock('@lowdefy/operators');
 
-function _global({ arrayIndices, location, lowdefyGlobal, params }) {
-  return getFromObject({
-    arrayIndices,
-    location,
-    object: lowdefyGlobal,
-    operator: '_global',
-    params,
-  });
-}
+const input = {
+  arrayIndices: [0],
+  location: 'location',
+  params: 'params',
+  state: { state: true },
+};
 
-export default _global;
+test('state calls getFromObject', () => {
+  const lowdefyOperators = import('@lowdefy/operators');
+  state(input);
+  expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
+    [
+      {
+        arrayIndices: [0],
+        location: 'location',
+        object: {
+          state: true,
+        },
+        operator: '_state',
+        params: 'params',
+      },
+    ],
+  ]);
+});
