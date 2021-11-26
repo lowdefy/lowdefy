@@ -18,7 +18,7 @@ import runStart from './runStart.js';
 
 async function build({ context }) {
   context.print.info('Starting server.');
-  context.sendTelemetry();
+  context.sendTelemetry({ sendTypes: true });
   await runStart({ context });
 }
 
