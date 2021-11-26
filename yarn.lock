@@ -3380,7 +3380,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/blocks-color-selectors@workspace:packages/plugins/blocks/blocks-color-selectors":
+"@lowdefy/blocks-color-selectors@4.0.0-alpha.4, @lowdefy/blocks-color-selectors@workspace:packages/plugins/blocks/blocks-color-selectors":
   version: 0.0.0-use.local
   resolution: "@lowdefy/blocks-color-selectors@workspace:packages/plugins/blocks/blocks-color-selectors"
   dependencies:
@@ -3406,7 +3406,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/blocks-echarts@workspace:packages/plugins/blocks/blocks-echarts":
+"@lowdefy/blocks-echarts@4.0.0-alpha.4, @lowdefy/blocks-echarts@workspace:packages/plugins/blocks/blocks-echarts":
   version: 0.0.0-use.local
   resolution: "@lowdefy/blocks-echarts@workspace:packages/plugins/blocks/blocks-echarts"
   dependencies:
@@ -3431,7 +3431,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/blocks-loaders@workspace:packages/plugins/blocks/blocks-loaders":
+"@lowdefy/blocks-loaders@4.0.0-alpha.4, @lowdefy/blocks-loaders@workspace:packages/plugins/blocks/blocks-loaders":
   version: 0.0.0-use.local
   resolution: "@lowdefy/blocks-loaders@workspace:packages/plugins/blocks/blocks-loaders"
   dependencies:
@@ -3455,7 +3455,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/blocks-markdown@workspace:packages/plugins/blocks/blocks-markdown":
+"@lowdefy/blocks-markdown@4.0.0-alpha.4, @lowdefy/blocks-markdown@workspace:packages/plugins/blocks/blocks-markdown":
   version: 0.0.0-use.local
   resolution: "@lowdefy/blocks-markdown@workspace:packages/plugins/blocks/blocks-markdown"
   dependencies:
@@ -3487,12 +3487,18 @@ __metadata:
   resolution: "@lowdefy/build@workspace:packages/build"
   dependencies:
     "@lowdefy/ajv": 4.0.0-alpha.4
+    "@lowdefy/blocks-antd": 4.0.0-alpha.4
     "@lowdefy/blocks-basic": 4.0.0-alpha.4
+    "@lowdefy/blocks-color-selectors": 4.0.0-alpha.4
+    "@lowdefy/blocks-echarts": 4.0.0-alpha.4
+    "@lowdefy/blocks-loaders": 4.0.0-alpha.4
+    "@lowdefy/blocks-markdown": 4.0.0-alpha.4
     "@lowdefy/connection-axios-http": 4.0.0-alpha.4
     "@lowdefy/helpers": 4.0.0-alpha.4
     "@lowdefy/node-utils": 4.0.0-alpha.4
     "@lowdefy/nunjucks": 4.0.0-alpha.4
     "@lowdefy/operators-js": 4.0.0-alpha.4
+    "@lowdefy/operators-nunjucks": 4.0.0-alpha.4
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
@@ -3747,6 +3753,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@lowdefy/operators-nunjucks@4.0.0-alpha.4, @lowdefy/operators-nunjucks@workspace:packages/plugins/operators/operators-nunjucks":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/operators-nunjucks@workspace:packages/plugins/operators/operators-nunjucks"
+  dependencies:
+    "@lowdefy/helpers": 4.0.0-alpha.4
+    "@lowdefy/nunjucks": 4.0.0-alpha.4
+    "@lowdefy/operators": 4.0.0-alpha.4
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
+    jest: 27.3.1
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/operators@4.0.0-alpha.4, @lowdefy/operators@workspace:packages/operators":
   version: 0.0.0-use.local
   resolution: "@lowdefy/operators@workspace:packages/operators"
@@ -3776,8 +3796,6 @@ __metadata:
     "@swc/jest": 0.2.9
     aws-sdk: 2.1021.0
     jest: 27.3.1
-  peerDependencies:
-    "@lowdefy/api": 4.0.0-alpha.4
   languageName: unknown
   linkType: soft
 

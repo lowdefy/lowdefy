@@ -60,6 +60,6 @@ SkeletonInput.meta = {
   category: 'display',
   loading: false,
 };
-SkeletonInput.styles: ['blocks/SkeletonInput/style.less'];
+SkeletonInput.styles = ['blocks/SkeletonInput/style.less'];
 
 export default SkeletonInput;

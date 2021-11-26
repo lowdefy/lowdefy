@@ -88,7 +88,7 @@ const WeekSelector = ({
 };
 
 WeekSelector.defaultProps = blockDefaultProps;
-WeekSelector.meta: {
+WeekSelector.meta = {
   valueType: 'date',
   category: 'input',
   loading: {
