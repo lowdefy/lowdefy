@@ -3851,6 +3851,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@lowdefy/operators-js@workspace:packages/plugins/operators/operators-js":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/operators-js@workspace:packages/plugins/operators/operators-js"
+  dependencies:
+    "@lowdefy/helpers": 4.0.0-alpha.0
+    "@lowdefy/operators": 4.0.0-alpha.0
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
+    jest: 27.3.1
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/operators@4.0.0-alpha.0, @lowdefy/operators@workspace:packages/operators":
   version: 0.0.0-use.local
   resolution: "@lowdefy/operators@workspace:packages/operators"

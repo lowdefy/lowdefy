@@ -13,10 +13,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-const shared = ['_op_1'];
+import * as client from './operatorsClient.js';
+import * as server from './operatorsServer.js';
+
 export default {
   operators: {
-    client: [...shared, '_op_2'],
-    server: [...shared, '_op_3'],
+    client: Object.keys(client),
+    server: Object.keys(server),
   },
 };
