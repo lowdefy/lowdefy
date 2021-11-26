@@ -1,3 +1,3 @@
-# Lowdefy Operators Nunjucks
+# Lowdefy Operators Change Case
 
-Nunjucks Lowdefy operators
+Change Case Lowdefy operators
