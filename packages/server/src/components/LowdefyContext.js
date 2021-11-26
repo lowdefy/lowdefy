@@ -18,6 +18,7 @@ import React from 'react';
 
 import callRequest from '../utils/callRequest.js';
 import blockComponents from '../../build/plugins/blocks.js';
+import operators from '../../build/plugins/operatorsClient.js';
 import components from './components.js';
 
 const LowdefyContext = ({ children }) => {
@@ -27,6 +28,7 @@ const LowdefyContext = ({ children }) => {
       callRequest,
       components,
       document,
+      operators,
       updaters: {},
       window,
       displayMessage: ({ content }) => {

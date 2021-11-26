@@ -14,43 +14,40 @@
   limitations under the License.
 */
 
-// import { NodeParser } from '@lowdefy/operators';
+import { NodeParser } from '@lowdefy/operators';
 
-// import { RequestError } from '../../context/errors.js';
+import { RequestError } from '../../context/errors.js';
 
-// async function evaluateOperators({ secrets, user }, { connectionConfig, payload, requestConfig }) {
-//   const operatorsParser = new NodeParser({
-//     payload,
-//     secrets,
-//     user,
-//   });
-//   await operatorsParser.init();
-//   const { output: connectionProperties, errors: connectionErrors } = operatorsParser.parse({
-//     input: connectionConfig.properties || {},
-//     location: connectionConfig.connectionId,
-//   });
-//   if (connectionErrors.length > 0) {
-//     throw new RequestError(connectionErrors[0]);
-//   }
+async function evaluateOperators(
+  { operators, secrets, user },
+  { connectionConfig, payload, requestConfig }
+) {
+  const operatorsParser = new NodeParser({
+    operators,
+    payload,
+    secrets,
+    user,
+  });
+  await operatorsParser.init();
+  const { output: connectionProperties, errors: connectionErrors } = operatorsParser.parse({
+    input: connectionConfig.properties || {},
+    location: connectionConfig.connectionId,
+  });
+  if (connectionErrors.length > 0) {
+    throw new RequestError(connectionErrors[0]);
+  }
 
-//   const { output: requestProperties, errors: requestErrors } = operatorsParser.parse({
-//     input: requestConfig.properties || {},
-//     location: requestConfig.requestId,
-//   });
-//   if (requestErrors.length > 0) {
-//     throw new RequestError(requestErrors[0]);
-//   }
+  const { output: requestProperties, errors: requestErrors } = operatorsParser.parse({
+    input: requestConfig.properties || {},
+    location: requestConfig.requestId,
+  });
+  if (requestErrors.length > 0) {
+    throw new RequestError(requestErrors[0]);
+  }
 
-//   return {
-//     connectionProperties,
-//     requestProperties,
-//   };
-// }
-
-async function evaluateOperators({ secrets, user }, { connectionConfig, payload, requestConfig }) {
   return {
-    connectionProperties: connectionConfig.properties || {},
-    requestProperties: requestConfig.properties || {},
+    connectionProperties,
+    requestProperties,
   };
 }
 

@@ -19,7 +19,11 @@ import path from 'path';
 import { type } from '@lowdefy/helpers';
 import { readFile, writeFile } from '@lowdefy/node-utils';
 
-const defaultPackages = ['@lowdefy/blocks-basic', '@lowdefy/connection-axios-http'];
+const defaultPackages = [
+  '@lowdefy/blocks-basic',
+  '@lowdefy/connection-axios-http',
+  '@lowdefy/operators-js',
+];
 
 function createTypeDefinitions({ typeNames, store, packageName, version }) {
   if (type.isArray(typeNames)) {

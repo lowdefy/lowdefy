@@ -16,14 +16,22 @@
 
 import generateImportFile from './generateImportFile.js';
 
-async function writeBlockImports({ components, context }) {
+async function writeOperatorImports({ components, context }) {
+  // TODO: import _not and _type for validation.
   await context.writeBuildArtifact({
-    filePath: 'plugins/blocks.js',
+    filePath: 'plugins/operatorsClient.js',
     content: generateImportFile({
-      types: components.types.blocks,
-      importPath: 'blocks',
+      types: components.types.operators.client,
+      importPath: 'operators/client',
+    }),
+  });
+  await context.writeBuildArtifact({
+    filePath: 'plugins/operatorsServer.js',
+    content: generateImportFile({
+      types: components.types.operators.server,
+      importPath: 'operators/server',
     }),
   });
 }
 
-export default writeBlockImports;
+export default writeOperatorImports;

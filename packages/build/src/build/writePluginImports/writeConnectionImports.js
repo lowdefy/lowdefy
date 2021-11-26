@@ -14,27 +14,15 @@
   limitations under the License.
 */
 
-import { nunjucksFunction } from '@lowdefy/nunjucks';
-
-const template = `{%- for connection in connections -%}
-import { {{ connection.type }} } from '{{ connection.package }}/connections';
-{% endfor -%}
-export default {
-  {% for connection in connections -%}
-  {{ connection.type }},
-  {% endfor -%}
-};
-`;
+import generateImportFile from './generateImportFile.js';
 
 async function writeConnectionImports({ components, context }) {
-  const templateFn = nunjucksFunction(template);
-  const connections = Object.keys(components.types.connections).map((type) => ({
-    type,
-    ...components.types.connections[type],
-  }));
   await context.writeBuildArtifact({
     filePath: 'plugins/connections.js',
-    content: templateFn({ connections }),
+    content: generateImportFile({
+      types: components.types.connections,
+      importPath: 'connections',
+    }),
   });
 }
 

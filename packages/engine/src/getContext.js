@@ -29,8 +29,6 @@ const blockData = ({
   field,
   id,
   layout,
-  meta,
-  operators,
   pageId,
   properties,
   requests,
@@ -47,8 +45,6 @@ const blockData = ({
   field,
   id,
   layout,
-  meta,
-  operators,
   pageId,
   properties,
   requests,
@@ -72,7 +68,6 @@ async function getContext({ config, lowdefy }) {
   if (!lowdefy.inputs[id]) {
     lowdefy.inputs[id] = {};
   }
-  const operatorsSet = new Set([...config.operators, '_not', '_type']);
   const ctx = {
     id: id,
     pageId: config.pageId,
@@ -81,13 +76,12 @@ async function getContext({ config, lowdefy }) {
     state: {},
     _internal: {
       lowdefy,
-      operators: [...operatorsSet],
       rootBlock: blockData(config), // filter block to prevent circular structure
       update: () => {}, // Initialize update since Requests might call it during context creation
     },
   };
   const _internal = ctx._internal;
-  _internal.parser = new WebParser({ context: ctx });
+  _internal.parser = new WebParser({ context: ctx, operators: lowdefy._internal.operators });
   await _internal.parser.init();
   _internal.State = new State(ctx);
   _internal.Actions = new Actions(ctx);

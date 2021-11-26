@@ -44,6 +44,7 @@ import writeConnections from './build/writeConnections.js';
 import writeGlobal from './build/writeGlobal.js';
 import writeIconImports from './build/writePluginImports/writeIconImports.js';
 import writeMenus from './build/writeMenus.js';
+import writeOperatorImports from './build/writePluginImports/writeOperatorImports.js';
 import writePages from './build/writePages.js';
 import writeRequests from './build/writeRequests.js';
 import writeStyleImports from './build/writePluginImports/writeStyleImports.js';
@@ -105,6 +106,7 @@ async function build(options) {
     await writeTypes({ components, context });
     await writeBlockImports({ components, context });
     await writeConnectionImports({ components, context });
+    await writeOperatorImports({ components, context });
     await writeStyleImports({ components, context });
     await writeIconImports({ components, context });
     await updateServerPackageJson({ components, context });
