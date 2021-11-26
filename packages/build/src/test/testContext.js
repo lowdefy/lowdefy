@@ -27,7 +27,9 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
 
   const context = {
     id: 'test',
-    configDirectory: configDirectory || '',
+    directories: {
+      config: configDirectory || '',
+    },
     typeCounters: {
       actions: createCounter(),
       blocks: createCounter(),
