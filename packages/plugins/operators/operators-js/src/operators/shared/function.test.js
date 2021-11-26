@@ -15,7 +15,13 @@
 */
 import { NodeParser, WebParser } from '@lowdefy/operators';
 import _function from './function.js';
-import { operators } from '../testContext.js'; // Do same as nodeParser.test.js
+
+const operators = {
+  _test: jest.fn(() => 'test'),
+  _error: jest.fn(() => {
+    throw new Error('Test error.');
+  }),
+};
 
 const state = {
   string: 'Some String',

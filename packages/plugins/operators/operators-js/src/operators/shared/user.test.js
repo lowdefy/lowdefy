@@ -13,26 +13,29 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
+import user from './user.js';
 jest.mock('@lowdefy/operators');
 
 const input = {
-  args: [{ args: true }],
   arrayIndices: [0],
   location: 'location',
   params: 'params',
+  user: { name: 'first name' },
 };
 
-test('args calls getFromObject', async () => {
-  const args = await import('./args.js');
-  const lowdefyOperators = await import('@lowdefy/operators');
-  args.default(input);
+test('user calls getFromObject', () => {
+  const lowdefyOperators = import('@lowdefy/operators');
+  user(input);
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
         arrayIndices: [0],
         location: 'location',
-        object: [{ args: true }],
-        operator: '_args',
+        object: {
+          name: 'first name',
+        },
+        operator: '_user',
         params: 'params',
       },
     ],

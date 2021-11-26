@@ -14,62 +14,33 @@
   limitations under the License.
 */
 
-import { NodeParser } from '@lowdefy/operators';
+import and from './and.js';
 
-const arr0 = [0, 0];
-const arr1 = [0, 1];
-const arr2 = [1, 2];
-const arr3 = [1, 2, 3];
-const arr30 = [1, 2, 3, 0];
-const string = 'hello';
-const Null = null;
-const True = true;
-const False = false;
+const location = 'location';
 
-test('_and', async () => {
-  const parser = new NodeParser();
-  await parser.init();
-  let res = parser.parse({ input: { _and: arr0 }, location: 'locationId' });
-  expect(res.output).toEqual(false);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  res = parser.parse({ input: { _and: arr1 }, location: 'locationId' });
-  expect(res.output).toEqual(false);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  res = parser.parse({ input: { _and: arr2 }, location: 'locationId' });
-  expect(res.output).toEqual(true);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  res = parser.parse({ input: { _and: arr3 }, location: 'locationId' });
-  expect(res.output).toEqual(true);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  res = parser.parse({ input: { _and: arr30 }, location: 'locationId' });
-  expect(res.output).toEqual(false);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  res = parser.parse({ input: { _and: string }, location: 'locationId' });
-  expect(res.output).toEqual(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _and takes an array type. Received: "hello" at locationId.],
-    ]
-  `);
-  res = parser.parse({ input: { _and: Null }, location: 'locationId' });
-  expect(res.output).toEqual(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _and takes an array type. Received: null at locationId.],
-    ]
-  `);
-  res = parser.parse({ input: { _and: True }, location: 'locationId' });
-  expect(res.output).toEqual(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _and takes an array type. Received: true at locationId.],
-    ]
-  `);
-  res = parser.parse({ input: { _and: False }, location: 'locationId' });
-  expect(res.output).toEqual(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _and takes an array type. Received: false at locationId.],
-    ]
-  `);
+test('_and false', () => {
+  expect(and({ params: [0, 0], location })).toEqual(false);
+  expect(and({ params: [0, 1], location })).toEqual(false);
+  expect(and({ params: [1, 2, 3, 0], location })).toEqual(false);
+  expect(and({ params: [false, false], location })).toEqual(false);
+  expect(and({ params: [false, true], location })).toEqual(false);
+});
+test('_and true', () => {
+  expect(and({ params: [1, 2], location })).toEqual(true);
+  expect(and({ params: [1, 2, 3], location })).toEqual(true);
+  expect(and({ params: [true, true], location })).toEqual(true);
+});
+test('_and errors', () => {
+  expect(() => and({ params: 'hello', location })).toThrow(
+    'Operator Error: _and takes an array type. Received: "hello" at location.'
+  );
+  expect(() => and({ params: null, location })).toThrow(
+    'Operator Error: _and takes an array type. Received: null at location.'
+  );
+  expect(() => and({ params: true, location })).toThrow(
+    'Operator Error: _and takes an array type. Received: true at location.'
+  );
+  expect(() => and({ params: false, location })).toThrow(
+    'Operator Error: _and takes an array type. Received: false at location.'
+  );
 });

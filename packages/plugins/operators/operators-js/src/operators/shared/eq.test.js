@@ -14,52 +14,31 @@
   limitations under the License.
 */
 
-import { NodeParser } from '@lowdefy/operators';
+import eq from './eq.js';
 
-const arr0 = [0, 0];
-const arr1 = [0, 1];
-const arr2 = [1, 2];
-const arr3 = [1, 2, 3];
-const arr30 = [1, 2, 3, 0];
-const string = 'hello';
-const Null = null;
-const True = true;
-const False = false;
-
-test('_eq', async () => {
-  const parser = new NodeParser();
-  await parser.init();
-  let res = parser.parse({ input: { _eq: [1, 1] }, location: 'locationId' });
-  expect(res.output).toBe(true);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  res = parser.parse({ input: { _eq: [0, 1] }, location: 'locationId' });
-  expect(res.output).toBe(false);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  res = parser.parse({ input: { _eq: ['1', '1'] }, location: 'locationId' });
-  expect(res.output).toBe(true);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  res = parser.parse({ input: { _eq: ['0', '1'] }, location: 'locationId' });
-  expect(res.output).toBe(false);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  res = parser.parse({ input: { _eq: [0] }, location: 'locationId' });
-  expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _eq takes an array of length 2 as input. Received: [0] at locationId.],
-    ]
-  `);
-  res = parser.parse({ input: { _eq: [0, 1, 2] }, location: 'locationId' });
-  expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _eq takes an array of length 2 as input. Received: [0,1,2] at locationId.],
-    ]
-  `);
-  res = parser.parse({ input: { _eq: 1 }, location: 'locationId' });
-  expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _eq takes an array type as input. Received: 1 at locationId.],
-    ]
-  `);
+test('_eq false', () => {
+  expect(eq({ params: [1, 2], location })).toEqual(false);
+  expect(eq({ params: [0, 1], location })).toEqual(false);
+  expect(eq({ params: [false, true], location })).toEqual(false);
+  expect(eq({ params: [true, false], location })).toEqual(false);
+});
+test('_eq true', () => {
+  expect(eq({ params: [1, 1], location })).toEqual(true);
+  expect(eq({ params: [0, 0], location })).toEqual(true);
+  expect(eq({ params: [true, true], location })).toEqual(true);
+  expect(eq({ params: [false, false], location })).toEqual(true);
+});
+test('_eq errors', () => {
+  expect(() => eq({ params: 'hello', location })).toThrow(
+    'Operator Error: _eq takes an array type as input. Received: "hello" at location.'
+  );
+  expect(() => eq({ params: null, location })).toThrow(
+    'Operator Error: _eq takes an array type as input. Received: null at location.'
+  );
+  expect(() => eq({ params: true, location })).toThrow(
+    'Operator Error: _eq takes an array type as input. Received: true at location.'
+  );
+  expect(() => eq({ params: false, location })).toThrow(
+    'Operator Error: _eq takes an array type as input. Received: false at location.'
+  );
 });

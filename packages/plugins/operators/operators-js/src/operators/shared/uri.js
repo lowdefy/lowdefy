@@ -13,28 +13,32 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-jest.mock('@lowdefy/operators');
 
-const input = {
-  args: [{ args: true }],
-  arrayIndices: [0],
-  location: 'location',
-  params: 'params',
+import { runClass } from '@lowdefy/operators';
+
+function decode(input) {
+  return decodeURIComponent(input);
+}
+
+function encode(input) {
+  return encodeURIComponent(input);
+}
+
+const functions = { encode, decode };
+const meta = {
+  encode: { singleArg: true, validTypes: ['string'] },
+  decode: { singleArg: true, validTypes: ['string'] },
 };
 
-test('args calls getFromObject', async () => {
-  const args = await import('./args.js');
-  const lowdefyOperators = await import('@lowdefy/operators');
-  args.default(input);
-  expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
-    [
-      {
-        arrayIndices: [0],
-        location: 'location',
-        object: [{ args: true }],
-        operator: '_args',
-        params: 'params',
-      },
-    ],
-  ]);
-});
+function _uri({ params, location, methodName }) {
+  return runClass({
+    functions,
+    location,
+    meta,
+    methodName,
+    operator: '_uri',
+    params,
+  });
+}
+
+export default _uri;

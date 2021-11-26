@@ -14,9 +14,8 @@
   limitations under the License.
 */
 
-import NodeParser from '@lowdefy/operators';
+import { NodeParser } from '@lowdefy/operators';
 import array from './array.js';
-import _function from './function.js';
 
 const parser = new NodeParser();
 beforeAll(async () => {

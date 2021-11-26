@@ -13,16 +13,11 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import get from './get.js';
 jest.mock('@lowdefy/operators');
 
-beforeAll(async () => {
-  const get = await import('./get.js');
-  const lowdefyOperators = await import('@lowdefy/operators');
-});
-
 test('_get calls getFromObject', () => {
-  // const get = await import('./get.js');
-  // const lowdefyOperators = await import('@lowdefy/operators');
+  const lowdefyOperators = import('@lowdefy/operators');
   const input = {
     arrayIndices: [0],
     location: 'location',
