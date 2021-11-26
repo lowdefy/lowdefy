@@ -1,3 +1,4 @@
+/* eslint-disable import/namespace */
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -14,18 +15,13 @@
   limitations under the License.
 */
 
+import * as blocks from './blocks.js';
+
+const styles = {};
+Object.keys(blocks).forEach((block) => {
+  styles[block] = blocks[block].styles || [];
+});
 export default {
-  import: {
-    block: 'blocks/Tabs/Tabs.js',
-    styles: ['blocks/Tabs/style.less'],
-  },
-  meta: {
-    category: 'container',
-    loading: {
-      type: 'Skeleton',
-      properties: {
-        height: 80,
-      },
-    },
-  },
+  blocks: Object.keys(blocks),
+  styles: { default: [], ...styles },
 };

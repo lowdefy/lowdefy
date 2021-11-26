@@ -1,3 +1,4 @@
+/* eslint-disable import/namespace */
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -14,27 +15,13 @@
   limitations under the License.
 */
 
+import * as blocks from './blocks.js';
+
+const styles = {};
+Object.keys(blocks).forEach((block) => {
+  styles[block] = blocks[block].styles || [];
+});
 export default {
-  import: {
-    block: 'blocks/Modal/Modal.js',
-    styles: ['blocks/Modal/style.less'],
-  },
-  meta: {
-    category: 'container',
-    loading: false,
-  },
-  test: {
-    methods: [
-      {
-        name: 'toggleOpen',
-        args: {},
-      },
-      {
-        name: 'setOpen',
-        args: {
-          open: true,
-        },
-      },
-    ],
-  },
+  blocks: Object.keys(blocks),
+  styles: { default: ['style.less'], ...styles },
 };

@@ -88,5 +88,13 @@ const WeekSelector = ({
 };
 
 WeekSelector.defaultProps = blockDefaultProps;
+WeekSelector.meta: {
+  valueType: 'date',
+  category: 'input',
+  loading: {
+    type: 'SkeletonInput',
+  },
+};
+WeekSelector.styles = ['blocks/WeekSelector/style.less'];
 
 export default WeekSelector;

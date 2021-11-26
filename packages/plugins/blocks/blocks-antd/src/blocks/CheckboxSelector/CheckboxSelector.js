@@ -105,5 +105,13 @@ const CheckboxSelector = ({
 };
 
 CheckboxSelector.defaultProps = blockDefaultProps;
+CheckboxSelector.meta = {
+  valueType: 'array',
+  category: 'input',
+  loading: {
+    type: 'SkeletonInput',
+  },
+};
+CheckboxSelector.styles = ['blocks/CheckboxSelector/style.less'];
 
 export default CheckboxSelector;

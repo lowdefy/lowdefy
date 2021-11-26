@@ -372,5 +372,10 @@ const MenuComp = ({
 };
 
 MenuComp.defaultProps = blockDefaultProps;
+MenuComp.meta = {
+  category: 'display',
+  loading: false,
+};
+MenuComp.styles = ['blocks/Menu/style.less'];
 
 export default MenuComp;

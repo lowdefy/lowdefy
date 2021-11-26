@@ -1,3 +1,4 @@
+/* eslint-disable import/namespace */
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -14,20 +15,13 @@
   limitations under the License.
 */
 
+import * as blocks from './blocks.js';
+
+const styles = {};
+Object.keys(blocks).forEach((block) => {
+  styles[block] = blocks[block].styles || [];
+});
 export default {
-  import: {
-    block: 'blocks/Switch/Switch.js',
-    styles: ['blocks/Switch/style.less'],
-  },
-  meta: {
-    valueType: 'boolean',
-    category: 'input',
-    loading: {
-      type: 'SkeletonInput',
-    },
-  },
-  test: {
-    validation: true,
-    required: true,
-  },
+  blocks: Object.keys(blocks),
+  styles: { default: [], ...styles },
 };

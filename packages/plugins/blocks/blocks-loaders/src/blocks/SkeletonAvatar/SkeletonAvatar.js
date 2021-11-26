@@ -50,5 +50,10 @@ const SkeletonAvatar = ({ properties, methods }) => {
 };
 
 SkeletonAvatar.defaultProps = blockDefaultProps;
+SkeletonAvatar.meta = {
+  category: 'display',
+  loading: false,
+};
+SkeletonAvatar.styles = ['blocks/SkeletonAvatar/style.less'];
 
 export default SkeletonAvatar;
