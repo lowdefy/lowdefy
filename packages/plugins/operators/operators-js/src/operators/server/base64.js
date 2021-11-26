@@ -14,15 +14,32 @@
   limitations under the License.
 */
 
-import getFromObject from '../getFromObject.js';
+import { runClass } from '@lowdefy/operators';
 
-function _payload({ location, params, payload }) {
-  return getFromObject({
+function decode(input) {
+  const buff = Buffer.from(input, 'base64');
+  return buff.toString('utf8');
+}
+
+function encode(input) {
+  const buff = Buffer.from(input, 'utf8');
+  return buff.toString('base64');
+}
+
+const functions = { encode, decode };
+const meta = {
+  encode: { singleArg: true, validTypes: ['string'] },
+  decode: { singleArg: true, validTypes: ['string'] },
+};
+function _base64({ params, location, methodName }) {
+  return runClass({
+    functions,
     location,
-    object: payload,
-    operator: '_payload',
+    meta,
+    methodName,
+    operator: '_base64',
     params,
   });
 }
 
-export default _payload;
+export default _base64;

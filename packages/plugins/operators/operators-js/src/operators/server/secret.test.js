@@ -14,21 +14,20 @@
   limitations under the License.
 */
 
-import secret from '../../src/node/secret.js';
-import getFromObject from '../../src/getFromObject.js';
-
-jest.mock('../../src/getFromObject');
+import secret from './secret.js';
+jest.mock('@lowdefy/operators');
 
 console.error = () => {};
 
 test('secret calls getFromObject', () => {
+  const lowdefyOperators = import('@lowdefy/operators');
   secret({
     arrayIndices: [0],
     location: 'location',
     params: 'params',
     secrets: { secrets: true },
   });
-  expect(getFromObject.mock.calls).toEqual([
+  expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
         location: 'location',
@@ -43,12 +42,13 @@ test('secret calls getFromObject', () => {
 });
 
 test('secret default value', () => {
+  const lowdefyOperators = import('@lowdefy/operators');
   secret({
     arrayIndices: [0],
     location: 'location',
     params: 'params',
   });
-  expect(getFromObject.mock.calls).toEqual([
+  expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
         location: 'location',
@@ -73,6 +73,7 @@ test('secret get all is not allowed', () => {
 });
 
 test('secret OpenID Connect and JSON web token secrets are filtered out', () => {
+  const lowdefyOperators = import('@lowdefy/operators');
   secret({
     arrayIndices: [0],
     location: 'location',
@@ -85,7 +86,7 @@ test('secret OpenID Connect and JSON web token secrets are filtered out', () => 
       OTHER: 'OTHER',
     },
   });
-  expect(getFromObject.mock.calls).toEqual([
+  expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
         location: 'location',

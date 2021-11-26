@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import base64 from '../../src/node/base64.js';
+import base64 from './base64.js';
 
 console.error = () => {};
 

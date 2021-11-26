@@ -14,10 +14,8 @@
   limitations under the License.
 */
 
-import payload from '../../src/node/payload.js';
-import getFromObject from '../../src/getFromObject.js';
-
-jest.mock('../../src/getFromObject');
+import payload from './payload.js';
+jest.mock('@lowdefy/operators');
 
 const input = {
   location: 'location',
@@ -26,8 +24,9 @@ const input = {
 };
 
 test('payload calls getFromObject', () => {
+  const lowdefyOperators = import('@lowdefy/operators');
   payload(input);
-  expect(getFromObject.mock.calls).toEqual([
+  expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
         location: 'location',
