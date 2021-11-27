@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.4...v4.0.0-alpha.5) (2021-11-27)
+
+
+### Bug Fixes
+
+* Fix home page route in server. ([640ab8a](https://github.com/lowdefy/lowdefy/commit/640ab8a6528019bc2f2ace818053f2f3fbb3955f))
+* V4 fixes. ([088e210](https://github.com/lowdefy/lowdefy/commit/088e210620ffd8d7735cc785483845d082d5485d))
+
+
+### Features
+
+* Allow Less variables to be specified in server. ([bd8ccbd](https://github.com/lowdefy/lowdefy/commit/bd8ccbdaf75fa320e5f6ee6abf3fb7480a3dc180)), closes [#893](https://github.com/lowdefy/lowdefy/issues/893)
+* Import operator plugins in server. ([f913e9e](https://github.com/lowdefy/lowdefy/commit/f913e9e261777a0c7f4b0a79995ef18290186b2e))
+* Update server package.json if plugin deps change. ([09f7bca](https://github.com/lowdefy/lowdefy/commit/09f7bca3a29ff186783197692e988cb315ff7483)), closes [#943](https://github.com/lowdefy/lowdefy/issues/943)
+
+
+
+
+
 # [4.0.0-alpha.4](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.3...v4.0.0-alpha.4) (2021-11-25)
 
 

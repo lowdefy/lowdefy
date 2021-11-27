@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/engine",
-  "version": "4.0.0-alpha.4",
+  "version": "4.0.0-alpha.5",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -38,8 +38,8 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.4",
-    "@lowdefy/operators": "4.0.0-alpha.4"
+    "@lowdefy/helpers": "4.0.0-alpha.5",
+    "@lowdefy/operators": "4.0.0-alpha.5"
   },
   "devDependencies": {
     "@swc/cli": "0.1.52",

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.4...v4.0.0-alpha.5) (2021-11-27)
+
+
+### Bug Fixes
+
+* Remove CHANGELOG file and aws plugin package peer depencies ([21627f7](https://github.com/lowdefy/lowdefy/commit/21627f7f7a53751099764ea444ad4519c6b18b1a))
+
+
+
+
+
 # [4.0.0-alpha.4](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.3...v4.0.0-alpha.4) (2021-11-25)
 
 **Note:** Version bump only for package @lowdefy/plugin-aws
