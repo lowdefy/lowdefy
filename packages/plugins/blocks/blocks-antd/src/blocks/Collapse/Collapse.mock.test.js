@@ -22,7 +22,7 @@ import schema from './schema.json';
 
 const { meta, tests } = block;
 
-jest.mock('antd/es/collapse', () => {
+jest.mock('antd/lib/collapse', () => {
   const collapse = jest.fn(() => 'mocked');
   collapse.Panel = jest.fn(() => 'mocked');
   return collapse;

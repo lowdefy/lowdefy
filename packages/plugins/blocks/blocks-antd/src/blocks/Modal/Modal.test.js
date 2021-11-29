@@ -39,7 +39,7 @@ import schema from './schema.json';
 
 const { meta, tests } = block;
 
-jest.mock('antd/es/modal', () => {
+jest.mock('antd/lib/modal', () => {
   return jest.fn(() => 'mocked');
 });
 
