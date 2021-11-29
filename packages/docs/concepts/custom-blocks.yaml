@@ -45,7 +45,7 @@ _ref:
 
             ```yaml
             name: dashboard-app
-            lowdefy: 3.23.1
+            lowdefy: 3.23.2
             types:
               AmChartsXY:
                 url: https://blocks-cdn.lowdefy.com/v3.10.1/blocks-amcharts/meta/AmChartsXY.json
@@ -95,7 +95,7 @@ _ref:
 
             ```yaml
             name: dashboard-app
-            lowdefy: 3.23.1
+            lowdefy: 3.23.2
             types:
               MyCustomBlock:
                 url: http://localhost:3002/meta/MyCustomBlock.json

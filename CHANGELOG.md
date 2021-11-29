@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.23.2](https://github.com/lowdefy/lowdefy/compare/v3.23.1...v3.23.2) (2021-11-29)
+
+
+## Changes
+
+### Blocks
+- Fix an issue where the `Selector` and `MultipleSelector` blocks were not handling bounced `onSearch` events correctly and leaving the loading state early. Closes #968.
+
+## Commits
+
+### Bug Fixes
+
+* **blocksAntd:** Added deboucing condition to Selector and MultipleSelector. ([ce1d3e4](https://github.com/lowdefy/lowdefy/commit/ce1d3e45d5e3add137a97c17461fcf57159dc3e2))
+
+
+
+
+
 ## [3.23.1](https://github.com/lowdefy/lowdefy/compare/v3.23.0...v3.23.1) (2021-11-20)
 
 ### Fixes
