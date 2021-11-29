@@ -3551,7 +3551,7 @@ __metadata:
     "@swc/jest": 0.2.9
     google-spreadsheet: 3.1.15
     jest: 27.3.1
-    mingo: 4.2.0
+    mingo: ^4.4.1
     moment: 2.29.1
   languageName: unknown
   linkType: soft
@@ -3643,7 +3643,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/format@4.0.0-alpha.5, @lowdefy/format@workspace:packages/format":
+"@lowdefy/format@workspace:packages/format":
   version: 0.0.0-use.local
   resolution: "@lowdefy/format@workspace:packages/format"
   dependencies:
@@ -3740,6 +3740,34 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@lowdefy/operators-change-case@workspace:packages/plugins/operators/operators-change-case":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/operators-change-case@workspace:packages/plugins/operators/operators-change-case"
+  dependencies:
+    "@lowdefy/helpers": 4.0.0-alpha.5
+    "@lowdefy/operators": 4.0.0-alpha.5
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
+    change-case: 4.1.2
+    jest: 27.3.1
+  languageName: unknown
+  linkType: soft
+
+"@lowdefy/operators-diff@workspace:packages/plugins/operators/operators-diff":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/operators-diff@workspace:packages/plugins/operators/operators-diff"
+  dependencies:
+    "@lowdefy/helpers": 4.0.0-alpha.5
+    "@lowdefy/operators": 4.0.0-alpha.5
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
+    deep-diff: 1.0.2
+    jest: 27.3.1
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/operators-js@4.0.0-alpha.5, @lowdefy/operators-js@workspace:packages/plugins/operators/operators-js":
   version: 0.0.0-use.local
   resolution: "@lowdefy/operators-js@workspace:packages/plugins/operators/operators-js"
@@ -3750,6 +3778,20 @@ __metadata:
     "@swc/core": 1.2.107
     "@swc/jest": 0.2.5
     jest: 27.3.1
+  languageName: unknown
+  linkType: soft
+
+"@lowdefy/operators-mql@workspace:packages/plugins/operators/operators-mql":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/operators-mql@workspace:packages/plugins/operators/operators-mql"
+  dependencies:
+    "@lowdefy/helpers": 4.0.0-alpha.5
+    "@lowdefy/operators": 4.0.0-alpha.5
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
+    jest: 27.3.1
+    mingo: ^4.4.1
   languageName: unknown
   linkType: soft
 
@@ -3767,22 +3809,43 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@lowdefy/operators-uuid@workspace:packages/plugins/operators/operators-uuid":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/operators-uuid@workspace:packages/plugins/operators/operators-uuid"
+  dependencies:
+    "@lowdefy/helpers": 4.0.0-alpha.5
+    "@lowdefy/operators": 4.0.0-alpha.5
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
+    jest: 27.3.1
+    uuid: 8.3.2
+  languageName: unknown
+  linkType: soft
+
+"@lowdefy/operators-yaml@workspace:packages/plugins/operators/operators-yaml":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/operators-yaml@workspace:packages/plugins/operators/operators-yaml"
+  dependencies:
+    "@lowdefy/helpers": 4.0.0-alpha.5
+    "@lowdefy/operators": 4.0.0-alpha.5
+    "@swc/cli": 0.1.51
+    "@swc/core": 1.2.107
+    "@swc/jest": 0.2.5
+    jest: 27.3.1
+    js-yaml: 4.1.0
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/operators@4.0.0-alpha.5, @lowdefy/operators@workspace:packages/operators":
   version: 0.0.0-use.local
   resolution: "@lowdefy/operators@workspace:packages/operators"
   dependencies:
-    "@lowdefy/format": 4.0.0-alpha.5
     "@lowdefy/helpers": 4.0.0-alpha.5
-    "@lowdefy/nunjucks": 4.0.0-alpha.5
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
-    change-case: 4.1.2
-    deep-diff: 1.0.2
     jest: 27.3.1
-    js-yaml: 4.1.0
-    mingo: 4.2.0
-    uuid: 8.3.2
   languageName: unknown
   linkType: soft
 
@@ -12325,10 +12388,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mingo@npm:4.2.0":
-  version: 4.2.0
-  resolution: "mingo@npm:4.2.0"
-  checksum: 7079c6182fd34e42bb8b85bb3e4cad0245571d86e79492494ab4c10bf5bffaaba97594f2913f0a18ea2802eb397c14cbe3d46f7f1253feb3db7f3d998dc4e54e
+"mingo@npm:^4.4.1":
+  version: 4.4.1
+  resolution: "mingo@npm:4.4.1"
+  checksum: 9edcad35e1309eff52cb17e3dec1443f45d25454b17c50ac95315271a8e92efad8f11d458bf906c81d36cb11aaf46e5f5698ca954578ce63b26fdd43dfefae52
   languageName: node
   linkType: hard
 
