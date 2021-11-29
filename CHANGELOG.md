@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.4...v4.0.0-alpha.5) (2021-11-27)
+
+
+### Bug Fixes
+
+* **cli:** Add node shebang to index.js. ([f711fa9](https://github.com/lowdefy/lowdefy/commit/f711fa9fad615d89263954512970ec930cf8dbcd))
+* **cli:** Update getDirectories. ([8af70b0](https://github.com/lowdefy/lowdefy/commit/8af70b0e66260a87a3e0e62f1ea83a12822cb3bb))
+* Fix home page route in server. ([640ab8a](https://github.com/lowdefy/lowdefy/commit/640ab8a6528019bc2f2ace818053f2f3fbb3955f))
+* Fixes for V4. ([41a9a30](https://github.com/lowdefy/lowdefy/commit/41a9a30b308543605a70f7d830a14f8f7221dd01))
+* Refactored blocks for Lowdefy Version 4. ([96f194d](https://github.com/lowdefy/lowdefy/commit/96f194dc5088b864ee6696b97780a0791b5a5a2d))
+* Remove CHANGELOG file and aws plugin package peer depencies ([21627f7](https://github.com/lowdefy/lowdefy/commit/21627f7f7a53751099764ea444ad4519c6b18b1a))
+* V4 fixes. ([088e210](https://github.com/lowdefy/lowdefy/commit/088e210620ffd8d7735cc785483845d082d5485d))
+
+
+### Features
+
+* Add client operators to operators-js. ([1453e8e](https://github.com/lowdefy/lowdefy/commit/1453e8e8d6ef2897be1d378488144b179949a7dd))
+* Add start command to CLI. ([19bf81a](https://github.com/lowdefy/lowdefy/commit/19bf81ad31d9f5f002521e0aed9b1fc1599277dd))
+* Add types object to telemetry. ([d2509b3](https://github.com/lowdefy/lowdefy/commit/d2509b327336c488db192fb1c8086ad685cd007b))
+* Allow Less variables to be specified in server. ([bd8ccbd](https://github.com/lowdefy/lowdefy/commit/bd8ccbdaf75fa320e5f6ee6abf3fb7480a3dc180)), closes [#893](https://github.com/lowdefy/lowdefy/issues/893)
+* Create operators-js plugins. ([fc0dc29](https://github.com/lowdefy/lowdefy/commit/fc0dc29ad8dcf6e7631d2bc77f1b3f8bf348bafd))
+* Create operators-nunjucks plugin. ([d299d2f](https://github.com/lowdefy/lowdefy/commit/d299d2f7ed4fd2ad928882bcdd1cfda7f82c9187))
+* Import operator plugins in server. ([f913e9e](https://github.com/lowdefy/lowdefy/commit/f913e9e261777a0c7f4b0a79995ef18290186b2e))
+* Move server operators to operators-js plugin. ([a864473](https://github.com/lowdefy/lowdefy/commit/a864473d7f68d4921186db8a6abeb681e5fe7f41))
+* **operators:** Add other functions to operators export. ([16f4da7](https://github.com/lowdefy/lowdefy/commit/16f4da78ec8e7a44fff4bdc28d4a61d421b82ca4))
+* **operators:** Move common operators to operators-js plugin ([42a8054](https://github.com/lowdefy/lowdefy/commit/42a80549e3c6153ef09ab5d0fd4b31c40a9c92f6))
+* **operators:** Update node and web parser and move their tests. ([3647299](https://github.com/lowdefy/lowdefy/commit/364729916a9238a7018adcfc5927e2ea85cab8c5))
+* **operators:** Update node and webParser and tests. ([e52a22e](https://github.com/lowdefy/lowdefy/commit/e52a22eb9fbfafab6c2bc0ef2c8915c9f844087c))
+* Update server package.json if plugin deps change. ([09f7bca](https://github.com/lowdefy/lowdefy/commit/09f7bca3a29ff186783197692e988cb315ff7483)), closes [#943](https://github.com/lowdefy/lowdefy/issues/943)
+* Update types.js and update packages ([b6ffbf6](https://github.com/lowdefy/lowdefy/commit/b6ffbf6001c3aa44c260afe7eba89a24d40a51f8))
+
+
+
+
+
 # [4.0.0-alpha.4](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.3...v4.0.0-alpha.4) (2021-11-25)
 
 

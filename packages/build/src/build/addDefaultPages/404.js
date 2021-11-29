@@ -14,47 +14,40 @@
   limitations under the License.
 */
 
-// TODO: temp fix while waiting for blocks-antd
 export default {
   id: '404',
-  type: 'Box',
+  type: 'Result',
+  style: {
+    minHeight: '100vh',
+  },
+  properties: {
+    status: 404,
+    title: '404',
+    subTitle: 'Sorry, the page you are visiting does not exist.',
+  },
+  areas: {
+    extra: {
+      blocks: [
+        {
+          id: 'home',
+          type: 'Button',
+          properties: {
+            title: 'Go to home page',
+            type: 'Link',
+          },
+          events: {
+            onClick: [
+              {
+                id: 'home',
+                type: 'Link',
+                params: {
+                  home: true,
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
+  },
 };
-
-// export default {
-//   id: '404',
-//   type: 'Result',
-//   style: {
-//     minHeight: '100vh',
-//   },
-//   properties: {
-//     status: 404,
-//     title: '404',
-//     subTitle: 'Sorry, the page you are visiting does not exist.',
-//   },
-//   areas: {
-//     extra: {
-//       blocks: [
-//         {
-//           id: 'home',
-//           type: 'Button',
-//           properties: {
-//             title: 'Go to home page',
-//             type: 'Link',
-//             icon: 'HomeOutlined',
-//           },
-//           events: {
-//             onClick: [
-//               {
-//                 id: 'home',
-//                 type: 'Link',
-//                 params: {
-//                   home: true,
-//                 },
-//               },
-//             ],
-//           },
-//         },
-//       ],
-//     },
-//   },
-// };

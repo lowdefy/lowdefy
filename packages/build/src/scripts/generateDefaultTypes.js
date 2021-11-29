@@ -20,9 +20,15 @@ import { type } from '@lowdefy/helpers';
 import { readFile, writeFile } from '@lowdefy/node-utils';
 
 const defaultPackages = [
+  '@lowdefy/blocks-antd',
   '@lowdefy/blocks-basic',
+  // '@lowdefy/blocks-color-selectors',
+  // '@lowdefy/blocks-echarts',
+  '@lowdefy/blocks-loaders',
+  // '@lowdefy/blocks-markdown',
   '@lowdefy/connection-axios-http',
   '@lowdefy/operators-js',
+  '@lowdefy/operators-nunjucks',
 ];
 
 function createTypeDefinitions({ typeNames, store, packageName, version }) {

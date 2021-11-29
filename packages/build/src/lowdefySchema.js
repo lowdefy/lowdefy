@@ -63,10 +63,10 @@ export default {
             },
           },
         },
-        styles: {
+        style: {
           type: 'object',
           errorMessage: {
-            type: 'App "app.styles" should be an object.',
+            type: 'App "app.style" should be an object.',
           },
         },
       },

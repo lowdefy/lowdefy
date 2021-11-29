@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/block-utils",
-  "version": "4.0.0-alpha.4",
+  "version": "4.0.0-alpha.5",
   "licence": "Apache-2.0",
   "description": "Lowdefy Block Utils",
   "homepage": "https://lowdefy.com",
@@ -41,7 +41,7 @@
   "dependencies": {
     "@emotion/css": "11.5.0",
     "@emotion/react": "11.5.0",
-    "@lowdefy/helpers": "4.0.0-alpha.4",
+    "@lowdefy/helpers": "4.0.0-alpha.5",
     "classnames": "2.3.1",
     "dompurify": "2.3.3",
     "react": "18.0.0-alpha-327d5c484-20211106",

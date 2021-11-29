@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/operators",
-  "version": "4.0.0-alpha.4",
+  "version": "4.0.0-alpha.5",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -38,14 +38,7 @@
     "test:watch": "jest --coverage --watch"
   },
   "dependencies": {
-    "@lowdefy/format": "4.0.0-alpha.4",
-    "@lowdefy/helpers": "4.0.0-alpha.4",
-    "@lowdefy/nunjucks": "4.0.0-alpha.4",
-    "change-case": "4.1.2",
-    "deep-diff": "1.0.2",
-    "js-yaml": "4.1.0",
-    "mingo": "4.2.0",
-    "uuid": "8.3.2"
+    "@lowdefy/helpers": "4.0.0-alpha.5"
   },
   "devDependencies": {
     "@swc/cli": "0.1.52",

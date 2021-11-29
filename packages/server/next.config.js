@@ -4,7 +4,7 @@ const appConfig = require('./build/app.json');
 module.exports = withLess({
   lessLoaderOptions: {
     lessOptions: {
-      modifyVars: appConfig.styles.lessVariables,
+      modifyVars: appConfig.style.lessVariables,
     },
   },
   reactStrictMode: true,
@@ -28,4 +28,7 @@ module.exports = withLess({
   // experimental: {
   //   concurrentFeatures: true,
   // },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 });

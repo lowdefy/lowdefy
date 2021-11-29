@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.4...v4.0.0-alpha.5) (2021-11-27)
+
+
+### Features
+
+* Add client operators to operators-js. ([1453e8e](https://github.com/lowdefy/lowdefy/commit/1453e8e8d6ef2897be1d378488144b179949a7dd))
+* Create operators-nunjucks plugin. ([d299d2f](https://github.com/lowdefy/lowdefy/commit/d299d2f7ed4fd2ad928882bcdd1cfda7f82c9187))
+* Move server operators to operators-js plugin. ([a864473](https://github.com/lowdefy/lowdefy/commit/a864473d7f68d4921186db8a6abeb681e5fe7f41))
+* **operators:** Add other functions to operators export. ([16f4da7](https://github.com/lowdefy/lowdefy/commit/16f4da78ec8e7a44fff4bdc28d4a61d421b82ca4))
+* **operators:** Move common operators to operators-js plugin ([42a8054](https://github.com/lowdefy/lowdefy/commit/42a80549e3c6153ef09ab5d0fd4b31c40a9c92f6))
+* **operators:** Update node and web parser and move their tests. ([3647299](https://github.com/lowdefy/lowdefy/commit/364729916a9238a7018adcfc5927e2ea85cab8c5))
+* **operators:** Update node and webParser and tests. ([e52a22e](https://github.com/lowdefy/lowdefy/commit/e52a22eb9fbfafab6c2bc0ef2c8915c9f844087c))
+
+
+
+
+
 # [4.0.0-alpha.4](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.3...v4.0.0-alpha.4) (2021-11-25)
 
 **Note:** Version bump only for package @lowdefy/operators

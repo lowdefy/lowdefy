@@ -14,18 +14,25 @@
   limitations under the License.
 */
 
-export default {
-  import: {
-    block: 'blocks/Tooltip/Tooltip.js',
-    styles: ['blocks/Tooltip/style.less'],
-  },
-  meta: {
-    category: 'container',
-    loading: {
-      type: 'Skeleton',
-      properties: {
-        height: 80,
-      },
+import { createApiContext, getPageConfig, getRootConfig } from '@lowdefy/api';
+
+import Page from '../components/Page.js';
+
+export async function getStaticProps() {
+  // TODO: get the right api context options
+  const apiContext = await createApiContext({ buildDirectory: './build' });
+
+  const [rootConfig, pageConfig] = await Promise.all([
+    getRootConfig(apiContext),
+    getPageConfig(apiContext, { pageId: '404' }),
+  ]);
+
+  return {
+    props: {
+      pageConfig,
+      rootConfig,
     },
-  },
-};
+  };
+}
+
+export default Page;

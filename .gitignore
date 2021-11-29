@@ -20,6 +20,7 @@ packages/server/build/**
 .DS_Store
 
 packages/build/src/test/writeFile.txt
+packages/build/build/**
 
 packages/plugins/connections/connection-mongodb/mongod-*
 packages/plugins/connections/connection-mongodb/globalConfig.json

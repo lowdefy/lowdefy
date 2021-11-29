@@ -42,6 +42,12 @@ function buildIcons({ components }) {
   components.icons = [];
   Object.entries(iconPackages).forEach(([iconPackage, regex]) => {
     const icons = new Set();
+    // TODO: Can we do better than this?
+    // Add default icons
+    if (iconPackage === 'react-icons/ai') {
+      icons.add('AiOutlineLoading3Quarters');
+      icons.add('AiOutlineExclamationCircle');
+    }
     [...JSON.stringify(components.global || {}).matchAll(regex)].map((match) =>
       icons.add(match[1])
     );

@@ -19,7 +19,7 @@ import { createApiContext, getHome, getPageConfig, getRootConfig } from '@lowdef
 import Page from '../components/Page.js';
 
 export async function getServerSideProps() {
-  const apiContext = await createApiContext({ buildDirectory: './.lowdefy/build' });
+  const apiContext = await createApiContext({ buildDirectory: './build' });
   const home = await getHome(apiContext);
   if (home.configured === false) {
     return {

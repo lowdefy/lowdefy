@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.4...v4.0.0-alpha.5) (2021-11-27)
+
+
+### Bug Fixes
+
+* **cli:** Add node shebang to index.js. ([f711fa9](https://github.com/lowdefy/lowdefy/commit/f711fa9fad615d89263954512970ec930cf8dbcd))
+* **cli:** Update getDirectories. ([8af70b0](https://github.com/lowdefy/lowdefy/commit/8af70b0e66260a87a3e0e62f1ea83a12822cb3bb))
+* V4 fixes. ([088e210](https://github.com/lowdefy/lowdefy/commit/088e210620ffd8d7735cc785483845d082d5485d))
+
+
+### Features
+
+* Add start command to CLI. ([19bf81a](https://github.com/lowdefy/lowdefy/commit/19bf81ad31d9f5f002521e0aed9b1fc1599277dd))
+* Add types object to telemetry. ([d2509b3](https://github.com/lowdefy/lowdefy/commit/d2509b327336c488db192fb1c8086ad685cd007b))
+* Update server package.json if plugin deps change. ([09f7bca](https://github.com/lowdefy/lowdefy/commit/09f7bca3a29ff186783197692e988cb315ff7483)), closes [#943](https://github.com/lowdefy/lowdefy/issues/943)
+
+
+
+
+
 # [4.0.0-alpha.4](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.3...v4.0.0-alpha.4) (2021-11-25)
 
 **Note:** Version bump only for package lowdefy

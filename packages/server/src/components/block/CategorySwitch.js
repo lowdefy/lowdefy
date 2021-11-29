@@ -69,7 +69,7 @@ const CategorySwitch = ({ block, Blocks, context, lowdefy }) => {
             blockId={block.blockId}
             components={lowdefy._internal.components}
             events={block.eval.events}
-            homePageId={lowdefy.homePageId}
+            homePageId={lowdefy.home.pageId}
             key={block.blockId}
             loading={block.loading}
             menus={lowdefy.menus}
@@ -102,7 +102,7 @@ const CategorySwitch = ({ block, Blocks, context, lowdefy }) => {
             blockId={block.blockId}
             components={lowdefy._internal.components}
             events={block.eval.events}
-            homePageId={lowdefy.homePageId}
+            homePageId={lowdefy.home.pageId}
             key={block.blockId}
             loading={block.loading}
             menus={lowdefy.menus}

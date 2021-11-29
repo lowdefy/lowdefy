@@ -14,4 +14,25 @@
   limitations under the License.
 */
 
-@import 'antd/lib/grid/style/index.less';
+import React from 'react';
+import Document, { Html, Head, Main, NextScript } from 'next/document';
+
+class LowdefyDocument extends Document {
+  render() {
+    return (
+      <Html>
+        <Head>
+          <link rel="manifest" href="/manifest.webmanifest" />
+          <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+          <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        </Head>
+        <body>
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    );
+  }
+}
+
+export default LowdefyDocument;
