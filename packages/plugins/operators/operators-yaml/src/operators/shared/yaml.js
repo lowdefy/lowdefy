@@ -17,7 +17,7 @@
 import YAML from 'js-yaml';
 import { serializer } from '@lowdefy/helpers';
 
-import runClass from '../runClass.js';
+import { runClass } from '@lowdefy/operators';
 
 function parse(input) {
   if (input === 'undefined') return undefined;

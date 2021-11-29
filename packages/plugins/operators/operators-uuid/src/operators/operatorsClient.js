@@ -14,30 +14,4 @@
   limitations under the License.
 */
 
-import { diff } from 'deep-diff';
-import runClass from '../runClass.js';
-
-function deep(lhs, rhs) {
-  const result = diff(lhs, rhs);
-  if (!result) {
-    return [];
-  }
-  return result;
-}
-
-const functions = { deep };
-const meta = {
-  deep: { namedArgs: ['lhs', 'rhs'], validTypes: ['object', 'array'] },
-};
-function _diff({ params, location, methodName }) {
-  return runClass({
-    functions,
-    location,
-    meta,
-    methodName,
-    operator: '_diff',
-    params,
-  });
-}
-
-export default _diff;
+export { default as _uuid } from './operators/shared/uuid.js';
