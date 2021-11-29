@@ -23,7 +23,7 @@ const defaultPackages = [
   '@lowdefy/blocks-antd',
   '@lowdefy/blocks-basic',
   // '@lowdefy/blocks-color-selectors',
-  // '@lowdefy/blocks-echarts',
+  '@lowdefy/blocks-echarts',
   '@lowdefy/blocks-loaders',
   // '@lowdefy/blocks-markdown',
   '@lowdefy/connection-axios-http',

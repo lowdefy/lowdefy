@@ -5613,10 +5613,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/server", "workspace:packages/server"],
             ["@lowdefy/api", "workspace:packages/api"],
             ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],
-            ["@lowdefy/blocks-antd", "workspace:packages/plugins/blocks/blocks-antd"],
-            ["@lowdefy/blocks-basic", "workspace:packages/plugins/blocks/blocks-basic"],
             ["@lowdefy/build", "workspace:packages/build"],
-            ["@lowdefy/connection-axios-http", "workspace:packages/plugins/connections/connection-axios-http"],
             ["@lowdefy/engine", "workspace:packages/engine"],
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],
             ["@lowdefy/layout", "workspace:packages/layout"],
@@ -10517,7 +10514,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["echarts", "npm:5.2.1"],
             ["fast-deep-equal", "npm:3.1.3"],
             ["react", "npm:18.0.0-alpha-327d5c484-20211106"],
-            ["size-sensor", "npm:1.0.1"]
+            ["size-sensor", "npm:1.0.1"],
+            ["tslib", "npm:2.3.1"]
           ],
           "packagePeers": [
             "@types/echarts",
