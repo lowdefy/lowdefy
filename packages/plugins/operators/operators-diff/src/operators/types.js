@@ -13,10 +13,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import * as client from './operatorsClient.js';
 import * as server from './operatorsServer.js';
 
 export default {
   operators: {
+    client: Object.keys(client),
     server: Object.keys(server),
   },
 };

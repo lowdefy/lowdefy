@@ -19,7 +19,6 @@ _ref:
     pageId: _diff
     pageTitle: _diff
     filePath: operators/_diff.yaml
-    env: Server Only
     methods:
       - name: deep
         types: |
