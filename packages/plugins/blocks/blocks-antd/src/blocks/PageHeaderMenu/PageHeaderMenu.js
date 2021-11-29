@@ -115,21 +115,23 @@ const PageHeaderMenu = ({
                 properties.header,
               ])}
               content={{
+                // TODO: use next/image
+                // TODO: Link to home=true
                 content: () => (
                   <>
-                    <Link href={`${basePath}/${homePageId}`}>
+                    <Link href={`${homePageId}`}>
                       <img
                         src={
                           (properties.logo && properties.logo.src) ||
                           (get(properties, 'header.theme') === 'light'
-                            ? `${basePath}/public/logo-light-theme.png`
-                            : `${basePath}/public/logo-dark-theme.png`)
+                            ? `${basePath}/logo-light-theme.png`
+                            : `${basePath}/logo-dark-theme.png`)
                         }
                         srcSet={
                           (properties.logo && (properties.logo.srcSet || properties.logo.src)) ||
                           (get(properties, 'header.theme') === 'light'
-                            ? `${basePath}/public/logo-square-light-theme.png 40w, ${basePath}/public/logo-light-theme.png 577w`
-                            : `${basePath}/public/logo-square-dark-theme.png 40w, ${basePath}/public/logo-dark-theme.png 577w`)
+                            ? `${basePath}/logo-square-light-theme.png 40w, ${basePath}/logo-light-theme.png 577w`
+                            : `${basePath}/logo-square-dark-theme.png 40w, ${basePath}/logo-dark-theme.png 577w`)
                         }
                         sizes={
                           (properties.logo && properties.logo.sizes) ||

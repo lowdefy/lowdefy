@@ -76,7 +76,7 @@ const List = ({ block, Blocks, Component, context, lowdefy }) => {
         blockId={block.blockId}
         components={lowdefy._internal.components}
         events={block.eval.events}
-        homePageId={lowdefy.homePageId}
+        homePageId={lowdefy.home.pageId}
         key={block.blockId}
         list={contentList}
         loading={block.loading}
