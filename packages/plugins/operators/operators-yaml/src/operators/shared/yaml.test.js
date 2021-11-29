@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import yaml from '../../src/common/yaml.js';
+import yaml from './yaml.js';
 
 test('_yaml.parse string unquoted', () => {
   expect(yaml({ params: 'firstName', location: 'locationId', methodName: 'parse' })).toEqual(

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import change_case from '../../src/common/change_case.js';
+import change_case from './change_case.js';
 
 const testString = 'test string';
 

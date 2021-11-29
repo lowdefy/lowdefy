@@ -28,7 +28,7 @@ import {
   snakeCase,
 } from 'change-case';
 import { get, type } from '@lowdefy/helpers';
-import runClass from '../runClass.js';
+import { runClass } from '@lowdefy/operators';
 
 const changeCase = {
   camelCase,

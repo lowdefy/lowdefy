@@ -15,7 +15,7 @@
 */
 
 import * as uuid from 'uuid';
-import _uuid from '../../src/common/uuid.js';
+import _uuid from './uuid.js';
 
 jest.mock('uuid', () => {
   return {

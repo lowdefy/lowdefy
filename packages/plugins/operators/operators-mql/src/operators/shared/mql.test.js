@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import mql from '../../src/common/mql.js';
+import mql from './mql.js';
 
 test('_mql.aggregate on: null', () => {
   expect(
