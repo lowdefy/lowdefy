@@ -28,4 +28,7 @@ module.exports = withLess({
   // experimental: {
   //   concurrentFeatures: true,
   // },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 });
