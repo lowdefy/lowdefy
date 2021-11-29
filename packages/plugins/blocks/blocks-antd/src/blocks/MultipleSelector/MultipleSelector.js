@@ -110,8 +110,10 @@ const MultipleSelector = ({
               }}
               onSearch={async (value) => {
                 setFetch(true);
-                await methods.triggerEvent({ name: 'onSearch', event: { value } });
-                setFetch(false);
+                const result = await methods.triggerEvent({ name: 'onSearch', event: { value } });
+                if (!result.bounced) {
+                  setFetch(false);
+                }
               }}
             >
               {uniqueValueOptions.map((opt, i) =>
