@@ -9,6 +9,7 @@
 **/es/*
 **/coverage/*
 **/.lowdefy/*
+**/.next/*
 **/.env
 **/lowdefy.yaml
 !packages/docs/lowdefy.yaml
@@ -16,6 +17,7 @@
 
 .DS_Store
 
+packages/server/build/**
 packages/express/config/**
 packages/build/src/test/writeFile.txt
 packages/graphql/globalConfig.json
