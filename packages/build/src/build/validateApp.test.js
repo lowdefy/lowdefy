@@ -19,32 +19,93 @@ import testContext from '../test/testContext.js';
 
 const context = testContext();
 
-test('validateApp success', async () => {
-  let components = {
+test('validateApp no app defined', async () => {
+  const components = {};
+  const result = await validateApp({ components, context });
+  expect(result).toEqual({
     app: {
       html: {
-        appendBody: 'abc',
-        appendHead: 'abc',
+        appendBody: '',
+        appendHead: '',
+      },
+      style: {},
+    },
+  });
+});
+
+test('validateApp empty app object', async () => {
+  const components = { app: {} };
+  const result = await validateApp({ components, context });
+  expect(result).toEqual({
+    app: {
+      html: {
+        appendBody: '',
+        appendHead: '',
+      },
+      style: {},
+    },
+  });
+});
+
+test('validateApp empty html', async () => {
+  const components = { app: { html: {} } };
+  const result = await validateApp({ components, context });
+  expect(result).toEqual({
+    app: {
+      html: {
+        appendBody: '',
+        appendHead: '',
+      },
+      style: {},
+    },
+  });
+});
+
+test('validateApp appendHead and appendHead', async () => {
+  const components = {
+    app: {
+      html: {
+        appendBody: 'body',
+        appendHead: 'head',
       },
     },
   };
-  let result = await validateApp({ components, context });
-  expect(result).toEqual({ app: { html: { appendBody: 'abc', appendHead: 'abc' } } });
-  components = {};
-  result = await validateApp({ components, context });
-  expect(result).toEqual({ app: { html: { appendBody: '', appendHead: '' } } });
-  components = {
-    app: {},
-  };
-  result = await validateApp({ components, context });
-  expect(result).toEqual({ app: { html: { appendBody: '', appendHead: '' } } });
-  components = {
+  const result = await validateApp({ components, context });
+  expect(result).toEqual({
     app: {
-      html: {},
+      html: {
+        appendBody: 'body',
+        appendHead: 'head',
+      },
+      style: {},
+    },
+  });
+});
+
+test('validateApp style', async () => {
+  const components = {
+    app: {
+      style: {
+        lessVariables: {
+          'primary-color': '#FF00FF',
+        },
+      },
     },
   };
-  result = await validateApp({ components, context });
-  expect(result).toEqual({ app: { html: { appendBody: '', appendHead: '' } } });
+  const result = await validateApp({ components, context });
+  expect(result).toEqual({
+    app: {
+      html: {
+        appendBody: '',
+        appendHead: '',
+      },
+      style: {
+        lessVariables: {
+          'primary-color': '#FF00FF',
+        },
+      },
+    },
+  });
 });
 
 test('validateApp app not an object', async () => {

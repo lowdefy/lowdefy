@@ -21,7 +21,6 @@ import Page from '../components/Page.js';
 export async function getServerSideProps() {
   const apiContext = await createApiContext({ buildDirectory: './build' });
   const home = await getHome(apiContext);
-  console.log(home);
   if (home.configured === false) {
     return {
       redirect: {
