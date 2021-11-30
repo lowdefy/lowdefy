@@ -14,6 +14,7 @@
 **/lowdefy.yaml
 
 packages/server/build/**
+packages/server-dev/build/**
 !packages/docs/lowdefy.yaml
 !packages/docs/howto/**/lowdefy.yaml
 

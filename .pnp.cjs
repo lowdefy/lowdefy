@@ -143,6 +143,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/server"
       },
       {
+        "name": "@lowdefy/server-dev",
+        "reference": "workspace:packages/server-dev"
+      },
+      {
         "name": "@lowdefy/ajv",
         "reference": "workspace:packages/utils/ajv"
       },
@@ -206,6 +210,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@lowdefy/operators-yaml", ["workspace:packages/plugins/operators/operators-yaml"]],
       ["@lowdefy/plugin-aws", ["workspace:packages/plugins/plugins/plugin-aws"]],
       ["@lowdefy/server", ["workspace:packages/server"]],
+      ["@lowdefy/server-dev", ["workspace:packages/server-dev"]],
       ["lowdefy", ["workspace:packages/cli"]]
     ],
     "fallbackPool": [
@@ -5636,6 +5641,45 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT",
         }]
       ]],
+      ["@lowdefy/server-dev", [
+        ["workspace:packages/server-dev", {
+          "packageLocation": "./packages/server-dev/",
+          "packageDependencies": [
+            ["@lowdefy/server-dev", "workspace:packages/server-dev"],
+            ["@lowdefy/api", "workspace:packages/api"],
+            ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],
+            ["@lowdefy/blocks-antd", "workspace:packages/plugins/blocks/blocks-antd"],
+            ["@lowdefy/blocks-basic", "workspace:packages/plugins/blocks/blocks-basic"],
+            ["@lowdefy/blocks-color-selectors", "workspace:packages/plugins/blocks/blocks-color-selectors"],
+            ["@lowdefy/blocks-echarts", "workspace:packages/plugins/blocks/blocks-echarts"],
+            ["@lowdefy/blocks-loaders", "workspace:packages/plugins/blocks/blocks-loaders"],
+            ["@lowdefy/blocks-markdown", "workspace:packages/plugins/blocks/blocks-markdown"],
+            ["@lowdefy/build", "workspace:packages/build"],
+            ["@lowdefy/connection-axios-http", "workspace:packages/plugins/connections/connection-axios-http"],
+            ["@lowdefy/engine", "workspace:packages/engine"],
+            ["@lowdefy/helpers", "workspace:packages/utils/helpers"],
+            ["@lowdefy/layout", "workspace:packages/layout"],
+            ["@lowdefy/operators-change-case", "workspace:packages/plugins/operators/operators-change-case"],
+            ["@lowdefy/operators-diff", "workspace:packages/plugins/operators/operators-diff"],
+            ["@lowdefy/operators-js", "workspace:packages/plugins/operators/operators-js"],
+            ["@lowdefy/operators-mql", "workspace:packages/plugins/operators/operators-mql"],
+            ["@lowdefy/operators-nunjucks", "workspace:packages/plugins/operators/operators-nunjucks"],
+            ["@lowdefy/operators-uuid", "workspace:packages/plugins/operators/operators-uuid"],
+            ["@lowdefy/operators-yaml", "workspace:packages/plugins/operators/operators-yaml"],
+            ["@next/eslint-plugin-next", "npm:12.0.4"],
+            ["less", "npm:4.1.2"],
+            ["less-loader", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:10.2.0"],
+            ["next", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:12.0.3"],
+            ["next-auth", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:4.0.0-beta.6"],
+            ["next-with-less", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:2.0.2"],
+            ["react", "npm:18.0.0-alpha-327d5c484-20211106"],
+            ["react-dom", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:18.0.0-alpha-327d5c484-20211106"],
+            ["react-icons", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:4.3.1"],
+            ["swr", "virtual:b951ea20ab6cada5f665e8389a50d828047e6b6f10e6ebaddde1e74a94868ec6ec703ff140742f295ef663cf92da1bc80fe9bbeaab30196cba0e992f38cd19ea#npm:1.0.1"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
       ["@napi-rs/triples", [
         ["npm:1.0.3", {
           "packageLocation": "./.yarn/cache/@napi-rs-triples-npm-1.0.3-b45eecb594-c83a4cc55f.zip/node_modules/@napi-rs/triples/",
@@ -10164,6 +10208,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/deprecation-npm-2.3.1-e19c92d6e7-f56a05e182.zip/node_modules/deprecation/",
           "packageDependencies": [
             ["deprecation", "npm:2.3.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["dequal", [
+        ["npm:2.0.2", {
+          "packageLocation": "./.yarn/cache/dequal-npm-2.0.2-370927eb6c-86c7a2c59f.zip/node_modules/dequal/",
+          "packageDependencies": [
+            ["dequal", "npm:2.0.2"]
           ],
           "linkType": "HARD",
         }]
@@ -21281,6 +21334,29 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["supports-hyperlinks", "npm:2.2.0"],
             ["has-flag", "npm:4.0.0"],
             ["supports-color", "npm:7.2.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["swr", [
+        ["npm:1.0.1", {
+          "packageLocation": "./.yarn/cache/swr-npm-1.0.1-56a5f8efad-8aaa10c4c6.zip/node_modules/swr/",
+          "packageDependencies": [
+            ["swr", "npm:1.0.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:b951ea20ab6cada5f665e8389a50d828047e6b6f10e6ebaddde1e74a94868ec6ec703ff140742f295ef663cf92da1bc80fe9bbeaab30196cba0e992f38cd19ea#npm:1.0.1", {
+          "packageLocation": "./.yarn/__virtual__/swr-virtual-cfa85c29d6/0/cache/swr-npm-1.0.1-56a5f8efad-8aaa10c4c6.zip/node_modules/swr/",
+          "packageDependencies": [
+            ["swr", "virtual:b951ea20ab6cada5f665e8389a50d828047e6b6f10e6ebaddde1e74a94868ec6ec703ff140742f295ef663cf92da1bc80fe9bbeaab30196cba0e992f38cd19ea#npm:1.0.1"],
+            ["@types/react", null],
+            ["dequal", "npm:2.0.2"],
+            ["react", "npm:18.0.0-alpha-327d5c484-20211106"]
+          ],
+          "packagePeers": [
+            "@types/react",
+            "react"
           ],
           "linkType": "HARD",
         }]

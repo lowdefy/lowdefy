@@ -1,0 +1,78 @@
+{
+  "name": "@lowdefy/server-dev",
+  "version": "4.0.0-alpha.5",
+  "license": "Apache-2.0",
+  "description": "",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "server"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Sam Tolmay",
+      "url": "https://github.com/SamTolmay"
+    },
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "files": [
+    "src/*",
+    "next.config.js",
+    ".eslintrc.yaml"
+  ],
+  "scripts": {
+    "build:lowdefy": "lowdefy-build",
+    "build:next": "next build",
+    "dev": "next dev",
+    "start": "next start",
+    "lint": "next lint",
+    "next": "next"
+  },
+  "dependencies": {
+    "@lowdefy/api": "4.0.0-alpha.5",
+    "@lowdefy/block-utils": "4.0.0-alpha.5",
+    "@lowdefy/blocks-antd": "4.0.0-alpha.5",
+    "@lowdefy/blocks-basic": "4.0.0-alpha.5",
+    "@lowdefy/blocks-color-selectors": "4.0.0-alpha.5",
+    "@lowdefy/blocks-echarts": "4.0.0-alpha.5",
+    "@lowdefy/blocks-loaders": "4.0.0-alpha.5",
+    "@lowdefy/blocks-markdown": "4.0.0-alpha.5",
+    "@lowdefy/build": "4.0.0-alpha.5",
+    "@lowdefy/connection-axios-http": "4.0.0-alpha.5",
+    "@lowdefy/engine": "4.0.0-alpha.5",
+    "@lowdefy/helpers": "4.0.0-alpha.5",
+    "@lowdefy/layout": "4.0.0-alpha.5",
+    "@lowdefy/operators-change-case": "4.0.0-alpha.5",
+    "@lowdefy/operators-diff": "4.0.0-alpha.5",
+    "@lowdefy/operators-js": "4.0.0-alpha.5",
+    "@lowdefy/operators-mql": "4.0.0-alpha.5",
+    "@lowdefy/operators-nunjucks": "4.0.0-alpha.5",
+    "@lowdefy/operators-uuid": "4.0.0-alpha.5",
+    "@lowdefy/operators-yaml": "4.0.0-alpha.5",
+    "next": "12.0.3",
+    "next-auth": "4.0.0-beta.6",
+    "react": "18.0.0-alpha-327d5c484-20211106",
+    "react-dom": "18.0.0-alpha-327d5c484-20211106",
+    "react-icons": "4.3.1",
+    "swr": "1.0.1"
+  },
+  "devDependencies": {
+    "@next/eslint-plugin-next": "12.0.4",
+    "less": "4.1.2",
+    "less-loader": "10.2.0",
+    "next-with-less": "2.0.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

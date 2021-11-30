@@ -3867,6 +3867,43 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@lowdefy/server-dev@workspace:packages/server-dev":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/server-dev@workspace:packages/server-dev"
+  dependencies:
+    "@lowdefy/api": 4.0.0-alpha.5
+    "@lowdefy/block-utils": 4.0.0-alpha.5
+    "@lowdefy/blocks-antd": 4.0.0-alpha.5
+    "@lowdefy/blocks-basic": 4.0.0-alpha.5
+    "@lowdefy/blocks-color-selectors": 4.0.0-alpha.5
+    "@lowdefy/blocks-echarts": 4.0.0-alpha.5
+    "@lowdefy/blocks-loaders": 4.0.0-alpha.5
+    "@lowdefy/blocks-markdown": 4.0.0-alpha.5
+    "@lowdefy/build": 4.0.0-alpha.5
+    "@lowdefy/connection-axios-http": 4.0.0-alpha.5
+    "@lowdefy/engine": 4.0.0-alpha.5
+    "@lowdefy/helpers": 4.0.0-alpha.5
+    "@lowdefy/layout": 4.0.0-alpha.5
+    "@lowdefy/operators-change-case": 4.0.0-alpha.5
+    "@lowdefy/operators-diff": 4.0.0-alpha.5
+    "@lowdefy/operators-js": 4.0.0-alpha.5
+    "@lowdefy/operators-mql": 4.0.0-alpha.5
+    "@lowdefy/operators-nunjucks": 4.0.0-alpha.5
+    "@lowdefy/operators-uuid": 4.0.0-alpha.5
+    "@lowdefy/operators-yaml": 4.0.0-alpha.5
+    "@next/eslint-plugin-next": 12.0.4
+    less: 4.1.2
+    less-loader: 10.2.0
+    next: 12.0.3
+    next-auth: 4.0.0-beta.6
+    next-with-less: 2.0.2
+    react: 18.0.0-alpha-327d5c484-20211106
+    react-dom: 18.0.0-alpha-327d5c484-20211106
+    react-icons: 4.3.1
+    swr: 1.0.1
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/server@workspace:packages/server":
   version: 0.0.0-use.local
   resolution: "@lowdefy/server@workspace:packages/server"
@@ -7647,6 +7684,13 @@ __metadata:
   version: 2.3.1
   resolution: "deprecation@npm:2.3.1"
   checksum: f56a05e182c2c195071385455956b0c4106fe14e36245b00c689ceef8e8ab639235176a96977ba7c74afb173317fac2e0ec6ec7a1c6d1e6eaa401c586c714132
+  languageName: node
+  linkType: hard
+
+"dequal@npm:2.0.2":
+  version: 2.0.2
+  resolution: "dequal@npm:2.0.2"
+  checksum: 86c7a2c59f7b0797ed397c74b5fcdb744e48fc19440b70ad6ac59f57550a96b0faef3f1cfd5760ec5e6d3f7cb101f634f1f80db4e727b1dc8389bf62d977c0a0
   languageName: node
   linkType: hard
 
@@ -17048,6 +17092,17 @@ resolve@^2.0.0-next.3:
     has-flag: ^4.0.0
     supports-color: ^7.0.0
   checksum: aef04fb41f4a67f1bc128f7c3e88a81b6cf2794c800fccf137006efe5bafde281da3e42e72bf9206c2fcf42e6438f37e3a820a389214d0a88613ca1f2d36076a
+  languageName: node
+  linkType: hard
+
+"swr@npm:1.0.1":
+  version: 1.0.1
+  resolution: "swr@npm:1.0.1"
+  dependencies:
+    dequal: 2.0.2
+  peerDependencies:
+    react: ^16.11.0 || ^17.0.0
+  checksum: 8aaa10c4c65cb9b46a143a52ac2728111fc8af96e83781df1f7b7d56aa027ef720b7feb230658616e479f224f684d4cbc5d2ca3265c40f95a3140dbdba801061
   languageName: node
   linkType: hard
 
