@@ -43,6 +43,7 @@ const LowdefyContext = ({ children }) => {
   };
   lowdefy._internal.updateBlock = (blockId) =>
     lowdefy._internal.updaters[blockId] && lowdefy._internal.updaters[blockId]();
+
   return <>{children(lowdefy)}</>;
 };
 

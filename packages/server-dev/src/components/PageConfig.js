@@ -14,6 +14,22 @@
   limitations under the License.
 */
 
-import Home from '../components/Home.js';
+import React from 'react';
+import usePageConfig from '../utils/usePageConfig.js';
+import useRootConfig from '../utils/useRootConfig.js';
 
-export default Home;
+const PageConfig = ({ lowdefy, children }) => {
+  const { pageId } = lowdefy._internal.query;
+
+  const { data: pageConfig } = usePageConfig(pageId);
+  const { data: rootConfig } = useRootConfig();
+
+  lowdefy.home = rootConfig.home;
+  lowdefy.lowdefyGlobal = rootConfig.lowdefyGlobal;
+  lowdefy.menus = rootConfig.menus;
+
+  window.lowdefy = lowdefy;
+  return <>{children(pageConfig)}</>;
+};
+
+export default PageConfig;

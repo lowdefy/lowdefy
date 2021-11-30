@@ -21,48 +21,39 @@ import { useRouter } from 'next/router';
 import Context from './Context.js';
 import Head from './Head.js';
 import Block from './block/Block.js';
-import PageConfig from './PageConfig.js';
 import setupLink from '../utils/setupLink.js';
 
 const LoadingBlock = () => <div>Loading...</div>;
 
-const Page = ({ lowdefy }) => {
+const Page = ({ lowdefy, pageConfig, rootConfig }) => {
   const router = useRouter();
-
   lowdefy._internal.basePath = router.basePath;
   lowdefy._internal.pathname = router.pathname;
   lowdefy._internal.query = router.query;
   lowdefy._internal.router = router;
   lowdefy._internal.link = setupLink({ lowdefy });
-
-  if (!lowdefy._internal.query.pageId) return <LoadingBlock />;
+  lowdefy.home = rootConfig.home;
+  lowdefy.lowdefyGlobal = rootConfig.lowdefyGlobal;
+  lowdefy.menus = rootConfig.menus;
   return (
-    <PageConfig lowdefy={lowdefy}>
-      {(pageConfig) => {
+    <Context config={pageConfig} lowdefy={lowdefy}>
+      {(context, loading) => {
+        if (loading) {
+          return <LoadingBlock />;
+        }
         return (
-          <Context config={pageConfig} lowdefy={lowdefy}>
-            {(context, loading) => {
-              if (loading) {
-                return <LoadingBlock />;
-              }
-              return (
-                <>
-                  <Head
-                    properties={context._internal.RootBlocks.map[pageConfig.id].eval.properties}
-                  />
-                  <Block
-                    block={context._internal.RootBlocks.map[pageConfig.id]}
-                    Blocks={context._internal.RootBlocks}
-                    context={context}
-                    lowdefy={lowdefy}
-                  />
-                </>
-              );
-            }}
-          </Context>
+          <>
+            <Head properties={context._internal.RootBlocks.map[pageConfig.id].eval.properties} />
+            <Block
+              block={context._internal.RootBlocks.map[pageConfig.id]}
+              Blocks={context._internal.RootBlocks}
+              context={context}
+              lowdefy={lowdefy}
+            />
+          </>
         );
       }}
-    </PageConfig>
+    </Context>
   );
 };
 

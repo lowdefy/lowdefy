@@ -14,6 +14,13 @@
   limitations under the License.
 */
 
-import Home from '../components/Home.js';
+import { createApiContext, getPageConfig } from '@lowdefy/api';
 
-export default Home;
+export default async function handler(req, res) {
+  const { pageId } = req.query;
+  // TODO: get the right api context options
+  const apiContext = await createApiContext({ buildDirectory: './build' });
+  const pageConfig = await getPageConfig(apiContext, { pageId });
+
+  res.status(200).json(pageConfig);
+}

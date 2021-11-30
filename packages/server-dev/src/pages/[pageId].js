@@ -14,37 +14,6 @@
   limitations under the License.
 */
 
-import { createApiContext, getPageConfig, getRootConfig } from '@lowdefy/api';
-
 import Page from '../components/Page.js';
-
-export async function getServerSideProps(context) {
-  const { pageId } = context.params;
-  // TODO: get the right api context options
-  const apiContext = await createApiContext({ buildDirectory: './build' });
-
-  // TODO: Maybe we can only get rootConfig once?
-  // We can't do getServerSideProps on _app :(
-  const [rootConfig, pageConfig] = await Promise.all([
-    getRootConfig(apiContext),
-    getPageConfig(apiContext, { pageId }),
-  ]);
-
-  if (!pageConfig) {
-    return {
-      redirect: {
-        destination: '/404',
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {
-      pageConfig,
-      rootConfig,
-    },
-  };
-}
 
 export default Page;
