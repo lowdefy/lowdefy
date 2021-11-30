@@ -14,16 +14,4 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
-function _js({ context, params, location, methodName }) {
-  if (!type.isFunction(context.lowdefy.imports.jsOperators[methodName])) {
-    throw new Error(`Operator Error: _js.${methodName} is not a function.`);
-  }
-  if (!type.isNone(params) && !type.isArray(params)) {
-    throw new Error(`Operator Error: _js.${methodName} takes an array as input at ${location}.`);
-  }
-  return context.lowdefy.imports.jsOperators[methodName](...(params || []));
-}
-
-export default _js;
+export { default as _mql } from './operators/shared/mql.js';

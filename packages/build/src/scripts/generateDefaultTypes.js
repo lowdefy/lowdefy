@@ -23,12 +23,17 @@ const defaultPackages = [
   '@lowdefy/blocks-antd',
   '@lowdefy/blocks-basic',
   // '@lowdefy/blocks-color-selectors',
-  // '@lowdefy/blocks-echarts',
+  '@lowdefy/blocks-echarts',
   '@lowdefy/blocks-loaders',
   // '@lowdefy/blocks-markdown',
   '@lowdefy/connection-axios-http',
+  '@lowdefy/operators-change-case',
+  // '@lowdefy/operators-diff',
   '@lowdefy/operators-js',
+  // '@lowdefy/operators-mql',
   '@lowdefy/operators-nunjucks',
+  '@lowdefy/operators-uuid',
+  '@lowdefy/operators-yaml',
 ];
 
 function createTypeDefinitions({ typeNames, store, packageName, version }) {

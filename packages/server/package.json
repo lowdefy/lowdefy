@@ -41,9 +41,6 @@
   "dependencies": {
     "@lowdefy/api": "4.0.0-alpha.5",
     "@lowdefy/block-utils": "4.0.0-alpha.5",
-    "@lowdefy/blocks-antd": "4.0.0-alpha.5",
-    "@lowdefy/blocks-basic": "4.0.0-alpha.5",
-    "@lowdefy/connection-axios-http": "4.0.0-alpha.5",
     "@lowdefy/engine": "4.0.0-alpha.5",
     "@lowdefy/helpers": "4.0.0-alpha.5",
     "@lowdefy/layout": "4.0.0-alpha.5",

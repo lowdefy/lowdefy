@@ -3497,8 +3497,13 @@ __metadata:
     "@lowdefy/helpers": 4.0.0-alpha.5
     "@lowdefy/node-utils": 4.0.0-alpha.5
     "@lowdefy/nunjucks": 4.0.0-alpha.5
+    "@lowdefy/operators-change-case": 4.0.0-alpha.5
+    "@lowdefy/operators-diff": 4.0.0-alpha.5
     "@lowdefy/operators-js": 4.0.0-alpha.5
+    "@lowdefy/operators-mql": 4.0.0-alpha.5
     "@lowdefy/operators-nunjucks": 4.0.0-alpha.5
+    "@lowdefy/operators-uuid": 4.0.0-alpha.5
+    "@lowdefy/operators-yaml": 4.0.0-alpha.5
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
@@ -3740,7 +3745,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/operators-change-case@workspace:packages/plugins/operators/operators-change-case":
+"@lowdefy/operators-change-case@4.0.0-alpha.5, @lowdefy/operators-change-case@workspace:packages/plugins/operators/operators-change-case":
   version: 0.0.0-use.local
   resolution: "@lowdefy/operators-change-case@workspace:packages/plugins/operators/operators-change-case"
   dependencies:
@@ -3754,7 +3759,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/operators-diff@workspace:packages/plugins/operators/operators-diff":
+"@lowdefy/operators-diff@4.0.0-alpha.5, @lowdefy/operators-diff@workspace:packages/plugins/operators/operators-diff":
   version: 0.0.0-use.local
   resolution: "@lowdefy/operators-diff@workspace:packages/plugins/operators/operators-diff"
   dependencies:
@@ -3781,7 +3786,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/operators-mql@workspace:packages/plugins/operators/operators-mql":
+"@lowdefy/operators-mql@4.0.0-alpha.5, @lowdefy/operators-mql@workspace:packages/plugins/operators/operators-mql":
   version: 0.0.0-use.local
   resolution: "@lowdefy/operators-mql@workspace:packages/plugins/operators/operators-mql"
   dependencies:
@@ -3809,7 +3814,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/operators-uuid@workspace:packages/plugins/operators/operators-uuid":
+"@lowdefy/operators-uuid@4.0.0-alpha.5, @lowdefy/operators-uuid@workspace:packages/plugins/operators/operators-uuid":
   version: 0.0.0-use.local
   resolution: "@lowdefy/operators-uuid@workspace:packages/plugins/operators/operators-uuid"
   dependencies:
@@ -3823,7 +3828,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/operators-yaml@workspace:packages/plugins/operators/operators-yaml":
+"@lowdefy/operators-yaml@4.0.0-alpha.5, @lowdefy/operators-yaml@workspace:packages/plugins/operators/operators-yaml":
   version: 0.0.0-use.local
   resolution: "@lowdefy/operators-yaml@workspace:packages/plugins/operators/operators-yaml"
   dependencies:
@@ -3868,10 +3873,7 @@ __metadata:
   dependencies:
     "@lowdefy/api": 4.0.0-alpha.5
     "@lowdefy/block-utils": 4.0.0-alpha.5
-    "@lowdefy/blocks-antd": 4.0.0-alpha.5
-    "@lowdefy/blocks-basic": 4.0.0-alpha.5
     "@lowdefy/build": 4.0.0-alpha.5
-    "@lowdefy/connection-axios-http": 4.0.0-alpha.5
     "@lowdefy/engine": 4.0.0-alpha.5
     "@lowdefy/helpers": 4.0.0-alpha.5
     "@lowdefy/layout": 4.0.0-alpha.5
@@ -17446,6 +17448,13 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"tslib@npm:*, tslib@npm:^2.0.0, tslib@npm:^2.0.3, tslib@npm:^2.2.0, tslib@npm:^2.3.0, tslib@npm:^2.3.1":
+  version: 2.3.1
+  resolution: "tslib@npm:2.3.1"
+  checksum: de17a98d4614481f7fcb5cd53ffc1aaf8654313be0291e1bfaee4b4bb31a20494b7d218ff2e15017883e8ea9626599b3b0e0229c18383ba9dce89da2adf15cb9
+  languageName: node
+  linkType: hard
+
 "tslib@npm:2.3.0":
   version: 2.3.0
   resolution: "tslib@npm:2.3.0"
@@ -17457,13 +17466,6 @@ resolve@^2.0.0-next.3:
   version: 1.14.1
   resolution: "tslib@npm:1.14.1"
   checksum: dbe628ef87f66691d5d2959b3e41b9ca0045c3ee3c7c7b906cc1e328b39f199bb1ad9e671c39025bd56122ac57dfbf7385a94843b1cc07c60a4db74795829acd
-  languageName: node
-  linkType: hard
-
-"tslib@npm:^2.0.0, tslib@npm:^2.0.3, tslib@npm:^2.2.0, tslib@npm:^2.3.0, tslib@npm:^2.3.1":
-  version: 2.3.1
-  resolution: "tslib@npm:2.3.1"
-  checksum: de17a98d4614481f7fcb5cd53ffc1aaf8654313be0291e1bfaee4b4bb31a20494b7d218ff2e15017883e8ea9626599b3b0e0229c18383ba9dce89da2adf15cb9
   languageName: node
   linkType: hard
 
