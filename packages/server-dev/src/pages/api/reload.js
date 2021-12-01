@@ -14,21 +14,47 @@
   limitations under the License.
 */
 
+// TODO: Send keep-alive comment event: https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#examples
+
+import chokidar from 'chokidar';
+
 export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const handler = async (req, res) => {
-  console.log('Update');
   res.setHeader('Content-Type', 'text/event-stream;charset=utf-8');
   res.setHeader('Cache-Control', 'no-cache, no-transform');
   res.setHeader('X-Accel-Buffering', 'no');
   res.setHeader('Connection', 'keep-alive');
 
-  for (let i = 0; i < 10; i++) {
-    console.log('Sending event', i);
-    res.write(`data: Hello seq ${i}\n\n`);
-    await sleep(1500);
-  }
-  res.end('done\n');
+  const watcher = chokidar.watch(['./build/tick.json'], {
+    ignored: [
+      /(^|[/\\])\../, // ignore dotfiles
+    ],
+    persistent: true,
+    ignoreInitial: true,
+  });
+
+  const reload = () => {
+    try {
+      console.log('reload');
+      res.write(`event: tick\ndata: ${JSON.stringify({ hello: true })}\n\n`);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  watcher.on('add', () => reload());
+  watcher.on('change', () => reload());
+  watcher.on('unlink', () => reload());
+
+  // TODO: This isn't working.
+  req.on('close', () => {
+    console.log('req closed');
+    watcher.close().then(() => {
+      console.log('watcher closed');
+    });
+  });
+
+  await sleep(7000);
 };
 
 export default handler;

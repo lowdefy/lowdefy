@@ -3884,6 +3884,7 @@ __metadata:
     "@lowdefy/engine": 4.0.0-alpha.5
     "@lowdefy/helpers": 4.0.0-alpha.5
     "@lowdefy/layout": 4.0.0-alpha.5
+    "@lowdefy/node-utils": 4.0.0-alpha.5
     "@lowdefy/operators-change-case": 4.0.0-alpha.5
     "@lowdefy/operators-diff": 4.0.0-alpha.5
     "@lowdefy/operators-js": 4.0.0-alpha.5
@@ -3892,6 +3893,7 @@ __metadata:
     "@lowdefy/operators-uuid": 4.0.0-alpha.5
     "@lowdefy/operators-yaml": 4.0.0-alpha.5
     "@next/eslint-plugin-next": 12.0.4
+    chokidar: 3.5.2
     less: 4.1.2
     less-loader: 10.2.0
     next: 12.0.3
@@ -3901,6 +3903,7 @@ __metadata:
     react-dom: 18.0.0-alpha-327d5c484-20211106
     react-icons: 4.3.1
     swr: 1.0.1
+    yargs: 17.3.0
   languageName: unknown
   linkType: soft
 
@@ -16829,7 +16832,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"string-width@npm:^1.0.2 || 2 || 3 || 4, string-width@npm:^4.1.0, string-width@npm:^4.2.0":
+"string-width@npm:^1.0.2 || 2 || 3 || 4, string-width@npm:^4.1.0, string-width@npm:^4.2.0, string-width@npm:^4.2.3":
   version: 4.2.3
   resolution: "string-width@npm:4.2.3"
   dependencies:
@@ -18482,6 +18485,28 @@ resolve@^2.0.0-next.3:
   version: 20.2.9
   resolution: "yargs-parser@npm:20.2.9"
   checksum: 8bb69015f2b0ff9e17b2c8e6bfe224ab463dd00ca211eece72a4cd8a906224d2703fb8a326d36fdd0e68701e201b2a60ed7cf81ce0fd9b3799f9fe7745977ae3
+  languageName: node
+  linkType: hard
+
+"yargs-parser@npm:^21.0.0":
+  version: 21.0.0
+  resolution: "yargs-parser@npm:21.0.0"
+  checksum: 1e205fca1cb7a36a1585e2b94a64e641c12741b53627d338e12747f4dca3c3610cdd9bb235040621120548dd74c3ef03a8168d52a1eabfedccbe4a62462b6731
+  languageName: node
+  linkType: hard
+
+"yargs@npm:17.3.0":
+  version: 17.3.0
+  resolution: "yargs@npm:17.3.0"
+  dependencies:
+    cliui: ^7.0.2
+    escalade: ^3.1.1
+    get-caller-file: ^2.0.5
+    require-directory: ^2.1.1
+    string-width: ^4.2.3
+    y18n: ^5.0.5
+    yargs-parser: ^21.0.0
+  checksum: 2b687338684bf9645e9389ffdbe813fc5a2ddfede299d46fbe5ac80eb9a391e558b97861ba44d2256936ebe9d7f8135f6a38af1c76a5685eac4061008b2df57a
   languageName: node
   linkType: hard
 

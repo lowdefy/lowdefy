@@ -27,6 +27,7 @@
   },
   "files": [
     "src/*",
+    "public/*",
     "next.config.js",
     ".eslintrc.yaml"
   ],
