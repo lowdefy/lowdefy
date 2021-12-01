@@ -7,7 +7,7 @@ module.exports = withLess({
       modifyVars: appConfig.style.lessVariables,
     },
   },
-  reactStrictMode: true,
+  // reactStrictMode: true,
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {

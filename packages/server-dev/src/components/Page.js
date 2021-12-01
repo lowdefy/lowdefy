@@ -21,6 +21,7 @@ import { useRouter } from 'next/router';
 import Context from './Context.js';
 import Head from './Head.js';
 import Block from './block/Block.js';
+import Reload from './Reload.js';
 import PageConfig from './PageConfig.js';
 import setupLink from '../utils/setupLink.js';
 
@@ -37,32 +38,34 @@ const Page = ({ lowdefy }) => {
 
   if (!lowdefy._internal.query.pageId) return <LoadingBlock />;
   return (
-    <PageConfig lowdefy={lowdefy}>
-      {(pageConfig) => {
-        return (
-          <Context config={pageConfig} lowdefy={lowdefy}>
-            {(context, loading) => {
-              if (loading) {
-                return <LoadingBlock />;
-              }
-              return (
-                <>
-                  <Head
-                    properties={context._internal.RootBlocks.map[pageConfig.id].eval.properties}
-                  />
-                  <Block
-                    block={context._internal.RootBlocks.map[pageConfig.id]}
-                    Blocks={context._internal.RootBlocks}
-                    context={context}
-                    lowdefy={lowdefy}
-                  />
-                </>
-              );
-            }}
-          </Context>
-        );
-      }}
-    </PageConfig>
+    <Reload>
+      <PageConfig lowdefy={lowdefy}>
+        {(pageConfig) => {
+          return (
+            <Context config={pageConfig} lowdefy={lowdefy}>
+              {(context, loading) => {
+                if (loading) {
+                  return <LoadingBlock />;
+                }
+                return (
+                  <>
+                    <Head
+                      properties={context._internal.RootBlocks.map[pageConfig.id].eval.properties}
+                    />
+                    <Block
+                      block={context._internal.RootBlocks.map[pageConfig.id]}
+                      Blocks={context._internal.RootBlocks}
+                      context={context}
+                      lowdefy={lowdefy}
+                    />
+                  </>
+                );
+              }}
+            </Context>
+          );
+        }}
+      </PageConfig>
+    </Reload>
   );
 };
 
