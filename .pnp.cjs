@@ -5194,6 +5194,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],
             ["@lowdefy/node-utils", "workspace:packages/utils/node-utils"],
             ["@lowdefy/nunjucks", "workspace:packages/utils/nunjucks"],
+            ["@lowdefy/operators", "workspace:packages/operators"],
             ["@lowdefy/operators-change-case", "workspace:packages/plugins/operators/operators-change-case"],
             ["@lowdefy/operators-diff", "workspace:packages/plugins/operators/operators-diff"],
             ["@lowdefy/operators-js", "workspace:packages/plugins/operators/operators-js"],

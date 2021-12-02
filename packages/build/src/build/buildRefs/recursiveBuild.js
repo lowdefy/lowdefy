@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-
+import evaluateBuildOperators from './evaluateBuildOperators.js';
 import getRefContent from './getRefContent.js';
 import getRefsFromFile from './getRefsFromFile.js';
 import populateRefs from './populateRefs.js';
@@ -50,9 +50,15 @@ async function recursiveParseFile({ context, refDef, count, referencedFrom }) {
       referencedFrom: refDef.path,
     });
 
+    const evaluatedOperators = await evaluateBuildOperators({
+      context,
+      input: parsedFile,
+      refDef: parsedRefDef,
+    });
+
     const transformedFile = await runTransformer({
       context,
-      parsedFile,
+      input: evaluatedOperators,
       refDef: parsedRefDef,
     });
 

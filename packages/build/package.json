@@ -18,6 +18,10 @@
     {
       "name": "Gerrie van Wyk",
       "url": "https://github.com/Gervwyk"
+    },
+    {
+      "name": "Johann Möller",
+      "url": "https://github.com/JohannMoller"
     }
   ],
   "repository": {
@@ -45,6 +49,7 @@
     "@lowdefy/helpers": "4.0.0-alpha.5",
     "@lowdefy/node-utils": "4.0.0-alpha.5",
     "@lowdefy/nunjucks": "4.0.0-alpha.5",
+    "@lowdefy/operators": "4.0.0-alpha.5",
     "ajv": "8.8.2",
     "js-yaml": "4.1.0",
     "json5": "2.2.0",
@@ -60,7 +65,6 @@
     "@lowdefy/connection-axios-http": "4.0.0-alpha.5",
     "@lowdefy/operators-change-case": "4.0.0-alpha.5",
     "@lowdefy/operators-diff": "4.0.0-alpha.5",
-    "@lowdefy/operators-js": "4.0.0-alpha.5",
     "@lowdefy/operators-mql": "4.0.0-alpha.5",
     "@lowdefy/operators-nunjucks": "4.0.0-alpha.5",
     "@lowdefy/operators-uuid": "4.0.0-alpha.5",
