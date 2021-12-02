@@ -14,28 +14,15 @@
   limitations under the License.
 */
 
-import { serializer, type } from '@lowdefy/helpers';
-
-function removeUnderscore(_, value) {
-  if (type.isObject(value) && Object.keys(value).length === 1) {
-    const key = Object.keys(value)[0];
-    if (key.startsWith('__')) {
-      const newKey = key.substring(1);
-      return { [newKey]: value[key] };
-    }
-  }
-  return value;
-}
-
-function _function({ arrayIndices, event, location, params, parser }) {
-  const preparedParams = serializer.copy(params, { reviver: removeUnderscore });
+function _function({ arrayIndices, event, location, operatorPrefix, params, parser }) {
   return (...args) => {
     const { output, errors } = parser.parse({
       arrayIndices,
       args,
       event,
-      input: preparedParams,
+      input: params,
       location,
+      operatorPrefix: `_${operatorPrefix}`,
     });
     if (errors.length > 0) {
       throw new Error(errors[0]);
