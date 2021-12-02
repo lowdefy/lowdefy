@@ -19,6 +19,10 @@
     {
       "name": "Gerrie van Wyk",
       "url": "https://github.com/Gervwyk"
+    },
+    {
+      "name": "Johann Möller",
+      "url": "https://github.com/JohannMoller"
     }
   ],
   "repository": {
@@ -27,6 +31,7 @@
   },
   "type": "module",
   "exports": {
+    "./operators/build": "./dist/operatorsBuild.js",
     "./operators/client": "./dist/operatorsClient.js",
     "./operators/server": "./dist/operatorsServer.js",
     "./types": "./dist/types.js"
