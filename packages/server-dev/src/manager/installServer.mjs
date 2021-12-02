@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -15,16 +14,22 @@
   limitations under the License.
 */
 
-import getContext from './getContext.mjs';
-import resetServer from './resetServer.mjs';
-import setupFileWatchers from './setupFileWatchers.mjs';
-import startServer from './startServer.mjs';
+import { spawnProcess } from '@lowdefy/node-utils';
 
-async function run() {
-  const context = await getContext();
-  await resetServer(context);
-  await setupFileWatchers(context);
-  await startServer(context);
+const args = {
+  npm: ['install', '--legacy-peer-deps'],
+  yarn: ['install'],
+};
+
+async function installServer({ packageManager, skipInstall }) {
+  if (skipInstall) return;
+  console.log('Installing server');
+  await spawnProcess({
+    logger: console,
+    command: packageManager, // npm or yarn
+    args: args[packageManager],
+    silent: false,
+  });
 }
 
-run();
+export default installServer;

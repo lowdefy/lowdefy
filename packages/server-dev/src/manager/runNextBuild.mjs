@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -15,16 +14,15 @@
   limitations under the License.
 */
 
-import getContext from './getContext.mjs';
-import resetServer from './resetServer.mjs';
-import setupFileWatchers from './setupFileWatchers.mjs';
-import startServer from './startServer.mjs';
+import { spawnProcess } from '@lowdefy/node-utils';
 
-async function run() {
-  const context = await getContext();
-  await resetServer(context);
-  await setupFileWatchers(context);
-  await startServer(context);
+async function runNextBuild({ packageManager }) {
+  await spawnProcess({
+    logger: console,
+    args: ['run', 'build:next'],
+    command: packageManager || 'npm',
+    silent: false,
+  });
 }
 
-run();
+export default runNextBuild;

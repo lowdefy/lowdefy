@@ -15,15 +15,16 @@
 */
 
 class BatchChanges {
-  constructor({ fn, context, minDelay }) {
+  constructor({ fn, minDelay }) {
+    this.args = [];
     this.fn = fn;
-    this.context = context;
     this.delay = minDelay || 500;
     this.minDelay = minDelay || 500;
     this._call = this._call.bind(this);
   }
 
-  newChange() {
+  newChange(args) {
+    this.args.push(args);
     this.delay = this.minDelay;
     this._startTimer();
   }
@@ -37,11 +38,13 @@ class BatchChanges {
 
   async _call() {
     try {
-      await this.fn();
+      const args = this.args;
+      this.args = [];
+      await this.fn(args);
     } catch (error) {
-      this.context.print.error(error.message, { timestamp: true });
+      console.error(error);
       this.delay *= 2;
-      this.context.print.warn(`Retrying in ${this.delay / 1000}s.`, { timestamp: true });
+      console.warn(`Retrying in ${this.delay / 1000}s.`, { timestamp: true });
       this._startTimer();
     }
   }

@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -15,16 +14,10 @@
   limitations under the License.
 */
 
-import getContext from './getContext.mjs';
-import resetServer from './resetServer.mjs';
-import setupFileWatchers from './setupFileWatchers.mjs';
-import startServer from './startServer.mjs';
+import setupConfigWatcher from './watchers/setupConfigWatcher.mjs';
 
-async function run() {
-  const context = await getContext();
-  await resetServer(context);
-  await setupFileWatchers(context);
-  await startServer(context);
+async function setupWatchers(context) {
+  await Promise.all([setupConfigWatcher(context)]);
 }
 
-run();
+export default setupWatchers;

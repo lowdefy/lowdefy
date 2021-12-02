@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -15,16 +14,22 @@
   limitations under the License.
 */
 
-import getContext from './getContext.mjs';
-import resetServer from './resetServer.mjs';
-import setupFileWatchers from './setupFileWatchers.mjs';
-import startServer from './startServer.mjs';
+import path from 'path';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 
-async function run() {
-  const context = await getContext();
-  await resetServer(context);
-  await setupFileWatchers(context);
-  await startServer(context);
+const argv = yargs(hideBin(process.argv)).argv;
+
+async function getContext() {
+  const { configDirectory = process.cwd(), packageManager = 'npm', skipInstall } = argv;
+  const context = {
+    directories: {
+      config: path.resolve(configDirectory),
+    },
+    packageManager,
+    skipInstall,
+  };
+  return context;
 }
 
-run();
+export default getContext;
