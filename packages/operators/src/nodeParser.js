@@ -17,7 +17,8 @@
 import { serializer, type } from '@lowdefy/helpers';
 
 class NodeParser {
-  constructor({ payload, secrets, user, operators }) {
+  constructor({ env, payload, secrets, user, operators }) {
+    this.env = env;
     this.operators = operators;
     this.payload = payload;
     this.secrets = secrets;
@@ -35,7 +36,8 @@ class NodeParser {
     );
   }
 
-  parse({ args, input, location }) {
+  parse({ args, input, location, operatorPrefix = '_' }) {
+    const env = this.env;
     const operators = this.operators;
     const secrets = this.secrets;
     const payload = this.payload;
@@ -52,33 +54,35 @@ class NodeParser {
     }
     const errors = [];
     const reviver = (_, value) => {
-      if (type.isObject(value) && Object.keys(value).length === 1) {
-        const key = Object.keys(value)[0];
-        const [op, methodName] = key.split('.');
-        try {
-          if (!type.isUndefined(operators[op])) {
-            const res = operators[op]({
-              args,
-              arrayIndices: [],
-              env: 'node',
-              location,
-              methodName,
-              operators: operators,
-              params: value[key],
-              secrets,
-              payload,
-              user,
-              parser: this,
-            });
-            return res;
-          }
-        } catch (e) {
-          errors.push(e);
-          console.error(e);
-          return null;
-        }
+      if (!type.isObject(value) || Object.keys(value).length !== 1) return value;
+
+      const key = Object.keys(value)[0];
+      if (!key.startsWith(operatorPrefix)) return value;
+
+      const [op, methodName] = `_${key.substring(operatorPrefix.length)}`.split('.');
+      if (type.isUndefined(operators[op])) return value;
+      console.log(op);
+      try {
+        const res = operators[op]({
+          args,
+          arrayIndices: [],
+          env,
+          location,
+          methodName,
+          operators: operators,
+          params: value[key],
+          operatorPrefix,
+          parser: this,
+          payload,
+          secrets,
+          user,
+        });
+        return res;
+      } catch (e) {
+        errors.push(e);
+        console.error(e);
+        return null;
       }
-      return value;
     };
     return {
       output: serializer.copy(input, { reviver }),

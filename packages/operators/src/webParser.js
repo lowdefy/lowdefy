@@ -37,7 +37,7 @@ class WebParser {
     );
   }
 
-  parse({ actions, args, arrayIndices, event, input, location }) {
+  parse({ actions, args, arrayIndices, event, input, location, operatorPrefix = '_' }) {
     const operators = this.operators;
     const context = this.context;
 
@@ -56,41 +56,42 @@ class WebParser {
     const errors = [];
     const { inputs, lowdefyGlobal, menus, urlQuery, user } = context._internal.lowdefy;
     const reviver = (_, value) => {
-      if (type.isObject(value) && Object.keys(value).length === 1) {
-        const key = Object.keys(value)[0];
-        const [op, methodName] = key.split('.');
-        try {
-          if (!type.isUndefined(operators[op])) {
-            const res = operators[op]({
-              eventLog: context.eventLog,
-              actions,
-              args,
-              arrayIndices,
-              context: context,
-              env: 'web',
-              event,
-              input: inputs ? inputs[context.id] : {},
-              location: applyArrayIndices(arrayIndices, location),
-              lowdefyGlobal: lowdefyGlobal || {},
-              menus: menus || {},
-              methodName,
-              operators: operators,
-              params: value[key],
-              requests: context.requests,
-              state: context.state,
-              urlQuery: urlQuery || {},
-              user: user || {},
-              parser: this,
-            });
-            return res;
-          }
-        } catch (e) {
-          errors.push(e);
-          console.error(e);
-          return null;
-        }
+      if (!type.isObject(value) || Object.keys(value).length !== 1) return value;
+
+      let key = Object.keys(value)[0];
+      if (!key.startsWith(operatorPrefix)) return value;
+
+      key = `_${key.substring(operatorPrefix.length)}`;
+      const [op, methodName] = key.split('.');
+      if (type.isUndefined(operators[op])) return value;
+
+      try {
+        const res = operators[op]({
+          eventLog: context.eventLog,
+          actions,
+          args,
+          arrayIndices,
+          context: context,
+          event,
+          input: inputs ? inputs[context.id] : {},
+          location: applyArrayIndices(arrayIndices, location),
+          lowdefyGlobal: lowdefyGlobal || {},
+          menus: menus || {},
+          methodName,
+          operators: operators,
+          params: value[key],
+          requests: context.requests,
+          state: context.state,
+          urlQuery: urlQuery || {},
+          user: user || {},
+          parser: this,
+        });
+        return res;
+      } catch (e) {
+        errors.push(e);
+        console.error(e);
+        return null;
       }
-      return value;
     };
     return {
       output: serializer.copy(input, { reviver }),
