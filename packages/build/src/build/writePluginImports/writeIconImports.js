@@ -17,17 +17,14 @@
 import { nunjucksFunction } from '@lowdefy/nunjucks';
 
 const template = `{%- for package in packages -%}
-{%- for icon in package.icons -%}
-import { {{ icon }} } from '{{ package.package }}';
-{% endfor -%}
-{% endfor -%}
+{% if package.icons.length %}import { {% endif %}{%- for icon in package.icons -%}{% if not loop.last -%} {{ icon }}, {% else -%} {{ icon }} } from '{{ package.package }}';
+{% endif -%}{% endfor %}{% endfor -%}
 export default {
-  {% for package in packages -%}
-  {%- for icon in package.icons -%}
-  {{ icon }},
-  {% endfor -%}{%- endfor -%}
-};
-`;
+  {%- for package in packages -%}
+  {%- for icon in package.icons %}
+  {{ icon }},{% endfor %}
+{%- endfor %}
+};`;
 
 async function writeIconImports({ components, context }) {
   const templateFn = nunjucksFunction(template);
