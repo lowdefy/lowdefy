@@ -88,5 +88,4 @@ export default {
   _switch,
   _type,
   _uri,
-  _user,
 };
