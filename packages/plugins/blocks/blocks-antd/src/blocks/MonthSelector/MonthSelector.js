@@ -97,7 +97,8 @@ MonthSelector.meta = {
   loading: {
     type: 'SkeletonInput',
   },
+  icons: [...Label.meta.icons],
+  styles: ['blocks/MonthSelector/style.less'],
 };
-MonthSelector.styles = ['blocks/MonthSelector/style.less'];
 
 export default MonthSelector;

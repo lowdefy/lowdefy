@@ -115,7 +115,8 @@ PageSHCF.meta = {
       height: '100vh',
     },
   },
+  icons: [],
+  styles: ['blocks/PageSHCF/style.less'],
 };
-PageSHCF.styles = ['blocks/PageSHCF/style.less'];
 
 export default PageSHCF;

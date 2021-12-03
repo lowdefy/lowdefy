@@ -85,7 +85,8 @@ DescriptionsBlock.meta = {
       height: 80,
     },
   },
+  icons: [],
+  styles: ['blocks/Descriptions/style.less'],
 };
-DescriptionsBlock.styles = ['blocks/Descriptions/style.less'];
 
 export default DescriptionsBlock;

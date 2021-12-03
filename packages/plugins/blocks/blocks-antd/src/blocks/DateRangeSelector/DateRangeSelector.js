@@ -108,7 +108,8 @@ DateRangeSelector.meta = {
   loading: {
     type: 'SkeletonInput',
   },
+  icons: [...Label.meta.icons],
+  styles: ['blocks/DateRangeSelector/style.less'],
 };
-DateRangeSelector.styles = ['blocks/DateRangeSelector/style.less'];
 
 export default DateRangeSelector;

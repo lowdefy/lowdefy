@@ -58,7 +58,8 @@ Selector.meta = {
       height: 44,
     },
   },
+  icons: [...Label.meta.icons],
+  styles: ['blocks/SliderColorSelector/style.less'],
 };
-Selector.styles = ['blocks/SliderColorSelector/style.less'];
 
 export default Selector;

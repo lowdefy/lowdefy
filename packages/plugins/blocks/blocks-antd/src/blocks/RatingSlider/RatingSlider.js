@@ -239,7 +239,8 @@ RatingSlider.meta = {
   loading: {
     type: 'SkeletonInput',
   },
+  icons: [...Label.meta.icons],
+  styles: ['blocks/RatingSlider/style.less'],
 };
-RatingSlider.styles = ['blocks/RatingSlider/style.less'];
 
 export default RatingSlider;

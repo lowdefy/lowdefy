@@ -18,6 +18,10 @@
     {
       "name": "Gerrie van Wyk",
       "url": "https://github.com/Gervwyk"
+    },
+    {
+      "name": "Sandile Memela",
+      "url": "https://github.com/sah-memela"
     }
   ],
   "repository": {
@@ -42,6 +46,7 @@
   },
   "dependencies": {
     "@lowdefy/ajv": "4.0.0-alpha.5",
+    "@lowdefy/blocks-antd": "4.0.0-alpha.5",
     "@lowdefy/helpers": "4.0.0-alpha.5",
     "@lowdefy/node-utils": "4.0.0-alpha.5",
     "@lowdefy/nunjucks": "4.0.0-alpha.5",

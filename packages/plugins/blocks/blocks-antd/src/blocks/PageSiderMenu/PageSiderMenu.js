@@ -302,8 +302,8 @@ const PageSiderMenu = ({
                                           block: true,
                                           icon: {
                                             name: openSiderState
-                                              ? 'MenuFoldOutlined'
-                                              : 'MenuUnfoldOutlined',
+                                              ? 'AiOutlineMenuFold'
+                                              : 'AiOutlineMenuUnfold',
                                           },
                                           ...(properties.toggleSiderButton || {}),
                                         }}
@@ -388,7 +388,8 @@ PageSiderMenu.meta = {
       height: '100vh',
     },
   },
+  icons: ['AiOutlineMenuFold', 'AiOutlineMenuUnfold', ...MobileMenu.meta.icons],
+  styles: ['blocks/PageSiderMenu/style.less'],
 };
-PageSiderMenu.styles = ['blocks/PageSiderMenu/style.less'];
 
 export default PageSiderMenu;

@@ -78,7 +78,8 @@ CheckboxSwitch.meta = {
   loading: {
     type: 'SkeletonInput',
   },
+  icons: [...Label.meta.icons],
+  styles: ['blocks/CheckboxSwitch/style.less'],
 };
-CheckboxSwitch.styles = ['blocks/CheckboxSwitch/style.less'];
 
 export default CheckboxSwitch;

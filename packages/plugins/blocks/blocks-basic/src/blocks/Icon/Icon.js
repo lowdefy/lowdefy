@@ -23,7 +23,8 @@ IconBlock.defaultProps = blockDefaultProps;
 IconBlock.meta = {
   category: 'display',
   loading: false,
+  icons: [],
+  styles: [],
 };
-IconBlock.styles = [];
 
 export default IconBlock;

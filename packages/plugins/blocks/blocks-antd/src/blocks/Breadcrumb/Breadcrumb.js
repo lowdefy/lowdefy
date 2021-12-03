@@ -100,7 +100,8 @@ BreadcrumbBlock.meta = {
       lines: 1,
     },
   },
+  icons: [],
+  styles: ['blocks/Breadcrumb/style.less'],
 };
-BreadcrumbBlock.styles = ['blocks/Breadcrumb/style.less'];
 
 export default BreadcrumbBlock;

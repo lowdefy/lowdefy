@@ -82,7 +82,8 @@ PasswordInput.meta = {
   loading: {
     type: 'SkeletonInput',
   },
+  icons: [...Label.meta.icons],
+  styles: ['blocks/PasswordInput/style.less'],
 };
-PasswordInput.styles = ['blocks/PasswordInput/style.less'];
 
 export default PasswordInput;

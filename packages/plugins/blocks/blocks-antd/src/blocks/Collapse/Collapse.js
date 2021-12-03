@@ -80,7 +80,8 @@ CollapseBlock.meta = {
       height: 80,
     },
   },
+  icons: [],
+  styles: ['blocks/Collapse/style.less'],
 };
-CollapseBlock.styles = ['blocks/Collapse/style.less'];
 
 export default CollapseBlock;

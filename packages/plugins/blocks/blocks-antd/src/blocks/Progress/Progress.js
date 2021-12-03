@@ -46,7 +46,8 @@ ProgressBlock.meta = {
       height: 40,
     },
   },
+  icons: [],
+  styles: ['blocks/Progress/style.less'],
 };
-ProgressBlock.styles = ['blocks/Progress/style.less'];
 
 export default ProgressBlock;

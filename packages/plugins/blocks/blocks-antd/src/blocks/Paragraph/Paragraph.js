@@ -111,7 +111,8 @@ ParagraphBlock.meta = {
   loading: {
     type: 'SkeletonParagraph',
   },
+  icons: [],
+  styles: ['blocks/Paragraph/style.less'],
 };
-ParagraphBlock.styles = ['blocks/Paragraph/style.less'];
 
 export default ParagraphBlock;

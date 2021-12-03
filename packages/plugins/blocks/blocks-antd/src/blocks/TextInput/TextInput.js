@@ -103,7 +103,8 @@ TextInput.meta = {
   loading: {
     type: 'SkeletonInput',
   },
+  icons: [...Label.meta.icons],
+  styles: ['blocks/TextInput/style.less'],
 };
-TextInput.styles = ['blocks/TextInput/style.less'];
 
 export default TextInput;

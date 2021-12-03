@@ -61,7 +61,8 @@ Selector.meta = {
       height: 216,
     },
   },
+  icons: [...Label.meta.icons],
+  styles: ['blocks/ColorSelector/style.less'],
 };
-Selector.styles = ['blocks/ColorSelector/style.less'];
 
 export default Selector;

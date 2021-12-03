@@ -117,7 +117,8 @@ AutoCompleteInput.meta = {
   loading: {
     type: 'SkeletonInput',
   },
+  icons: [...Label.meta.icons],
+  styles: ['blocks/AutoComplete/style.less'],
 };
-AutoCompleteInput.styles = ['blocks/AutoComplete/style.less'];
 
 export default AutoCompleteInput;

@@ -119,7 +119,8 @@ TitleBlock.meta = {
       lines: 1,
     },
   },
+  icons: [],
+  styles: ['blocks/Title/style.less'],
 };
-TitleBlock.styles = ['blocks/Title/style.less'];
 
 export default TitleBlock;
