@@ -61,7 +61,6 @@ class NodeParser {
 
       const [op, methodName] = `_${key.substring(operatorPrefix.length)}`.split('.');
       if (type.isUndefined(operators[op])) return value;
-      console.log(op);
       try {
         const res = operators[op]({
           args,

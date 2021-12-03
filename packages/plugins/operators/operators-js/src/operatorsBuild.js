@@ -46,7 +46,6 @@ import _sum from './operators/shared/sum.js';
 import _switch from './operators/shared/switch.js';
 import _type from './operators/shared/type.js';
 import _uri from './operators/shared/uri.js';
-import _user from './operators/shared/user.js';
 
 import _base64 from './operators/server/base64.js';
 import _hash from './operators/server/hash.js';
