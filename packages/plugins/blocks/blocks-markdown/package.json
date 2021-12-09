@@ -48,11 +48,13 @@
   "dependencies": {
     "@lowdefy/block-utils": "4.0.0-alpha.5",
     "dompurify": "2.3.3",
+    "process": "0.11.10",
     "react": "18.0.0-alpha-327d5c484-20211106",
     "react-dom": "18.0.0-alpha-327d5c484-20211106",
-    "react-markdown": "5.0.3",
-    "react-syntax-highlighter": "15.4.4",
-    "remark-gfm": "1.0.0"
+    "react-markdown": "7.1.1",
+    "react-syntax-highlighter": "15.4.5",
+    "rehype-raw": "6.1.0",
+    "remark-gfm": "3.0.1"
   },
   "devDependencies": {
     "@babel/preset-react": "7.16.0",

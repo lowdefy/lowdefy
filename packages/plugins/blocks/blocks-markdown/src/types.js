@@ -15,13 +15,13 @@
   limitations under the License.
 */
 
-import * as blocks from './blocks.js';
+// import * as blocks from './blocks.js';
 
-const styles = {};
-Object.keys(blocks).forEach((block) => {
-  styles[block] = blocks[block].styles || [];
-});
+// const styles = {};
+// Object.keys(blocks).forEach((block) => {
+//   styles[block] = blocks[block].styles || [];
+// });
 export default {
-  blocks: Object.keys(blocks),
-  styles: { default: ['style.less'], ...styles },
+  blocks: ['Markdown', 'MarkdownWithCode', 'DangerousMarkdown'],
+  styles: { default: ['style.less'], Markdown: [], MarkdownWithCode: [], DangerousMarkdown: [] },
 };

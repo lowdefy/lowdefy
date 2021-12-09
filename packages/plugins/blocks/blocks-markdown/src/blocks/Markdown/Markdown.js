@@ -22,9 +22,12 @@ import gfm from 'remark-gfm';
 
 const Markdown = ({ blockId, properties, methods }) => (
   <div id={blockId} className={methods.makeCssClass(properties.style)}>
-    <ReactMarkdown className="markdown-body" plugins={[gfm]} skipHtml={properties.skipHtml}>
-      {properties.content}
-    </ReactMarkdown>
+    <ReactMarkdown
+      className="markdown-body"
+      skipHtml={properties.skipHtml}
+      children={properties.content}
+      remarkPlugins={[gfm]}
+    />
   </div>
 );
 
