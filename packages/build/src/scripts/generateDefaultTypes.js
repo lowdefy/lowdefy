@@ -25,7 +25,7 @@ const defaultPackages = [
   // '@lowdefy/blocks-color-selectors',
   '@lowdefy/blocks-echarts',
   '@lowdefy/blocks-loaders',
-  // '@lowdefy/blocks-markdown',
+  '@lowdefy/blocks-markdown',
   '@lowdefy/connection-axios-http',
   '@lowdefy/operators-change-case',
   // '@lowdefy/operators-diff',
