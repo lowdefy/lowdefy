@@ -44,7 +44,8 @@ ResultBlock.meta = {
       height: '100vh',
     },
   },
+  icons: [],
+  styles: ['blocks/Result/style.less'],
 };
-ResultBlock.styles = ['blocks/Result/style.less'];
 
 export default ResultBlock;

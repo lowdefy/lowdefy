@@ -71,7 +71,7 @@ const ControlledListBlock = ({
                 components={{ Icon, Link }}
                 events={events}
                 properties={{
-                  icon: 'PlusOutlined',
+                  icon: 'AiOutlinePlus',
                   size: properties.size,
                   title: get(properties, 'addItemButton.title ') || 'Add Item',
                   type: 'default',
@@ -93,7 +93,7 @@ const ControlledListBlock = ({
               components={{ Icon, Link }}
               events={events}
               properties={{
-                icon: 'PlusOutlined',
+                icon: 'AiOutlinePlus',
                 size: properties.size,
                 title: get(properties, 'addItemButton.title ') || 'Add Item',
                 type: 'dashed',
@@ -118,7 +118,7 @@ const ControlledListBlock = ({
                 blockId={`${blockId}_${i}_remove_icon`}
                 events={events}
                 properties={{
-                  name: 'MinusCircleOutlined',
+                  name: 'AiOutlineMinusCircle',
                   ...properties.removeItemIcon,
                   style: {
                     paddingLeft:
@@ -152,7 +152,8 @@ ControlledListBlock.meta = {
       height: 80,
     },
   },
+  icons: ['AiOutlinePlus', 'AiOutlineMinusCircle'],
+  styles: ['blocks/ControlledList/style.less'],
 };
-ControlledListBlock.styles = ['blocks/ControlledList/style.less'];
 
 export default ControlledListBlock;

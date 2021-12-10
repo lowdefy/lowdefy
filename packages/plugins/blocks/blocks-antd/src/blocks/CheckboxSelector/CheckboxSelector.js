@@ -111,7 +111,8 @@ CheckboxSelector.meta = {
   loading: {
     type: 'SkeletonInput',
   },
+  icons: [...Label.meta.icons],
+  styles: ['blocks/CheckboxSelector/style.less'],
 };
-CheckboxSelector.styles = ['blocks/CheckboxSelector/style.less'];
 
 export default CheckboxSelector;

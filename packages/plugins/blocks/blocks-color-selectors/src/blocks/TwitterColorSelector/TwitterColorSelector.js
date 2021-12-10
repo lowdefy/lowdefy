@@ -57,7 +57,8 @@ Selector.meta = {
       height: 96,
     },
   },
+  icons: [...Label.meta.icons],
+  styles: ['blocks/TwitterColorSelector/style.less'],
 };
-Selector.styles = ['blocks/TwitterColorSelector/style.less'];
 
 export default Selector;

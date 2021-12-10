@@ -145,7 +145,8 @@ Selector.meta = {
   loading: {
     type: 'SkeletonInput',
   },
+  icons: [...Label.meta.icons],
+  styles: ['blocks/Selector/style.less'],
 };
-Selector.styles = ['blocks/Selector/style.less'];
 
 export default Selector;

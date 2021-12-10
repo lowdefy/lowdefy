@@ -50,7 +50,8 @@ AvatarBlock.meta = {
   loading: {
     type: 'SkeletonAvatar',
   },
+  icons: [],
+  styles: ['blocks/Avatar/style.less'],
 };
-AvatarBlock.styles = ['blocks/Avatar/style.less'];
 
 export default AvatarBlock;

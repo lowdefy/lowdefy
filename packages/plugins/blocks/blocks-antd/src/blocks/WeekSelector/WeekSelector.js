@@ -94,7 +94,8 @@ WeekSelector.meta = {
   loading: {
     type: 'SkeletonInput',
   },
+  icons: [...Label.meta.icons],
+  styles: ['blocks/WeekSelector/style.less'],
 };
-WeekSelector.styles = ['blocks/WeekSelector/style.less'];
 
 export default WeekSelector;

@@ -58,6 +58,7 @@ async function generateDefaultTypes() {
       client: {},
       server: {},
     },
+    icons: {},
     styles: {},
   };
 
@@ -110,6 +111,10 @@ async function generateDefaultTypes() {
 
       if (type.isObject(types.styles)) {
         defaultTypes.styles[packageName] = types.styles;
+      }
+
+      if (type.isObject(types.icons)) {
+        defaultTypes.icons[packageName] = types.icons;
       }
     })
   );

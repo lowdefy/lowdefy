@@ -62,7 +62,8 @@ Selector.meta = {
       height: 62,
     },
   },
+  icons: [...Label.meta.icons],
+  styles: ['blocks/GithubColorSelector/style.less'],
 };
-Selector.styles = ['blocks/GithubColorSelector/style.less'];
 
 export default Selector;

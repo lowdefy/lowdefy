@@ -135,7 +135,7 @@ const S3UploadButtonBlock = ({ blockId, components, events, methods, properties,
         events={events}
         properties={{
           disabled,
-          icon: 'UploadOutlined',
+          icon: 'AiOutlineUpload',
           title: 'Upload',
           type: 'default',
           ...properties.button,
@@ -153,7 +153,8 @@ S3UploadButtonBlock.meta = {
   loading: {
     type: 'SkeletonButton',
   },
+  icons: ['AiOutlineUpload'],
+  styles: ['blocks/S3UploadButton/style.less'],
 };
-S3UploadButtonBlock.styles = ['blocks/S3UploadButton/style.less'];
 
 export default S3UploadButtonBlock;

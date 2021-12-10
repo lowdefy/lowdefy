@@ -37,7 +37,8 @@ Markdown.meta = {
       lines: 7,
     },
   },
+  icons: [],
+  styles: [],
 };
-Markdown.styles = [];
 
 export default Markdown;

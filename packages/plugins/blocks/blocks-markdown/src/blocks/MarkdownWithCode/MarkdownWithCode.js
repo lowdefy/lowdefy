@@ -77,7 +77,8 @@ MarkdownWithCode.meta = {
       lines: 7,
     },
   },
+  icons: [],
+  styles: [],
 };
-MarkdownWithCode.styles = [];
 
 export default MarkdownWithCode;

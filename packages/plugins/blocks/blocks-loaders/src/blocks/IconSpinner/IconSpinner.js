@@ -67,7 +67,8 @@ IconSpinner.defaultProps = blockDefaultProps;
 IconSpinner.meta = {
   category: 'display',
   loading: false,
+  icons: [],
+  styles: ['blocks/IconSpinner/style.less'],
 };
-IconSpinner.styles = ['blocks/IconSpinner/style.less'];
 
 export default IconSpinner;
