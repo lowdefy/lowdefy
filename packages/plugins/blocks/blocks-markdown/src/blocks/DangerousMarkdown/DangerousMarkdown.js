@@ -37,7 +37,6 @@ class DangerousMarkdown extends React.Component {
           className="markdown-body"
           remarkPlugins={[gfm]}
           rehypePlugins={[rehypeRaw]}
-          allowDangerousHtml={true}
           skipHtml={false}
         >
           {DOMPurify.sanitize(this.props.properties.content, this.DOMPurifyOptions)}

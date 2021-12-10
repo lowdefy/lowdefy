@@ -3474,7 +3474,6 @@ __metadata:
     jest: 27.3.1
     jest-serializer-html: 7.1.0
     jest-transform-yaml: 0.1.2
-    process: 0.11.10
     react: 18.0.0-alpha-327d5c484-20211106
     react-dom: 18.0.0-alpha-327d5c484-20211106
     react-markdown: 7.1.1
@@ -3875,9 +3874,6 @@ __metadata:
   dependencies:
     "@lowdefy/api": 4.0.0-alpha.5
     "@lowdefy/block-utils": 4.0.0-alpha.5
-    "@lowdefy/blocks-antd": 4.0.0-alpha.5
-    "@lowdefy/blocks-basic": 4.0.0-alpha.5
-    "@lowdefy/blocks-markdown": 4.0.0-alpha.5
     "@lowdefy/build": 4.0.0-alpha.5
     "@lowdefy/engine": 4.0.0-alpha.5
     "@lowdefy/helpers": 4.0.0-alpha.5
