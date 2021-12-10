@@ -61,7 +61,8 @@ Selector.meta = {
       height: 175,
     },
   },
+  icons: [...Label.meta.icons],
+  styles: ['blocks/SwatchesColorSelector/style.less'],
 };
-Selector.styles = ['blocks/SwatchesColorSelector/style.less'];
 
 export default Selector;

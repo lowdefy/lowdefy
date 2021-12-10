@@ -88,7 +88,8 @@ Selector.meta = {
       height: 42,
     },
   },
+  icons: [...Label.meta.icons],
+  styles: ['blocks/CircleColorSelector/style.less'],
 };
-Selector.styles = ['blocks/CircleColorSelector/style.less'];
 
 export default Selector;

@@ -45,7 +45,8 @@ MessageBlock.defaultProps = blockDefaultProps;
 MessageBlock.meta = {
   category: 'display',
   loading: false,
+  icons: [],
+  styles: ['blocks/Message/style.less'],
 };
-MessageBlock.styles = ['blocks/Message/style.less'];
 
 export default MessageBlock;

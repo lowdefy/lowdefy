@@ -40,7 +40,8 @@ DividerBlock.meta = {
       height: 5,
     },
   },
+  icons: [],
+  styles: ['blocks/Divider/style.less'],
 };
-DividerBlock.styles = ['blocks/Divider/style.less'];
 
 export default DividerBlock;

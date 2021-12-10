@@ -110,7 +110,8 @@ SwitchBlock.meta = {
   loading: {
     type: 'SkeletonInput',
   },
+  icons: [...Label.meta.icons],
+  styles: ['blocks/Switch/style.less'],
 };
-SwitchBlock.styles = ['blocks/Switch/style.less'];
 
 export default SwitchBlock;

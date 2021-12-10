@@ -64,7 +64,8 @@ StatisticBlock.meta = {
       height: 80,
     },
   },
+  icons: [],
+  styles: ['blocks/Statistic/style.less'],
 };
-StatisticBlock.styles = ['blocks/Statistic/style.less'];
 
 export default StatisticBlock;

@@ -93,7 +93,8 @@ DateSelector.meta = {
   loading: {
     type: 'SkeletonInput',
   },
+  icons: [...Label.meta.icons],
+  styles: ['blocks/DateSelector/style.less'],
 };
-DateSelector.styles = ['blocks/DateSelector/style.less'];
 
 export default DateSelector;

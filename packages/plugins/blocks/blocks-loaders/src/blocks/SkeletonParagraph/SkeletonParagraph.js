@@ -45,7 +45,8 @@ SkeletonParagraph.defaultProps = blockDefaultProps;
 SkeletonParagraph.meta = {
   category: 'display',
   loading: false,
+  icons: [],
+  styles: ['blocks/SkeletonParagraph/style.less'],
 };
-SkeletonParagraph.styles = ['blocks/SkeletonParagraph/style.less'];
 
 export default SkeletonParagraph;

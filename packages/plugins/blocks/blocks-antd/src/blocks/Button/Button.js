@@ -81,7 +81,8 @@ ButtonBlock.meta = {
   loading: {
     type: 'SkeletonButton',
   },
+  icons: [],
+  styles: ['blocks/Button/style.less'],
 };
-ButtonBlock.styles = ['blocks/Button/style.less'];
 
 export default ButtonBlock;

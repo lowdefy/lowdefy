@@ -54,7 +54,8 @@ DangerousMarkdown.meta = {
       lines: 7,
     },
   },
+  icons: [],
+  styles: [],
 };
-DangerousMarkdown.styles = [];
 
 export default DangerousMarkdown;

@@ -50,7 +50,8 @@ SkeletonButton.defaultProps = blockDefaultProps;
 SkeletonButton.meta = {
   category: 'display',
   loading: false,
+  icons: [],
+  styles: ['blocks/SkeletonButton/style.less'],
 };
-SkeletonButton.styles = ['blocks/SkeletonButton/style.less'];
 
 export default SkeletonButton;

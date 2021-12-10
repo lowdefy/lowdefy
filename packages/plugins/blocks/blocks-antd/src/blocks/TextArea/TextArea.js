@@ -94,7 +94,8 @@ TextAreaBlock.meta = {
   loading: {
     type: 'SkeletonInput',
   },
+  icons: [...Label.meta.icons],
+  styles: ['blocks/TextArea/style.less'],
 };
-TextAreaBlock.styles = ['blocks/TextArea/style.less'];
 
 export default TextAreaBlock;

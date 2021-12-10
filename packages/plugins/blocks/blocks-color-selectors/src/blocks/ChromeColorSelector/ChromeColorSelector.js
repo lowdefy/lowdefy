@@ -63,7 +63,8 @@ Selector.meta = {
       height: 240,
     },
   },
+  icons: [...Label.meta.icons],
+  styles: ['blocks/ChromeColorSelector/style.less'],
 };
-Selector.styles = ['blocks/ChromeColorSelector/style.less'];
 
 export default Selector;

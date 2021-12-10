@@ -89,7 +89,8 @@ AnchorBlock.meta = {
       lines: 1,
     },
   },
+  icons: [],
+  styles: [],
 };
-AnchorBlock.styles = [];
 
 export default AnchorBlock;
