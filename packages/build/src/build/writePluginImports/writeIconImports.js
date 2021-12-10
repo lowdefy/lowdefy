@@ -17,8 +17,8 @@
 import { nunjucksFunction } from '@lowdefy/nunjucks';
 
 const template = `{%- for package in packages -%}
-{% if package.icons.length %}import { {% endif %}{%- for icon in package.icons -%}{% if not loop.last -%} {{ icon }}, {% else -%} {{ icon }} } from '{{ package.package }}';
-{% endif -%}{% endfor %}{% endfor -%}
+{% if package.icons.length %}import { {% for icon in package.icons -%}{% if not loop.last -%} {{ icon }}, {% else -%} {{ icon }} } from '{{ package.package }}';
+{% endif -%}{% endfor %}{% endif %}{% endfor -%}
 export default {
   {%- for package in packages -%}
   {%- for icon in package.icons %}
