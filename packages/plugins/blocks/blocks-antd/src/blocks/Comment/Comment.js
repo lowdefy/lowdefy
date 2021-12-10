@@ -53,7 +53,8 @@ CommentBlock.meta = {
   loading: {
     type: 'SkeletonParagraph',
   },
+  icons: [],
+  styles: ['blocks/Comment/style.less'],
 };
-CommentBlock.styles = ['blocks/Comment/style.less'];
 
 export default CommentBlock;

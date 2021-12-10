@@ -51,7 +51,8 @@ TooltipBlock.meta = {
       height: 80,
     },
   },
+  icons: [],
+  styles: ['blocks/Tooltip/style.less'],
 };
-TooltipBlock.styles = ['blocks/Tooltip/style.less'];
 
 export default TooltipBlock;

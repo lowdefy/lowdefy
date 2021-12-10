@@ -137,7 +137,8 @@ TitleInput.meta = {
       lines: 1,
     },
   },
+  icons: [],
+  styles: ['blocks/TitleInput/style.less'],
 };
-TitleInput.styles = ['blocks/TitleInput/style.less'];
 
 export default TitleInput;

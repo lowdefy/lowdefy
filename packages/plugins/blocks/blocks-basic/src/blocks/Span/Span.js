@@ -35,7 +35,8 @@ Span.defaultProps = blockDefaultProps;
 Span.meta = {
   category: 'container',
   loading: false,
+  icons: [],
+  styles: [],
 };
-Span.styles = [];
 
 export default Span;

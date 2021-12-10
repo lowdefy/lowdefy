@@ -156,7 +156,8 @@ MultipleSelector.meta = {
   loading: {
     type: 'SkeletonInput',
   },
+  icons: [...Label.meta.icons],
+  styles: ['blocks/MultipleSelector/style.less'],
 };
-MultipleSelector.styles = ['blocks/MultipleSelector/style.less'];
 
 export default MultipleSelector;

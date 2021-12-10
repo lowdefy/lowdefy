@@ -90,7 +90,8 @@ PaginationBlock.meta = {
       height: 33,
     },
   },
+  icons: [],
+  styles: ['blocks/Pagination/style.less'],
 };
-PaginationBlock.styles = ['blocks/Pagination/style.less'];
 
 export default PaginationBlock;

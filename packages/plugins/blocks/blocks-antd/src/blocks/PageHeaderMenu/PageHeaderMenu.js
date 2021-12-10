@@ -260,7 +260,8 @@ PageHeaderMenu.meta = {
       height: '100vh',
     },
   },
+  icons: [...MobileMenu.meta.icons],
+  styles: ['blocks/PageHeaderMenu/style.less'],
 };
-PageHeaderMenu.styles = ['blocks/PageHeaderMenu/style.less'];
 
 export default PageHeaderMenu;

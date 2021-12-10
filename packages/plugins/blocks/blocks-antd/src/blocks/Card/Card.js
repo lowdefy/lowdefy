@@ -40,7 +40,7 @@ const CardBlock = ({ blockId, content, properties, methods, events }) => (
 );
 
 CardBlock.defaultProps = blockDefaultProps;
-CardBlock.meta ={
+CardBlock.meta = {
   category: 'container',
   loading: {
     type: 'Skeleton',
@@ -48,7 +48,8 @@ CardBlock.meta ={
       height: 80,
     },
   },
+  icons: [],
+  styles: ['blocks/Card/style.less'],
 };
-CardBlock.styles = ['blocks/Card/style.less'];
 
 export default CardBlock;

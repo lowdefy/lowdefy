@@ -43,7 +43,9 @@ const LogoSpinner = ({ color, barColor }) => (
   </svg>
 );
 
-LogoSpinner.meta = {};
-LogoSpinner.styles = [];
+LogoSpinner.meta = {
+  icons: [],
+  styles: [],
+};
 
 export default LogoSpinner;

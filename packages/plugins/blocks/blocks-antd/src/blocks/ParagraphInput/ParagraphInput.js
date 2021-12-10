@@ -138,7 +138,8 @@ ParagraphInput.meta = {
   loading: {
     type: 'SkeletonParagraph',
   },
+  icons: [],
+  styles: ['blocks/ParagraphInput/style.less'],
 };
-ParagraphInput.styles = ['blocks/ParagraphInput/style.less'];
 
 export default ParagraphInput;

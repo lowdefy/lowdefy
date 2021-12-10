@@ -33,7 +33,8 @@ LayoutBlock.meta = {
       height: '100vh',
     },
   },
+  icons: [],
+  styles: ['blocks/Layout/style.less'],
 };
-LayoutBlock.styles = ['blocks/Layout/style.less'];
 
 export default LayoutBlock;

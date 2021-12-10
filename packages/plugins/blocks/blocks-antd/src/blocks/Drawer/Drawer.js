@@ -80,7 +80,8 @@ DrawerBlock.defaultProps = blockDefaultProps;
 DrawerBlock.meta = {
   category: 'container',
   loading: false,
+  icons: [],
+  styles: ['blocks/Drawer/style.less'],
 };
-DrawerBlock.styles = ['blocks/Drawer/style.less'];
 
 export default DrawerBlock;

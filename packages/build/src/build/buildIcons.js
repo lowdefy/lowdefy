@@ -38,7 +38,21 @@ const iconPackages = {
   'react-icons/cg': /"(Cg[A-Z0-9]\w*)"/gm,
 };
 
-function buildIcons({ components }) {
+function getConfigIcons({ components, icons, regex }) {
+  [...JSON.stringify(components.global || {}).matchAll(regex)].map((match) => icons.add(match[1]));
+  [...JSON.stringify(components.menus || []).matchAll(regex)].map((match) => icons.add(match[1]));
+  [...JSON.stringify(components.pages || []).matchAll(regex)].map((match) => icons.add(match[1]));
+}
+
+function getBlockDefaultIcons({ components, context, icons, regex }) {
+  Object.entries(components.types.blocks).forEach(([blockName, block]) => {
+    context.types.icons[block.package][blockName].forEach((icon) => {
+      [...JSON.stringify(icon).matchAll(regex)].map((match) => icons.add(match[1]));
+    });
+  });
+}
+
+function buildIcons({ components, context }) {
   components.icons = [];
   Object.entries(iconPackages).forEach(([iconPackage, regex]) => {
     const icons = new Set();
@@ -48,11 +62,8 @@ function buildIcons({ components }) {
       icons.add('AiOutlineLoading3Quarters');
       icons.add('AiOutlineExclamationCircle');
     }
-    [...JSON.stringify(components.global || {}).matchAll(regex)].map((match) =>
-      icons.add(match[1])
-    );
-    [...JSON.stringify(components.menus || []).matchAll(regex)].map((match) => icons.add(match[1]));
-    [...JSON.stringify(components.pages || []).matchAll(regex)].map((match) => icons.add(match[1]));
+    getConfigIcons({ components, icons, regex });
+    getBlockDefaultIcons({ components, context, icons, regex });
     components.icons.push({ icons: [...icons], package: iconPackage });
   });
 }

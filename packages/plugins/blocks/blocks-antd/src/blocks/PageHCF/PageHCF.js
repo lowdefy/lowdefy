@@ -80,7 +80,8 @@ PageHCF.meta = {
       height: '100vh',
     },
   },
+  icons: [],
+  styles: ['blocks/PageHCF/style.less'],
 };
-PageHCF.styles = ['blocks/PageHCF/style.less'];
 
 export default PageHCF;

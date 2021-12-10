@@ -89,7 +89,8 @@ TabsBlock.meta = {
       height: 80,
     },
   },
+  icons: [],
+  styles: ['blocks/Tabs/style.less'],
 };
-TabsBlock.styles = ['blocks/Tabs/style.less'];
 
 export default TabsBlock;

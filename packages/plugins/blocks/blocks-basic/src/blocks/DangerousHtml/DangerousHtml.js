@@ -64,7 +64,8 @@ DangerousHtml.defaultProps = blockDefaultProps;
 DangerousHtml.meta = {
   category: 'display',
   loading: false,
+  icons: [],
+  styles: [],
 };
-DangerousHtml.styles = [];
 
 export default DangerousHtml;

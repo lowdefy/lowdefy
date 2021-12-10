@@ -81,7 +81,8 @@ NumberInput.meta = {
   loading: {
     type: 'SkeletonInput',
   },
+  icons: [...Label.meta.icons],
+  styles: ['blocks/NumberInput/style.less'],
 };
-NumberInput.styles = ['blocks/NumberInput/style.less'];
 
 export default NumberInput;
