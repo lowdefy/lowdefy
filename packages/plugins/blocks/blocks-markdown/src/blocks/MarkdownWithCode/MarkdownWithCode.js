@@ -48,7 +48,7 @@ SyntaxHighlighter.registerLanguage('ts', typescript);
 SyntaxHighlighter.registerLanguage('xml', xml);
 SyntaxHighlighter.registerLanguage('yaml', yaml);
 
-const renderers = {
+const components = {
   code: ({ language, children }) => (
     <SyntaxHighlighter style={github} language={language}>
       {children}
@@ -60,10 +60,11 @@ const MarkdownWithCode = ({ blockId, properties, methods }) => (
     <ReactMarkdown
       className="markdown-body"
       skipHtml={properties.skipHtml}
-      children={properties.content}
       remarkPlugins={[gfm]}
-      components={renderers}
-    />
+      components={components}
+    >
+      {properties.content}
+    </ReactMarkdown>
   </div>
 );
 

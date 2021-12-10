@@ -39,8 +39,9 @@ class DangerousMarkdown extends React.Component {
           rehypePlugins={[rehypeRaw]}
           allowDangerousHtml={true}
           skipHtml={false}
-          children={DOMPurify.sanitize(this.props.properties.content, this.DOMPurifyOptions)}
-        />
+        >
+          {DOMPurify.sanitize(this.props.properties.content, this.DOMPurifyOptions)}
+        </ReactMarkdown>
       </div>
     );
   }
