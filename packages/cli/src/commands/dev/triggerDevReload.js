@@ -13,13 +13,15 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import dotenv from 'dotenv';
 
-async function prepare({ context }) {
-  dotenv.config({ silent: true });
-  // Setup
-  if (!context.options.port) context.options.port = 3000;
-  // TODO: Check if theres any cache from next that should be removed
+import path from 'path';
+import { writeFile } from '@lowdefy/node-utils';
+
+async function triggerDevReload({ context }) {
+  await writeFile({
+    filePath: path.join(context.directories.build, 'reloadTrigger.js'),
+    content: '',
+  });
 }
 
-export default prepare;
+export default triggerDevReload;

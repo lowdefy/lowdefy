@@ -14,8 +14,8 @@
   limitations under the License.
 */
 import chokidar from 'chokidar';
-import BatchChanges from '../../utils/BatchChanges';
-import getLowdefyYaml from '../../utils/getLowdefyYaml';
+import BatchChanges from '../../utils/BatchChanges.js';
+import getLowdefyYaml from '../../utils/getLowdefyYaml.js';
 
 function versionWatcher({ context }) {
   const changeLowdefyFileCallback = async () => {

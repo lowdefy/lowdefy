@@ -17,13 +17,12 @@ import path from 'path';
 import chokidar from 'chokidar';
 import BatchChanges from '../../utils/BatchChanges.js';
 
-function buildWatcher({ build, context, reloadFn }) {
+function buildWatcher({ build, context }) {
   const { watch = [], watchIgnore = [] } = context.options;
   const resolvedWatchPaths = watch.map((pathName) => path.resolve(pathName));
 
   const buildCallback = async () => {
-    await build();
-    reloadFn();
+    await build({ context });
   };
   const buildBatchChanges = new BatchChanges({ fn: buildCallback, context });
   const configWatcher = chokidar.watch(['.', ...resolvedWatchPaths], {

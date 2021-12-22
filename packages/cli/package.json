@@ -32,7 +32,7 @@
   ],
   "exports": "./dist/index.js",
   "scripts": {
-    "build": "yarn swc",
+    "build": "yarn swc && node dist/scripts/handleLocalServer.js",
     "clean": "rm -rf dist && rm -rf .lowdefy",
     "start": "yarn node ./dist/index.js",
     "prepare": "yarn build",

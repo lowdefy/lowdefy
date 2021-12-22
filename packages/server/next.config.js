@@ -1,7 +1,10 @@
 const withLess = require('next-with-less');
+const withRemoteRefresh = require('next-remote-refresh')({
+  paths: [require('path').resolve(__dirname, './build/reloadTrigger.js')],
+})
 const appConfig = require('./build/app.json');
 
-module.exports = withLess({
+module.exports = withRemoteRefresh(withLess({
   lessLoaderOptions: {
     lessOptions: {
       modifyVars: appConfig.style.lessVariables,
@@ -31,4 +34,4 @@ module.exports = withLess({
   eslint: {
     ignoreDuringBuilds: true,
   },
-});
+}));
