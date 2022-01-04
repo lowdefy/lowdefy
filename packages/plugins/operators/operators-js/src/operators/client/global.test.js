@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
-import global from './global.js';
-
 jest.mock('@lowdefy/operators');
+
+let lowdefyOperators;
+let global;
 
 const input = {
   arrayIndices: [0],
@@ -25,8 +26,12 @@ const input = {
   params: 'params',
 };
 
-test('global calls getFromObject', () => {
-  const lowdefyOperators = import('@lowdefy/operators');
+beforeEach(async () => {
+  lowdefyOperators = await import('@lowdefy/operators');
+  global = (await import('./global.js')).default;
+});
+
+test('global calls getFromObject', async () => {
   global(input);
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
