@@ -18,8 +18,8 @@ import opener from 'opener';
 
 import buildWatcher from './buildWatcher.js';
 import envWatcher from './envWatcher.js';
-import getLocalServer from './getLocalServer.js';
-// import getServer from './getServer.js';
+// import getLocalServer from './getLocalServer.js';
+import getServer from './getServer.js';
 import installServer from './installServer.js';
 import prepare from './prepare.js';
 import runLowdefyBuild from './runLowdefyBuild.js';
