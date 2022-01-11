@@ -20,8 +20,16 @@ import { render } from '@testing-library/react';
 
 import mockBlock from './mockBlock.js';
 
-const runMockRenderTests = ({ examples, logger, meta, mocks, reset = () => null, schema }) => {
-  const { before, getProps } = mockBlock({ meta, logger, schema });
+const runMockRenderTests = ({
+  Block,
+  examples,
+  logger,
+  mocks,
+  reset = () => null,
+  schema,
+  values = [],
+}) => {
+  const { before, getProps } = mockBlock({ meta: Block.meta, logger, schema });
 
   const makeCssClass = jest.fn();
   const makeCssImp = (style, op) => JSON.stringify({ style, options: op });
@@ -33,11 +41,8 @@ const runMockRenderTests = ({ examples, logger, meta, mocks, reset = () => null,
     makeCssClass.mockImplementation(makeCssImp);
   });
 
-  const values = meta.values
-    ? [type.enforceType(meta.valueType, null), ...meta.values]
-    : [type.enforceType(meta.valueType, null)];
   examples.forEach((ex) => {
-    values.forEach((value, v) => {
+    [type.enforceType(Block.meta.valueType, null), ...values].forEach((value, v) => {
       mocks.forEach((mock) => {
         test(`Mock render - ${ex.id} - value[${v}] - ${mock.name}`, async () => {
           const mockFns = await mock.getMockFns();
