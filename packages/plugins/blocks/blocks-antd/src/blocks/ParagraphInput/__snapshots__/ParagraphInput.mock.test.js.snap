@@ -27,6 +27,8 @@ Array [
 ]
 `;
 
+exports[`Mock render - default - value[1] - ParagraphInput 1`] = `Array []`;
+
 exports[`Mock render - properties.code: true - value[0] - ParagraphInput 1`] = `
 Array [
   Array [
@@ -53,6 +55,8 @@ Array [
   ],
 ]
 `;
+
+exports[`Mock render - properties.code: true - value[1] - ParagraphInput 1`] = `Array []`;
 
 exports[`Mock render - properties.copyable: icon - value[0] - ParagraphInput 1`] = `
 Array [
@@ -111,6 +115,8 @@ Array [
   ],
 ]
 `;
+
+exports[`Mock render - properties.copyable: icon - value[1] - ParagraphInput 1`] = `Array []`;
 
 exports[`Mock render - properties.copyable: icon: [] - value[0] - ParagraphInput 1`] = `
 Array [
@@ -199,6 +205,8 @@ Array [
 ]
 `;
 
+exports[`Mock render - properties.copyable: icon: [] - value[1] - ParagraphInput 1`] = `Array []`;
+
 exports[`Mock render - properties.copyable: text: one - value[0] - ParagraphInput 1`] = `
 Array [
   Array [
@@ -230,6 +238,8 @@ Array [
   ],
 ]
 `;
+
+exports[`Mock render - properties.copyable: text: one - value[1] - ParagraphInput 1`] = `Array []`;
 
 exports[`Mock render - properties.copyable: tooltips: [] - value[0] - ParagraphInput 1`] = `
 Array [
@@ -266,6 +276,8 @@ Array [
 ]
 `;
 
+exports[`Mock render - properties.copyable: tooltips: [] - value[1] - ParagraphInput 1`] = `Array []`;
+
 exports[`Mock render - properties.copyable: true - value[0] - ParagraphInput 1`] = `
 Array [
   Array [
@@ -292,6 +304,8 @@ Array [
   ],
 ]
 `;
+
+exports[`Mock render - properties.copyable: true - value[1] - ParagraphInput 1`] = `Array []`;
 
 exports[`Mock render - properties.delete: true - value[0] - ParagraphInput 1`] = `
 Array [
@@ -320,6 +334,8 @@ Array [
 ]
 `;
 
+exports[`Mock render - properties.delete: true - value[1] - ParagraphInput 1`] = `Array []`;
+
 exports[`Mock render - properties.disabled: true - value[0] - ParagraphInput 1`] = `
 Array [
   Array [
@@ -346,6 +362,8 @@ Array [
   ],
 ]
 `;
+
+exports[`Mock render - properties.disabled: true - value[1] - ParagraphInput 1`] = `Array []`;
 
 exports[`Mock render - properties.editable.icon - value[0] - ParagraphInput 1`] = `
 Array [
@@ -405,6 +423,8 @@ Array [
 ]
 `;
 
+exports[`Mock render - properties.editable.icon - value[1] - ParagraphInput 1`] = `Array []`;
+
 exports[`Mock render - properties.editable.maxLength: 10 - value[0] - ParagraphInput 1`] = `
 Array [
   Array [
@@ -436,6 +456,8 @@ Array [
   ],
 ]
 `;
+
+exports[`Mock render - properties.editable.maxLength: 10 - value[1] - ParagraphInput 1`] = `Array []`;
 
 exports[`Mock render - properties.editable.tooltip - value[0] - ParagraphInput 1`] = `
 Array [
@@ -469,6 +491,8 @@ Array [
 ]
 `;
 
+exports[`Mock render - properties.editable.tooltip - value[1] - ParagraphInput 1`] = `Array []`;
+
 exports[`Mock render - properties.editable: false - value[0] - ParagraphInput 1`] = `
 Array [
   Array [
@@ -492,6 +516,8 @@ Array [
   ],
 ]
 `;
+
+exports[`Mock render - properties.editable: false - value[1] - ParagraphInput 1`] = `Array []`;
 
 exports[`Mock render - properties.editable: true - value[0] - ParagraphInput 1`] = `
 Array [
@@ -519,6 +545,8 @@ Array [
   ],
 ]
 `;
+
+exports[`Mock render - properties.editable: true - value[1] - ParagraphInput 1`] = `Array []`;
 
 exports[`Mock render - properties.ellipsis: expandable, rows - value[0] - ParagraphInput 1`] = `
 Array [
@@ -553,6 +581,8 @@ Array [
 ]
 `;
 
+exports[`Mock render - properties.ellipsis: expandable, rows - value[1] - ParagraphInput 1`] = `Array []`;
+
 exports[`Mock render - properties.ellipsis: rows - value[0] - ParagraphInput 1`] = `
 Array [
   Array [
@@ -585,6 +615,8 @@ Array [
   ],
 ]
 `;
+
+exports[`Mock render - properties.ellipsis: rows - value[1] - ParagraphInput 1`] = `Array []`;
 
 exports[`Mock render - properties.ellipsis: rows, suffix - value[0] - ParagraphInput 1`] = `
 Array [
@@ -619,6 +651,8 @@ Array [
 ]
 `;
 
+exports[`Mock render - properties.ellipsis: rows, suffix - value[1] - ParagraphInput 1`] = `Array []`;
+
 exports[`Mock render - properties.ellipsis: true - value[0] - ParagraphInput 1`] = `
 Array [
   Array [
@@ -645,6 +679,8 @@ Array [
   ],
 ]
 `;
+
+exports[`Mock render - properties.ellipsis: true - value[1] - ParagraphInput 1`] = `Array []`;
 
 exports[`Mock render - properties.italic: true - value[0] - ParagraphInput 1`] = `
 Array [
@@ -673,6 +709,8 @@ Array [
 ]
 `;
 
+exports[`Mock render - properties.italic: true - value[1] - ParagraphInput 1`] = `Array []`;
+
 exports[`Mock render - properties.mark: true - value[0] - ParagraphInput 1`] = `
 Array [
   Array [
@@ -699,6 +737,8 @@ Array [
   ],
 ]
 `;
+
+exports[`Mock render - properties.mark: true - value[1] - ParagraphInput 1`] = `Array []`;
 
 exports[`Mock render - properties.strong: true - value[0] - ParagraphInput 1`] = `
 Array [
@@ -727,6 +767,8 @@ Array [
 ]
 `;
 
+exports[`Mock render - properties.strong: true - value[1] - ParagraphInput 1`] = `Array []`;
+
 exports[`Mock render - properties.type: danger - value[0] - ParagraphInput 1`] = `
 Array [
   Array [
@@ -753,6 +795,8 @@ Array [
   ],
 ]
 `;
+
+exports[`Mock render - properties.type: danger - value[1] - ParagraphInput 1`] = `Array []`;
 
 exports[`Mock render - properties.type: secondary - value[0] - ParagraphInput 1`] = `
 Array [
@@ -781,6 +825,8 @@ Array [
 ]
 `;
 
+exports[`Mock render - properties.type: secondary - value[1] - ParagraphInput 1`] = `Array []`;
+
 exports[`Mock render - properties.type: warning - value[0] - ParagraphInput 1`] = `
 Array [
   Array [
@@ -808,6 +854,8 @@ Array [
 ]
 `;
 
+exports[`Mock render - properties.type: warning - value[1] - ParagraphInput 1`] = `Array []`;
+
 exports[`Mock render - properties.underline: true - value[0] - ParagraphInput 1`] = `
 Array [
   Array [
@@ -834,3 +882,5 @@ Array [
   ],
 ]
 `;
+
+exports[`Mock render - properties.underline: true - value[1] - ParagraphInput 1`] = `Array []`;
