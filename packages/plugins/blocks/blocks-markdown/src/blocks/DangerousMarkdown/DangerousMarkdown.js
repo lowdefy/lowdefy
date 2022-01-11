@@ -20,6 +20,7 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 import ReactMarkdown from 'react-markdown';
 
 import gfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 
 class DangerousMarkdown extends React.Component {
   constructor(props) {
@@ -34,8 +35,8 @@ class DangerousMarkdown extends React.Component {
       <div id={blockId} className={methods.makeCssClass(properties.style)}>
         <ReactMarkdown
           className="markdown-body"
-          plugins={[gfm]}
-          allowDangerousHtml={true}
+          remarkPlugins={[gfm]}
+          rehypePlugins={[rehypeRaw]}
           skipHtml={false}
         >
           {DOMPurify.sanitize(this.props.properties.content, this.DOMPurifyOptions)}

@@ -17,7 +17,7 @@ module.exports = withLess({
         events: false,
         fs: false,
         path: false,
-        process: false,
+        process: require.resolve('process/browser'),
         util: false,
       };
     }
