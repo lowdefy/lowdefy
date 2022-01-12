@@ -14,17 +14,15 @@
   limitations under the License.
 */
 
-import { spawnProcess } from '@lowdefy/node-utils';
+import NextAuth from 'next-auth';
+import Auth0Provider from 'next-auth/providers/auth0';
 
-async function runStart({ context }) {
-  context.print.spin(`Running "${context.packageManager} run start".`);
-  await spawnProcess({
-    logger: context.print,
-    args: ['run', 'start'],
-    command: context.packageManager, // npm or yarn
-    processOptions: { cwd: context.directories.server },
-    silent: false,
-  });
-}
-
-export default runStart;
+export default NextAuth({
+  providers: [
+    Auth0Provider({
+      clientId: process.env.AUTH0_CLIENT_ID,
+      clientSecret: process.env.AUTH0_CLIENT_SECRET,
+      issuer: process.env.AUTH0_ISSUER,
+    }),
+  ],
+});

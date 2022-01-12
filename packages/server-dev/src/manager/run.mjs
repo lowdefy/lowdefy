@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -14,17 +15,16 @@
   limitations under the License.
 */
 
-import { spawnProcess } from '@lowdefy/node-utils';
+import getContext from './getContext.mjs';
+import resetServer from './resetServer.mjs';
+import setupFileWatchers from './setupFileWatchers.mjs';
+import startServer from './startServer.mjs';
 
-async function runStart({ context }) {
-  context.print.spin(`Running "${context.packageManager} run start".`);
-  await spawnProcess({
-    logger: context.print,
-    args: ['run', 'start'],
-    command: context.packageManager, // npm or yarn
-    processOptions: { cwd: context.directories.server },
-    silent: false,
-  });
+async function run() {
+  const context = await getContext();
+  await resetServer(context);
+  await setupFileWatchers(context);
+  await startServer(context);
 }
 
-export default runStart;
+run();

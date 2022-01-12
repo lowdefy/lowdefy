@@ -14,17 +14,22 @@
   limitations under the License.
 */
 
-import { spawnProcess } from '@lowdefy/node-utils';
+import path from 'path';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 
-async function runStart({ context }) {
-  context.print.spin(`Running "${context.packageManager} run start".`);
-  await spawnProcess({
-    logger: context.print,
-    args: ['run', 'start'],
-    command: context.packageManager, // npm or yarn
-    processOptions: { cwd: context.directories.server },
-    silent: false,
-  });
+const argv = yargs(hideBin(process.argv)).argv;
+
+async function getContext() {
+  const { configDirectory = process.cwd(), packageManager = 'npm', skipInstall } = argv;
+  const context = {
+    directories: {
+      config: path.resolve(configDirectory),
+    },
+    packageManager,
+    skipInstall,
+  };
+  return context;
 }
 
-export default runStart;
+export default getContext;

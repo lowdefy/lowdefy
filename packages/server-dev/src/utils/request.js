@@ -14,17 +14,22 @@
   limitations under the License.
 */
 
-import { spawnProcess } from '@lowdefy/node-utils';
-
-async function runStart({ context }) {
-  context.print.spin(`Running "${context.packageManager} run start".`);
-  await spawnProcess({
-    logger: context.print,
-    args: ['run', 'start'],
-    command: context.packageManager, // npm or yarn
-    processOptions: { cwd: context.directories.server },
-    silent: false,
+async function request({ url, method = 'GET', body }) {
+  const res = await fetch(url, {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
   });
+  if (!res.ok) {
+    // TODO: check
+    const body = await res.json();
+    console.log(res);
+    console.log(body);
+    throw new Error(body.message || 'Request error');
+  }
+  return res.json();
 }
 
-export default runStart;
+export default request;

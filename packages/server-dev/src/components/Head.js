@@ -14,17 +14,15 @@
   limitations under the License.
 */
 
-import { spawnProcess } from '@lowdefy/node-utils';
+import React from 'react';
+import Head from 'next/head';
 
-async function runStart({ context }) {
-  context.print.spin(`Running "${context.packageManager} run start".`);
-  await spawnProcess({
-    logger: context.print,
-    args: ['run', 'start'],
-    command: context.packageManager, // npm or yarn
-    processOptions: { cwd: context.directories.server },
-    silent: false,
-  });
-}
+const BindHead = ({ properties }) => {
+  return (
+    <Head>
+      <title>{properties.title}</title>
+    </Head>
+  );
+};
 
-export default runStart;
+export default BindHead;

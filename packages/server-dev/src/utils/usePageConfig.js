@@ -1,12 +1,9 @@
 /*
   Copyright 2020-2021 Lowdefy, Inc
-
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-
       http://www.apache.org/licenses/LICENSE-2.0
-
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,17 +11,22 @@
   limitations under the License.
 */
 
-import { spawnProcess } from '@lowdefy/node-utils';
+import useSWR from 'swr';
 
-async function runStart({ context }) {
-  context.print.spin(`Running "${context.packageManager} run start".`);
-  await spawnProcess({
-    logger: context.print,
-    args: ['run', 'start'],
-    command: context.packageManager, // npm or yarn
-    processOptions: { cwd: context.directories.server },
-    silent: false,
-  });
+import request from './request.js';
+
+// TODO: Handle TokenExpiredError
+
+function fetchPageConfig(url) {
+  return request({ url });
 }
 
-export default runStart;
+function usePageConfig(pageId) {
+  if (!pageId) {
+    pageId = 'NULL';
+  }
+  const { data } = useSWR(`/api/page/${pageId}`, fetchPageConfig, { suspense: true });
+  return { data };
+}
+
+export default usePageConfig;
