@@ -14,17 +14,24 @@
   limitations under the License.
 */
 
-import { spawnProcess } from '@lowdefy/node-utils';
+import React, { Suspense } from 'react';
 
-async function runStart({ context }) {
-  context.print.spin(`Running "${context.packageManager} run start".`);
-  await spawnProcess({
-    logger: context.print,
-    args: ['run', 'start'],
-    command: context.packageManager, // npm or yarn
-    processOptions: { cwd: context.directories.server },
-    silent: false,
-  });
+import { ErrorBoundary } from '@lowdefy/block-utils';
+
+import LowdefyContext from '../components/LowdefyContext.js';
+
+import '../../build/plugins/styles.less';
+
+function App({ Component, pageProps }) {
+  return (
+    <ErrorBoundary>
+      <Suspense>
+        <LowdefyContext>
+          {(lowdefy) => <Component lowdefy={lowdefy} {...pageProps} />}
+        </LowdefyContext>
+      </Suspense>
+    </ErrorBoundary>
+  );
 }
 
-export default runStart;
+export default App;

@@ -16,15 +16,21 @@
 
 import { spawnProcess } from '@lowdefy/node-utils';
 
-async function runStart({ context }) {
-  context.print.spin(`Running "${context.packageManager} run start".`);
+async function runLowdefyBuild({ packageManager, directories }) {
   await spawnProcess({
-    logger: context.print,
-    args: ['run', 'start'],
-    command: context.packageManager, // npm or yarn
-    processOptions: { cwd: context.directories.server },
+    logger: console,
+    args: ['run', 'build:lowdefy'],
+    command: packageManager || 'npm',
+    processOptions: {
+      env: {
+        ...process.env,
+        LOWDEFY_BUILD_DIRECTORY: './build',
+        LOWDEFY_CONFIG_DIRECTORY: directories.config,
+        LOWDEFY_SERVER_DIRECTORY: process.cwd(),
+      },
+    },
     silent: false,
   });
 }
 
-export default runStart;
+export default runLowdefyBuild;

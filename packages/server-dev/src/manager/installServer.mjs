@@ -21,23 +21,15 @@ const args = {
   yarn: ['install'],
 };
 
-async function installServer({ context }) {
-  context.print.spin(`Running ${context.packageManager} install.`);
-  try {
-    await spawnProcess({
-      logger: context.print,
-      command: context.packageManager, // npm or yarn
-      args: args[context.packageManager],
-      processOptions: {
-        cwd: context.directories.server,
-      },
-      silent: false,
-    });
-  } catch (error) {
-    console.log(error);
-    throw new Error(`${context.packageManager} install failed.`);
-  }
-  context.print.log(`${context.packageManager} install successful.`);
+async function installServer({ packageManager, skipInstall }) {
+  if (skipInstall) return;
+  console.log('Installing server');
+  await spawnProcess({
+    logger: console,
+    command: packageManager, // npm or yarn
+    args: args[packageManager],
+    silent: false,
+  });
 }
 
 export default installServer;

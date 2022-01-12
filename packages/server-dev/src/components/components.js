@@ -14,17 +14,12 @@
   limitations under the License.
 */
 
-import { spawnProcess } from '@lowdefy/node-utils';
+import Link from 'next/link';
+import { createIcon } from '@lowdefy/block-utils';
 
-async function runStart({ context }) {
-  context.print.spin(`Running "${context.packageManager} run start".`);
-  await spawnProcess({
-    logger: context.print,
-    args: ['run', 'start'],
-    command: context.packageManager, // npm or yarn
-    processOptions: { cwd: context.directories.server },
-    silent: false,
-  });
-}
+import icons from '../../build/plugins/icons.js';
 
-export default runStart;
+export default {
+  Link,
+  Icon: createIcon(icons),
+};

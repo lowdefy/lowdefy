@@ -14,17 +14,22 @@
   limitations under the License.
 */
 
-import { spawnProcess } from '@lowdefy/node-utils';
+import React from 'react';
+import usePageConfig from '../utils/usePageConfig.js';
+import useRootConfig from '../utils/useRootConfig.js';
 
-async function runStart({ context }) {
-  context.print.spin(`Running "${context.packageManager} run start".`);
-  await spawnProcess({
-    logger: context.print,
-    args: ['run', 'start'],
-    command: context.packageManager, // npm or yarn
-    processOptions: { cwd: context.directories.server },
-    silent: false,
-  });
-}
+const PageConfig = ({ lowdefy, children }) => {
+  const { pageId } = lowdefy._internal.query;
 
-export default runStart;
+  const { data: pageConfig } = usePageConfig(pageId);
+  const { data: rootConfig } = useRootConfig();
+
+  lowdefy.home = rootConfig.home;
+  lowdefy.lowdefyGlobal = rootConfig.lowdefyGlobal;
+  lowdefy.menus = rootConfig.menus;
+
+  window.lowdefy = lowdefy;
+  return <>{children(pageConfig)}</>;
+};
+
+export default PageConfig;

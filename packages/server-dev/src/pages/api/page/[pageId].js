@@ -14,17 +14,13 @@
   limitations under the License.
 */
 
-import { spawnProcess } from '@lowdefy/node-utils';
+import { createApiContext, getPageConfig } from '@lowdefy/api';
 
-async function runStart({ context }) {
-  context.print.spin(`Running "${context.packageManager} run start".`);
-  await spawnProcess({
-    logger: context.print,
-    args: ['run', 'start'],
-    command: context.packageManager, // npm or yarn
-    processOptions: { cwd: context.directories.server },
-    silent: false,
-  });
+export default async function handler(req, res) {
+  const { pageId } = req.query;
+  // TODO: get the right api context options
+  const apiContext = await createApiContext({ buildDirectory: './build' });
+  const pageConfig = await getPageConfig(apiContext, { pageId });
+
+  res.status(200).json(pageConfig);
 }
-
-export default runStart;

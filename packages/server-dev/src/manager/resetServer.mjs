@@ -14,17 +14,17 @@
   limitations under the License.
 */
 
-import { spawnProcess } from '@lowdefy/node-utils';
+import runLowdefyBuild from './runLowdefyBuild.mjs';
+import runNextBuild from './runNextBuild.mjs';
+import installServer from './installServer.mjs';
 
-async function runStart({ context }) {
-  context.print.spin(`Running "${context.packageManager} run start".`);
-  await spawnProcess({
-    logger: context.print,
-    args: ['run', 'start'],
-    command: context.packageManager, // npm or yarn
-    processOptions: { cwd: context.directories.server },
-    silent: false,
-  });
+async function resetServer(context) {
+  // TODO: Only install when needed
+  await installServer(context);
+  await runLowdefyBuild(context);
+  // TODO: Only install when needed
+  await installServer(context);
+  await runNextBuild(context);
 }
 
-export default runStart;
+export default resetServer;

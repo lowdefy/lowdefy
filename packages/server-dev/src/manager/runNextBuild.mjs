@@ -16,15 +16,13 @@
 
 import { spawnProcess } from '@lowdefy/node-utils';
 
-async function runStart({ context }) {
-  context.print.spin(`Running "${context.packageManager} run start".`);
+async function runNextBuild({ packageManager }) {
   await spawnProcess({
-    logger: context.print,
-    args: ['run', 'start'],
-    command: context.packageManager, // npm or yarn
-    processOptions: { cwd: context.directories.server },
+    logger: console,
+    args: ['run', 'build:next'],
+    command: packageManager || 'npm',
     silent: false,
   });
 }
 
-export default runStart;
+export default runNextBuild;
