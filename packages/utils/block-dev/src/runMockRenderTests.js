@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { type } from '@lowdefy/helpers';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 
 import mockBlock from './mockBlock.js';
 
@@ -27,7 +27,7 @@ const runMockRenderTests = ({
   mocks,
   reset = () => null,
   schema,
-  values = [],
+  testConfig,
 }) => {
   const { before, getProps } = mockBlock({ meta: Block.meta, logger, schema });
 
@@ -42,7 +42,14 @@ const runMockRenderTests = ({
   });
 
   examples.forEach((ex) => {
-    [type.enforceType(Block.meta.valueType, null), ...values].forEach((value, v) => {
+    const values = [type.enforceType(Block.meta.valueType, null)];
+    if (!type.isNone(ex.value)) {
+      values.push(ex.value);
+    }
+    if (type.isArray(testConfig.values)) {
+      values.push(...testConfig.values);
+    }
+    values.forEach((value, v) => {
       mocks.forEach((mock) => {
         test(`Mock render - ${ex.id} - value[${v}] - ${mock.name}`, async () => {
           const mockFns = await mock.getMockFns();
@@ -51,7 +58,8 @@ const runMockRenderTests = ({
             const props = getProps(ex);
             return <Block {...props} methods={{ ...props.methods, makeCssClass }} value={value} />;
           };
-          render(<Shell />);
+          const { container } = render(<Shell />);
+          await waitFor(() => expect(container.firstChild).toMatchSnapshot());
           mockFns.forEach((mockFn) => {
             expect(mockFn.mock.calls).toMatchSnapshot();
           });

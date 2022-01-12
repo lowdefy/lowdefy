@@ -48,4 +48,4 @@ const mocks = [
     name: 'ParagraphInput',
   },
 ];
-runMockRenderTests({ Block, examples, mocks, schema, values: testConfig.values });
+runMockRenderTests({ Block, examples, mocks, schema, testConfig });
