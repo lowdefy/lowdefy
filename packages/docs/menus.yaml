@@ -515,6 +515,9 @@
         - id: PostgreSQL
           type: MenuLink
           pageId: PostgreSQL
+        - id: Redis
+          type: MenuLink
+          pageId: Redis
         - id: SendGridMail
           type: MenuLink
           pageId: SendGridMail
