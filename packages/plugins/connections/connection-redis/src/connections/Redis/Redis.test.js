@@ -23,47 +23,33 @@ test('All requests are present', () => {
   expect(Redis.requests.Redis).toBeDefined();
 });
 
-test('valid connection schema, with url', () => {
+test('valid connection schema, with string', () => {
   const connection = {
-    url: '/path',
+    connection: '/path',
   };
   expect(validate({ schema, data: connection })).toEqual({ valid: true });
 });
 
-test('valid connection schema, with socket', () => {
+test('valid connection schema, with object', () => {
   const connection = {
-    socket: {
-      host: 'https://example.com/redis',
-      port: 6379,
+    connection: {
+      socket: {
+        host: 'https://example.com/redis',
+        port: 6379,
+      },
+      username: 'username',
+      password: 'password',
+      database: 5,
     },
-    username: 'username',
-    password: 'password',
-    database: 5,
   };
   expect(validate({ schema, data: connection })).toEqual({ valid: true });
 });
 
-test('invalid connection schema, with all properties', () => {
+test('invalid connection schema', () => {
   const connection = {
-    url: '/path',
-    socket: {
-      host: 'https://example.com/redis',
-      port: 6379,
-    },
-    username: 'username',
-    password: 'password',
-    database: 0,
+    connection: null,
   };
   expect(() => validate({ schema, data: connection })).toThrow(
-    'Redis connection should have required property "url" or "socket.host" and "socket.port".'
-  );
-});
-
-test('url is not a string', () => {
-  const connection = {
-    url: true,
-  };
-  expect(() => validate({ schema, data: connection })).toThrow(
-    'Redis property "url" should be a string.'
+    'Redis connection property "connection" should be a string or object.'
   );
 });

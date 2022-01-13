@@ -21,11 +21,16 @@ export default {
   properties: {
     command: {
       type: 'string',
-      enum: ['get', 'set', 'hget', 'hset'],
       description: 'Redis command to execute.',
       errorMessage: {
         type: 'Redis request property "command" should be a string.',
-        enum: 'Redis request property "command" is not a valid value.',
+      },
+    },
+    parameters: {
+      type: 'array',
+      description: 'The parameters to use with the command.',
+      errorMessage: {
+        type: 'Redis request property "parameters" should be an array.',
       },
     },
     modifiers: {
@@ -38,37 +43,6 @@ export default {
     },
   },
   required: ['command'],
-  if: {
-    properties: { command: { enum: ['get'] } },
-  },
-  then: {
-    properties: {
-      params: {
-        type: 'string',
-        errorMessage: {
-          type: 'Redis request property "params" should be a string.',
-        },
-      },
-    },
-    required: ['params'],
-    errorMessage: {
-      required: 'Redis request property "params" should be present.',
-    },
-  },
-  else: {
-    properties: {
-      params: {
-        type: 'array',
-        errorMessage: {
-          type: 'Redis request property "params" should be an array.',
-        },
-      },
-    },
-    required: ['params'],
-    errorMessage: {
-      required: 'Redis request property "params" should be present.',
-    },
-  },
   errorMessage: {
     type: 'Redis request properties should be an object.',
   },

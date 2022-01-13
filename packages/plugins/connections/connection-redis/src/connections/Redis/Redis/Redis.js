@@ -19,23 +19,49 @@ import { createClient } from 'redis';
 import schema from './schema.js';
 
 async function Redis({ request, connection }) {
-  const client = new createClient(connection);
+  const connectionObject = type.isString(connection.connection)
+    ? { url: connection.connection }
+    : connection.connection;
+
+  const client = new createClient(connectionObject);
   client.on('error', (error) => {
     throw error;
   });
 
+  const { command, parameters, modifiers } = request;
+
   try {
-    const { command, params, modifiers } = request;
     await client.connect();
-    const commandParams = type.isArray(params) ? params : [params];
-    const commandReturn = await client[command.toUpperCase()](...commandParams, modifiers);
+  } catch (error) {
+    throw new Error(`Connection refused.`);
+  }
+
+  if (!type.isFunction(client[command.toUpperCase()])) {
+    throw new Error(`Invalid redis command "${command}".`);
+  }
+
+  if (!type.isArray(parameters)) {
+    throw new Error(
+      `Invalid command, command "${command}" parameters should be an array, received ${JSON.stringify(
+        parameters
+      )}.`
+    );
+  }
+
+  const upperCaseModifiers = Object.entries(modifiers).reduce((acc, [key, value]) => {
+    acc[key.toUpperCase()] = value;
+    return acc;
+  }, {});
+
+  try {
+    const commandReturn = await client[command.toUpperCase()](...parameters, upperCaseModifiers);
     await client.quit();
     return commandReturn;
   } catch (error) {
-    if (error.code !== 'ECONNREFUSED') {
-      await client.quit();
-    }
-    throw error;
+    client.quit();
+    throw new Error(
+      `Invalid command "${command}" parameters, received ${JSON.stringify(parameters)}.`
+    );
   }
 }
 

@@ -19,74 +19,16 @@ export default {
   title: 'Lowdefy Connection Schema - Redis',
   type: 'object',
   properties: {
-    url: {
-      type: 'string',
-      description:
-        'The redis server url to connect to (redis[s]://[[username][:password]@][host][:port][/db-number])',
+    connection: {
+      type: ['string', 'object'],
+      description: 'Connection object or string to pass to the redis client.',
       errorMessage: {
-        type: 'Redis property "url" should be a string.',
-      },
-    },
-    socket: {
-      type: 'object',
-      description: 'Object defining socket connection properties.',
-      properties: {
-        host: {
-          type: 'string',
-          description: 'Hostname to connect to',
-          default: 'localhost',
-          errorMessage: {
-            type: 'Redis property "socket.host" should be a string.',
-          },
-        },
-        port: {
-          type: 'number',
-          description: 'Port to connect to',
-          default: 6379,
-          errorMessage: {
-            type: 'Redis property "socket.port" should be a number.',
-          },
-        },
-      },
-      required: ['host', 'port'],
-      errorMessage: {
-        type: 'Redis property "socket" should be an object.',
-      },
-    },
-    username: {
-      type: 'string',
-      description: 'ACL username',
-      errorMessage: {
-        type: 'Redis property "username" should be a string.',
-      },
-    },
-    password: {
-      type: 'string',
-      description: 'ACL password',
-      errorMessage: {
-        type: 'Redis property "password" should be a string.',
-      },
-    },
-    database: {
-      type: 'number',
-      description: 'Database number to connect to',
-      minimum: 0,
-      errorMessage: {
-        type: 'Redis property "database" should be a number.',
+        type: 'Redis connection property "connection" should be a string or object.',
       },
     },
   },
-  oneOf: [
-    {
-      required: ['url'],
-    },
-    {
-      required: ['socket'],
-    },
-  ],
+  require: ['connection'],
   errorMessage: {
     type: 'Redis connection properties should be an object.',
-    oneOf:
-      'Redis connection should have required property "url" or "socket.host" and "socket.port".',
   },
 };
