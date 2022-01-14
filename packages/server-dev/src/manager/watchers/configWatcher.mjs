@@ -14,15 +14,16 @@
   limitations under the License.
 */
 
-import { spawnProcess } from '@lowdefy/node-utils';
+import lowdefyBuild from '../processes/lowdefyBuild.mjs';
+import setupWatcher from './setupWatcher.mjs';
 
-async function runNextBuild({ packageManager }) {
-  await spawnProcess({
-    logger: console,
-    args: ['run', 'build:next'],
-    command: packageManager || 'npm',
-    silent: false,
-  });
+async function configWatcher(context) {
+  const callback = async () => {
+    await lowdefyBuild(context);
+    context.restartServer();
+  };
+  // TODO: Add ignored paths
+  return setupWatcher({ callback, watchPaths: [context.directories.config] });
 }
 
-export default runNextBuild;
+export default configWatcher;

@@ -14,17 +14,15 @@
   limitations under the License.
 */
 
-import runLowdefyBuild from './runLowdefyBuild.mjs';
-import runNextBuild from './runNextBuild.mjs';
-import installServer from './installServer.mjs';
+import { spawnProcess } from '@lowdefy/node-utils';
 
-async function resetServer(context) {
-  // TODO: Only install when needed
-  await installServer(context);
-  await runLowdefyBuild(context);
-  // TODO: Only install when needed
-  await installServer(context);
-  await runNextBuild(context);
+async function runNextBuild({ packageManager }) {
+  await spawnProcess({
+    logger: console,
+    args: ['run', 'build:next'],
+    command: packageManager,
+    silent: false,
+  });
 }
 
-export default resetServer;
+export default runNextBuild;

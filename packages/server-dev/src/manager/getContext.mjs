@@ -27,6 +27,7 @@ async function getContext() {
       config: path.resolve(configDirectory),
     },
     packageManager,
+    restartServer: () => {},
     skipInstall,
   };
   return context;

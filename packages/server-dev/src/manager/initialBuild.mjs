@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -14,10 +15,15 @@
   limitations under the License.
 */
 
-import setupConfigWatcher from './watchers/setupConfigWatcher.mjs';
+import installServer from './processes/installServer.mjs';
+import lowdefyBuild from './processes/lowdefyBuild.mjs';
+import nextBuild from './processes/nextBuild.mjs';
 
-async function setupWatchers(context) {
-  await Promise.all([setupConfigWatcher(context)]);
+async function initialBuild(context) {
+  await installServer(context);
+  await lowdefyBuild(context);
+  await installServer(context);
+  await nextBuild(context);
 }
 
-export default setupWatchers;
+export default initialBuild;
