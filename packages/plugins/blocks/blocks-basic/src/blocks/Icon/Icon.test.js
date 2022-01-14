@@ -18,9 +18,13 @@ import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import Block from './Icon.js';
 import examples from './examples.yaml';
-import block from './index.js';
 import schema from './schema.json';
 
-const { meta, tests } = block;
-runRenderTests({ examples, Block, meta, schema, tests });
-runBlockSchemaTests({ examples, meta, schema });
+const testConfig = {
+  validation: true,
+  required: true,
+  values: [],
+};
+
+runRenderTests({ Block, examples, schema, testConfig });
+runBlockSchemaTests({ examples, schema });
