@@ -18,25 +18,25 @@ import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import Block from './MobileMenu.js';
 import examples from './examples.yaml';
-import block from './index.js';
 import schema from './schema.json';
 
-// test: {
-//   methods: [
-//     {
-//       name: 'toggleOpen',
-//       args: {},
-//     },
-//     {
-//       name: 'setOpen',
-//       args: {
-//         open: true,
-//       },
-//     },
-//   ],
-// }
+const testConfig = {
+  validation: true,
+  required: true,
+  values: [],
+  methods: [
+    {
+      name: 'toggleOpen',
+      args: {},
+    },
+    {
+      name: 'setOpen',
+      args: {
+        open: true,
+      },
+    },
+  ],
+};
 
-const { meta, tests } = block;
-
-runRenderTests({ Block, examples, meta, schema, tests });
-runBlockSchemaTests({ examples, meta, schema });
+runRenderTests({ Block, examples, schema, testConfig });
+runBlockSchemaTests({ examples, schema });
