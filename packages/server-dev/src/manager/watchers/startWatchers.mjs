@@ -15,6 +15,7 @@
 */
 
 import configWatcher from './configWatcher.mjs';
+import envWatcher from './envWatcher.mjs';
 
 /*
 Config change
@@ -57,7 +58,7 @@ Watch <server-dir>/build/plugins/*
 */
 
 async function startWatchers(context) {
-  await Promise.all([configWatcher(context)]);
+  await Promise.all([configWatcher(context), envWatcher(context)]);
 }
 
 export default startWatchers;

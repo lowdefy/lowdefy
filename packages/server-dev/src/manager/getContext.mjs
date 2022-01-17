@@ -18,18 +18,35 @@ import path from 'path';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
+import lowdefyBuild from './processes/lowdefyBuild.mjs';
+import nextBuild from './processes/nextBuild.mjs';
+import installServer from './processes/installServer.mjs';
+import reloadClients from './processes/reloadClients.mjs';
+
 const argv = yargs(hideBin(process.argv)).argv;
 
 async function getContext() {
-  const { configDirectory = process.cwd(), packageManager = 'npm', skipInstall } = argv;
+  const {
+    configDirectory = process.cwd(),
+    packageManager = 'npm',
+    skipInstall,
+    verbose = false,
+  } = argv;
   const context = {
     directories: {
       config: path.resolve(configDirectory),
     },
     packageManager,
-    restartServer: () => {},
     skipInstall,
+    restartServer: () => {},
+    shutdownServer: () => {},
+    verbose,
   };
+  context.installServer = installServer(context);
+  context.lowdefyBuild = lowdefyBuild(context);
+  context.nextBuild = nextBuild(context);
+  context.reloadClients = reloadClients(context);
+
   return context;
 }
 

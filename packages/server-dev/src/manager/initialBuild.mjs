@@ -15,15 +15,11 @@
   limitations under the License.
 */
 
-import installServer from './processes/installServer.mjs';
-import lowdefyBuild from './processes/lowdefyBuild.mjs';
-import nextBuild from './processes/nextBuild.mjs';
-
 async function initialBuild(context) {
-  await installServer(context);
-  await lowdefyBuild(context);
-  await installServer(context);
-  await nextBuild(context);
+  await context.installServer();
+  await context.lowdefyBuild();
+  await context.installServer();
+  await context.nextBuild();
 }
 
 export default initialBuild;

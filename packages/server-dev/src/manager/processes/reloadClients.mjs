@@ -14,15 +14,13 @@
   limitations under the License.
 */
 
-import setupWatcher from './setupWatcher.mjs';
+import { writeFile } from '@lowdefy/node-utils';
 
-async function configWatcher(context) {
-  const callback = async () => {
-    await context.lowdefyBuild();
-    context.reloadClients({ type: 'soft' });
+function reloadClients(context) {
+  return async () => {
+    await writeFile({ filePath: './build/reload', content: `${Date.now()}` });
+    console.log('Reloaded');
   };
-  // TODO: Add ignored paths
-  return setupWatcher({ callback, watchPaths: [context.directories.config] });
 }
 
-export default configWatcher;
+export default reloadClients;

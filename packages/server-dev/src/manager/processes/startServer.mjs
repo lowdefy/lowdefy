@@ -24,9 +24,14 @@ function startServerProcess({ context, handleExit }) {
     silent: false,
   });
   context.serverProcess.on('exit', handleExit);
-  context.restartServer = async () => {
+  context.restartServer = () => {
+    console.log('Restarting server...');
     context.serverProcess.kill();
     startServerProcess({ context, handleExit });
+  };
+  context.shutdownServer = () => {
+    console.log('Shutting down server...');
+    context.serverProcess.kill();
   };
 }
 
@@ -34,7 +39,7 @@ async function startServer(context) {
   return new Promise((resolve, reject) => {
     function handleExit(code) {
       if (code !== 0) {
-        // TODO: Shutdown server
+        context.shutdownServer && context.shutdownServer();
         reject(new Error('Server error.'));
       }
       resolve();
@@ -42,7 +47,7 @@ async function startServer(context) {
     try {
       startServerProcess({ context, handleExit });
     } catch (error) {
-      // TODO: Shutdown server
+      context.shutdownServer && context.shutdownServer();
       reject(error);
     }
   });

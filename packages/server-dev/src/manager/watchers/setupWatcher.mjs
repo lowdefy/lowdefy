@@ -17,16 +17,19 @@
 import chokidar from 'chokidar';
 import BatchChanges from '../BatchChanges.mjs';
 
-function setupWatcher({ callback, watchPaths }) {
+function setupWatcher({ callback, watchDotfiles = false, ignorePaths = [], watchPaths }) {
   return new Promise((resolve) => {
     // const { watch = [], watchIgnore = [] } = context.options;
     // const resolvedWatchPaths = watch.map((pathName) => path.resolve(pathName));
 
     const batchChanges = new BatchChanges({ fn: callback });
+    const defaultIgnorePaths = watchDotfiles
+      ? []
+      : [
+          /(^|[/\\])\../, // ignore dotfiles
+        ];
     const configWatcher = chokidar.watch(watchPaths, {
-      ignored: [
-        /(^|[/\\])\../, // ignore dotfiles
-      ],
+      ignored: [...defaultIgnorePaths, ...ignorePaths],
       persistent: true,
       ignoreInitial: true,
     });

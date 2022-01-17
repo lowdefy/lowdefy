@@ -14,15 +14,24 @@
   limitations under the License.
 */
 
+import path from 'path';
 import setupWatcher from './setupWatcher.mjs';
+import wait from '../wait.mjs';
 
-async function configWatcher(context) {
+async function envWatcher(context) {
   const callback = async () => {
-    await context.lowdefyBuild();
-    context.reloadClients({ type: 'soft' });
+    console.log('.env file changed, restarting server...');
+    context.reloadClients({ type: 'hard' });
+    // Wait for clients to get reload event.
+    await wait(500);
+    context.restartServer();
   };
   // TODO: Add ignored paths
-  return setupWatcher({ callback, watchPaths: [context.directories.config] });
+  return setupWatcher({
+    callback,
+    watchPaths: [path.resolve(context.directories.config, '.env')],
+    watchDotfiles: true,
+  });
 }
 
-export default configWatcher;
+export default envWatcher;
