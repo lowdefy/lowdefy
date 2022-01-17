@@ -3883,6 +3883,46 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@lowdefy/server-dev@workspace:packages/server-dev":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/server-dev@workspace:packages/server-dev"
+  dependencies:
+    "@lowdefy/api": 4.0.0-alpha.5
+    "@lowdefy/block-utils": 4.0.0-alpha.5
+    "@lowdefy/blocks-antd": 4.0.0-alpha.5
+    "@lowdefy/blocks-basic": 4.0.0-alpha.5
+    "@lowdefy/blocks-color-selectors": 4.0.0-alpha.5
+    "@lowdefy/blocks-echarts": 4.0.0-alpha.5
+    "@lowdefy/blocks-loaders": 4.0.0-alpha.5
+    "@lowdefy/blocks-markdown": 4.0.0-alpha.5
+    "@lowdefy/build": 4.0.0-alpha.5
+    "@lowdefy/connection-axios-http": 4.0.0-alpha.5
+    "@lowdefy/engine": 4.0.0-alpha.5
+    "@lowdefy/helpers": 4.0.0-alpha.5
+    "@lowdefy/layout": 4.0.0-alpha.5
+    "@lowdefy/node-utils": 4.0.0-alpha.5
+    "@lowdefy/operators-change-case": 4.0.0-alpha.5
+    "@lowdefy/operators-diff": 4.0.0-alpha.5
+    "@lowdefy/operators-js": 4.0.0-alpha.5
+    "@lowdefy/operators-mql": 4.0.0-alpha.5
+    "@lowdefy/operators-nunjucks": 4.0.0-alpha.5
+    "@lowdefy/operators-uuid": 4.0.0-alpha.5
+    "@lowdefy/operators-yaml": 4.0.0-alpha.5
+    "@next/eslint-plugin-next": 12.0.4
+    chokidar: 3.5.2
+    less: 4.1.2
+    less-loader: 10.2.0
+    next: 12.0.3
+    next-auth: 4.0.0-beta.6
+    next-with-less: 2.0.2
+    react: 18.0.0-alpha-327d5c484-20211106
+    react-dom: 18.0.0-alpha-327d5c484-20211106
+    react-icons: 4.3.1
+    swr: 1.0.1
+    yargs: 17.3.0
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/server@workspace:packages/server":
   version: 0.0.0-use.local
   resolution: "@lowdefy/server@workspace:packages/server"
@@ -7896,7 +7936,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dequal@npm:^2.0.0":
+"dequal@npm:2.0.2, dequal@npm:^2.0.0":
   version: 2.0.2
   resolution: "dequal@npm:2.0.2"
   checksum: 86c7a2c59f7b0797ed397c74b5fcdb744e48fc19440b70ad6ac59f57550a96b0faef3f1cfd5760ec5e6d3f7cb101f634f1f80db4e727b1dc8389bf62d977c0a0
@@ -17494,7 +17534,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"string-width@npm:^1.0.2 || 2 || 3 || 4, string-width@npm:^4.1.0, string-width@npm:^4.2.0":
+"string-width@npm:^1.0.2 || 2 || 3 || 4, string-width@npm:^4.1.0, string-width@npm:^4.2.0, string-width@npm:^4.2.3":
   version: 4.2.3
   resolution: "string-width@npm:4.2.3"
   dependencies:
@@ -17766,6 +17806,17 @@ resolve@^2.0.0-next.3:
     has-flag: ^4.0.0
     supports-color: ^7.0.0
   checksum: aef04fb41f4a67f1bc128f7c3e88a81b6cf2794c800fccf137006efe5bafde281da3e42e72bf9206c2fcf42e6438f37e3a820a389214d0a88613ca1f2d36076a
+  languageName: node
+  linkType: hard
+
+"swr@npm:1.0.1":
+  version: 1.0.1
+  resolution: "swr@npm:1.0.1"
+  dependencies:
+    dequal: 2.0.2
+  peerDependencies:
+    react: ^16.11.0 || ^17.0.0
+  checksum: 8aaa10c4c65cb9b46a143a52ac2728111fc8af96e83781df1f7b7d56aa027ef720b7feb230658616e479f224f684d4cbc5d2ca3265c40f95a3140dbdba801061
   languageName: node
   linkType: hard
 
@@ -19222,6 +19273,28 @@ resolve@^2.0.0-next.3:
   version: 20.2.9
   resolution: "yargs-parser@npm:20.2.9"
   checksum: 8bb69015f2b0ff9e17b2c8e6bfe224ab463dd00ca211eece72a4cd8a906224d2703fb8a326d36fdd0e68701e201b2a60ed7cf81ce0fd9b3799f9fe7745977ae3
+  languageName: node
+  linkType: hard
+
+"yargs-parser@npm:^21.0.0":
+  version: 21.0.0
+  resolution: "yargs-parser@npm:21.0.0"
+  checksum: 1e205fca1cb7a36a1585e2b94a64e641c12741b53627d338e12747f4dca3c3610cdd9bb235040621120548dd74c3ef03a8168d52a1eabfedccbe4a62462b6731
+  languageName: node
+  linkType: hard
+
+"yargs@npm:17.3.0":
+  version: 17.3.0
+  resolution: "yargs@npm:17.3.0"
+  dependencies:
+    cliui: ^7.0.2
+    escalade: ^3.1.1
+    get-caller-file: ^2.0.5
+    require-directory: ^2.1.1
+    string-width: ^4.2.3
+    y18n: ^5.0.5
+    yargs-parser: ^21.0.0
+  checksum: 2b687338684bf9645e9389ffdbe813fc5a2ddfede299d46fbe5ac80eb9a391e558b97861ba44d2256936ebe9d7f8135f6a38af1c76a5685eac4061008b2df57a
   languageName: node
   linkType: hard
 

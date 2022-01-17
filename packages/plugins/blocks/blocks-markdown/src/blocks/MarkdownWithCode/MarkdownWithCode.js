@@ -21,32 +21,33 @@ import ReactMarkdown from 'react-markdown';
 
 import gfm from 'remark-gfm';
 
-import github from 'react-syntax-highlighter/dist/esm/styles/hljs/github.js';
-import javascript from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript.js';
-import typescript from 'react-syntax-highlighter/dist/esm/languages/hljs/typescript.js';
-import python from 'react-syntax-highlighter/dist/esm/languages/hljs/python.js';
-import java from 'react-syntax-highlighter/dist/esm/languages/hljs/java.js';
-import xml from 'react-syntax-highlighter/dist/esm/languages/hljs/xml.js';
-import json from 'react-syntax-highlighter/dist/esm/languages/hljs/json.js';
-import yaml from 'react-syntax-highlighter/dist/esm/languages/hljs/yaml.js';
-import markdown from 'react-syntax-highlighter/dist/esm/languages/hljs/markdown.js';
-import handlebars from 'react-syntax-highlighter/dist/esm/languages/hljs/handlebars.js';
+// See https://github.com/react-syntax-highlighter/react-syntax-highlighter/issues/393 for esm issue.
+import github from 'react-syntax-highlighter/dist/cjs/styles/hljs/github.js';
+import javascript from 'react-syntax-highlighter/dist/cjs/languages/hljs/javascript.js';
+import typescript from 'react-syntax-highlighter/dist/cjs/languages/hljs/typescript.js';
+import python from 'react-syntax-highlighter/dist/cjs/languages/hljs/python.js';
+import java from 'react-syntax-highlighter/dist/cjs/languages/hljs/java.js';
+import xml from 'react-syntax-highlighter/dist/cjs/languages/hljs/xml.js';
+import json from 'react-syntax-highlighter/dist/cjs/languages/hljs/json.js';
+import yaml from 'react-syntax-highlighter/dist/cjs/languages/hljs/yaml.js';
+import markdown from 'react-syntax-highlighter/dist/cjs/languages/hljs/markdown.js';
+import handlebars from 'react-syntax-highlighter/dist/cjs/languages/hljs/handlebars.js';
 
-SyntaxHighlighter.registerLanguage('handlebars', handlebars);
-SyntaxHighlighter.registerLanguage('nunjucks', handlebars);
-SyntaxHighlighter.registerLanguage('html', handlebars);
-SyntaxHighlighter.registerLanguage('java', java);
-SyntaxHighlighter.registerLanguage('javascript', javascript);
-SyntaxHighlighter.registerLanguage('js', javascript);
-SyntaxHighlighter.registerLanguage('jsx', javascript);
-SyntaxHighlighter.registerLanguage('json', json);
-SyntaxHighlighter.registerLanguage('markdown', markdown);
-SyntaxHighlighter.registerLanguage('python', python);
-SyntaxHighlighter.registerLanguage('py', python);
-SyntaxHighlighter.registerLanguage('typescript', typescript);
-SyntaxHighlighter.registerLanguage('ts', typescript);
-SyntaxHighlighter.registerLanguage('xml', xml);
-SyntaxHighlighter.registerLanguage('yaml', yaml);
+SyntaxHighlighter.registerLanguage('handlebars', handlebars.default);
+SyntaxHighlighter.registerLanguage('nunjucks', handlebars.default);
+SyntaxHighlighter.registerLanguage('html', handlebars.default);
+SyntaxHighlighter.registerLanguage('java', java.default);
+SyntaxHighlighter.registerLanguage('javascript', javascript.default);
+SyntaxHighlighter.registerLanguage('js', javascript.default);
+SyntaxHighlighter.registerLanguage('jsx', javascript.default);
+SyntaxHighlighter.registerLanguage('json', json.default);
+SyntaxHighlighter.registerLanguage('markdown', markdown.default);
+SyntaxHighlighter.registerLanguage('python', python.default);
+SyntaxHighlighter.registerLanguage('py', python.default);
+SyntaxHighlighter.registerLanguage('typescript', typescript.default);
+SyntaxHighlighter.registerLanguage('ts', typescript.default);
+SyntaxHighlighter.registerLanguage('xml', xml.default);
+SyntaxHighlighter.registerLanguage('yaml', yaml.default);
 
 const components = {
   code: ({ language, children }) => (
