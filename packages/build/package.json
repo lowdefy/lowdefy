@@ -62,6 +62,7 @@
     "@lowdefy/blocks-loaders": "4.0.0-alpha.5",
     "@lowdefy/blocks-markdown": "4.0.0-alpha.5",
     "@lowdefy/connection-axios-http": "4.0.0-alpha.5",
+    "@lowdefy/connection-redis": "4.0.0-alpha.5",
     "@lowdefy/operators-change-case": "4.0.0-alpha.5",
     "@lowdefy/operators-diff": "4.0.0-alpha.5",
     "@lowdefy/operators-js": "4.0.0-alpha.5",
