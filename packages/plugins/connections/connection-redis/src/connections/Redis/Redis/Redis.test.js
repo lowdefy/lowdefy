@@ -20,6 +20,161 @@ import Redis from './Redis.js';
 const { checkRead, checkWrite } = Redis.meta;
 const schema = Redis.schema;
 
+jest.mock('redis', () => {
+  return {
+    createClient: jest.fn(),
+  };
+});
+
+let mockedCreateClient;
+
+beforeAll(async () => {
+  mockedCreateClient = (await import('redis')).createClient;
+});
+
+test('redis command', async () => {
+  const client = {
+    on: jest.fn(),
+    connect: jest.fn().mockImplementation(() => Promise.resolve()),
+    GET: jest.fn().mockImplementation(() => Promise.resolve(response)),
+    quit: jest.fn().mockImplementation(() => Promise.resolve()),
+  };
+  mockedCreateClient.mockImplementationOnce(() => client);
+  const connection = {
+    connection: {
+      password: 'password',
+      socket: {
+        host: 'host',
+        port: 1,
+      },
+    },
+  };
+  const request = {
+    command: 'get',
+    parameters: ['key'],
+    modifiers: {
+      a: true,
+      b: false,
+    },
+  };
+  const response = 'responseValue';
+  const res = await Redis({ request, connection });
+  expect(mockedCreateClient.mock.calls).toEqual([[connection.connection]]);
+  expect(client.connect).toHaveBeenCalledTimes(1);
+  expect(client.GET.mock.calls).toEqual([['key', { A: true, B: false }]]);
+  expect(client.quit).toHaveBeenCalledTimes(1);
+  expect(res).toEqual(response);
+});
+
+test('connection error', async () => {
+  const client = {
+    on: jest.fn(),
+    connect: jest.fn().mockImplementation(() => Promise.reject()),
+  };
+  mockedCreateClient.mockImplementationOnce(() => client);
+  const connection = {
+    connection: {
+      password: 'password',
+      socket: {
+        host: 'host',
+        port: 1,
+      },
+    },
+  };
+  const request = {
+    command: 'get',
+    parameters: ['key'],
+    modifiers: {
+      a: true,
+      b: false,
+    },
+  };
+  await expect(Redis({ request, connection })).rejects.toThrow('Connection refused.');
+});
+
+test('invalid command', async () => {
+  const client = {
+    on: jest.fn(),
+    connect: jest.fn().mockImplementation(() => Promise.resolve()),
+  };
+  mockedCreateClient.mockImplementationOnce(() => client);
+  const connection = {
+    connection: {
+      password: 'password',
+      socket: {
+        host: 'host',
+        port: 1,
+      },
+    },
+  };
+  const request = {
+    command: 'get',
+    parameters: ['key'],
+    modifiers: {
+      a: true,
+      b: false,
+    },
+  };
+  await expect(Redis({ request, connection })).rejects.toThrow('Invalid redis command "get".');
+});
+
+test('invalid parameters type', async () => {
+  const client = {
+    on: jest.fn(),
+    connect: jest.fn().mockImplementation(() => Promise.resolve()),
+    GET: jest.fn().mockImplementation(() => Promise.resolve()),
+  };
+  mockedCreateClient.mockImplementationOnce(() => client);
+  const connection = {
+    connection: {
+      password: 'password',
+      socket: {
+        host: 'host',
+        port: 1,
+      },
+    },
+  };
+  const request = {
+    command: 'get',
+    parameters: 'key',
+    modifiers: {
+      a: true,
+      b: false,
+    },
+  };
+  await expect(Redis({ request, connection })).rejects.toThrow(
+    'Invalid parameters, command "get" parameters should be an array, received "key".'
+  );
+});
+
+test('invalid parameters number', async () => {
+  const client = {
+    on: jest.fn(),
+    connect: jest.fn().mockImplementation(() => Promise.resolve()),
+    SET: jest.fn().mockImplementation(() => Promise.reject(new Error('SET error'))),
+    quit: jest.fn().mockImplementation(() => Promise.resolve()),
+  };
+  mockedCreateClient.mockImplementationOnce(() => client);
+  const connection = {
+    connection: {
+      password: 'password',
+      socket: {
+        host: 'host',
+        port: 1,
+      },
+    },
+  };
+  const request = {
+    command: 'SET',
+    parameters: ['key'],
+    modifiers: {
+      a: true,
+      b: false,
+    },
+  };
+  await expect(Redis({ request, connection })).rejects.toThrow('SET error');
+});
+
 test('valid request schema, with url', () => {
   const request = {
     command: 'set',
