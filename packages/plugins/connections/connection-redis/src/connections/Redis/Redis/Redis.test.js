@@ -32,7 +32,7 @@ beforeAll(async () => {
   mockedCreateClient = (await import('redis')).createClient;
 });
 
-test('redis command', async () => {
+test('redis command with connection as an object', async () => {
   const client = {
     on: jest.fn(),
     connect: jest.fn().mockImplementation(() => Promise.resolve()),
@@ -66,9 +66,41 @@ test('redis command', async () => {
   expect(res).toEqual(response);
 });
 
-test('connection error', async () => {
+test('redis command with connection as a string', async () => {
   const client = {
     on: jest.fn(),
+    connect: jest.fn().mockImplementation(() => Promise.resolve()),
+    GET: jest.fn().mockImplementation(() => Promise.resolve(response)),
+    quit: jest.fn().mockImplementation(() => Promise.resolve()),
+  };
+  mockedCreateClient.mockImplementationOnce(() => client);
+  const connection = {
+    connection: 'redis://user:password@redis:server.com:5000/4',
+  };
+  const request = {
+    command: 'get',
+    parameters: ['key'],
+    modifiers: {
+      a: true,
+      b: false,
+    },
+  };
+  const response = 'responseValue';
+  const res = await Redis({ request, connection });
+  expect(mockedCreateClient.mock.calls).toEqual([[{ url: connection.connection }]]);
+  expect(client.connect).toHaveBeenCalledTimes(1);
+  expect(client.GET.mock.calls).toEqual([['key', { A: true, B: false }]]);
+  expect(client.quit).toHaveBeenCalledTimes(1);
+  expect(res).toEqual(response);
+});
+
+test('connection error', async () => {
+  const client = {
+    on: jest.fn((event, cb) => {
+      if (event === 'error') {
+        cb(new Error('connection error'));
+      }
+    }),
     connect: jest.fn().mockImplementation(() => Promise.reject()),
   };
   mockedCreateClient.mockImplementationOnce(() => client);
@@ -89,7 +121,7 @@ test('connection error', async () => {
       b: false,
     },
   };
-  await expect(Redis({ request, connection })).rejects.toThrow('Connection refused.');
+  await expect(Redis({ request, connection })).rejects.toThrow('connection error');
 });
 
 test('invalid command', async () => {

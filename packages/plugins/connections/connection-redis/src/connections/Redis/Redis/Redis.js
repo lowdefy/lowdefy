@@ -29,12 +29,7 @@ async function Redis({ request, connection }) {
   });
 
   const { command, parameters, modifiers } = request;
-
-  try {
-    await client.connect();
-  } catch (error) {
-    throw new Error(`Connection refused.`);
-  }
+  await client.connect();
 
   if (!type.isFunction(client[command.toUpperCase()])) {
     throw new Error(`Invalid redis command "${command}".`);
