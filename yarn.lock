@@ -3495,6 +3495,7 @@ __metadata:
     "@lowdefy/blocks-loaders": 4.0.0-alpha.5
     "@lowdefy/blocks-markdown": 4.0.0-alpha.5
     "@lowdefy/connection-axios-http": 4.0.0-alpha.5
+    "@lowdefy/connection-redis": 4.0.0-alpha.5
     "@lowdefy/helpers": 4.0.0-alpha.5
     "@lowdefy/node-utils": 4.0.0-alpha.5
     "@lowdefy/nunjucks": 4.0.0-alpha.5
@@ -3596,7 +3597,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-redis@workspace:packages/plugins/connections/connection-redis":
+"@lowdefy/connection-redis@4.0.0-alpha.5, @lowdefy/connection-redis@workspace:packages/plugins/connections/connection-redis":
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-redis@workspace:packages/plugins/connections/connection-redis"
   dependencies:
@@ -3606,7 +3607,7 @@ __metadata:
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
     jest: 27.3.1
-    redis: ^4.0.1
+    redis: 4.0.1
   languageName: unknown
   linkType: soft
 
@@ -16189,7 +16190,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redis@npm:^4.0.1":
+"redis@npm:4.0.1":
   version: 4.0.1
   resolution: "redis@npm:4.0.1"
   dependencies:

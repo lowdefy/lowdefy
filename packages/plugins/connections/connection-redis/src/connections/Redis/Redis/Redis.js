@@ -42,7 +42,7 @@ async function Redis({ request, connection }) {
 
   if (!type.isArray(parameters)) {
     throw new Error(
-      `Invalid command, command "${command}" parameters should be an array, received ${JSON.stringify(
+      `Invalid parameters, command "${command}" parameters should be an array, received ${JSON.stringify(
         parameters
       )}.`
     );
@@ -59,9 +59,7 @@ async function Redis({ request, connection }) {
     return commandReturn;
   } catch (error) {
     client.quit();
-    throw new Error(
-      `Invalid command "${command}" parameters, received ${JSON.stringify(parameters)}.`
-    );
+    throw error;
   }
 }
 

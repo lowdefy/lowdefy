@@ -19,6 +19,10 @@
     {
       "name": "Gerrie van Wyk",
       "url": "https://github.com/Gervwyk"
+    },
+    {
+      "name": "João Correia",
+      "url": "https://github.com/correiarmjoao"
     }
   ],
   "repository": {
@@ -42,7 +46,7 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-alpha.5",
-    "redis": "^4.0.1"
+    "redis": "4.0.1"
   },
   "devDependencies": {
     "@lowdefy/ajv": "4.0.0-alpha.5",
