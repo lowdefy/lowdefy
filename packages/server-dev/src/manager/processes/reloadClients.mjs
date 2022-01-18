@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -15,16 +14,13 @@
   limitations under the License.
 */
 
-import getContext from './getContext.mjs';
-import initialBuild from './initialBuild.mjs';
-import startWatchers from './watchers/startWatchers.mjs';
-import startServer from './processes/startServer.mjs';
+import { writeFile } from '@lowdefy/node-utils';
 
-async function run() {
-  const context = await getContext();
-  await initialBuild(context);
-  await startWatchers(context);
-  await startServer(context);
+function reloadClients(context) {
+  return async () => {
+    await writeFile({ filePath: './build/reload', content: `${Date.now()}` });
+    console.log('Reloaded');
+  };
 }
 
-run();
+export default reloadClients;

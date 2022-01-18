@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -14,15 +15,11 @@
   limitations under the License.
 */
 
-import { spawnProcess } from '@lowdefy/node-utils';
-
-async function startServer({ packageManager }) {
-  await spawnProcess({
-    logger: console,
-    args: ['run', 'next', 'start'],
-    command: packageManager || 'npm',
-    silent: false,
-  });
+async function initialBuild(context) {
+  await context.installServer();
+  await context.lowdefyBuild();
+  await context.installServer();
+  await context.nextBuild();
 }
 
-export default startServer;
+export default initialBuild;

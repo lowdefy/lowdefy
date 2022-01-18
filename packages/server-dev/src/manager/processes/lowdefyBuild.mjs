@@ -16,13 +16,23 @@
 
 import { spawnProcess } from '@lowdefy/node-utils';
 
-async function runNextBuild({ packageManager }) {
-  await spawnProcess({
-    logger: console,
-    args: ['run', 'build:next'],
-    command: packageManager || 'npm',
-    silent: false,
-  });
+function lowdefyBuild({ packageManager, directories }) {
+  return async () => {
+    await spawnProcess({
+      logger: console,
+      args: ['run', 'build:lowdefy'],
+      command: packageManager,
+      processOptions: {
+        env: {
+          ...process.env,
+          LOWDEFY_BUILD_DIRECTORY: './build',
+          LOWDEFY_CONFIG_DIRECTORY: directories.config,
+          LOWDEFY_SERVER_DIRECTORY: process.cwd(),
+        },
+      },
+      silent: false,
+    });
+  };
 }
 
-export default runNextBuild;
+export default lowdefyBuild;

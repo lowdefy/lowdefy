@@ -14,10 +14,15 @@
   limitations under the License.
 */
 
-import setupConfigWatcher from './watchers/setupConfigWatcher.mjs';
+import setupWatcher from './setupWatcher.mjs';
 
-async function setupWatchers(context) {
-  await Promise.all([setupConfigWatcher(context)]);
+async function configWatcher(context) {
+  const callback = async () => {
+    await context.lowdefyBuild();
+    context.reloadClients({ type: 'soft' });
+  };
+  // TODO: Add ignored paths
+  return setupWatcher({ callback, watchPaths: [context.directories.config] });
 }
 
-export default setupWatchers;
+export default configWatcher;

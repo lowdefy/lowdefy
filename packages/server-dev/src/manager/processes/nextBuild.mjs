@@ -14,15 +14,18 @@
   limitations under the License.
 */
 
-import runLowdefyBuild from '../runLowdefyBuild.mjs';
-import setupWatcher from './setupWatcher.mjs';
+import { spawnProcess } from '@lowdefy/node-utils';
 
-async function setupConfigWatcher(context) {
-  const callback = async () => {
-    console.log('Running build');
-    await runLowdefyBuild(context);
+function nextBuild({ packageManager, verbose }) {
+  return async () => {
+    console.log('Building next app...');
+    await spawnProcess({
+      logger: console,
+      args: ['run', 'build:next'],
+      command: packageManager,
+      silent: !verbose,
+    });
   };
-  return setupWatcher({ callback, watchPaths: [context.directories.config] });
 }
 
-export default setupConfigWatcher;
+export default nextBuild;

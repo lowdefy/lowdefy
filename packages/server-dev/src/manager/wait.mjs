@@ -14,17 +14,8 @@
   limitations under the License.
 */
 
-import runLowdefyBuild from './runLowdefyBuild.mjs';
-import runNextBuild from './runNextBuild.mjs';
-import installServer from './installServer.mjs';
-
-async function resetServer(context) {
-  // TODO: Only install when needed
-  await installServer(context);
-  await runLowdefyBuild(context);
-  // TODO: Only install when needed
-  await installServer(context);
-  await runNextBuild(context);
+async function wait(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export default resetServer;
+export default wait;

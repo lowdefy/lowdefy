@@ -14,23 +14,24 @@
   limitations under the License.
 */
 
-import { spawnProcess } from '@lowdefy/node-utils';
+import path from 'path';
+import setupWatcher from './setupWatcher.mjs';
+import wait from '../wait.mjs';
 
-async function runLowdefyBuild({ packageManager, directories }) {
-  await spawnProcess({
-    logger: console,
-    args: ['run', 'build:lowdefy'],
-    command: packageManager || 'npm',
-    processOptions: {
-      env: {
-        ...process.env,
-        LOWDEFY_BUILD_DIRECTORY: './build',
-        LOWDEFY_CONFIG_DIRECTORY: directories.config,
-        LOWDEFY_SERVER_DIRECTORY: process.cwd(),
-      },
-    },
-    silent: false,
+async function envWatcher(context) {
+  const callback = async () => {
+    console.log('.env file changed, restarting server...');
+    context.reloadClients({ type: 'hard' });
+    // Wait for clients to get reload event.
+    await wait(500);
+    context.restartServer();
+  };
+  // TODO: Add ignored paths
+  return setupWatcher({
+    callback,
+    watchPaths: [path.resolve(context.directories.config, '.env')],
+    watchDotfiles: true,
   });
 }
 
-export default runLowdefyBuild;
+export default envWatcher;
