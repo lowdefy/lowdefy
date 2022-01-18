@@ -28,7 +28,6 @@ test('validateApp no app defined', async () => {
         appendBody: '',
         appendHead: '',
       },
-      style: {},
     },
   });
 });
@@ -42,7 +41,6 @@ test('validateApp empty app object', async () => {
         appendBody: '',
         appendHead: '',
       },
-      style: {},
     },
   });
 });
@@ -56,7 +54,6 @@ test('validateApp empty html', async () => {
         appendBody: '',
         appendHead: '',
       },
-      style: {},
     },
   });
 });
@@ -77,15 +74,14 @@ test('validateApp appendHead and appendHead', async () => {
         appendBody: 'body',
         appendHead: 'head',
       },
-      style: {},
     },
   });
 });
 
-test('validateApp style', async () => {
+test('validate config theme', async () => {
   const components = {
-    app: {
-      style: {
+    config: {
+      theme: {
         lessVariables: {
           'primary-color': '#FF00FF',
         },
@@ -99,7 +95,9 @@ test('validateApp style', async () => {
         appendBody: '',
         appendHead: '',
       },
-      style: {
+    },
+    config: {
+      theme: {
         lessVariables: {
           'primary-color': '#FF00FF',
         },

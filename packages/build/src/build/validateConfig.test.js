@@ -19,6 +19,21 @@ import testContext from '../test/testContext.js';
 
 const context = testContext();
 
+test('validateConfig no config defined', async () => {
+  const components = {};
+  const result = await validateConfig({ components, context });
+  expect(result).toEqual({
+    config: {
+      auth: {
+        pages: {
+          roles: {},
+        },
+      },
+      theme: {},
+    },
+  });
+});
+
 test('validateConfig config not an object', async () => {
   const components = {
     config: 'config',
