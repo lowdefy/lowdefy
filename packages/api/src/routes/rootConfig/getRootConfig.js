@@ -14,15 +14,17 @@
   limitations under the License.
 */
 
-import findHome from './findHome.js';
+import getHomeAndMenus from './getHomeAndMenus.js';
 import getLowdefyGlobal from './getLowdefyGlobal.js';
-import getMenus from './menus/getMenus.js';
 
 async function getRootConfig(context) {
-  const [lowdefyGlobal, menus] = await Promise.all([getLowdefyGlobal(context), getMenus(context)]);
+  const [lowdefyGlobal, { home, menus }] = await Promise.all([
+    getLowdefyGlobal(context),
+    getHomeAndMenus(context),
+  ]);
   return {
     authenticated: context.authenticated,
-    home: findHome(context, { menus }),
+    home,
     lowdefyGlobal,
     menus,
   };
