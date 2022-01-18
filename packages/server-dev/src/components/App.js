@@ -18,43 +18,38 @@ import React from 'react';
 
 import { useRouter } from 'next/router';
 
-import Context from './Context.js';
-import Head from './Head.js';
-import Block from './block/Block.js';
+import Page from './Page.js';
+import Reload from './Reload.js';
+import setPageId from '../utils/setPageId.js';
 import setupLink from '../utils/setupLink.js';
+import useRootConfig from '../utils/useRootConfig.js';
 
-const LoadingBlock = () => <div>Loading...</div>;
-
-const Page = ({ lowdefy, pageConfig, rootConfig }) => {
+const App = ({ lowdefy }) => {
   const router = useRouter();
+  const { data: rootConfig } = useRootConfig();
+
+  window.lowdefy = lowdefy;
+
+  lowdefy.home = rootConfig.home;
+  lowdefy.lowdefyGlobal = rootConfig.lowdefyGlobal;
+  lowdefy.menus = rootConfig.menus;
+
   lowdefy._internal.basePath = router.basePath;
   lowdefy._internal.pathname = router.pathname;
   lowdefy._internal.query = router.query;
   lowdefy._internal.router = router;
   lowdefy._internal.link = setupLink({ lowdefy });
-  lowdefy.home = rootConfig.home;
-  lowdefy.lowdefyGlobal = rootConfig.lowdefyGlobal;
-  lowdefy.menus = rootConfig.menus;
+
+  const redirect = setPageId(lowdefy);
+  if (redirect) {
+    lowdefy._internal.router.push(`/${lowdefy.pageId}`);
+  }
+
   return (
-    <Context config={pageConfig} lowdefy={lowdefy}>
-      {(context, loading) => {
-        if (loading) {
-          return <LoadingBlock />;
-        }
-        return (
-          <>
-            <Head properties={context._internal.RootBlocks.map[pageConfig.id].eval.properties} />
-            <Block
-              block={context._internal.RootBlocks.map[pageConfig.id]}
-              Blocks={context._internal.RootBlocks}
-              context={context}
-              lowdefy={lowdefy}
-            />
-          </>
-        );
-      }}
-    </Context>
+    <Reload>
+      <Page lowdefy={lowdefy} />
+    </Reload>
   );
 };
 
-export default Page;
+export default App;

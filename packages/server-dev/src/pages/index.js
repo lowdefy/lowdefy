@@ -14,6 +14,6 @@
   limitations under the License.
 */
 
-import Home from '../components/Home.js';
+import App from '../components/App.js';
 
-export default Home;
+export default App;

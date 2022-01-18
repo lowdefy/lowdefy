@@ -21,6 +21,9 @@ export default async function handler(req, res) {
   // TODO: get the right api context options
   const apiContext = await createApiContext({ buildDirectory: './build' });
   const pageConfig = await getPageConfig(apiContext, { pageId });
-
-  res.status(200).json(pageConfig);
+  if (pageConfig === null) {
+    res.status(404).send('Page not found.');
+  } else {
+    res.status(200).json(pageConfig);
+  }
 }

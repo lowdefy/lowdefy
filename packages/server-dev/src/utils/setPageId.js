@@ -14,22 +14,20 @@
   limitations under the License.
 */
 
-import React from 'react';
-import usePageConfig from '../utils/usePageConfig.js';
-import useRootConfig from '../utils/useRootConfig.js';
+function setPageId(lowdefy) {
+  if (lowdefy._internal.pathname === '/404') {
+    lowdefy.pageId = '404';
+    return false;
+  }
+  if (!lowdefy._internal.query.pageId) {
+    lowdefy.pageId = lowdefy.home.pageId;
+    if (lowdefy.home.configured === false) {
+      return true;
+    }
+    return false;
+  }
+  lowdefy.pageId = lowdefy._internal.query.pageId;
+  return false;
+}
 
-const PageConfig = ({ lowdefy, children }) => {
-  const { pageId } = lowdefy._internal.query;
-
-  const { data: pageConfig } = usePageConfig(pageId);
-  const { data: rootConfig } = useRootConfig();
-
-  lowdefy.home = rootConfig.home;
-  lowdefy.lowdefyGlobal = rootConfig.lowdefyGlobal;
-  lowdefy.menus = rootConfig.menus;
-
-  window.lowdefy = lowdefy;
-  return <>{children(pageConfig)}</>;
-};
-
-export default PageConfig;
+export default setPageId;
