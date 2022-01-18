@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // TODO: Used for local builds, remove once finished;
-import spawnProcess from '../utils/spawnProcess.js';
+import { spawnProcess } from '@lowdefy/node-utils';
 import createPrint from '../utils/print.js';
 import path from 'path';
 import fs from 'fs';
@@ -11,7 +11,7 @@ async function packLocalServer() {
 
   try {
     await spawnProcess({
-      context,
+      logger: context.print,
       command: 'npm',
       args: ['pack'],
       processOptions: {
