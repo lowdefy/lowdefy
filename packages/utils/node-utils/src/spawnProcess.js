@@ -16,7 +16,7 @@
 
 import { spawn } from 'child_process';
 
-async function spawnProcess({ context, command, args, processOptions, silent }) {
+async function spawnProcess({ logger, command, args, processOptions, silent }) {
   return new Promise((resolve, reject) => {
     const process = spawn(command, args, processOptions);
 
@@ -27,7 +27,7 @@ async function spawnProcess({ context, command, args, processOptions, silent }) 
           .split('\n')
           .forEach((line) => {
             if (line) {
-              context.print.log(line);
+              logger.log(line);
             }
           });
       }
@@ -40,7 +40,7 @@ async function spawnProcess({ context, command, args, processOptions, silent }) 
           .split('\n')
           .forEach((line) => {
             if (line) {
-              context.print.warn(line);
+              logger.warn(line);
             }
           });
       }

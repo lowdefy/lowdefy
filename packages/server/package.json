@@ -27,13 +27,15 @@
   },
   "files": [
     "src/*",
+    "public/*",
     "next.config.js",
     ".eslintrc.yaml"
   ],
   "scripts": {
     "build:lowdefy": "lowdefy-build",
     "build:next": "next build",
-    "dev": "next dev",
+    "dev": "yarn build:lowdefy && yarn && next dev",
+    "dev:prod": "yarn build:lowdefy && yarn && yarn build:next && next start",
     "start": "next start",
     "lint": "next lint",
     "next": "next"

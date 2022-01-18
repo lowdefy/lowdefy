@@ -14,17 +14,15 @@
   limitations under the License.
 */
 
-import spawnProcess from '../../utils/spawnProcess.js';
+import { spawnProcess } from '@lowdefy/node-utils';
 
 async function runStart({ context }) {
   context.print.spin(`Running "${context.packageManager} run start".`);
   await spawnProcess({
-    context,
-    command: context.packageManager, // npm or yarn
+    logger: context.print,
     args: ['run', 'start'],
-    processOptions: {
-      cwd: context.directories.server,
-    },
+    command: context.packageManager, // npm or yarn
+    processOptions: { cwd: context.directories.server },
     silent: false,
   });
 }

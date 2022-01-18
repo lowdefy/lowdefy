@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import spawnProcess from '../../utils/spawnProcess.js';
+import { spawnProcess } from '@lowdefy/node-utils';
 
 async function runNextBuild({ context }) {
   context.print.log('Running Next build.');
   try {
     await spawnProcess({
-      context,
+      logger: context.print,
       command: context.packageManager, // npm or yarn
       args: ['run', 'build:next'],
       processOptions: {

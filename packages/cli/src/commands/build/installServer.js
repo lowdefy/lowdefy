@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import spawnProcess from '../../utils/spawnProcess.js';
+import { spawnProcess } from '@lowdefy/node-utils';
 
 const args = {
   npm: ['install', '--legacy-peer-deps'],
@@ -25,7 +25,7 @@ async function installServer({ context }) {
   context.print.spin(`Running ${context.packageManager} install.`);
   try {
     await spawnProcess({
-      context,
+      logger: context.print,
       command: context.packageManager, // npm or yarn
       args: args[context.packageManager],
       processOptions: {
