@@ -21,7 +21,7 @@ import React from 'react';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { Col, Row } from 'antd';
 import classNames from 'classnames';
-import CSSMotion from 'rc-animate/es/CSSMotion.js';
+import CSSMotion from 'rc-motion';
 
 import labelLogic from './labelLogic.js';
 
