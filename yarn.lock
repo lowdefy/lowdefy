@@ -3495,6 +3495,7 @@ __metadata:
     "@lowdefy/blocks-loaders": 4.0.0-alpha.5
     "@lowdefy/blocks-markdown": 4.0.0-alpha.5
     "@lowdefy/connection-axios-http": 4.0.0-alpha.5
+    "@lowdefy/connection-redis": 4.0.0-alpha.5
     "@lowdefy/helpers": 4.0.0-alpha.5
     "@lowdefy/node-utils": 4.0.0-alpha.5
     "@lowdefy/nunjucks": 4.0.0-alpha.5
@@ -3593,6 +3594,20 @@ __metadata:
     jest: 27.3.1
     mongodb: 3.7.3
     saslprep: 1.0.3
+  languageName: unknown
+  linkType: soft
+
+"@lowdefy/connection-redis@4.0.0-alpha.5, @lowdefy/connection-redis@workspace:packages/plugins/connections/connection-redis":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/connection-redis@workspace:packages/plugins/connections/connection-redis"
+  dependencies:
+    "@lowdefy/ajv": 4.0.0-alpha.5
+    "@lowdefy/helpers": 4.0.0-alpha.5
+    "@swc/cli": 0.1.52
+    "@swc/core": 1.2.113
+    "@swc/jest": 0.2.9
+    jest: 27.3.1
+    redis: 4.0.1
   languageName: unknown
   linkType: soft
 
@@ -4085,6 +4100,45 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@node-redis/client@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@node-redis/client@npm:1.0.1"
+  dependencies:
+    cluster-key-slot: 1.1.0
+    generic-pool: 3.8.2
+    redis-parser: 3.0.0
+    yallist: 4.0.0
+  checksum: 949c312191b66f7974b3c3842f4e61979b4c2bf45e68d51df39d7e422f5a3ae2e3b944264c1f4e9ead5bf320a37709d1245b3672bc67da669c1033c490d8c4db
+  languageName: node
+  linkType: hard
+
+"@node-redis/json@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@node-redis/json@npm:1.0.1"
+  peerDependencies:
+    "@node-redis/client": ^1.0.0
+  checksum: 5027a9ad1388897244fc19816e9aaeb0f62a08c6036d46767c9ea77265d2f5fe802d8099fef32187c1beeeef3ec14a8e3745baeff5b201e8474a15e06a72e966
+  languageName: node
+  linkType: hard
+
+"@node-redis/search@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@node-redis/search@npm:1.0.1"
+  peerDependencies:
+    "@node-redis/client": ^1.0.0
+  checksum: dd0000107276e34d2ef0a6aac407d13bf9dec1938143754a556505512d415a2e532660b32c621efe3f47a9eb70f55dda3354e0ebf2e81520e8b0be12dd25a206
+  languageName: node
+  linkType: hard
+
+"@node-redis/time-series@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@node-redis/time-series@npm:1.0.0"
+  peerDependencies:
+    "@node-redis/client": ^1.0.0
+  checksum: 9dc549666385a46b600933e803c6a318a3a11077e5db04fd4a1136e3de07f79247c60247d924671bce7a89a807dbb262cf922378632ab3c5dc528cfeb4c8079a
+  languageName: node
+  linkType: hard
+
 "@node-rs/helper@npm:^1.0.0":
   version: 1.2.1
   resolution: "@node-rs/helper@npm:1.2.1"
@@ -4472,9 +4526,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@swc/core-android-arm64@npm:^1.2.113":
+  version: 1.2.130
+  resolution: "@swc/core-android-arm64@npm:1.2.130"
+  conditions: os=android & cpu=arm64
+  languageName: node
+  linkType: hard
+
 "@swc/core-darwin-arm64@npm:^1.2.107, @swc/core-darwin-arm64@npm:^1.2.112":
   version: 1.2.112
   resolution: "@swc/core-darwin-arm64@npm:1.2.112"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@swc/core-darwin-arm64@npm:^1.2.113":
+  version: 1.2.130
+  resolution: "@swc/core-darwin-arm64@npm:1.2.130"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
@@ -4486,9 +4554,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@swc/core-darwin-x64@npm:^1.2.113":
+  version: 1.2.130
+  resolution: "@swc/core-darwin-x64@npm:1.2.130"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
 "@swc/core-freebsd-x64@npm:^1.2.107, @swc/core-freebsd-x64@npm:^1.2.112":
   version: 1.2.112
   resolution: "@swc/core-freebsd-x64@npm:1.2.112"
+  conditions: os=freebsd & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@swc/core-freebsd-x64@npm:^1.2.113":
+  version: 1.2.130
+  resolution: "@swc/core-freebsd-x64@npm:1.2.130"
   conditions: os=freebsd & cpu=x64
   languageName: node
   linkType: hard
@@ -4500,9 +4582,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@swc/core-linux-arm-gnueabihf@npm:^1.2.113":
+  version: 1.2.130
+  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.2.130"
+  conditions: os=linux & cpu=arm
+  languageName: node
+  linkType: hard
+
 "@swc/core-linux-arm64-gnu@npm:^1.2.107, @swc/core-linux-arm64-gnu@npm:^1.2.112":
   version: 1.2.112
   resolution: "@swc/core-linux-arm64-gnu@npm:1.2.112"
+  conditions: os=linux & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-arm64-gnu@npm:^1.2.113":
+  version: 1.2.130
+  resolution: "@swc/core-linux-arm64-gnu@npm:1.2.130"
   conditions: os=linux & cpu=arm64
   languageName: node
   linkType: hard
@@ -4514,9 +4610,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@swc/core-linux-arm64-musl@npm:^1.2.113":
+  version: 1.2.130
+  resolution: "@swc/core-linux-arm64-musl@npm:1.2.130"
+  conditions: os=linux & cpu=arm64
+  languageName: node
+  linkType: hard
+
 "@swc/core-linux-x64-gnu@npm:^1.2.107, @swc/core-linux-x64-gnu@npm:^1.2.112":
   version: 1.2.112
   resolution: "@swc/core-linux-x64-gnu@npm:1.2.112"
+  conditions: os=linux & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-x64-gnu@npm:^1.2.113":
+  version: 1.2.130
+  resolution: "@swc/core-linux-x64-gnu@npm:1.2.130"
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard
@@ -4528,9 +4638,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@swc/core-linux-x64-musl@npm:^1.2.113":
+  version: 1.2.130
+  resolution: "@swc/core-linux-x64-musl@npm:1.2.130"
+  conditions: os=linux & cpu=x64
+  languageName: node
+  linkType: hard
+
 "@swc/core-win32-arm64-msvc@npm:^1.2.107, @swc/core-win32-arm64-msvc@npm:^1.2.112":
   version: 1.2.112
   resolution: "@swc/core-win32-arm64-msvc@npm:1.2.112"
+  conditions: os=win32 & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@swc/core-win32-arm64-msvc@npm:^1.2.113":
+  version: 1.2.130
+  resolution: "@swc/core-win32-arm64-msvc@npm:1.2.130"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
@@ -4542,9 +4666,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@swc/core-win32-ia32-msvc@npm:^1.2.113":
+  version: 1.2.130
+  resolution: "@swc/core-win32-ia32-msvc@npm:1.2.130"
+  conditions: os=win32 & cpu=ia32
+  languageName: node
+  linkType: hard
+
 "@swc/core-win32-x64-msvc@npm:^1.2.107, @swc/core-win32-x64-msvc@npm:^1.2.112":
   version: 1.2.112
   resolution: "@swc/core-win32-x64-msvc@npm:1.2.112"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@swc/core-win32-x64-msvc@npm:^1.2.113":
+  version: 1.2.130
+  resolution: "@swc/core-win32-x64-msvc@npm:1.2.130"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -4638,6 +4776,52 @@ __metadata:
     "@swc/core-win32-x64-msvc":
       optional: true
   checksum: 4e60e542db515c3d68f76f813db920e7fb752499f221f86f46cb7f8fdb46648dfbce7959066e2fbcb4cc782bf43d1156649da71e7d99941949d15a0f14b7635f
+  languageName: node
+  linkType: hard
+
+"@swc/core@npm:1.2.113":
+  version: 1.2.113
+  resolution: "@swc/core@npm:1.2.113"
+  dependencies:
+    "@node-rs/helper": ^1.0.0
+    "@swc/core-android-arm64": ^1.2.113
+    "@swc/core-darwin-arm64": ^1.2.113
+    "@swc/core-darwin-x64": ^1.2.113
+    "@swc/core-freebsd-x64": ^1.2.113
+    "@swc/core-linux-arm-gnueabihf": ^1.2.113
+    "@swc/core-linux-arm64-gnu": ^1.2.113
+    "@swc/core-linux-arm64-musl": ^1.2.113
+    "@swc/core-linux-x64-gnu": ^1.2.113
+    "@swc/core-linux-x64-musl": ^1.2.113
+    "@swc/core-win32-arm64-msvc": ^1.2.113
+    "@swc/core-win32-ia32-msvc": ^1.2.113
+    "@swc/core-win32-x64-msvc": ^1.2.113
+  dependenciesMeta:
+    "@swc/core-android-arm64":
+      optional: true
+    "@swc/core-darwin-arm64":
+      optional: true
+    "@swc/core-darwin-x64":
+      optional: true
+    "@swc/core-freebsd-x64":
+      optional: true
+    "@swc/core-linux-arm-gnueabihf":
+      optional: true
+    "@swc/core-linux-arm64-gnu":
+      optional: true
+    "@swc/core-linux-arm64-musl":
+      optional: true
+    "@swc/core-linux-x64-gnu":
+      optional: true
+    "@swc/core-linux-x64-musl":
+      optional: true
+    "@swc/core-win32-arm64-msvc":
+      optional: true
+    "@swc/core-win32-ia32-msvc":
+      optional: true
+    "@swc/core-win32-x64-msvc":
+      optional: true
+  checksum: fa9281080d26a6590be636c5b7a3f61d76b8605465f23bf90532402e0fbc794b2ebca0317c0f93e87a328d03f79d6773a8d61bbf3d42af619603342fd3fe305d
   languageName: node
   linkType: hard
 
@@ -6818,6 +7002,13 @@ __metadata:
   version: 1.0.4
   resolution: "clone@npm:1.0.4"
   checksum: d06418b7335897209e77bdd430d04f882189582e67bd1f75a04565f3f07f5b3f119a9d670c943b6697d0afb100f03b866b3b8a1f91d4d02d72c4ecf2bb64b5dd
+  languageName: node
+  linkType: hard
+
+"cluster-key-slot@npm:1.1.0":
+  version: 1.1.0
+  resolution: "cluster-key-slot@npm:1.1.0"
+  checksum: fc953c75209b1ef9088081bab4e40a0b2586491c974ab93460569c014515ca5a2e31c043f185285e177007162fc353d07836d98f570c171dbe055775430e495b
   languageName: node
   linkType: hard
 
@@ -9224,6 +9415,13 @@ __metadata:
     gaxios: ^4.0.0
     json-bigint: ^1.0.0
   checksum: b0b1b85ea2efee1d640a1d4ead0937fdcceffd43ab4cacfdd66fd086fcfe5c3d09ad850ee14f43f2dc73244b2617b166adfa09a2a85e0652a8c56bed194f01fe
+  languageName: node
+  linkType: hard
+
+"generic-pool@npm:3.8.2":
+  version: 3.8.2
+  resolution: "generic-pool@npm:3.8.2"
+  checksum: f549077d90265e5e4d32a2410205b357ec61cf73d17861f1013637984390e09fe7bf537129a2c6ed30ae57662a57c8d54194f80046408d3349836330f422dbde
   languageName: node
   linkType: hard
 
@@ -16146,6 +16344,34 @@ __metadata:
   languageName: node
   linkType: hard
 
+"redis-errors@npm:^1.0.0":
+  version: 1.2.0
+  resolution: "redis-errors@npm:1.2.0"
+  checksum: f28ac2692113f6f9c222670735aa58aeae413464fd58ccf3fce3f700cae7262606300840c802c64f2b53f19f65993da24dc918afc277e9e33ac1ff09edb394f4
+  languageName: node
+  linkType: hard
+
+"redis-parser@npm:3.0.0":
+  version: 3.0.0
+  resolution: "redis-parser@npm:3.0.0"
+  dependencies:
+    redis-errors: ^1.0.0
+  checksum: 89290ae530332f2ae37577647fa18208d10308a1a6ba750b9d9a093e7398f5e5253f19855b64c98757f7129cccce958e4af2573fdc33bad41405f87f1943459a
+  languageName: node
+  linkType: hard
+
+"redis@npm:4.0.1":
+  version: 4.0.1
+  resolution: "redis@npm:4.0.1"
+  dependencies:
+    "@node-redis/client": ^1.0.1
+    "@node-redis/json": ^1.0.1
+    "@node-redis/search": ^1.0.1
+    "@node-redis/time-series": ^1.0.0
+  checksum: 0d5db4d8f6617185888d2efb65ba9d3718942d3bb7253f573ee040032daf12fb3e27393a0259402a06dd9e1ae151db107753500c435a2e5594cb2b8542a4dc0d
+  languageName: node
+  linkType: hard
+
 "refractor@npm:^3.2.0":
   version: 3.5.0
   resolution: "refractor@npm:3.5.0"
@@ -19005,17 +19231,17 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"yallist@npm:4.0.0, yallist@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "yallist@npm:4.0.0"
+  checksum: 343617202af32df2a15a3be36a5a8c0c8545208f3d3dfbc6bb7c3e3b7e8c6f8e7485432e4f3b88da3031a6e20afa7c711eded32ddfb122896ac5d914e75848d5
+  languageName: node
+  linkType: hard
+
 "yallist@npm:^3.0.0, yallist@npm:^3.1.1":
   version: 3.1.1
   resolution: "yallist@npm:3.1.1"
   checksum: 48f7bb00dc19fc635a13a39fe547f527b10c9290e7b3e836b9a8f1ca04d4d342e85714416b3c2ab74949c9c66f9cebb0473e6bc353b79035356103b47641285d
-  languageName: node
-  linkType: hard
-
-"yallist@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "yallist@npm:4.0.0"
-  checksum: 343617202af32df2a15a3be36a5a8c0c8545208f3d3dfbc6bb7c3e3b7e8c6f8e7485432e4f3b88da3031a6e20afa7c711eded32ddfb122896ac5d914e75848d5
   languageName: node
   linkType: hard
 

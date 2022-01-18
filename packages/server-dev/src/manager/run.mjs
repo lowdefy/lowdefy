@@ -16,14 +16,14 @@
 */
 
 import getContext from './getContext.mjs';
-import resetServer from './resetServer.mjs';
-import setupFileWatchers from './setupFileWatchers.mjs';
-import startServer from './startServer.mjs';
+import initialBuild from './initialBuild.mjs';
+import startWatchers from './watchers/startWatchers.mjs';
+import startServer from './processes/startServer.mjs';
 
 async function run() {
   const context = await getContext();
-  await resetServer(context);
-  await setupFileWatchers(context);
+  await initialBuild(context);
+  await startWatchers(context);
   await startServer(context);
 }
 
