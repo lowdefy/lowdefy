@@ -15,21 +15,41 @@
 */
 
 import React from 'react';
-import usePageConfig from '../utils/usePageConfig.js';
+
+import { useRouter } from 'next/router';
+
+import Page from './Page.js';
+import Reload from './Reload.js';
+import setPageId from '../utils/setPageId.js';
+import setupLink from '../utils/setupLink.js';
 import useRootConfig from '../utils/useRootConfig.js';
 
-const PageConfig = ({ lowdefy, children }) => {
-  const { pageId } = lowdefy._internal.query;
-
-  const { data: pageConfig } = usePageConfig(pageId);
+const App = ({ lowdefy }) => {
+  const router = useRouter();
   const { data: rootConfig } = useRootConfig();
+
+  window.lowdefy = lowdefy;
 
   lowdefy.home = rootConfig.home;
   lowdefy.lowdefyGlobal = rootConfig.lowdefyGlobal;
   lowdefy.menus = rootConfig.menus;
 
-  window.lowdefy = lowdefy;
-  return <>{children(pageConfig)}</>;
+  lowdefy._internal.basePath = router.basePath;
+  lowdefy._internal.pathname = router.pathname;
+  lowdefy._internal.query = router.query;
+  lowdefy._internal.router = router;
+  lowdefy._internal.link = setupLink({ lowdefy });
+
+  const redirect = setPageId(lowdefy);
+  if (redirect) {
+    lowdefy._internal.router.push(`/${lowdefy.pageId}`);
+  }
+
+  return (
+    <Reload>
+      <Page lowdefy={lowdefy} />
+    </Reload>
+  );
 };
 
-export default PageConfig;
+export default App;
