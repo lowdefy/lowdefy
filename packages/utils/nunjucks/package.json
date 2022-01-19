@@ -45,9 +45,9 @@
     "nunjucks": "3.2.3"
   },
   "devDependencies": {
-    "@swc/cli": "0.1.52",
-    "@swc/core": "1.2.112",
-    "@swc/jest": "0.2.9",
+    "@swc/cli": "0.1.55",
+    "@swc/core": "1.2.130",
+    "@swc/jest": "0.2.17",
     "jest": "27.3.1"
   },
   "publishConfig": {

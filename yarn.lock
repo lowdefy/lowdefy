@@ -2290,12 +2290,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/create-cache-key-function@npm:^27.3.1":
-  version: 27.3.1
-  resolution: "@jest/create-cache-key-function@npm:27.3.1"
+"@jest/create-cache-key-function@npm:^27.4.2":
+  version: 27.4.2
+  resolution: "@jest/create-cache-key-function@npm:27.4.2"
   dependencies:
-    "@jest/types": ^27.2.5
-  checksum: cc431761ccee06a2346eae11d92ccec438c17718cb4b8386e1d9f2571767479ac1fa4fc80045d370d7d2a2f2ff80d49cdbea2b6289c27bee3ea32bc37f7de698
+    "@jest/types": ^27.4.2
+  checksum: 46eeb4460798c6bba9da5bba6d07030012a9290ee6d2e3537e49110e57e6bcb118d9075a942ec3c1b1a2eebb50746d231bc9b15749980dd3817c41db3179c27a
   languageName: node
   linkType: hard
 
@@ -2442,6 +2442,19 @@ __metadata:
     "@types/yargs": ^16.0.0
     chalk: ^4.0.0
   checksum: 322603c24354a5333b5b7a670464422a46e0244a5a96a35552a7018eb4ac2e84c3b7657336b0ea6aa114963f9b6d0da8b8f6f963cb044fea9e7bc04d464b0ab1
+  languageName: node
+  linkType: hard
+
+"@jest/types@npm:^27.4.2":
+  version: 27.4.2
+  resolution: "@jest/types@npm:27.4.2"
+  dependencies:
+    "@types/istanbul-lib-coverage": ^2.0.0
+    "@types/istanbul-reports": ^3.0.0
+    "@types/node": "*"
+    "@types/yargs": ^16.0.0
+    chalk: ^4.0.0
+  checksum: 1191022023e32763063cc1c8b1143fa316fb05db2f9698280a7bdbafcabd989e5fd64f8eb875b8a2e54c53f25dba45ed2eea8ced394d9e484da0fda674cd17a5
   languageName: node
   linkType: hard
 
@@ -3246,9 +3259,9 @@ __metadata:
   resolution: "@lowdefy/ajv@workspace:packages/utils/ajv"
   dependencies:
     "@lowdefy/nunjucks": 4.0.0-alpha.5
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.112
-    "@swc/jest": 0.2.9
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     ajv: 8.8.2
     ajv-errors: 3.0.0
     jest: 27.3.1
@@ -3264,9 +3277,9 @@ __metadata:
     "@lowdefy/node-utils": 4.0.0-alpha.5
     "@lowdefy/nunjucks": 4.0.0-alpha.5
     "@lowdefy/operators": 4.0.0-alpha.5
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.112
-    "@swc/jest": 0.2.9
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     jest: 27.3.1
   languageName: unknown
   linkType: soft
@@ -3278,8 +3291,8 @@ __metadata:
     "@emotion/jest": 11.5.0
     "@lowdefy/block-utils": 4.0.0-alpha.5
     "@lowdefy/helpers": 4.0.0-alpha.5
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.112
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
     "@testing-library/dom": 8.10.1
     "@testing-library/react": 13.0.0-alpha.4
     "@testing-library/user-event": 14.0.0-alpha.14
@@ -3302,9 +3315,9 @@ __metadata:
     "@emotion/jest": 11.5.0
     "@emotion/react": 11.5.0
     "@lowdefy/helpers": 4.0.0-alpha.5
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.112
-    "@swc/jest": 0.2.9
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     "@testing-library/dom": 8.10.1
     "@testing-library/react": 13.0.0-alpha.4
     "@testing-library/user-event": 14.0.0-alpha.14
@@ -3329,9 +3342,9 @@ __metadata:
     "@lowdefy/block-utils": 4.0.0-alpha.5
     "@lowdefy/helpers": 4.0.0-alpha.5
     "@lowdefy/node-utils": 4.0.0-alpha.5
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.112
-    "@swc/jest": 0.2.9
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     "@testing-library/dom": 8.11.1
     "@testing-library/react": 13.0.0-alpha.4
     "@testing-library/user-event": 14.0.0-alpha.14
@@ -3358,9 +3371,9 @@ __metadata:
     "@lowdefy/block-dev": 4.0.0-alpha.5
     "@lowdefy/block-utils": 4.0.0-alpha.5
     "@lowdefy/helpers": 4.0.0-alpha.5
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.112
-    "@swc/jest": 0.2.9
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     "@testing-library/dom": 8.10.1
     "@testing-library/react": 13.0.0-alpha.4
     "@testing-library/user-event": 14.0.0-alpha.14
@@ -3383,9 +3396,9 @@ __metadata:
     "@lowdefy/block-dev": 4.0.0-alpha.5
     "@lowdefy/block-utils": 4.0.0-alpha.5
     "@lowdefy/blocks-antd": 4.0.0-alpha.5
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.112
-    "@swc/jest": 0.2.9
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     "@testing-library/dom": 8.10.1
     "@testing-library/react": 13.0.0-alpha.4
     "@testing-library/user-event": 14.0.0-alpha.14
@@ -3408,9 +3421,9 @@ __metadata:
     "@emotion/jest": 11.5.0
     "@lowdefy/block-dev": 4.0.0-alpha.5
     "@lowdefy/block-utils": 4.0.0-alpha.5
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.112
-    "@swc/jest": 0.2.9
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     "@testing-library/dom": 8.10.1
     "@testing-library/react": 13.0.0-alpha.4
     "@testing-library/user-event": 14.0.0-alpha.14
@@ -3434,9 +3447,9 @@ __metadata:
     "@lowdefy/block-dev": 4.0.0-alpha.5
     "@lowdefy/block-utils": 4.0.0-alpha.5
     "@lowdefy/helpers": 4.0.0-alpha.5
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.112
-    "@swc/jest": 0.2.9
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     "@testing-library/dom": 8.10.1
     "@testing-library/react": 13.0.0-alpha.4
     "@testing-library/user-event": 14.0.0-alpha.14
@@ -3457,9 +3470,9 @@ __metadata:
     "@emotion/jest": 11.5.0
     "@lowdefy/block-dev": 4.0.0-alpha.5
     "@lowdefy/block-utils": 4.0.0-alpha.5
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.112
-    "@swc/jest": 0.2.9
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     "@testing-library/dom": 8.10.1
     "@testing-library/react": 13.0.0-alpha.4
     "@testing-library/user-event": 14.0.0-alpha.14
@@ -3500,9 +3513,9 @@ __metadata:
     "@lowdefy/operators-nunjucks": 4.0.0-alpha.5
     "@lowdefy/operators-uuid": 4.0.0-alpha.5
     "@lowdefy/operators-yaml": 4.0.0-alpha.5
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.112
-    "@swc/jest": 0.2.9
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     ajv: 8.8.2
     jest: 27.3.1
     js-yaml: 4.1.0
@@ -3519,9 +3532,9 @@ __metadata:
   dependencies:
     "@lowdefy/ajv": 4.0.0-alpha.5
     "@lowdefy/helpers": 4.0.0-alpha.5
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.112
-    "@swc/jest": 0.2.9
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     axios: 0.24.0
     jest: 27.3.1
   languageName: unknown
@@ -3534,9 +3547,9 @@ __metadata:
     "@elastic/elasticsearch": 7.15.0
     "@lowdefy/ajv": 4.0.0-alpha.5
     "@lowdefy/helpers": 4.0.0-alpha.5
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.112
-    "@swc/jest": 0.2.9
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     jest: 27.3.1
   languageName: unknown
   linkType: soft
@@ -3547,9 +3560,9 @@ __metadata:
   dependencies:
     "@lowdefy/ajv": 4.0.0-alpha.5
     "@lowdefy/helpers": 4.0.0-alpha.5
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.112
-    "@swc/jest": 0.2.9
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     google-spreadsheet: 3.1.15
     jest: 27.3.1
     mingo: ^4.4.1
@@ -3563,9 +3576,9 @@ __metadata:
   dependencies:
     "@lowdefy/ajv": 4.0.0-alpha.5
     "@lowdefy/helpers": 4.0.0-alpha.5
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.112
-    "@swc/jest": 0.2.9
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     jest: 27.3.1
     knex: 0.95.13
     mssql: 7.2.1
@@ -3582,9 +3595,9 @@ __metadata:
     "@lowdefy/ajv": 4.0.0-alpha.5
     "@lowdefy/helpers": 4.0.0-alpha.5
     "@shelf/jest-mongodb": 2.1.0
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.112
-    "@swc/jest": 0.2.9
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     jest: 27.3.1
     mongodb: 3.7.3
     saslprep: 1.0.3
@@ -3597,9 +3610,9 @@ __metadata:
   dependencies:
     "@lowdefy/ajv": 4.0.0-alpha.5
     "@lowdefy/helpers": 4.0.0-alpha.5
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.113
-    "@swc/jest": 0.2.9
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     jest: 27.3.1
     redis: 4.0.1
   languageName: unknown
@@ -3612,9 +3625,9 @@ __metadata:
     "@lowdefy/ajv": 4.0.0-alpha.5
     "@lowdefy/helpers": 4.0.0-alpha.5
     "@sendgrid/mail": 7.5.0
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.112
-    "@swc/jest": 0.2.9
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     jest: 27.3.1
   languageName: unknown
   linkType: soft
@@ -3625,9 +3638,9 @@ __metadata:
   dependencies:
     "@lowdefy/ajv": 4.0.0-alpha.5
     "@lowdefy/helpers": 4.0.0-alpha.5
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.112
-    "@swc/jest": 0.2.9
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     jest: 27.3.1
     stripe: 8.186.0
   languageName: unknown
@@ -3651,9 +3664,9 @@ __metadata:
   dependencies:
     "@lowdefy/helpers": 4.0.0-alpha.5
     "@lowdefy/operators": 4.0.0-alpha.5
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.112
-    "@swc/jest": 0.2.9
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     jest: 27.3.1
   languageName: unknown
   linkType: soft
@@ -3675,9 +3688,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/helpers@workspace:packages/utils/helpers"
   dependencies:
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.112
-    "@swc/jest": 0.2.9
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     jest: 27.3.1
     jest-diff: 27.3.1
     lodash.merge: 4.6.2
@@ -3694,9 +3707,9 @@ __metadata:
     "@lowdefy/block-dev": 4.0.0-alpha.5
     "@lowdefy/block-utils": 4.0.0-alpha.5
     "@lowdefy/helpers": 4.0.0-alpha.5
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.112
-    "@swc/jest": 0.2.9
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     "@testing-library/dom": 8.10.1
     "@testing-library/react": 13.0.0-alpha.4
     "@testing-library/user-event": 14.0.0-alpha.14
@@ -3733,9 +3746,9 @@ __metadata:
   resolution: "@lowdefy/node-utils@workspace:packages/utils/node-utils"
   dependencies:
     "@lowdefy/helpers": 4.0.0-alpha.5
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.112
-    "@swc/jest": 0.2.9
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     jest: 27.3.1
     rimraf: 3.0.2
   languageName: unknown
@@ -3746,9 +3759,9 @@ __metadata:
   resolution: "@lowdefy/nunjucks@workspace:packages/utils/nunjucks"
   dependencies:
     "@lowdefy/helpers": 4.0.0-alpha.5
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.112
-    "@swc/jest": 0.2.9
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     jest: 27.3.1
     moment: 2.29.1
     nunjucks: 3.2.3
@@ -3761,9 +3774,9 @@ __metadata:
   dependencies:
     "@lowdefy/helpers": 4.0.0-alpha.5
     "@lowdefy/operators": 4.0.0-alpha.5
-    "@swc/cli": 0.1.51
-    "@swc/core": 1.2.107
-    "@swc/jest": 0.2.5
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     change-case: 4.1.2
     jest: 27.3.1
   languageName: unknown
@@ -3775,9 +3788,9 @@ __metadata:
   dependencies:
     "@lowdefy/helpers": 4.0.0-alpha.5
     "@lowdefy/operators": 4.0.0-alpha.5
-    "@swc/cli": 0.1.51
-    "@swc/core": 1.2.107
-    "@swc/jest": 0.2.5
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     deep-diff: 1.0.2
     jest: 27.3.1
   languageName: unknown
@@ -3789,9 +3802,9 @@ __metadata:
   dependencies:
     "@lowdefy/helpers": 4.0.0-alpha.5
     "@lowdefy/operators": 4.0.0-alpha.5
-    "@swc/cli": 0.1.51
-    "@swc/core": 1.2.107
-    "@swc/jest": 0.2.5
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     jest: 27.3.1
   languageName: unknown
   linkType: soft
@@ -3802,9 +3815,9 @@ __metadata:
   dependencies:
     "@lowdefy/helpers": 4.0.0-alpha.5
     "@lowdefy/operators": 4.0.0-alpha.5
-    "@swc/cli": 0.1.51
-    "@swc/core": 1.2.107
-    "@swc/jest": 0.2.5
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     jest: 27.3.1
     mingo: ^4.4.1
   languageName: unknown
@@ -3817,9 +3830,9 @@ __metadata:
     "@lowdefy/helpers": 4.0.0-alpha.5
     "@lowdefy/nunjucks": 4.0.0-alpha.5
     "@lowdefy/operators": 4.0.0-alpha.5
-    "@swc/cli": 0.1.51
-    "@swc/core": 1.2.107
-    "@swc/jest": 0.2.5
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     jest: 27.3.1
   languageName: unknown
   linkType: soft
@@ -3830,9 +3843,9 @@ __metadata:
   dependencies:
     "@lowdefy/helpers": 4.0.0-alpha.5
     "@lowdefy/operators": 4.0.0-alpha.5
-    "@swc/cli": 0.1.51
-    "@swc/core": 1.2.107
-    "@swc/jest": 0.2.5
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     jest: 27.3.1
     uuid: 8.3.2
   languageName: unknown
@@ -3844,9 +3857,9 @@ __metadata:
   dependencies:
     "@lowdefy/helpers": 4.0.0-alpha.5
     "@lowdefy/operators": 4.0.0-alpha.5
-    "@swc/cli": 0.1.51
-    "@swc/core": 1.2.107
-    "@swc/jest": 0.2.5
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     jest: 27.3.1
     js-yaml: 4.1.0
   languageName: unknown
@@ -3857,9 +3870,9 @@ __metadata:
   resolution: "@lowdefy/operators@workspace:packages/operators"
   dependencies:
     "@lowdefy/helpers": 4.0.0-alpha.5
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.112
-    "@swc/jest": 0.2.9
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     jest: 27.3.1
   languageName: unknown
   linkType: soft
@@ -3869,9 +3882,9 @@ __metadata:
   resolution: "@lowdefy/plugin-aws@workspace:packages/plugins/plugins/plugin-aws"
   dependencies:
     "@lowdefy/ajv": 4.0.0-alpha.5
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.112
-    "@swc/jest": 0.2.9
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     aws-sdk: 2.1021.0
     jest: 27.3.1
   languageName: unknown
@@ -4471,9 +4484,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/cli@npm:0.1.51":
-  version: 0.1.51
-  resolution: "@swc/cli@npm:0.1.51"
+"@swc/cli@npm:0.1.55":
+  version: 0.1.55
+  resolution: "@swc/cli@npm:0.1.55"
   dependencies:
     commander: ^7.1.0
     fast-glob: ^3.2.5
@@ -4488,217 +4501,122 @@ __metadata:
   bin:
     spack: bin/spack.js
     swc: bin/swc.js
-  checksum: 348bf0aee8e0cab567b75061f71ccbeff4964d9d6af03760f06641dbdb3f753865d2f0806d9adf805f19b9449a9665fdc4260d907246ab045156f427fa6a1ecd
+  checksum: db6a727716acffd6202158bb47ab1541f9b43f1a8146c8588b33a969330f08ffbc59d813bad192929acb67f6675aabeee20618522b0b7533a9f77b35c49edaa1
   languageName: node
   linkType: hard
 
-"@swc/cli@npm:0.1.52":
-  version: 0.1.52
-  resolution: "@swc/cli@npm:0.1.52"
-  dependencies:
-    commander: ^7.1.0
-    fast-glob: ^3.2.5
-    slash: 3.0.0
-    source-map: ^0.7.3
-  peerDependencies:
-    "@swc/core": ^1.2.66
-    chokidar: ^3.5.1
-  peerDependenciesMeta:
-    chokidar:
-      optional: true
-  bin:
-    spack: bin/spack.js
-    swc: bin/swc.js
-  checksum: f1fe91deeccb21c4e3c97637c8e463a334412bcd287fec487bcd3a75580a57592bfd1951ad94fe122bc72a1b20d4212b69f83f310369aba50f51ad90813683a7
+"@swc/core-android-arm-eabi@npm:1.2.130":
+  version: 1.2.130
+  resolution: "@swc/core-android-arm-eabi@npm:1.2.130"
+  conditions: os=android & cpu=arm
   languageName: node
   linkType: hard
 
-"@swc/core-android-arm64@npm:^1.2.107, @swc/core-android-arm64@npm:^1.2.112":
-  version: 1.2.112
-  resolution: "@swc/core-android-arm64@npm:1.2.112"
-  conditions: os=android & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"@swc/core-android-arm64@npm:^1.2.113":
+"@swc/core-android-arm64@npm:1.2.130":
   version: 1.2.130
   resolution: "@swc/core-android-arm64@npm:1.2.130"
   conditions: os=android & cpu=arm64
   languageName: node
   linkType: hard
 
-"@swc/core-darwin-arm64@npm:^1.2.107, @swc/core-darwin-arm64@npm:^1.2.112":
-  version: 1.2.112
-  resolution: "@swc/core-darwin-arm64@npm:1.2.112"
-  conditions: os=darwin & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"@swc/core-darwin-arm64@npm:^1.2.113":
+"@swc/core-darwin-arm64@npm:1.2.130":
   version: 1.2.130
   resolution: "@swc/core-darwin-arm64@npm:1.2.130"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@swc/core-darwin-x64@npm:^1.2.107, @swc/core-darwin-x64@npm:^1.2.112":
-  version: 1.2.112
-  resolution: "@swc/core-darwin-x64@npm:1.2.112"
-  conditions: os=darwin & cpu=x64
-  languageName: node
-  linkType: hard
-
-"@swc/core-darwin-x64@npm:^1.2.113":
+"@swc/core-darwin-x64@npm:1.2.130":
   version: 1.2.130
   resolution: "@swc/core-darwin-x64@npm:1.2.130"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@swc/core-freebsd-x64@npm:^1.2.107, @swc/core-freebsd-x64@npm:^1.2.112":
-  version: 1.2.112
-  resolution: "@swc/core-freebsd-x64@npm:1.2.112"
-  conditions: os=freebsd & cpu=x64
-  languageName: node
-  linkType: hard
-
-"@swc/core-freebsd-x64@npm:^1.2.113":
+"@swc/core-freebsd-x64@npm:1.2.130":
   version: 1.2.130
   resolution: "@swc/core-freebsd-x64@npm:1.2.130"
   conditions: os=freebsd & cpu=x64
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm-gnueabihf@npm:^1.2.107, @swc/core-linux-arm-gnueabihf@npm:^1.2.112":
-  version: 1.2.112
-  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.2.112"
-  conditions: os=linux & cpu=arm
-  languageName: node
-  linkType: hard
-
-"@swc/core-linux-arm-gnueabihf@npm:^1.2.113":
+"@swc/core-linux-arm-gnueabihf@npm:1.2.130":
   version: 1.2.130
   resolution: "@swc/core-linux-arm-gnueabihf@npm:1.2.130"
   conditions: os=linux & cpu=arm
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm64-gnu@npm:^1.2.107, @swc/core-linux-arm64-gnu@npm:^1.2.112":
-  version: 1.2.112
-  resolution: "@swc/core-linux-arm64-gnu@npm:1.2.112"
-  conditions: os=linux & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"@swc/core-linux-arm64-gnu@npm:^1.2.113":
+"@swc/core-linux-arm64-gnu@npm:1.2.130":
   version: 1.2.130
   resolution: "@swc/core-linux-arm64-gnu@npm:1.2.130"
   conditions: os=linux & cpu=arm64
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm64-musl@npm:^1.2.107, @swc/core-linux-arm64-musl@npm:^1.2.112":
-  version: 1.2.112
-  resolution: "@swc/core-linux-arm64-musl@npm:1.2.112"
-  conditions: os=linux & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"@swc/core-linux-arm64-musl@npm:^1.2.113":
+"@swc/core-linux-arm64-musl@npm:1.2.130":
   version: 1.2.130
   resolution: "@swc/core-linux-arm64-musl@npm:1.2.130"
   conditions: os=linux & cpu=arm64
   languageName: node
   linkType: hard
 
-"@swc/core-linux-x64-gnu@npm:^1.2.107, @swc/core-linux-x64-gnu@npm:^1.2.112":
-  version: 1.2.112
-  resolution: "@swc/core-linux-x64-gnu@npm:1.2.112"
-  conditions: os=linux & cpu=x64
-  languageName: node
-  linkType: hard
-
-"@swc/core-linux-x64-gnu@npm:^1.2.113":
+"@swc/core-linux-x64-gnu@npm:1.2.130":
   version: 1.2.130
   resolution: "@swc/core-linux-x64-gnu@npm:1.2.130"
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard
 
-"@swc/core-linux-x64-musl@npm:^1.2.107, @swc/core-linux-x64-musl@npm:^1.2.112":
-  version: 1.2.112
-  resolution: "@swc/core-linux-x64-musl@npm:1.2.112"
-  conditions: os=linux & cpu=x64
-  languageName: node
-  linkType: hard
-
-"@swc/core-linux-x64-musl@npm:^1.2.113":
+"@swc/core-linux-x64-musl@npm:1.2.130":
   version: 1.2.130
   resolution: "@swc/core-linux-x64-musl@npm:1.2.130"
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard
 
-"@swc/core-win32-arm64-msvc@npm:^1.2.107, @swc/core-win32-arm64-msvc@npm:^1.2.112":
-  version: 1.2.112
-  resolution: "@swc/core-win32-arm64-msvc@npm:1.2.112"
-  conditions: os=win32 & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"@swc/core-win32-arm64-msvc@npm:^1.2.113":
+"@swc/core-win32-arm64-msvc@npm:1.2.130":
   version: 1.2.130
   resolution: "@swc/core-win32-arm64-msvc@npm:1.2.130"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@swc/core-win32-ia32-msvc@npm:^1.2.107, @swc/core-win32-ia32-msvc@npm:^1.2.112":
-  version: 1.2.112
-  resolution: "@swc/core-win32-ia32-msvc@npm:1.2.112"
-  conditions: os=win32 & cpu=ia32
-  languageName: node
-  linkType: hard
-
-"@swc/core-win32-ia32-msvc@npm:^1.2.113":
+"@swc/core-win32-ia32-msvc@npm:1.2.130":
   version: 1.2.130
   resolution: "@swc/core-win32-ia32-msvc@npm:1.2.130"
   conditions: os=win32 & cpu=ia32
   languageName: node
   linkType: hard
 
-"@swc/core-win32-x64-msvc@npm:^1.2.107, @swc/core-win32-x64-msvc@npm:^1.2.112":
-  version: 1.2.112
-  resolution: "@swc/core-win32-x64-msvc@npm:1.2.112"
-  conditions: os=win32 & cpu=x64
-  languageName: node
-  linkType: hard
-
-"@swc/core-win32-x64-msvc@npm:^1.2.113":
+"@swc/core-win32-x64-msvc@npm:1.2.130":
   version: 1.2.130
   resolution: "@swc/core-win32-x64-msvc@npm:1.2.130"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
-"@swc/core@npm:1.2.107":
-  version: 1.2.107
-  resolution: "@swc/core@npm:1.2.107"
+"@swc/core@npm:1.2.130":
+  version: 1.2.130
+  resolution: "@swc/core@npm:1.2.130"
   dependencies:
     "@node-rs/helper": ^1.0.0
-    "@swc/core-android-arm64": ^1.2.107
-    "@swc/core-darwin-arm64": ^1.2.107
-    "@swc/core-darwin-x64": ^1.2.107
-    "@swc/core-freebsd-x64": ^1.2.107
-    "@swc/core-linux-arm-gnueabihf": ^1.2.107
-    "@swc/core-linux-arm64-gnu": ^1.2.107
-    "@swc/core-linux-arm64-musl": ^1.2.107
-    "@swc/core-linux-x64-gnu": ^1.2.107
-    "@swc/core-linux-x64-musl": ^1.2.107
-    "@swc/core-win32-arm64-msvc": ^1.2.107
-    "@swc/core-win32-ia32-msvc": ^1.2.107
-    "@swc/core-win32-x64-msvc": ^1.2.107
+    "@swc/core-android-arm-eabi": 1.2.130
+    "@swc/core-android-arm64": 1.2.130
+    "@swc/core-darwin-arm64": 1.2.130
+    "@swc/core-darwin-x64": 1.2.130
+    "@swc/core-freebsd-x64": 1.2.130
+    "@swc/core-linux-arm-gnueabihf": 1.2.130
+    "@swc/core-linux-arm64-gnu": 1.2.130
+    "@swc/core-linux-arm64-musl": 1.2.130
+    "@swc/core-linux-x64-gnu": 1.2.130
+    "@swc/core-linux-x64-musl": 1.2.130
+    "@swc/core-win32-arm64-msvc": 1.2.130
+    "@swc/core-win32-ia32-msvc": 1.2.130
+    "@swc/core-win32-x64-msvc": 1.2.130
   dependenciesMeta:
+    "@swc/core-android-arm-eabi":
+      optional: true
     "@swc/core-android-arm64":
       optional: true
     "@swc/core-darwin-arm64":
@@ -4723,119 +4641,18 @@ __metadata:
       optional: true
     "@swc/core-win32-x64-msvc":
       optional: true
-  checksum: 452fd087c7c16caa1bb51c48847b43e5ec57f44dad24b1d5ca64849d050343caeb0942db126296f799778eaf455274a5a25e4b0a9334bf49657ed758babaa846
+  checksum: 759f3658dce1b47891894df32c2bcffa516e5cbddf01c576a9792264af9fd0f9a762870cd919059c3ce502ff77fb92b89be3f07165dc88fc5f6aec54137b08d7
   languageName: node
   linkType: hard
 
-"@swc/core@npm:1.2.112":
-  version: 1.2.112
-  resolution: "@swc/core@npm:1.2.112"
+"@swc/jest@npm:0.2.17":
+  version: 0.2.17
+  resolution: "@swc/jest@npm:0.2.17"
   dependencies:
-    "@node-rs/helper": ^1.0.0
-    "@swc/core-android-arm64": ^1.2.112
-    "@swc/core-darwin-arm64": ^1.2.112
-    "@swc/core-darwin-x64": ^1.2.112
-    "@swc/core-freebsd-x64": ^1.2.112
-    "@swc/core-linux-arm-gnueabihf": ^1.2.112
-    "@swc/core-linux-arm64-gnu": ^1.2.112
-    "@swc/core-linux-arm64-musl": ^1.2.112
-    "@swc/core-linux-x64-gnu": ^1.2.112
-    "@swc/core-linux-x64-musl": ^1.2.112
-    "@swc/core-win32-arm64-msvc": ^1.2.112
-    "@swc/core-win32-ia32-msvc": ^1.2.112
-    "@swc/core-win32-x64-msvc": ^1.2.112
-  dependenciesMeta:
-    "@swc/core-android-arm64":
-      optional: true
-    "@swc/core-darwin-arm64":
-      optional: true
-    "@swc/core-darwin-x64":
-      optional: true
-    "@swc/core-freebsd-x64":
-      optional: true
-    "@swc/core-linux-arm-gnueabihf":
-      optional: true
-    "@swc/core-linux-arm64-gnu":
-      optional: true
-    "@swc/core-linux-arm64-musl":
-      optional: true
-    "@swc/core-linux-x64-gnu":
-      optional: true
-    "@swc/core-linux-x64-musl":
-      optional: true
-    "@swc/core-win32-arm64-msvc":
-      optional: true
-    "@swc/core-win32-ia32-msvc":
-      optional: true
-    "@swc/core-win32-x64-msvc":
-      optional: true
-  checksum: 4e60e542db515c3d68f76f813db920e7fb752499f221f86f46cb7f8fdb46648dfbce7959066e2fbcb4cc782bf43d1156649da71e7d99941949d15a0f14b7635f
-  languageName: node
-  linkType: hard
-
-"@swc/core@npm:1.2.113":
-  version: 1.2.113
-  resolution: "@swc/core@npm:1.2.113"
-  dependencies:
-    "@node-rs/helper": ^1.0.0
-    "@swc/core-android-arm64": ^1.2.113
-    "@swc/core-darwin-arm64": ^1.2.113
-    "@swc/core-darwin-x64": ^1.2.113
-    "@swc/core-freebsd-x64": ^1.2.113
-    "@swc/core-linux-arm-gnueabihf": ^1.2.113
-    "@swc/core-linux-arm64-gnu": ^1.2.113
-    "@swc/core-linux-arm64-musl": ^1.2.113
-    "@swc/core-linux-x64-gnu": ^1.2.113
-    "@swc/core-linux-x64-musl": ^1.2.113
-    "@swc/core-win32-arm64-msvc": ^1.2.113
-    "@swc/core-win32-ia32-msvc": ^1.2.113
-    "@swc/core-win32-x64-msvc": ^1.2.113
-  dependenciesMeta:
-    "@swc/core-android-arm64":
-      optional: true
-    "@swc/core-darwin-arm64":
-      optional: true
-    "@swc/core-darwin-x64":
-      optional: true
-    "@swc/core-freebsd-x64":
-      optional: true
-    "@swc/core-linux-arm-gnueabihf":
-      optional: true
-    "@swc/core-linux-arm64-gnu":
-      optional: true
-    "@swc/core-linux-arm64-musl":
-      optional: true
-    "@swc/core-linux-x64-gnu":
-      optional: true
-    "@swc/core-linux-x64-musl":
-      optional: true
-    "@swc/core-win32-arm64-msvc":
-      optional: true
-    "@swc/core-win32-ia32-msvc":
-      optional: true
-    "@swc/core-win32-x64-msvc":
-      optional: true
-  checksum: fa9281080d26a6590be636c5b7a3f61d76b8605465f23bf90532402e0fbc794b2ebca0317c0f93e87a328d03f79d6773a8d61bbf3d42af619603342fd3fe305d
-  languageName: node
-  linkType: hard
-
-"@swc/jest@npm:0.2.5":
-  version: 0.2.5
-  resolution: "@swc/jest@npm:0.2.5"
+    "@jest/create-cache-key-function": ^27.4.2
   peerDependencies:
     "@swc/core": "*"
-  checksum: 3a1b2717623a1419f0f3fc04bc7e2cd112a084e1763a33d9df06bda9431b6dd67bff8dba358162b23f1911f9a0e67422f09afd0983c77b4dc6f9fbde7a712bd8
-  languageName: node
-  linkType: hard
-
-"@swc/jest@npm:0.2.9":
-  version: 0.2.9
-  resolution: "@swc/jest@npm:0.2.9"
-  dependencies:
-    "@jest/create-cache-key-function": ^27.3.1
-  peerDependencies:
-    "@swc/core": "*"
-  checksum: 2463242d9e18aa93fb584985b69f229e614bd6dda442d2d24e1ace2e7a13705ff43d139e055a96e007bffd2f682cb488c7bd04bf2491ab04ac9f8d2cbefa5b3b
+  checksum: 33e08c71adaa3d46f47b888b954c8f61513804a1b3ee24fdc13ccbbb89ca6c96b474eef4002b96edcd6090a308a1aafd313073ae4bcd6339fcc3a22e2f29f1b7
   languageName: node
   linkType: hard
 
@@ -12223,9 +12040,9 @@ __metadata:
   dependencies:
     "@lowdefy/helpers": 4.0.0-alpha.5
     "@lowdefy/node-utils": 4.0.0-alpha.5
-    "@swc/cli": 0.1.52
-    "@swc/core": 1.2.112
-    "@swc/jest": 0.2.9
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.130
+    "@swc/jest": 0.2.17
     axios: 0.24.0
     chalk: 4.1.2
     chokidar: 3.5.2
