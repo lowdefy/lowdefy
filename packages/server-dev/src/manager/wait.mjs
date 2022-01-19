@@ -13,19 +13,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-/* eslint-disable no-console */
 
-import startServerProcess from './startServerProcess.mjs';
-
-async function startServer(context) {
-  return new Promise((resolve, reject) => {
-    context.serverProcessPromise = { resolve, reject };
-    try {
-      startServerProcess(context);
-    } catch (error) {
-      reject(error);
-    }
-  });
+async function wait(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export default startServer;
+export default wait;

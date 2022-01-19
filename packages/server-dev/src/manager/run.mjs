@@ -15,17 +15,23 @@
   limitations under the License.
 */
 
+import opener from 'opener';
 import getContext from './getContext.mjs';
 import initialBuild from './initialBuild.mjs';
-import startWatchers from './watchers/startWatchers.mjs';
 import startServer from './processes/startServer.mjs';
+import startWatchers from './watchers/startWatchers.mjs';
+import wait from './wait.mjs';
 
 async function run() {
   const context = await getContext();
   await initialBuild(context);
   await startWatchers(context);
   try {
-    await startServer(context);
+    const serverPromise = startServer(context);
+    await wait(800);
+    // TODO: set correct port
+    opener(`http://localhost:3000`);
+    await serverPromise;
   } catch (error) {
     context.shutdownServer();
     throw error;

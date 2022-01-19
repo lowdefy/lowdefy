@@ -21,6 +21,7 @@ import { hideBin } from 'yargs/helpers';
 import lowdefyBuild from './processes/lowdefyBuild.mjs';
 import nextBuild from './processes/nextBuild.mjs';
 import installServer from './processes/installServer.mjs';
+import startServerProcess from './processes/startServerProcess.mjs';
 import reloadClients from './processes/reloadClients.mjs';
 
 const argv = yargs(hideBin(process.argv)).argv;
@@ -36,9 +37,20 @@ async function getContext() {
       server: process.cwd(),
     },
     packageManager,
-    restartServer: () => {},
-    shutdownServer: () => {},
+    shutdownServer: () => {
+      if (context.serverProcess) {
+        console.log('Shutting down server...');
+        context.serverProcess.kill();
+      }
+    },
     verbose,
+  };
+  context.restartServer = () => {
+    if (context.serverProcess) {
+      console.log('Restarting server...');
+      context.serverProcess.kill();
+      startServerProcess(context);
+    }
   };
   context.installServer = installServer(context);
   context.lowdefyBuild = lowdefyBuild(context);

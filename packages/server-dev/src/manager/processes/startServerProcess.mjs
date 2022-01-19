@@ -13,19 +13,22 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-/* eslint-disable no-console */
 
-import startServerProcess from './startServerProcess.mjs';
+import spawnProcess from '../spawnProcess.mjs';
 
-async function startServer(context) {
-  return new Promise((resolve, reject) => {
-    context.serverProcessPromise = { resolve, reject };
-    try {
-      startServerProcess(context);
-    } catch (error) {
-      reject(error);
+function startServerProcess(context) {
+  context.serverProcess = spawnProcess({
+    logger: console,
+    command: context.packageManager,
+    args: ['run', 'next', 'start'],
+    silent: false,
+  });
+  context.serverProcess.on('exit', (code) => {
+    if (code !== 0) {
+      context.serverProcessPromise.reject(new Error('Server error.'));
     }
+    context.serverProcessPromise.resolve();
   });
 }
 
-export default startServer;
+export default startServerProcess;
