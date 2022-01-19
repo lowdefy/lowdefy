@@ -21,9 +21,8 @@ const args = {
   yarn: ['install'],
 };
 
-function installServer({ packageManager, skipInstall, verbose }) {
+function installServer({ packageManager, verbose }) {
   return async () => {
-    if (skipInstall) return;
     console.log('Installing server...');
     await spawnProcess({
       logger: console,

@@ -16,14 +16,10 @@
 
 import path from 'path';
 import setupWatcher from './setupWatcher.mjs';
-import wait from '../wait.mjs';
 
 async function envWatcher(context) {
   const callback = async () => {
     console.log('.env file changed, restarting server...');
-    context.reloadClients({ type: 'hard' });
-    // Wait for clients to get reload event.
-    await wait(500);
     context.restartServer();
   };
   // TODO: Add ignored paths

@@ -28,6 +28,7 @@ const Context = ({ children, lowdefy, config }) => {
       const ctx = await getContext({
         config,
         lowdefy,
+        development: true,
       });
       if (mounted) {
         setContext(ctx);

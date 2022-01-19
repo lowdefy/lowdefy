@@ -42,8 +42,8 @@ const Reload = ({ children }) => {
       console.log(event);
       mutateCache();
     };
-    sse.addEventListener('tick', (event) => {
-      console.log('tick event listener');
+    sse.addEventListener('reload', (event) => {
+      console.log('reload event listener');
       console.log(event);
       mutateCache();
     });

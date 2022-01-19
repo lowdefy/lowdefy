@@ -16,7 +16,7 @@
 */
 
 async function initialBuild(context) {
-  await context.installServer();
+  await context.installServer(); // TODO: Is this necessary because CLI will install?
   await context.lowdefyBuild();
   await context.installServer();
   await context.nextBuild();

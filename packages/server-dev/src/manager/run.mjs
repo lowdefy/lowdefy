@@ -24,7 +24,12 @@ async function run() {
   const context = await getContext();
   await initialBuild(context);
   await startWatchers(context);
-  await startServer(context);
+  try {
+    await startServer(context);
+  } catch (error) {
+    context.shutdownServer();
+    throw error;
+  }
 }
 
 run();

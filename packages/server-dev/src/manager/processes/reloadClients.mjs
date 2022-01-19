@@ -16,10 +16,9 @@
 
 import { writeFile } from '@lowdefy/node-utils';
 
-function reloadClients(context) {
+function reloadClients() {
   return async () => {
     await writeFile({ filePath: './build/reload', content: `${Date.now()}` });
-    console.log('Reloaded');
   };
 }
 

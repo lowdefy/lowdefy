@@ -19,7 +19,7 @@ import setupWatcher from './setupWatcher.mjs';
 async function configWatcher(context) {
   const callback = async () => {
     await context.lowdefyBuild();
-    context.reloadClients({ type: 'soft' });
+    context.reloadClients();
   };
   // TODO: Add ignored paths
   return setupWatcher({ callback, watchPaths: [context.directories.config] });
