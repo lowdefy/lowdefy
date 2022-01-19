@@ -13,19 +13,23 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import chokidar from 'chokidar';
-import BatchChanges from '../../utils/BatchChanges.js';
 
-function envWatcher({ context }) {
-  const changeEnvCallback = async () => {
-    context.print.warn('.env file changed. You should restart your development server.');
-    process.exit();
-  };
-  const changeEnvBatchChanges = new BatchChanges({ fn: changeEnvCallback, context });
-  const envFileWatcher = chokidar.watch('./.env', {
-    persistent: true,
+import { spawnProcess } from '@lowdefy/node-utils';
+
+async function runDevServer({ context }) {
+  await spawnProcess({
+    logger: context.print,
+    args: ['run', 'start'],
+    command: context.packageManager, // npm or yarn
+    processOptions: {
+      cwd: context.directories.devServer,
+      env: {
+        ...process.env,
+        LOWDEFY_DIRECTORY_CONFIG: context.directories.base,
+      },
+    },
+    silent: false,
   });
-  envFileWatcher.on('change', () => changeEnvBatchChanges.newChange());
 }
 
-export default envWatcher;
+export default runDevServer;

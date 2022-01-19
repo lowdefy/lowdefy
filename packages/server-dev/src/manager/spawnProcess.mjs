@@ -16,7 +16,7 @@
 
 import { spawn } from 'child_process';
 
-function spawnKillableProcess({ logger, command, args, processOptions, silent }) {
+function spawnProcess({ logger, command, args, processOptions, silent }) {
   const process = spawn(command, args, processOptions);
 
   process.stdout.on('data', (data) => {
@@ -52,4 +52,4 @@ function spawnKillableProcess({ logger, command, args, processOptions, silent })
   return process;
 }
 
-export default spawnKillableProcess;
+export default spawnProcess;

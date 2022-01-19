@@ -44,15 +44,11 @@
     "@lowdefy/node-utils": "4.0.0-alpha.5",
     "axios": "0.24.0",
     "chalk": "4.1.2",
-    "chokidar": "3.5.2",
     "commander": "8.3.0",
     "decompress": "4.2.1",
     "decompress-targz": "4.1.1",
-    "dotenv": "10.0.0",
     "js-yaml": "4.1.0",
-    "opener": "1.5.2",
     "ora": "6.0.1",
-    "reload": "3.2.0",
     "uuid": "8.3.2"
   },
   "devDependencies": {

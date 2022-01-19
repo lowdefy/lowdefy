@@ -21,7 +21,7 @@ async function configWatcher(context) {
     await context.lowdefyBuild();
     context.reloadClients();
   };
-  // TODO: Add ignored paths
+  // TODO: Add ignored and watch paths
   return setupWatcher({ callback, watchPaths: [context.directories.config] });
 }
 

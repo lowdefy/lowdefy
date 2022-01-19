@@ -14,11 +14,12 @@
   limitations under the License.
 */
 
+import path from 'path';
 import { writeFile } from '@lowdefy/node-utils';
 
-function reloadClients() {
+function reloadClients({ directories }) {
   return async () => {
-    await writeFile({ filePath: './build/reload', content: `${Date.now()}` });
+    await writeFile({ filePath: path.join(directories.build, 'reload'), content: `${Date.now()}` });
   };
 }
 

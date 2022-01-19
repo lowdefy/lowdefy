@@ -13,14 +13,15 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+/* eslint-disable no-console */
 
-import spawnKillableProcess from '../spawnKillableProcess.mjs';
+import spawnProcess from '../spawnProcess.mjs';
 
 function startServerProcess({ context, handleExit }) {
-  context.serverProcess = spawnKillableProcess({
+  context.serverProcess = spawnProcess({
     logger: console,
-    args: ['run', 'next', 'start'],
     command: context.packageManager,
+    args: ['run', 'next', 'start'],
     silent: false,
   });
   context.serverProcess.on('exit', handleExit);

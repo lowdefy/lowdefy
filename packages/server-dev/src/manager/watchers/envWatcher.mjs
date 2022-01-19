@@ -22,10 +22,9 @@ async function envWatcher(context) {
     console.log('.env file changed, restarting server...');
     context.restartServer();
   };
-  // TODO: Add ignored paths
   return setupWatcher({
     callback,
-    watchPaths: [path.resolve(context.directories.config, '.env')],
+    watchPaths: [path.join(context.directories.config, '.env')],
     watchDotfiles: true,
   });
 }

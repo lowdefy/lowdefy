@@ -22,9 +22,9 @@ async function run() {
   await build({
     logger: console,
     directories: {
-      build: path.resolve(process.env.LOWDEFY_BUILD_DIRECTORY || path.join(process.cwd(), 'build')),
-      config: path.resolve(process.env.LOWDEFY_CONFIG_DIRECTORY || process.cwd()),
-      server: path.resolve(process.env.LOWDEFY_SERVER_DIRECTORY || process.cwd()),
+      build: path.resolve(process.env.LOWDEFY_DIRECTORY_BUILD || path.join(process.cwd(), 'build')),
+      config: path.resolve(process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd()),
+      server: path.resolve(process.env.LOWDEFY_DIRECTORY_SERVER || process.cwd()),
     },
   });
 }

@@ -26,10 +26,14 @@ import reloadClients from './processes/reloadClients.mjs';
 const argv = yargs(hideBin(process.argv)).argv;
 
 async function getContext() {
-  const { configDirectory = process.cwd(), packageManager = 'npm', verbose = false } = argv;
+  const { packageManager = 'npm', verbose = false } = argv;
   const context = {
     directories: {
-      config: path.resolve(configDirectory),
+      build: path.resolve(process.cwd(), './build'),
+      config: path.resolve(
+        argv.configDirectory || process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd()
+      ),
+      server: process.cwd(),
     },
     packageManager,
     restartServer: () => {},
