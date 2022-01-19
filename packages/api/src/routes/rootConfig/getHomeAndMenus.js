@@ -13,16 +13,24 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-
 import { get } from '@lowdefy/helpers';
 
-function findHome({ config }, { menus }) {
-  if (get(config, 'homePageId')) {
+import getMenus from './menus/getMenus.js';
+
+async function getHomeAndMenus(context) {
+  const menus = await getMenus(context);
+
+  const homePageId = get(context.config, 'homePageId');
+  if (homePageId) {
     return {
-      pageId: config.homePageId,
-      configured: true,
+      home: {
+        configured: true,
+        pageId: homePageId,
+      },
+      menus,
     };
   }
+
   let defaultMenu = menus.find((menu) => menu.menuId === 'default');
   if (!defaultMenu) {
     // eslint-disable-next-line prefer-destructuring
@@ -37,9 +45,12 @@ function findHome({ config }, { menus }) {
     pageId = get(defaultMenu, 'links.0.links.0.links.0.pageId', { default: null });
   }
   return {
-    pageId,
-    configured: false,
+    home: {
+      configured: false,
+      pageId,
+    },
+    menus,
   };
 }
 
-export default findHome;
+export default getHomeAndMenus;

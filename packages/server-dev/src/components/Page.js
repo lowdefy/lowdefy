@@ -16,56 +16,38 @@
 
 import React from 'react';
 
-import { useRouter } from 'next/router';
-
+import Block from './block/Block.js';
 import Context from './Context.js';
 import Head from './Head.js';
-import Block from './block/Block.js';
-import Reload from './Reload.js';
-import PageConfig from './PageConfig.js';
-import setupLink from '../utils/setupLink.js';
+import usePageConfig from '../utils/usePageConfig.js';
 
 const LoadingBlock = () => <div>Loading...</div>;
 
 const Page = ({ lowdefy }) => {
-  const router = useRouter();
-
-  lowdefy._internal.basePath = router.basePath;
-  lowdefy._internal.pathname = router.pathname;
-  lowdefy._internal.query = router.query;
-  lowdefy._internal.router = router;
-  lowdefy._internal.link = setupLink({ lowdefy });
-
-  if (!lowdefy._internal.query.pageId) return <LoadingBlock />;
+  const { data: pageConfig } = usePageConfig(lowdefy.pageId);
+  if (!pageConfig) {
+    lowdefy._internal.router.push(`/404`);
+    return <LoadingBlock />;
+  }
   return (
-    <Reload>
-      <PageConfig lowdefy={lowdefy}>
-        {(pageConfig) => {
-          return (
-            <Context config={pageConfig} lowdefy={lowdefy}>
-              {(context, loading) => {
-                if (loading) {
-                  return <LoadingBlock />;
-                }
-                return (
-                  <>
-                    <Head
-                      properties={context._internal.RootBlocks.map[pageConfig.id].eval.properties}
-                    />
-                    <Block
-                      block={context._internal.RootBlocks.map[pageConfig.id]}
-                      Blocks={context._internal.RootBlocks}
-                      context={context}
-                      lowdefy={lowdefy}
-                    />
-                  </>
-                );
-              }}
-            </Context>
-          );
-        }}
-      </PageConfig>
-    </Reload>
+    <Context config={pageConfig} lowdefy={lowdefy}>
+      {(context, loading) => {
+        if (loading) {
+          return <LoadingBlock />;
+        }
+        return (
+          <>
+            <Head properties={context._internal.RootBlocks.map[pageConfig.id].eval.properties} />
+            <Block
+              block={context._internal.RootBlocks.map[pageConfig.id]}
+              Blocks={context._internal.RootBlocks}
+              context={context}
+              lowdefy={lowdefy}
+            />
+          </>
+        );
+      }}
+    </Context>
   );
 };
 

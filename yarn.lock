@@ -14,13 +14,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ant-design/css-animation@npm:^1.7.2":
-  version: 1.7.3
-  resolution: "@ant-design/css-animation@npm:1.7.3"
-  checksum: 75a62af5d12839eb5fff1af1e446431553cb0bd1538b89b88d1a0e4cd31978c878b622194f688bd732d4d95f778df9818735fdb31939bc615ace50ab6a506fdc
-  languageName: node
-  linkType: hard
-
 "@ant-design/icons-svg@npm:^4.2.1":
   version: 4.2.1
   resolution: "@ant-design/icons-svg@npm:4.2.1"
@@ -3335,6 +3328,7 @@ __metadata:
     "@lowdefy/block-dev": 4.0.0-alpha.5
     "@lowdefy/block-utils": 4.0.0-alpha.5
     "@lowdefy/helpers": 4.0.0-alpha.5
+    "@lowdefy/node-utils": 4.0.0-alpha.5
     "@swc/cli": 0.1.52
     "@swc/core": 1.2.112
     "@swc/jest": 0.2.9
@@ -3348,7 +3342,7 @@ __metadata:
     jest-serializer-html: 7.1.0
     jest-transform-yaml: 0.1.2
     moment: 2.29.1
-    rc-animate: 3.1.1
+    rc-motion: 2.4.4
     react: 18.0.0-alpha-327d5c484-20211106
     react-dom: 18.0.0-alpha-327d5c484-20211106
     tinycolor2: 1.4.2
@@ -5486,15 +5480,6 @@ __metadata:
     uuid: ^3.1.0
     xpath.js: ~1.1.0
   checksum: ab00fcdc29da20b06280cf764fcf70dfec6a1885ebf4f2197c9d2ef660725b140d289f28afff161091868d896e32da6e5b2626e5c429c294bacf13f388e13fb0
-  languageName: node
-  linkType: hard
-
-"add-dom-event-listener@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "add-dom-event-listener@npm:1.1.0"
-  dependencies:
-    object-assign: 4.x
-  checksum: 7685d32c4a9d78ad7a36641774168d80e195ef0710ae801e7211d849100c0e4499657cf3838bdae5ee9134b5aa9d7f50d68dec73b03e7d0082302804efff6ea6
   languageName: node
   linkType: hard
 
@@ -14130,7 +14115,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"object-assign@npm:4.x, object-assign@npm:^4.0.1, object-assign@npm:^4.1.0, object-assign@npm:^4.1.1":
+"object-assign@npm:^4.0.1, object-assign@npm:^4.1.0, object-assign@npm:^4.1.1":
   version: 4.1.1
   resolution: "object-assign@npm:4.1.1"
   checksum: fcc6e4ea8c7fe48abfbb552578b1c53e0d194086e2e6bbbf59e0a536381a292f39943c6e9628af05b5528aa5e3318bb30d6b2e53cadaf5b8fe9e12c4b69af23f
@@ -15390,15 +15375,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"raf@npm:^3.4.0":
-  version: 3.4.1
-  resolution: "raf@npm:3.4.1"
-  dependencies:
-    performance-now: ^2.1.0
-  checksum: 50ba284e481c8185dbcf45fc4618ba3aec580bb50c9121385d5698cb6012fe516d2015b1df6dd407a7b7c58d44be8086108236affbce1861edd6b44637c8cd52
-  languageName: node
-  linkType: hard
-
 "randombytes@npm:^2.0.0, randombytes@npm:^2.0.1, randombytes@npm:^2.0.5":
   version: 2.1.0
   resolution: "randombytes@npm:2.1.0"
@@ -15451,18 +15427,6 @@ __metadata:
     react: ">=16.9.0"
     react-dom: ">=16.9.0"
   checksum: e929f21d24b41314739221ed6527d006137d2f68b11c21c59759b3f98382f7b6cad7f8100732b84ac92934b0a427d69836ee8434fd73b09c4020b193ac3fdea0
-  languageName: node
-  linkType: hard
-
-"rc-animate@npm:3.1.1":
-  version: 3.1.1
-  resolution: "rc-animate@npm:3.1.1"
-  dependencies:
-    "@ant-design/css-animation": ^1.7.2
-    classnames: ^2.2.6
-    raf: ^3.4.0
-    rc-util: ^4.15.3
-  checksum: ff1b49a16522f88bf1db1e27732570ac1c8af923b2df188ec42570e3a02c846057359dae1a6ee6efba5436d7fa45fbbb8a90418e16da413dedfd779473032a00
   languageName: node
   linkType: hard
 
@@ -15633,7 +15597,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rc-motion@npm:^2.0.0, rc-motion@npm:^2.0.1, rc-motion@npm:^2.2.0, rc-motion@npm:^2.3.0, rc-motion@npm:^2.3.4, rc-motion@npm:^2.4.3, rc-motion@npm:^2.4.4":
+"rc-motion@npm:2.4.4, rc-motion@npm:^2.0.0, rc-motion@npm:^2.0.1, rc-motion@npm:^2.2.0, rc-motion@npm:^2.3.0, rc-motion@npm:^2.3.4, rc-motion@npm:^2.4.3, rc-motion@npm:^2.4.4":
   version: 2.4.4
   resolution: "rc-motion@npm:2.4.4"
   dependencies:
@@ -15936,19 +15900,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rc-util@npm:^4.15.3":
-  version: 4.21.1
-  resolution: "rc-util@npm:4.21.1"
-  dependencies:
-    add-dom-event-listener: ^1.1.0
-    prop-types: ^15.5.10
-    react-is: ^16.12.0
-    react-lifecycles-compat: ^3.0.4
-    shallowequal: ^1.1.0
-  checksum: f87d321ad2088171eef990f179fe8b34db648cd5ad37439de381093891189e429ad8c791077205c56de9e26e37749fb3f4ecfceba8c35f983f540650c7ed4fb0
-  languageName: node
-  linkType: hard
-
 "rc-util@npm:^5.0.0, rc-util@npm:^5.0.1, rc-util@npm:^5.0.5, rc-util@npm:^5.0.6, rc-util@npm:^5.0.7, rc-util@npm:^5.12.0, rc-util@npm:^5.14.0, rc-util@npm:^5.2.0, rc-util@npm:^5.2.1, rc-util@npm:^5.3.0, rc-util@npm:^5.4.0, rc-util@npm:^5.5.0, rc-util@npm:^5.5.1, rc-util@npm:^5.6.1, rc-util@npm:^5.7.0, rc-util@npm:^5.8.0, rc-util@npm:^5.9.4, rc-util@npm:^5.9.8":
   version: 5.14.0
   resolution: "rc-util@npm:5.14.0"
@@ -16054,13 +16005,6 @@ __metadata:
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
   checksum: f7a19ac3496de32ca9ae12aa030f00f14a3d45374f1ceca0af707c831b2a6098ef0d6bdae51bd437b0a306d7f01d4677fcc8de7c0d331eb47ad0f46130e53c5f
-  languageName: node
-  linkType: hard
-
-"react-lifecycles-compat@npm:^3.0.4":
-  version: 3.0.4
-  resolution: "react-lifecycles-compat@npm:3.0.4"
-  checksum: a904b0fc0a8eeb15a148c9feb7bc17cec7ef96e71188280061fc340043fd6d8ee3ff233381f0e8f95c1cf926210b2c4a31f38182c8f35ac55057e453d6df204f
   languageName: node
   linkType: hard
 

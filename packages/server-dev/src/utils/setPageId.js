@@ -14,14 +14,20 @@
   limitations under the License.
 */
 
-import findHome from './findHome.js';
-import getMenus from './menus/getMenus.js';
-
-async function getHome(context) {
-  // TODO: We can optimise here as we don't need to read menus if homepageId is configured
-  // but not sure if it is worth the added complexity
-  const menus = await getMenus(context);
-  return findHome(context, { menus });
+function setPageId(lowdefy) {
+  if (lowdefy._internal.pathname === '/404') {
+    lowdefy.pageId = '404';
+    return false;
+  }
+  if (!lowdefy._internal.query.pageId) {
+    lowdefy.pageId = lowdefy.home.pageId;
+    if (lowdefy.home.configured === false) {
+      return true;
+    }
+    return false;
+  }
+  lowdefy.pageId = lowdefy._internal.query.pageId;
+  return false;
 }
 
-export default getHome;
+export default setPageId;
