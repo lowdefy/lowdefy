@@ -14,23 +14,21 @@
   limitations under the License.
 */
 
-import { spawnProcess } from '@lowdefy/node-utils';
+import { useSWRConfig } from 'swr';
 
-const args = {
-  npm: ['install', '--legacy-peer-deps'],
-  yarn: ['install'],
-};
+function useMutateCache() {
+  const { cache, mutate } = useSWRConfig();
+  return () => {
+    const keys = ['/api/root'];
 
-function installServer({ packageManager, verbose }) {
-  return async () => {
-    console.log('Installing server...');
-    await spawnProcess({
-      logger: console,
-      command: packageManager, // npm or yarn
-      args: args[packageManager],
-      silent: !verbose,
-    });
+    for (const key of cache.keys()) {
+      if (key.startsWith('/api/page')) {
+        keys.push(key);
+      }
+    }
+    const mutations = keys.map((key) => mutate(key));
+    return Promise.all(mutations);
   };
 }
 
-export default installServer;
+export default useMutateCache;

@@ -14,30 +14,19 @@
   limitations under the License.
 */
 
-import React, { useEffect } from 'react';
+import request from './request.js';
 
-import useMutateCache from '../utils/useMutateCache.js';
-import waitForRestartedServer from '../utils/waitForRestartedServer.js';
-
-const Reload = ({ children, lowdefy }) => {
-  const mutateCache = useMutateCache();
-  useEffect(() => {
-    const sse = new EventSource('/api/reload');
-
-    sse.addEventListener('reload', () => {
-      mutateCache();
-      console.log('Reloaded config.');
-    });
-
-    sse.onerror = () => {
-      sse.close();
+function waitForRestartedServer(lowdefy) {
+  setTimeout(async () => {
+    try {
+      await request({
+        url: '/api/ping',
+      });
+      lowdefy._internal.window.location.reload();
+    } catch (error) {
       waitForRestartedServer(lowdefy);
-    };
-    return () => {
-      sse.close();
-    };
-  }, []);
-  return <>{children}</>;
-};
+    }
+  }, 1500);
+}
 
-export default Reload;
+export default waitForRestartedServer;

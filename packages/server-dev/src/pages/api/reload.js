@@ -31,7 +31,6 @@ const handler = async (req, res) => {
 
   const reload = () => {
     try {
-      console.log('Reload');
       res.write(`event: reload\ndata: ${JSON.stringify({})}\n\n`);
     } catch (e) {
       console.log(e);

@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -15,10 +14,23 @@
   limitations under the License.
 */
 
-async function initialBuild(context) {
-  await context.lowdefyBuild();
-  await context.installPlugins();
-  await context.nextBuild();
+import { spawnProcess } from '@lowdefy/node-utils';
+
+const args = {
+  npm: ['install', '--legacy-peer-deps'],
+  yarn: ['install'],
+};
+
+function installPlugins({ packageManager, verbose }) {
+  return async () => {
+    console.log('Installing plugins...');
+    await spawnProcess({
+      logger: console,
+      command: packageManager, // npm or yarn
+      args: args[packageManager],
+      silent: !verbose,
+    });
+  };
 }
 
-export default initialBuild;
+export default installPlugins;

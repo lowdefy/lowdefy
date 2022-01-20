@@ -13,6 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+/* eslint-disable no-console */
 
 import path from 'path';
 import yargs from 'yargs';
@@ -20,7 +21,7 @@ import { hideBin } from 'yargs/helpers';
 
 import lowdefyBuild from './processes/lowdefyBuild.mjs';
 import nextBuild from './processes/nextBuild.mjs';
-import installServer from './processes/installServer.mjs';
+import installPlugins from './processes/installPlugins.mjs';
 import startServerProcess from './processes/startServerProcess.mjs';
 import reloadClients from './processes/reloadClients.mjs';
 
@@ -37,6 +38,13 @@ async function getContext() {
       server: process.cwd(),
     },
     packageManager,
+    restartServer: () => {
+      if (context.serverProcess) {
+        console.log('Restarting server...');
+        context.serverProcess.kill();
+        startServerProcess(context);
+      }
+    },
     shutdownServer: () => {
       if (context.serverProcess) {
         console.log('Shutting down server...');
@@ -45,14 +53,7 @@ async function getContext() {
     },
     verbose,
   };
-  context.restartServer = () => {
-    if (context.serverProcess) {
-      console.log('Restarting server...');
-      context.serverProcess.kill();
-      startServerProcess(context);
-    }
-  };
-  context.installServer = installServer(context);
+  context.installPlugins = installPlugins(context);
   context.lowdefyBuild = lowdefyBuild(context);
   context.nextBuild = nextBuild(context);
   context.reloadClients = reloadClients(context);

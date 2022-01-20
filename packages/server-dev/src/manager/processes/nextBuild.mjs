@@ -18,7 +18,7 @@ import { spawnProcess } from '@lowdefy/node-utils';
 
 function nextBuild({ packageManager, verbose }) {
   return async () => {
-    console.log('Building next app...');
+    console.log('Building app...');
     await spawnProcess({
       logger: console,
       args: ['run', 'build:next'],

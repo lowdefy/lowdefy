@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -15,10 +14,6 @@
   limitations under the License.
 */
 
-async function initialBuild(context) {
-  await context.lowdefyBuild();
-  await context.installPlugins();
-  await context.nextBuild();
+export default async function handler(req, res) {
+  res.status(200).json({ timestamp: new Date().toISOString() });
 }
-
-export default initialBuild;

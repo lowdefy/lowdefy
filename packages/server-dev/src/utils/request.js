@@ -20,7 +20,7 @@ async function request({ url, method = 'GET', body }) {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(body),
+    body: body && JSON.stringify(body),
   });
   if (res.status === 404) {
     return null;
