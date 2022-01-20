@@ -28,7 +28,6 @@ test('validateApp no app defined', async () => {
         appendBody: '',
         appendHead: '',
       },
-      style: {},
     },
   });
 });
@@ -42,7 +41,6 @@ test('validateApp empty app object', async () => {
         appendBody: '',
         appendHead: '',
       },
-      style: {},
     },
   });
 });
@@ -56,7 +54,6 @@ test('validateApp empty html', async () => {
         appendBody: '',
         appendHead: '',
       },
-      style: {},
     },
   });
 });
@@ -76,33 +73,6 @@ test('validateApp appendHead and appendHead', async () => {
       html: {
         appendBody: 'body',
         appendHead: 'head',
-      },
-      style: {},
-    },
-  });
-});
-
-test('validateApp style', async () => {
-  const components = {
-    app: {
-      style: {
-        lessVariables: {
-          'primary-color': '#FF00FF',
-        },
-      },
-    },
-  };
-  const result = await validateApp({ components, context });
-  expect(result).toEqual({
-    app: {
-      html: {
-        appendBody: '',
-        appendHead: '',
-      },
-      style: {
-        lessVariables: {
-          'primary-color': '#FF00FF',
-        },
       },
     },
   });

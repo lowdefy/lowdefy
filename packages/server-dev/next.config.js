@@ -1,10 +1,10 @@
 const withLess = require('next-with-less');
-const appConfig = require('./build/app.json');
+const lowdefyConfig = require('./build/config.json');
 
 module.exports = withLess({
   lessLoaderOptions: {
     lessOptions: {
-      modifyVars: appConfig.style.lessVariables,
+      modifyVars: lowdefyConfig.theme.lessVariables,
     },
   },
   // reactStrictMode: true,

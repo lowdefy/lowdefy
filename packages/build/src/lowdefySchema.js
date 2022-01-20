@@ -63,12 +63,6 @@ export default {
             },
           },
         },
-        style: {
-          type: 'object',
-          errorMessage: {
-            type: 'App "app.style" should be an object.',
-          },
-        },
       },
     },
     authConfig: {
@@ -601,6 +595,9 @@ export default {
       },
       additionalProperties: false,
       properties: {
+        auth: {
+          $ref: '#/definitions/authConfig',
+        },
         homePageId: {
           type: 'string',
           description:
@@ -609,8 +606,20 @@ export default {
             type: 'App "config.homePageId" should be a string.',
           },
         },
-        auth: {
-          $ref: '#/definitions/authConfig',
+        theme: {
+          type: 'object',
+          errorMessage: {
+            type: 'App "config.theme" should be an object.',
+          },
+          properties: {
+            lessVariables: {
+              type: 'object',
+              description: 'App theme less variables.',
+              errorMessage: {
+                type: 'App "config.theme.lessVariables" should be an object.',
+              },
+            },
+          },
         },
       },
     },

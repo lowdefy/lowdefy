@@ -28,9 +28,6 @@ async function validateApp({ components }) {
   if (type.isNone(components.app.html)) {
     components.app.html = {};
   }
-  if (type.isNone(components.app.style)) {
-    components.app.style = {};
-  }
   if (type.isNone(components.app.html.appendBody)) {
     components.app.html.appendBody = '';
   }
