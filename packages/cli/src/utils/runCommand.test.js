@@ -13,6 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { wait } from '@lowdefy/helpers';
 
 import errorHandler from './errorHandler.js';
 import runCommand from './runCommand.js';
@@ -20,12 +21,6 @@ import startUp from './startUp.js';
 
 jest.mock('./errorHandler');
 jest.mock('./startUp');
-
-async function wait(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
 
 beforeEach(() => {
   errorHandler.mockReset();

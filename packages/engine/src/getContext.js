@@ -55,12 +55,12 @@ const blockData = ({
   visible,
 });
 
-async function getContext({ config, lowdefy }) {
+async function getContext({ config, lowdefy, development = false }) {
   if (!config) {
     throw new Error('A page must be provided to get context.');
   }
   const { id } = config;
-  if (lowdefy.contexts[id]) {
+  if (lowdefy.contexts[id] && !development) {
     lowdefy.contexts[id]._internal.update();
     return lowdefy.contexts[id];
   }

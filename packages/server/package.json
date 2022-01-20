@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/server",
-  "version": "4.0.0-alpha.5",
+  "version": "4.0.0-alpha.6",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -41,13 +41,13 @@
     "next": "next"
   },
   "dependencies": {
-    "@lowdefy/api": "4.0.0-alpha.5",
-    "@lowdefy/block-utils": "4.0.0-alpha.5",
-    "@lowdefy/engine": "4.0.0-alpha.5",
-    "@lowdefy/helpers": "4.0.0-alpha.5",
-    "@lowdefy/layout": "4.0.0-alpha.5",
-    "@lowdefy/node-utils": "4.0.0-alpha.5",
-    "@lowdefy/operators-js": "4.0.0-alpha.5",
+    "@lowdefy/api": "4.0.0-alpha.6",
+    "@lowdefy/block-utils": "4.0.0-alpha.6",
+    "@lowdefy/engine": "4.0.0-alpha.6",
+    "@lowdefy/helpers": "4.0.0-alpha.6",
+    "@lowdefy/layout": "4.0.0-alpha.6",
+    "@lowdefy/node-utils": "4.0.0-alpha.6",
+    "@lowdefy/operators-js": "4.0.0-alpha.6",
     "next": "12.0.3",
     "next-auth": "4.0.0-beta.6",
     "process": "0.11.10",
@@ -56,7 +56,7 @@
     "react-icons": "4.3.1"
   },
   "devDependencies": {
-    "@lowdefy/build": "4.0.0-alpha.5",
+    "@lowdefy/build": "4.0.0-alpha.6",
     "@next/eslint-plugin-next": "12.0.4",
     "less": "4.1.2",
     "less-loader": "10.2.0",

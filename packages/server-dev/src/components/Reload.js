@@ -15,42 +15,23 @@
 */
 
 import React, { useEffect } from 'react';
-import { useSWRConfig } from 'swr';
 
-function useMutateCache() {
-  const { cache, mutate } = useSWRConfig();
-  return () => {
-    const keys = ['/api/root'];
+import useMutateCache from '../utils/useMutateCache.js';
+import waitForRestartedServer from '../utils/waitForRestartedServer.js';
 
-    for (const key of cache.keys()) {
-      if (key.startsWith('/api/page')) {
-        keys.push(key);
-      }
-    }
-    console.log('mutate', keys);
-    const mutations = keys.map((key) => mutate(key));
-    return Promise.all(mutations);
-  };
-}
-
-const Reload = ({ children }) => {
+const Reload = ({ children, lowdefy }) => {
   const mutateCache = useMutateCache();
   useEffect(() => {
     const sse = new EventSource('/api/reload');
 
-    sse.onmessage = (event) => {
-      console.log(event);
+    sse.addEventListener('reload', () => {
       mutateCache();
-    };
-    sse.addEventListener('tick', (event) => {
-      console.log('tick event listener');
-      console.log(event);
-      mutateCache();
+      console.log('Reloaded config.');
     });
-    sse.onerror = (error) => {
-      console.log('ERROR');
-      console.error(error);
+
+    sse.onerror = () => {
       sse.close();
+      waitForRestartedServer(lowdefy);
     };
     return () => {
       sse.close();

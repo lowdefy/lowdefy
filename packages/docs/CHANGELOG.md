@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v4.0.0-alpha.6) (2022-01-20)
+
+
+### Bug Fixes
+
+* **docs:** Added redis connection documentation. ([ee1620b](https://github.com/lowdefy/lowdefy/commit/ee1620bb41d8aa3f32e05e9b7e03c7986365c59f))
+
+
+### Features
+
+* Add _diff to client operators as well as server. ([4e23fec](https://github.com/lowdefy/lowdefy/commit/4e23fec8a4985d7453dfcf750298bc0bedeb34a2))
+
+
+
+
+
 # [4.0.0-alpha.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.4...v4.0.0-alpha.5) (2021-11-27)
 
 **Note:** Version bump only for package @lowdefy/docs

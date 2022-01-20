@@ -25,9 +25,9 @@ function lowdefyBuild({ packageManager, directories }) {
       processOptions: {
         env: {
           ...process.env,
-          LOWDEFY_BUILD_DIRECTORY: './build',
-          LOWDEFY_CONFIG_DIRECTORY: directories.config,
-          LOWDEFY_SERVER_DIRECTORY: process.cwd(),
+          LOWDEFY_DIRECTORY_BUILD: directories.build,
+          LOWDEFY_DIRECTORY_CONFIG: directories.config,
+          LOWDEFY_DIRECTORY_SERVER: process.cwd(),
         },
       },
       silent: false,

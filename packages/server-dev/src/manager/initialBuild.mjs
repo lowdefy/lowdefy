@@ -16,9 +16,8 @@
 */
 
 async function initialBuild(context) {
-  await context.installServer();
   await context.lowdefyBuild();
-  await context.installServer();
+  await context.installPlugins();
   await context.nextBuild();
 }
 

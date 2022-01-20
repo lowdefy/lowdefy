@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/connection-stripe",
-  "version": "4.0.0-alpha.5",
+  "version": "4.0.0-alpha.6",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -42,14 +42,14 @@
     "s": "swc"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.5",
+    "@lowdefy/helpers": "4.0.0-alpha.6",
     "stripe": "8.186.0"
   },
   "devDependencies": {
-    "@lowdefy/ajv": "4.0.0-alpha.5",
-    "@swc/cli": "0.1.52",
-    "@swc/core": "1.2.112",
-    "@swc/jest": "0.2.9",
+    "@lowdefy/ajv": "4.0.0-alpha.6",
+    "@swc/cli": "0.1.55",
+    "@swc/core": "1.2.130",
+    "@swc/jest": "0.2.17",
     "jest": "27.3.1"
   },
   "publishConfig": {

@@ -46,7 +46,7 @@ const App = ({ lowdefy }) => {
   }
 
   return (
-    <Reload>
+    <Reload lowdefy={lowdefy}>
       <Page lowdefy={lowdefy} />
     </Reload>
   );

@@ -13,6 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+/* eslint-disable no-console */
 
 import path from 'path';
 import yargs from 'yargs';
@@ -20,29 +21,39 @@ import { hideBin } from 'yargs/helpers';
 
 import lowdefyBuild from './processes/lowdefyBuild.mjs';
 import nextBuild from './processes/nextBuild.mjs';
-import installServer from './processes/installServer.mjs';
+import installPlugins from './processes/installPlugins.mjs';
+import startServerProcess from './processes/startServerProcess.mjs';
 import reloadClients from './processes/reloadClients.mjs';
 
 const argv = yargs(hideBin(process.argv)).argv;
 
 async function getContext() {
-  const {
-    configDirectory = process.cwd(),
-    packageManager = 'npm',
-    skipInstall,
-    verbose = false,
-  } = argv;
+  const { packageManager = 'npm', verbose = false } = argv;
   const context = {
     directories: {
-      config: path.resolve(configDirectory),
+      build: path.resolve(process.cwd(), './build'),
+      config: path.resolve(
+        argv.configDirectory || process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd()
+      ),
+      server: process.cwd(),
     },
     packageManager,
-    skipInstall,
-    restartServer: () => {},
-    shutdownServer: () => {},
+    restartServer: () => {
+      if (context.serverProcess) {
+        console.log('Restarting server...');
+        context.serverProcess.kill();
+        startServerProcess(context);
+      }
+    },
+    shutdownServer: () => {
+      if (context.serverProcess) {
+        console.log('Shutting down server...');
+        context.serverProcess.kill();
+      }
+    },
     verbose,
   };
-  context.installServer = installServer(context);
+  context.installPlugins = installPlugins(context);
   context.lowdefyBuild = lowdefyBuild(context);
   context.nextBuild = nextBuild(context);
   context.reloadClients = reloadClients(context);

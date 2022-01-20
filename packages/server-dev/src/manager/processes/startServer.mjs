@@ -13,41 +13,16 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+/* eslint-disable no-console */
 
-import spawnKillableProcess from '../spawnKillableProcess.mjs';
-
-function startServerProcess({ context, handleExit }) {
-  context.serverProcess = spawnKillableProcess({
-    logger: console,
-    args: ['run', 'next', 'start'],
-    command: context.packageManager,
-    silent: false,
-  });
-  context.serverProcess.on('exit', handleExit);
-  context.restartServer = () => {
-    console.log('Restarting server...');
-    context.serverProcess.kill();
-    startServerProcess({ context, handleExit });
-  };
-  context.shutdownServer = () => {
-    console.log('Shutting down server...');
-    context.serverProcess.kill();
-  };
-}
+import startServerProcess from './startServerProcess.mjs';
 
 async function startServer(context) {
   return new Promise((resolve, reject) => {
-    function handleExit(code) {
-      if (code !== 0) {
-        context.shutdownServer && context.shutdownServer();
-        reject(new Error('Server error.'));
-      }
-      resolve();
-    }
+    context.serverProcessPromise = { resolve, reject };
     try {
-      startServerProcess({ context, handleExit });
+      startServerProcess(context);
     } catch (error) {
-      context.shutdownServer && context.shutdownServer();
       reject(error);
     }
   });
