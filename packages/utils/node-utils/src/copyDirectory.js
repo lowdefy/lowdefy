@@ -14,23 +14,10 @@
   limitations under the License.
 */
 
-import cleanDirectory from './cleanDirectory.js';
-import copyDirectory from './copyDirectory.js';
-import getConfigFromEnv from './getConfigFromEnv.js';
-import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
-import getSecretsFromEnv from './getSecretsFromEnv.js';
-import spawnProcess from './spawnProcess.js';
-import readFile from './readFile.js';
-import writeFile from './writeFile.js';
+import fsExtra from 'fs-extra';
 
-export {
-  cleanDirectory,
-  copyDirectory,
-  getConfigFromEnv,
-  getFileExtension,
-  getFileSubExtension,
-  getSecretsFromEnv,
-  spawnProcess,
-  readFile,
-  writeFile,
-};
+async function copyDirectory(dirPathFrom, dirPathTo) {
+  await fsExtra.copy(dirPathFrom, dirPathTo);
+}
+
+export default copyDirectory;
