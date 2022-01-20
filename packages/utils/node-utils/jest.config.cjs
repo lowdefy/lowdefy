@@ -9,6 +9,6 @@ module.exports = {
   testEnvironment: 'node',
   testPathIgnorePatterns: ['<rootDir>/dist/'],
   transform: {
-    '^.+\\.(t|j)sx?$': ['@swc/jest', { configFile: '../../.swcrc.test' }],
+    '^.+\\.(t|j)sx?$': ['@swc/jest', { configFile: '../../../.swcrc.test' }],
   },
 };

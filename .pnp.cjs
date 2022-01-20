@@ -5481,8 +5481,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.55"],
             ["@swc/core", "npm:1.2.130"],
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.17"],
-            ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:27.3.1"],
-            ["rimraf", "npm:3.0.2"]
+            ["fs-extra", "npm:10.0.0"],
+            ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:27.3.1"]
           ],
           "linkType": "SOFT",
         }]
@@ -5650,6 +5650,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/server", "workspace:packages/server"],
             ["@lowdefy/api", "workspace:packages/api"],
             ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],
+            ["@lowdefy/blocks-antd", "workspace:packages/plugins/blocks/blocks-antd"],
+            ["@lowdefy/blocks-basic", "workspace:packages/plugins/blocks/blocks-basic"],
             ["@lowdefy/build", "workspace:packages/build"],
             ["@lowdefy/engine", "workspace:packages/engine"],
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],
@@ -11741,6 +11743,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["fs-extra", [
+        ["npm:10.0.0", {
+          "packageLocation": "./.yarn/cache/fs-extra-npm-10.0.0-4f8c704115-5285a3d8f3.zip/node_modules/fs-extra/",
+          "packageDependencies": [
+            ["fs-extra", "npm:10.0.0"],
+            ["graceful-fs", "npm:4.2.8"],
+            ["jsonfile", "npm:6.1.0"],
+            ["universalify", "npm:2.0.0"]
+          ],
+          "linkType": "HARD",
+        }],
         ["npm:9.1.0", {
           "packageLocation": "./.yarn/cache/fs-extra-npm-9.1.0-983c2ddb4c-ba71ba32e0.zip/node_modules/fs-extra/",
           "packageDependencies": [
