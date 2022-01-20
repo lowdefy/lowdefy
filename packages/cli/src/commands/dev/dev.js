@@ -15,11 +15,13 @@
 */
 
 import getServer from './getServer.js';
+import installServer from './installServer.js';
 import runDevServer from './runDevServer.js';
 
 async function dev({ context }) {
   context.print.info('Starting development server.');
   await getServer({ context });
+  await installServer({ context });
   context.sendTelemetry();
   await runDevServer({ context });
 }

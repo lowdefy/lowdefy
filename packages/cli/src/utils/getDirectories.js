@@ -28,7 +28,7 @@ function getDirectories({ baseDirectory, options }) {
     build: path.join(dotLowdefy, 'server', 'build'),
     dotLowdefy,
     server: path.join(dotLowdefy, 'server'),
-    serverDev: path.join(dotLowdefy, 'server-dev'),
+    devServer: path.join(dotLowdefy, 'dev'),
   };
 }
 

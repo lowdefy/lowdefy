@@ -63,6 +63,10 @@ program
     'Change base directory. Default is the current working directory.'
   )
   .option('--disable-telemetry', 'Disable telemetry.')
+  .option(
+    '--package-manager <package-manager>',
+    'The package manager to use. Options are "npm" or "yarn".'
+  )
   // TODO:
   .option('--port <port>', 'Change the port the server is hosted at. Default is 3000.')
   // TODO:
