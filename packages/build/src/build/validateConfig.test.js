@@ -34,6 +34,33 @@ test('validateConfig no config defined', async () => {
   });
 });
 
+test('validate config theme', async () => {
+  const components = {
+    config: {
+      theme: {
+        lessVariables: {
+          'primary-color': '#FF00FF',
+        },
+      },
+    },
+  };
+  const result = await validateConfig({ components, context });
+  expect(result).toEqual({
+    config: {
+      auth: {
+        pages: {
+          roles: {},
+        },
+      },
+      theme: {
+        lessVariables: {
+          'primary-color': '#FF00FF',
+        },
+      },
+    },
+  });
+});
+
 test('validateConfig config not an object', async () => {
   const components = {
     config: 'config',

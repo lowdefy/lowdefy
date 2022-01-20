@@ -78,34 +78,6 @@ test('validateApp appendHead and appendHead', async () => {
   });
 });
 
-test('validate config theme', async () => {
-  const components = {
-    config: {
-      theme: {
-        lessVariables: {
-          'primary-color': '#FF00FF',
-        },
-      },
-    },
-  };
-  const result = await validateApp({ components, context });
-  expect(result).toEqual({
-    app: {
-      html: {
-        appendBody: '',
-        appendHead: '',
-      },
-    },
-    config: {
-      theme: {
-        lessVariables: {
-          'primary-color': '#FF00FF',
-        },
-      },
-    },
-  });
-});
-
 test('validateApp app not an object', async () => {
   const components = {
     app: 'app',
