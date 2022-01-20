@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/plugin-aws",
-  "version": "4.0.0-alpha.5",
+  "version": "4.0.0-alpha.6",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -44,7 +44,7 @@
     "aws-sdk": "2.1021.0"
   },
   "devDependencies": {
-    "@lowdefy/ajv": "4.0.0-alpha.5",
+    "@lowdefy/ajv": "4.0.0-alpha.6",
     "@swc/cli": "0.1.55",
     "@swc/core": "1.2.130",
     "@swc/jest": "0.2.17",

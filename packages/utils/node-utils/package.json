@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/node-utils",
-  "version": "4.0.0-alpha.5",
+  "version": "4.0.0-alpha.6",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -41,7 +41,7 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.5",
+    "@lowdefy/helpers": "4.0.0-alpha.6",
     "rimraf": "3.0.2"
   },
   "devDependencies": {
