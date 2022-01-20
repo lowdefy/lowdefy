@@ -16,11 +16,7 @@
 
 import BatchChanges from './BatchChanges.js';
 
-async function wait(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
+import { wait } from '@lowdefy/helpers';
 
 const context = {};
 

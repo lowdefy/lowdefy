@@ -3941,6 +3941,7 @@ __metadata:
     "@lowdefy/engine": 4.0.0-alpha.5
     "@lowdefy/helpers": 4.0.0-alpha.5
     "@lowdefy/layout": 4.0.0-alpha.5
+    "@lowdefy/node-utils": 4.0.0-alpha.5
     "@lowdefy/operators-js": 4.0.0-alpha.5
     "@next/eslint-plugin-next": 12.0.4
     less: 4.1.2

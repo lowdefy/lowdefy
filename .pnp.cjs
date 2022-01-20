@@ -5654,6 +5654,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/engine", "workspace:packages/engine"],
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],
             ["@lowdefy/layout", "workspace:packages/layout"],
+            ["@lowdefy/node-utils", "workspace:packages/utils/node-utils"],
             ["@lowdefy/operators-js", "workspace:packages/plugins/operators/operators-js"],
             ["@next/eslint-plugin-next", "npm:12.0.4"],
             ["less", "npm:4.1.2"],
