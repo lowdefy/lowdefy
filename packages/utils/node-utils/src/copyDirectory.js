@@ -16,8 +16,8 @@
 
 import fsExtra from 'fs-extra';
 
-async function cleanDirectory(dirPath) {
-  await fsExtra.emptyDir(dirPath);
+async function copyDirectory(dirPathFrom, dirPathTo) {
+  await fsExtra.copy(dirPathFrom, dirPathTo);
 }
 
-export default cleanDirectory;
+export default copyDirectory;

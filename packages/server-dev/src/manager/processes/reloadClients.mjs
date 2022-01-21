@@ -19,7 +19,7 @@ import { writeFile } from '@lowdefy/node-utils';
 
 function reloadClients({ directories }) {
   return async () => {
-    await writeFile({ filePath: path.join(directories.build, 'reload'), content: `${Date.now()}` });
+    await writeFile(path.join(directories.build, 'reload'), `${Date.now()}`);
   };
 }
 

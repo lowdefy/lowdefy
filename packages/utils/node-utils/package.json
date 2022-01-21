@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-alpha.6",
-    "rimraf": "3.0.2"
+    "fs-extra": "10.0.0"
   },
   "devDependencies": {
     "@swc/cli": "0.1.55",

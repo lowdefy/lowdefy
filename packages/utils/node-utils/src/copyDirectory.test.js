@@ -14,23 +14,21 @@
   limitations under the License.
 */
 
-import cleanDirectory from './cleanDirectory.js';
+import fs from 'fs-extra';
+import path from 'path';
 import copyDirectory from './copyDirectory.js';
-import getConfigFromEnv from './getConfigFromEnv.js';
-import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
-import getSecretsFromEnv from './getSecretsFromEnv.js';
-import spawnProcess from './spawnProcess.js';
-import readFile from './readFile.js';
-import writeFile from './writeFile.js';
 
-export {
-  cleanDirectory,
-  copyDirectory,
-  getConfigFromEnv,
-  getFileExtension,
-  getFileSubExtension,
-  getSecretsFromEnv,
-  spawnProcess,
-  readFile,
-  writeFile,
-};
+test('copyDirectory', async () => {
+  const dirPathFrom = path.resolve(process.cwd(), 'test/copyDirectory/From/');
+  const dirPathTo = path.resolve(process.cwd(), 'test/copyDirectory/To/');
+  const filePathFrom = path.resolve(dirPathFrom, 'copyDirectory.txt');
+  const filePathTo = path.resolve(dirPathTo, 'copyDirectory.txt');
+
+  fs.mkdirSync(dirPathFrom, {
+    recursive: true,
+  });
+  fs.writeFileSync(filePathFrom, 'copyDirectory');
+
+  await copyDirectory(dirPathFrom, dirPathTo);
+  expect(fs.existsSync(filePathTo)).toBe(true);
+});
