@@ -45,12 +45,10 @@ test('getCliJson, no file exists', async () => {
   expect(res).toEqual({ appId: 'uuidv4' });
   expect(writeFile.mock.calls).toEqual([
     [
-      {
-        content: `{
+      path.resolve(process.cwd(), '.lowdefy/cli.json'),
+      `{
   "appId": "uuidv4"
 }`,
-        filePath: path.resolve(process.cwd(), '.lowdefy/cli.json'),
-      },
     ],
   ]);
 });

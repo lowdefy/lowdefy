@@ -14,10 +14,18 @@
   limitations under the License.
 */
 
-import fsExtra from 'fs-extra';
+import path from 'path';
+import fs from 'fs';
+import { copyDirectory } from '@lowdefy/node-utils';
 
-async function cleanDirectory(dirPath) {
-  await fsExtra.emptyDir(dirPath);
+async function copyPublicFolder({ context }) {
+  if (context.directories.config === context.directories.server) return;
+  if (!fs.existsSync(path.resolve(context.directories.config, 'public'))) return;
+
+  await copyDirectory(
+    path.resolve(context.directories.config, 'public'),
+    path.resolve(context.directories.server, 'public')
+  );
 }
 
-export default cleanDirectory;
+export default copyPublicFolder;

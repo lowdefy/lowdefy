@@ -19,7 +19,7 @@ import { writeFile } from '@lowdefy/node-utils';
 
 function createWriteBuildArtifact({ directories }) {
   async function writeBuildArtifact({ filePath, content }) {
-    return writeFile({ filePath: path.resolve(directories.build, filePath), content });
+    return writeFile(path.resolve(directories.build, filePath), content);
   }
   return writeBuildArtifact;
 }

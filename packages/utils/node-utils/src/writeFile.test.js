@@ -15,8 +15,8 @@
 */
 
 import fs from 'fs';
+import fsExtra from 'fs-extra';
 import path from 'path';
-import rimraf from 'rimraf';
 import writeFile from './writeFile.js';
 
 const baseDir = path.resolve(process.cwd(), 'test/writeFile');
@@ -29,10 +29,7 @@ test('writeFile', async () => {
     //pass
   }
   expect(fs.existsSync(filePath)).toBe(false);
-  await writeFile({
-    filePath,
-    content: `Test Write File`,
-  });
+  await writeFile(filePath, `Test Write File`);
   const res = fs.readFileSync(filePath, 'utf8');
   expect(res).toEqual(`Test Write File`);
   try {
@@ -46,28 +43,23 @@ test('writeFile should create directories if they do not exist', async () => {
   const filePath = path.resolve(baseDir, 'sub/dir/test/writeFile.txt');
   const testBaseDir = path.resolve(baseDir, 'sub');
 
-  await new Promise((resolve) => rimraf(testBaseDir, resolve));
+  await new Promise((resolve) => fsExtra.emptyDir(testBaseDir, resolve));
 
   expect(fs.existsSync(filePath)).toBe(false);
-  await writeFile({
-    filePath,
-    content: `Test Write File`,
-  });
+  await writeFile(filePath, `Test Write File`);
   const res = fs.readFileSync(filePath, 'utf8');
   expect(res).toEqual(`Test Write File`);
-  await new Promise((resolve) => rimraf(testBaseDir, resolve));
+  await new Promise((resolve) => fsExtra.emptyDir(testBaseDir, resolve));
 });
 
 test('readFile error id filepath is not a string', async () => {
-  await expect(writeFile({ filePath: true, content: `Test Write File` })).rejects.toThrow(
+  await expect(writeFile(true, `Test Write File`)).rejects.toThrow(
     'Could not write file, file path should be a string, received true.'
   );
 });
 
-test('readFile errors if path is not already resolved', async () => {
-  await expect(
-    writeFile({ filePath: './writeFile/writeFile.txt', content: `Test Write File` })
-  ).rejects.toThrow(
-    'Could not write file, file path was not resolved, received "./writeFile/writeFile.txt".'
+test('readFile errors if content is not a string.', async () => {
+  await expect(writeFile('./test/writeFile/writeFile.txt', 123)).rejects.toThrow(
+    'The "data" argument must be of type string or an instance of Buffer, TypedArray, or DataView. Received type number (123)'
   );
 });

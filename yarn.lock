@@ -3749,8 +3749,8 @@ __metadata:
     "@swc/cli": 0.1.55
     "@swc/core": 1.2.130
     "@swc/jest": 0.2.17
+    fs-extra: 10.0.0
     jest: 27.3.1
-    rimraf: 3.0.2
   languageName: unknown
   linkType: soft
 
@@ -3939,6 +3939,8 @@ __metadata:
   dependencies:
     "@lowdefy/api": 4.0.0-alpha.6
     "@lowdefy/block-utils": 4.0.0-alpha.6
+    "@lowdefy/blocks-antd": 4.0.0-alpha.6
+    "@lowdefy/blocks-basic": 4.0.0-alpha.6
     "@lowdefy/build": 4.0.0-alpha.6
     "@lowdefy/engine": 4.0.0-alpha.6
     "@lowdefy/helpers": 4.0.0-alpha.6
@@ -8950,6 +8952,17 @@ __metadata:
   version: 1.0.0
   resolution: "fs-constants@npm:1.0.0"
   checksum: 18f5b718371816155849475ac36c7d0b24d39a11d91348cfcb308b4494824413e03572c403c86d3a260e049465518c4f0d5bd00f0371cdfcad6d4f30a85b350d
+  languageName: node
+  linkType: hard
+
+"fs-extra@npm:10.0.0":
+  version: 10.0.0
+  resolution: "fs-extra@npm:10.0.0"
+  dependencies:
+    graceful-fs: ^4.2.0
+    jsonfile: ^6.0.1
+    universalify: ^2.0.0
+  checksum: 5285a3d8f34b917cf2b66af8c231a40c1623626e9d701a20051d3337be16c6d7cac94441c8b3732d47a92a2a027886ca93c69b6a4ae6aee3c89650d2a8880c0a
   languageName: node
   linkType: hard
 
@@ -16242,7 +16255,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"rimraf@npm:3.0.2, rimraf@npm:^3.0.0, rimraf@npm:^3.0.2":
+"rimraf@npm:^3.0.0, rimraf@npm:^3.0.2":
   version: 3.0.2
   resolution: "rimraf@npm:3.0.2"
   dependencies:
