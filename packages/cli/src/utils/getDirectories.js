@@ -16,15 +16,15 @@
 
 import path from 'path';
 
-function getDirectories({ baseDirectory, options }) {
+function getDirectories({ configDirectory, options }) {
   let dotLowdefy;
   if (options.outputDirectory) {
     dotLowdefy = path.resolve(options.outputDirectory);
   } else {
-    dotLowdefy = path.resolve(baseDirectory, '.lowdefy');
+    dotLowdefy = path.resolve(configDirectory, '.lowdefy');
   }
   return {
-    base: baseDirectory,
+    base: configDirectory,
     build: path.join(dotLowdefy, 'server', 'build'),
     dotLowdefy,
     server: path.join(dotLowdefy, 'server'),

@@ -18,7 +18,7 @@ import getDirectories from './getDirectories.js';
 
 test('default directories', () => {
   const { cacheDirectory, buildDirectory } = getDirectories({
-    baseDirectory: '/test/base',
+    configDirectory: '/test/base',
     options: {},
   });
 
@@ -28,7 +28,7 @@ test('default directories', () => {
 
 test('specify outputDirectory in options', () => {
   const { cacheDirectory, buildDirectory } = getDirectories({
-    baseDirectory: '/test/base',
+    configDirectory: '/test/base',
     options: {
       outputDirectory: '/test/build',
     },
