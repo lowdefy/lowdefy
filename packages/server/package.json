@@ -34,8 +34,7 @@
   "scripts": {
     "build:lowdefy": "lowdefy-build",
     "build:next": "next build",
-    "dev": "yarn build:lowdefy && yarn && next dev",
-    "dev:prod": "yarn build:lowdefy && yarn && yarn build:next && next start",
+    "dev": "next dev",
     "start": "next start",
     "lint": "next lint",
     "next": "next"
