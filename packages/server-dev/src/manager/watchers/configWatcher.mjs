@@ -13,11 +13,24 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+/* eslint-disable no-console */
 
-import setupWatcher from './setupWatcher.mjs';
+import getLowdefyVersion from '../utils/getLowdefyVersion.mjs';
+import setupWatcher from '../utils/setupWatcher.mjs';
 
 async function configWatcher(context) {
-  const callback = async () => {
+  const callback = async (filePaths) => {
+    const lowdefyYamlModified = filePaths
+      .flat()
+      .some((filePath) => filePath.includes('lowdefy.yaml') || filePath.includes('lowdefy.yml'));
+    if (lowdefyYamlModified) {
+      const lowdefyVersion = await getLowdefyVersion(context);
+      if (lowdefyVersion !== context.version) {
+        console.warn('Lowdefy version changed. You should restart your development server.');
+        process.exit();
+      }
+    }
+
     await context.lowdefyBuild();
     context.reloadClients();
   };

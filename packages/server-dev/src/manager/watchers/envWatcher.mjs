@@ -13,13 +13,15 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+/* eslint-disable no-console */
 
 import path from 'path';
-import setupWatcher from './setupWatcher.mjs';
+import setupWatcher from '../utils/setupWatcher.mjs';
 
 async function envWatcher(context) {
   const callback = async () => {
-    console.log('.env file changed, restarting server...');
+    console.warn('.env file changed.');
+    await context.readDotEnv();
     context.restartServer();
   };
   return setupWatcher({

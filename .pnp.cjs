@@ -5700,6 +5700,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/operators-yaml", "workspace:packages/plugins/operators/operators-yaml"],
             ["@next/eslint-plugin-next", "npm:12.0.4"],
             ["chokidar", "npm:3.5.2"],
+            ["dotenv", "npm:14.2.0"],
+            ["js-yaml", "npm:4.1.0"],
             ["less", "npm:4.1.2"],
             ["less-loader", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:10.2.0"],
             ["next", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:12.0.3"],
@@ -10532,6 +10534,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["dot-prop", "npm:6.0.1"],
             ["is-obj", "npm:2.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["dotenv", [
+        ["npm:14.2.0", {
+          "packageLocation": "./.yarn/cache/dotenv-npm-14.2.0-b237345d26-85a0e44918.zip/node_modules/dotenv/",
+          "packageDependencies": [
+            ["dotenv", "npm:14.2.0"]
           ],
           "linkType": "HARD",
         }]

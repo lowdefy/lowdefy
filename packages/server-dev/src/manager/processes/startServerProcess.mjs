@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import spawnProcess from '../spawnProcess.mjs';
+import spawnProcess from '../utils/spawnProcess.mjs';
 
 function startServerProcess(context) {
   context.serverProcess = spawnProcess({
@@ -22,6 +22,12 @@ function startServerProcess(context) {
     command: context.packageManager,
     args: ['run', 'next', 'start'],
     silent: false,
+    processOptions: {
+      env: {
+        ...process.env,
+        ...context.serverEnv,
+      },
+    },
   });
   context.serverProcess.on('exit', (code) => {
     if (code !== 0) {

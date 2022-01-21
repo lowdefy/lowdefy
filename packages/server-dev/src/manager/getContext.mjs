@@ -19,11 +19,15 @@ import path from 'path';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
+import initialBuild from './processes/initialBuild.mjs';
+import installPlugins from './processes/installPlugins.mjs';
 import lowdefyBuild from './processes/lowdefyBuild.mjs';
 import nextBuild from './processes/nextBuild.mjs';
-import installPlugins from './processes/installPlugins.mjs';
-import startServerProcess from './processes/startServerProcess.mjs';
+import readDotEnv from './processes/readDotEnv.mjs';
 import reloadClients from './processes/reloadClients.mjs';
+import restartServer from './processes/restartServer.mjs';
+import shutdownServer from './processes/shutdownServer.mjs';
+import startWatchers from './processes/startWatchers.mjs';
 
 const argv = yargs(hideBin(process.argv)).argv;
 
@@ -38,25 +42,19 @@ async function getContext() {
       server: process.cwd(),
     },
     packageManager,
-    restartServer: () => {
-      if (context.serverProcess) {
-        console.log('Restarting server...');
-        context.serverProcess.kill();
-        startServerProcess(context);
-      }
-    },
-    shutdownServer: () => {
-      if (context.serverProcess) {
-        console.log('Shutting down server...');
-        context.serverProcess.kill();
-      }
-    },
     verbose,
   };
+
+  context.version = process.env.npm_package_version;
+  context.initialBuild = initialBuild(context);
   context.installPlugins = installPlugins(context);
   context.lowdefyBuild = lowdefyBuild(context);
   context.nextBuild = nextBuild(context);
+  context.readDotEnv = readDotEnv(context);
   context.reloadClients = reloadClients(context);
+  context.restartServer = restartServer(context);
+  context.shutdownServer = shutdownServer(context);
+  context.startWatchers = startWatchers(context);
 
   return context;
 }

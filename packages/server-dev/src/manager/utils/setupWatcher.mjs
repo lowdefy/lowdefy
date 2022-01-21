@@ -15,14 +15,20 @@
 */
 
 import chokidar from 'chokidar';
-import BatchChanges from '../BatchChanges.mjs';
+import BatchChanges from './BatchChanges.mjs';
 
-function setupWatcher({ callback, watchDotfiles = false, ignorePaths = [], watchPaths }) {
+function setupWatcher({
+  callback,
+  watchDotfiles = false,
+  ignorePaths = [],
+  watchPaths,
+  minDelay = 500,
+}) {
   return new Promise((resolve) => {
     // const { watch = [], watchIgnore = [] } = context.options;
     // const resolvedWatchPaths = watch.map((pathName) => path.resolve(pathName));
 
-    const batchChanges = new BatchChanges({ fn: callback });
+    const batchChanges = new BatchChanges({ fn: callback, minDelay });
     const defaultIgnorePaths = watchDotfiles
       ? []
       : [
@@ -33,9 +39,9 @@ function setupWatcher({ callback, watchDotfiles = false, ignorePaths = [], watch
       persistent: true,
       ignoreInitial: true,
     });
-    configWatcher.on('add', (...args) => batchChanges.newChange(args));
-    configWatcher.on('change', (...args) => batchChanges.newChange(args));
-    configWatcher.on('unlink', (...args) => batchChanges.newChange(args));
+    configWatcher.on('add', (...args) => batchChanges.newChange(...args));
+    configWatcher.on('change', (...args) => batchChanges.newChange(...args));
+    configWatcher.on('unlink', (...args) => batchChanges.newChange(...args));
     configWatcher.on('ready', () => resolve());
   });
 }

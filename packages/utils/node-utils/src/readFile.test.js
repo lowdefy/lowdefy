@@ -35,9 +35,3 @@ test('readFile error id filepath is not a string', async () => {
     'Could not read file, file path should be a string, received {}.'
   );
 });
-
-test('readFile errors if path is not already resolved', async () => {
-  await expect(readFile('./readFile/readFile.txt')).rejects.toThrow(
-    'Could not read file, file path was not resolved, received "./readFile/readFile.txt".'
-  );
-});

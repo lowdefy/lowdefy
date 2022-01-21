@@ -27,14 +27,9 @@ async function readFile(filePath) {
       `Could not read file, file path should be a string, received ${JSON.stringify(filePath)}.`
     );
   }
-  if (filePath !== path.resolve(filePath)) {
-    throw new Error(
-      `Could not read file, file path was not resolved, received ${JSON.stringify(filePath)}.`
-    );
-  }
   try {
     // By specifying encoding, readFile returns a string instead of a buffer.
-    const file = await readFilePromise(filePath, 'utf8');
+    const file = await readFilePromise(path.resolve(filePath), 'utf8');
     return file;
   } catch (error) {
     if (error.code === 'ENOENT' || error.code === 'EISDIR') {

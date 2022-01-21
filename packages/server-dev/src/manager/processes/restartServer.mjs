@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -15,10 +14,16 @@
   limitations under the License.
 */
 
-async function initialBuild(context) {
-  await context.lowdefyBuild();
-  await context.installPlugins();
-  await context.nextBuild();
+import startServerProcess from './startServerProcess.mjs';
+
+function shutdownServer(context) {
+  return async () => {
+    if (context.serverProcess) {
+      console.log('Restarting server...');
+      context.serverProcess.kill();
+      startServerProcess(context);
+    }
+  };
 }
 
-export default initialBuild;
+export default shutdownServer;

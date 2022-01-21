@@ -26,7 +26,7 @@ const LoadingBlock = () => <div>Loading...</div>;
 const Page = ({ lowdefy }) => {
   const { data: pageConfig } = usePageConfig(lowdefy.pageId);
   if (!pageConfig) {
-    lowdefy._internal.router.push(`/404`);
+    lowdefy._internal.router.replace(`/404`);
     return <LoadingBlock />;
   }
   return (
