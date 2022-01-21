@@ -22,6 +22,12 @@ function startServerProcess(context) {
     command: context.packageManager,
     args: ['run', 'next', 'start'],
     silent: false,
+    processOptions: {
+      env: {
+        ...process.env,
+        ...context.serverEnv,
+      },
+    },
   });
   context.serverProcess.on('exit', (code) => {
     if (code !== 0) {

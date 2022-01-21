@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -15,25 +14,15 @@
   limitations under the License.
 */
 
-import { wait } from '@lowdefy/helpers';
-import opener from 'opener';
-import getContext from './getContext.mjs';
-import startServer from './processes/startServer.mjs';
+import path from 'path';
+import dotenv from 'dotenv';
+import { readFile } from '@lowdefy/node-utils';
 
-async function run() {
-  const context = await getContext();
-  await context.initialBuild();
-  await context.startWatchers();
-  try {
-    const serverPromise = startServer(context);
-    await wait(800);
-    // TODO: set correct port
-    opener(`http://localhost:3000`);
-    await serverPromise;
-  } catch (error) {
-    context.shutdownServer();
-    throw error;
-  }
+function readDotEnv(context) {
+  return async () => {
+    const dotEnvPath = path.join(context.directories.config, '.env');
+    context.serverEnv = dotenv.parse(await readFile(dotEnvPath));
+  };
 }
 
-run();
+export default readDotEnv;

@@ -3917,6 +3917,8 @@ __metadata:
     "@lowdefy/operators-yaml": 4.0.0-alpha.6
     "@next/eslint-plugin-next": 12.0.4
     chokidar: 3.5.2
+    dotenv: 14.2.0
+    js-yaml: 4.1.0
     less: 4.1.2
     less-loader: 10.2.0
     next: 12.0.3
@@ -7940,6 +7942,13 @@ __metadata:
   dependencies:
     is-obj: ^2.0.0
   checksum: 0f47600a4b93e1dc37261da4e6909652c008832a5d3684b5bf9a9a0d3f4c67ea949a86dceed9b72f5733ed8e8e6383cc5958df3bbd0799ee317fd181f2ece700
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:14.2.0":
+  version: 14.2.0
+  resolution: "dotenv@npm:14.2.0"
+  checksum: 85a0e44918ef49e64c278f757dab50a156b9a6ca67f708876fd81d265e575e35b67387fc681d910df99368d6c1edca66cd546edeb0f7db3b499cb876c999233e
   languageName: node
   linkType: hard
 

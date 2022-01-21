@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import configWatcher from './watchers/configWatcher.mjs';
-import envWatcher from './watchers/envWatcher.mjs';
+import configWatcher from '../watchers/configWatcher.mjs';
+import envWatcher from '../watchers/envWatcher.mjs';
 
 /*
 Config change
@@ -31,7 +31,6 @@ Watch <server>/package.json
 - No need for Lowdefy build (confirm?)
 - Trigger hard reload
 - Restart server.
-
 ----------------------------------------
 .env change
 Watch <config-dir>/.env
@@ -48,7 +47,6 @@ Watch <server-dir>/build/config.json
 - Next build.
 - Trigger hard reload
 - Restart server.
-
 ----------------------------------------
 New plugin or icon used.
 Watch <server-dir>/build/plugins/*
@@ -57,8 +55,10 @@ Watch <server-dir>/build/plugins/*
 - Restart server.
 */
 
-async function startWatchers(context) {
-  await Promise.all([configWatcher(context), envWatcher(context)]);
+function startWatchers(context) {
+  return async () => {
+    await Promise.all([configWatcher(context), envWatcher(context)]);
+  };
 }
 
 export default startWatchers;

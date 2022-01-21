@@ -15,10 +15,13 @@
   limitations under the License.
 */
 
-async function initialBuild(context) {
-  await context.lowdefyBuild();
-  await context.installPlugins();
-  await context.nextBuild();
+function initialBuild(context) {
+  return async () => {
+    await context.lowdefyBuild();
+    await context.installPlugins();
+    await context.nextBuild();
+    await context.readDotEnv();
+  };
 }
 
 export default initialBuild;

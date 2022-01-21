@@ -13,8 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-
-import dotenv from 'dotenv';
+/* eslint-disable no-console */
 
 import path from 'path';
 import setupWatcher from '../utils/setupWatcher.mjs';
@@ -22,6 +21,7 @@ import setupWatcher from '../utils/setupWatcher.mjs';
 async function envWatcher(context) {
   const callback = async () => {
     console.warn('.env file changed.');
+    await context.readDotEnv();
     context.restartServer();
   };
   return setupWatcher({
