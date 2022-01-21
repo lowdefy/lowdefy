@@ -27,16 +27,13 @@ async function init({ context }) {
     throw new Error('Cannot initialize a Lowdefy project, a "lowdefy.yaml" file already exists');
   }
   context.print.log(`Initializing Lowdefy project`);
-  await writeFile({
-    filePath: lowdefyFilePath,
-    content: lowdefyFile({ version: context.cliVersion }),
-  });
+  await writeFile(lowdefyFilePath, lowdefyFile({ version: context.cliVersion }));
   context.print.log(`Created 'lowdefy.yaml'.`);
-  await writeFile({
-    filePath: path.resolve('./.gitignore'),
-    content: `.lowdefy/**
-.env`,
-  });
+  await writeFile(
+    path.resolve('./.gitignore'),
+    `.lowdefy/**
+.env`
+  );
   context.print.log(`Created '.gitignore'.`);
   await context.sendTelemetry();
   context.print.succeed(`Project initialized.`);

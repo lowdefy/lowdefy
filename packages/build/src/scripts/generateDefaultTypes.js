@@ -120,10 +120,10 @@ async function generateDefaultTypes() {
     })
   );
 
-  await writeFile({
-    filePath: path.resolve(process.cwd(), './dist/defaultTypes.json'),
-    content: JSON.stringify(defaultTypes, null, 2),
-  });
+  await writeFile(
+    path.resolve(process.cwd(), './dist/defaultTypes.json'),
+    JSON.stringify(defaultTypes, null, 2)
+  );
 }
 
 generateDefaultTypes();

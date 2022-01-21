@@ -23,7 +23,7 @@ async function getCliJson({ baseDirectory }) {
   const cliJson = await readFile(filePath);
   if (!cliJson) {
     const appId = uuid();
-    await writeFile({ filePath, content: JSON.stringify({ appId }, null, 2) });
+    await writeFile(filePath, JSON.stringify({ appId }, null, 2));
     return { appId };
   }
   return JSON.parse(cliJson);
