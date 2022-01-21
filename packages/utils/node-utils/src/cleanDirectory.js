@@ -17,7 +17,7 @@
 import fsExtra from 'fs-extra';
 
 async function cleanDirectory(dirPath) {
-  await new Promise((resolve) => fsExtra.emptyDir(dirPath, resolve));
+  await fsExtra.emptyDir(dirPath);
 }
 
 export default cleanDirectory;
