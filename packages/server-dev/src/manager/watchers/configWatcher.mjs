@@ -14,10 +14,11 @@
   limitations under the License.
 */
 
-import setupWatcher from './setupWatcher.mjs';
+import setupWatcher from '../utils/setupWatcher.mjs';
 
 async function configWatcher(context) {
-  const callback = async () => {
+  const callback = async (...args) => {
+    console.log('args', args);
     await context.lowdefyBuild();
     context.reloadClients();
   };

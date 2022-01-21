@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import spawnProcess from '../spawnProcess.mjs';
+import spawnProcess from '../utils/spawnProcess.mjs';
 
 function startServerProcess(context) {
   context.serverProcess = spawnProcess({

@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import configWatcher from './configWatcher.mjs';
-import envWatcher from './envWatcher.mjs';
+import configWatcher from './watchers/configWatcher.mjs';
+import envWatcher from './watchers/envWatcher.mjs';
 
 /*
 Config change

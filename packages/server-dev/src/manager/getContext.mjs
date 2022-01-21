@@ -18,6 +18,7 @@
 import path from 'path';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
+import { readFile } from '@lowdefy/node-utils';
 
 import lowdefyBuild from './processes/lowdefyBuild.mjs';
 import nextBuild from './processes/nextBuild.mjs';
@@ -53,6 +54,11 @@ async function getContext() {
     },
     verbose,
   };
+
+  const packageJson = JSON.parse(
+    await readFile(path.join(context.directories.server, 'package.json'))
+  );
+  context.version = packageJson.version;
   context.installPlugins = installPlugins(context);
   context.lowdefyBuild = lowdefyBuild(context);
   context.nextBuild = nextBuild(context);

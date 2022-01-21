@@ -14,12 +14,14 @@
   limitations under the License.
 */
 
+import dotenv from 'dotenv';
+
 import path from 'path';
-import setupWatcher from './setupWatcher.mjs';
+import setupWatcher from '../utils/setupWatcher.mjs';
 
 async function envWatcher(context) {
   const callback = async () => {
-    console.log('.env file changed, restarting server...');
+    console.warn('.env file changed.');
     context.restartServer();
   };
   return setupWatcher({

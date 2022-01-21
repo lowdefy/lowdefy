@@ -18,9 +18,9 @@
 import { wait } from '@lowdefy/helpers';
 import opener from 'opener';
 import getContext from './getContext.mjs';
-import initialBuild from './initialBuild.mjs';
+import initialBuild from './processes/initialBuild.mjs';
 import startServer from './processes/startServer.mjs';
-import startWatchers from './watchers/startWatchers.mjs';
+import startWatchers from './startWatchers.mjs';
 
 async function run() {
   const context = await getContext();
