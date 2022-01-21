@@ -16,7 +16,7 @@
 
 import startServerProcess from './startServerProcess.mjs';
 
-function shutdownServer(context) {
+function restartServer(context) {
   return async () => {
     if (context.serverProcess) {
       console.log('Restarting server...');
@@ -26,4 +26,4 @@ function shutdownServer(context) {
   };
 }
 
-export default shutdownServer;
+export default restartServer;
