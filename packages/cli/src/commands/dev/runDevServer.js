@@ -27,6 +27,7 @@ async function runDevServer({ context }) {
       env: {
         ...process.env,
         LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
+        PORT: context.commandLineOptions.port,
       },
     },
     silent: false,
