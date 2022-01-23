@@ -42,10 +42,11 @@ async function getContext() {
       server: process.cwd(),
     },
     packageManager,
+    port: argv.port || process.env.PORT || 3000,
     verbose,
+    version: process.env.npm_package_version,
   };
 
-  context.version = process.env.npm_package_version;
   context.initialBuild = initialBuild(context);
   context.installPlugins = installPlugins(context);
   context.lowdefyBuild = lowdefyBuild(context);
