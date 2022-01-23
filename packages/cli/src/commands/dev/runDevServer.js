@@ -26,7 +26,7 @@ async function runDevServer({ context }) {
       cwd: context.directories.devServer,
       env: {
         ...process.env,
-        LOWDEFY_DIRECTORY_CONFIG: context.directories.base,
+        LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
       },
     },
     silent: false,

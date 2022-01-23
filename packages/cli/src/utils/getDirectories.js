@@ -24,7 +24,7 @@ function getDirectories({ configDirectory, options }) {
     dotLowdefy = path.resolve(configDirectory, '.lowdefy');
   }
   return {
-    base: configDirectory,
+    config: configDirectory,
     build: path.join(dotLowdefy, 'server', 'build'),
     dotLowdefy,
     server: path.join(dotLowdefy, 'server'),

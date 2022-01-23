@@ -27,7 +27,7 @@ async function getLowdefyYaml({ configDirectory, command }) {
   if (!lowdefyYaml) {
     if (!['init'].includes(command)) {
       throw new Error(
-        `Could not find "lowdefy.yaml" file in specified base directory ${configDirectory}.`
+        `Could not find "lowdefy.yaml" file in specified config directory ${configDirectory}.`
       );
     }
     return { cliConfig: {} };

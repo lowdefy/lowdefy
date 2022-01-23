@@ -37,7 +37,7 @@ program
   .usage(`[options]`)
   .option(
     '--config-directory <config-directory>',
-    'Change base directory. Default is the current working directory.'
+    'Change config directory. Default is the current working directory.'
   )
   .option('--disable-telemetry', 'Disable telemetry.')
   .option(
@@ -60,7 +60,7 @@ program
   .usage(`[options]`)
   .option(
     '--config-directory <config-directory>',
-    'Change base directory. Default is the current working directory.'
+    'Change config directory. Default is the current working directory.'
   )
   .option('--disable-telemetry', 'Disable telemetry.')
   .option(
@@ -98,7 +98,7 @@ program
   .usage(`[options]`)
   .option(
     '--config-directory <config-directory>',
-    'Change base directory. Default is the current working directory.'
+    'Change config directory. Default is the current working directory.'
   )
   .option('--disable-telemetry', 'Disable telemetry.')
   .option(

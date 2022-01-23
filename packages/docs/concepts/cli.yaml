@@ -58,7 +58,7 @@ _ref:
 
             The `build` command runs a Lowdefy build. The options are:
 
-            - `--config-directory <config-directory>`: Change base directory. The default is the current working directory.
+            - `--config-directory <config-directory>`: Change config directory. The default is the current working directory.
             - `--blocks-server-url <blocks-server-url>`: The URL from where Lowdefy blocks will be served. See below for more information.
             - `--disable-telemetry`: Disable telemetry.
             - `--output-directory <output-directory>`: Change the directory to which build artifacts are saved. The default is `<config-directory>/.lowdefy/build`.
@@ -69,7 +69,7 @@ _ref:
 
             We recommend setting the build command to `npx lowdefy@latest build-netlify`. The Netlify publish directory should be set to `.lowdefy/publish`, and the functions directory set to `.lowdefy/functions`.
 
-            - `--config-directory <config-directory>`: Change base directory. The default is the current working directory (The base directory should rather be configured in the Netlify build settings).
+            - `--config-directory <config-directory>`: Change config directory. The default is the current working directory (The confg directory should rather be configured in the Netlify build settings).
             - `--blocks-server-url <blocks-server-url>`: The URL from where Lowdefy blocks will be served. See below for more information.
             - `--disable-telemetry`: Disable telemetry.
             - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
@@ -78,14 +78,14 @@ _ref:
 
             The Lowdefy CLI caches block metadata, and build and server scripts in the `.lowdefy/cache` directory. These cached files can be removed using the `clean-cache` command.
 
-            - `--config-directory <config-directory>`: Change base directory. The default is the current working directory.
+            - `--config-directory <config-directory>`: Change config directory. The default is the current working directory.
             - `--disable-telemetry`: Disable telemetry.
 
             ## dev
 
             The `dev` command starts a Lowdefy development server, running locally. It can be accessed in a browser at [http://localhost:3000](http://localhost:3000). The CLI watches the file system, and rebuilds the app and reloads served pages every time a change is made to any of the files in the project directory.
 
-            - `--config-directory <config-directory>`: Change base directory. The default is the current working directory.
+            - `--config-directory <config-directory>`: Change config directory. The default is the current working directory.
             - `--blocks-server-url <blocks-server-url>`: The URL from where Lowdefy blocks will be served. See below for more information.
             - `--disable-telemetry`: Disable telemetry.
             - `--port <port>`: Change the port the server is hosted at. The default is `3000`.
