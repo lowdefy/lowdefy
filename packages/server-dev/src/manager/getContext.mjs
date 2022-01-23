@@ -32,7 +32,7 @@ import startWatchers from './processes/startWatchers.mjs';
 const argv = yargs(hideBin(process.argv)).argv;
 
 async function getContext() {
-  const { packageManager = 'npm', verbose = false } = argv;
+  const { verbose = false } = argv;
   const context = {
     directories: {
       build: path.resolve(process.cwd(), './build'),
@@ -41,7 +41,7 @@ async function getContext() {
       ),
       server: process.cwd(),
     },
-    packageManager,
+    packageManager: argv.packageManager || process.env.LOWDEFY_PACKAGE_MANAGER || 'npm',
     port: argv.port || process.env.PORT || 3000,
     verbose,
     version: process.env.npm_package_version,
