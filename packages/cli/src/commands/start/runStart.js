@@ -22,7 +22,14 @@ async function runStart({ context }) {
     logger: context.print,
     args: ['run', 'start'],
     command: context.packageManager, // npm or yarn
-    processOptions: { cwd: context.directories.server },
+    processOptions: {
+      cwd: context.directories.server,
+      env: {
+        ...process.env,
+        LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
+        PORT: context.commandLineOptions.port,
+      },
+    },
     silent: false,
   });
 }

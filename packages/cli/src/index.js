@@ -67,8 +67,7 @@ program
     '--package-manager <package-manager>',
     'The package manager to use. Options are "npm" or "yarn".'
   )
-  // TODO:
-  .option('--port <port>', 'Change the port the server is hosted at. Default is 3000.')
+  .option('--port <port>', 'Change the port the development server is hosted at. Default is 3000.')
   // TODO:
   .option(
     '--ref-resolver <ref-resolver-function-path>',
@@ -109,6 +108,7 @@ program
     '--package-manager <package-manager>',
     'The package manager to use. Options are "npm" or "yarn".'
   )
+  .option('--port <port>', 'Change the port the server is hosted at. Default is 3000.')
   .action(runCommand({ cliVersion: version })(start));
 
 program.parse(process.argv);
