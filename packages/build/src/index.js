@@ -19,8 +19,8 @@
 import { readFile } from '@lowdefy/node-utils';
 
 import createCounter from './utils/createCounter.js';
-import createReadConfigFile from './utils/files/readConfigFile.js';
-import createWriteBuildArtifact from './utils/files/writeBuildArtifact.js';
+import createReadConfigFile from './utils/readConfigFile.js';
+import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
 
 import addDefaultPages from './build/addDefaultPages/addDefaultPages.js';
 import buildAuth from './build/buildAuth/buildAuth.js';

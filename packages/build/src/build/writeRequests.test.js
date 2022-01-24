@@ -49,9 +49,8 @@ test('writeRequests write request', async () => {
   await writeRequests({ components, context });
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
-      {
-        filePath: 'pages/page1/requests/request1.json',
-        content: `{
+      'pages/page1/requests/request1.json',
+      `{
   "id": "request:page1:request1",
   "requestId": "request1",
   "pageId": "page1",
@@ -65,7 +64,6 @@ test('writeRequests write request', async () => {
     "key": "value"
   }
 }`,
-      },
     ],
   ]);
 });
@@ -104,9 +102,8 @@ test('writeRequests write multiple requests on a page', async () => {
   await writeRequests({ components, context });
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
-      {
-        filePath: 'pages/page1/requests/request1.json',
-        content: `{
+      'pages/page1/requests/request1.json',
+      `{
   "id": "request:page1:request1",
   "requestId": "request1",
   "pageId": "page1",
@@ -120,12 +117,10 @@ test('writeRequests write multiple requests on a page', async () => {
     "key": "value"
   }
 }`,
-      },
     ],
     [
-      {
-        filePath: 'pages/page1/requests/request2.json',
-        content: `{
+      'pages/page1/requests/request2.json',
+      `{
   "id": "request:page1:request2",
   "requestId": "request2",
   "pageId": "page1",
@@ -139,7 +134,6 @@ test('writeRequests write multiple requests on a page', async () => {
     "key": "value"
   }
 }`,
-      },
     ],
   ]);
 });
@@ -184,9 +178,8 @@ test('writeRequests write requests on a for multiple pages', async () => {
   await writeRequests({ components, context });
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
-      {
-        filePath: 'pages/page1/requests/request1.json',
-        content: `{
+      'pages/page1/requests/request1.json',
+      `{
   "id": "request:page1:request1",
   "requestId": "request1",
   "pageId": "page1",
@@ -200,12 +193,10 @@ test('writeRequests write requests on a for multiple pages', async () => {
     "key": "value"
   }
 }`,
-      },
     ],
     [
-      {
-        filePath: 'pages/page2/requests/request1.json',
-        content: `{
+      'pages/page2/requests/request1.json',
+      `{
   "id": "request:page2:request1",
   "requestId": "request1",
   "pageId": "page2",
@@ -219,7 +210,6 @@ test('writeRequests write requests on a for multiple pages', async () => {
     "key": "value"
   }
 }`,
-      },
     ],
   ]);
 });

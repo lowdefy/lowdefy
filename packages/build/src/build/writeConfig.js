@@ -15,10 +15,7 @@
 */
 
 async function writeConfig({ components, context }) {
-  await context.writeBuildArtifact({
-    filePath: 'config.json',
-    content: JSON.stringify(components.config || {}, null, 2),
-  });
+  await context.writeBuildArtifact('config.json', JSON.stringify(components.config || {}, null, 2));
 }
 
 export default writeConfig;
