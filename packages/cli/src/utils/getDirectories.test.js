@@ -18,22 +18,22 @@ import getDirectories from './getDirectories.js';
 
 test('default directories', () => {
   const { cacheDirectory, buildDirectory } = getDirectories({
-    baseDirectory: '/test/base',
+    configDirectory: '/test/config',
     options: {},
   });
 
-  expect(cacheDirectory).toEqual('/test/base/.lowdefy/.cache');
-  expect(buildDirectory).toEqual('/test/base/.lowdefy/build');
+  expect(cacheDirectory).toEqual('/test/config/.lowdefy/.cache');
+  expect(buildDirectory).toEqual('/test/config/.lowdefy/build');
 });
 
 test('specify outputDirectory in options', () => {
   const { cacheDirectory, buildDirectory } = getDirectories({
-    baseDirectory: '/test/base',
+    configDirectory: '/test/config',
     options: {
       outputDirectory: '/test/build',
     },
   });
 
-  expect(cacheDirectory).toEqual('/test/base/.lowdefy/.cache');
+  expect(cacheDirectory).toEqual('/test/config/.lowdefy/.cache');
   expect(buildDirectory).toEqual('/test/build');
 });

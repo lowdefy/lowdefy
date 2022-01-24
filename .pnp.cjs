@@ -5224,7 +5224,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:27.3.1"],
             ["js-yaml", "npm:4.1.0"],
             ["json5", "npm:2.2.0"],
-            ["uuid", "npm:8.3.2"]
+            ["uuid", "npm:8.3.2"],
+            ["yargs", "npm:17.3.0"]
           ],
           "linkType": "SOFT",
         }]
@@ -5650,8 +5651,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/server", "workspace:packages/server"],
             ["@lowdefy/api", "workspace:packages/api"],
             ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],
-            ["@lowdefy/blocks-antd", "workspace:packages/plugins/blocks/blocks-antd"],
-            ["@lowdefy/blocks-basic", "workspace:packages/plugins/blocks/blocks-basic"],
             ["@lowdefy/build", "workspace:packages/build"],
             ["@lowdefy/engine", "workspace:packages/engine"],
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],

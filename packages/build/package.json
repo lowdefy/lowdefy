@@ -52,7 +52,8 @@
     "ajv": "8.8.2",
     "js-yaml": "4.1.0",
     "json5": "2.2.0",
-    "uuid": "8.3.2"
+    "uuid": "8.3.2",
+    "yargs": "17.3.0"
   },
   "devDependencies": {
     "@lowdefy/blocks-antd": "4.0.0-alpha.6",

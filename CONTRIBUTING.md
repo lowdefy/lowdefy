@@ -1,11 +1,22 @@
 # Lowdefy Contributor Guide
 
+- [Starting the Lowdefy server](#starting-the-lowdefy-server)
 - [Asking a question](#asking-a-question)
 - [Reporting bugs](#reporting-bugs)
 - [Suggesting features](#suggesting-features)
 - [Improving the documentation](#improving-the-documentation)
 - [Responding to questions](#responding-to-questions)
 - [Contributing code](#contributing-code)
+
+## Starting the Lowdefy server
+
+Run Lowdefy servers locally by adding your Lowdefy config to the `app/..` folder. Use one of the following scripts to the server:
+
+- `yarn start`: Starts the production server.
+- `yarn start:dev`: Starts the production server in next development mode, useful for debugging Lowdefy code changes.
+- `yarn start:server-dev`: Starts the development server in next production mode, useful for developing your Lowdefy config locally.
+
+> `yarn install` and `yarn build` should be executed manually during development, this allows you to build only the package you are working on. Server needs to be restarted after package rebuild.
 
 ## Asking a question
 

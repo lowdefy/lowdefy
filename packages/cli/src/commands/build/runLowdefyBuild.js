@@ -28,7 +28,7 @@ async function runLowdefyBuild({ context }) {
         env: {
           ...process.env,
           LOWDEFY_DIRECTORY_BUILD: context.directories.build,
-          LOWDEFY_DIRECTORY_CONFIG: context.directories.base,
+          LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
           LOWDEFY_DIRECTORY_SERVER: context.directories.server,
         },
       },

@@ -36,13 +36,13 @@ program
   .description('Build a Lowdefy production app.')
   .usage(`[options]`)
   .option(
-    '--base-directory <base-directory>',
-    'Change base directory. Default is the current working directory.'
+    '--config-directory <config-directory>',
+    'Change config directory. Default is the current working directory.'
   )
   .option('--disable-telemetry', 'Disable telemetry.')
   .option(
     '--output-directory <output-directory>',
-    'Change the directory to which build artifacts are saved. Default is "<base-directory>/.lowdefy".'
+    'Change the directory to which build artifacts are saved. Default is "<config-directory>/.lowdefy".'
   )
   .option(
     '--package-manager <package-manager>',
@@ -59,8 +59,8 @@ program
   .description('Start a Lowdefy development server.')
   .usage(`[options]`)
   .option(
-    '--base-directory <base-directory>',
-    'Change base directory. Default is the current working directory.'
+    '--config-directory <config-directory>',
+    'Change config directory. Default is the current working directory.'
   )
   .option('--disable-telemetry', 'Disable telemetry.')
   .option(
@@ -97,13 +97,13 @@ program
   .description('Start a Lowdefy production app.')
   .usage(`[options]`)
   .option(
-    '--base-directory <base-directory>',
-    'Change base directory. Default is the current working directory.'
+    '--config-directory <config-directory>',
+    'Change config directory. Default is the current working directory.'
   )
   .option('--disable-telemetry', 'Disable telemetry.')
   .option(
     '--output-directory <output-directory>',
-    'Change the directory to which build artifacts are saved. Default is "<base-directory>/.lowdefy".'
+    'Change the directory to which build artifacts are saved. Default is "<config-directory>/.lowdefy".'
   )
   .option(
     '--package-manager <package-manager>',

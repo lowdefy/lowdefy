@@ -30,3 +30,5 @@ packages/plugins/connections/connection-mongodb/*.lock
 
 packages/utils/node-utils/test/writeFile/writeFile.txt
 packages/utils/node-utils/test/copyDirectory/**
+
+app/**

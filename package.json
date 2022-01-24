@@ -37,6 +37,9 @@
     "lerna:publish": "lerna publish from-git",
     "postversion": "yarn install",
     "prettier": "prettier --config .prettierrc --write **/*.js",
+    "start:server-dev": "yarn workspace @lowdefy/server-dev start --package-manager yarn --config-directory ../../app",
+    "start": "yarn workspace @lowdefy/server build:lowdefy --config-directory ../../app && yarn && yarn workspace @lowdefy/server build:next && yarn workspace @lowdefy/server start",
+    "start:dev": "yarn workspace @lowdefy/server build:lowdefy --config-directory ../../app && yarn && yarn workspace @lowdefy/server dev",
     "test": "lerna run test",
     "test:ci": "yarn install --immutable --immutable-cache --check-cache && yarn build && yarn test --ignore='@lowdefy/format' --ignore='@lowdefy/block-dev'"
   },

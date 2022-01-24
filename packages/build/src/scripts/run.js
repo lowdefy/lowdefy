@@ -16,15 +16,28 @@
 */
 
 import path from 'path';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
+
 import build from '../index.js';
+
+const argv = yargs(hideBin(process.argv)).argv;
 
 async function run() {
   await build({
     logger: console,
     directories: {
-      build: path.resolve(process.env.LOWDEFY_DIRECTORY_BUILD || path.join(process.cwd(), 'build')),
-      config: path.resolve(process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd()),
-      server: path.resolve(process.env.LOWDEFY_DIRECTORY_SERVER || process.cwd()),
+      build: path.resolve(
+        argv.buildDirectory ||
+          process.env.LOWDEFY_DIRECTORY_BUILD ||
+          path.join(process.cwd(), 'build')
+      ),
+      config: path.resolve(
+        argv.configDirectory || process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd()
+      ),
+      server: path.resolve(
+        argv.serverDirectory || process.env.LOWDEFY_DIRECTORY_SERVER || process.cwd()
+      ),
     },
   });
 }
