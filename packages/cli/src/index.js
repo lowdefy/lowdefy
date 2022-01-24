@@ -36,13 +36,13 @@ program
   .description('Build a Lowdefy production app.')
   .usage(`[options]`)
   .option(
-    '--base-directory <base-directory>',
-    'Change base directory. Default is the current working directory.'
+    '--config-directory <config-directory>',
+    'Change config directory. Default is the current working directory.'
   )
   .option('--disable-telemetry', 'Disable telemetry.')
   .option(
     '--output-directory <output-directory>',
-    'Change the directory to which build artifacts are saved. Default is "<base-directory>/.lowdefy".'
+    'Change the directory to which build artifacts are saved. Default is "<config-directory>/.lowdefy".'
   )
   .option(
     '--package-manager <package-manager>',
@@ -59,16 +59,15 @@ program
   .description('Start a Lowdefy development server.')
   .usage(`[options]`)
   .option(
-    '--base-directory <base-directory>',
-    'Change base directory. Default is the current working directory.'
+    '--config-directory <config-directory>',
+    'Change config directory. Default is the current working directory.'
   )
   .option('--disable-telemetry', 'Disable telemetry.')
   .option(
     '--package-manager <package-manager>',
     'The package manager to use. Options are "npm" or "yarn".'
   )
-  // TODO:
-  .option('--port <port>', 'Change the port the server is hosted at. Default is 3000.')
+  .option('--port <port>', 'Change the port the development server is hosted at. Default is 3000.')
   // TODO:
   .option(
     '--ref-resolver <ref-resolver-function-path>',
@@ -97,18 +96,19 @@ program
   .description('Start a Lowdefy production app.')
   .usage(`[options]`)
   .option(
-    '--base-directory <base-directory>',
-    'Change base directory. Default is the current working directory.'
+    '--config-directory <config-directory>',
+    'Change config directory. Default is the current working directory.'
   )
   .option('--disable-telemetry', 'Disable telemetry.')
   .option(
     '--output-directory <output-directory>',
-    'Change the directory to which build artifacts are saved. Default is "<base-directory>/.lowdefy".'
+    'Change the directory to which build artifacts are saved. Default is "<config-directory>/.lowdefy".'
   )
   .option(
     '--package-manager <package-manager>',
     'The package manager to use. Options are "npm" or "yarn".'
   )
+  .option('--port <port>', 'Change the port the server is hosted at. Default is 3000.')
   .action(runCommand({ cliVersion: version })(start));
 
 program.parse(process.argv);

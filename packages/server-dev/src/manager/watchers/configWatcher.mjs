@@ -25,7 +25,7 @@ async function configWatcher(context) {
       .some((filePath) => filePath.includes('lowdefy.yaml') || filePath.includes('lowdefy.yml'));
     if (lowdefyYamlModified) {
       const lowdefyVersion = await getLowdefyVersion(context);
-      if (lowdefyVersion !== context.version) {
+      if (lowdefyVersion !== context.version || lowdefyVersion === 'local') {
         console.warn('Lowdefy version changed. You should restart your development server.');
         process.exit();
       }
