@@ -62,7 +62,6 @@ test('addDefaultPages, no pages array', async () => {
                 },
                 id: 'home',
                 properties: {
-                  icon: 'HomeOutlined',
                   title: 'Go to home page',
                   type: 'Link',
                 },
@@ -109,7 +108,6 @@ test('addDefaultPages, empty pages array', async () => {
                 },
                 id: 'home',
                 properties: {
-                  icon: 'HomeOutlined',
                   title: 'Go to home page',
                   type: 'Link',
                 },
@@ -160,7 +158,6 @@ test('addDefaultPages, pages without 404 page', async () => {
                 },
                 id: 'home',
                 properties: {
-                  icon: 'HomeOutlined',
                   title: 'Go to home page',
                   type: 'Link',
                 },
