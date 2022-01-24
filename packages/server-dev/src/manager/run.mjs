@@ -27,7 +27,6 @@ async function run() {
   try {
     const serverPromise = startServer(context);
     await wait(800);
-    // TODO: set correct port
     opener(`http://localhost:${context.port}`);
     await serverPromise;
   } catch (error) {
