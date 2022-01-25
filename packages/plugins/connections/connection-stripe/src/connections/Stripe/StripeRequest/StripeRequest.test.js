@@ -15,8 +15,10 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import stripeRequest from './StripeRequest.js';
-import schema from './StripeRequestSchema.json';
+import StripeRequest from './StripeRequest.js';
+
+const { checkRead, checkWrite } = StripeRequest.meta;
+const schema = StripeRequest.schema;
 
 const connection = {
   secretKey: 'foo',
@@ -196,7 +198,7 @@ test('valid request for missing resource', async () => {
     },
   };
 
-  return expect(() => stripeRequest({ request, connection })).rejects.toThrow(
+  return expect(() => StripeRequest({ request, connection })).rejects.toThrow(
     'Invalid Stripe method foo.bar'
   );
 });
@@ -208,7 +210,7 @@ test('valid request for missing resource method', async () => {
     },
   };
 
-  return expect(() => stripeRequest({ request, connection })).rejects.toThrow(
+  return expect(() => StripeRequest({ request, connection })).rejects.toThrow(
     'Invalid Stripe method customers.foo'
   );
 });
@@ -220,7 +222,7 @@ test('valid request for missing resource method', async () => {
     },
   };
 
-  return expect(() => stripeRequest({ request, connection })).rejects.toThrow(
+  return expect(() => StripeRequest({ request, connection })).rejects.toThrow(
     'Invalid Stripe method customers.missing'
   );
 });
@@ -232,7 +234,15 @@ test('valid request', async () => {
     },
   };
 
-  const res = await stripeRequest({ request, connection });
+  const res = await StripeRequest({ request, connection });
 
   return expect(res).toEqual(['foo', 42, { bar: true }]);
+});
+
+test('checkRead should be false', async () => {
+  expect(checkRead).toBe(false);
+});
+
+test('checkWrite should be false', async () => {
+  expect(checkWrite).toBe(false);
 });

@@ -16,7 +16,8 @@
 
 import { validate } from '@lowdefy/ajv';
 import Stripe from './Stripe.js';
-import schema from './StripeSchema.json';
+
+const schema = Stripe.schema;
 
 test('All requests are present', () => {
   expect(Stripe.requests.StripeRequest).toBeDefined();

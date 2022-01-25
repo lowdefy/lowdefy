@@ -14,13 +14,4 @@
   limitations under the License.
 */
 
-export default {
-  import: {
-    path: 'connections/Stripe/StripeRequest/StripeRequest.js',
-    schema: 'connections/Stripe/StripeRequest/StripeRequestSchema.json',
-  },
-  meta: {
-    checkRead: false,
-    checkWrite: false,
-  },
-};
+export { default as Stripe } from './connections/Stripe/Stripe.js';
