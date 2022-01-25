@@ -1,3 +1,4 @@
+/* eslint-disable import/namespace */
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -14,12 +15,16 @@
   limitations under the License.
 */
 
-import SendGridMailSend from './SendGridMailSend/SendGridMailSend.js';
-import schema from './schema.js';
+import * as connections from './connections.js';
 
 export default {
-  schema,
-  requests: {
-    SendGridMailSend,
-  },
+  connections: Object.keys(connections),
+  requests: Object.keys(connections)
+    .map((connection) => Object.keys(connections[connection].requests))
+    .flat(),
 };
+
+// export default {
+//   connections: ['SendGridMail'],
+//   requests: ['SendGridMailSend'],
+// };

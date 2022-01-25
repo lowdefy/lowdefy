@@ -28,6 +28,7 @@ const defaultPackages = [
   '@lowdefy/blocks-markdown',
   '@lowdefy/connection-axios-http',
   '@lowdefy/connection-redis',
+  '@lowdefy/connection-sendgrid',
   '@lowdefy/operators-change-case',
   // '@lowdefy/operators-diff',
   '@lowdefy/operators-js',
