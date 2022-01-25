@@ -15,11 +15,10 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import googleSheetAppendOne from './GoogleSheetAppendOne.js';
-import requestIndex from './index.js';
-import schema from './GoogleSheetAppendOneSchema.json';
+import GoogleSheetAppendOne from './GoogleSheetAppendOne.js';
 
-const { checkRead, checkWrite } = requestIndex.meta;
+const { checkRead, checkWrite } = GoogleSheetAppendOne.meta;
+const schema = GoogleSheetAppendOne.schema;
 
 const mockAddRow = jest.fn();
 jest.mock('../getSheet', () => () => ({
@@ -30,7 +29,7 @@ const mockAddRowDefaultImp = (row) => ({ ...row, _sheet: {} });
 
 test('googleSheetAppendOne', async () => {
   mockAddRow.mockImplementation(mockAddRowDefaultImp);
-  const res = await googleSheetAppendOne({
+  const res = await GoogleSheetAppendOne({
     request: {
       row: { id: '1', name: 'John', age: '34', birth_date: '2020/04/26', married: 'TRUE' },
     },
@@ -66,7 +65,7 @@ test('googleSheetAppendOne', async () => {
 
 test('googleSheetAppendOne, transform types', async () => {
   mockAddRow.mockImplementation(mockAddRowDefaultImp);
-  const res = await googleSheetAppendOne({
+  const res = await GoogleSheetAppendOne({
     request: {
       row: {
         id: '1',
@@ -115,7 +114,7 @@ test('googleSheetAppendOne, transform types', async () => {
 
 test('googleSheetAppendOne, raw true', async () => {
   mockAddRow.mockImplementation(mockAddRowDefaultImp);
-  const res = await googleSheetAppendOne({
+  const res = await GoogleSheetAppendOne({
     request: {
       row: { id: '1', name: 'John', age: '34', birth_date: '2020/04/26', married: 'TRUE' },
       options: {

@@ -15,11 +15,10 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import googleSheetGetMany from './GoogleSheetGetMany.js';
-import requestIndex from './index.js';
-import schema from './GoogleSheetGetManySchema.json';
+import GoogleSheetGetMany from './GoogleSheetGetMany.js';
 
-const { checkRead, checkWrite } = requestIndex.meta;
+const { checkRead, checkWrite } = GoogleSheetGetMany.meta;
+const schema = GoogleSheetGetMany.schema;
 
 const mockGetRows = jest.fn();
 jest.mock('../getSheet', () => () => ({
@@ -74,7 +73,7 @@ const mockGetRowsDefaultImp = ({ limit, offset }) => {
 
 test('googleSheetGetMany, all rows', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetGetMany({ request: {}, connection: {} });
+  const res = await GoogleSheetGetMany({ request: {}, connection: {} });
   expect(res).toEqual([
     {
       _rowNumber: 2,
@@ -117,13 +116,13 @@ test('googleSheetGetMany, all rows', async () => {
 
 test('googleSheetGetMany, empty rows returned', async () => {
   mockGetRows.mockImplementation(() => []);
-  const res = await googleSheetGetMany({ request: {}, connection: {} });
+  const res = await GoogleSheetGetMany({ request: {}, connection: {} });
   expect(res).toEqual([]);
 });
 
 test('googleSheetGetMany, limit', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetGetMany({ request: { options: { limit: 2 } }, connection: {} });
+  const res = await GoogleSheetGetMany({ request: { options: { limit: 2 } }, connection: {} });
   expect(res).toEqual([
     {
       _rowNumber: 2,
@@ -148,7 +147,7 @@ test('googleSheetGetMany, limit', async () => {
 
 test('googleSheetGetMany, skip', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetGetMany({ request: { options: { skip: 2 } }, connection: {} });
+  const res = await GoogleSheetGetMany({ request: { options: { skip: 2 } }, connection: {} });
   expect(res).toEqual([
     {
       _rowNumber: 4,
@@ -173,7 +172,7 @@ test('googleSheetGetMany, skip', async () => {
 
 test('googleSheetGetMany, skip and limit', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetGetMany({
+  const res = await GoogleSheetGetMany({
     request: { options: { skip: 2, limit: 1 } },
     connection: {},
   });
@@ -192,7 +191,7 @@ test('googleSheetGetMany, skip and limit', async () => {
 
 test('googleSheetGetMany, filter', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetGetMany({ request: { filter: { name: 'Tim' } }, connection: {} });
+  const res = await GoogleSheetGetMany({ request: { filter: { name: 'Tim' } }, connection: {} });
   expect(res).toEqual([
     {
       _rowNumber: 4,
@@ -208,13 +207,13 @@ test('googleSheetGetMany, filter', async () => {
 
 test('googleSheetGetMany, filter filters all', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetGetMany({ request: { filter: { name: 'Nobody' } }, connection: {} });
+  const res = await GoogleSheetGetMany({ request: { filter: { name: 'Nobody' } }, connection: {} });
   expect(res).toEqual([]);
 });
 
 test('googleSheetGetMany, filter _rowNumber', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetGetMany({
+  const res = await GoogleSheetGetMany({
     request: { filter: { _rowNumber: { $gt: 3 } } },
     connection: {},
   });
@@ -242,7 +241,7 @@ test('googleSheetGetMany, filter _rowNumber', async () => {
 
 test('googleSheetGetMany, pipeline count', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetGetMany({
+  const res = await GoogleSheetGetMany({
     request: { pipeline: [{ $group: { _id: 0, count: { $sum: 1 } } }] },
     connection: {},
   });
@@ -256,7 +255,7 @@ test('googleSheetGetMany, pipeline count', async () => {
 
 test('googleSheetGetMany, columnTypes', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetGetMany({
+  const res = await GoogleSheetGetMany({
     request: {},
     connection: {
       columnTypes: {

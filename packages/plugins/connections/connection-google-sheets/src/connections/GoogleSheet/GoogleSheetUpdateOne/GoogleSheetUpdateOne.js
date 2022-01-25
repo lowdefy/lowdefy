@@ -18,8 +18,9 @@ import cleanRows from '../cleanRows.js';
 import getSheet from '../getSheet.js';
 import { transformRead, transformWrite } from '../transformTypes.js';
 import mingoFilter from '../mingoFilter.js';
+import schema from './schema.js';
 
-async function googleSheetUpdateOne({ request, connection }) {
+async function GoogleSheetUpdateOne({ request, connection }) {
   const { filter, update, options = {} } = request;
   const { limit, skip, upsert, raw } = options;
   const sheet = await getSheet({ connection });
@@ -51,4 +52,10 @@ async function googleSheetUpdateOne({ request, connection }) {
   };
 }
 
-export default googleSheetUpdateOne;
+GoogleSheetUpdateOne.schema = schema;
+GoogleSheetUpdateOne.meta = {
+  checkRead: false,
+  checkWrite: true,
+};
+
+export default GoogleSheetUpdateOne;

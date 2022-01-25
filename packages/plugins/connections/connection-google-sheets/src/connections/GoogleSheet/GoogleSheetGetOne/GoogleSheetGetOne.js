@@ -18,8 +18,9 @@ import cleanRows from '../cleanRows.js';
 import getSheet from '../getSheet.js';
 import { transformRead } from '../transformTypes.js';
 import mingoFilter from '../mingoFilter.js';
+import schema from './schema.js';
 
-async function googleSheetGetOne({ request, connection }) {
+async function GoogleSheetGetOne({ request, connection }) {
   const { filter, options = {} } = request;
   const { limit, skip } = options;
   const sheet = await getSheet({ connection });
@@ -32,4 +33,10 @@ async function googleSheetGetOne({ request, connection }) {
   return rows[0] || null;
 }
 
-export default googleSheetGetOne;
+GoogleSheetGetOne.schema = schema;
+GoogleSheetGetOne.meta = {
+  checkRead: true,
+  checkWrite: false,
+};
+
+export default GoogleSheetGetOne;

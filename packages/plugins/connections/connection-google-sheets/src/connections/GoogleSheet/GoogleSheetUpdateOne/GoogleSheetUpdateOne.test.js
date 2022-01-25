@@ -15,11 +15,10 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import googleSheetUpdateOne from './GoogleSheetUpdateOne';
-import requestIndex from './index.js';
-import schema from './GoogleSheetUpdateOneSchema.json';
+import GoogleSheetUpdateOne from './GoogleSheetUpdateOne.js';
 
-const { checkRead, checkWrite } = requestIndex.meta;
+const { checkRead, checkWrite } = GoogleSheetUpdateOne.meta;
+const schema = GoogleSheetUpdateOne.schema;
 
 const mockGetRows = jest.fn();
 const mockAddRow = jest.fn();
@@ -83,7 +82,7 @@ const mockGetRowsDefaultImp = ({ limit, offset }) => {
 
 test('googleSheetUpdateOne, match one', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetUpdateOne({
+  const res = await GoogleSheetUpdateOne({
     request: {
       filter: { id: '1' },
       update: {
@@ -119,7 +118,7 @@ test('googleSheetUpdateOne, match one', async () => {
 
 test('googleSheetUpdateOne, match one, raw true', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetUpdateOne({
+  const res = await GoogleSheetUpdateOne({
     request: {
       filter: { id: '1' },
       update: {
@@ -158,7 +157,7 @@ test('googleSheetUpdateOne, match one, raw true', async () => {
 
 test('googleSheetUpdateOne, match nothing', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetUpdateOne({
+  const res = await GoogleSheetUpdateOne({
     request: {
       filter: { id: 'does_not_exist' },
       update: {
@@ -177,7 +176,7 @@ test('googleSheetUpdateOne, match nothing', async () => {
 test('googleSheetUpdateOne, match nothing, upsert true', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   mockAddRow.mockImplementation(mockAddRowDefaultImp);
-  const res = await googleSheetUpdateOne({
+  const res = await GoogleSheetUpdateOne({
     request: {
       filter: { id: 'does_not_exist' },
       update: {
@@ -212,7 +211,7 @@ test('googleSheetUpdateOne, match nothing, upsert true', async () => {
 
 test('googleSheetUpdateOne, match more than one', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetUpdateOne({
+  const res = await GoogleSheetUpdateOne({
     request: {
       filter: { _rowNumber: { $gt: 3 } },
       update: {

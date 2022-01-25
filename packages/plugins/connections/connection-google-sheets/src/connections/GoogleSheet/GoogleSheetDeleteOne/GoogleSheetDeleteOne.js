@@ -18,8 +18,9 @@ import cleanRows from '../cleanRows.js';
 import getSheet from '../getSheet.js';
 import { transformRead } from '../transformTypes.js';
 import mingoFilter from '../mingoFilter.js';
+import schema from './schema.js';
 
-async function googleSheetDeleteOne({ request, connection }) {
+async function GoogleSheetDeleteOne({ request, connection }) {
   const { filter, options = {} } = request;
   const { limit, skip } = options;
   const sheet = await getSheet({ connection });
@@ -39,4 +40,10 @@ async function googleSheetDeleteOne({ request, connection }) {
   };
 }
 
-export default googleSheetDeleteOne;
+GoogleSheetDeleteOne.schema = schema;
+GoogleSheetDeleteOne.meta = {
+  checkRead: false,
+  checkWrite: true,
+};
+
+export default GoogleSheetDeleteOne;
