@@ -3502,6 +3502,7 @@ __metadata:
     "@lowdefy/blocks-loaders": 4.0.0-alpha.6
     "@lowdefy/blocks-markdown": 4.0.0-alpha.6
     "@lowdefy/connection-axios-http": 4.0.0-alpha.6
+    "@lowdefy/connection-knex": 4.0.0-alpha.6
     "@lowdefy/connection-redis": 4.0.0-alpha.6
     "@lowdefy/helpers": 4.0.0-alpha.6
     "@lowdefy/node-utils": 4.0.0-alpha.6
@@ -3571,7 +3572,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-knex@workspace:packages/plugins/connections/connection-knex":
+"@lowdefy/connection-knex@4.0.0-alpha.6, @lowdefy/connection-knex@workspace:packages/plugins/connections/connection-knex":
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-knex@workspace:packages/plugins/connections/connection-knex"
   dependencies:
