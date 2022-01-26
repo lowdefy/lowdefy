@@ -14,18 +14,15 @@
   limitations under the License.
 */
 
-import { createRequire } from 'module';
 import spawnProcess from '../utils/spawnProcess.mjs';
-
-const require = createRequire(import.meta.url);
 
 function startServerProcess(context) {
   context.shutdownServer();
-  const nextCliUrl = require.resolve('next').replace('server/next.js', 'bin/next');
+
   const nextServer = spawnProcess({
     logger: console,
     command: 'node',
-    args: [nextCliUrl, 'start'],
+    args: [context.bin.next, 'start'],
     silent: false,
     processOptions: {
       env: {
