@@ -15,14 +15,14 @@
 */
 /* eslint-disable no-console */
 
-import startServerProcess from './startServerProcess.mjs';
+import startNextServer from './startNextServer.mjs';
 
 async function startServer(context) {
   return new Promise((resolve, reject) => {
-    context.serverProcessPromise = { resolve, reject };
     try {
-      startServerProcess(context);
+      startNextServer(context);
     } catch (error) {
+      console.log(error);
       reject(error);
     }
   });

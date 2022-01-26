@@ -14,13 +14,18 @@
   limitations under the License.
 */
 
+import { createRequire } from 'module';
 import spawnProcess from '../utils/spawnProcess.mjs';
 
+const require = createRequire(import.meta.url);
+
 function startServerProcess(context) {
-  context.serverProcess = spawnProcess({
+  context.shutdownServer();
+  const nextCliUrl = require.resolve('next').replace('server/next.js', 'bin/next');
+  const nextServer = spawnProcess({
     logger: console,
-    command: context.packageManager,
-    args: ['run', 'next', 'start'],
+    command: 'node',
+    args: [nextCliUrl, 'start'],
     silent: false,
     processOptions: {
       env: {
@@ -30,12 +35,14 @@ function startServerProcess(context) {
       },
     },
   });
-  context.serverProcess.on('exit', (code) => {
-    if (code !== 0) {
-      context.serverProcessPromise.reject(new Error('Server error.'));
-    }
-    context.serverProcessPromise.resolve();
+  // console.log(`Started server ${nextServer.pid}.`);
+  // nextServer.on('exit', (code, signal) => {
+  //   console.log(`nextServer exit ${nextServer.pid}, signal: ${signal}, code: ${code}`);
+  // });
+  nextServer.on('error', (error) => {
+    console.log(error);
   });
+  context.nextServer = nextServer;
 }
 
 export default startServerProcess;

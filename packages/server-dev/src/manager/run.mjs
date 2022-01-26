@@ -30,6 +30,7 @@ async function run() {
     opener(`http://localhost:${context.port}`);
     await serverPromise;
   } catch (error) {
+    console.log(error);
     context.shutdownServer();
     throw error;
   }

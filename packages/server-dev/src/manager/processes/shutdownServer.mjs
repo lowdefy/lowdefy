@@ -15,10 +15,19 @@
 */
 
 function shutdownServer(context) {
-  return async () => {
+  return () => {
     if (context.serverProcess) {
-      console.log('Shutting down server...');
-      context.serverProcess.kill();
+      // console.log(
+      //   `Existing server ${context.serverProcess.pid}, killed: ${context.serverProcess.killed}`
+      // );
+      if (!context.serverProcess.killed) {
+        console.log('Shutting down server...');
+        context.serverProcess.kill();
+        // console.log(
+        //   `Killed server ${context.serverProcess.pid}, killed: ${context.serverProcess.killed}`
+        // );
+      }
+      context.serverProcess = null;
     }
   };
 }
