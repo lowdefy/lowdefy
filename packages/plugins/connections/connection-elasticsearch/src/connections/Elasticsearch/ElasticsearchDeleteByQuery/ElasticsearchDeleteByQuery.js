@@ -15,8 +15,9 @@
 */
 
 import { Client } from '@elastic/elasticsearch';
+import schema from './schema.js';
 
-async function elasticsearchDeleteByQuery({ request, connection }) {
+async function ElasticsearchDeleteByQuery({ request, connection }) {
   const client = new Client(connection);
 
   const { body: response } = await client.deleteByQuery({
@@ -29,4 +30,10 @@ async function elasticsearchDeleteByQuery({ request, connection }) {
   };
 }
 
-export default elasticsearchDeleteByQuery;
+ElasticsearchDeleteByQuery.schema = schema;
+ElasticsearchDeleteByQuery.meta = {
+  checkRead: false,
+  checkWrite: true,
+};
+
+export default ElasticsearchDeleteByQuery;
