@@ -16,7 +16,8 @@
 
 import { validate } from '@lowdefy/ajv';
 import Elasticsearch from './Elasticsearch.js';
-import schema from './ElasticsearchSchema.json';
+
+const schema = Elasticsearch.schema;
 
 test('All requests are present', () => {
   expect(Elasticsearch.requests.ElasticsearchSearch).toBeDefined();

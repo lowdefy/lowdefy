@@ -3502,6 +3502,7 @@ __metadata:
     "@lowdefy/blocks-loaders": 4.0.0-alpha.6
     "@lowdefy/blocks-markdown": 4.0.0-alpha.6
     "@lowdefy/connection-axios-http": 4.0.0-alpha.6
+    "@lowdefy/connection-elasticsearch": 4.0.0-alpha.6
     "@lowdefy/connection-redis": 4.0.0-alpha.6
     "@lowdefy/connection-stripe": 4.0.0-alpha.6
     "@lowdefy/helpers": 4.0.0-alpha.6
@@ -3542,7 +3543,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-elasticsearch@workspace:packages/plugins/connections/connection-elasticsearch":
+"@lowdefy/connection-elasticsearch@4.0.0-alpha.6, @lowdefy/connection-elasticsearch@workspace:packages/plugins/connections/connection-elasticsearch":
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-elasticsearch@workspace:packages/plugins/connections/connection-elasticsearch"
   dependencies:

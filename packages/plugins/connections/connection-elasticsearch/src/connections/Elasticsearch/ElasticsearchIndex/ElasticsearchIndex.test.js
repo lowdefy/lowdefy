@@ -17,11 +17,10 @@
 import { Client } from '@elastic/elasticsearch';
 import { validate } from '@lowdefy/ajv';
 
-import elasticsearchIndex from './ElasticsearchIndex.js';
-import requestIndex from './index.js';
-import schema from './ElasticsearchIndex.json';
+import ElasticsearchIndex from './ElasticsearchIndex.js';
 
-const { checkRead, checkWrite } = requestIndex.meta;
+const { checkRead, checkWrite } = ElasticsearchIndex.meta;
+const schema = ElasticsearchIndex.schema;
 
 const mockElasticsearchClient = jest.fn(() => mockElasticsearchClient);
 mockElasticsearchClient.index = jest.fn(() => mockElasticsearchClient);
@@ -108,7 +107,7 @@ test('ElasticsearchIndex', async () => {
       foo: 'bar',
     },
   };
-  const res = await elasticsearchIndex({ request, connection });
+  const res = await ElasticsearchIndex({ request, connection });
   expect(Client.mock.calls).toEqual([
     [
       {

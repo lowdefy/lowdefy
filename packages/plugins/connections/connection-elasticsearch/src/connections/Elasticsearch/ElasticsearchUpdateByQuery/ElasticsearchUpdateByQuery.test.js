@@ -17,11 +17,10 @@
 import { Client } from '@elastic/elasticsearch';
 import { validate } from '@lowdefy/ajv';
 
-import elasticsearchUpdateByQuery from './ElasticsearchUpdateByQuery.js';
-import requestIndex from './index.js';
-import schema from './ElasticsearchUpdateByQuery.json';
+import ElasticsearchUpdateByQuery from './ElasticsearchUpdateByQuery.js';
 
-const { checkRead, checkWrite } = requestIndex.meta;
+const { checkRead, checkWrite } = ElasticsearchUpdateByQuery.meta;
+const schema = ElasticsearchUpdateByQuery.schema;
 
 const mockElasticsearchClient = jest.fn(() => mockElasticsearchClient);
 mockElasticsearchClient.updateByQuery = jest.fn(() => mockElasticsearchClient);
@@ -82,7 +81,7 @@ test('ElasticsearchUpdateByQuery', async () => {
       },
     },
   };
-  const res = await elasticsearchUpdateByQuery({ request, connection });
+  const res = await ElasticsearchUpdateByQuery({ request, connection });
   expect(Client.mock.calls).toEqual([
     [
       {

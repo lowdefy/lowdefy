@@ -17,11 +17,10 @@
 import { Client } from '@elastic/elasticsearch';
 import { validate } from '@lowdefy/ajv';
 
-import elasticsearchSearch from './ElasticsearchSearch.js';
-import requestIndex from './index.js';
-import schema from './ElasticsearchSearch.json';
+import ElasticsearchSearch from './ElasticsearchSearch.js';
 
-const { checkRead, checkWrite } = requestIndex.meta;
+const { checkRead, checkWrite } = ElasticsearchSearch.meta;
+const schema = ElasticsearchSearch.schema;
 
 const mockElasticsearchClient = jest.fn(() => mockElasticsearchClient);
 mockElasticsearchClient.search = jest.fn(() => mockElasticsearchClient);
@@ -152,7 +151,7 @@ test('ElasticsearchSearch with match_all query', async () => {
       },
     },
   };
-  const res = await elasticsearchSearch({ request, connection });
+  const res = await ElasticsearchSearch({ request, connection });
   expect(Client.mock.calls).toEqual([
     [
       {
@@ -354,7 +353,7 @@ test('ElasticsearchSearch exposes total results', async () => {
       },
     },
   };
-  const res = await elasticsearchSearch({ request, connection });
+  const res = await ElasticsearchSearch({ request, connection });
   expect(res.total).toEqual({ relation: 'eq', value: 1234 });
 });
 
@@ -438,7 +437,7 @@ test('ElasticsearchSearch exposes total results over 10k as Infinity', async () 
       },
     },
   };
-  const res = await elasticsearchSearch({ request, connection });
+  const res = await ElasticsearchSearch({ request, connection });
   expect(res.total).toEqual({ relation: 'gte', value: 10000 });
 });
 
@@ -522,7 +521,7 @@ test('ElasticsearchSearch exposes maximum score', async () => {
       },
     },
   };
-  const res = await elasticsearchSearch({ request, connection });
+  const res = await ElasticsearchSearch({ request, connection });
   expect(res.maxScore).toEqual(42);
 });
 
@@ -606,7 +605,7 @@ test('ElasticsearchSearch exposes aggregations', async () => {
       },
     },
   };
-  const res = await elasticsearchSearch({ request, connection });
+  const res = await ElasticsearchSearch({ request, connection });
   expect(res.aggregations).toEqual({
     nameAggregation: {
       doc_count_error_upper_bound: 0,
@@ -696,7 +695,7 @@ test('ElasticsearchSearch exposes original response body', async () => {
       },
     },
   };
-  const res = await elasticsearchSearch({ request, connection });
+  const res = await ElasticsearchSearch({ request, connection });
   expect(res.response).toMatchObject(responseData.body);
 });
 
