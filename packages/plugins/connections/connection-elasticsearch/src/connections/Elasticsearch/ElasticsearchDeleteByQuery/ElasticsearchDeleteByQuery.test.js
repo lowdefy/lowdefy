@@ -17,11 +17,10 @@
 import { Client } from '@elastic/elasticsearch';
 import { validate } from '@lowdefy/ajv';
 
-import elasticsearchDeleteByQuery from './ElasticsearchDeleteByQuery.js';
-import requestIndex from './index.js';
-import schema from './ElasticsearchDeleteByQuery.json';
+import ElasticsearchDeleteByQuery from './ElasticsearchDeleteByQuery.js';
 
-const { checkRead, checkWrite } = requestIndex.meta;
+const { checkRead, checkWrite } = ElasticsearchDeleteByQuery.meta;
+const schema = ElasticsearchDeleteByQuery.schema;
 
 const mockElasticsearchClient = jest.fn(() => mockElasticsearchClient);
 mockElasticsearchClient.deleteByQuery = jest.fn(() => mockElasticsearchClient);
@@ -81,7 +80,7 @@ test('ElasticsearchDeleteByQuery', async () => {
       },
     },
   };
-  const res = await elasticsearchDeleteByQuery({ request, connection });
+  const res = await ElasticsearchDeleteByQuery({ request, connection });
   expect(Client.mock.calls).toEqual([
     [
       {
