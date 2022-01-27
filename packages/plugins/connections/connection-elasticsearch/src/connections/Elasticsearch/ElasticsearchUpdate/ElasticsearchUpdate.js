@@ -15,8 +15,9 @@
 */
 
 import { Client } from '@elastic/elasticsearch';
+import schema from './schema.js';
 
-async function elasticsearchUpdate({ request, connection }) {
+async function ElasticsearchUpdate({ request, connection }) {
   const client = new Client(connection);
 
   const { body: response } = await client.update({
@@ -30,4 +31,10 @@ async function elasticsearchUpdate({ request, connection }) {
   };
 }
 
-export default elasticsearchUpdate;
+ElasticsearchUpdate.schema = schema;
+ElasticsearchUpdate.meta = {
+  checkRead: false,
+  checkWrite: true,
+};
+
+export default ElasticsearchUpdate;

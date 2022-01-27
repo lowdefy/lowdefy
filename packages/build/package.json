@@ -63,6 +63,7 @@
     "@lowdefy/blocks-loaders": "4.0.0-alpha.6",
     "@lowdefy/blocks-markdown": "4.0.0-alpha.6",
     "@lowdefy/connection-axios-http": "4.0.0-alpha.6",
+    "@lowdefy/connection-elasticsearch": "4.0.0-alpha.6",
     "@lowdefy/connection-redis": "4.0.0-alpha.6",
     "@lowdefy/connection-sendgrid": "4.0.0-alpha.6",
     "@lowdefy/operators-change-case": "4.0.0-alpha.6",

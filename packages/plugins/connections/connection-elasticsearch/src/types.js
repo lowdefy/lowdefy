@@ -1,3 +1,4 @@
+/* eslint-disable import/namespace */
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -14,13 +15,23 @@
   limitations under the License.
 */
 
+import * as connections from './connections.js';
+
 export default {
-  import: {
-    path: 'connections/Elasticsearch/ElasticsearchDelete/ElasticsearchDelete.js',
-    schema: 'connections/Elasticsearch/ElasticsearchDelete/ElasticsearchDelete.json',
-  },
-  meta: {
-    checkRead: false,
-    checkWrite: true,
-  },
+  connections: Object.keys(connections),
+  requests: Object.keys(connections)
+    .map((connection) => Object.keys(connections[connection].requests))
+    .flat(),
 };
+
+// export default {
+//   connections: ['Elasticsearch'],
+//   requests: [
+//     ElasticsearchDelete,
+//     ElasticsearchDeleteByQuery,
+//     ElasticsearchIndex,
+//     ElasticsearchSearch,
+//     ElasticsearchUpdate,
+//     ElasticsearchUpdateByQuery,
+//   ],
+// };

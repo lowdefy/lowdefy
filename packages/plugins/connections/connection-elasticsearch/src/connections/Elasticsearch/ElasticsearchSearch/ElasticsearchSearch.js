@@ -16,9 +16,9 @@
 
 import { Client } from '@elastic/elasticsearch';
 import { get } from '@lowdefy/helpers';
-import schema from './ElasticsearchSearch.json';
+import schema from './schema.js';
 
-async function elasticsearchSearch({ request, connection }) {
+async function ElasticsearchSearch({ request, connection }) {
   const client = new Client(connection);
 
   const { body: response } = await client.search({
@@ -49,4 +49,10 @@ async function elasticsearchSearch({ request, connection }) {
   };
 }
 
-export default elasticsearchSearch;
+ElasticsearchSearch.schema = schema;
+ElasticsearchSearch.meta = {
+  checkRead: true,
+  checkWrite: false,
+};
+
+export default ElasticsearchSearch;
