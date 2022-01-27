@@ -15,8 +15,9 @@
 */
 
 import { Client } from '@elastic/elasticsearch';
+import schema from './schema.js';
 
-async function elasticsearchIndex({ request, connection }) {
+async function ElasticsearchIndex({ request, connection }) {
   const client = new Client(connection);
   const body = {
     ...request,
@@ -31,4 +32,10 @@ async function elasticsearchIndex({ request, connection }) {
   };
 }
 
-export default elasticsearchIndex;
+ElasticsearchIndex.schema = schema;
+ElasticsearchIndex.meta = {
+  checkRead: false,
+  checkWrite: true,
+};
+
+export default ElasticsearchIndex;

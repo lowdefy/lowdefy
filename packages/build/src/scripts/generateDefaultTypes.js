@@ -27,6 +27,7 @@ const defaultPackages = [
   '@lowdefy/blocks-loaders',
   '@lowdefy/blocks-markdown',
   '@lowdefy/connection-axios-http',
+  '@lowdefy/connection-elasticsearch',
   '@lowdefy/connection-mongodb',
   '@lowdefy/connection-redis',
   '@lowdefy/operators-change-case',
