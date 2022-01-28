@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/connection-elasticsearch",
-  "version": "4.0.0-alpha.5",
+  "version": "4.0.0-alpha.6",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -27,8 +27,8 @@
   },
   "type": "module",
   "exports": {
-    ".": "./dist/index.js",
-    "./connections/*": "./dist/connections/*"
+    "./connections": "./dist/connections.js",
+    "./types": "./dist/types.js"
   },
   "files": [
     "dist/*"
@@ -42,13 +42,13 @@
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.15.0",
-    "@lowdefy/helpers": "4.0.0-alpha.5"
+    "@lowdefy/helpers": "4.0.0-alpha.6"
   },
   "devDependencies": {
-    "@lowdefy/ajv": "4.0.0-alpha.5",
-    "@swc/cli": "0.1.52",
-    "@swc/core": "1.2.112",
-    "@swc/jest": "0.2.9",
+    "@lowdefy/ajv": "4.0.0-alpha.6",
+    "@swc/cli": "0.1.55",
+    "@swc/core": "1.2.130",
+    "@swc/jest": "0.2.17",
     "jest": "27.3.1"
   },
   "publishConfig": {

@@ -15,6 +15,7 @@
 */
 
 import { callRequest, createApiContext } from '@lowdefy/api';
+import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import connections from '../../../../../build/plugins/connections.js';
 import operators from '../../../../../build/plugins/operatorsServer.js';
 
@@ -30,8 +31,7 @@ export default async function handler(req, res) {
       // TODO: use a logger like pino
       logger: console,
       operators,
-      // TODO: get secrets
-      secrets: {},
+      secrets: getSecretsFromEnv(),
     });
     const { pageId, requestId } = req.query;
     const { payload } = req.body;

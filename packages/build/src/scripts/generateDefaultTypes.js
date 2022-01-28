@@ -27,6 +27,8 @@ const defaultPackages = [
   '@lowdefy/blocks-loaders',
   '@lowdefy/blocks-markdown',
   '@lowdefy/connection-axios-http',
+  '@lowdefy/connection-elasticsearch',
+  '@lowdefy/connection-redis',
   '@lowdefy/operators-change-case',
   // '@lowdefy/operators-diff',
   '@lowdefy/operators-js',
@@ -119,10 +121,10 @@ async function generateDefaultTypes() {
     })
   );
 
-  await writeFile({
-    filePath: path.resolve(process.cwd(), './dist/defaultTypes.json'),
-    content: JSON.stringify(defaultTypes, null, 2),
-  });
+  await writeFile(
+    path.resolve(process.cwd(), './dist/defaultTypes.json'),
+    JSON.stringify(defaultTypes, null, 2)
+  );
 }
 
 generateDefaultTypes();

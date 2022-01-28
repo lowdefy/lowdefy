@@ -18,26 +18,20 @@
 
 import chokidar from 'chokidar';
 
-export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
 const handler = async (req, res) => {
   res.setHeader('Content-Type', 'text/event-stream;charset=utf-8');
   res.setHeader('Cache-Control', 'no-cache, no-transform');
   res.setHeader('X-Accel-Buffering', 'no');
   res.setHeader('Connection', 'keep-alive');
 
-  const watcher = chokidar.watch(['./build/tick.json'], {
-    ignored: [
-      /(^|[/\\])\../, // ignore dotfiles
-    ],
+  const watcher = chokidar.watch(['./build/reload'], {
     persistent: true,
     ignoreInitial: true,
   });
 
   const reload = () => {
     try {
-      console.log('reload');
-      res.write(`event: tick\ndata: ${JSON.stringify({ hello: true })}\n\n`);
+      res.write(`event: reload\ndata: ${JSON.stringify({})}\n\n`);
     } catch (e) {
       console.log(e);
     }
@@ -53,8 +47,6 @@ const handler = async (req, res) => {
       console.log('watcher closed');
     });
   });
-
-  await sleep(7000);
 };
 
 export default handler;

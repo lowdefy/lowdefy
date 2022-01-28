@@ -16,11 +16,7 @@
 
 import BatchChanges from './BatchChanges.js';
 
-async function wait(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
+import { wait } from '@lowdefy/helpers';
 
 const context = {};
 
@@ -132,7 +128,6 @@ test('BatchChanges calls function again if it receives new change while executin
   expect(fn).toHaveBeenCalledTimes(1);
   await wait(50);
   expect(fn).toHaveBeenCalledTimes(2);
-  await wait(50);
 });
 
 test('BatchChanges provides arguments to the called function', async () => {

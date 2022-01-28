@@ -49,10 +49,7 @@ async function updateServerPackageJson({ components, context }) {
   // be watching the file to trigger reinstalls
   if (newPackageJsonContent !== packageJsonContent) {
     context.logger.warn('Plugin dependencies have changed. Updating "package.json".');
-    await writeFile({
-      filePath,
-      content: newPackageJsonContent,
-    });
+    await writeFile(filePath, newPackageJsonContent);
   }
 }
 

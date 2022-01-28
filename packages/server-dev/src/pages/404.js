@@ -14,6 +14,6 @@
   limitations under the License.
 */
 
-import Page from '../components/Page.js';
+import App from '../components/App.js';
 
-export default Page;
+export default App;

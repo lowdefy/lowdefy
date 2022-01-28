@@ -143,6 +143,7 @@
 - _ref: connections/MySQL.yaml
 # - _ref: connections/OracleDB.yaml
 - _ref: connections/PostgreSQL.yaml
+- _ref: connections/Redis.yaml
 - _ref: connections/SendGridMail.yaml
 - _ref: connections/SQLite.yaml
 - _ref: connections/Stripe.yaml

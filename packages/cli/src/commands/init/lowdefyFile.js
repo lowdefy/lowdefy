@@ -38,7 +38,7 @@ pages:
                   title: Welcome to your Lowdefy app
                   subTitle: We are excited to see what you are going to build
                   icon:
-                    name: HeartTwoTone
+                    name: AiTwoToneHeart
                     color: '#f00'
                 areas:
                   extra:

@@ -32,6 +32,7 @@ import buildRefs from './build/buildRefs/buildRefs.js';
 import buildStyles from './build/buildStyles.js';
 import buildTypes from './build/buildTypes.js';
 import cleanBuildDirectory from './build/cleanBuildDirectory.js';
+import copyPublicFolder from './build/copyPublicFolder.js';
 import testSchema from './build/testSchema.js';
 import validateApp from './build/validateApp.js';
 import validateConfig from './build/validateConfig.js';
@@ -110,6 +111,7 @@ async function build(options) {
     await writeStyleImports({ components, context });
     await writeIconImports({ components, context });
     await updateServerPackageJson({ components, context });
+    await copyPublicFolder({ components, context });
   } catch (error) {
     context.logger.error(error);
     throw error;

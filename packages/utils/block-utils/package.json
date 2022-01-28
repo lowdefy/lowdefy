@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/block-utils",
-  "version": "4.0.0-alpha.5",
+  "version": "4.0.0-alpha.6",
   "licence": "Apache-2.0",
   "description": "Lowdefy Block Utils",
   "homepage": "https://lowdefy.com",
@@ -41,7 +41,7 @@
   "dependencies": {
     "@emotion/css": "11.5.0",
     "@emotion/react": "11.5.0",
-    "@lowdefy/helpers": "4.0.0-alpha.5",
+    "@lowdefy/helpers": "4.0.0-alpha.6",
     "classnames": "2.3.1",
     "dompurify": "2.3.3",
     "react": "18.0.0-alpha-327d5c484-20211106",
@@ -50,9 +50,9 @@
   "devDependencies": {
     "@babel/preset-react": "7.16.0",
     "@emotion/jest": "11.5.0",
-    "@swc/cli": "0.1.52",
-    "@swc/core": "1.2.112",
-    "@swc/jest": "0.2.9",
+    "@swc/cli": "0.1.55",
+    "@swc/core": "1.2.130",
+    "@swc/jest": "0.2.17",
     "@testing-library/dom": "8.10.1",
     "@testing-library/react": "13.0.0-alpha.4",
     "@testing-library/user-event": "14.0.0-alpha.14",

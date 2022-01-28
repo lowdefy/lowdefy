@@ -15,16 +15,24 @@
   limitations under the License.
 */
 
+import { wait } from '@lowdefy/helpers';
+import opener from 'opener';
 import getContext from './getContext.mjs';
-import resetServer from './resetServer.mjs';
-import setupFileWatchers from './setupFileWatchers.mjs';
-import startServer from './startServer.mjs';
+import startServer from './processes/startServer.mjs';
 
 async function run() {
   const context = await getContext();
-  await resetServer(context);
-  await setupFileWatchers(context);
-  await startServer(context);
+  await context.initialBuild();
+  await context.startWatchers();
+  try {
+    const serverPromise = startServer(context);
+    await wait(800);
+    opener(`http://localhost:${context.port}`);
+    await serverPromise;
+  } catch (error) {
+    context.shutdownServer();
+    throw error;
+  }
 }
 
 run();

@@ -35,22 +35,20 @@ jest.mock('uuid', () => ({
   v4: () => 'uuidv4',
 }));
 
-const baseDirectory = process.cwd();
+const configDirectory = process.cwd();
 
 test('getCliJson, no file exists', async () => {
   readFile.mockImplementation(() => {
     return null;
   });
-  const res = await getCliJson({ baseDirectory });
+  const res = await getCliJson({ configDirectory });
   expect(res).toEqual({ appId: 'uuidv4' });
   expect(writeFile.mock.calls).toEqual([
     [
-      {
-        content: `{
+      path.resolve(process.cwd(), '.lowdefy/cli.json'),
+      `{
   "appId": "uuidv4"
 }`,
-        filePath: path.resolve(process.cwd(), '.lowdefy/cli.json'),
-      },
     ],
   ]);
 });
@@ -61,7 +59,7 @@ test('getCliJson, no file exists', async () => {
       return `{"appId": "appId"}`;
     }
   });
-  const res = await getCliJson({ baseDirectory });
+  const res = await getCliJson({ configDirectory });
   expect(res).toEqual({ appId: 'appId' });
   expect(writeFile.mock.calls).toEqual([]);
 });

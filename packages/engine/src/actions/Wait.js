@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { type, wait } from '@lowdefy/helpers';
 
 async function Wait({ params }) {
   if (!type.isInt(params.ms)) {
     throw new Error(`Wait action "ms" param should be an integer.`);
   }
-  return new Promise((resolve) => setTimeout(resolve, params.ms));
+  return wait(params.ms);
 }
 
 export default Wait;

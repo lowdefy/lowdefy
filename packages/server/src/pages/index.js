@@ -14,13 +14,14 @@
   limitations under the License.
 */
 
-import { createApiContext, getHome, getPageConfig, getRootConfig } from '@lowdefy/api';
+import { createApiContext, getPageConfig, getRootConfig } from '@lowdefy/api';
 
 import Page from '../components/Page.js';
 
 export async function getServerSideProps() {
   const apiContext = await createApiContext({ buildDirectory: './build' });
-  const home = await getHome(apiContext);
+  const rootConfig = await getRootConfig(apiContext);
+  const { home } = rootConfig;
   if (home.configured === false) {
     return {
       redirect: {
@@ -29,12 +30,7 @@ export async function getServerSideProps() {
       },
     };
   }
-
-  const [rootConfig, pageConfig] = await Promise.all([
-    getRootConfig(apiContext),
-    getPageConfig(apiContext, { pageId: home.pageId }),
-  ]);
-
+  const pageConfig = await getPageConfig(apiContext, { pageId: home.pageId });
   if (!pageConfig) {
     return {
       redirect: {
@@ -43,7 +39,6 @@ export async function getServerSideProps() {
       },
     };
   }
-
   return {
     props: {
       pageConfig,

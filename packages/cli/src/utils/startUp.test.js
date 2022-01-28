@@ -56,7 +56,7 @@ test('startUp, options empty', async () => {
   await startUp({ context, options: {}, command });
   expect(context).toEqual({
     appId: 'appId',
-    baseDirectory: path.resolve(process.cwd()),
+    configDirectory: path.resolve(process.cwd()),
     cacheDirectory: path.resolve(process.cwd(), './.lowdefy/.cache'),
     cliConfig: { cliConfig: true },
     cliVersion: 'cliVersion',
@@ -79,7 +79,7 @@ test('startUp, options undefined', async () => {
   await startUp({ context, command });
   expect(context).toEqual({
     appId: 'appId',
-    baseDirectory: path.resolve(process.cwd()),
+    configDirectory: path.resolve(process.cwd()),
     cacheDirectory: path.resolve(process.cwd(), './.lowdefy/.cache'),
     cliConfig: { cliConfig: true },
     cliVersion: 'cliVersion',
@@ -93,23 +93,23 @@ test('startUp, options undefined', async () => {
   });
 });
 
-test('startUp, options baseDirectory', async () => {
+test('startUp, options configDirectory', async () => {
   const context = {};
-  await startUp({ context, options: { baseDirectory: './baseDirectory' }, command });
+  await startUp({ context, options: { configDirectory: './configDirectory' }, command });
   expect(context).toEqual({
     appId: 'appId',
-    baseDirectory: path.resolve(process.cwd(), 'baseDirectory'),
-    cacheDirectory: path.resolve(process.cwd(), 'baseDirectory/.lowdefy/.cache'),
+    configDirectory: path.resolve(process.cwd(), 'configDirectory'),
+    cacheDirectory: path.resolve(process.cwd(), 'configDirectory/.lowdefy/.cache'),
     cliConfig: { cliConfig: true },
     cliVersion: 'cliVersion',
     command: 'test',
-    commandLineOptions: { baseDirectory: './baseDirectory' },
+    commandLineOptions: { configDirectory: './configDirectory' },
     lowdefyVersion: 'lowdefyVersion',
     options: {
       cliConfig: true,
-      baseDirectory: './baseDirectory',
+      configDirectory: './configDirectory',
     },
-    buildDirectory: path.resolve(process.cwd(), 'baseDirectory/.lowdefy/build'),
+    buildDirectory: path.resolve(process.cwd(), 'configDirectory/.lowdefy/build'),
     sendTelemetry: 'sendTelemetry',
     print,
   });
@@ -120,7 +120,7 @@ test('startUp, options outputDirectory', async () => {
   await startUp({ context, options: { outputDirectory: './outputDirectory' }, command });
   expect(context).toEqual({
     appId: 'appId',
-    baseDirectory: path.resolve(process.cwd()),
+    configDirectory: path.resolve(process.cwd()),
     cacheDirectory: path.resolve(process.cwd(), './.lowdefy/.cache'),
     cliConfig: { cliConfig: true },
     cliVersion: 'cliVersion',
@@ -137,12 +137,12 @@ test('startUp, options outputDirectory', async () => {
   });
 });
 
-test('startUp, options baseDirectory and outputDirectory', async () => {
+test('startUp, options configDirectory and outputDirectory', async () => {
   const context = {};
   await startUp({
     context,
     options: {
-      baseDirectory: './baseDirectory',
+      configDirectory: './configDirectory',
       outputDirectory: './outputDirectory',
     },
     command,
@@ -150,18 +150,18 @@ test('startUp, options baseDirectory and outputDirectory', async () => {
 
   expect(context).toEqual({
     appId: 'appId',
-    baseDirectory: path.resolve(process.cwd(), 'baseDirectory'),
-    cacheDirectory: path.resolve(process.cwd(), 'baseDirectory/.lowdefy/.cache'),
+    configDirectory: path.resolve(process.cwd(), 'configDirectory'),
+    cacheDirectory: path.resolve(process.cwd(), 'configDirectory/.lowdefy/.cache'),
     cliConfig: { cliConfig: true },
     cliVersion: 'cliVersion',
     command: 'test',
     commandLineOptions: {
-      baseDirectory: './baseDirectory',
+      configDirectory: './configDirectory',
       outputDirectory: './outputDirectory',
     },
     lowdefyVersion: 'lowdefyVersion',
     options: {
-      baseDirectory: './baseDirectory',
+      configDirectory: './configDirectory',
       cliConfig: true,
       outputDirectory: './outputDirectory',
     },
@@ -177,7 +177,7 @@ test('startUp, no lowdefyVersion returned', async () => {
   await startUp({ context, options: {}, command });
   expect(context).toEqual({
     appId: 'appId',
-    baseDirectory: path.resolve(process.cwd()),
+    configDirectory: path.resolve(process.cwd()),
     cacheDirectory: path.resolve(process.cwd(), './.lowdefy/.cache'),
     cliConfig: {},
     cliVersion: 'cliVersion',

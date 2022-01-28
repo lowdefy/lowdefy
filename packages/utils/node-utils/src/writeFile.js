@@ -22,19 +22,15 @@ import { type } from '@lowdefy/helpers';
 const mkdirPromise = promisify(fs.mkdir);
 const writeFilePromise = promisify(fs.writeFile);
 
-async function writeFile({ filePath, content }) {
+async function writeFile(filePath, content) {
   if (!type.isString(filePath)) {
     throw new Error(
       `Could not write file, file path should be a string, received ${JSON.stringify(filePath)}.`
     );
   }
-  if (filePath !== path.resolve(filePath)) {
-    throw new Error(
-      `Could not write file, file path was not resolved, received ${JSON.stringify(filePath)}.`
-    );
-  }
+
   try {
-    await writeFilePromise(filePath, content);
+    await writeFilePromise(path.resolve(filePath), content);
   } catch (error) {
     if (error.code === 'ENOENT') {
       await mkdirPromise(path.dirname(filePath), { recursive: true });

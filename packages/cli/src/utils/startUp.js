@@ -31,7 +31,7 @@ async function startUp({ context, options = {}, command }) {
   context.commandLineOptions = options;
   context.print = createPrint();
 
-  context.baseDirectory = path.resolve(options.baseDirectory || process.cwd());
+  context.configDirectory = path.resolve(options.configDirectory || process.cwd());
   const { cliConfig, lowdefyVersion } = await getLowdefyYaml(context);
   context.cliConfig = cliConfig;
   context.lowdefyVersion = lowdefyVersion;
