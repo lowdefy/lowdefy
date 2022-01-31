@@ -26,6 +26,7 @@
     "type": "git",
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
+  "type": "module",
   "scripts": {
     "clean": "rm -rf .lowdefy",
     "test": "jest --coverage"
