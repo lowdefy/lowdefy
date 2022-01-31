@@ -17,7 +17,7 @@
 import { cleanDirectory } from '@lowdefy/node-utils';
 
 async function cleanBuildDirectory({ context }) {
-  return cleanDirectory(context.directories.build);
+  await cleanDirectory(context.directories.build);
 }
 
 export default cleanBuildDirectory;

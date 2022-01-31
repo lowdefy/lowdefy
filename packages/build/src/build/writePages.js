@@ -20,10 +20,10 @@ async function writePage({ page, context }) {
   if (!type.isObject(page)) {
     throw new Error(`Page is not an object. Received ${JSON.stringify(page)}`);
   }
-  await context.writeBuildArtifact({
-    filePath: `pages/${page.pageId}/${page.pageId}.json`,
-    content: JSON.stringify(page, null, 2),
-  });
+  await context.writeBuildArtifact(
+    `pages/${page.pageId}/${page.pageId}.json`,
+    JSON.stringify(page, null, 2)
+  );
 }
 
 async function writePages({ components, context }) {

@@ -16,6 +16,7 @@
 /* eslint-disable no-console */
 
 import path from 'path';
+import { createRequire } from 'module';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
@@ -30,10 +31,16 @@ import shutdownServer from './processes/shutdownServer.mjs';
 import startWatchers from './processes/startWatchers.mjs';
 
 const argv = yargs(hideBin(process.argv)).argv;
+const require = createRequire(import.meta.url);
 
 async function getContext() {
   const { verbose = false } = argv;
   const context = {
+    bin: {
+      // TODO: The string replace is a little hacky and will fail if the location of the bin changes,
+      lowdefyBuild: require.resolve('@lowdefy/build').replace('index.js', 'scripts/run.js'),
+      next: require.resolve('next').replace('server/next.js', 'bin/next'),
+    },
     directories: {
       build: path.resolve(process.cwd(), './build'),
       config: path.resolve(
