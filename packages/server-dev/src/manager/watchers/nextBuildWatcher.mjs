@@ -57,14 +57,20 @@ async function nextBuildWatcher(context) {
     await Promise.all(
       filePaths.flat().map(async (filePath) => {
         const hash = await sha1(filePath);
-        if (hashes[filePath] === hash) return;
+        if (hashes[filePath] === hash) {
+          return;
+        }
         build = true;
-        if (filePath.endsWith('package.json')) install = true;
+        if (filePath.endsWith('package.json')) {
+          install = true;
+        }
         hashes[filePath] = hash;
       })
     );
 
-    if (!build) return;
+    if (!build) {
+      return;
+    }
 
     context.shutdownServer();
     if (install) {
