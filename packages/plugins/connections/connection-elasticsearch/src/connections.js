@@ -14,13 +14,4 @@
   limitations under the License.
 */
 
-export default {
-  import: {
-    path: 'connections/Elasticsearch/ElasticsearchUpdateByQuery/ElasticsearchUpdateByQuery.js',
-    schema: 'connections/Elasticsearch/ElasticsearchUpdateByQuery/ElasticsearchUpdateByQuery.json',
-  },
-  meta: {
-    checkRead: false,
-    checkWrite: true,
-  },
-};
+export { default as Elasticsearch } from './connections/Elasticsearch/Elasticsearch.js';
