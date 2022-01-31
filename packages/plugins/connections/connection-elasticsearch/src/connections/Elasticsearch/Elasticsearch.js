@@ -20,11 +20,10 @@ import ElasticsearchIndex from './ElasticsearchIndex/ElasticsearchIndex.js';
 import ElasticsearchSearch from './ElasticsearchSearch/ElasticsearchSearch.js';
 import ElasticsearchUpdate from './ElasticsearchUpdate/ElasticsearchUpdate.js';
 import ElasticsearchUpdateByQuery from './ElasticsearchUpdateByQuery/ElasticsearchUpdateByQuery.js';
+import schema from './schema.js';
 
 export default {
-  import: {
-    schema: 'connections/Elasticsearch/ElasticsearchSchema.json',
-  },
+  schema,
   requests: {
     ElasticsearchDelete,
     ElasticsearchDeleteByQuery,
