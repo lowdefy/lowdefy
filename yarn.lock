@@ -3609,7 +3609,7 @@ __metadata:
     "@swc/cli": 0.1.55
     "@swc/core": 1.2.135
     "@swc/jest": 0.2.17
-    google-spreadsheet: 3.1.15
+    google-spreadsheet: 3.2.0
     jest: 27.4.7
     mingo: ^4.4.1
     moment: 2.29.1
@@ -8974,14 +8974,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"google-spreadsheet@npm:3.1.15":
-  version: 3.1.15
-  resolution: "google-spreadsheet@npm:3.1.15"
+"google-spreadsheet@npm:3.2.0":
+  version: 3.2.0
+  resolution: "google-spreadsheet@npm:3.2.0"
   dependencies:
-    axios: ^0.21.1
+    axios: ^0.21.4
     google-auth-library: ^6.1.3
-    lodash: ^4.17.20
-  checksum: 1ec37d71ee09b2b8f6dd41c98b4e0babac86f544cbeb1475a2db13a3bfad05274845a580f38bd153d7cf0b891951bf016bbcb1fb037ef71e5dd26501ff216f0d
+    lodash: ^4.17.21
+  checksum: 1d351b11e48f08a78472a177144fb1c1d26d07852182d3be62ef3fe1859b06fc90429114ed2b41f196a9bd2eaf565365723b7c8fdd0e0722d3a8d393734f9736
   languageName: node
   linkType: hard
 
@@ -11300,7 +11300,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:^4.0.1, lodash@npm:^4.17.14, lodash@npm:^4.17.15, lodash@npm:^4.17.19, lodash@npm:^4.17.20, lodash@npm:^4.17.21, lodash@npm:^4.7.0":
+"lodash@npm:^4.0.1, lodash@npm:^4.17.14, lodash@npm:^4.17.15, lodash@npm:^4.17.19, lodash@npm:^4.17.21, lodash@npm:^4.7.0":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
