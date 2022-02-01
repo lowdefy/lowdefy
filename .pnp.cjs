@@ -5249,7 +5249,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/react", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:13.0.0-alpha.4"],
             ["@testing-library/user-event", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:14.0.0-alpha.14"],
             ["classnames", "npm:2.3.1"],
-            ["dompurify", "npm:2.3.3"],
+            ["dompurify", "npm:2.3.5"],
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:27.4.7"],
             ["jest-serializer-html", "npm:7.1.0"],
             ["react", "npm:18.0.0-alpha-327d5c484-20211106"],
@@ -5309,7 +5309,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/react", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:13.0.0-alpha.4"],
             ["@testing-library/user-event", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:14.0.0-alpha.14"],
             ["copyfiles", "npm:2.4.1"],
-            ["dompurify", "npm:2.3.3"],
+            ["dompurify", "npm:2.3.5"],
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:27.4.7"],
             ["jest-serializer-html", "npm:7.1.0"],
             ["jest-transform-yaml", "npm:1.0.0"],
@@ -5416,7 +5416,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/react", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:13.0.0-alpha.4"],
             ["@testing-library/user-event", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:14.0.0-alpha.14"],
             ["copyfiles", "npm:2.4.1"],
-            ["dompurify", "npm:2.3.3"],
+            ["dompurify", "npm:2.3.5"],
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:27.4.7"],
             ["jest-serializer-html", "npm:7.1.0"],
             ["jest-transform-yaml", "npm:1.0.0"],
@@ -10282,10 +10282,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["dompurify", [
-        ["npm:2.3.3", {
-          "packageLocation": "./.yarn/cache/dompurify-npm-2.3.3-a36506accf-947e366168.zip/node_modules/dompurify/",
+        ["npm:2.3.5", {
+          "packageLocation": "./.yarn/cache/dompurify-npm-2.3.5-21d6008c6a-06a7883b5e.zip/node_modules/dompurify/",
           "packageDependencies": [
-            ["dompurify", "npm:2.3.3"]
+            ["dompurify", "npm:2.3.5"]
           ],
           "linkType": "HARD",
         }]

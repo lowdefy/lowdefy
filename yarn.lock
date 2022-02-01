@@ -3361,7 +3361,7 @@ __metadata:
     "@testing-library/react": 13.0.0-alpha.4
     "@testing-library/user-event": 14.0.0-alpha.14
     classnames: 2.3.1
-    dompurify: 2.3.3
+    dompurify: 2.3.5
     jest: 27.4.7
     jest-serializer-html: 7.1.0
     react: 18.0.0-alpha-327d5c484-20211106
@@ -3417,7 +3417,7 @@ __metadata:
     "@testing-library/react": 13.0.0-alpha.4
     "@testing-library/user-event": 14.0.0-alpha.14
     copyfiles: 2.4.1
-    dompurify: 2.3.3
+    dompurify: 2.3.5
     jest: 27.4.7
     jest-serializer-html: 7.1.0
     jest-transform-yaml: 1.0.0
@@ -3516,7 +3516,7 @@ __metadata:
     "@testing-library/react": 13.0.0-alpha.4
     "@testing-library/user-event": 14.0.0-alpha.14
     copyfiles: 2.4.1
-    dompurify: 2.3.3
+    dompurify: 2.3.5
     jest: 27.4.7
     jest-serializer-html: 7.1.0
     jest-transform-yaml: 1.0.0
@@ -7575,10 +7575,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dompurify@npm:2.3.3":
-  version: 2.3.3
-  resolution: "dompurify@npm:2.3.3"
-  checksum: 947e3661681bd183aae1cd08f991b14c6aa41fd188f6c801c5e916c2dc4575bbefbaa121ed06dbe0cb0f595545527d588a44b53bfc35d1cbb898c214dc0d7930
+"dompurify@npm:2.3.5":
+  version: 2.3.5
+  resolution: "dompurify@npm:2.3.5"
+  checksum: 06a7883b5ed0aed0da7c54606f3491d200ca427b8269834240110083c85908f96d7f7afdd56ee497fa6b2d500cb20b3026954219fec30b557cfea2535e0559c9
   languageName: node
   linkType: hard
 
