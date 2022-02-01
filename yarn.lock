@@ -3969,7 +3969,7 @@ __metadata:
     less-loader: 10.2.0
     next: 12.0.10
     next-auth: 4.1.2
-    next-with-less: 2.0.2
+    next-with-less: 2.0.4
     opener: 1.5.2
     react: 18.0.0-alpha-327d5c484-20211106
     react-dom: 18.0.0-alpha-327d5c484-20211106
@@ -3996,7 +3996,7 @@ __metadata:
     less-loader: 10.2.0
     next: 12.0.10
     next-auth: 4.1.2
-    next-with-less: 2.0.2
+    next-with-less: 2.0.4
     process: 0.11.10
     react: 18.0.0-alpha-327d5c484-20211106
     react-dom: 18.0.0-alpha-327d5c484-20211106
@@ -12552,16 +12552,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next-with-less@npm:2.0.2":
-  version: 2.0.2
-  resolution: "next-with-less@npm:2.0.2"
+"next-with-less@npm:2.0.4":
+  version: 2.0.4
+  resolution: "next-with-less@npm:2.0.4"
   dependencies:
     clone-deep: ^4.0.1
   peerDependencies:
     less: "*"
     less-loader: ">= 7.0.0"
     next: ">= 11.0.1"
-  checksum: 21777e6fe249ae8db9b3da8e89172750ae283ad8397ee53974139eb52b030f8d41bb1c69be31a234f92e33a8f5df08bb42ad1a3ba2eede9ee15a7323f8b6da69
+  checksum: 0237e5acd30cda2ae8c9566518796654721c8b0db76e6077633e5f447716ab8a130c1662eaee5a36addfe7a11e5837046b511f2567b6da9e9a1a5af1cffce4ea
   languageName: node
   linkType: hard
 
