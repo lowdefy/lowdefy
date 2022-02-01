@@ -3974,7 +3974,7 @@ __metadata:
     react: 18.0.0-alpha-327d5c484-20211106
     react-dom: 18.0.0-alpha-327d5c484-20211106
     react-icons: 4.3.1
-    swr: 1.0.1
+    swr: 1.2.0
     yargs: 17.3.0
   languageName: unknown
   linkType: soft
@@ -7378,7 +7378,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dequal@npm:2.0.2, dequal@npm:^2.0.0":
+"dequal@npm:^2.0.0":
   version: 2.0.2
   resolution: "dequal@npm:2.0.2"
   checksum: 86c7a2c59f7b0797ed397c74b5fcdb744e48fc19440b70ad6ac59f57550a96b0faef3f1cfd5760ec5e6d3f7cb101f634f1f80db4e727b1dc8389bf62d977c0a0
@@ -16278,14 +16278,12 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"swr@npm:1.0.1":
-  version: 1.0.1
-  resolution: "swr@npm:1.0.1"
-  dependencies:
-    dequal: 2.0.2
+"swr@npm:1.2.0":
+  version: 1.2.0
+  resolution: "swr@npm:1.2.0"
   peerDependencies:
-    react: ^16.11.0 || ^17.0.0
-  checksum: 8aaa10c4c65cb9b46a143a52ac2728111fc8af96e83781df1f7b7d56aa027ef720b7feb230658616e479f224f684d4cbc5d2ca3265c40f95a3140dbdba801061
+    react: ^16.11.0 || ^17.0.0 || ^18.0.0
+  checksum: 9858cbd1849fea5d4d9c63c90b8115ffdc27ddd5500d37f43d6fe58fc57777846fc8e9bf2b12a954b5e8328eac38ecccfa16c5a08afe00a48dfb828516e208f7
   languageName: node
   linkType: hard
 
