@@ -8,17 +8,26 @@
 **/dist/*
 **/es/*
 **/coverage/*
+**/node_modules/*
 **/.lowdefy/*
 **/.next/*
 **/.env
 **/lowdefy.yaml
+
+packages/server/build/**
+packages/server-dev/build/**
 !packages/docs/lowdefy.yaml
 !packages/docs/howto/**/lowdefy.yaml
 
 .DS_Store
 
-packages/server/build/**
-packages/express/config/**
-packages/build/src/test/writeFile.txt
-packages/graphql/globalConfig.json
-packages/graphql/node_modules/**
+packages/build/build/**
+
+packages/plugins/connections/connection-mongodb/mongod-*
+packages/plugins/connections/connection-mongodb/globalConfig.json
+packages/plugins/connections/connection-mongodb/*.lock
+
+packages/utils/node-utils/test/writeFile/writeFile.txt
+packages/utils/node-utils/test/copyDirectory/**
+
+app/**

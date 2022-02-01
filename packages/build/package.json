@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/build",
-  "version": "3.23.2",
+  "version": "4.0.0-alpha.6",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -18,44 +18,69 @@
     {
       "name": "Gerrie van Wyk",
       "url": "https://github.com/Gervwyk"
+    },
+    {
+      "name": "Sandile Memela",
+      "url": "https://github.com/sah-memela"
     }
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
-  "main": "dist/index.js",
+  "type": "module",
+  "bin": {
+    "lowdefy-build": "./dist/scripts/run.js"
+  },
+  "exports": "./dist/index.js",
   "files": [
     "dist/*"
   ],
   "scripts": {
-    "build": "yarn webpack",
+    "build": "yarn swc && node dist/scripts/generateDefaultTypes.js",
     "clean": "rm -rf dist",
     "prepare": "yarn build",
-    "test": "jest --coverage",
-    "webpack": "webpack --config webpack.config.js"
+    "start": "node dist/scripts/run.js",
+    "swc": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
+    "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/ajv": "3.23.2",
-    "@lowdefy/helpers": "3.23.2",
-    "@lowdefy/node-utils": "3.23.2",
-    "@lowdefy/nunjucks": "3.23.2",
-    "ajv": "6.12.6",
-    "axios": "0.21.4",
+    "@lowdefy/ajv": "4.0.0-alpha.6",
+    "@lowdefy/helpers": "4.0.0-alpha.6",
+    "@lowdefy/node-utils": "4.0.0-alpha.6",
+    "@lowdefy/nunjucks": "4.0.0-alpha.6",
+    "ajv": "8.8.2",
     "js-yaml": "4.1.0",
     "json5": "2.2.0",
-    "uuid": "8.3.2"
+    "uuid": "8.3.2",
+    "yargs": "17.3.0"
   },
   "devDependencies": {
-    "@babel/cli": "7.14.3",
-    "@babel/core": "7.14.3",
-    "@babel/preset-env": "7.14.4",
-    "babel-jest": "26.6.3",
-    "babel-loader": "8.2.2",
-    "clean-webpack-plugin": "3.0.0",
-    "jest": "26.6.3",
-    "webpack": "5.38.1",
-    "webpack-cli": "4.7.0"
+    "@lowdefy/blocks-antd": "4.0.0-alpha.6",
+    "@lowdefy/blocks-basic": "4.0.0-alpha.6",
+    "@lowdefy/blocks-color-selectors": "4.0.0-alpha.6",
+    "@lowdefy/blocks-echarts": "4.0.0-alpha.6",
+    "@lowdefy/blocks-loaders": "4.0.0-alpha.6",
+    "@lowdefy/blocks-markdown": "4.0.0-alpha.6",
+    "@lowdefy/connection-axios-http": "4.0.0-alpha.6",
+    "@lowdefy/connection-elasticsearch": "4.0.0-alpha.6",
+    "@lowdefy/connection-google-sheets": "4.0.0-alpha.6",
+    "@lowdefy/connection-knex": "4.0.0-alpha.6",
+    "@lowdefy/connection-mongodb": "4.0.0-alpha.6",
+    "@lowdefy/connection-redis": "4.0.0-alpha.6",
+    "@lowdefy/connection-sendgrid": "4.0.0-alpha.6",
+    "@lowdefy/connection-stripe": "4.0.0-alpha.6",
+    "@lowdefy/operators-change-case": "4.0.0-alpha.6",
+    "@lowdefy/operators-diff": "4.0.0-alpha.6",
+    "@lowdefy/operators-js": "4.0.0-alpha.6",
+    "@lowdefy/operators-mql": "4.0.0-alpha.6",
+    "@lowdefy/operators-nunjucks": "4.0.0-alpha.6",
+    "@lowdefy/operators-uuid": "4.0.0-alpha.6",
+    "@lowdefy/operators-yaml": "4.0.0-alpha.6",
+    "@swc/cli": "0.1.55",
+    "@swc/core": "1.2.130",
+    "@swc/jest": "0.2.17",
+    "jest": "27.3.1"
   },
   "publishConfig": {
     "access": "public"

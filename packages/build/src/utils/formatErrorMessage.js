@@ -25,9 +25,9 @@ function formatArrayKey({ index, object }) {
   return `[${index}]`;
 }
 
-function recursiveFormatPath({ data, dataPath, formattedPath = '', gap = '', root = false }) {
-  if (dataPath.length === 0) return formattedPath;
-  const key = dataPath.shift();
+function recursiveFormatPath({ data, instancePath, formattedPath = '', gap = '', root = false }) {
+  if (instancePath.length === 0) return formattedPath;
+  const key = instancePath.shift();
   const newData = get(data, key);
   let newPath;
   if (type.isArray(data)) {
@@ -37,13 +37,13 @@ ${gap}- ${formatArrayKey({ index: key, object: newData })}`;
   } else {
     newPath = `${formattedPath}${root ? '- ' : '.'}${key}`;
   }
-  return recursiveFormatPath({ data: newData, dataPath, formattedPath: newPath, gap });
+  return recursiveFormatPath({ data: newData, instancePath, formattedPath: newPath, gap });
 }
 
 function formatErrorMessage({ error, components }) {
   const formattedPath = recursiveFormatPath({
     data: components,
-    dataPath: error.dataPath.split('/').slice(1),
+    instancePath: error.instancePath.split('/').slice(1),
     root: true,
   });
   return `Schema Error

@@ -14,61 +14,36 @@
   limitations under the License.
 */
 
-import testContext from '../testContext';
-
-const gqlError = new Error('gqlError');
-
-gqlError.graphQLErrors = [
-  {
-    extensions: {
-      displayTitle: 'displayTitle',
-      displayMessage: 'displayMessage',
-    },
-  },
-];
+import testContext from '../testContext.js';
 
 // Mock apollo client
 const mockReqResponses = {
   req_one: {
-    data: {
-      request: {
-        id: 'req_one',
-        success: true,
-        response: 1,
-      },
-    },
+    id: 'req_one',
+    success: true,
+    response: 1,
   },
   req_two: {
-    data: {
-      request: {
-        id: 'req_two',
-        success: true,
-        response: 2,
-      },
-    },
+    id: 'req_two',
+    success: true,
+    response: 2,
   },
   req_error: new Error('Request error'),
-  req_gql_error: gqlError,
 };
 
-const mockQuery = jest.fn();
-const mockQueryImp = ({ variables }) => {
-  const { input } = variables;
-  const { requestId } = input;
+const mockCallRequest = jest.fn();
+const mockCallRequestImp = ({ requestId }) => {
   return new Promise((resolve, reject) => {
-    if (requestId.includes('error')) {
+    if (requestId === 'req_error') {
       reject(mockReqResponses[requestId]);
     }
     resolve(mockReqResponses[requestId]);
   });
 };
 
-const client = {
-  query: mockQuery,
-};
 const pageId = 'one';
 const lowdefy = {
-  client,
+  callRequest: mockCallRequest,
   pageId,
 };
 
@@ -89,15 +64,15 @@ afterAll(() => {
 });
 
 beforeEach(() => {
-  mockQuery.mockReset();
-  mockQuery.mockImplementation(mockQueryImp);
+  mockCallRequest.mockReset();
+  mockCallRequest.mockImplementation(mockCallRequestImp);
 });
 
 test('Request call one request', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     requests: [
       {
@@ -161,7 +136,7 @@ test('Request call all requests', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     requests: [
       {
@@ -242,7 +217,7 @@ test('Request call array of requests', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     requests: [
       {
@@ -323,7 +298,7 @@ test('Request pass if params are none', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     requests: [
       {
@@ -364,7 +339,7 @@ test('Request call request error', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     requests: [
       {
@@ -423,76 +398,6 @@ test('Request call request error', async () => {
         type: 'Request',
         index: 0,
         error: new Error('Request error'),
-      },
-    },
-    success: false,
-    startTimestamp: { date: 0 },
-    endTimestamp: { date: 0 },
-  });
-});
-
-test('Request call request graphql error', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'context',
-    },
-    requests: [
-      {
-        requestId: 'req_gql_error',
-      },
-    ],
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [{ id: 'a', type: 'Request', params: 'req_gql_error' }],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = await testContext({
-    lowdefy,
-    rootBlock,
-  });
-  const { button } = context.RootBlocks.map;
-  const res = await button.triggerEvent({ name: 'onClick' });
-  expect(context.requests.req_gql_error).toEqual({
-    error: [new Error('gqlError')],
-    loading: false,
-    response: null,
-  });
-  expect(res).toEqual({
-    blockId: 'button',
-    bounced: false,
-    event: undefined,
-    eventName: 'onClick',
-    error: {
-      action: {
-        id: 'a',
-        params: 'req_gql_error',
-        type: 'Request',
-      },
-      error: {
-        error: new Error('displayTitle: displayMessage'),
-        index: 0,
-        type: 'Request',
-      },
-    },
-    responses: {
-      a: {
-        type: 'Request',
-        index: 0,
-        error: new Error('displayTitle: displayMessage'),
       },
     },
     success: false,

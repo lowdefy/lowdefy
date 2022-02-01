@@ -15,30 +15,33 @@
 */
 
 import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
-import { makeContextId } from '@lowdefy/engine';
 
 function createLink({ backLink, lowdefy, newOriginLink, sameOriginLink }) {
   function link({ back, home, input, newTab, pageId, url, urlQuery }) {
+    let pathname = pageId;
     if (back) {
       return backLink();
     }
     const lowdefyUrlQuery = type.isNone(urlQuery) ? '' : `?${urlQueryFn.stringify(urlQuery)}`;
-    if (home) pageId = lowdefy.homePageId;
-    if (pageId) {
-      if (!type.isNone(input)) {
-        const nextContextId = makeContextId({
-          pageId,
-          urlQuery: urlQuery,
-          blockId: pageId,
-        });
-        lowdefy.inputs[nextContextId] = input;
+    if (home) {
+      if (lowdefy.home.configured) {
+        pathname = '';
+        pageId = lowdefy.home.pageId;
+      } else {
+        pathname = lowdefy.home.pageId;
+        pageId = lowdefy.home.pageId;
       }
-      return sameOriginLink(`/${pageId}${lowdefyUrlQuery}`, newTab);
-    } else if (url) {
-      return newOriginLink(`${url}${lowdefyUrlQuery}`, newTab);
-    } else {
-      throw new Error(`Invalid Link.`);
     }
+    if (!type.isNone(pathname)) {
+      if (!type.isNone(input)) {
+        lowdefy.inputs[pageId] = input;
+      }
+      return sameOriginLink(`/${pathname}${lowdefyUrlQuery}`, newTab);
+    }
+    if (!type.isNone(url)) {
+      return newOriginLink(`${url}${lowdefyUrlQuery}`, newTab);
+    }
+    throw new Error(`Invalid Link.`);
   }
   return link;
 }

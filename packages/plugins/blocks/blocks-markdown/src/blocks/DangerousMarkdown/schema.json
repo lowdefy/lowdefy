@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "content": {
+        "type": "string",
+        "description": "Content in markdown format.",
+        "docs": {
+          "displayType": "text-area"
+        }
+      },
+      "DOMPurifyOptions": {
+        "type": "object",
+        "description": "Customize DOMPurify options. Options are only applied when the block is mounted, thus any parsed settings is only applied at first render.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "style": {
+        "type": "object",
+        "description": "Style to apply to Markdown div.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  }
+}

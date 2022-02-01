@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import writeApp from './writeApp';
-import testContext from '../test/testContext';
+import writeApp from './writeApp.js';
+import testContext from '../test/testContext.js';
 
 const mockWriteBuildArtifact = jest.fn();
 
@@ -34,12 +34,10 @@ test('writeApp', async () => {
   await writeApp({ components, context });
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
-      {
-        filePath: 'app.json',
-        content: `{
+      'app.json',
+      `{
   "key": "value"
 }`,
-      },
     ],
   ]);
 });
@@ -49,25 +47,11 @@ test('writeApp empty config', async () => {
     app: {},
   };
   await writeApp({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([
-    [
-      {
-        filePath: 'app.json',
-        content: `{}`,
-      },
-    ],
-  ]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['app.json', `{}`]]);
 });
 
 test('writeApp config undefined', async () => {
   const components = {};
   await writeApp({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([
-    [
-      {
-        filePath: 'app.json',
-        content: `{}`,
-      },
-    ],
-  ]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['app.json', `{}`]]);
 });

@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/server",
-  "version": "3.23.2",
+  "version": "4.0.0-alpha.6",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -25,36 +25,41 @@
     "type": "git",
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
-  "main": "dist/index.js",
   "files": [
-    "dist/*"
+    "src/*",
+    "public/*",
+    "next.config.js",
+    ".eslintrc.yaml"
   ],
   "scripts": {
-    "babel": "babel src --out-dir dist",
-    "build": "rm -rf dist && babel src --out-dir dist",
-    "clean": "rm -rf dist && rm -rf .lowdefy",
-    "prepare": "yarn build",
-    "start": "nodemon dist/server.js"
+    "build:lowdefy": "lowdefy-build",
+    "build:next": "next build",
+    "dev": "next dev",
+    "start": "next start",
+    "lint": "next lint",
+    "next": "next"
   },
   "dependencies": {
-    "@lowdefy/graphql": "3.23.2",
-    "@lowdefy/helpers": "3.23.2",
-    "@lowdefy/node-utils": "3.23.2",
-    "apollo-server-express": "2.25.0",
-    "dotenv": "10.0.0",
-    "express": "4.17.1",
-    "graphql": "15.5.0"
+    "@lowdefy/api": "4.0.0-alpha.6",
+    "@lowdefy/block-utils": "4.0.0-alpha.6",
+    "@lowdefy/engine": "4.0.0-alpha.6",
+    "@lowdefy/helpers": "4.0.0-alpha.6",
+    "@lowdefy/layout": "4.0.0-alpha.6",
+    "@lowdefy/node-utils": "4.0.0-alpha.6",
+    "@lowdefy/operators-js": "4.0.0-alpha.6",
+    "next": "12.0.3",
+    "next-auth": "4.0.0-beta.6",
+    "process": "0.11.10",
+    "react": "18.0.0-alpha-327d5c484-20211106",
+    "react-dom": "18.0.0-alpha-327d5c484-20211106",
+    "react-icons": "4.3.1"
   },
   "devDependencies": {
-    "@babel/cli": "7.14.3",
-    "@babel/core": "7.14.3",
-    "@babel/preset-env": "7.14.4",
-    "@babel/preset-react": "7.13.13",
-    "@lowdefy/block-tools": "3.23.2",
-    "babel-jest": "26.6.3",
-    "babel-loader": "8.2.2",
-    "jest": "26.6.3",
-    "nodemon": "2.0.7"
+    "@lowdefy/build": "4.0.0-alpha.6",
+    "@next/eslint-plugin-next": "12.0.4",
+    "less": "4.1.2",
+    "less-loader": "10.2.0",
+    "next-with-less": "2.0.2"
   },
   "publishConfig": {
     "access": "public"

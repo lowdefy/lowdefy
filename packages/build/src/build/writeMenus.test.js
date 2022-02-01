@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import writeMenus from './writeMenus';
-import testContext from '../test/testContext';
+import writeMenus from './writeMenus.js';
+import testContext from '../test/testContext.js';
 
 const mockWriteBuildArtifact = jest.fn();
 
@@ -38,16 +38,14 @@ test('writeMenus', async () => {
   await writeMenus({ components, context });
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
-      {
-        filePath: 'menus.json',
-        content: `[
+      'menus.json',
+      `[
   {
     "id": "menu:default",
     "menuId": "default",
     "links": []
   }
 ]`,
-      },
     ],
   ]);
 });
@@ -57,14 +55,7 @@ test('writeMenus empty menus', async () => {
     menus: [],
   };
   await writeMenus({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([
-    [
-      {
-        filePath: 'menus.json',
-        content: `[]`,
-      },
-    ],
-  ]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['menus.json', `[]`]]);
 });
 
 test('writeMenus menus undefined', async () => {

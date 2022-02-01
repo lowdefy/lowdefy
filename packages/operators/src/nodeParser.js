@@ -16,49 +16,38 @@
 
 import { serializer, type } from '@lowdefy/helpers';
 
-import commonOperators from './common';
-import nodeOperators from './node';
-
 class NodeParser {
-  constructor({ arrayIndices, input, lowdefyGlobal, secrets, state, urlQuery, user } = {}) {
-    this.arrayIndices = arrayIndices;
-    this.input = input;
-    this.lowdefyGlobal = lowdefyGlobal;
+  constructor({ payload, secrets, user, operators }) {
+    this.operators = operators;
+    this.payload = payload;
     this.secrets = secrets;
-    this.state = state;
-    this.urlQuery = urlQuery;
     this.user = user;
     this.parse = this.parse.bind(this);
-    this.operators = {
-      ...commonOperators,
-      ...nodeOperators,
-    };
-    this.operations = {};
   }
 
   async init() {
     await Promise.all(
-      Object.keys(this.operators).map(async (operator) => {
-        const fn = require(`./${this.operators[operator]}.js`);
-        this.operations[operator] = fn.default;
-        if (this.operations[operator].init) {
-          await this.operations[operator].init();
+      Object.values(this.operators).map(async (operator) => {
+        if (operator.init) {
+          await operator.init();
         }
       })
     );
   }
 
-  parse({ actions, args, event, input, location }) {
+  parse({ args, input, location }) {
+    const operators = this.operators;
+    const secrets = this.secrets;
+    const payload = this.payload;
+    const user = this.user;
+
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
-    }
-    if (event && !type.isObject(event)) {
-      throw new Error('Operator parser event must be a object.');
     }
     if (args && !type.isArray(args)) {
       throw new Error('Operator parser args must be an array.');
     }
-    if (location && !type.isString(location)) {
+    if (!type.isString(location)) {
       throw new Error('Operator parser location must be a string.');
     }
     const errors = [];
@@ -67,23 +56,18 @@ class NodeParser {
         const key = Object.keys(value)[0];
         const [op, methodName] = key.split('.');
         try {
-          if (!type.isUndefined(this.operations[op])) {
-            const res = this.operations[op]({
-              actions,
+          if (!type.isUndefined(operators[op])) {
+            const res = operators[op]({
               args,
-              arrayIndices: this.arrayIndices,
+              arrayIndices: [],
               env: 'node',
-              event,
-              input: this.input,
               location,
-              lowdefyGlobal: this.lowdefyGlobal,
               methodName,
-              operations: this.operations,
+              operators: operators,
               params: value[key],
-              secrets: this.secrets,
-              state: this.state,
-              urlQuery: this.urlQuery,
-              user: this.user,
+              secrets,
+              payload,
+              user,
               parser: this,
             });
             return res;

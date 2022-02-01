@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mock render - default - value[0] - CheckboxSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.align: baseline - value[0] - CheckboxSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.align: center - value[0] - CheckboxSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.align: end - value[0] - CheckboxSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.align: start - value[0] - CheckboxSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.color_red - value[0] - CheckboxSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.direction horizontal - value[0] - CheckboxSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.direction vertical - value[0] - CheckboxSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.disabled: true - value[0] - CheckboxSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.label.colon: false - value[0] - CheckboxSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.label.disabled: true - value[0] - CheckboxSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.label.extra: showingextra - value[0] - CheckboxSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.label: align_right - value[0] - CheckboxSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.label: inline_true - value[0] - CheckboxSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.label: span_12 - value[0] - CheckboxSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.options.label: html - value[0] - CheckboxSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.options: html - value[0] - CheckboxSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.options-number - value[0] - CheckboxSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.options-object - value[0] - CheckboxSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.options-string - value[0] - CheckboxSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.options-style - value[0] - CheckboxSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.title - value[0] - CheckboxSelector 1`] = `Array []`;
+
+exports[`Mock render - properties.wrap false - value[0] - CheckboxSelector 1`] = `Array []`;

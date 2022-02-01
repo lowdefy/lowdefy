@@ -78,4 +78,4 @@ ${example.description || ''}
   return examples;
 };
 
-module.exports = transformer;
+export default transformer;

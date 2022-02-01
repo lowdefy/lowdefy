@@ -59,6 +59,7 @@ function createBasicPrint() {
 let print;
 
 function createPrint() {
+  // TODO: Add debug
   if (print) return print;
   if (process.env.CI === 'true') {
     print = createBasicPrint();

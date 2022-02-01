@@ -1,4 +1,4 @@
-import createLink from '../src/createLink';
+import createLink from '../src/createLink.js';
 
 const mockBackLink = jest.fn();
 const mockNewOriginLink = jest.fn();
@@ -55,16 +55,16 @@ test('createLink, link with pageId with inputs', () => {
     sameOriginLink: mockSameOriginLink,
   });
   link({ pageId: 'page_1', input: { a: 1 } });
-  link({ pageId: 'page_1', input: { a: 1 }, urlQuery: { p: 3 } });
+  link({ pageId: 'page_2', input: { a: 2 }, urlQuery: { p: 3 } });
   expect(mockBackLink.mock.calls).toEqual([]);
   expect(mockNewOriginLink.mock.calls).toEqual([]);
   expect(mockSameOriginLink.mock.calls).toEqual([
     ['/page_1', undefined],
-    ['/page_1?p=3', undefined],
+    ['/page_2?p=3', undefined],
   ]);
   expect(lowdefy.inputs).toEqual({
-    'page_1:page_1:{}': { a: 1 },
-    'page_1:page_1:{"p":3}': { a: 1 },
+    page_1: { a: 1 },
+    page_2: { a: 2 },
   });
 });
 
@@ -149,16 +149,11 @@ test('createLink, link with home with inputs', () => {
     sameOriginLink: mockSameOriginLink,
   });
   link({ home: true, input: { a: 1 } });
-  link({ home: true, input: { a: 1 }, urlQuery: { p: 3 } });
   expect(mockBackLink.mock.calls).toEqual([]);
   expect(mockNewOriginLink.mock.calls).toEqual([]);
-  expect(mockSameOriginLink.mock.calls).toEqual([
-    ['/home', undefined],
-    ['/home?p=3', undefined],
-  ]);
+  expect(mockSameOriginLink.mock.calls).toEqual([['/home', undefined]]);
   expect(lowdefy.inputs).toEqual({
-    'home:home:{}': { a: 1 },
-    'home:home:{"p":3}': { a: 1 },
+    home: { a: 1 },
   });
 });
 

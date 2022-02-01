@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getBlockMatcher from '../getBlockMatcher';
+import getBlockMatcher from '../getBlockMatcher.js';
 
 async function Validate({ context, params }) {
   const validationErrors = context.RootBlocks.validate(getBlockMatcher(params));

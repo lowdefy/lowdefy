@@ -17,9 +17,11 @@
 import { serializer } from '@lowdefy/helpers';
 
 function Reset({ context }) {
-  context.State.resetState();
-  context.RootBlocks.reset(serializer.deserializeFromString(context.State.frozenState));
-  context.update();
+  context._internal.State.resetState();
+  context._internal.RootBlocks.reset(
+    serializer.deserializeFromString(context._internal.State.frozenState)
+  );
+  context._internal.update();
 }
 
 export default Reset;

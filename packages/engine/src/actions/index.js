@@ -14,21 +14,21 @@
   limitations under the License.
 */
 
-import CallMethod from './CallMethod';
-import JsAction from './JsAction';
-import Link from './Link';
-import Login from './Login';
-import Logout from './Logout';
-import Message from './Message';
-import Request from './Request';
-import Reset from './Reset';
-import ResetValidation from './ResetValidation';
-import ScrollTo from './ScrollTo';
-import SetGlobal from './SetGlobal';
-import SetState from './SetState';
-import Throw from './Throw';
-import Validate from './Validate';
-import Wait from './Wait';
+import CallMethod from './CallMethod.js';
+import JsAction from './JsAction.js';
+import Link from './Link.js';
+import Login from './Login.js';
+import Logout from './Logout.js';
+import Message from './Message.js';
+import Request from './Request.js';
+import Reset from './Reset.js';
+import ResetValidation from './ResetValidation.js';
+import ScrollTo from './ScrollTo.js';
+import SetGlobal from './SetGlobal.js';
+import SetState from './SetState.js';
+import Throw from './Throw.js';
+import Validate from './Validate.js';
+import Wait from './Wait.js';
 
 export default {
   CallMethod,

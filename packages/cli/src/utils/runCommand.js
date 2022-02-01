@@ -14,21 +14,23 @@
   limitations under the License.
 */
 
-import errorHandler from './errorHandler';
-import startUp from './startUp';
+import errorHandler from './errorHandler.js';
+import startUp from './startUp.js';
 
-function runCommand(fn) {
-  async function run(options, command) {
-    const context = {};
-    try {
-      await startUp({ context, options, command });
-      const res = await fn({ context });
-      return res;
-    } catch (error) {
-      await errorHandler({ context, error });
+const runCommand =
+  ({ cliVersion }) =>
+  (fn) => {
+    async function run(options, command) {
+      const context = { cliVersion };
+      try {
+        await startUp({ context, options, command });
+        const res = await fn({ context });
+        return res;
+      } catch (error) {
+        await errorHandler({ context, error });
+      }
     }
-  }
-  return run;
-}
+    return run;
+  };
 
 export default runCommand;

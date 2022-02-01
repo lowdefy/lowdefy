@@ -14,59 +14,27 @@
   limitations under the License.
 */
 
-import { serializer, type } from '@lowdefy/helpers';
-
-function getRequestsOnBlock({ block, requests, pageId }) {
-  if (!type.isObject(block)) {
-    throw new Error(`Block is not an object on page "${pageId}".`);
-  }
-  if (!type.isNone(block.requests)) {
-    if (!type.isArray(block.requests)) {
-      throw new Error(`Requests is not an array on page "${pageId}".`);
-    }
-    block.requests.forEach((request) => {
-      requests.push(serializer.copy(request));
-      delete request.properties;
-    });
-  }
-  if (type.isObject(block.areas)) {
-    Object.keys(block.areas).forEach((key) => {
-      if (!type.isArray(block.areas[key].blocks)) {
-        throw new Error(
-          `Blocks is not an array on page "${pageId}", block "${block.blockId}", area "${key}".`
-        );
-      }
-      block.areas[key].blocks.forEach((blk) => {
-        getRequestsOnBlock({ block: blk, requests, pageId });
-      });
-    });
-  }
-}
+import { type } from '@lowdefy/helpers';
 
 async function writeRequestsOnPage({ page, context }) {
-  if (!type.isObject(page)) {
-    throw new Error(`Page is not an object.`);
-  }
-  const requests = [];
-  getRequestsOnBlock({ block: page, requests, pageId: page.pageId });
-
-  return requests.map(async (request) => {
-    await context.writeBuildArtifact({
-      filePath: `pages/${page.pageId}/requests/${request.contextId}/${request.requestId}.json`,
-      content: JSON.stringify(request, null, 2),
-    });
-  });
+  return Promise.all(
+    page.requests.map(async (request) => {
+      await context.writeBuildArtifact(
+        `pages/${page.pageId}/requests/${request.requestId}.json`,
+        JSON.stringify(request, null, 2)
+      );
+      delete request.properties;
+      delete request.type;
+      delete request.connectionId;
+      delete request.auth;
+    })
+  );
 }
 
 async function writeRequests({ components, context }) {
   if (type.isNone(components.pages)) return;
-  if (!type.isArray(components.pages)) {
-    throw new Error(`Pages is not an array.`);
-  }
   const writePromises = components.pages.map((page) => writeRequestsOnPage({ page, context }));
   return Promise.all(writePromises);
 }
-
-export { getRequestsOnBlock };
 
 export default writeRequests;

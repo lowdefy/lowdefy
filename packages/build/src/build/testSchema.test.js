@@ -1,9 +1,12 @@
 /*
   Copyright 2020-2021 Lowdefy, Inc
+
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
+
       http://www.apache.org/licenses/LICENSE-2.0
+
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -196,7 +199,7 @@ Action should have required property "type".
     ],
     [
       `Schema Error
-should be object
+must be object
 - pages
  - [0:page_1:PageHeaderMenu].blocks
   - [0:box_1:Box].areas.footer.blocks
@@ -204,7 +207,7 @@ should be object
     ],
     [
       `Schema Error
-should match some schema in anyOf
+must match a schema in anyOf
 - pages
  - [0:page_1:PageHeaderMenu].blocks
   - [0:box_1:Box].areas.footer.blocks
@@ -399,7 +402,7 @@ test('menus schema error', async () => {
     ['Schema not valid.'],
     [
       `Schema Error
-should NOT have additional properties
+must NOT have additional properties
 - menus
  - [0:default:_ERROR_MISSING_TYPE_].links
   - [0:_ERROR_MISSING_ID_:MenuLink]`,
@@ -420,7 +423,7 @@ MenuLink should have required property "id".
     ],
     [
       `Schema Error
-should match some schema in anyOf
+must match a schema in anyOf
 - menus
  - [0:default:_ERROR_MISSING_TYPE_].links
   - [0:_ERROR_MISSING_ID_:MenuLink]`,
@@ -441,7 +444,7 @@ MenuLink should have required property "type".
     ],
     [
       `Schema Error
-should match some schema in anyOf
+must match a schema in anyOf
 - menus
  - [0:default:_ERROR_MISSING_TYPE_].links
   - [1:menu-2:_ERROR_MISSING_TYPE_]`,

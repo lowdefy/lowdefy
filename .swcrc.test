@@ -1,0 +1,18 @@
+{
+  "jsc": {
+    "parser": {
+      "syntax": "ecmascript",
+      "jsx": true,
+      "dynamicImport": true
+    },
+    "target": "es2020",
+    "keepClassNames": true,
+    "transform": { "react": { "runtime": "automatic" } }
+  },
+  "module": {
+    "type": "es6",
+    "noInterop": true,
+    "ignoreDynamic": true
+  },
+  "sourceMaps": true
+}

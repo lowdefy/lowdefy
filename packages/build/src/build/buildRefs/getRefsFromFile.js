@@ -14,7 +14,7 @@
   limitations under the License.
 */
 import { type } from '@lowdefy/helpers';
-import makeRefDefinition from './makeRefDefinition';
+import makeRefDefinition from './makeRefDefinition.js';
 
 function getRefsFromFile(fileContent) {
   const foundRefs = [];

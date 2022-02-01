@@ -16,8 +16,9 @@
 
 import React from 'react';
 import { Row } from 'antd';
+import { blockDefaultProps } from '@lowdefy/block-utils';
+
 import gutterSetup from './gutterSetup.js';
-import { blockDefaultProps } from '@lowdefy/block-tools';
 
 const Area = ({ area, areaStyle, children, highlightBorders, id, makeCssClass }) => (
   <Row

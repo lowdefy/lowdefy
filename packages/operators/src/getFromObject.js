@@ -16,18 +16,7 @@
 
 import { applyArrayIndices, get, serializer, type } from '@lowdefy/helpers';
 
-import getFromOtherContext from './getFromOtherContext';
-
-function getFromObject({
-  params,
-  object,
-  context,
-  contexts,
-  arrayIndices,
-  operator,
-  location,
-  env,
-}) {
+function getFromObject({ params, object, arrayIndices, operator, location }) {
   if (params === true) params = { all: true };
   if (type.isString(params) || type.isInt(params)) params = { key: params };
   if (!type.isObject(params)) {
@@ -40,23 +29,6 @@ function getFromObject({
 
   if (params.key === null) return get(params, 'default', { default: null, copy: true });
 
-  if (params.contextId) {
-    if (env === 'node') {
-      throw new Error(
-        `Operator Error: Accessing a context using contextId is only available in a client environment. Received: ${JSON.stringify(
-          params
-        )} at ${location}.`
-      );
-    }
-    return getFromOtherContext({
-      arrayIndices,
-      context,
-      contexts,
-      location,
-      operator,
-      params,
-    });
-  }
   if (params.all === true) return serializer.copy(object);
   if (!type.isString(params.key) && !type.isInt(params.key)) {
     throw new Error(

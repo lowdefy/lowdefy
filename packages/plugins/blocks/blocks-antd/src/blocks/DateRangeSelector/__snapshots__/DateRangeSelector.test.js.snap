@@ -1,0 +1,2557 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render default - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  width: 100%;
+}
+
+.emotion-5 {
+  width: 100%;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="default"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="default_input"
+      title="default"
+    >
+      <span
+        class="emotion-3"
+      >
+        default
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="emotion-4"
+        >
+          <div
+            id="default_popup"
+          />
+          <div
+            class="ant-picker ant-picker-range emotion-5"
+          >
+            <div
+              class="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autocomplete="off"
+                id="default_input"
+                placeholder="Start Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              class="ant-picker-input"
+            >
+              <input
+                autocomplete="off"
+                placeholder="End Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-active-bar"
+              style="left: 0px; width: 0px; position: absolute;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.bordered: false - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  width: 100%;
+}
+
+.emotion-5 {
+  width: 100%;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="properties.bordered: false"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="properties.bordered: false_input"
+      title="properties.bordered: false"
+    >
+      <span
+        class="emotion-3"
+      >
+        properties.bordered: false
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="emotion-4"
+        >
+          <div
+            id="properties.bordered: false_popup"
+          />
+          <div
+            class="ant-picker ant-picker-range ant-picker-borderless emotion-5"
+          >
+            <div
+              class="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autocomplete="off"
+                id="properties.bordered: false_input"
+                placeholder="Start Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              class="ant-picker-input"
+            >
+              <input
+                autocomplete="off"
+                placeholder="End Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-active-bar"
+              style="left: 0px; width: 0px; position: absolute;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.disabledDates.dates - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  width: 100%;
+}
+
+.emotion-5 {
+  width: 100%;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="properties.disabledDates.dates"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="properties.disabledDates.dates_input"
+      title="properties.disabledDates.dates"
+    >
+      <span
+        class="emotion-3"
+      >
+        properties.disabledDates.dates
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="emotion-4"
+        >
+          <div
+            id="properties.disabledDates.dates_popup"
+          />
+          <div
+            class="ant-picker ant-picker-range emotion-5"
+          >
+            <div
+              class="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autocomplete="off"
+                id="properties.disabledDates.dates_input"
+                placeholder="Start Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              class="ant-picker-input"
+            >
+              <input
+                autocomplete="off"
+                placeholder="End Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-active-bar"
+              style="left: 0px; width: 0px; position: absolute;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.disabledDates.max - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  width: 100%;
+}
+
+.emotion-5 {
+  width: 100%;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="properties.disabledDates.max"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="properties.disabledDates.max_input"
+      title="properties.disabledDates.max"
+    >
+      <span
+        class="emotion-3"
+      >
+        properties.disabledDates.max
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="emotion-4"
+        >
+          <div
+            id="properties.disabledDates.max_popup"
+          />
+          <div
+            class="ant-picker ant-picker-range emotion-5"
+          >
+            <div
+              class="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autocomplete="off"
+                id="properties.disabledDates.max_input"
+                placeholder="Start Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              class="ant-picker-input"
+            >
+              <input
+                autocomplete="off"
+                placeholder="End Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-active-bar"
+              style="left: 0px; width: 0px; position: absolute;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.disabledDates.min - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  width: 100%;
+}
+
+.emotion-5 {
+  width: 100%;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="properties.disabledDates.min"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="properties.disabledDates.min_input"
+      title="properties.disabledDates.min"
+    >
+      <span
+        class="emotion-3"
+      >
+        properties.disabledDates.min
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="emotion-4"
+        >
+          <div
+            id="properties.disabledDates.min_popup"
+          />
+          <div
+            class="ant-picker ant-picker-range emotion-5"
+          >
+            <div
+              class="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autocomplete="off"
+                id="properties.disabledDates.min_input"
+                placeholder="Start Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              class="ant-picker-input"
+            >
+              <input
+                autocomplete="off"
+                placeholder="End Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-active-bar"
+              style="left: 0px; width: 0px; position: absolute;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.disabledDates.ranges - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  width: 100%;
+}
+
+.emotion-5 {
+  width: 100%;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="properties.disabledDates.ranges"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="properties.disabledDates.ranges_input"
+      title="properties.disabledDates.ranges"
+    >
+      <span
+        class="emotion-3"
+      >
+        properties.disabledDates.ranges
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="emotion-4"
+        >
+          <div
+            id="properties.disabledDates.ranges_popup"
+          />
+          <div
+            class="ant-picker ant-picker-range emotion-5"
+          >
+            <div
+              class="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autocomplete="off"
+                id="properties.disabledDates.ranges_input"
+                placeholder="Start Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              class="ant-picker-input"
+            >
+              <input
+                autocomplete="off"
+                placeholder="End Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-active-bar"
+              style="left: 0px; width: 0px; position: absolute;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.inputStyle: CSS style applied - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  width: 100%;
+}
+
+.emotion-5 {
+  width: 100%;
+  border: 1px solid red;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="properties.inputStyle: CSS style applied"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="properties.inputStyle: CSS style applied_input"
+      title="properties.inputStyle: CSS style applied"
+    >
+      <span
+        class="emotion-3"
+      >
+        properties.inputStyle: CSS style applied
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="emotion-4"
+        >
+          <div
+            id="properties.inputStyle: CSS style applied_popup"
+          />
+          <div
+            class="ant-picker ant-picker-range emotion-5"
+          >
+            <div
+              class="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autocomplete="off"
+                id="properties.inputStyle: CSS style applied_input"
+                placeholder="Start Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              class="ant-picker-input"
+            >
+              <input
+                autocomplete="off"
+                placeholder="End Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-active-bar"
+              style="left: 0px; width: 0px; position: absolute;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.title - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  width: 100%;
+}
+
+.emotion-5 {
+  width: 100%;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="properties.title"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="properties.title_input"
+      title="DateRangeSelector title"
+    >
+      <span
+        class="emotion-3"
+      >
+        DateRangeSelector title
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="emotion-4"
+        >
+          <div
+            id="properties.title_popup"
+          />
+          <div
+            class="ant-picker ant-picker-range emotion-5"
+          >
+            <div
+              class="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autocomplete="off"
+                id="properties.title_input"
+                placeholder="Start Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              class="ant-picker-input"
+            >
+              <input
+                autocomplete="off"
+                placeholder="End Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-active-bar"
+              style="left: 0px; width: 0px; position: absolute;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.allowClear: false - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  width: 100%;
+}
+
+.emotion-5 {
+  width: 100%;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="property.allowClear: false"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="property.allowClear: false_input"
+      title="property.allowClear: false"
+    >
+      <span
+        class="emotion-3"
+      >
+        property.allowClear: false
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="emotion-4"
+        >
+          <div
+            id="property.allowClear: false_popup"
+          />
+          <div
+            class="ant-picker ant-picker-range emotion-5"
+          >
+            <div
+              class="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autocomplete="off"
+                id="property.allowClear: false_input"
+                placeholder="Start Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              class="ant-picker-input"
+            >
+              <input
+                autocomplete="off"
+                placeholder="End Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-active-bar"
+              style="left: 0px; width: 0px; position: absolute;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.autoFocus: true - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  width: 100%;
+}
+
+.emotion-5 {
+  width: 100%;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="property.autoFocus: true"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="property.autoFocus: true_input"
+      title="property.autoFocus: true"
+    >
+      <span
+        class="emotion-3"
+      >
+        property.autoFocus: true
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="emotion-4"
+        >
+          <div
+            id="property.autoFocus: true_popup"
+          />
+          <div
+            class="ant-picker ant-picker-range emotion-5 ant-picker-focused"
+          >
+            <div
+              class="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autocomplete="off"
+                id="property.autoFocus: true_input"
+                placeholder="Start Date"
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              class="ant-picker-input"
+            >
+              <input
+                autocomplete="off"
+                placeholder="End Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-active-bar"
+              style="left: 0px; width: 0px; position: absolute;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.disabled: true - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  width: 100%;
+}
+
+.emotion-5 {
+  width: 100%;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="property.disabled: true"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="property.disabled: true_input"
+      title="property.disabled: true"
+    >
+      <span
+        class="emotion-3"
+      >
+        property.disabled: true
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="emotion-4"
+        >
+          <div
+            id="property.disabled: true_popup"
+          />
+          <div
+            class="ant-picker ant-picker-range emotion-5 ant-picker-disabled"
+          >
+            <div
+              class="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autocomplete="off"
+                disabled=""
+                id="property.disabled: true_input"
+                placeholder="Start Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              class="ant-picker-input"
+            >
+              <input
+                autocomplete="off"
+                disabled=""
+                placeholder="End Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-active-bar"
+              style="left: 0px; width: 0px; position: absolute;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.format: YYYY-MMM-DD - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  width: 100%;
+}
+
+.emotion-5 {
+  width: 100%;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="property.format: YYYY-MMM-DD"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="property.format: YYYY-MMM-DD_input"
+      title="property.format: YYYY-MMM-DD"
+    >
+      <span
+        class="emotion-3"
+      >
+        property.format: YYYY-MMM-DD
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="emotion-4"
+        >
+          <div
+            id="property.format: YYYY-MMM-DD_popup"
+          />
+          <div
+            class="ant-picker ant-picker-range emotion-5"
+          >
+            <div
+              class="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autocomplete="off"
+                id="property.format: YYYY-MMM-DD_input"
+                placeholder="Start Date"
+                readonly=""
+                size="13"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              class="ant-picker-input"
+            >
+              <input
+                autocomplete="off"
+                placeholder="End Date"
+                readonly=""
+                size="13"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-active-bar"
+              style="left: 0px; width: 0px; position: absolute;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.label align: right - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  width: 100%;
+}
+
+.emotion-5 {
+  width: 100%;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="property.label align: right"
+>
+  <div
+    class="ant-col ant-form-item-label emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="property.label align: right_input"
+      title="property.label align: right"
+    >
+      <span
+        class="emotion-3"
+      >
+        property.label align: right
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="emotion-4"
+        >
+          <div
+            id="property.label align: right_popup"
+          />
+          <div
+            class="ant-picker ant-picker-range emotion-5"
+          >
+            <div
+              class="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autocomplete="off"
+                id="property.label align: right_input"
+                placeholder="Start Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              class="ant-picker-input"
+            >
+              <input
+                autocomplete="off"
+                placeholder="End Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-active-bar"
+              style="left: 0px; width: 0px; position: absolute;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.label colon: true - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  width: 100%;
+}
+
+.emotion-5 {
+  width: 100%;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="property.label colon: true"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="property.label colon: true_input"
+      title="property.label colon: true"
+    >
+      <span
+        class="emotion-3"
+      >
+        property.label colon: true
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="emotion-4"
+        >
+          <div
+            id="property.label colon: true_popup"
+          />
+          <div
+            class="ant-picker ant-picker-range emotion-5"
+          >
+            <div
+              class="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autocomplete="off"
+                id="property.label colon: true_input"
+                placeholder="Start Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              class="ant-picker-input"
+            >
+              <input
+                autocomplete="off"
+                placeholder="End Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-active-bar"
+              style="left: 0px; width: 0px; position: absolute;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.label disabled: true - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  width: 100%;
+}
+
+.emotion-2 {
+  width: 100%;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="property.label disabled: true"
+>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="emotion-1"
+        >
+          <div
+            id="property.label disabled: true_popup"
+          />
+          <div
+            class="ant-picker ant-picker-range emotion-2"
+          >
+            <div
+              class="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autocomplete="off"
+                id="property.label disabled: true_input"
+                placeholder="Start Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              class="ant-picker-input"
+            >
+              <input
+                autocomplete="off"
+                placeholder="End Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-active-bar"
+              style="left: 0px; width: 0px; position: absolute;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.label extra: extra text added - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  width: 100%;
+}
+
+.emotion-5 {
+  width: 100%;
+}
+
+.emotion-6 {
+  margin-top: 0;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="property.label extra: extra text added"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="property.label extra: extra text added_input"
+      title="property.label extra: extra text added"
+    >
+      <span
+        class="emotion-3"
+      >
+        property.label extra: extra text added
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="emotion-4"
+        >
+          <div
+            id="property.label extra: extra text added_popup"
+          />
+          <div
+            class="ant-picker ant-picker-range emotion-5"
+          >
+            <div
+              class="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autocomplete="off"
+                id="property.label extra: extra text added_input"
+                placeholder="Start Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              class="ant-picker-input"
+            >
+              <input
+                autocomplete="off"
+                placeholder="End Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-active-bar"
+              style="left: 0px; width: 0px; position: absolute;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="ant-form-item-explain ant-form-item-extra emotion-6"
+    >
+      <span
+        class="emotion-3"
+      >
+        extra text added
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.label inline: true - value[0] 1`] = `
+.emotion-0 {
+  -webkit-box-flex-wrap: inherit;
+  -webkit-flex-wrap: inherit;
+  -ms-flex-wrap: inherit;
+  flex-wrap: inherit;
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  overflow: inherit;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  width: 100%;
+}
+
+.emotion-5 {
+  width: 100%;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="property.label inline: true"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1"
+    style="flex: 0 1 auto;"
+  >
+    <label
+      class="emotion-2"
+      for="property.label inline: true_input"
+      title="property.label inline: true"
+    >
+      <span
+        class="emotion-3"
+      >
+        property.label inline: true
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control"
+    style="flex: 1 1 auto;"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="emotion-4"
+        >
+          <div
+            id="property.label inline: true_popup"
+          />
+          <div
+            class="ant-picker ant-picker-range emotion-5"
+          >
+            <div
+              class="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autocomplete="off"
+                id="property.label inline: true_input"
+                placeholder="Start Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              class="ant-picker-input"
+            >
+              <input
+                autocomplete="off"
+                placeholder="End Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-active-bar"
+              style="left: 0px; width: 0px; position: absolute;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.label span: 5 - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  width: 100%;
+}
+
+.emotion-5 {
+  width: 100%;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="property.label span: 5"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24 ant-col-md-5"
+  >
+    <label
+      class="emotion-2"
+      for="property.label span: 5_input"
+      title="property.label span: 5"
+    >
+      <span
+        class="emotion-3"
+      >
+        property.label span: 5
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24 ant-col-md-19"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="emotion-4"
+        >
+          <div
+            id="property.label span: 5_popup"
+          />
+          <div
+            class="ant-picker ant-picker-range emotion-5"
+          >
+            <div
+              class="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autocomplete="off"
+                id="property.label span: 5_input"
+                placeholder="Start Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              class="ant-picker-input"
+            >
+              <input
+                autocomplete="off"
+                placeholder="End Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-active-bar"
+              style="left: 0px; width: 0px; position: absolute;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.placeholder: - Start Date - End Date - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  width: 100%;
+}
+
+.emotion-5 {
+  width: 100%;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="property.placeholder: - Start Date - End Date"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="property.placeholder: - Start Date - End Date_input"
+      title="property.placeholder: - Start Date - End Date"
+    >
+      <span
+        class="emotion-3"
+      >
+        property.placeholder: - Start Date - End Date
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="emotion-4"
+        >
+          <div
+            id="property.placeholder: - Start Date - End Date_popup"
+          />
+          <div
+            class="ant-picker ant-picker-range emotion-5"
+          >
+            <div
+              class="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autocomplete="off"
+                id="property.placeholder: - Start Date - End Date_input"
+                placeholder="From this Start Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              class="ant-picker-input"
+            >
+              <input
+                autocomplete="off"
+                placeholder="To this End Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-active-bar"
+              style="left: 0px; width: 0px; position: absolute;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.separator: ǁ - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  width: 100%;
+}
+
+.emotion-5 {
+  width: 100%;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="property.separator: ǁ"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="property.separator: ǁ_input"
+      title="property.separator: ǁ"
+    >
+      <span
+        class="emotion-3"
+      >
+        property.separator: ǁ
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="emotion-4"
+        >
+          <div
+            id="property.separator: ǁ_popup"
+          />
+          <div
+            class="ant-picker ant-picker-range emotion-5"
+          >
+            <div
+              class="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autocomplete="off"
+                id="property.separator: ǁ_input"
+                placeholder="Start Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-range-separator"
+            >
+              ǁ
+            </div>
+            <div
+              class="ant-picker-input"
+            >
+              <input
+                autocomplete="off"
+                placeholder="End Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-active-bar"
+              style="left: 0px; width: 0px; position: absolute;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.size: large - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 40px;
+}
+
+.emotion-4 {
+  width: 100%;
+}
+
+.emotion-5 {
+  width: 100%;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="property.size: large"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="property.size: large_input"
+      title="property.size: large"
+    >
+      <span
+        class="emotion-3"
+      >
+        property.size: large
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="emotion-4"
+        >
+          <div
+            id="property.size: large_popup"
+          />
+          <div
+            class="ant-picker ant-picker-range ant-picker-large emotion-5"
+          >
+            <div
+              class="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autocomplete="off"
+                id="property.size: large_input"
+                placeholder="Start Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              class="ant-picker-input"
+            >
+              <input
+                autocomplete="off"
+                placeholder="End Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-active-bar"
+              style="left: 0px; width: 0px; position: absolute;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.size: small - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 0;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 24px;
+}
+
+.emotion-4 {
+  width: 100%;
+}
+
+.emotion-5 {
+  width: 100%;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="property.size: small"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="property.size: small_input"
+      title="property.size: small"
+    >
+      <span
+        class="emotion-3"
+      >
+        property.size: small
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="emotion-4"
+        >
+          <div
+            id="property.size: small_popup"
+          />
+          <div
+            class="ant-picker ant-picker-range ant-picker-small emotion-5"
+          >
+            <div
+              class="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autocomplete="off"
+                id="property.size: small_input"
+                placeholder="Start Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              class="ant-picker-input"
+            >
+              <input
+                autocomplete="off"
+                placeholder="End Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-active-bar"
+              style="left: 0px; width: 0px; position: absolute;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.suffixIcon Red: CalendarOutlined - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  width: 100%;
+}
+
+.emotion-5 {
+  width: 100%;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="property.suffixIcon Red: CalendarOutlined"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="property.suffixIcon Red: CalendarOutlined_input"
+      title="property.suffixIcon Red: CalendarOutlined"
+    >
+      <span
+        class="emotion-3"
+      >
+        property.suffixIcon Red: CalendarOutlined
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="emotion-4"
+        >
+          <div
+            id="property.suffixIcon Red: CalendarOutlined_popup"
+          />
+          <div
+            class="ant-picker ant-picker-range emotion-5"
+          >
+            <div
+              class="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autocomplete="off"
+                id="property.suffixIcon Red: CalendarOutlined_input"
+                placeholder="Start Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              class="ant-picker-input"
+            >
+              <input
+                autocomplete="off"
+                placeholder="End Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-active-bar"
+              style="left: 0px; width: 0px; position: absolute;"
+            />
+            <span
+              class="ant-picker-suffix"
+            >
+              <svg
+                class="emotion-3"
+                data-testid="AiOutlineExclamationCircle"
+                id="property.suffixIcon Red: CalendarOutlined_suffixIcon"
+              />
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.suffixIcon: CalendarOutlined - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  width: 100%;
+}
+
+.emotion-5 {
+  width: 100%;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="property.suffixIcon: CalendarOutlined"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="property.suffixIcon: CalendarOutlined_input"
+      title="property.suffixIcon: CalendarOutlined"
+    >
+      <span
+        class="emotion-3"
+      >
+        property.suffixIcon: CalendarOutlined
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          class="emotion-4"
+        >
+          <div
+            id="property.suffixIcon: CalendarOutlined_popup"
+          />
+          <div
+            class="ant-picker ant-picker-range emotion-5"
+          >
+            <div
+              class="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autocomplete="off"
+                id="property.suffixIcon: CalendarOutlined_input"
+                placeholder="Start Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              class="ant-picker-input"
+            >
+              <input
+                autocomplete="off"
+                placeholder="End Date"
+                readonly=""
+                size="12"
+                value=""
+              />
+            </div>
+            <div
+              class="ant-picker-active-bar"
+              style="left: 0px; width: 0px; position: absolute;"
+            />
+            <span
+              class="ant-picker-suffix"
+            >
+              <svg
+                class="emotion-3"
+                data-testid="AiOutlineExclamationCircle"
+                id="property.suffixIcon: CalendarOutlined_suffixIcon"
+              />
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Test Schema default 1`] = `true`;
+
+exports[`Test Schema default 2`] = `null`;
+
+exports[`Test Schema properties.bordered: false 1`] = `true`;
+
+exports[`Test Schema properties.bordered: false 2`] = `null`;
+
+exports[`Test Schema properties.disabledDates.dates 1`] = `true`;
+
+exports[`Test Schema properties.disabledDates.dates 2`] = `null`;
+
+exports[`Test Schema properties.disabledDates.max 1`] = `true`;
+
+exports[`Test Schema properties.disabledDates.max 2`] = `null`;
+
+exports[`Test Schema properties.disabledDates.min 1`] = `true`;
+
+exports[`Test Schema properties.disabledDates.min 2`] = `null`;
+
+exports[`Test Schema properties.disabledDates.ranges 1`] = `true`;
+
+exports[`Test Schema properties.disabledDates.ranges 2`] = `null`;
+
+exports[`Test Schema properties.inputStyle: CSS style applied 1`] = `true`;
+
+exports[`Test Schema properties.inputStyle: CSS style applied 2`] = `null`;
+
+exports[`Test Schema properties.title 1`] = `true`;
+
+exports[`Test Schema properties.title 2`] = `null`;
+
+exports[`Test Schema property.allowClear: false 1`] = `true`;
+
+exports[`Test Schema property.allowClear: false 2`] = `null`;
+
+exports[`Test Schema property.autoFocus: true 1`] = `true`;
+
+exports[`Test Schema property.autoFocus: true 2`] = `null`;
+
+exports[`Test Schema property.disabled: true 1`] = `true`;
+
+exports[`Test Schema property.disabled: true 2`] = `null`;
+
+exports[`Test Schema property.format: YYYY-MMM-DD 1`] = `true`;
+
+exports[`Test Schema property.format: YYYY-MMM-DD 2`] = `null`;
+
+exports[`Test Schema property.label align: right 1`] = `true`;
+
+exports[`Test Schema property.label align: right 2`] = `null`;
+
+exports[`Test Schema property.label colon: true 1`] = `true`;
+
+exports[`Test Schema property.label colon: true 2`] = `null`;
+
+exports[`Test Schema property.label disabled: true 1`] = `true`;
+
+exports[`Test Schema property.label disabled: true 2`] = `null`;
+
+exports[`Test Schema property.label extra: extra text added 1`] = `true`;
+
+exports[`Test Schema property.label extra: extra text added 2`] = `null`;
+
+exports[`Test Schema property.label inline: true 1`] = `true`;
+
+exports[`Test Schema property.label inline: true 2`] = `null`;
+
+exports[`Test Schema property.label span: 5 1`] = `true`;
+
+exports[`Test Schema property.label span: 5 2`] = `null`;
+
+exports[`Test Schema property.placeholder: - Start Date - End Date 1`] = `true`;
+
+exports[`Test Schema property.placeholder: - Start Date - End Date 2`] = `null`;
+
+exports[`Test Schema property.separator: ǁ 1`] = `true`;
+
+exports[`Test Schema property.separator: ǁ 2`] = `null`;
+
+exports[`Test Schema property.size: large 1`] = `true`;
+
+exports[`Test Schema property.size: large 2`] = `null`;
+
+exports[`Test Schema property.size: small 1`] = `true`;
+
+exports[`Test Schema property.size: small 2`] = `null`;
+
+exports[`Test Schema property.suffixIcon Red: CalendarOutlined 1`] = `true`;
+
+exports[`Test Schema property.suffixIcon Red: CalendarOutlined 2`] = `null`;
+
+exports[`Test Schema property.suffixIcon: CalendarOutlined 1`] = `true`;
+
+exports[`Test Schema property.suffixIcon: CalendarOutlined 2`] = `null`;

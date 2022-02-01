@@ -59,6 +59,12 @@ _ref:
 
       A transformer is a JavaScript function that receives the result of the `_ref` operator, and its `vars` as arguments. The value returned by this function will be included in the configuration as the final result of the `_ref` operator. The `transformer` argument should be the file path (relative to the root of the project) to a JavaScript file that exports a transformer function.
 
+      ###### CommonJS and ES Modules
+
+      Both [CommonJS](https://nodejs.org/api/modules.html) and [ES Modules](https://nodejs.org/api/esm.html) are supported for in resolver and transformer functions. By default the functions are imported as CommonJs modules, and the function should be exported as a default export (`module.exports = transformer`). Files can also use the `.cjs` file extension to indicate they are CommonJs modules.
+
+      To use ES Modules, either use files with `.mjs` file extension, or add a `package.json` in the project directory file with `"type": "module"` set. When using ES Modules, the functions should also be a default export (`export default transformer;`)
+
     arguments: |
       ###### string
       The file path to the referenced file, from the root of the project directory.
@@ -170,8 +176,8 @@ _ref:
 
       ```js
       // resolvers/useLocalOrSharedConfig.js
-      const fs = require('fs')
-      const path = require('path')
+      const fs = require('fs');
+      const path = require('path');
       const { promisify } = require('util');
 
       const readFilePromise = promisify(fs.readFile);
@@ -229,4 +235,32 @@ _ref:
         - _ref:
             path: pages/page1.yaml
             transformer: transformers/addFooter.js
+      ```
+      ###### Using ES Modules with `.mjs` file extension:
+
+      ```js
+      // resolvers/useLocalOrSharedConfig.mjs
+      import fs from 'fs';
+      import path from 'path';
+      import { promisify } from 'util';
+
+      const readFilePromise = promisify(fs.readFile);
+
+      async function useLocalOrSharedConfig(refPath, vars, context) {
+        let fileContent
+        try {
+          fileContent =  await readFilePromise(path.resolve(refPath), 'utf8');
+          return fileContent;
+        } catch (error) {
+          if (error.code === 'ENOENT') {
+            fileContent = readFilePromise(path.resolve('../shared', refPath), 'utf8');
+            return fileContent;
+          }
+          throw error;
+        }
+
+
+      }
+
+      export default useLocalOrSharedConfig;
       ```

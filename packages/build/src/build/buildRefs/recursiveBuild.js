@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import getRefContent from './getRefContent';
-import getRefsFromFile from './getRefsFromFile';
-import populateRefs from './populateRefs';
-import runTransformer from './runTransformer';
+import getRefContent from './getRefContent.js';
+import getRefsFromFile from './getRefsFromFile.js';
+import populateRefs from './populateRefs.js';
+import runTransformer from './runTransformer.js';
 
 async function recursiveParseFile({ context, refDef, count, referencedFrom }) {
   // TODO: Maybe it would be better to detect a cycle, since this is the real issue here?

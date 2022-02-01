@@ -23,10 +23,7 @@ async function writeGlobal({ components, context }) {
   if (!type.isObject(components.global)) {
     throw new Error('Global is not an object.');
   }
-  await context.writeBuildArtifact({
-    filePath: 'global.json',
-    content: JSON.stringify(components.global, null, 2),
-  });
+  await context.writeBuildArtifact('global.json', JSON.stringify(components.global, null, 2));
 }
 
 export default writeGlobal;

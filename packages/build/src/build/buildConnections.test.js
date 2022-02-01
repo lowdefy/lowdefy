@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import buildConnections from './buildConnections';
-import testContext from '../test/testContext';
+import buildConnections from './buildConnections.js';
+import testContext from '../test/testContext.js';
 
 const context = testContext();
 
@@ -40,9 +40,11 @@ test('buildConnections', async () => {
     connections: [
       {
         id: 'connection1',
+        type: 'ConnectionType',
       },
       {
         id: 'connection2',
+        type: 'ConnectionType',
       },
     ],
   };
@@ -51,10 +53,55 @@ test('buildConnections', async () => {
     {
       id: 'connection:connection1',
       connectionId: 'connection1',
+      type: 'ConnectionType',
     },
     {
       id: 'connection:connection2',
       connectionId: 'connection2',
+      type: 'ConnectionType',
     },
   ]);
+});
+
+test('throw on missing id', async () => {
+  const components = {
+    connections: [{ type: 'ConnectionType' }],
+  };
+  await expect(buildConnections({ components, context })).rejects.toThrow('Connection id missing.');
+});
+
+test('connection id is not a string', async () => {
+  const components = {
+    connections: [{ id: 1 }],
+  };
+  await expect(buildConnections({ components, context })).rejects.toThrow(
+    'Connection id is not a string. Received 1.'
+  );
+});
+
+test('throw on missing type', async () => {
+  const components = {
+    connections: [{ id: 'connection1' }],
+  };
+  await expect(buildConnections({ components, context })).rejects.toThrow(
+    'Connection type is not a string at connection "connection1". Received undefined.'
+  );
+});
+
+test('throw on Duplicate ids', async () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'ConnectionType',
+      },
+      {
+        id: 'connection1',
+        type: 'ConnectionType',
+      },
+    ],
+  };
+  await expect(buildConnections({ components, context })).rejects.toThrow(
+    'Duplicate connectionId "connection1".'
+  );
 });

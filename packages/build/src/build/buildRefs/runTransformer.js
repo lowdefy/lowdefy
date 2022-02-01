@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getUserJavascriptFunction from './getUserJavascriptFunction';
+import getUserJavascriptFunction from './getUserJavascriptFunction.js';
 
 async function runTransformer({ context, parsedFile, refDef }) {
   if (refDef.transformer) {

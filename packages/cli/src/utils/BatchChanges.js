@@ -16,14 +16,18 @@
 
 class BatchChanges {
   constructor({ fn, context, minDelay }) {
-    this.fn = fn;
+    this._call = this._call.bind(this);
+    this.args = [];
     this.context = context;
     this.delay = minDelay || 500;
+    this.fn = fn;
     this.minDelay = minDelay || 500;
-    this._call = this._call.bind(this);
+    this.repeat = false;
+    this.running = false;
   }
 
-  newChange() {
+  newChange(...args) {
+    this.args.push(args);
     this.delay = this.minDelay;
     this._startTimer();
   }
@@ -32,16 +36,29 @@ class BatchChanges {
     if (this.timer) {
       clearTimeout(this.timer);
     }
-    this.timer = setTimeout(this._call, this.delay);
+    if (this.running) {
+      this.repeat = true;
+    } else {
+      this.timer = setTimeout(this._call, this.delay);
+    }
   }
 
   async _call() {
+    this.running = true;
     try {
-      await this.fn();
+      const args = this.args;
+      this.args = [];
+      await this.fn(args);
+      this.running = false;
+      if (this.repeat) {
+        this.repeat = false;
+        this._call();
+      }
     } catch (error) {
-      this.context.print.error(error.message, { timestamp: true });
+      this.running = false;
+      this.context.print.error(error.message);
       this.delay *= 2;
-      this.context.print.warn(`Retrying in ${this.delay / 1000}s.`, { timestamp: true });
+      this.context.print.warn(`Retrying in ${this.delay / 1000}s.`);
       this._startTimer();
     }
   }
