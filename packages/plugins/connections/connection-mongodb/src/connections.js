@@ -14,13 +14,4 @@
   limitations under the License.
 */
 
-export default {
-  import: {
-    path: 'connections/MongoDBCollection/MongoDBDeleteMany/MongoDBDeleteMany.js',
-    schema: 'connections/MongoDBCollection/MongoDBDeleteMany/MongoDBDeleteManySchema.json',
-  },
-  meta: {
-    checkRead: false,
-    checkWrite: true,
-  },
-};
+export { default as MongoDBCollection } from './connections/MongoDBCollection/MongoDBCollection.js';

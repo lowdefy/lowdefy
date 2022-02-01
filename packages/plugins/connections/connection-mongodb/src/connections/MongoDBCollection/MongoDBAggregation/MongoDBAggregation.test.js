@@ -15,12 +15,11 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import mongoDBAggregation from './MongoDBAggregation.js';
+import MongoDBAggregation from './MongoDBAggregation.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
-import requestIndex from './index.js';
-import schema from './MongoDBAggregationSchema.json';
 
-const { checkRead, checkWrite } = requestIndex.meta;
+const { checkRead, checkWrite } = MongoDBAggregation.meta;
+const schema = MongoDBAggregation.schema;
 
 const pipeline = [
   {
@@ -52,7 +51,7 @@ test('aggregation', async () => {
     collection,
     read: true,
   };
-  const res = await mongoDBAggregation({ request, connection });
+  const res = await MongoDBAggregation({ request, connection });
   expect(res).toEqual([
     {
       _id: 1,
@@ -69,7 +68,7 @@ test('aggregation connection error', async () => {
     collection,
     read: true,
   };
-  await expect(mongoDBAggregation({ request, connection })).rejects.toThrow(
+  await expect(MongoDBAggregation({ request, connection })).rejects.toThrow(
     'Invalid connection string'
   );
 });
@@ -82,7 +81,7 @@ test('aggregation mongodb error', async () => {
     collection,
     read: true,
   };
-  await expect(mongoDBAggregation({ request, connection })).rejects.toThrow(
+  await expect(MongoDBAggregation({ request, connection })).rejects.toThrow(
     "Unrecognized pipeline stage name: '$badStage'"
   );
 });
@@ -111,7 +110,7 @@ test('aggregation match dates', async () => {
     collection,
     read: true,
   };
-  const res = await mongoDBAggregation({ request, connection });
+  const res = await MongoDBAggregation({ request, connection });
   expect(res).toEqual([
     {
       _id: 2,
@@ -159,7 +158,7 @@ test('$out is not allowed with write undefined', async () => {
     databaseName,
     collection,
   };
-  await expect(mongoDBAggregation({ request, connection })).rejects.toThrow(
+  await expect(MongoDBAggregation({ request, connection })).rejects.toThrow(
     'Connection does not allow writes and aggregation pipeline contains a "$merge" or "$out" stage.'
   );
 });
@@ -172,7 +171,7 @@ test('$out is not allowed with write false', async () => {
     collection,
     write: false,
   };
-  await expect(mongoDBAggregation({ request, connection })).rejects.toThrow(
+  await expect(MongoDBAggregation({ request, connection })).rejects.toThrow(
     'Connection does not allow writes and aggregation pipeline contains a "$merge" or "$out" stage.'
   );
 });
@@ -185,7 +184,7 @@ test('$out is allowed with write true', async () => {
     collection,
     write: true,
   };
-  const res = await mongoDBAggregation({ request, connection });
+  const res = await MongoDBAggregation({ request, connection });
   expect(res).toEqual([]);
 });
 
@@ -196,7 +195,7 @@ test('$merge is not allowed with write undefined', async () => {
     databaseName,
     collection,
   };
-  await expect(mongoDBAggregation({ request, connection })).rejects.toThrow(
+  await expect(MongoDBAggregation({ request, connection })).rejects.toThrow(
     'Connection does not allow writes and aggregation pipeline contains a "$merge" or "$out" stage.'
   );
 });
@@ -209,7 +208,7 @@ test('$merge is not allowed with write false', async () => {
     collection,
     write: false,
   };
-  await expect(mongoDBAggregation({ request, connection })).rejects.toThrow(
+  await expect(MongoDBAggregation({ request, connection })).rejects.toThrow(
     'Connection does not allow writes and aggregation pipeline contains a "$merge" or "$out" stage.'
   );
 });

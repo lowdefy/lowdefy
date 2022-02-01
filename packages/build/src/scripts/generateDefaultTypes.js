@@ -29,6 +29,7 @@ const defaultPackages = [
   '@lowdefy/connection-axios-http',
   '@lowdefy/connection-elasticsearch',
   '@lowdefy/connection-knex',
+  '@lowdefy/connection-mongodb',
   '@lowdefy/connection-redis',
   '@lowdefy/operators-change-case',
   // '@lowdefy/operators-diff',

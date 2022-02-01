@@ -3504,6 +3504,7 @@ __metadata:
     "@lowdefy/connection-axios-http": 4.0.0-alpha.6
     "@lowdefy/connection-elasticsearch": 4.0.0-alpha.6
     "@lowdefy/connection-knex": 4.0.0-alpha.6
+    "@lowdefy/connection-mongodb": 4.0.0-alpha.6
     "@lowdefy/connection-redis": 4.0.0-alpha.6
     "@lowdefy/helpers": 4.0.0-alpha.6
     "@lowdefy/node-utils": 4.0.0-alpha.6
@@ -3591,7 +3592,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-mongodb@workspace:packages/plugins/connections/connection-mongodb":
+"@lowdefy/connection-mongodb@4.0.0-alpha.6, @lowdefy/connection-mongodb@workspace:packages/plugins/connections/connection-mongodb":
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-mongodb@workspace:packages/plugins/connections/connection-mongodb"
   dependencies:
