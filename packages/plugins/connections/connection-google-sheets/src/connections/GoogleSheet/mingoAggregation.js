@@ -16,18 +16,22 @@
 
 import { type } from '@lowdefy/helpers';
 import mingo from 'mingo';
-import { useOperators, OperatorType } from 'mingo/core';
-import * as accumulatorOperators from 'mingo/operators/accumulator';
-import * as expressionOperators from 'mingo/operators/expression';
-import * as pipelineOperators from 'mingo/operators/pipeline';
-import * as queryOperators from 'mingo/operators/query';
-import * as projectionOperators from 'mingo/operators/projection';
+import { useOperators, OperatorType } from 'mingo/core.js';
+import * as accumulatorOperators from 'mingo/operators/accumulator/index.js';
+import * as expressionOperators from 'mingo/operators/expression/index.js';
+import * as pipelineOperators from 'mingo/operators/pipeline/index.js';
+import * as queryOperators from 'mingo/operators/query/index.js';
+import * as projectionOperators from 'mingo/operators/projection/index.js';
 
-useOperators(OperatorType.ACCUMULATOR, accumulatorOperators);
-useOperators(OperatorType.EXPRESSION, expressionOperators);
-useOperators(OperatorType.PIPELINE, pipelineOperators);
-useOperators(OperatorType.PROJECTION, queryOperators);
-useOperators(OperatorType.QUERY, projectionOperators);
+// "import * as" is returning different object structures when the connection is being
+// imported in the build or when running the tests.
+// So we check for the a default object with all the named exports, otherwise the
+// returned object has all the named exports.
+useOperators(OperatorType.ACCUMULATOR, accumulatorOperators.default || accumulatorOperators);
+useOperators(OperatorType.EXPRESSION, expressionOperators.default || expressionOperators);
+useOperators(OperatorType.PIPELINE, pipelineOperators.default || pipelineOperators);
+useOperators(OperatorType.QUERY, queryOperators.default || queryOperators);
+useOperators(OperatorType.PROJECTION, projectionOperators.default || projectionOperators);
 
 function mingoAggregation({ input = [], pipeline = [] }) {
   if (!type.isArray(input)) {

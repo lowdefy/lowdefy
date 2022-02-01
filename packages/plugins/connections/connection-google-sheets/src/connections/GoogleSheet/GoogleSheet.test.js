@@ -16,7 +16,8 @@
 
 import { validate } from '@lowdefy/ajv';
 import GoogleSheet from './GoogleSheet.js';
-import schema from './GoogleSheetSchema.json';
+
+const schema = GoogleSheet.schema;
 
 test('All requests are present', () => {
   expect(GoogleSheet.requests.GoogleSheetAppendOne).toBeDefined();

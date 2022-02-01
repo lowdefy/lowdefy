@@ -17,8 +17,9 @@
 import getSheet from '../getSheet.js';
 import cleanRows from '../cleanRows.js';
 import { transformWrite } from '../transformTypes.js';
+import schema from './schema.js';
 
-async function googleSheetAppendOne({ request, connection }) {
+async function GoogleSheetAppendOne({ request, connection }) {
   const { row, options = {} } = request;
   const { raw } = options;
   const sheet = await getSheet({ connection });
@@ -32,4 +33,10 @@ async function googleSheetAppendOne({ request, connection }) {
   };
 }
 
-export default googleSheetAppendOne;
+GoogleSheetAppendOne.schema = schema;
+GoogleSheetAppendOne.meta = {
+  checkRead: false,
+  checkWrite: true,
+};
+
+export default GoogleSheetAppendOne;

@@ -17,8 +17,9 @@
 import getSheet from '../getSheet.js';
 import { transformRead, transformWrite } from '../transformTypes.js';
 import mingoFilter from '../mingoFilter.js';
+import schema from './schema.js';
 
-async function googleSheetUpdateMany({ request, connection }) {
+async function GoogleSheetUpdateMany({ request, connection }) {
   const { filter, update, options = {} } = request;
   const { limit, skip, raw } = options;
   const sheet = await getSheet({ connection });
@@ -41,4 +42,10 @@ async function googleSheetUpdateMany({ request, connection }) {
   };
 }
 
-export default googleSheetUpdateMany;
+GoogleSheetUpdateMany.schema = schema;
+GoogleSheetUpdateMany.meta = {
+  checkRead: false,
+  checkWrite: true,
+};
+
+export default GoogleSheetUpdateMany;

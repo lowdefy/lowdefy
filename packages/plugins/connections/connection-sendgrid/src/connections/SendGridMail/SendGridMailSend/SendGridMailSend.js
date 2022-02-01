@@ -16,12 +16,12 @@
 
 import sendgrid from '@sendgrid/mail';
 import { type } from '@lowdefy/helpers';
-import schema from './SendGridMailSendSchema.json';
+import schema from './schema.js';
 
 // https://sendgrid.api-docs.io/v3.0/how-to-use-the-sendgrid-v3-api/api-authentication
 // https://github.com/sendgrid/sendgrid-nodejs/blob/master/docs/use-cases/README.md#email-use-cases
 
-async function sendGridMailSend({ request, connection }) {
+async function SendGridMailSend({ request, connection }) {
   const { apiKey, from, templateId, mailSettings } = connection;
   sendgrid.setApiKey(apiKey);
   const messages = (type.isArray(request) ? request : [request]).map((msg) => ({
@@ -41,4 +41,10 @@ async function sendGridMailSend({ request, connection }) {
   return { response: 'Mail sent successfully' };
 }
 
-export default sendGridMailSend;
+SendGridMailSend.schema = schema;
+SendGridMailSend.meta = {
+  checkRead: false,
+  checkWrite: false,
+};
+
+export default SendGridMailSend;

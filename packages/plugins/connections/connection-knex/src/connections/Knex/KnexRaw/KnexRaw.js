@@ -15,8 +15,9 @@
 */
 
 import knex from 'knex';
+import schema from './schema.js';
 
-async function knexRaw({ request, connection }) {
+async function KnexRaw({ request, connection }) {
   const client = knex(connection);
   const res = await client.raw(request.query, request.parameters);
   Object.keys(res).forEach((key) => {
@@ -27,4 +28,10 @@ async function knexRaw({ request, connection }) {
   return res;
 }
 
-export default knexRaw;
+KnexRaw.schema = schema;
+KnexRaw.meta = {
+  checkRead: false,
+  checkWrite: false,
+};
+
+export default KnexRaw;
