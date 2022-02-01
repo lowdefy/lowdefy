@@ -5429,7 +5429,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-transform-yaml", "npm:1.0.0"],
             ["react", "npm:18.0.0-alpha-327d5c484-20211106"],
             ["react-dom", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:18.0.0-alpha-327d5c484-20211106"],
-            ["react-markdown", "virtual:5f524c741247cab5c10daa0e8e15ac36ad181d1b577a348511587c8a60cfabb8ae502afcaa3d6382784b87fb0c47cdaa2ab4a0769887b98e8e70603a2469c5de#npm:7.1.1"],
+            ["react-markdown", "virtual:5f524c741247cab5c10daa0e8e15ac36ad181d1b577a348511587c8a60cfabb8ae502afcaa3d6382784b87fb0c47cdaa2ab4a0769887b98e8e70603a2469c5de#npm:8.0.0"],
             ["react-syntax-highlighter", "virtual:5f524c741247cab5c10daa0e8e15ac36ad181d1b577a348511587c8a60cfabb8ae502afcaa3d6382784b87fb0c47cdaa2ab4a0769887b98e8e70603a2469c5de#npm:15.4.5"],
             ["rehype-raw", "npm:6.1.1"],
             ["remark-gfm", "npm:3.0.1"]
@@ -14890,15 +14890,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["mdast-util-to-hast", [
-        ["npm:11.3.0", {
-          "packageLocation": "./.yarn/cache/mdast-util-to-hast-npm-11.3.0-e0e49d7416-a968d03461.zip/node_modules/mdast-util-to-hast/",
+        ["npm:12.1.1", {
+          "packageLocation": "./.yarn/cache/mdast-util-to-hast-npm-12.1.1-60f8c34910-4c5a73e046.zip/node_modules/mdast-util-to-hast/",
           "packageDependencies": [
-            ["mdast-util-to-hast", "npm:11.3.0"],
+            ["mdast-util-to-hast", "npm:12.1.1"],
             ["@types/hast", "npm:2.3.4"],
             ["@types/mdast", "npm:3.0.10"],
             ["@types/mdurl", "npm:1.0.2"],
             ["mdast-util-definitions", "npm:5.1.0"],
             ["mdurl", "npm:1.0.1"],
+            ["micromark-util-sanitize-uri", "npm:1.0.0"],
             ["unist-builder", "npm:3.0.0"],
             ["unist-util-generated", "npm:2.0.0"],
             ["unist-util-position", "npm:4.0.1"],
@@ -18929,17 +18930,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["react-markdown", [
-        ["npm:7.1.1", {
-          "packageLocation": "./.yarn/cache/react-markdown-npm-7.1.1-99b3af7151-108759c9e1.zip/node_modules/react-markdown/",
+        ["npm:8.0.0", {
+          "packageLocation": "./.yarn/cache/react-markdown-npm-8.0.0-3d725f3756-61412ecd18.zip/node_modules/react-markdown/",
           "packageDependencies": [
-            ["react-markdown", "npm:7.1.1"]
+            ["react-markdown", "npm:8.0.0"]
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:5f524c741247cab5c10daa0e8e15ac36ad181d1b577a348511587c8a60cfabb8ae502afcaa3d6382784b87fb0c47cdaa2ab4a0769887b98e8e70603a2469c5de#npm:7.1.1", {
-          "packageLocation": "./.yarn/__virtual__/react-markdown-virtual-240b91b52c/0/cache/react-markdown-npm-7.1.1-99b3af7151-108759c9e1.zip/node_modules/react-markdown/",
+        ["virtual:5f524c741247cab5c10daa0e8e15ac36ad181d1b577a348511587c8a60cfabb8ae502afcaa3d6382784b87fb0c47cdaa2ab4a0769887b98e8e70603a2469c5de#npm:8.0.0", {
+          "packageLocation": "./.yarn/__virtual__/react-markdown-virtual-6ef3235a7d/0/cache/react-markdown-npm-8.0.0-3d725f3756-61412ecd18.zip/node_modules/react-markdown/",
           "packageDependencies": [
-            ["react-markdown", "virtual:5f524c741247cab5c10daa0e8e15ac36ad181d1b577a348511587c8a60cfabb8ae502afcaa3d6382784b87fb0c47cdaa2ab4a0769887b98e8e70603a2469c5de#npm:7.1.1"],
+            ["react-markdown", "virtual:5f524c741247cab5c10daa0e8e15ac36ad181d1b577a348511587c8a60cfabb8ae502afcaa3d6382784b87fb0c47cdaa2ab4a0769887b98e8e70603a2469c5de#npm:8.0.0"],
             ["@types/hast", "npm:2.3.4"],
             ["@types/react", null],
             ["@types/unist", "npm:2.0.6"],
@@ -18950,7 +18951,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react", "npm:18.0.0-alpha-327d5c484-20211106"],
             ["react-is", "npm:17.0.2"],
             ["remark-parse", "npm:10.0.1"],
-            ["remark-rehype", "npm:9.1.0"],
+            ["remark-rehype", "npm:10.1.0"],
             ["space-separated-tokens", "npm:2.0.1"],
             ["style-to-object", "npm:0.3.0"],
             ["unified", "npm:10.1.1"],
@@ -19401,13 +19402,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["remark-rehype", [
-        ["npm:9.1.0", {
-          "packageLocation": "./.yarn/cache/remark-rehype-npm-9.1.0-0bd7036a2e-01d8177ce1.zip/node_modules/remark-rehype/",
+        ["npm:10.1.0", {
+          "packageLocation": "./.yarn/cache/remark-rehype-npm-10.1.0-bd8e6f7d8b-b9ac8acff3.zip/node_modules/remark-rehype/",
           "packageDependencies": [
-            ["remark-rehype", "npm:9.1.0"],
+            ["remark-rehype", "npm:10.1.0"],
             ["@types/hast", "npm:2.3.4"],
             ["@types/mdast", "npm:3.0.10"],
-            ["mdast-util-to-hast", "npm:11.3.0"],
+            ["mdast-util-to-hast", "npm:12.1.1"],
             ["unified", "npm:10.1.1"]
           ],
           "linkType": "HARD",
