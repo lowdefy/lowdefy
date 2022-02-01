@@ -37,7 +37,7 @@
     "swc": "swc src --out-dir dist --config-file ../../../.swcrc --delete-dir-on-start"
   },
   "dependencies": {
-    "@emotion/jest": "11.5.0",
+    "@emotion/jest": "11.7.1",
     "@lowdefy/block-utils": "4.0.0-alpha.6",
     "@lowdefy/helpers": "4.0.0-alpha.6",
     "@testing-library/dom": "8.10.1",

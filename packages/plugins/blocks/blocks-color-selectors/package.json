@@ -58,7 +58,7 @@
   },
   "devDependencies": {
     "@babel/preset-react": "7.16.7",
-    "@emotion/jest": "11.5.0",
+    "@emotion/jest": "11.7.1",
     "@lowdefy/block-dev": "4.0.0-alpha.6",
     "@swc/cli": "0.1.55",
     "@swc/core": "1.2.135",

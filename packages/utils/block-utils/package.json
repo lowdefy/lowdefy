@@ -39,8 +39,8 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@emotion/css": "11.5.0",
-    "@emotion/react": "11.5.0",
+    "@emotion/css": "11.7.1",
+    "@emotion/react": "11.7.1",
     "@lowdefy/helpers": "4.0.0-alpha.6",
     "classnames": "2.3.1",
     "dompurify": "2.3.5",
@@ -49,7 +49,7 @@
   },
   "devDependencies": {
     "@babel/preset-react": "7.16.7",
-    "@emotion/jest": "11.5.0",
+    "@emotion/jest": "11.7.1",
     "@swc/cli": "0.1.55",
     "@swc/core": "1.2.135",
     "@swc/jest": "0.2.17",
