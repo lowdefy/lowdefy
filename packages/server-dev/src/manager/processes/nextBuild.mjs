@@ -16,14 +16,14 @@
 
 import { spawnProcess } from '@lowdefy/node-utils';
 
-function nextBuild({ packageManager, verbose }) {
+function nextBuild(context) {
   return async () => {
     console.log('Building app...');
     await spawnProcess({
       logger: console,
-      args: ['run', 'build:next'],
-      command: packageManager,
-      silent: !verbose,
+      command: 'node',
+      args: [context.bin.next, 'build'],
+      silent: !context.verbose,
     });
   };
 }

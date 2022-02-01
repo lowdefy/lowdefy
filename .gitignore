@@ -21,7 +21,6 @@ packages/server-dev/build/**
 
 .DS_Store
 
-packages/build/src/test/writeFile.txt
 packages/build/build/**
 
 packages/plugins/connections/connection-mongodb/mongod-*

@@ -14,13 +14,4 @@
   limitations under the License.
 */
 
-export default {
-  import: {
-    path: 'connections/Knex/KnexRaw/KnexRaw.js',
-    schema: 'connections/Knex/KnexRaw/KnexRawSchema.json',
-  },
-  meta: {
-    checkRead: false,
-    checkWrite: false,
-  },
-};
+export { default as Knex } from './connections/Knex/Knex.js';

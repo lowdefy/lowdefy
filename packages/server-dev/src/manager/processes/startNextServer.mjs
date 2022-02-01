@@ -17,10 +17,12 @@
 import spawnProcess from '../utils/spawnProcess.mjs';
 
 function startServerProcess(context) {
-  context.serverProcess = spawnProcess({
+  context.shutdownServer();
+
+  const nextServer = spawnProcess({
     logger: console,
-    command: context.packageManager,
-    args: ['run', 'next', 'start'],
+    command: 'node',
+    args: [context.bin.next, 'start'],
     silent: false,
     processOptions: {
       env: {
@@ -30,12 +32,14 @@ function startServerProcess(context) {
       },
     },
   });
-  context.serverProcess.on('exit', (code) => {
-    if (code !== 0) {
-      context.serverProcessPromise.reject(new Error('Server error.'));
-    }
-    context.serverProcessPromise.resolve();
+  // console.log(`Started server ${nextServer.pid}.`);
+  // nextServer.on('exit', (code, signal) => {
+  //   console.log(`nextServer exit ${nextServer.pid}, signal: ${signal}, code: ${code}`);
+  // });
+  nextServer.on('error', (error) => {
+    console.log(error);
   });
+  context.nextServer = nextServer;
 }
 
 export default startServerProcess;

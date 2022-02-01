@@ -1,3 +1,4 @@
+/* eslint-disable import/namespace */
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -13,15 +14,16 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import * as connections from './connections.js';
 
-import path from 'path';
-import { writeFile } from '@lowdefy/node-utils';
+export default {
+  connections: Object.keys(connections),
+  requests: Object.keys(connections)
+    .map((connection) => Object.keys(connections[connection].requests))
+    .flat(),
+};
 
-function createWriteBuildArtifact({ directories }) {
-  async function writeBuildArtifact({ filePath, content }) {
-    return writeFile(path.resolve(directories.build, filePath), content);
-  }
-  return writeBuildArtifact;
-}
-
-export default createWriteBuildArtifact;
+// export default {
+//   connections: ['Knex'],
+//   requests: ['KnexBuilder', 'KnexRaw'],
+// };

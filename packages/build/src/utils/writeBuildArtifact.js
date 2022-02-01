@@ -14,13 +14,14 @@
   limitations under the License.
 */
 
-export default {
-  import: {
-    path: 'connections/Knex/KnexBuilder/KnexBuilder.js',
-    schema: 'connections/Knex/KnexBuilder/KnexBuilderSchema.json',
-  },
-  meta: {
-    checkRead: false,
-    checkWrite: false,
-  },
-};
+import path from 'path';
+import { writeFile } from '@lowdefy/node-utils';
+
+function createWriteBuildArtifact({ directories }) {
+  async function writeBuildArtifact(filePath, content) {
+    await writeFile(path.join(directories.build, filePath), content);
+  }
+  return writeBuildArtifact;
+}
+
+export default createWriteBuildArtifact;
