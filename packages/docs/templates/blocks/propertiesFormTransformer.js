@@ -28,7 +28,7 @@ const avatar = (path) => ({
   blocks: [
     {
       id: `${path}.color`,
-      type: 'CircleColorSelector',
+      type: 'Selector', // TODO: change back to CircleColorSelector
       layout: {
         _global: 'settings_input_layout',
       },
@@ -258,7 +258,7 @@ function makeBlockDefinition({
         };
         return block;
       case 'color':
-        block.type = 'CircleColorSelector';
+        block.type = 'Selector'; // TODO: change back to CircleColorSelector
         block.properties.circleSize = 14;
         block.properties.circleSpacing = 8;
         block.properties.colors = [
@@ -401,8 +401,8 @@ function makeBlockDefinition({
 }
 
 function transformer(obj) {
-  const blockProperties = obj.schema.properties.properties;
-  const requiredProperties = obj.schema.properties.required || [];
+  const blockProperties = obj.properties.properties;
+  const requiredProperties = obj.properties.required || [];
   const blocks = Object.keys(blockProperties)
     .sort()
     .map((propertyName) => {
@@ -416,4 +416,4 @@ function transformer(obj) {
   return blocks;
 }
 
-module.exports = transformer;
+export default transformer;

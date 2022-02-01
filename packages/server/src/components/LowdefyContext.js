@@ -32,7 +32,7 @@ const LowdefyContext = ({ children }) => {
       updaters: {},
       window,
       displayMessage: ({ content }) => {
-        alert(content);
+        console.log(content);
         return () => undefined;
       },
       link: () => undefined,
