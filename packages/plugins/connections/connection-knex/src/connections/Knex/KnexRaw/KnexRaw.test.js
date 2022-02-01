@@ -16,8 +16,10 @@
 
 import { validate } from '@lowdefy/ajv';
 import knex from 'knex';
-import knexRaw from './KnexRaw.js';
-import schema from './KnexRawSchema.json';
+import KnexRaw from './KnexRaw.js';
+
+const { checkRead, checkWrite } = KnexRaw.meta;
+const schema = KnexRaw.schema;
 
 const mockRaw = jest.fn(() => {
   return Promise.resolve({ rows: [{ name: 'name' }], _types: 'types' });
@@ -39,7 +41,7 @@ const connection = {
 };
 
 test('knexRaw', async () => {
-  const res = await knexRaw({ request, connection });
+  const res = await KnexRaw({ request, connection });
   expect(knex.mock.calls).toEqual([
     [
       {
@@ -87,4 +89,12 @@ test('query missing', () => {
   expect(() => validate({ schema, data: request })).toThrow(
     'KnexRaw request should have required property "query".'
   );
+});
+
+test('checkRead should be false', async () => {
+  expect(checkRead).toBe(false);
+});
+
+test('checkWrite should be false', async () => {
+  expect(checkWrite).toBe(false);
 });
