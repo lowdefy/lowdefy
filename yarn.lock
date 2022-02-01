@@ -3311,8 +3311,8 @@ __metadata:
     ajv-errors: 3.0.0
     jest: 27.4.7
     jest-serializer-html: 7.1.0
-    react: 18.0.0-alpha-327d5c484-20211106
-    react-dom: 18.0.0-alpha-327d5c484-20211106
+    react: 18.0.0-rc.0
+    react-dom: 18.0.0-rc.0
     yaml-loader: 0.6.0
   languageName: unknown
   linkType: soft
@@ -3336,8 +3336,8 @@ __metadata:
     dompurify: 2.3.5
     jest: 27.4.7
     jest-serializer-html: 7.1.0
-    react: 18.0.0-alpha-327d5c484-20211106
-    react-dom: 18.0.0-alpha-327d5c484-20211106
+    react: 18.0.0-rc.0
+    react-dom: 18.0.0-rc.0
   languageName: unknown
   linkType: soft
 
@@ -3367,8 +3367,8 @@ __metadata:
     jest-transform-yaml: 1.0.0
     moment: 2.29.1
     rc-motion: 2.4.4
-    react: 18.0.0-alpha-327d5c484-20211106
-    react-dom: 18.0.0-alpha-327d5c484-20211106
+    react: 18.0.0-rc.0
+    react-dom: 18.0.0-rc.0
     tinycolor2: 1.4.2
   languageName: unknown
   linkType: soft
@@ -3393,8 +3393,8 @@ __metadata:
     jest: 27.4.7
     jest-serializer-html: 7.1.0
     jest-transform-yaml: 1.0.0
-    react: 18.0.0-alpha-327d5c484-20211106
-    react-dom: 18.0.0-alpha-327d5c484-20211106
+    react: 18.0.0-rc.0
+    react-dom: 18.0.0-rc.0
   languageName: unknown
   linkType: soft
 
@@ -3418,9 +3418,9 @@ __metadata:
     jest-canvas-mock: 2.3.1
     jest-serializer-html: 7.1.0
     jest-transform-yaml: 1.0.0
-    react: 18.0.0-alpha-327d5c484-20211106
+    react: 18.0.0-rc.0
     react-color: 2.19.3
-    react-dom: 18.0.0-alpha-327d5c484-20211106
+    react-dom: 18.0.0-rc.0
   languageName: unknown
   linkType: soft
 
@@ -3444,8 +3444,8 @@ __metadata:
     jest: 27.4.7
     jest-serializer-html: 7.1.0
     jest-transform-yaml: 1.0.0
-    react: 18.0.0-alpha-327d5c484-20211106
-    react-dom: 18.0.0-alpha-327d5c484-20211106
+    react: 18.0.0-rc.0
+    react-dom: 18.0.0-rc.0
   languageName: unknown
   linkType: soft
 
@@ -3468,8 +3468,8 @@ __metadata:
     jest: 27.4.7
     jest-serializer-html: 7.1.0
     jest-transform-yaml: 1.0.0
-    react: 18.0.0-alpha-327d5c484-20211106
-    react-dom: 18.0.0-alpha-327d5c484-20211106
+    react: 18.0.0-rc.0
+    react-dom: 18.0.0-rc.0
   languageName: unknown
   linkType: soft
 
@@ -3492,8 +3492,8 @@ __metadata:
     jest: 27.4.7
     jest-serializer-html: 7.1.0
     jest-transform-yaml: 1.0.0
-    react: 18.0.0-alpha-327d5c484-20211106
-    react-dom: 18.0.0-alpha-327d5c484-20211106
+    react: 18.0.0-rc.0
+    react-dom: 18.0.0-rc.0
     react-markdown: 8.0.0
     react-syntax-highlighter: 15.4.5
     rehype-raw: 6.1.1
@@ -3736,8 +3736,8 @@ __metadata:
     jest: 27.4.7
     jest-serializer-html: 7.1.0
     jest-transform-yaml: 1.0.0
-    react: 18.0.0-alpha-327d5c484-20211106
-    react-dom: 18.0.0-alpha-327d5c484-20211106
+    react: 18.0.0-rc.0
+    react-dom: 18.0.0-rc.0
   languageName: unknown
   linkType: soft
 
@@ -3943,8 +3943,8 @@ __metadata:
     next-auth: 4.1.2
     next-with-less: 2.0.4
     opener: 1.5.2
-    react: 18.0.0-alpha-327d5c484-20211106
-    react-dom: 18.0.0-alpha-327d5c484-20211106
+    react: 18.0.0-rc.0
+    react-dom: 18.0.0-rc.0
     react-icons: 4.3.1
     swr: 1.2.0
     yargs: 17.3.1
@@ -3970,8 +3970,8 @@ __metadata:
     next-auth: 4.1.2
     next-with-less: 2.0.4
     process: 0.11.10
-    react: 18.0.0-alpha-327d5c484-20211106
-    react-dom: 18.0.0-alpha-327d5c484-20211106
+    react: 18.0.0-rc.0
+    react-dom: 18.0.0-rc.0
     react-icons: 4.3.1
   languageName: unknown
   linkType: soft
@@ -14614,16 +14614,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:18.0.0-alpha-327d5c484-20211106":
-  version: 18.0.0-alpha-327d5c484-20211106
-  resolution: "react-dom@npm:18.0.0-alpha-327d5c484-20211106"
+"react-dom@npm:18.0.0-rc.0":
+  version: 18.0.0-rc.0
+  resolution: "react-dom@npm:18.0.0-rc.0"
   dependencies:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
-    scheduler: 0.21.0-alpha-327d5c484-20211106
+    scheduler: ^0.21.0-rc.0
   peerDependencies:
-    react: 18.0.0-alpha-327d5c484-20211106
-  checksum: c1da729219ae3c9d01f6ff5cf0b1290b745317e620a17b429623b6be3826a84d0993ee74a279cc1923c569e1179c0d6dc4aed6272923a4f219b40f319edbd1f6
+    react: ^18.0.0-rc.0
+  checksum: 713db349fad704527d328275d43c57ca670c801a6592e5f308c5572a7559540d0dcfc0b065a878cea4764f742d27fb2ed1065092ca40589759d5b51ecce6773b
   languageName: node
   linkType: hard
 
@@ -14700,13 +14700,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:18.0.0-alpha-327d5c484-20211106":
-  version: 18.0.0-alpha-327d5c484-20211106
-  resolution: "react@npm:18.0.0-alpha-327d5c484-20211106"
+"react@npm:18.0.0-rc.0":
+  version: 18.0.0-rc.0
+  resolution: "react@npm:18.0.0-rc.0"
   dependencies:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
-  checksum: 2ee0d4b73302d4fcae20fc3f371bb369922337df877ee0ce508098d0cd3e1c158c77556d549fc7aeb8885ebbcefe47de7a110c4a886c53034ebc4f18b793d4b6
+  checksum: bb886ab411d7732ca8aace98bf0015a31f30b010bd674accdbbf4a474429b656b4463a58e677f33972bab9b820e949765e27fc6c468b13833b515e50b2d0b999
   languageName: node
   linkType: hard
 
@@ -15381,16 +15381,6 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"scheduler@npm:0.21.0-alpha-327d5c484-20211106":
-  version: 0.21.0-alpha-327d5c484-20211106
-  resolution: "scheduler@npm:0.21.0-alpha-327d5c484-20211106"
-  dependencies:
-    loose-envify: ^1.1.0
-    object-assign: ^4.1.1
-  checksum: 060056d9ecd24c03cec49d7a78082a0ebff01d869f1381be0992fbd9ba9db72db00cd370309c710f8b79cd92f69110ef8c7f7a843bd7aaf61bae200384d27892
-  languageName: node
-  linkType: hard
-
 "scheduler@npm:^0.20.2":
   version: 0.20.2
   resolution: "scheduler@npm:0.20.2"
@@ -15398,6 +15388,16 @@ resolve@^2.0.0-next.3:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
   checksum: c4b35cf967c8f0d3e65753252d0f260271f81a81e427241295c5a7b783abf4ea9e905f22f815ab66676f5313be0a25f47be582254db8f9241b259213e999b8fc
+  languageName: node
+  linkType: hard
+
+"scheduler@npm:^0.21.0-rc.0":
+  version: 0.21.0-rc.0-next-fe905f152-20220107
+  resolution: "scheduler@npm:0.21.0-rc.0-next-fe905f152-20220107"
+  dependencies:
+    loose-envify: ^1.1.0
+    object-assign: ^4.1.1
+  checksum: 72d1e7451c0af41ba6dcf53aaafeb72620e9d4d4cf30b3709f7a93c4e31fc872ce574a0a7bef168175ee4d148a2b9ca2e318d02387600c8b7f95da0d4ff185bb
   languageName: node
   linkType: hard
 
