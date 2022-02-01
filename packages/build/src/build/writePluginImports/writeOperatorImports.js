@@ -18,20 +18,20 @@ import generateImportFile from './generateImportFile.js';
 
 async function writeOperatorImports({ components, context }) {
   // TODO: import _not and _type for validation.
-  await context.writeBuildArtifact({
-    filePath: 'plugins/operatorsClient.js',
-    content: generateImportFile({
+  await context.writeBuildArtifact(
+    'plugins/operatorsClient.js',
+    generateImportFile({
       types: components.types.operators.client,
       importPath: 'operators/client',
-    }),
-  });
-  await context.writeBuildArtifact({
-    filePath: 'plugins/operatorsServer.js',
-    content: generateImportFile({
+    })
+  );
+  await context.writeBuildArtifact(
+    'plugins/operatorsServer.js',
+    generateImportFile({
       types: components.types.operators.server,
       importPath: 'operators/server',
-    }),
-  });
+    })
+  );
 }
 
 export default writeOperatorImports;

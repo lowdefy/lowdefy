@@ -15,10 +15,7 @@
 */
 
 async function writeTypes({ components, context }) {
-  await context.writeBuildArtifact({
-    filePath: 'types.json',
-    content: JSON.stringify(components.types, null, 2),
-  });
+  await context.writeBuildArtifact('types.json', JSON.stringify(components.types, null, 2));
 }
 
 export default writeTypes;

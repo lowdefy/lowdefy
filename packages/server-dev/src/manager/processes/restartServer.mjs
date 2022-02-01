@@ -14,16 +14,14 @@
   limitations under the License.
 */
 
-import startServerProcess from './startServerProcess.mjs';
+import startNextServer from './startNextServer.mjs';
 
-function shutdownServer(context) {
-  return async () => {
-    if (context.serverProcess) {
-      console.log('Restarting server...');
-      context.serverProcess.kill();
-      startServerProcess(context);
-    }
+function restartServer(context) {
+  return () => {
+    context.shutdownServer(); // Is this needed here?
+    console.log('Restarting server...');
+    startNextServer(context);
   };
 }
 
-export default shutdownServer;
+export default restartServer;

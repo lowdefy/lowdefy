@@ -20,10 +20,7 @@ async function writeMenus({ components, context }) {
   if (!type.isArray(components.menus)) {
     throw new Error('Menus is not an array.');
   }
-  await context.writeBuildArtifact({
-    filePath: 'menus.json',
-    content: JSON.stringify(components.menus, null, 2),
-  });
+  await context.writeBuildArtifact('menus.json', JSON.stringify(components.menus, null, 2));
 }
 
 export default writeMenus;

@@ -20,8 +20,8 @@ import { readFile } from '@lowdefy/node-utils';
 
 function readDotEnv(context) {
   return async () => {
-    const dotEnvPath = path.join(context.directories.config, '.env');
-    context.serverEnv = dotenv.parse(await readFile(dotEnvPath));
+    const dotEnv = await readFile(path.join(context.directories.config, '.env'));
+    context.serverEnv = dotenv.parse(dotEnv || '');
   };
 }
 

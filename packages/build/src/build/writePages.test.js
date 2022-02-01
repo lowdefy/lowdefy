@@ -39,15 +39,13 @@ test('writePages write page', async () => {
   await writePages({ components, context });
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
-      {
-        filePath: 'pages/page1/page1.json',
-        content: `{
+      'pages/page1/page1.json',
+      `{
   "id": "page:page1",
   "pageId": "page1",
   "blockId": "page1",
   "requests": []
 }`,
-      },
     ],
   ]);
 });
@@ -72,26 +70,22 @@ test('writePages multiple pages', async () => {
   await writePages({ components, context });
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
-      {
-        filePath: 'pages/page1/page1.json',
-        content: `{
+      'pages/page1/page1.json',
+      `{
   "id": "page:page1",
   "pageId": "page1",
   "blockId": "page1",
   "requests": []
 }`,
-      },
     ],
     [
-      {
-        filePath: 'pages/page2/page2.json',
-        content: `{
+      'pages/page2/page2.json',
+      `{
   "id": "page:page2",
   "pageId": "page2",
   "blockId": "page2",
   "requests": []
 }`,
-      },
     ],
   ]);
 });

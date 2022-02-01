@@ -23,11 +23,12 @@ module.exports = withLess({
     }
     return config;
   },
+  swcMinify: true,
+  compress: false,
+  outputFileTracing: false,
   poweredByHeader: false,
-  // productionBrowserSourceMaps: true
-  // experimental: {
-  //   concurrentFeatures: true,
-  // },
+  generateEtags: false,
+  optimizeFonts: false,
   eslint: {
     ignoreDuringBuilds: true,
   },
