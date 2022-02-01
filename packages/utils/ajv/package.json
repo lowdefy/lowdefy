@@ -41,7 +41,7 @@
   },
   "dependencies": {
     "@lowdefy/nunjucks": "4.0.0-alpha.6",
-    "ajv": "8.8.2",
+    "ajv": "8.9.0",
     "ajv-errors": "3.0.0"
   },
   "devDependencies": {
