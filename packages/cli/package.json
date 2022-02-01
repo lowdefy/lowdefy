@@ -42,7 +42,7 @@
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-alpha.6",
     "@lowdefy/node-utils": "4.0.0-alpha.6",
-    "axios": "0.24.0",
+    "axios": "0.25.0",
     "chalk": "4.1.2",
     "commander": "8.3.0",
     "decompress": "4.2.1",
