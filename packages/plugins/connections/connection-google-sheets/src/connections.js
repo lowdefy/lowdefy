@@ -14,13 +14,4 @@
   limitations under the License.
 */
 
-export default {
-  import: {
-    path: 'connections/GoogleSheet/GoogleSheetAppendMany/GoogleSheetAppendMany.js',
-    schema: 'connections/GoogleSheet/GoogleSheetAppendMany/GoogleSheetAppendManySchema.json',
-  },
-  meta: {
-    checkRead: false,
-    checkWrite: true,
-  },
-};
+export { default as GoogleSheet } from './connections/GoogleSheet/GoogleSheet.js';

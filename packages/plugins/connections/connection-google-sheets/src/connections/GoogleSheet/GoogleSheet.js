@@ -21,11 +21,10 @@ import GoogleSheetGetMany from './GoogleSheetGetMany/GoogleSheetGetMany.js';
 import GoogleSheetGetOne from './GoogleSheetGetOne/GoogleSheetGetOne.js';
 import GoogleSheetUpdateOne from './GoogleSheetUpdateOne/GoogleSheetUpdateOne.js';
 import GoogleSheetUpdateMany from './GoogleSheetUpdateMany/GoogleSheetUpdateMany.js';
+import schema from './schema.js';
 
 export default {
-  import: {
-    schema: 'connections/GoogleSheet/GoogleSheetSchema.json',
-  },
+  schema,
   requests: {
     GoogleSheetAppendMany,
     GoogleSheetAppendOne,

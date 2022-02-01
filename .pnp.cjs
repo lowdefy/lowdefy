@@ -5207,6 +5207,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/blocks-markdown", "workspace:packages/plugins/blocks/blocks-markdown"],
             ["@lowdefy/connection-axios-http", "workspace:packages/plugins/connections/connection-axios-http"],
             ["@lowdefy/connection-elasticsearch", "workspace:packages/plugins/connections/connection-elasticsearch"],
+            ["@lowdefy/connection-google-sheets", "workspace:packages/plugins/connections/connection-google-sheets"],
             ["@lowdefy/connection-knex", "workspace:packages/plugins/connections/connection-knex"],
             ["@lowdefy/connection-mongodb", "workspace:packages/plugins/connections/connection-mongodb"],
             ["@lowdefy/connection-redis", "workspace:packages/plugins/connections/connection-redis"],

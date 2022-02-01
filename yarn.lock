@@ -3503,6 +3503,7 @@ __metadata:
     "@lowdefy/blocks-markdown": 4.0.0-alpha.6
     "@lowdefy/connection-axios-http": 4.0.0-alpha.6
     "@lowdefy/connection-elasticsearch": 4.0.0-alpha.6
+    "@lowdefy/connection-google-sheets": 4.0.0-alpha.6
     "@lowdefy/connection-knex": 4.0.0-alpha.6
     "@lowdefy/connection-mongodb": 4.0.0-alpha.6
     "@lowdefy/connection-redis": 4.0.0-alpha.6
@@ -3560,7 +3561,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-google-sheets@workspace:packages/plugins/connections/connection-google-sheets":
+"@lowdefy/connection-google-sheets@4.0.0-alpha.6, @lowdefy/connection-google-sheets@workspace:packages/plugins/connections/connection-google-sheets":
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-google-sheets@workspace:packages/plugins/connections/connection-google-sheets"
   dependencies:

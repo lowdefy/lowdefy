@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import mingoFilter from './mingoFilter';
+import mingoFilter from './mingoFilter.js';
 
 test('mingoFilter equals shorthand', () => {
   const filter = { id: 1 };

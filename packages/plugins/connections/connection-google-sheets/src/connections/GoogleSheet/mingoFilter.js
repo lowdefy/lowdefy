@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import mingoAggregation from './mingoAggregation';
+import mingoAggregation from './mingoAggregation.js';
 
 function mingoFilter({ input = [], filter = {} }) {
   if (!type.isObject(filter)) {

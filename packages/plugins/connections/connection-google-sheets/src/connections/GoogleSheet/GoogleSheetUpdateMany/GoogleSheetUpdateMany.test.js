@@ -15,11 +15,10 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import googleSheetUpdateMany from './GoogleSheetUpdateMany';
-import requestIndex from './index.js';
-import schema from './GoogleSheetUpdateManySchema.json';
+import GoogleSheetUpdateMany from './GoogleSheetUpdateMany.js';
 
-const { checkRead, checkWrite } = requestIndex.meta;
+const { checkRead, checkWrite } = GoogleSheetUpdateMany.meta;
+const schema = GoogleSheetUpdateMany.schema;
 
 const mockGetRows = jest.fn();
 const mockSave = jest.fn();
@@ -79,7 +78,7 @@ const mockGetRowsDefaultImp = ({ limit, offset }) => {
 
 test('googleSheetUpdateMany, match one', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetUpdateMany({
+  const res = await GoogleSheetUpdateMany({
     request: {
       filter: { id: '1' },
       update: {
@@ -104,7 +103,7 @@ test('googleSheetUpdateMany, match one', async () => {
 
 test('googleSheetUpdateMany, match one, raw true', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetUpdateMany({
+  const res = await GoogleSheetUpdateMany({
     request: {
       filter: { id: '1' },
       update: {
@@ -132,7 +131,7 @@ test('googleSheetUpdateMany, match one, raw true', async () => {
 
 test('googleSheetUpdateMany, match nothing', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetUpdateMany({
+  const res = await GoogleSheetUpdateMany({
     request: {
       filter: { id: 'does_not_exist' },
       update: {
@@ -149,7 +148,7 @@ test('googleSheetUpdateMany, match nothing', async () => {
 
 test('googleSheetUpdateMany, match more than one', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetUpdateMany({
+  const res = await GoogleSheetUpdateMany({
     request: {
       filter: { _rowNumber: { $gt: 3 } },
       update: {

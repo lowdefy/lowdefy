@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { transformRead } from './transformTypes';
+import { transformRead } from './transformTypes.js';
 
 test('transformRead invalid input', () => {
   expect(() => transformRead({ input: 1 })).toThrow(
