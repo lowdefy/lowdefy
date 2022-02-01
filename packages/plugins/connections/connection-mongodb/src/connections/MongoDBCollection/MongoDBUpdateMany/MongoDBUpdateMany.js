@@ -16,8 +16,9 @@
 
 import getCollection from '../getCollection.js';
 import { serialize, deserialize } from '../serialize.js';
+import schema from './schema.js';
 
-async function mongodbUpdateMany({ request, connection }) {
+async function MongodbUpdateMany({ request, connection }) {
   const deserializedRequest = deserialize(request);
   const { filter, update, options } = deserializedRequest;
   const { collection, client } = await getCollection({ connection });
@@ -33,4 +34,10 @@ async function mongodbUpdateMany({ request, connection }) {
   return { modifiedCount, upsertedId, upsertedCount, matchedCount };
 }
 
-export default mongodbUpdateMany;
+MongodbUpdateMany.schema = schema;
+MongodbUpdateMany.meta = {
+  checkRead: false,
+  checkWrite: true,
+};
+
+export default MongodbUpdateMany;

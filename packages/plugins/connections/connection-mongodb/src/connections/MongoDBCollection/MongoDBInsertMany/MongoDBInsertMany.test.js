@@ -15,12 +15,11 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import mongoDBInsertMany from './MongoDBInsertMany.js';
+import MongoDBInsertMany from './MongoDBInsertMany.js';
 import clearTestMongoDb from '../../../../test/clearTestMongoDb.js';
-import requestIndex from './index.js';
-import schema from './MongoDBInsertManySchema.json';
 
-const { checkRead, checkWrite } = requestIndex.meta;
+const { checkRead, checkWrite } = MongoDBInsertMany.meta;
+const schema = MongoDBInsertMany.schema;
 
 const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';
@@ -40,7 +39,7 @@ test('insertMany', async () => {
     collection,
     write: true,
   };
-  const res = await mongoDBInsertMany({ request, connection });
+  const res = await MongoDBInsertMany({ request, connection });
   expect(res).toEqual({
     insertedCount: 3,
     ops: [
@@ -68,7 +67,7 @@ test('insertMany options', async () => {
     collection,
     write: true,
   };
-  const res = await mongoDBInsertMany({ request, connection });
+  const res = await MongoDBInsertMany({ request, connection });
   expect(res).toEqual({
     insertedCount: 2,
     ops: [
@@ -90,7 +89,7 @@ test('insertMany connection error', async () => {
     collection,
     write: true,
   };
-  await expect(mongoDBInsertMany({ request, connection })).rejects.toThrow(
+  await expect(MongoDBInsertMany({ request, connection })).rejects.toThrow(
     'Invalid connection string'
   );
 });
@@ -103,8 +102,8 @@ test('insertMany mongodb error', async () => {
     collection,
     write: true,
   };
-  await mongoDBInsertMany({ request, connection });
-  await expect(mongoDBInsertMany({ request, connection })).rejects.toThrow(
+  await MongoDBInsertMany({ request, connection });
+  await expect(MongoDBInsertMany({ request, connection })).rejects.toThrow(
     'E11000 duplicate key error'
   );
 });

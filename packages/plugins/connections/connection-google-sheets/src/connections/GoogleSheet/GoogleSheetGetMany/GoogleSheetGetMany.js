@@ -19,8 +19,9 @@ import getSheet from '../getSheet.js';
 import { transformRead } from '../transformTypes.js';
 import mingoAggregation from '../mingoAggregation.js';
 import mingoFilter from '../mingoFilter.js';
+import schema from './schema.js';
 
-async function googleSheetGetMany({ request, connection }) {
+async function GoogleSheetGetMany({ request, connection }) {
   const { filter, pipeline, options = {} } = request;
   const { limit, skip } = options;
   const sheet = await getSheet({ connection });
@@ -36,4 +37,10 @@ async function googleSheetGetMany({ request, connection }) {
   return rows;
 }
 
-export default googleSheetGetMany;
+GoogleSheetGetMany.schema = schema;
+GoogleSheetGetMany.meta = {
+  checkRead: true,
+  checkWrite: false,
+};
+
+export default GoogleSheetGetMany;

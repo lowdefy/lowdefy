@@ -16,8 +16,9 @@
 
 import getSheet from '../getSheet.js';
 import { transformWrite } from '../transformTypes.js';
+import schema from './schema.js';
 
-async function googleSheetAppendMany({ request, connection }) {
+async function GoogleSheetAppendMany({ request, connection }) {
   const { rows, options = {} } = request;
   const { raw } = options;
   const sheet = await getSheet({ connection });
@@ -27,4 +28,10 @@ async function googleSheetAppendMany({ request, connection }) {
   };
 }
 
-export default googleSheetAppendMany;
+GoogleSheetAppendMany.schema = schema;
+GoogleSheetAppendMany.meta = {
+  checkRead: false,
+  checkWrite: true,
+};
+
+export default GoogleSheetAppendMany;

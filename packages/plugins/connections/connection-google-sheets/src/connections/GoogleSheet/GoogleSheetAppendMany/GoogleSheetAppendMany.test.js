@@ -15,11 +15,11 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import googleSheetAppendMany from './GoogleSheetAppendMany.js';
-import requestIndex from './index.js';
-import schema from './GoogleSheetAppendManySchema.json';
+import GoogleSheetAppendMany from './GoogleSheetAppendMany.js';
 
-const { checkRead, checkWrite } = requestIndex.meta;
+const { checkRead, checkWrite } = GoogleSheetAppendMany.meta;
+const schema = GoogleSheetAppendMany.schema;
+
 const mockAddRows = jest.fn();
 jest.mock('../getSheet', () => () => ({
   addRows: mockAddRows,
@@ -29,7 +29,7 @@ const mockAddRowsDefaultImp = (rows) => rows.map((row) => ({ ...row, _sheet: {} 
 
 test('googleSheetAppendMany, one row', async () => {
   mockAddRows.mockImplementation(mockAddRowsDefaultImp);
-  const res = await googleSheetAppendMany({
+  const res = await GoogleSheetAppendMany({
     request: {
       rows: [{ id: '1', name: 'John', age: '34', birth_date: '2020/04/26', married: 'TRUE' }],
     },
@@ -58,7 +58,7 @@ test('googleSheetAppendMany, one row', async () => {
 
 test('googleSheetAppendMany, two rows', async () => {
   mockAddRows.mockImplementation(mockAddRowsDefaultImp);
-  const res = await googleSheetAppendMany({
+  const res = await GoogleSheetAppendMany({
     request: {
       rows: [
         { id: '1', name: 'John', age: '34', birth_date: '2020/04/26', married: 'TRUE' },
@@ -97,7 +97,7 @@ test('googleSheetAppendMany, two rows', async () => {
 
 test('googleSheetAppendMany, rows empty array', async () => {
   mockAddRows.mockImplementation(mockAddRowsDefaultImp);
-  const res = await googleSheetAppendMany({
+  const res = await GoogleSheetAppendMany({
     request: {
       rows: [],
     },
@@ -118,7 +118,7 @@ test('googleSheetAppendMany, rows empty array', async () => {
 
 test('googleSheetAppendMany, transform types', async () => {
   mockAddRows.mockImplementation(mockAddRowsDefaultImp);
-  const res = await googleSheetAppendMany({
+  const res = await GoogleSheetAppendMany({
     request: {
       rows: [
         {
@@ -162,7 +162,7 @@ test('googleSheetAppendMany, transform types', async () => {
 
 test('googleSheetAppendMany, one row, raw true', async () => {
   mockAddRows.mockImplementation(mockAddRowsDefaultImp);
-  const res = await googleSheetAppendMany({
+  const res = await GoogleSheetAppendMany({
     request: {
       rows: [{ id: '1', name: 'John', age: '34', birth_date: '2020/04/26', married: 'TRUE' }],
       options: {

@@ -23,11 +23,10 @@ import MongoDBInsertMany from './MongoDBInsertMany/MongoDBInsertMany.js';
 import MongoDBInsertOne from './MongoDBInsertOne/MongoDBInsertOne.js';
 import MongoDBUpdateMany from './MongoDBUpdateMany/MongoDBUpdateMany.js';
 import MongoDBUpdateOne from './MongoDBUpdateOne/MongoDBUpdateOne.js';
+import schema from './schema.js';
 
 export default {
-  import: {
-    schema: 'connections/MongoDBCollection/MongoDBCollectionSchema.json',
-  },
+  schema,
   requests: {
     MongoDBAggregation,
     MongoDBDeleteMany,

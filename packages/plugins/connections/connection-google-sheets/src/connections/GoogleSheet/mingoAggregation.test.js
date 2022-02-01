@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import mingoAggregation from './mingoAggregation';
+import mingoAggregation from './mingoAggregation.js';
 
 test('mingoAggregation sort', () => {
   const pipeline = [

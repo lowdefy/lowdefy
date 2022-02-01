@@ -15,11 +15,10 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import googleSheetGetOne from './GoogleSheetGetOne';
-import requestIndex from './index.js';
-import schema from './GoogleSheetGetOneSchema.json';
+import GoogleSheetGetOne from './GoogleSheetGetOne.js';
 
-const { checkRead, checkWrite } = requestIndex.meta;
+const { checkRead, checkWrite } = GoogleSheetGetOne.meta;
+const schema = GoogleSheetGetOne.schema;
 
 const mockGetRows = jest.fn();
 jest.mock('../getSheet', () => () => ({
@@ -74,7 +73,7 @@ const mockGetRowsDefaultImp = ({ limit, offset }) => {
 
 test('googleSheetGetOne, first row is returned', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetGetOne({ request: {}, connection: {} });
+  const res = await GoogleSheetGetOne({ request: {}, connection: {} });
   expect(res).toEqual({
     _rowNumber: 2,
     _rawData: ['1', 'John', '34', '2020/04/26', 'TRUE'],
@@ -88,13 +87,13 @@ test('googleSheetGetOne, first row is returned', async () => {
 
 test('googleSheetGetOne, empty rows returned', async () => {
   mockGetRows.mockImplementation(() => []);
-  const res = await googleSheetGetOne({ request: {}, connection: {} });
+  const res = await GoogleSheetGetOne({ request: {}, connection: {} });
   expect(res).toEqual(null);
 });
 
 test('googleSheetGetOne, limit', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetGetOne({ request: { options: { limit: 2 } }, connection: {} });
+  const res = await GoogleSheetGetOne({ request: { options: { limit: 2 } }, connection: {} });
   expect(res).toEqual({
     _rowNumber: 2,
     _rawData: ['1', 'John', '34', '2020/04/26', 'TRUE'],
@@ -108,7 +107,7 @@ test('googleSheetGetOne, limit', async () => {
 
 test('googleSheetGetOne, skip', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetGetOne({ request: { options: { skip: 2 } }, connection: {} });
+  const res = await GoogleSheetGetOne({ request: { options: { skip: 2 } }, connection: {} });
   expect(res).toEqual({
     _rowNumber: 4,
     _rawData: ['3', 'Tim', '34', '2020/04/28', 'FALSE'],
@@ -122,7 +121,7 @@ test('googleSheetGetOne, skip', async () => {
 
 test('googleSheetGetOne, skip and limit', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetGetOne({
+  const res = await GoogleSheetGetOne({
     request: { options: { skip: 2, limit: 1 } },
     connection: {},
   });
@@ -139,7 +138,7 @@ test('googleSheetGetOne, skip and limit', async () => {
 
 test('googleSheetGetOne, filter', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetGetOne({ request: { filter: { name: 'Tim' } }, connection: {} });
+  const res = await GoogleSheetGetOne({ request: { filter: { name: 'Tim' } }, connection: {} });
   expect(res).toEqual({
     _rowNumber: 4,
     _rawData: ['3', 'Tim', '34', '2020/04/28', 'FALSE'],
@@ -153,7 +152,7 @@ test('googleSheetGetOne, filter', async () => {
 
 test('googleSheetGetOne, limit before filter', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetGetOne({
+  const res = await GoogleSheetGetOne({
     request: { filter: { name: 'Tim' }, options: { limit: 2 } },
     connection: {},
   });
@@ -162,7 +161,7 @@ test('googleSheetGetOne, limit before filter', async () => {
 
 test('googleSheetGetOne, skip before filter', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetGetOne({
+  const res = await GoogleSheetGetOne({
     request: { filter: { married: 'TRUE' }, options: { skip: 2 } },
     connection: {},
   });
@@ -179,13 +178,13 @@ test('googleSheetGetOne, skip before filter', async () => {
 
 test('googleSheetGetOne, filter filters all', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetGetOne({ request: { filter: { name: 'Nobody' } }, connection: {} });
+  const res = await GoogleSheetGetOne({ request: { filter: { name: 'Nobody' } }, connection: {} });
   expect(res).toEqual(null);
 });
 
 test('googleSheetGetOne, filter _rowNumber', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetGetOne({
+  const res = await GoogleSheetGetOne({
     request: { filter: { _rowNumber: { $gt: 3 } } },
     connection: {},
   });
@@ -202,7 +201,7 @@ test('googleSheetGetOne, filter _rowNumber', async () => {
 
 test('googleSheetGetOne, columnTypes', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetGetOne({
+  const res = await GoogleSheetGetOne({
     request: {},
     connection: {
       columnTypes: {

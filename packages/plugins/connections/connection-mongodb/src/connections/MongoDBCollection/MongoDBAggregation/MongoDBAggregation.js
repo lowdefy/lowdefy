@@ -16,6 +16,7 @@
 
 import getCollection from '../getCollection.js';
 import { serialize, deserialize } from '../serialize.js';
+import schema from './schema.js';
 
 function checkOutAndMerge({ pipeline, connection }) {
   if (connection.write !== true) {
@@ -29,7 +30,7 @@ function checkOutAndMerge({ pipeline, connection }) {
   }
 }
 
-async function mongodbAggregation({ request, connection }) {
+async function MongodbAggregation({ request, connection }) {
   const deserializedRequest = deserialize(request);
   const { pipeline, options } = deserializedRequest;
   checkOutAndMerge({ pipeline, connection });
@@ -46,4 +47,10 @@ async function mongodbAggregation({ request, connection }) {
   return serialize(res);
 }
 
-export default mongodbAggregation;
+MongodbAggregation.schema = schema;
+MongodbAggregation.meta = {
+  checkRead: true,
+  checkWrite: false,
+};
+
+export default MongodbAggregation;

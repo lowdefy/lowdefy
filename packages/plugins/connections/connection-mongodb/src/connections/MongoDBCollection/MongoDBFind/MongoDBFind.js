@@ -16,8 +16,9 @@
 
 import getCollection from '../getCollection.js';
 import { serialize, deserialize } from '../serialize.js';
+import schema from './schema.js';
 
-async function mongodbFind({ request, connection }) {
+async function MongodbFind({ request, connection }) {
   const deserializedRequest = deserialize(request);
   const { query, options } = deserializedRequest;
   const { collection, client } = await getCollection({ connection });
@@ -33,4 +34,10 @@ async function mongodbFind({ request, connection }) {
   return serialize(res);
 }
 
-export default mongodbFind;
+MongodbFind.schema = schema;
+MongodbFind.meta = {
+  checkRead: true,
+  checkWrite: false,
+};
+
+export default MongodbFind;
