@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-alpha.6",
-    "stripe": "8.186.0"
+    "stripe": "8.201.0"
   },
   "devDependencies": {
     "@lowdefy/ajv": "4.0.0-alpha.6",

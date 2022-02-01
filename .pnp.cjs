@@ -5604,7 +5604,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@swc/core", "npm:1.2.135"],
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.17"],
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:27.4.7"],
-            ["stripe", "npm:8.186.0"]
+            ["stripe", "npm:8.201.0"]
           ],
           "linkType": "SOFT",
         }]
@@ -20432,10 +20432,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["stripe", [
-        ["npm:8.186.0", {
-          "packageLocation": "./.yarn/cache/stripe-npm-8.186.0-8cf12459a8-82fb9b48d0.zip/node_modules/stripe/",
+        ["npm:8.201.0", {
+          "packageLocation": "./.yarn/cache/stripe-npm-8.201.0-e2515ca16f-b283fadc1f.zip/node_modules/stripe/",
           "packageDependencies": [
-            ["stripe", "npm:8.186.0"],
+            ["stripe", "npm:8.201.0"],
             ["@types/node", "npm:16.11.6"],
             ["qs", "npm:6.10.1"]
           ],

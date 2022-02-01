@@ -3688,7 +3688,7 @@ __metadata:
     "@swc/core": 1.2.135
     "@swc/jest": 0.2.17
     jest: 27.4.7
-    stripe: 8.186.0
+    stripe: 8.201.0
   languageName: unknown
   linkType: soft
 
@@ -16188,13 +16188,13 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"stripe@npm:8.186.0":
-  version: 8.186.0
-  resolution: "stripe@npm:8.186.0"
+"stripe@npm:8.201.0":
+  version: 8.201.0
+  resolution: "stripe@npm:8.201.0"
   dependencies:
     "@types/node": ">=8.1.0"
     qs: ^6.6.0
-  checksum: 82fb9b48d0d3465dc3c7a6751247ed0b74fbbea47e510c5dc032597246d82c855d90dfe3068bdee0c4ed1b00a524402b74bfb744d816f8301896546b1b416f36
+  checksum: b283fadc1f58734178753e3eb5a1ee044f7729015d4b9faf4f5b51d5e49cff7a1eab41b7eeedef26987fd220678a08fd013a1cac9f424a34ec4687052369a53c
   languageName: node
   linkType: hard
 
