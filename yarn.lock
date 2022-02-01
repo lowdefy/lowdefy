@@ -3583,7 +3583,7 @@ __metadata:
     "@swc/jest": 0.2.17
     google-spreadsheet: 3.2.0
     jest: 27.4.7
-    mingo: ^4.4.1
+    mingo: 6.0.0
     moment: 2.29.1
   languageName: unknown
   linkType: soft
@@ -3837,7 +3837,7 @@ __metadata:
     "@swc/core": 1.2.135
     "@swc/jest": 0.2.17
     jest: 27.4.7
-    mingo: ^4.4.1
+    mingo: 6.0.0
   languageName: unknown
   linkType: soft
 
@@ -12039,10 +12039,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mingo@npm:^4.4.1":
-  version: 4.4.1
-  resolution: "mingo@npm:4.4.1"
-  checksum: 9edcad35e1309eff52cb17e3dec1443f45d25454b17c50ac95315271a8e92efad8f11d458bf906c81d36cb11aaf46e5f5698ca954578ce63b26fdd43dfefae52
+"mingo@npm:6.0.0":
+  version: 6.0.0
+  resolution: "mingo@npm:6.0.0"
+  checksum: 25a4f8f8faeefe1ef1660e472bf0e9ddfa8a22c9de81d0f25be319e944791b29e7f9e971f965883a81174faddd2d72f14bdb413a87bc99b82770e56e37197288
   languageName: node
   linkType: hard
 

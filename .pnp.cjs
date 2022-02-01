@@ -5485,7 +5485,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.17"],
             ["google-spreadsheet", "npm:3.2.0"],
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:27.4.7"],
-            ["mingo", "npm:4.4.1"],
+            ["mingo", "npm:6.0.0"],
             ["moment", "npm:2.29.1"]
           ],
           "linkType": "SOFT",
@@ -5787,7 +5787,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@swc/core", "npm:1.2.135"],
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.17"],
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:27.4.7"],
-            ["mingo", "npm:4.4.1"]
+            ["mingo", "npm:6.0.0"]
           ],
           "linkType": "SOFT",
         }]
@@ -15346,10 +15346,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["mingo", [
-        ["npm:4.4.1", {
-          "packageLocation": "./.yarn/cache/mingo-npm-4.4.1-44a34bfeb5-9edcad35e1.zip/node_modules/mingo/",
+        ["npm:6.0.0", {
+          "packageLocation": "./.yarn/cache/mingo-npm-6.0.0-86f61eabb0-25a4f8f8fa.zip/node_modules/mingo/",
           "packageDependencies": [
-            ["mingo", "npm:4.4.1"]
+            ["mingo", "npm:6.0.0"]
           ],
           "linkType": "HARD",
         }]

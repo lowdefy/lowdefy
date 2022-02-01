@@ -44,7 +44,7 @@
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-alpha.6",
     "@lowdefy/operators": "4.0.0-alpha.6",
-    "mingo": "^4.4.1"
+    "mingo": "6.0.0"
   },
   "devDependencies": {
     "@swc/cli": "0.1.55",
