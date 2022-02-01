@@ -44,7 +44,7 @@
     "@lowdefy/helpers": "4.0.0-alpha.6",
     "@vscode/sqlite3": "5.0.7",
     "knex": "1.0.1",
-    "mssql": "7.2.1",
+    "mssql": "8.0.1",
     "mysql": "2.18.1",
     "pg": "8.7.1"
   },
