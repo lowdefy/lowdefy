@@ -3467,7 +3467,7 @@ __metadata:
     "@testing-library/react": 13.0.0-alpha.4
     "@testing-library/user-event": 14.0.0-alpha.14
     copyfiles: 2.4.1
-    echarts: 5.2.1
+    echarts: 5.3.0
     echarts-for-react: 3.0.2
     jest: 27.4.7
     jest-serializer-html: 7.1.0
@@ -7666,13 +7666,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"echarts@npm:5.2.1":
-  version: 5.2.1
-  resolution: "echarts@npm:5.2.1"
+"echarts@npm:5.3.0":
+  version: 5.3.0
+  resolution: "echarts@npm:5.3.0"
   dependencies:
     tslib: 2.3.0
-    zrender: 5.2.1
-  checksum: 61265a409bc9bb1b644f087cbf2fd64bf07102d83403e77c0395f271d61bb83b876894a163afd0a68ccd4b7139e827c89d9e59e4624b24ca32f17b22401995f5
+    zrender: 5.3.0
+  checksum: aa3992d7d9bc22b76971e66241015f413410657cc473e0703bc7b48634e2e3684c36df6c90c446ca61173397d290e3edc5bcab1cf5bfe2a331394e02a9495e7f
   languageName: node
   linkType: hard
 
@@ -17671,12 +17671,12 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"zrender@npm:5.2.1":
-  version: 5.2.1
-  resolution: "zrender@npm:5.2.1"
+"zrender@npm:5.3.0":
+  version: 5.3.0
+  resolution: "zrender@npm:5.3.0"
   dependencies:
     tslib: 2.3.0
-  checksum: 4252ca7bd638d23cfef115b9d6a42c6eb893af3e37f25416afc65214139298817d2d3221022b3b2359d36fe7dacc887c8d21cbea454e3d6105f8263d579919e1
+  checksum: 4a5d95d9ccea104d443c36445cefbb0d66cb20cc93610c4c72cac974ef446b5381c297918a3c643696f7e405fad13c98309ea525c8283ed529422b6f1c1fce43
   languageName: node
   linkType: hard
 
