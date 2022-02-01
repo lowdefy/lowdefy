@@ -3566,7 +3566,7 @@ __metadata:
     js-yaml: 4.1.0
     json5: 2.2.0
     uuid: 8.3.2
-    yargs: 17.3.0
+    yargs: 17.3.1
   bin:
     lowdefy-build: ./dist/scripts/run.js
   languageName: unknown
@@ -3975,7 +3975,7 @@ __metadata:
     react-dom: 18.0.0-alpha-327d5c484-20211106
     react-icons: 4.3.1
     swr: 1.2.0
-    yargs: 17.3.0
+    yargs: 17.3.1
   languageName: unknown
   linkType: soft
 
@@ -17612,9 +17612,9 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"yargs@npm:17.3.0":
-  version: 17.3.0
-  resolution: "yargs@npm:17.3.0"
+"yargs@npm:17.3.1":
+  version: 17.3.1
+  resolution: "yargs@npm:17.3.1"
   dependencies:
     cliui: ^7.0.2
     escalade: ^3.1.1
@@ -17623,7 +17623,7 @@ resolve@^2.0.0-next.3:
     string-width: ^4.2.3
     y18n: ^5.0.5
     yargs-parser: ^21.0.0
-  checksum: 2b687338684bf9645e9389ffdbe813fc5a2ddfede299d46fbe5ac80eb9a391e558b97861ba44d2256936ebe9d7f8135f6a38af1c76a5685eac4061008b2df57a
+  checksum: 64fc2e32c56739f1d14d2d24acd17a6944c3c8e3e3558f09fc1953ac112e868cc16013d282886b9d5be22187f8b9ed4f60741a6b1011f595ce2718805a656852
   languageName: node
   linkType: hard
 
