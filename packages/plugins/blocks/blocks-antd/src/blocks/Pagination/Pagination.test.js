@@ -16,12 +16,15 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import block from './index.js';
 import Block from './Pagination.js';
 import examples from './examples.yaml';
 import schema from './schema.json';
 
-const { meta, tests } = block;
+const testConfig = {
+  validation: true,
+  required: true,
+  values: [],
+};
 
-runRenderTests({ examples, Block, meta, schema, tests });
-runBlockSchemaTests({ examples, meta, schema });
+runRenderTests({ Block, examples, schema, testConfig });
+runBlockSchemaTests({ examples, schema });

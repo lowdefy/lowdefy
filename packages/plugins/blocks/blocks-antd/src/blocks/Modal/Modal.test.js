@@ -19,25 +19,25 @@ import { Modal } from 'antd';
 
 import Block from './Modal.js';
 import examples from './examples.yaml';
-import block from './index.js';
 import schema from './schema.json';
 
-// test: {
-//   methods: [
-//     {
-//       name: 'toggleOpen',
-//       args: {},
-//     },
-//     {
-//       name: 'setOpen',
-//       args: {
-//         open: true,
-//       },
-//     },
-//   ],
-// }
-
-const { meta, tests } = block;
+const testConfig = {
+  validation: true,
+  required: true,
+  values: [],
+  methods: [
+    {
+      name: 'toggleOpen',
+      args: {},
+    },
+    {
+      name: 'setOpen',
+      args: {
+        open: true,
+      },
+    },
+  ],
+};
 
 jest.mock('antd/lib/modal', () => {
   return jest.fn(() => 'mocked');
@@ -50,5 +50,5 @@ const mocks = [
   },
 ];
 
-runMockMethodTests({ examples, Block, mocks, meta, schema, tests });
-runBlockSchemaTests({ examples, meta, schema });
+runMockMethodTests({ Block, examples, mocks, schema, testConfig });
+runBlockSchemaTests({ examples, schema });

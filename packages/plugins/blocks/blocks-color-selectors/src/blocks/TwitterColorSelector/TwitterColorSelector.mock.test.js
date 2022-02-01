@@ -16,11 +16,15 @@
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
 
-import block from './index.js';
+import Block from './TwitterColorSelector.js';
 import examples from './examples.yaml';
 import schema from './schema.json';
 
-const { meta, tests } = block;
+const testConfig = {
+  validation: true,
+  required: true,
+  values: [],
+};
 
 jest.mock('react-color', () => {
   const selectors = {
@@ -43,4 +47,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, meta, mocks, schema, tests });
+runMockRenderTests({ Block, examples, mocks, schema, testConfig });

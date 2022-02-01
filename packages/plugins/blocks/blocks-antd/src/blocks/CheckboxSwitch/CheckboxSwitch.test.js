@@ -17,18 +17,15 @@
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import Block from './CheckboxSwitch.js';
-import block from './index.js';
 import examples from './examples.yaml';
 import schema from './schema.json';
 import validationsExamples from '../../validationExamples.js';
 
-// test: {
-//   validation: true,
-//   required: true,
-//   values: [true],
-// }
+const testConfig = {
+  validation: true,
+  required: true,
+  values: [true],
+};
 
-const { meta, tests } = block;
-
-runRenderTests({ Block, examples, meta, schema, tests, validationsExamples });
-runBlockSchemaTests({ examples, meta, schema });
+runRenderTests({ Block, examples, schema, testConfig, validationsExamples });
+runBlockSchemaTests({ examples, schema });

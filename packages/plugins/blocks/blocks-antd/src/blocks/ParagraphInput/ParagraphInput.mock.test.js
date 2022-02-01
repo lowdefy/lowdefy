@@ -16,11 +16,17 @@
 
 import { runMockRenderTests } from '@lowdefy/block-dev';
 
-import block from './index.js';
+import Block from './ParagraphInput.js';
 import examples from './examples.yaml';
 import schema from './schema.json';
 
-const { meta, tests } = block;
+const testConfig = {
+  required: true,
+  validation: true,
+  values: [
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+  ],
+};
 
 jest.mock('antd', () => {
   const comp = jest.fn(() => 'mocked');
@@ -42,4 +48,4 @@ const mocks = [
     name: 'ParagraphInput',
   },
 ];
-runMockRenderTests({ examples, meta, mocks, schema, tests });
+runMockRenderTests({ Block, examples, mocks, schema, testConfig });

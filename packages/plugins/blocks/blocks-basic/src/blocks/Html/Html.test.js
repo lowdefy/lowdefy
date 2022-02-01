@@ -20,14 +20,18 @@ import { render } from '@testing-library/react';
 
 import Block from './Html.js';
 import examples from './examples.yaml';
-import block from './index.js';
 import schema from './schema.json';
 
-const { meta, tests } = block;
-runRenderTests({ examples, Block, meta, schema, tests });
-runBlockSchemaTests({ examples, meta, schema });
+const testConfig = {
+  validation: true,
+  required: true,
+  values: [],
+};
 
-const { before, methods, getProps } = mockBlock({ meta, schema });
+runRenderTests({ Block, examples, schema, testConfig });
+runBlockSchemaTests({ examples, schema });
+
+const { before, methods, getProps } = mockBlock({ meta: Block.meta, schema });
 beforeEach(before);
 
 test('update on properties.html change', () => {

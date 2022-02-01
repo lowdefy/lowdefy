@@ -17,11 +17,14 @@
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import Block from './Avatar.js';
-import block from './index.js';
 import examples from './examples.yaml';
 import schema from './schema.json';
 
-const { meta, tests } = block;
+const testConfig = {
+  validation: true,
+  required: true,
+  values: [],
+};
 
-runRenderTests({ Block, examples, meta, schema, tests });
-runBlockSchemaTests({ examples, meta, schema });
+runRenderTests({ Block, examples, schema, testConfig });
+runBlockSchemaTests({ examples, schema });

@@ -17,11 +17,15 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 import { Avatar } from 'antd';
 
-import block from './index.js';
+import Block from './Comment.js';
 import examples from './examples.yaml';
 import schema from './schema.json';
 
-const { meta, tests } = block;
+const testConfig = {
+  validation: true,
+  required: true,
+  values: [],
+};
 
 jest.mock('antd', () => {
   const comp = jest.fn(() => 'mocked');
@@ -45,4 +49,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, meta, mocks, schema, tests });
+runMockRenderTests({ Block, examples, mocks, schema, testConfig });

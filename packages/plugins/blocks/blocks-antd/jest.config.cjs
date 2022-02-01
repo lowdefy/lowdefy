@@ -9,7 +9,7 @@ module.exports = {
   testEnvironment: 'jsdom',
   testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/src/test'],
   transform: {
-    '^.+\\.(t|j)sx?$': ['@swc/jest', { configFile: '../../../.swcrc.test' }],
+    '^.+\\.(t|j)sx?$': ['@swc/jest', { configFile: '../../../../.swcrc.test' }],
     '\\.yaml$': 'jest-transform-yaml',
   },
   snapshotSerializers: ['@emotion/jest/serializer', 'jest-serializer-html'],
