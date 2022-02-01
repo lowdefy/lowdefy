@@ -5364,7 +5364,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/user-event", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:14.0.0-alpha.14"],
             ["copyfiles", "npm:2.4.1"],
             ["echarts", "npm:5.2.1"],
-            ["echarts-for-react", "virtual:80340452f7a2143773390e8962fe504495bdbbbb548d3de37d9f561a9ed93a2a0ad90f0809f4b149dbc7dd5cef711ad15df3fd8610904528bbf246d0242a066f#npm:3.0.1"],
+            ["echarts-for-react", "virtual:80340452f7a2143773390e8962fe504495bdbbbb548d3de37d9f561a9ed93a2a0ad90f0809f4b149dbc7dd5cef711ad15df3fd8610904528bbf246d0242a066f#npm:3.0.2"],
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:27.4.7"],
             ["jest-serializer-html", "npm:7.1.0"],
             ["jest-transform-yaml", "npm:1.0.0"],
@@ -10381,17 +10381,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["echarts-for-react", [
-        ["npm:3.0.1", {
-          "packageLocation": "./.yarn/cache/echarts-for-react-npm-3.0.1-6680875913-064becc7dd.zip/node_modules/echarts-for-react/",
+        ["npm:3.0.2", {
+          "packageLocation": "./.yarn/cache/echarts-for-react-npm-3.0.2-1e95fef430-d3b16325be.zip/node_modules/echarts-for-react/",
           "packageDependencies": [
-            ["echarts-for-react", "npm:3.0.1"]
+            ["echarts-for-react", "npm:3.0.2"]
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:80340452f7a2143773390e8962fe504495bdbbbb548d3de37d9f561a9ed93a2a0ad90f0809f4b149dbc7dd5cef711ad15df3fd8610904528bbf246d0242a066f#npm:3.0.1", {
-          "packageLocation": "./.yarn/__virtual__/echarts-for-react-virtual-0cae3d84a2/0/cache/echarts-for-react-npm-3.0.1-6680875913-064becc7dd.zip/node_modules/echarts-for-react/",
+        ["virtual:80340452f7a2143773390e8962fe504495bdbbbb548d3de37d9f561a9ed93a2a0ad90f0809f4b149dbc7dd5cef711ad15df3fd8610904528bbf246d0242a066f#npm:3.0.2", {
+          "packageLocation": "./.yarn/__virtual__/echarts-for-react-virtual-f3d6e35a0e/0/cache/echarts-for-react-npm-3.0.2-1e95fef430-d3b16325be.zip/node_modules/echarts-for-react/",
           "packageDependencies": [
-            ["echarts-for-react", "virtual:80340452f7a2143773390e8962fe504495bdbbbb548d3de37d9f561a9ed93a2a0ad90f0809f4b149dbc7dd5cef711ad15df3fd8610904528bbf246d0242a066f#npm:3.0.1"],
+            ["echarts-for-react", "virtual:80340452f7a2143773390e8962fe504495bdbbbb548d3de37d9f561a9ed93a2a0ad90f0809f4b149dbc7dd5cef711ad15df3fd8610904528bbf246d0242a066f#npm:3.0.2"],
             ["@types/echarts", null],
             ["@types/react", null],
             ["echarts", "npm:5.2.1"],
