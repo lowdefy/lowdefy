@@ -5424,7 +5424,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-dom", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:18.0.0-alpha-327d5c484-20211106"],
             ["react-markdown", "virtual:5f524c741247cab5c10daa0e8e15ac36ad181d1b577a348511587c8a60cfabb8ae502afcaa3d6382784b87fb0c47cdaa2ab4a0769887b98e8e70603a2469c5de#npm:7.1.1"],
             ["react-syntax-highlighter", "virtual:5f524c741247cab5c10daa0e8e15ac36ad181d1b577a348511587c8a60cfabb8ae502afcaa3d6382784b87fb0c47cdaa2ab4a0769887b98e8e70603a2469c5de#npm:15.4.5"],
-            ["rehype-raw", "npm:6.1.0"],
+            ["rehype-raw", "npm:6.1.1"],
             ["remark-gfm", "npm:3.0.1"]
           ],
           "linkType": "SOFT",
@@ -19356,10 +19356,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["rehype-raw", [
-        ["npm:6.1.0", {
-          "packageLocation": "./.yarn/cache/rehype-raw-npm-6.1.0-4ebba9ca17-ea978c4b10.zip/node_modules/rehype-raw/",
+        ["npm:6.1.1", {
+          "packageLocation": "./.yarn/cache/rehype-raw-npm-6.1.1-d8b5afcf82-a1f9d309e6.zip/node_modules/rehype-raw/",
           "packageDependencies": [
-            ["rehype-raw", "npm:6.1.0"],
+            ["rehype-raw", "npm:6.1.1"],
             ["@types/hast", "npm:2.3.4"],
             ["hast-util-raw", "npm:7.2.1"],
             ["unified", "npm:10.1.1"]

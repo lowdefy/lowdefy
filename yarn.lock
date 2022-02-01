@@ -3524,7 +3524,7 @@ __metadata:
     react-dom: 18.0.0-alpha-327d5c484-20211106
     react-markdown: 7.1.1
     react-syntax-highlighter: 15.4.5
-    rehype-raw: 6.1.0
+    rehype-raw: 6.1.1
     remark-gfm: 3.0.1
   languageName: unknown
   linkType: soft
@@ -15158,14 +15158,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rehype-raw@npm:6.1.0":
-  version: 6.1.0
-  resolution: "rehype-raw@npm:6.1.0"
+"rehype-raw@npm:6.1.1":
+  version: 6.1.1
+  resolution: "rehype-raw@npm:6.1.1"
   dependencies:
     "@types/hast": ^2.0.0
     hast-util-raw: ^7.2.0
     unified: ^10.0.0
-  checksum: ea978c4b1090c9fba629ee37ae965b7521799c312d1657c507d3082b5ddd1e9081a6c9ad07c9c5de0b1cc37be31cfaa6547580ecd5f48c55271fd9c6158ae402
+  checksum: a1f9d309e609f49fb1f1e06e722705f4dd2e569653a89f756eaccb33b612cf1bb511216a81d10a619d11d047afc161e4b3cb99b957df05a8ba8fdbd5843f949a
   languageName: node
   linkType: hard
 

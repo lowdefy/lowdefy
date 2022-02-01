@@ -52,7 +52,7 @@
     "react-dom": "18.0.0-alpha-327d5c484-20211106",
     "react-markdown": "7.1.1",
     "react-syntax-highlighter": "15.4.5",
-    "rehype-raw": "6.1.0",
+    "rehype-raw": "6.1.1",
     "remark-gfm": "3.0.1"
   },
   "devDependencies": {
