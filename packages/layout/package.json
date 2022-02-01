@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/layout",
-  "version": "3.23.1",
+  "version": "4.0.0-alpha.6",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -25,52 +25,43 @@
     "type": "git",
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
-  "main": "dist/index.js",
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*"
+  },
   "files": [
     "dist/*"
   ],
   "scripts": {
-    "build": "babel src --out-dir dist",
+    "build": "yarn swc",
     "clean": "rm -rf dist",
+    "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.yaml\" -e \"./src/**/*.snap\"",
     "prepare": "yarn build",
-    "start": "webpack serve",
+    "swc": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start && yarn copyfiles",
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/block-tools": "3.23.1",
-    "@lowdefy/helpers": "3.23.1",
-    "antd": "4.4.2",
-    "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "@lowdefy/block-utils": "4.0.0-alpha.6",
+    "@lowdefy/helpers": "4.0.0-alpha.6",
+    "antd": "4.17.0-alpha.7",
+    "react": "18.0.0-alpha-327d5c484-20211106",
+    "react-dom": "18.0.0-alpha-327d5c484-20211106"
   },
   "devDependencies": {
-    "@babel/cli": "7.14.3",
-    "@babel/core": "7.14.3",
-    "@babel/preset-env": "7.14.4",
-    "@babel/preset-react": "7.13.13",
-    "babel-jest": "26.6.3",
-    "babel-loader": "8.2.2",
-    "babel-plugin-import": "1.13.3",
-    "buffer": "6.0.3",
-    "clean-webpack-plugin": "3.0.0",
-    "css-loader": "5.2.6",
-    "html-webpack-plugin": "5.3.1",
-    "identity-obj-proxy": "3.0.0",
-    "jest": "26.6.3",
-    "js-yaml": "4.1.0",
-    "less": "3.13.0",
-    "less-loader": "9.0.0",
-    "path-browserify": "1.0.1",
-    "process": "0.11.10",
-    "react-markdown": "5.0.3",
-    "react-syntax-highlight": "15.3.1",
-    "react-test-renderer": "17.0.2",
-    "style-loader": "2.0.0",
-    "webpack": "5.38.1",
-    "webpack-cli": "4.7.0",
-    "webpack-dev-server": "3.11.2",
-    "yaml-jest": "1.0.5",
-    "yaml-loader": "0.6.0"
+    "@babel/preset-react": "7.16.0",
+    "@emotion/jest": "11.5.0",
+    "@lowdefy/block-dev": "4.0.0-alpha.6",
+    "@swc/cli": "0.1.55",
+    "@swc/core": "1.2.130",
+    "@swc/jest": "0.2.17",
+    "@testing-library/dom": "8.10.1",
+    "@testing-library/react": "13.0.0-alpha.4",
+    "@testing-library/user-event": "14.0.0-alpha.14",
+    "copyfiles": "2.4.1",
+    "jest": "27.3.1",
+    "jest-serializer-html": "7.1.0",
+    "jest-transform-yaml": "0.1.2"
   },
   "publishConfig": {
     "access": "public"

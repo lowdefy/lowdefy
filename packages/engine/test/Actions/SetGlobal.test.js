@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import testContext from '../testContext';
+import testContext from '../testContext.js';
 
 const pageId = 'one';
 
@@ -24,14 +24,16 @@ test('SetGlobal data to global', async () => {
     pageId,
   };
   const rootBlock = {
+    id: 'block:root:root:0',
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
         blocks: [
           {
+            id: 'block:root:button:0',
             blockId: 'button',
             type: 'Button',
             meta: {
@@ -57,11 +59,11 @@ test('SetGlobal data to global', async () => {
     rootBlock,
   });
 
-  expect(context.lowdefy.lowdefyGlobal).toEqual({ x: 'old', init: 'init' });
-  const { button } = context.RootBlocks.map;
+  expect(context._internal.lowdefy.lowdefyGlobal).toEqual({ x: 'old', init: 'init' });
+  const button = context._internal.RootBlocks.map['block:root:button:0'];
 
   await button.triggerEvent({ name: 'onClick' });
-  expect(context.lowdefy.lowdefyGlobal).toEqual({
+  expect(context._internal.lowdefy.lowdefyGlobal).toEqual({
     init: 'init',
     str: 'hello',
     number: 13,
@@ -69,3 +71,5 @@ test('SetGlobal data to global', async () => {
     x: 'new',
   });
 });
+
+test.todo('SetGlobal calls context update');

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getFieldValues from '../src/getFieldValues';
+import getFieldValues from '../src/getFieldValues.js';
 
 test('single object', () => {
   expect(getFieldValues('_req', { _req: 1 })).toEqual([1]);

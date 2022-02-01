@@ -14,33 +14,19 @@
   limitations under the License.
 */
 
-import path from 'path';
-import fse from 'fs-extra';
-import getFederatedModule from '../../utils/getFederatedModule';
+import getServer from './getServer.js';
+import installServer from './installServer.js';
+import runLowdefyBuild from './runLowdefyBuild.js';
+import runNextBuild from './runNextBuild.js';
 
 async function build({ context }) {
-  const { default: buildScript } = await getFederatedModule({
-    module: 'build',
-    packageName: '@lowdefy/build',
-    version: context.lowdefyVersion,
-    context,
-  });
-  context.print.log(
-    `Cleaning block meta cache at "${path.resolve(context.cacheDirectory, './meta')}".`
-  );
-
-  await fse.emptyDir(path.resolve(context.cacheDirectory, './meta'));
   context.print.info('Starting build.');
-  await buildScript({
-    blocksServerUrl: context.options.blocksServerUrl,
-    cacheDirectory: context.cacheDirectory,
-    configDirectory: context.baseDirectory,
-    logger: context.print,
-    outputDirectory: context.outputDirectory,
-    refResolver: context.options.refResolver,
-  });
-  await context.sendTelemetry();
-  context.print.log(`Build artifacts saved at ${context.outputDirectory}.`);
+  await getServer({ context });
+  await installServer({ context });
+  await runLowdefyBuild({ context });
+  await installServer({ context });
+  await runNextBuild({ context });
+  await context.sendTelemetry({ sendTypes: true });
   context.print.succeed(`Build successful.`);
 }
 

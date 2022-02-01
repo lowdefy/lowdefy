@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/lowdefy",
-  "version": "3.23.1",
+  "version": "4.0.0-alpha.6",
   "license": "Apache-2.0",
   "private": true,
   "description": "Lowdefy monorepo",
@@ -25,7 +25,9 @@
   "workspaces": [
     "packages/*",
     "packages/blocks/*",
-    "packages/servers/*"
+    "packages/connections/*",
+    "packages/plugins/**",
+    "packages/utils/*"
   ],
   "scripts": {
     "build": "lerna run build",
@@ -35,23 +37,24 @@
     "lerna:publish": "lerna publish from-git",
     "postversion": "yarn install",
     "prettier": "prettier --config .prettierrc --write **/*.js",
+    "start:server-dev": "yarn workspace @lowdefy/server-dev start --package-manager yarn --config-directory ../../app",
+    "start": "yarn workspace @lowdefy/server build:lowdefy --config-directory ../../app && yarn && yarn workspace @lowdefy/server build:next && yarn workspace @lowdefy/server start",
+    "start:dev": "yarn workspace @lowdefy/server build:lowdefy --config-directory ../../app && yarn && yarn workspace @lowdefy/server dev",
     "test": "lerna run test",
-    "test:ci": "yarn install --immutable --immutable-cache --check-cache && yarn build && yarn test --ignore='@lowdefy/format'"
+    "test:ci": "yarn install --immutable --immutable-cache --check-cache && yarn build && yarn test --ignore='@lowdefy/format' --ignore='@lowdefy/block-dev'"
   },
   "devDependencies": {
-    "@yarnpkg/pnpify": "2.4.0",
-    "eslint": "7.27.0",
+    "@yarnpkg/pnpify": "3.1.0-rc.2",
+    "eslint": "8.3.0",
     "eslint-config-prettier": "8.3.0",
-    "eslint-import-resolver-node": "0.3.4",
-    "eslint-plugin-import": "2.23.4",
-    "eslint-plugin-jsx-a11y": "6.4.1",
-    "eslint-plugin-prettier": "3.4.0",
-    "eslint-plugin-react": "7.24.0",
-    "eslint-plugin-react-hooks": "4.2.0",
+    "eslint-import-resolver-node": "0.3.6",
+    "eslint-plugin-import": "2.25.3",
+    "eslint-plugin-jsx-a11y": "6.5.1",
+    "eslint-plugin-prettier": "4.0.0",
+    "eslint-plugin-react": "7.27.1",
+    "eslint-plugin-react-hooks": "4.3.0",
     "lerna": "4.0.0",
-    "prettier": "2.3.0"
+    "prettier": "2.4.1"
   },
-  "resolutions": {
-    "mongodb": "3.6.5"
-  }
+  "packageManager": "yarn@3.1.0"
 }

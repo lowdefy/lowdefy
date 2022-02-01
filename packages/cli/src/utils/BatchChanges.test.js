@@ -14,13 +14,9 @@
   limitations under the License.
 */
 
-import BatchChanges from './BatchChanges';
+import BatchChanges from './BatchChanges.js';
 
-async function wait(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
+import { wait } from '@lowdefy/helpers';
 
 const context = {};
 
@@ -104,85 +100,42 @@ test('BatchChanges retries on errors, with back-off', async () => {
   batchChanges.newChange();
   await wait(120);
   expect(fn).toHaveBeenCalledTimes(1);
-  expect(context.print.error.mock.calls).toEqual([
-    [
-      'Error: 1',
-      {
-        timestamp: true,
-      },
-    ],
-  ]);
-  expect(context.print.warn.mock.calls).toEqual([
-    [
-      'Retrying in 0.2s.',
-      {
-        timestamp: true,
-      },
-    ],
-  ]);
+  expect(context.print.error.mock.calls).toEqual([['Error: 1']]);
+  expect(context.print.warn.mock.calls).toEqual([['Retrying in 0.2s.']]);
   expect(batchChanges.delay).toBe(200);
   expect(count).toBe(1);
   await wait(200);
   expect(fn).toHaveBeenCalledTimes(2);
-  expect(context.print.error.mock.calls).toEqual([
-    [
-      'Error: 1',
-      {
-        timestamp: true,
-      },
-    ],
-    [
-      'Error: 2',
-      {
-        timestamp: true,
-      },
-    ],
-  ]);
-  expect(context.print.warn.mock.calls).toEqual([
-    [
-      'Retrying in 0.2s.',
-      {
-        timestamp: true,
-      },
-    ],
-    [
-      'Retrying in 0.4s.',
-      {
-        timestamp: true,
-      },
-    ],
-  ]);
+  expect(context.print.error.mock.calls).toEqual([['Error: 1'], ['Error: 2']]);
+  expect(context.print.warn.mock.calls).toEqual([['Retrying in 0.2s.'], ['Retrying in 0.4s.']]);
   expect(batchChanges.delay).toBe(400);
   expect(count).toBe(2);
   await wait(400);
   expect(fn).toHaveBeenCalledTimes(3);
-  expect(context.print.error.mock.calls).toEqual([
-    [
-      'Error: 1',
-      {
-        timestamp: true,
-      },
-    ],
-    [
-      'Error: 2',
-      {
-        timestamp: true,
-      },
-    ],
-  ]);
-  expect(context.print.warn.mock.calls).toEqual([
-    [
-      'Retrying in 0.2s.',
-      {
-        timestamp: true,
-      },
-    ],
-    [
-      'Retrying in 0.4s.',
-      {
-        timestamp: true,
-      },
-    ],
-  ]);
+  expect(context.print.error.mock.calls).toEqual([['Error: 1'], ['Error: 2']]);
+  expect(context.print.warn.mock.calls).toEqual([['Retrying in 0.2s.'], ['Retrying in 0.4s.']]);
   expect(success).toBe(true);
+});
+
+test('BatchChanges calls function again if it receives new change while executing', async () => {
+  const fn = jest.fn(async () => {
+    await wait(50);
+  });
+  const batchChanges = new BatchChanges({ fn, context, minDelay: 50 });
+  batchChanges.newChange();
+  await wait(60);
+  batchChanges.newChange();
+  expect(fn).toHaveBeenCalledTimes(1);
+  await wait(50);
+  expect(fn).toHaveBeenCalledTimes(2);
+});
+
+test('BatchChanges provides arguments to the called function', async () => {
+  const fn = jest.fn();
+  const batchChanges = new BatchChanges({ fn, context, minDelay: 5 });
+  batchChanges.newChange(1, 2, 3);
+  batchChanges.newChange('a', 'b', 'c');
+  batchChanges.newChange({ a: 1 });
+  await wait(6);
+  expect(fn.mock.calls).toEqual([[[[1, 2, 3], ['a', 'b', 'c'], [{ a: 1 }]]]]);
 });

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import testContext from '../testContext';
+import testContext from '../testContext.js';
 
 const pageId = 'one';
 
@@ -22,14 +22,16 @@ const lowdefy = { pageId };
 
 test('SetState data to state', async () => {
   const rootBlock = {
+    id: 'block:root:root:0',
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
         blocks: [
           {
+            id: 'block:root:textInput:0',
             blockId: 'textInput',
             type: 'TextInput',
             meta: {
@@ -38,6 +40,7 @@ test('SetState data to state', async () => {
             },
           },
           {
+            id: 'block:root:button:0',
             blockId: 'button',
             type: 'Button',
             meta: {
@@ -58,7 +61,7 @@ test('SetState data to state', async () => {
     initState: { textInput: 'init' },
   });
   expect(context.state).toEqual({ textInput: 'init' });
-  const { button } = context.RootBlocks.map;
+  const button = context._internal.RootBlocks.map['block:root:button:0'];
   expect(context.state).toEqual({ textInput: 'init' });
   button.triggerEvent({ name: 'onClick' });
   expect(context.state).toEqual({ textInput: 'init', x: [1, 2, 3] });
@@ -66,14 +69,16 @@ test('SetState data to state', async () => {
 
 test('SetState field to state and update block value', async () => {
   const rootBlock = {
+    id: 'block:root:root:0',
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
         blocks: [
           {
+            id: 'block:root:textInput:0',
             blockId: 'textInput',
             type: 'TextInput',
             meta: {
@@ -82,6 +87,7 @@ test('SetState field to state and update block value', async () => {
             },
           },
           {
+            id: 'block:root:button:0',
             blockId: 'button',
             type: 'Button',
             meta: {
@@ -102,7 +108,8 @@ test('SetState field to state and update block value', async () => {
     initState: { textInput: 'init' },
   });
   expect(context.state).toEqual({ textInput: 'init' });
-  const { button, textInput } = context.RootBlocks.map;
+  const button = context._internal.RootBlocks.map['block:root:button:0'];
+  const textInput = context._internal.RootBlocks.map['block:root:textInput:0'];
 
   expect(context.state).toEqual({ textInput: 'init' });
   button.triggerEvent({ name: 'onClick' });
@@ -112,14 +119,16 @@ test('SetState field to state and update block value', async () => {
 
 test('SetState field to state with incorrect type - NOTE SetState IS NOT TYPE SAFE', async () => {
   const rootBlock = {
+    id: 'block:root:root:0',
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
         blocks: [
           {
+            id: 'block:root:textInput:0',
             blockId: 'textInput',
             type: 'TextInput',
             meta: {
@@ -128,6 +137,7 @@ test('SetState field to state with incorrect type - NOTE SetState IS NOT TYPE SA
             },
           },
           {
+            id: 'block:root:button:0',
             blockId: 'button',
             type: 'Button',
             meta: {
@@ -148,7 +158,8 @@ test('SetState field to state with incorrect type - NOTE SetState IS NOT TYPE SA
     initState: { textInput: 'init' },
   });
   expect(context.state).toEqual({ textInput: 'init' });
-  const { button, textInput } = context.RootBlocks.map;
+  const button = context._internal.RootBlocks.map['block:root:button:0'];
+  const textInput = context._internal.RootBlocks.map['block:root:textInput:0'];
 
   expect(context.state).toEqual({ textInput: 'init' });
   button.triggerEvent({ name: 'onClick' });
@@ -158,14 +169,16 @@ test('SetState field to state with incorrect type - NOTE SetState IS NOT TYPE SA
 
 test('SetState value on array and create new Blocks for array items', async () => {
   const rootBlock = {
+    id: 'block:root:root:0',
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
         blocks: [
           {
+            id: 'block:root:list:0',
             blockId: 'list',
             type: 'List',
             meta: {
@@ -176,6 +189,7 @@ test('SetState value on array and create new Blocks for array items', async () =
               content: {
                 blocks: [
                   {
+                    id: 'block:root:list.$.textInput:0',
                     blockId: 'list.$.textInput',
                     type: 'TextInput',
                     defaultValue: '123',
@@ -189,6 +203,7 @@ test('SetState value on array and create new Blocks for array items', async () =
             },
           },
           {
+            id: 'block:root:button:0',
             blockId: 'button',
             type: 'Button',
             meta: {
@@ -214,7 +229,7 @@ test('SetState value on array and create new Blocks for array items', async () =
     rootBlock,
     initState: { list: [{ textInput: 'init' }] },
   });
-  const { button } = context.RootBlocks.map;
+  const button = context._internal.RootBlocks.map['block:root:button:0'];
 
   expect(context.state).toEqual({ list: [{ textInput: 'init' }] });
 
@@ -223,9 +238,9 @@ test('SetState value on array and create new Blocks for array items', async () =
     list: [{ textInput: '0' }, { textInput: '1' }, { textInput: '2' }],
   });
 
-  const textInput0 = context.RootBlocks.map['list.0.textInput'];
-  const textInput1 = context.RootBlocks.map['list.1.textInput'];
-  const textInput2 = context.RootBlocks.map['list.2.textInput'];
+  const textInput0 = context._internal.RootBlocks.map['block:root:list.0.textInput:0'];
+  const textInput1 = context._internal.RootBlocks.map['block:root:list.1.textInput:0'];
+  const textInput2 = context._internal.RootBlocks.map['block:root:list.2.textInput:0'];
 
   expect(textInput0.value).toEqual('0');
   expect(textInput1.value).toEqual('1');

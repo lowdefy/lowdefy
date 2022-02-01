@@ -18,12 +18,12 @@ import path from 'path';
 import { readFile, writeFile } from '@lowdefy/node-utils';
 import { v4 as uuid } from 'uuid';
 
-async function getCliJson({ baseDirectory }) {
-  const filePath = path.resolve(baseDirectory, './.lowdefy/cli.json');
+async function getCliJson({ configDirectory }) {
+  const filePath = path.resolve(configDirectory, './.lowdefy/cli.json');
   const cliJson = await readFile(filePath);
   if (!cliJson) {
     const appId = uuid();
-    await writeFile({ filePath, content: JSON.stringify({ appId }, null, 2) });
+    await writeFile(filePath, JSON.stringify({ appId }, null, 2));
     return { appId };
   }
   return JSON.parse(cliJson);

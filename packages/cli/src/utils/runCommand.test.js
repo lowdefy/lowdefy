@@ -13,19 +13,14 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { wait } from '@lowdefy/helpers';
 
-import errorHandler from './errorHandler';
-import runCommand from './runCommand';
-import startUp from './startUp';
+import errorHandler from './errorHandler.js';
+import runCommand from './runCommand.js';
+import startUp from './startUp.js';
 
 jest.mock('./errorHandler');
 jest.mock('./startUp');
-
-async function wait(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
 
 beforeEach(() => {
   errorHandler.mockReset();
@@ -64,8 +59,9 @@ test('runCommand calls startUp', async () => {
       Object {
         "context": Object {
           "appId": "appId",
-          "baseDirectory": "baseDirectory",
-          "cacheDirectory": "baseDirectory/cacheDirectory",
+          "configDirectory": "configDirectory",
+          "buildDirectory": "configDirectory/buildDirectory",
+          "cacheDirectory": "configDirectory/cacheDirectory",
           "cliConfig": Object {},
           "cliVersion": "cliVersion",
           "command": "test",
@@ -76,7 +72,6 @@ test('runCommand calls startUp', async () => {
           "options": Object {
             "option": true,
           },
-          "outputDirectory": "baseDirectory/outputDirectory",
           "print": Object {
             "info": [MockFunction],
             "log": [MockFunction],
@@ -96,8 +91,9 @@ test('runCommand calls startUp', async () => {
           },
           "context": Object {
             "appId": "appId",
-            "baseDirectory": "baseDirectory",
-            "cacheDirectory": "baseDirectory/cacheDirectory",
+            "configDirectory": "configDirectory",
+            "buildDirectory": "configDirectory/buildDirectory",
+            "cacheDirectory": "configDirectory/cacheDirectory",
             "cliConfig": Object {},
             "cliVersion": "cliVersion",
             "command": "test",
@@ -108,7 +104,6 @@ test('runCommand calls startUp', async () => {
             "options": Object {
               "option": true,
             },
-            "outputDirectory": "baseDirectory/outputDirectory",
             "print": Object {
               "info": [MockFunction],
               "log": [MockFunction],
@@ -138,8 +133,9 @@ test('Catch error synchronous function', async () => {
         Object {
           "context": Object {
             "appId": "appId",
-            "baseDirectory": "baseDirectory",
-            "cacheDirectory": "baseDirectory/cacheDirectory",
+            "configDirectory": "configDirectory",
+            "buildDirectory": "configDirectory/buildDirectory",
+            "cacheDirectory": "configDirectory/cacheDirectory",
             "cliConfig": Object {},
             "cliVersion": "cliVersion",
             "command": "test",
@@ -150,7 +146,6 @@ test('Catch error synchronous function', async () => {
             "options": Object {
               "option": true,
             },
-            "outputDirectory": "baseDirectory/outputDirectory",
             "print": Object {
               "info": [MockFunction],
               "log": [MockFunction],
@@ -179,8 +174,9 @@ test('Catch error asynchronous function', async () => {
         Object {
           "context": Object {
             "appId": "appId",
-            "baseDirectory": "baseDirectory",
-            "cacheDirectory": "baseDirectory/cacheDirectory",
+            "configDirectory": "configDirectory",
+            "buildDirectory": "configDirectory/buildDirectory",
+            "cacheDirectory": "configDirectory/cacheDirectory",
             "cliConfig": Object {},
             "cliVersion": "cliVersion",
             "command": "test",
@@ -191,7 +187,6 @@ test('Catch error asynchronous function', async () => {
             "options": Object {
               "option": true,
             },
-            "outputDirectory": "baseDirectory/outputDirectory",
             "print": Object {
               "info": [MockFunction],
               "log": [MockFunction],

@@ -17,23 +17,21 @@
 import path from 'path';
 import { type } from '@lowdefy/helpers';
 
-import checkForUpdatedVersions from './checkForUpdatedVersions';
-import getCliJson from './getCliJson';
-import getDirectories from './getDirectories';
-import getLowdefyYaml from './getLowdefyYaml';
-import getOptions from './getOptions';
-import getSendTelemetry from './getSendTelemetry';
-import createPrint from './print';
-import packageJson from '../../package.json';
-const { version: cliVersion } = packageJson;
+import checkForUpdatedVersions from './checkForUpdatedVersions.js';
+import getCliJson from './getCliJson.js';
+import getDirectories from './getDirectories.js';
+import getLowdefyYaml from './getLowdefyYaml.js';
+import getOptions from './getOptions.js';
+import getPackageManager from './getPackageManager.js';
+import getSendTelemetry from './getSendTelemetry.js';
+import createPrint from './print.js';
 
 async function startUp({ context, options = {}, command }) {
   context.command = command.name();
-  context.cliVersion = cliVersion;
   context.commandLineOptions = options;
   context.print = createPrint();
-  context.baseDirectory = path.resolve(options.baseDirectory || process.cwd());
 
+  context.configDirectory = path.resolve(options.configDirectory || process.cwd());
   const { cliConfig, lowdefyVersion } = await getLowdefyYaml(context);
   context.cliConfig = cliConfig;
   context.lowdefyVersion = lowdefyVersion;
@@ -42,11 +40,8 @@ async function startUp({ context, options = {}, command }) {
   context.appId = appId;
 
   context.options = getOptions(context);
-
-  const { cacheDirectory, outputDirectory } = getDirectories(context);
-  context.cacheDirectory = cacheDirectory;
-  context.outputDirectory = outputDirectory;
-
+  context.directories = getDirectories(context);
+  context.packageManager = getPackageManager(context);
   await checkForUpdatedVersions(context);
 
   context.sendTelemetry = getSendTelemetry(context);

@@ -1,0 +1,521 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mock render - default - value[0] - TextArea 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": undefined,
+      "autoFocus": undefined,
+      "autoSize": Object {
+        "minRows": 3,
+      },
+      "bordered": undefined,
+      "className": "{}",
+      "disabled": undefined,
+      "id": "default_input",
+      "maxLength": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "showCount": undefined,
+      "size": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.allowClear: false - value[0] - TextArea 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": false,
+      "autoFocus": undefined,
+      "autoSize": Object {
+        "minRows": 3,
+      },
+      "bordered": undefined,
+      "className": "{}",
+      "disabled": undefined,
+      "id": "properties.allowClear: false_input",
+      "maxLength": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "showCount": undefined,
+      "size": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.autoFocus: true - value[0] - TextArea 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": undefined,
+      "autoFocus": true,
+      "autoSize": Object {
+        "minRows": 3,
+      },
+      "bordered": undefined,
+      "className": "{}",
+      "disabled": undefined,
+      "id": "properties.autoFocus: true_input",
+      "maxLength": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "showCount": undefined,
+      "size": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.autoSize: true - value[0] - TextArea 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": undefined,
+      "autoFocus": undefined,
+      "autoSize": true,
+      "bordered": undefined,
+      "className": "{}",
+      "disabled": undefined,
+      "id": "properties.autoSize: true_input",
+      "maxLength": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "showCount": undefined,
+      "size": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.bordered: false - value[0] - TextArea 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": undefined,
+      "autoFocus": undefined,
+      "autoSize": Object {
+        "minRows": 3,
+      },
+      "bordered": false,
+      "className": "{}",
+      "disabled": undefined,
+      "id": "properties.bordered: false_input",
+      "maxLength": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "showCount": undefined,
+      "size": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.disabled: true - value[0] - TextArea 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": undefined,
+      "autoFocus": undefined,
+      "autoSize": Object {
+        "minRows": 3,
+      },
+      "bordered": undefined,
+      "className": "{}",
+      "disabled": true,
+      "id": "properties.disabled: true_input",
+      "maxLength": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "showCount": undefined,
+      "size": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label align: right - value[0] - TextArea 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": undefined,
+      "autoFocus": undefined,
+      "autoSize": Object {
+        "minRows": 3,
+      },
+      "bordered": undefined,
+      "className": "{}",
+      "disabled": undefined,
+      "id": "properties.label align: right_input",
+      "maxLength": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "showCount": undefined,
+      "size": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label colon: false - value[0] - TextArea 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": undefined,
+      "autoFocus": undefined,
+      "autoSize": Object {
+        "minRows": 3,
+      },
+      "bordered": undefined,
+      "className": "{}",
+      "disabled": undefined,
+      "id": "properties.label colon: false_input",
+      "maxLength": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "showCount": undefined,
+      "size": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label disabled: true - value[0] - TextArea 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": undefined,
+      "autoFocus": undefined,
+      "autoSize": Object {
+        "minRows": 3,
+      },
+      "bordered": undefined,
+      "className": "{}",
+      "disabled": undefined,
+      "id": "properties.label disabled: true_input",
+      "maxLength": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "showCount": undefined,
+      "size": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label extra: showing extra - value[0] - TextArea 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": undefined,
+      "autoFocus": undefined,
+      "autoSize": Object {
+        "minRows": 3,
+      },
+      "bordered": undefined,
+      "className": "{}",
+      "disabled": undefined,
+      "id": "properties.label extra: showing extra_input",
+      "maxLength": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "showCount": undefined,
+      "size": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label inline: true - value[0] - TextArea 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": undefined,
+      "autoFocus": undefined,
+      "autoSize": Object {
+        "minRows": 3,
+      },
+      "bordered": undefined,
+      "className": "{}",
+      "disabled": undefined,
+      "id": "properties.label inline: true_input",
+      "maxLength": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "showCount": undefined,
+      "size": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label span: 12 - value[0] - TextArea 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": undefined,
+      "autoFocus": undefined,
+      "autoSize": Object {
+        "minRows": 3,
+      },
+      "bordered": undefined,
+      "className": "{}",
+      "disabled": undefined,
+      "id": "properties.label span: 12_input",
+      "maxLength": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "showCount": undefined,
+      "size": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.maxLength: 4 - value[0] - TextArea 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": undefined,
+      "autoFocus": undefined,
+      "autoSize": Object {
+        "minRows": 3,
+      },
+      "bordered": undefined,
+      "className": "{}",
+      "disabled": undefined,
+      "id": "properties.maxLength: 4_input",
+      "maxLength": 4,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "showCount": undefined,
+      "size": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.minRows: 2  maxRows: 6 - value[0] - TextArea 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": undefined,
+      "autoFocus": undefined,
+      "autoSize": Object {
+        "maxRows": 6,
+        "minRows": 2,
+      },
+      "bordered": undefined,
+      "className": "{}",
+      "disabled": undefined,
+      "id": "properties.minRows: 2  maxRows: 6_input",
+      "maxLength": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "showCount": undefined,
+      "size": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.placeholder: Type your text here - value[0] - TextArea 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": undefined,
+      "autoFocus": undefined,
+      "autoSize": Object {
+        "minRows": 3,
+      },
+      "bordered": undefined,
+      "className": "{}",
+      "disabled": undefined,
+      "id": "properties.placeholder: Type your text here_input",
+      "maxLength": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": "Type your text here",
+      "showCount": undefined,
+      "size": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.rows: 5 - value[0] - TextArea 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": undefined,
+      "autoFocus": undefined,
+      "autoSize": Object {
+        "maxRows": 5,
+        "minRows": 5,
+      },
+      "bordered": undefined,
+      "className": "{}",
+      "disabled": undefined,
+      "id": "properties.rows: 5_input",
+      "maxLength": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "showCount": undefined,
+      "size": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.showCount: true - value[0] - TextArea 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": undefined,
+      "autoFocus": undefined,
+      "autoSize": Object {
+        "minRows": 3,
+      },
+      "bordered": undefined,
+      "className": "{}",
+      "disabled": undefined,
+      "id": "properties.showCount: true_input",
+      "maxLength": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "showCount": true,
+      "size": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.size: large - value[0] - TextArea 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": undefined,
+      "autoFocus": undefined,
+      "autoSize": Object {
+        "minRows": 3,
+      },
+      "bordered": undefined,
+      "className": "{}",
+      "disabled": undefined,
+      "id": "properties.size: large_input",
+      "maxLength": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "showCount": undefined,
+      "size": "large",
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.size: small - value[0] - TextArea 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": undefined,
+      "autoFocus": undefined,
+      "autoSize": Object {
+        "minRows": 3,
+      },
+      "bordered": undefined,
+      "className": "{}",
+      "disabled": undefined,
+      "id": "properties.size: small_input",
+      "maxLength": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "showCount": undefined,
+      "size": "small",
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.title: My TextArea Title - value[0] - TextArea 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": undefined,
+      "autoFocus": undefined,
+      "autoSize": Object {
+        "minRows": 3,
+      },
+      "bordered": undefined,
+      "className": "{}",
+      "disabled": undefined,
+      "id": "properties.title: My TextArea Title_input",
+      "maxLength": undefined,
+      "onChange": [Function],
+      "onPressEnter": [Function],
+      "placeholder": undefined,
+      "showCount": undefined,
+      "size": undefined,
+      "value": null,
+    },
+    Object {},
+  ],
+]
+`;

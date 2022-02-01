@@ -1,0 +1,78 @@
+{
+  "name": "@lowdefy/blocks-color-selectors",
+  "version": "4.0.0-alpha.6",
+  "license": "Apache-2.0",
+  "description": "A Lowdefy color selector blocks based on react-color.",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "lowdefy blocks",
+    "color picker",
+    "react-color"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Sam Tolmay",
+      "url": "https://github.com/SamTolmay"
+    },
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    },
+    {
+      "name": "Sandile Memela",
+      "url": "https://github.com/sah-memela"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "type": "module",
+  "exports": {
+    "./*": "./dist/*",
+    "./blocks": "./dist/blocks.js",
+    "./types": "./dist/types.js"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "build": "yarn swc",
+    "clean": "rm -rf dist",
+    "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.yaml\" -e \"./src/**/*.snap\"",
+    "prepare": "yarn build",
+    "swc": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start && yarn copyfiles",
+    "test:watch": "jest --coverage --watch",
+    "test": "jest --coverage"
+  },
+  "dependencies": {
+    "@lowdefy/block-utils": "4.0.0-alpha.6",
+    "@lowdefy/blocks-antd": "4.0.0-alpha.6",
+    "react": "18.0.0-alpha-327d5c484-20211106",
+    "react-color": "2.19.3",
+    "react-dom": "18.0.0-alpha-327d5c484-20211106"
+  },
+  "devDependencies": {
+    "@babel/preset-react": "7.16.0",
+    "@emotion/jest": "11.5.0",
+    "@lowdefy/block-dev": "4.0.0-alpha.6",
+    "@swc/cli": "0.1.55",
+    "@swc/core": "1.2.130",
+    "@swc/jest": "0.2.17",
+    "@testing-library/dom": "8.10.1",
+    "@testing-library/react": "13.0.0-alpha.4",
+    "@testing-library/user-event": "14.0.0-alpha.14",
+    "copyfiles": "2.4.1",
+    "jest": "27.3.1",
+    "jest-canvas-mock": "2.3.1",
+    "jest-serializer-html": "7.1.0",
+    "jest-transform-yaml": "0.1.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

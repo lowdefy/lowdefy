@@ -14,13 +14,9 @@
   limitations under the License.
 */
 
-function testContext({
-  writeBuildArtifact,
-  configDirectory,
-  readConfigFile,
-  logger = {},
-  getMeta,
-} = {}) {
+import createCounter from '../utils/createCounter.js';
+
+function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logger = {} } = {}) {
   const defaultLogger = {
     info: () => {},
     log: () => {},
@@ -30,8 +26,20 @@ function testContext({
   };
 
   const context = {
-    configDirectory: configDirectory || '',
-    getMeta: getMeta || (() => {}),
+    id: 'test',
+    directories: {
+      config: configDirectory || '',
+    },
+    typeCounters: {
+      actions: createCounter(),
+      blocks: createCounter(),
+      connections: createCounter(),
+      requests: createCounter(),
+      operators: {
+        client: createCounter(),
+        server: createCounter(),
+      },
+    },
     writeBuildArtifact: writeBuildArtifact || (() => {}),
     readConfigFile: readConfigFile || (() => {}),
   };

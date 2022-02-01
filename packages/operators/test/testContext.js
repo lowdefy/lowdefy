@@ -1,5 +1,5 @@
-import commonOperators from '../src/common';
-import webOperators from '../src/web';
+import commonOperators from '../src/common/index.js';
+import webOperators from '../src/web/index.js';
 
 const operators = Object.keys({
   ...commonOperators,
@@ -12,7 +12,7 @@ const lowdefy = {
     jsActions: {},
   },
   inputs: {
-    own: {
+    context: {
       string: 'input',
       arr: [{ a: 'input1' }, { a: 'input2' }],
     },
@@ -40,7 +40,7 @@ const lowdefy = {
 };
 
 const context = {
-  id: 'own',
+  id: 'context',
   config: {
     string: 'config',
     arr: [{ a: 'config1' }, { a: 'config2' }],
@@ -77,6 +77,4 @@ const context = {
   operators,
 };
 
-const contexts = {};
-
-export { context, contexts, operators };
+export { context, operators };

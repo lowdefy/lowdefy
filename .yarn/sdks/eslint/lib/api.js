@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
-const {existsSync} = require(`fs`);
-const {createRequire, createRequireFromPath} = require(`module`);
-const {resolve} = require(`path`);
+const { existsSync } = require(`fs`);
+const { createRequire, createRequireFromPath } = require(`module`);
+const { resolve } = require(`path`);
 
-const relPnpApiPath = "../../../../.pnp.cjs";
+const relPnpApiPath = '../../../../.pnp.cjs';
 
 const absPnpApiPath = resolve(__dirname, relPnpApiPath);
 const absRequire = (createRequire || createRequireFromPath)(absPnpApiPath);
@@ -16,5 +16,6 @@ if (existsSync(absPnpApiPath)) {
   }
 }
 
+// See https://github.com/yarnpkg/berry/issues/3578
 // Defer to the real eslint/lib/api.js your application uses
-module.exports = absRequire(`eslint/lib/api.js`);
+module.exports = absRequire(`eslint`);

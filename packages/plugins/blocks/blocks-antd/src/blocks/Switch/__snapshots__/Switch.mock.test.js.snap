@@ -1,0 +1,1305 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mock render - default - value[0] - Switch 1`] = `
+Array [
+  Array [
+    Object {
+      "autoFocus": undefined,
+      "checked": false,
+      "checkedChildren": <IconComp1
+        basePath=""
+        blockId="default_checkedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CheckOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "default_input",
+      "loading": undefined,
+      "onChange": [Function],
+      "size": undefined,
+      "unCheckedChildren": <IconComp1
+        basePath=""
+        blockId="default_uncheckedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CloseOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.autoFocus: true - value[0] - Switch 1`] = `
+Array [
+  Array [
+    Object {
+      "autoFocus": true,
+      "checked": false,
+      "checkedChildren": <IconComp1
+        basePath=""
+        blockId="properties.autoFocus: true_checkedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CheckOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.autoFocus: true_input",
+      "loading": undefined,
+      "onChange": [Function],
+      "size": undefined,
+      "unCheckedChildren": <IconComp1
+        basePath=""
+        blockId="properties.autoFocus: true_uncheckedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CloseOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.checkedIcon: CheckCircleOutlined - value[0] - Switch 1`] = `
+Array [
+  Array [
+    Object {
+      "autoFocus": undefined,
+      "checked": false,
+      "checkedChildren": <IconComp1
+        basePath=""
+        blockId="properties.checkedIcon: CheckCircleOutlined_checkedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CheckCircleOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.checkedIcon: CheckCircleOutlined_input",
+      "loading": undefined,
+      "onChange": [Function],
+      "size": undefined,
+      "unCheckedChildren": <IconComp1
+        basePath=""
+        blockId="properties.checkedIcon: CheckCircleOutlined_uncheckedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CloseOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.checkedText: Checked - value[0] - Switch 1`] = `
+Array [
+  Array [
+    Object {
+      "autoFocus": undefined,
+      "checked": false,
+      "checkedChildren": <span>
+        Checked
+      </span>,
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.checkedText: Checked_input",
+      "loading": undefined,
+      "onChange": [Function],
+      "size": undefined,
+      "unCheckedChildren": <IconComp1
+        basePath=""
+        blockId="properties.checkedText: Checked_uncheckedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CloseOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.color: # - value[0] - Switch 1`] = `
+Array [
+  Array [
+    Object {
+      "autoFocus": undefined,
+      "checked": false,
+      "checkedChildren": <IconComp1
+        basePath=""
+        blockId="properties.color: #_checkedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CheckOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[{\\"&.ant-switch-checked\\":{\\"backgroundColor\\":\\"#f44336 !important\\"}},null]}",
+      "disabled": undefined,
+      "id": "properties.color: #_input",
+      "loading": undefined,
+      "onChange": [Function],
+      "size": undefined,
+      "unCheckedChildren": <IconComp1
+        basePath=""
+        blockId="properties.color: #_uncheckedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CloseOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.disabled: true - value[0] - Switch 1`] = `
+Array [
+  Array [
+    Object {
+      "autoFocus": undefined,
+      "checked": false,
+      "checkedChildren": <IconComp1
+        basePath=""
+        blockId="properties.disabled: true_checkedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CheckOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": true,
+      "id": "properties.disabled: true_input",
+      "loading": undefined,
+      "onChange": [Function],
+      "size": undefined,
+      "unCheckedChildren": <IconComp1
+        basePath=""
+        blockId="properties.disabled: true_uncheckedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CloseOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.inputStyle: CSS style applied - value[0] - Switch 1`] = `
+Array [
+  Array [
+    Object {
+      "autoFocus": undefined,
+      "checked": false,
+      "checkedChildren": <IconComp1
+        basePath=""
+        blockId="properties.inputStyle: CSS style applied_checkedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CheckOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,{\\"border\\":\\"2px solid red\\"}]}",
+      "disabled": undefined,
+      "id": "properties.inputStyle: CSS style applied_input",
+      "loading": undefined,
+      "onChange": [Function],
+      "size": undefined,
+      "unCheckedChildren": <IconComp1
+        basePath=""
+        blockId="properties.inputStyle: CSS style applied_uncheckedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CloseOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label align: right - value[0] - Switch 1`] = `
+Array [
+  Array [
+    Object {
+      "autoFocus": undefined,
+      "checked": false,
+      "checkedChildren": <IconComp1
+        basePath=""
+        blockId="properties.label align: right_checkedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CheckOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.label align: right_input",
+      "loading": undefined,
+      "onChange": [Function],
+      "size": undefined,
+      "unCheckedChildren": <IconComp1
+        basePath=""
+        blockId="properties.label align: right_uncheckedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CloseOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label colon: false - value[0] - Switch 1`] = `
+Array [
+  Array [
+    Object {
+      "autoFocus": undefined,
+      "checked": false,
+      "checkedChildren": <IconComp1
+        basePath=""
+        blockId="properties.label colon: false_checkedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CheckOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.label colon: false_input",
+      "loading": undefined,
+      "onChange": [Function],
+      "size": undefined,
+      "unCheckedChildren": <IconComp1
+        basePath=""
+        blockId="properties.label colon: false_uncheckedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CloseOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label disabled: true - value[0] - Switch 1`] = `
+Array [
+  Array [
+    Object {
+      "autoFocus": undefined,
+      "checked": false,
+      "checkedChildren": <IconComp1
+        basePath=""
+        blockId="properties.label disabled: true_checkedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CheckOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.label disabled: true_input",
+      "loading": undefined,
+      "onChange": [Function],
+      "size": undefined,
+      "unCheckedChildren": <IconComp1
+        basePath=""
+        blockId="properties.label disabled: true_uncheckedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CloseOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label extra: showing extra - value[0] - Switch 1`] = `
+Array [
+  Array [
+    Object {
+      "autoFocus": undefined,
+      "checked": false,
+      "checkedChildren": <IconComp1
+        basePath=""
+        blockId="properties.label extra: showing extra_checkedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CheckOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.label extra: showing extra_input",
+      "loading": undefined,
+      "onChange": [Function],
+      "size": undefined,
+      "unCheckedChildren": <IconComp1
+        basePath=""
+        blockId="properties.label extra: showing extra_uncheckedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CloseOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label inline: true - value[0] - Switch 1`] = `
+Array [
+  Array [
+    Object {
+      "autoFocus": undefined,
+      "checked": false,
+      "checkedChildren": <IconComp1
+        basePath=""
+        blockId="properties.label inline: true_checkedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CheckOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.label inline: true_input",
+      "loading": undefined,
+      "onChange": [Function],
+      "size": undefined,
+      "unCheckedChildren": <IconComp1
+        basePath=""
+        blockId="properties.label inline: true_uncheckedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CloseOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label span: 4 - value[0] - Switch 1`] = `
+Array [
+  Array [
+    Object {
+      "autoFocus": undefined,
+      "checked": false,
+      "checkedChildren": <IconComp1
+        basePath=""
+        blockId="properties.label span: 4_checkedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CheckOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.label span: 4_input",
+      "loading": undefined,
+      "onChange": [Function],
+      "size": undefined,
+      "unCheckedChildren": <IconComp1
+        basePath=""
+        blockId="properties.label span: 4_uncheckedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CloseOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.size: small - value[0] - Switch 1`] = `
+Array [
+  Array [
+    Object {
+      "autoFocus": undefined,
+      "checked": false,
+      "checkedChildren": <IconComp1
+        basePath=""
+        blockId="properties.size: small_checkedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CheckOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.size: small_input",
+      "loading": undefined,
+      "onChange": [Function],
+      "size": "small",
+      "unCheckedChildren": <IconComp1
+        basePath=""
+        blockId="properties.size: small_uncheckedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CloseOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.title - value[0] - Switch 1`] = `
+Array [
+  Array [
+    Object {
+      "autoFocus": undefined,
+      "checked": false,
+      "checkedChildren": <IconComp1
+        basePath=""
+        blockId="properties.title_checkedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CheckOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.title_input",
+      "loading": undefined,
+      "onChange": [Function],
+      "size": undefined,
+      "unCheckedChildren": <IconComp1
+        basePath=""
+        blockId="properties.title_uncheckedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CloseOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.uncheckedIcon: UnlockFilled - value[0] - Switch 1`] = `
+Array [
+  Array [
+    Object {
+      "autoFocus": undefined,
+      "checked": false,
+      "checkedChildren": <IconComp1
+        basePath=""
+        blockId="properties.uncheckedIcon: UnlockFilled_checkedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CheckOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.uncheckedIcon: UnlockFilled_input",
+      "loading": undefined,
+      "onChange": [Function],
+      "size": undefined,
+      "unCheckedChildren": <IconComp1
+        basePath=""
+        blockId="properties.uncheckedIcon: UnlockFilled_uncheckedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "UnlockFilled",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.uncheckedText: Unchecked - value[0] - Switch 1`] = `
+Array [
+  Array [
+    Object {
+      "autoFocus": undefined,
+      "checked": false,
+      "checkedChildren": <IconComp1
+        basePath=""
+        blockId="properties.uncheckedText: Unchecked_checkedIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "name": "CheckOutlined",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "className": "{\\"style\\":[null,null]}",
+      "disabled": undefined,
+      "id": "properties.uncheckedText: Unchecked_input",
+      "loading": undefined,
+      "onChange": [Function],
+      "size": undefined,
+      "unCheckedChildren": <span>
+        Unchecked
+      </span>,
+    },
+    Object {},
+  ],
+]
+`;

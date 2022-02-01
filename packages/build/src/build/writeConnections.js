@@ -22,10 +22,10 @@ async function writeConnections({ components, context }) {
     throw new Error(`Connections is not an array.`);
   }
   const writePromises = components.connections.map(async (connection) => {
-    await context.writeBuildArtifact({
-      filePath: `connections/${connection.connectionId}.json`,
-      content: JSON.stringify(connection, null, 2),
-    });
+    await context.writeBuildArtifact(
+      `connections/${connection.connectionId}.json`,
+      JSON.stringify(connection, null, 2)
+    );
   });
   return Promise.all(writePromises);
 }

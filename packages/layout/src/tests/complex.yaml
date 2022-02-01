@@ -1,0 +1,292 @@
+- id: Complex Example
+  type: Box
+  blocks:
+    - id: header
+      type: Box
+      blocks:
+        - id: heading
+          type: Paragraph
+          layout:
+            flex: 1 0 auto
+          properties:
+            content: |
+              # Issues
+        - id: feedback
+          type: Paragraph
+          layout:
+            flex: 0 1 auto
+            align: center
+          properties:
+            content: |
+              Give Feedback
+    - id: tools
+      type: Box
+      blocks:
+        - id: search
+          type: Input
+          layout:
+            flex: 0 0 auto
+        - id: Assign
+          type: Button
+          layout:
+            flex: 0 0 auto
+        - id: Reporter
+          type: Button
+          layout:
+            flex: 0 0 auto
+        - id: Status
+          type: Button
+          layout:
+            flex: 0 0 auto
+        - id: Type
+          type: Button
+          layout:
+            flex: 1 0 auto
+        - id: advanced
+          type: Paragraph
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: |
+              Advanced Search
+    - id: main
+      type: Box
+      blocks:
+        - id: list_main
+          type: Box
+          layout:
+            flex: 0 1 300px
+          blocks:
+            - id: list_tools
+              type: Box
+              blocks:
+                - id: Created
+                  type: Button
+                  layout:
+                    flex: 1 1 auto
+                - id: Fil
+                  type: Button
+                  layout:
+                    flex: 0 1 auto
+                - id: Ref
+                  type: Button
+                  layout:
+                    flex: 0 1 auto
+            - id: list
+              type: Box
+              blocks:
+                - id: item_0_1
+                  type: Block
+                  style:
+                    height: 50
+                - id: item_0_2
+                  type: Block
+                  style:
+                    height: 50
+                - id: item_0_3
+                  type: Block
+                  style:
+                    height: 50
+                - id: item_0_4
+                  type: Block
+                  style:
+                    height: 50
+
+        - id: main_content
+          type: Box
+          layout:
+            flex: 1 1 200px
+            # align: start
+          blocks:
+            - id: content
+              type: Paragraph
+              properties:
+                content: |
+                  ## Validate still a heading
+
+                  The below config will fail for both the field on root and the field in the object when the context is validated.
+
+            - id: comment
+              type: Box
+              blocks:
+                - id: avatar
+                  type: Block
+                  layout:
+                    flex: 0 1 80px
+                - id: input_comment
+                  layout:
+                    flex: 1 1 80px
+                  type: Input
+
+        - id: sider
+          type: Box
+          layout:
+            flex: 0 1 200px
+          blocks:
+            - id: content
+              type: Paragraph
+              properties:
+                content: |
+                  ### One
+            - id: content
+              type: Paragraph
+              properties:
+                content: |
+                  Two
+            - id: content
+              type: Paragraph
+              properties:
+                content: |
+                  ### three
+            - id: content
+              type: Paragraph
+              properties:
+                content: |
+                  Four
+
+- id: Complex No Flex Field Example
+  type: Box
+  blocks:
+    - id: header
+      type: Box
+      blocks:
+        - id: heading
+          type: Paragraph
+          layout:
+            grow: 1
+          properties:
+            content: |
+              # Issues
+        - id: feedback
+          type: Paragraph
+          layout:
+            size: auto
+            align: center
+          properties:
+            content: |
+              Give Feedback
+    - id: tools
+      type: Box
+      blocks:
+        - id: search
+          type: Input
+          layout:
+            size: auto
+        - id: Assign
+          type: Button
+          layout:
+            flex: 0 1 auto
+            size: auto
+        - id: Reporter
+          type: Button
+          layout:
+            size: auto
+        - id: Status
+          type: Button
+          layout:
+            size: auto
+        - id: Type
+          type: Button
+          layout:
+            grow: 1
+        - id: advanced
+          type: Paragraph
+          layout:
+            size: auto
+          properties:
+            content: |
+              Advanced Search
+    - id: main
+      type: Box
+      blocks:
+        - id: list_main
+          type: Box
+          layout:
+            size: 300
+          blocks:
+            - id: list_tools
+              type: Box
+              blocks:
+                - id: Created
+                  type: Button
+                  layout:
+                    grow: 1
+                - id: Fil
+                  type: Button
+                  layout:
+                    size: auto
+                - id: Ref
+                  type: Button
+                  layout:
+                    size: auto
+            - id: list
+              type: Box
+              blocks:
+                - id: item_0_1
+                  type: Block
+                  style:
+                    height: 50
+                - id: item_0_2
+                  type: Block
+                  style:
+                    height: 50
+                - id: item_0_3
+                  type: Block
+                  style:
+                    height: 50
+                - id: item_0_4
+                  type: Block
+                  style:
+                    height: 50
+
+        - id: main_content
+          type: Box
+          layout:
+            size: 200
+            grow: 1
+          blocks:
+            - id: content
+              type: Paragraph
+              properties:
+                content: |
+                  ## Validate still a heading
+
+                  The below config will fail for both the field on root and the field in the object when the context is validated.
+
+            - id: comment
+              type: Box
+              blocks:
+                - id: avatar
+                  type: Block
+                  layout:
+                    size: auto
+                - id: inputs_comment
+                  layout:
+                    grow: 1
+                  type: Input
+
+        - id: sider
+          type: Box
+          layout:
+            size: 200
+          blocks:
+            - id: content
+              type: Paragraph
+              properties:
+                content: |
+                  ### One
+            - id: content
+              type: Paragraph
+              properties:
+                content: |
+                  Two
+            - id: content
+              type: Paragraph
+              properties:
+                content: |
+                  ### three
+            - id: content
+              type: Paragraph
+              properties:
+                content: |
+                  Four

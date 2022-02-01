@@ -16,10 +16,10 @@
 
 import { WebParser } from '@lowdefy/operators';
 
-import Actions from './Actions';
-import Blocks from './Blocks';
-import Requests from './Requests';
-import State from './State';
+import Actions from './Actions.js';
+import Blocks from './Blocks.js';
+import Requests from './Requests.js';
+import State from './State.js';
 
 const blockData = ({
   areas,
@@ -29,8 +29,6 @@ const blockData = ({
   field,
   id,
   layout,
-  meta,
-  operators,
   pageId,
   properties,
   requests,
@@ -47,8 +45,6 @@ const blockData = ({
   field,
   id,
   layout,
-  meta,
-  operators,
   pageId,
   properties,
   requests,
@@ -59,59 +55,51 @@ const blockData = ({
   visible,
 });
 
-const getContext = async ({ block, contextId, lowdefy }) => {
-  if (lowdefy.contexts[contextId]) {
-    lowdefy.contexts[contextId].update();
-    return lowdefy.contexts[contextId];
+async function getContext({ config, lowdefy, development = false }) {
+  if (!config) {
+    throw new Error('A page must be provided to get context.');
   }
-  if (!block) {
-    throw new Error('A block must be provided to get context.');
+  const { id } = config;
+  if (lowdefy.contexts[id] && !development) {
+    lowdefy.contexts[id]._internal.update();
+    return lowdefy.contexts[id];
   }
-  // eslint-disable-next-line no-param-reassign
-  if (!lowdefy.inputs[contextId]) {
-    lowdefy.inputs[contextId] = {};
+
+  if (!lowdefy.inputs[id]) {
+    lowdefy.inputs[id] = {};
   }
-  const operatorsSet = new Set([...block.operators, '_not', '_type']);
-  lowdefy.contexts[contextId] = {
-    id: contextId,
-    blockId: block.blockId,
+  const ctx = {
+    id: id,
+    pageId: config.pageId,
     eventLog: [],
     requests: {},
-    operators: [...operatorsSet],
-    lowdefy,
-    pageId: lowdefy.pageId,
-    rootBlock: blockData(block), // filter block to prevent circular structure
     state: {},
-    update: () => {}, // Initialize update since Requests might call it during context creation
-    updateListeners: new Set(),
+    _internal: {
+      lowdefy,
+      rootBlock: blockData(config), // filter block to prevent circular structure
+      update: () => {}, // Initialize update since Requests might call it during context creation
+    },
   };
-  const ctx = lowdefy.contexts[contextId];
-  ctx.parser = new WebParser({ context: ctx, contexts: lowdefy.contexts });
-  await ctx.parser.init();
-  ctx.State = new State(ctx);
-  ctx.Actions = new Actions(ctx);
-  ctx.Requests = new Requests(ctx);
-  ctx.RootBlocks = new Blocks({
-    areas: { root: { blocks: [ctx.rootBlock] } },
+  const _internal = ctx._internal;
+  _internal.parser = new WebParser({ context: ctx, operators: lowdefy._internal.operators });
+  await _internal.parser.init();
+  _internal.State = new State(ctx);
+  _internal.Actions = new Actions(ctx);
+  _internal.Requests = new Requests(ctx);
+  _internal.RootBlocks = new Blocks({
+    areas: { root: { blocks: [_internal.rootBlock] } },
     context: ctx,
   });
-  ctx.RootBlocks.init();
-  ctx.update = () => {
-    ctx.RootBlocks.update();
-    [...ctx.updateListeners].forEach((listenId) => {
-      // Will loop infinitely if update is called on self
-      if (!lowdefy.contexts[listenId] || listenId === contextId) {
-        ctx.updateListeners.delete(listenId);
-      } else {
-        lowdefy.contexts[listenId].update();
-      }
-    });
+  _internal.RootBlocks.init();
+  _internal.update = () => {
+    _internal.RootBlocks.update();
   };
-  await ctx.RootBlocks.map[ctx.blockId].triggerEvent({ name: 'onInit' });
-  ctx.update();
-  ctx.State.freezeState();
-  ctx.RootBlocks.map[ctx.blockId].triggerEvent({ name: 'onInitAsync' });
+  await _internal.RootBlocks.map[ctx.id].triggerEvent({ name: 'onInit' });
+  _internal.update();
+  _internal.State.freezeState();
+  _internal.RootBlocks.map[ctx.id].triggerEvent({ name: 'onInitAsync' });
+  lowdefy.contexts[id] = ctx;
   return ctx;
-};
+}
 
 export default getContext;

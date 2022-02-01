@@ -3,6 +3,81 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v4.0.0-alpha.6) (2022-01-20)
+
+
+### Bug Fixes
+
+* **docs:** Added redis connection documentation. ([ee1620b](https://github.com/lowdefy/lowdefy/commit/ee1620bb41d8aa3f32e05e9b7e03c7986365c59f))
+
+
+### Features
+
+* Add _diff to client operators as well as server. ([4e23fec](https://github.com/lowdefy/lowdefy/commit/4e23fec8a4985d7453dfcf750298bc0bedeb34a2))
+
+
+
+
+
+# [4.0.0-alpha.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.4...v4.0.0-alpha.5) (2021-11-27)
+
+**Note:** Version bump only for package @lowdefy/docs
+
+
+
+
+
+# [4.0.0-alpha.4](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.3...v4.0.0-alpha.4) (2021-11-25)
+
+**Note:** Version bump only for package @lowdefy/docs
+
+
+
+
+
+# [4.0.0-alpha.3](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.2...v4.0.0-alpha.3) (2021-11-25)
+
+**Note:** Version bump only for package @lowdefy/docs
+
+
+
+
+
+# [4.0.0-alpha.2](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.1...v4.0.0-alpha.2) (2021-11-25)
+
+**Note:** Version bump only for package @lowdefy/docs
+
+
+
+
+
+# [4.0.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.23.1...v4.0.0-alpha.1) (2021-11-25)
+
+
+### Bug Fixes
+
+* **docs:** Document that _index operator is client side only. ([72c8228](https://github.com/lowdefy/lowdefy/commit/72c82282a3e6bcd3eb2eeaf3c09b395a0f152405))
+* Replace all front end testing with @testing-library/react, jest and other updates. ([22ec295](https://github.com/lowdefy/lowdefy/commit/22ec2954047853096aabcddba7a2c509342f95f2))
+
+
+### Features
+
+* **blocksAntd:** Add HolderOutlined icon. ([c39c387](https://github.com/lowdefy/lowdefy/commit/c39c38752e4a681a1146e44b6638ff8486ff9da9))
+* **blocksAntd:** Convert Alert to container and add action content area. ([49c6baa](https://github.com/lowdefy/lowdefy/commit/49c6baabeedd4ed5aaaf14f1d7b4ae5d2545d6cf))
+* **blocksAntd:** Drawer: Add extra content area and contentWrapperStyle property. ([9273fac](https://github.com/lowdefy/lowdefy/commit/9273facac41e5ee6341c80e698f4367b7d8686f3))
+* **blocks:** Convert all context category blocks to container. ([6bc03c8](https://github.com/lowdefy/lowdefy/commit/6bc03c86b80a3506c2b85076626ae15a401bcdfc))
+* **blockTools:** Update to @emotion/css, optimize makeCssClass standarise jest settings. ([947defa](https://github.com/lowdefy/lowdefy/commit/947defa3d8934e061933b1e218b79f2f97456054))
+* Replace server side state with payload and _payload operator. ([1f928d9](https://github.com/lowdefy/lowdefy/commit/1f928d93db4cbe886d322a1a3998a817d769485f))
+
+
+### BREAKING CHANGES
+
+* The _event, _global, _input, _state, and _url_query operators are no longer evaluated in connections or requests.
+
+
+
+
+
 ## [3.23.1](https://github.com/lowdefy/lowdefy/compare/v3.23.0...v3.23.1) (2021-11-20)
 
 **Note:** Version bump only for package @lowdefy/docs

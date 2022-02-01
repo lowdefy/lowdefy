@@ -17,7 +17,7 @@
 import { get } from '@lowdefy/helpers';
 import { v1 as uuid } from 'uuid';
 
-import getRefPath from './getRefPath';
+import getRefPath from './getRefPath.js';
 
 function makeRefDefinition(refDefinition) {
   return {

@@ -16,7 +16,7 @@
   limitations under the License.
 */
 
-import testContext from './testContext';
+import testContext from './testContext.js';
 
 const pageId = 'one';
 
@@ -82,7 +82,7 @@ test('init Events', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -122,7 +122,7 @@ test('triggerEvent no event defined', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -163,7 +163,7 @@ test('triggerEvent x1', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -225,7 +225,7 @@ test('triggerEvent, 2 actions', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     requests: [{ requestId: 'request1' }],
     areas: {
@@ -264,7 +264,7 @@ test('triggerEvent error', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -334,7 +334,7 @@ test('registerEvent then triggerEvent x1', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -394,7 +394,7 @@ test('triggerEvent skip', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -496,7 +496,7 @@ test('triggerEvent skip tests === true', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -598,7 +598,7 @@ test('Actions array defaults', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -637,7 +637,7 @@ test('Actions try catch array defaults', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -674,7 +674,7 @@ test('Actions try catch arrays', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -716,7 +716,7 @@ test('Actions try catch arrays and debounce.immediate == true (leading edge)', a
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -839,7 +839,7 @@ test('Actions try catch arrays and debounce.immediate == undefined (trailing edg
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -957,7 +957,7 @@ test('Actions try catch arrays and debounce.immediate == false default ms (trail
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {

@@ -1,0 +1,1597 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mock render - default - value[0] - S3UploadButton 1`] = `
+Array [
+  Array [
+    Object {
+      "accept": undefined,
+      "children": <ButtonBlock
+        basePath=""
+        blockId="default_button"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
+        content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "__getS3PostPolicy",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
+                "type": "Request",
+              },
+            ],
+          }
+        }
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "disabled": false,
+            "icon": "UploadOutlined",
+            "title": "Upload",
+            "type": "default",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "customRequest": [Function],
+      "disabled": false,
+      "id": "default",
+      "multiple": true,
+      "onChange": [Function],
+      "showUploadList": undefined,
+    },
+    Object {},
+  ],
+  Array [
+    Object {
+      "accept": undefined,
+      "children": <ButtonBlock
+        basePath=""
+        blockId="default_button"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
+        content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "__getS3PostPolicy",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
+                "type": "Request",
+              },
+            ],
+          }
+        }
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "disabled": false,
+            "icon": "UploadOutlined",
+            "title": "Upload",
+            "type": "default",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "customRequest": [Function],
+      "disabled": false,
+      "id": "default",
+      "multiple": true,
+      "onChange": [Function],
+      "showUploadList": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - default - value[0] - S3UploadButton 2`] = `
+Array [
+  Array [
+    Object {
+      "accept": undefined,
+      "children": <ButtonBlock
+        basePath=""
+        blockId="default_button"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
+        content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "__getS3PostPolicy",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
+                "type": "Request",
+              },
+            ],
+          }
+        }
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "disabled": false,
+            "icon": "UploadOutlined",
+            "title": "Upload",
+            "type": "default",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "customRequest": [Function],
+      "disabled": false,
+      "id": "default",
+      "multiple": true,
+      "onChange": [Function],
+      "showUploadList": undefined,
+    },
+    Object {},
+  ],
+  Array [
+    Object {
+      "accept": undefined,
+      "children": <ButtonBlock
+        basePath=""
+        blockId="default_button"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
+        content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "__getS3PostPolicy",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
+                "type": "Request",
+              },
+            ],
+          }
+        }
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "disabled": false,
+            "icon": "UploadOutlined",
+            "title": "Upload",
+            "type": "default",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "customRequest": [Function],
+      "disabled": false,
+      "id": "default",
+      "multiple": true,
+      "onChange": [Function],
+      "showUploadList": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.accept - value[0] - S3UploadButton 1`] = `
+Array [
+  Array [
+    Object {
+      "accept": ".png,.jpg",
+      "children": <ButtonBlock
+        basePath=""
+        blockId="properties.accept_button"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
+        content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "__getS3PostPolicy",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
+                "type": "Request",
+              },
+            ],
+          }
+        }
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "disabled": false,
+            "icon": "UploadOutlined",
+            "title": "Upload",
+            "type": "default",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "customRequest": [Function],
+      "disabled": false,
+      "id": "properties.accept",
+      "multiple": true,
+      "onChange": [Function],
+      "showUploadList": undefined,
+    },
+    Object {},
+  ],
+  Array [
+    Object {
+      "accept": ".png,.jpg",
+      "children": <ButtonBlock
+        basePath=""
+        blockId="properties.accept_button"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
+        content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "__getS3PostPolicy",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
+                "type": "Request",
+              },
+            ],
+          }
+        }
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "disabled": false,
+            "icon": "UploadOutlined",
+            "title": "Upload",
+            "type": "default",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "customRequest": [Function],
+      "disabled": false,
+      "id": "properties.accept",
+      "multiple": true,
+      "onChange": [Function],
+      "showUploadList": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.accept - value[0] - S3UploadButton 2`] = `
+Array [
+  Array [
+    Object {
+      "accept": ".png,.jpg",
+      "children": <ButtonBlock
+        basePath=""
+        blockId="properties.accept_button"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
+        content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "__getS3PostPolicy",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
+                "type": "Request",
+              },
+            ],
+          }
+        }
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "disabled": false,
+            "icon": "UploadOutlined",
+            "title": "Upload",
+            "type": "default",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "customRequest": [Function],
+      "disabled": false,
+      "id": "properties.accept",
+      "multiple": true,
+      "onChange": [Function],
+      "showUploadList": undefined,
+    },
+    Object {},
+  ],
+  Array [
+    Object {
+      "accept": ".png,.jpg",
+      "children": <ButtonBlock
+        basePath=""
+        blockId="properties.accept_button"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
+        content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "__getS3PostPolicy",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
+                "type": "Request",
+              },
+            ],
+          }
+        }
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "disabled": false,
+            "icon": "UploadOutlined",
+            "title": "Upload",
+            "type": "default",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "customRequest": [Function],
+      "disabled": false,
+      "id": "properties.accept",
+      "multiple": true,
+      "onChange": [Function],
+      "showUploadList": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.button - value[0] - S3UploadButton 1`] = `
+Array [
+  Array [
+    Object {
+      "accept": undefined,
+      "children": <ButtonBlock
+        basePath=""
+        blockId="properties.button_button"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
+        content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "__getS3PostPolicy",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
+                "type": "Request",
+              },
+            ],
+          }
+        }
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "disabled": false,
+            "icon": "UploadOutlined",
+            "title": "Upload",
+            "type": "primary",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "customRequest": [Function],
+      "disabled": false,
+      "id": "properties.button",
+      "multiple": true,
+      "onChange": [Function],
+      "showUploadList": undefined,
+    },
+    Object {},
+  ],
+  Array [
+    Object {
+      "accept": undefined,
+      "children": <ButtonBlock
+        basePath=""
+        blockId="properties.button_button"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
+        content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "__getS3PostPolicy",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
+                "type": "Request",
+              },
+            ],
+          }
+        }
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "disabled": false,
+            "icon": "UploadOutlined",
+            "title": "Upload",
+            "type": "primary",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "customRequest": [Function],
+      "disabled": false,
+      "id": "properties.button",
+      "multiple": true,
+      "onChange": [Function],
+      "showUploadList": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.button - value[0] - S3UploadButton 2`] = `
+Array [
+  Array [
+    Object {
+      "accept": undefined,
+      "children": <ButtonBlock
+        basePath=""
+        blockId="properties.button_button"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
+        content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "__getS3PostPolicy",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
+                "type": "Request",
+              },
+            ],
+          }
+        }
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "disabled": false,
+            "icon": "UploadOutlined",
+            "title": "Upload",
+            "type": "primary",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "customRequest": [Function],
+      "disabled": false,
+      "id": "properties.button",
+      "multiple": true,
+      "onChange": [Function],
+      "showUploadList": undefined,
+    },
+    Object {},
+  ],
+  Array [
+    Object {
+      "accept": undefined,
+      "children": <ButtonBlock
+        basePath=""
+        blockId="properties.button_button"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
+        content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "__getS3PostPolicy",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
+                "type": "Request",
+              },
+            ],
+          }
+        }
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "disabled": false,
+            "icon": "UploadOutlined",
+            "title": "Upload",
+            "type": "primary",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "customRequest": [Function],
+      "disabled": false,
+      "id": "properties.button",
+      "multiple": true,
+      "onChange": [Function],
+      "showUploadList": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.disabled - value[0] - S3UploadButton 1`] = `
+Array [
+  Array [
+    Object {
+      "accept": undefined,
+      "children": <ButtonBlock
+        basePath=""
+        blockId="properties.disabled_button"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
+        content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "__getS3PostPolicy",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
+                "type": "Request",
+              },
+            ],
+          }
+        }
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "disabled": true,
+            "icon": "UploadOutlined",
+            "title": "Upload",
+            "type": "default",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "customRequest": [Function],
+      "disabled": true,
+      "id": "properties.disabled",
+      "multiple": true,
+      "onChange": [Function],
+      "showUploadList": undefined,
+    },
+    Object {},
+  ],
+  Array [
+    Object {
+      "accept": undefined,
+      "children": <ButtonBlock
+        basePath=""
+        blockId="properties.disabled_button"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
+        content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "__getS3PostPolicy",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
+                "type": "Request",
+              },
+            ],
+          }
+        }
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "disabled": true,
+            "icon": "UploadOutlined",
+            "title": "Upload",
+            "type": "default",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "customRequest": [Function],
+      "disabled": true,
+      "id": "properties.disabled",
+      "multiple": true,
+      "onChange": [Function],
+      "showUploadList": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.disabled - value[0] - S3UploadButton 2`] = `
+Array [
+  Array [
+    Object {
+      "accept": undefined,
+      "children": <ButtonBlock
+        basePath=""
+        blockId="properties.disabled_button"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
+        content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "__getS3PostPolicy",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
+                "type": "Request",
+              },
+            ],
+          }
+        }
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "disabled": true,
+            "icon": "UploadOutlined",
+            "title": "Upload",
+            "type": "default",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "customRequest": [Function],
+      "disabled": true,
+      "id": "properties.disabled",
+      "multiple": true,
+      "onChange": [Function],
+      "showUploadList": undefined,
+    },
+    Object {},
+  ],
+  Array [
+    Object {
+      "accept": undefined,
+      "children": <ButtonBlock
+        basePath=""
+        blockId="properties.disabled_button"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
+        content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "__getS3PostPolicy",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
+                "type": "Request",
+              },
+            ],
+          }
+        }
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "disabled": true,
+            "icon": "UploadOutlined",
+            "title": "Upload",
+            "type": "default",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "customRequest": [Function],
+      "disabled": true,
+      "id": "properties.disabled",
+      "multiple": true,
+      "onChange": [Function],
+      "showUploadList": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.showUploadList - value[0] - S3UploadButton 1`] = `
+Array [
+  Array [
+    Object {
+      "accept": undefined,
+      "children": <ButtonBlock
+        basePath=""
+        blockId="properties.showUploadList_button"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
+        content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "__getS3PostPolicy",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
+                "type": "Request",
+              },
+            ],
+          }
+        }
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "disabled": false,
+            "icon": "UploadOutlined",
+            "title": "Upload",
+            "type": "default",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "customRequest": [Function],
+      "disabled": false,
+      "id": "properties.showUploadList",
+      "multiple": true,
+      "onChange": [Function],
+      "showUploadList": true,
+    },
+    Object {},
+  ],
+  Array [
+    Object {
+      "accept": undefined,
+      "children": <ButtonBlock
+        basePath=""
+        blockId="properties.showUploadList_button"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
+        content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "__getS3PostPolicy",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
+                "type": "Request",
+              },
+            ],
+          }
+        }
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "disabled": false,
+            "icon": "UploadOutlined",
+            "title": "Upload",
+            "type": "default",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "customRequest": [Function],
+      "disabled": false,
+      "id": "properties.showUploadList",
+      "multiple": true,
+      "onChange": [Function],
+      "showUploadList": true,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.showUploadList - value[0] - S3UploadButton 2`] = `
+Array [
+  Array [
+    Object {
+      "accept": undefined,
+      "children": <ButtonBlock
+        basePath=""
+        blockId="properties.showUploadList_button"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
+        content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "__getS3PostPolicy",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
+                "type": "Request",
+              },
+            ],
+          }
+        }
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "disabled": false,
+            "icon": "UploadOutlined",
+            "title": "Upload",
+            "type": "default",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "customRequest": [Function],
+      "disabled": false,
+      "id": "properties.showUploadList",
+      "multiple": true,
+      "onChange": [Function],
+      "showUploadList": true,
+    },
+    Object {},
+  ],
+  Array [
+    Object {
+      "accept": undefined,
+      "children": <ButtonBlock
+        basePath=""
+        blockId="properties.showUploadList_button"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
+        content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "__getS3PostPolicy",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
+                "type": "Request",
+              },
+            ],
+          }
+        }
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "disabled": false,
+            "icon": "UploadOutlined",
+            "title": "Upload",
+            "type": "default",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "customRequest": [Function],
+      "disabled": false,
+      "id": "properties.showUploadList",
+      "multiple": true,
+      "onChange": [Function],
+      "showUploadList": true,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.singleFile - value[0] - S3UploadButton 1`] = `
+Array [
+  Array [
+    Object {
+      "accept": undefined,
+      "children": <ButtonBlock
+        basePath=""
+        blockId="properties.singleFile_button"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
+        content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "__getS3PostPolicy",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
+                "type": "Request",
+              },
+            ],
+          }
+        }
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "disabled": false,
+            "icon": "UploadOutlined",
+            "title": "Upload",
+            "type": "default",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "customRequest": [Function],
+      "disabled": false,
+      "id": "properties.singleFile",
+      "multiple": false,
+      "onChange": [Function],
+      "showUploadList": undefined,
+    },
+    Object {},
+  ],
+  Array [
+    Object {
+      "accept": undefined,
+      "children": <ButtonBlock
+        basePath=""
+        blockId="properties.singleFile_button"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
+        content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "__getS3PostPolicy",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
+                "type": "Request",
+              },
+            ],
+          }
+        }
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "disabled": false,
+            "icon": "UploadOutlined",
+            "title": "Upload",
+            "type": "default",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "customRequest": [Function],
+      "disabled": false,
+      "id": "properties.singleFile",
+      "multiple": false,
+      "onChange": [Function],
+      "showUploadList": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.singleFile - value[0] - S3UploadButton 2`] = `
+Array [
+  Array [
+    Object {
+      "accept": undefined,
+      "children": <ButtonBlock
+        basePath=""
+        blockId="properties.singleFile_button"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
+        content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "__getS3PostPolicy",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
+                "type": "Request",
+              },
+            ],
+          }
+        }
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "disabled": false,
+            "icon": "UploadOutlined",
+            "title": "Upload",
+            "type": "default",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "customRequest": [Function],
+      "disabled": false,
+      "id": "properties.singleFile",
+      "multiple": false,
+      "onChange": [Function],
+      "showUploadList": undefined,
+    },
+    Object {},
+  ],
+  Array [
+    Object {
+      "accept": undefined,
+      "children": <ButtonBlock
+        basePath=""
+        blockId="properties.singleFile_button"
+        components={
+          Object {
+            "Icon": [Function],
+            "Link": [Function],
+          }
+        }
+        content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "__getS3PostPolicy",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
+                "type": "Request",
+              },
+            ],
+          }
+        }
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "disabled": false,
+            "icon": "UploadOutlined",
+            "title": "Upload",
+            "type": "default",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "customRequest": [Function],
+      "disabled": false,
+      "id": "properties.singleFile",
+      "multiple": false,
+      "onChange": [Function],
+      "showUploadList": undefined,
+    },
+    Object {},
+  ],
+]
+`;

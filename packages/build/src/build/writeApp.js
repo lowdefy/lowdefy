@@ -15,10 +15,7 @@
 */
 
 async function writeApp({ components, context }) {
-  await context.writeBuildArtifact({
-    filePath: 'app.json',
-    content: JSON.stringify(components.app || {}, null, 2),
-  });
+  await context.writeBuildArtifact('app.json', JSON.stringify(components.app || {}, null, 2));
 }
 
 export default writeApp;

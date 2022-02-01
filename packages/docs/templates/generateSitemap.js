@@ -38,5 +38,4 @@ function transformer(pages) {
   fs.writeFileSync('public/sitemap.xml', sitemap);
   return pages;
 }
-
-module.exports = transformer;
+export default transformer;

@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Button
     category: display
-    schema: ../blocks/blocksAntd/src/blocks/Button/Button.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Button/schema.json
     filePath: blocks/display/Button.yaml
     description_content: |
       Button block.
@@ -33,11 +33,11 @@ _ref:
             ghost: true
             icon: RocketOutlined
       - title: Round and type danger
-        block: 
+        block:
           id: danger_example
           type: Button
-          properties: 
+          properties:
             title: Delete Forever
-            shape: round 
-            type: danger 
+            shape: round
+            type: danger
             icon: WarningOutlined

@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import buildRefs from './buildRefs';
-import testContext from '../../test/testContext';
+import buildRefs from './buildRefs.js';
+import testContext from '../../test/testContext.js';
 
 const readConfigFileMockImplementation = (files) => {
   const mockImp = (filePath) => {
@@ -827,12 +827,11 @@ _ref:
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
     expect(mockReadConfigFile.mock.calls).toEqual([['lowdefy.yaml']]);
-    // Return context gets JSON stringified and parsed, so functions are stripped
     expect(res).toEqual({
       resolved: true,
       path: null,
       vars: {},
-      context: { configDirectory: '', logger: {} },
+      contextId: 'test',
     });
   });
 
@@ -857,8 +856,7 @@ _ref:
       vars: {
         var: 'var1',
       },
-      // Return context gets JSON stringified and parsed, so functions are stripped
-      context: { configDirectory: '', logger: {} },
+      contextId: 'test',
     });
   });
 
@@ -1045,11 +1043,7 @@ _ref: target`,
       resolved: true,
       path: 'target',
       vars: {},
-      context: {
-        configDirectory: '',
-        logger: {},
-        refResolver: 'src/test/buildRefs/testBuildRefsResolver.js',
-      },
+      contextId: 'test',
     });
   });
 });

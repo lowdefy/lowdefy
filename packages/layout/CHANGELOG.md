@@ -3,6 +3,77 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v4.0.0-alpha.6) (2022-01-20)
+
+
+### Bug Fixes
+
+* Fix antd styles. ([62a752d](https://github.com/lowdefy/lowdefy/commit/62a752d66c9b7cf4ebfd07fcc92d8a195ed43be4))
+* Fix layout style import. ([b318343](https://github.com/lowdefy/lowdefy/commit/b3183437fe76dc49378590967671891206dcdf39))
+
+
+
+
+
+# [4.0.0-alpha.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.4...v4.0.0-alpha.5) (2021-11-27)
+
+**Note:** Version bump only for package @lowdefy/layout
+
+
+
+
+
+# [4.0.0-alpha.4](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.3...v4.0.0-alpha.4) (2021-11-25)
+
+
+### Bug Fixes
+
+* Plugin import fixes. ([e1becad](https://github.com/lowdefy/lowdefy/commit/e1becad08704833b2a8f559e8c88bcd7172ea622))
+
+
+
+
+
+# [4.0.0-alpha.3](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.2...v4.0.0-alpha.3) (2021-11-25)
+
+
+### Features
+
+* **layout:** Export styles.less. ([f898cff](https://github.com/lowdefy/lowdefy/commit/f898cfff5f3d963931b4f9265fa4b6e77866699f))
+
+
+
+
+
+# [4.0.0-alpha.2](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.1...v4.0.0-alpha.2) (2021-11-25)
+
+**Note:** Version bump only for package @lowdefy/layout
+
+
+
+
+
+# [4.0.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.23.1...v4.0.0-alpha.1) (2021-11-25)
+
+
+### Bug Fixes
+
+* Authorisation flows working. ([5b32ca8](https://github.com/lowdefy/lowdefy/commit/5b32ca86bae8a13fea477d4d7ef19a4c5ad4fdc8))
+* **deps:** Update dependency less to v4.1.2. ([96016f5](https://github.com/lowdefy/lowdefy/commit/96016f5d3cb9fb01fcc279e8eefcc8f6fe5b05c4))
+* Next server fixes ([d5ab3d9](https://github.com/lowdefy/lowdefy/commit/d5ab3d92f24b09a59e6c20e31a8b01dce9d1056f))
+* Replace all front end testing with @testing-library/react, jest and other updates. ([22ec295](https://github.com/lowdefy/lowdefy/commit/22ec2954047853096aabcddba7a2c509342f95f2))
+* Update antd from v4.4.2 to v4.16.13. ([dfe5966](https://github.com/lowdefy/lowdefy/commit/dfe5966f7856148472382b1dea7d81fc9082b7c0))
+* Update to antd@4.17.0-alpha.7 and @ant-design/icons@4.7.0. ([25d9067](https://github.com/lowdefy/lowdefy/commit/25d906799e29aab98361f7a4895b15375afe1959))
+
+
+### Features
+
+* Next server rendering blocks ([e625e07](https://github.com/lowdefy/lowdefy/commit/e625e07a29b5ae3f09f74c629f35fe52ce73dace))
+
+
+
+
+
 ## [3.23.1](https://github.com/lowdefy/lowdefy/compare/v3.23.0...v3.23.1) (2021-11-20)
 
 **Note:** Version bump only for package @lowdefy/layout

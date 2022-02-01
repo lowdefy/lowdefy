@@ -15,8 +15,8 @@
 */
 
 import axios from 'axios';
-import errorHandler from './errorHandler';
-import createPrint from './print';
+import errorHandler from './errorHandler.js';
+import createPrint from './print.js';
 // eslint-disable-next-line no-unused-vars
 import packageJson from '../../package.json';
 
