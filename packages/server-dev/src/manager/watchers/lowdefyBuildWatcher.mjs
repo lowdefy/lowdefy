@@ -18,14 +18,15 @@
 import getLowdefyVersion from '../utils/getLowdefyVersion.mjs';
 import setupWatcher from '../utils/setupWatcher.mjs';
 
-async function configWatcher(context) {
+function lowdefyBuildWatcher(context) {
   const callback = async (filePaths) => {
     const lowdefyYamlModified = filePaths
       .flat()
       .some((filePath) => filePath.includes('lowdefy.yaml') || filePath.includes('lowdefy.yml'));
     if (lowdefyYamlModified) {
       const lowdefyVersion = await getLowdefyVersion(context);
-      if (lowdefyVersion !== context.version || lowdefyVersion === 'local') {
+      if (lowdefyVersion !== context.version && lowdefyVersion !== 'local') {
+        context.shutdownServer();
         console.warn('Lowdefy version changed. You should restart your development server.');
         process.exit();
       }
@@ -35,7 +36,10 @@ async function configWatcher(context) {
     context.reloadClients();
   };
   // TODO: Add ignored and watch paths
-  return setupWatcher({ callback, watchPaths: [context.directories.config] });
+  return setupWatcher({
+    callback,
+    watchPaths: [context.directories.config],
+  });
 }
 
-export default configWatcher;
+export default lowdefyBuildWatcher;

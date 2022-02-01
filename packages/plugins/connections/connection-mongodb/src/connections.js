@@ -14,13 +14,4 @@
   limitations under the License.
 */
 
-export default {
-  import: {
-    path: 'connections/MongoDBCollection/MongoDBInsertOne/MongoDBInsertOne.js',
-    schema: 'connections/MongoDBCollection/MongoDBInsertOne/MongoDBInsertOneSchema.json',
-  },
-  meta: {
-    checkRead: false,
-    checkWrite: true,
-  },
-};
+export { default as MongoDBCollection } from './connections/MongoDBCollection/MongoDBCollection.js';

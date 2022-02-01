@@ -17,13 +17,13 @@
 import generateImportFile from './generateImportFile.js';
 
 async function writeBlockImports({ components, context }) {
-  await context.writeBuildArtifact({
-    filePath: 'plugins/blocks.js',
-    content: generateImportFile({
+  await context.writeBuildArtifact(
+    'plugins/blocks.js',
+    generateImportFile({
       types: components.types.blocks,
       importPath: 'blocks',
-    }),
-  });
+    })
+  );
 }
 
 export default writeBlockImports;

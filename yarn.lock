@@ -3503,7 +3503,10 @@ __metadata:
     "@lowdefy/blocks-markdown": 4.0.0-alpha.6
     "@lowdefy/connection-axios-http": 4.0.0-alpha.6
     "@lowdefy/connection-elasticsearch": 4.0.0-alpha.6
+    "@lowdefy/connection-knex": 4.0.0-alpha.6
+    "@lowdefy/connection-mongodb": 4.0.0-alpha.6
     "@lowdefy/connection-redis": 4.0.0-alpha.6
+    "@lowdefy/connection-sendgrid": 4.0.0-alpha.6
     "@lowdefy/connection-stripe": 4.0.0-alpha.6
     "@lowdefy/helpers": 4.0.0-alpha.6
     "@lowdefy/node-utils": 4.0.0-alpha.6
@@ -3573,7 +3576,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-knex@workspace:packages/plugins/connections/connection-knex":
+"@lowdefy/connection-knex@4.0.0-alpha.6, @lowdefy/connection-knex@workspace:packages/plugins/connections/connection-knex":
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-knex@workspace:packages/plugins/connections/connection-knex"
   dependencies:
@@ -3591,7 +3594,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-mongodb@workspace:packages/plugins/connections/connection-mongodb":
+"@lowdefy/connection-mongodb@4.0.0-alpha.6, @lowdefy/connection-mongodb@workspace:packages/plugins/connections/connection-mongodb":
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-mongodb@workspace:packages/plugins/connections/connection-mongodb"
   dependencies:
@@ -3621,7 +3624,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-sendgrid@workspace:packages/plugins/connections/connection-sendgrid":
+"@lowdefy/connection-sendgrid@4.0.0-alpha.6, @lowdefy/connection-sendgrid@workspace:packages/plugins/connections/connection-sendgrid":
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-sendgrid@workspace:packages/plugins/connections/connection-sendgrid"
   dependencies:

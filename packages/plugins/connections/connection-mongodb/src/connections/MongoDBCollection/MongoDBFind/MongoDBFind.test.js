@@ -15,12 +15,11 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import mongoDBFind from './MongoDBFind.js';
+import MongoDBFind from './MongoDBFind.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
-import requestIndex from './index.js';
-import schema from './MongoDBFindSchema.json';
 
-const { checkRead, checkWrite } = requestIndex.meta;
+const { checkRead, checkWrite } = MongoDBFind.meta;
+const schema = MongoDBFind.schema;
 
 const query = { _id: 1 };
 
@@ -41,7 +40,7 @@ test('find', async () => {
     collection,
     read: true,
   };
-  const res = await mongoDBFind({ request, connection });
+  const res = await MongoDBFind({ request, connection });
   expect(res).toEqual([
     {
       _id: 1,
@@ -60,7 +59,7 @@ test('find options', async () => {
     collection,
     read: true,
   };
-  const res = await mongoDBFind({ request, connection });
+  const res = await MongoDBFind({ request, connection });
   expect(res).toEqual([
     {
       _id: 2,
@@ -76,7 +75,7 @@ test('find mongodb error', async () => {
     collection,
     read: true,
   };
-  await expect(mongoDBFind({ request, connection })).rejects.toThrow('unknown operator: $badOp');
+  await expect(MongoDBFind({ request, connection })).rejects.toThrow('unknown operator: $badOp');
 });
 
 test('checkRead should be true', async () => {

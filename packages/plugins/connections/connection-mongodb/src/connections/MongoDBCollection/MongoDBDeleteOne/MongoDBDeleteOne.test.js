@@ -15,12 +15,11 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import mongoDBDeleteOne from './MongoDBDeleteOne.js';
+import MongoDBDeleteOne from './MongoDBDeleteOne.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
-import requestIndex from './index.js';
-import schema from './MongoDBDeleteOneSchema.json';
 
-const { checkRead, checkWrite } = requestIndex.meta;
+const { checkRead, checkWrite } = MongoDBDeleteOne.meta;
+const schema = MongoDBDeleteOne.schema;
 
 const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';
@@ -41,7 +40,7 @@ test('deleteOne', async () => {
     collection,
     write: true,
   };
-  const res = await mongoDBDeleteOne({ request, connection });
+  const res = await MongoDBDeleteOne({ request, connection });
   expect(res).toEqual({
     deletedCount: 1,
   });
@@ -57,7 +56,7 @@ test('deleteOne connection error', async () => {
     collection,
     write: true,
   };
-  await expect(mongoDBDeleteOne({ request, connection })).rejects.toThrow(
+  await expect(MongoDBDeleteOne({ request, connection })).rejects.toThrow(
     'Invalid connection string'
   );
 });
@@ -81,7 +80,7 @@ test('deleteOne catch invalid options', async () => {
     collection,
     write: true,
   };
-  await expect(mongoDBDeleteOne({ request, connection })).rejects.toThrow(
+  await expect(MongoDBDeleteOne({ request, connection })).rejects.toThrow(
     'w has to be a number or a string'
   );
 });

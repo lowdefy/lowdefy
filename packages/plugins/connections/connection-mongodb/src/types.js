@@ -1,3 +1,4 @@
+/* eslint-disable import/namespace */
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -14,13 +15,26 @@
   limitations under the License.
 */
 
+import * as connections from './connections.js';
+
 export default {
-  import: {
-    path: 'connections/Knex/KnexRaw/KnexRaw.js',
-    schema: 'connections/Knex/KnexRaw/KnexRawSchema.json',
-  },
-  meta: {
-    checkRead: false,
-    checkWrite: false,
-  },
+  connections: Object.keys(connections),
+  requests: Object.keys(connections)
+    .map((connection) => Object.keys(connections[connection].requests))
+    .flat(),
 };
+
+// export default {
+//   connections: ['MongoDBCollection'],
+//   requests: [
+//     MongoDBAggregation,
+//     MongoDBDeleteMany,
+//     MongoDBDeleteOne,
+//     MongoDBFind,
+//     MongoDBFindOne,
+//     MongoDBInsertMany,
+//     MongoDBInsertOne,
+//     MongoDBUpdateMany,
+//     MongoDBUpdateOne,
+//   ],
+// };
