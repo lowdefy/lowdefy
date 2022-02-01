@@ -17,7 +17,8 @@
 
 import { readFile } from '@lowdefy/node-utils';
 
-import program from 'commander';
+import { Command } from 'commander';
+
 import build from './commands/build/build.js';
 import dev from './commands/dev/dev.js';
 import init from './commands/init/init.js';
@@ -28,6 +29,8 @@ const packageJson = JSON.parse(
   await readFile(new URL('../package.json', import.meta.url).pathname)
 );
 const { description, version } = packageJson;
+
+const program = new Command();
 
 program.name('lowdefy').description(description).version(version, '-v, --version');
 
