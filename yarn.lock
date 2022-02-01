@@ -3931,7 +3931,7 @@ __metadata:
     "@swc/cli": 0.1.55
     "@swc/core": 1.2.135
     "@swc/jest": 0.2.17
-    aws-sdk: 2.1021.0
+    aws-sdk: 2.1066.0
     jest: 27.4.7
   languageName: unknown
   linkType: soft
@@ -5720,20 +5720,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:2.1021.0":
-  version: 2.1021.0
-  resolution: "aws-sdk@npm:2.1021.0"
+"aws-sdk@npm:2.1066.0":
+  version: 2.1066.0
+  resolution: "aws-sdk@npm:2.1066.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
     ieee754: 1.1.13
-    jmespath: 0.15.0
+    jmespath: 0.16.0
     querystring: 0.2.0
     sax: 1.2.1
     url: 0.10.3
     uuid: 3.3.2
     xml2js: 0.4.19
-  checksum: 057bb0cc7571bfb3e66f7dfc437d369e2abb8af966bfc02f8ccff74a4dec98768cfe8b4eac9179c93d8d9a5986362289f298b31fcb9addeda8d2432736a1ab15
+  checksum: 5ed48ddd14fa01478222d989be06d75a9a3d7521a5bb9324547f745fbde8ee760836c80c6ee9678449b591c67e1d447671ed16ab36583a3a6266c4fc6ba6eb7c
   languageName: node
   linkType: hard
 
@@ -10563,10 +10563,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jmespath@npm:0.15.0":
-  version: 0.15.0
-  resolution: "jmespath@npm:0.15.0"
-  checksum: 353bb9e69cc4c1560be0a4df43cb4020abc246e1c60cb5b55dcc76d8c858383f1633faf22ccaf6a5e09568a2077d0f4f1e989e6fcfd496b5cef87964cc8cb9e7
+"jmespath@npm:0.16.0":
+  version: 0.16.0
+  resolution: "jmespath@npm:0.16.0"
+  checksum: 2d602493a1e4addfd1350ac8c9d54b1b03ed09e305fd863bab84a4ee1f52868cf939dd1a08c5cdea29ce9ba8f86875ebb458b6ed45dab3e1c3f2694503fb2fd9
   languageName: node
   linkType: hard
 

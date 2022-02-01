@@ -41,7 +41,7 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "aws-sdk": "2.1021.0"
+    "aws-sdk": "2.1066.0"
   },
   "devDependencies": {
     "@lowdefy/ajv": "4.0.0-alpha.6",

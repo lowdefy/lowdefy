@@ -5881,7 +5881,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.55"],
             ["@swc/core", "npm:1.2.135"],
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.17"],
-            ["aws-sdk", "npm:2.1021.0"],
+            ["aws-sdk", "npm:2.1066.0"],
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:27.4.7"]
           ],
           "linkType": "SOFT",
@@ -8073,14 +8073,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["aws-sdk", [
-        ["npm:2.1021.0", {
-          "packageLocation": "./.yarn/cache/aws-sdk-npm-2.1021.0-f9beab7d6f-057bb0cc75.zip/node_modules/aws-sdk/",
+        ["npm:2.1066.0", {
+          "packageLocation": "./.yarn/cache/aws-sdk-npm-2.1066.0-027f1ee3f6-5ed48ddd14.zip/node_modules/aws-sdk/",
           "packageDependencies": [
-            ["aws-sdk", "npm:2.1021.0"],
+            ["aws-sdk", "npm:2.1066.0"],
             ["buffer", "npm:4.9.2"],
             ["events", "npm:1.1.1"],
             ["ieee754", "npm:1.1.13"],
-            ["jmespath", "npm:0.15.0"],
+            ["jmespath", "npm:0.16.0"],
             ["querystring", "npm:0.2.0"],
             ["sax", "npm:1.2.1"],
             ["url", "npm:0.10.3"],
@@ -13718,10 +13718,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["jmespath", [
-        ["npm:0.15.0", {
-          "packageLocation": "./.yarn/cache/jmespath-npm-0.15.0-df80ed6dd1-353bb9e69c.zip/node_modules/jmespath/",
+        ["npm:0.16.0", {
+          "packageLocation": "./.yarn/cache/jmespath-npm-0.16.0-d47535c65a-2d602493a1.zip/node_modules/jmespath/",
           "packageDependencies": [
-            ["jmespath", "npm:0.15.0"]
+            ["jmespath", "npm:0.16.0"]
           ],
           "linkType": "HARD",
         }]
