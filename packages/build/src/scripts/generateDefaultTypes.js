@@ -32,6 +32,7 @@ const defaultPackages = [
   '@lowdefy/connection-mongodb',
   '@lowdefy/connection-redis',
   '@lowdefy/connection-sendgrid',
+  '@lowdefy/connection-stripe',
   '@lowdefy/operators-change-case',
   // '@lowdefy/operators-diff',
   '@lowdefy/operators-js',
