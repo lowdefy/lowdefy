@@ -15,8 +15,10 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import sendGridMailSend from './SendGridMailSend.js';
-import schema from './SendGridMailSendSchema.json';
+import SendGridMailSend from './SendGridMailSend.js';
+
+const { checkRead, checkWrite } = SendGridMailSend.meta;
+const schema = SendGridMailSend.schema;
 
 const mockSend = jest.fn();
 
@@ -53,7 +55,7 @@ test('send with valid request and connection', async () => {
     apiKey: 'X',
     from: { name: 'a@b.om', email: 'a.cc@mm.co' },
   };
-  const send = await sendGridMailSend({ request, connection });
+  const send = await SendGridMailSend({ request, connection });
   expect(mockSend.mock.calls).toEqual([
     [
       [
@@ -83,7 +85,7 @@ test('send to list of emails', async () => {
     apiKey: 'X',
     from: 'x@y.com',
   };
-  const send = await sendGridMailSend({ request, connection });
+  const send = await SendGridMailSend({ request, connection });
   expect(mockSend.mock.calls).toEqual([
     [
       [
@@ -120,7 +122,7 @@ test('send a list of different emails', async () => {
     apiKey: 'X',
     from: 'x@y.com',
   };
-  const send = await sendGridMailSend({ request, connection });
+  const send = await SendGridMailSend({ request, connection });
   expect(mockSend.mock.calls).toEqual([
     [
       [
@@ -220,7 +222,7 @@ test('request throws an error', async () => {
     apiKey: 'X',
     from: { name: 'a@b.om', email: 'a.cc@mm.co' },
   };
-  await expect(() => sendGridMailSend({ request, connection })).rejects.toThrow('Test error.');
+  await expect(() => SendGridMailSend({ request, connection })).rejects.toThrow('Test error.');
 });
 
 test('request throws an error with response body', async () => {
@@ -233,7 +235,15 @@ test('request throws an error with response body', async () => {
     apiKey: 'X',
     from: { name: 'a@b.om', email: 'a.cc@mm.co' },
   };
-  await expect(() => sendGridMailSend({ request, connection })).rejects.toThrow(
+  await expect(() => SendGridMailSend({ request, connection })).rejects.toThrow(
     '["Test error 1.","Test error 2."]'
   );
+});
+
+test('checkRead should be false', async () => {
+  expect(checkRead).toBe(false);
+});
+
+test('checkWrite should be false', async () => {
+  expect(checkWrite).toBe(false);
 });

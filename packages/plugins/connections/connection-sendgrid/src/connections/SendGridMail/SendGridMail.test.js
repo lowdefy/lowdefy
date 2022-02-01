@@ -16,7 +16,8 @@
 
 import { validate } from '@lowdefy/ajv';
 import SendGridMail from './SendGridMail.js';
-import schema from './SendGridMailSchema.json';
+
+const schema = SendGridMail.schema;
 
 test('All requests are present', () => {
   expect(SendGridMail.requests.SendGridMailSend).toBeDefined();

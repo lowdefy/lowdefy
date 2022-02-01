@@ -31,6 +31,7 @@ const defaultPackages = [
   '@lowdefy/connection-knex',
   '@lowdefy/connection-mongodb',
   '@lowdefy/connection-redis',
+  '@lowdefy/connection-sendgrid',
   '@lowdefy/operators-change-case',
   // '@lowdefy/operators-diff',
   '@lowdefy/operators-js',

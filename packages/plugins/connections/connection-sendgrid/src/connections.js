@@ -14,13 +14,4 @@
   limitations under the License.
 */
 
-export default {
-  import: {
-    path: 'connections/SendGridMail/SendGridMailSend/SendGridMailSend.js',
-    schema: 'connections/SendGridMail/SendGridMailSend/SendGridMailSendSchema.json',
-  },
-  meta: {
-    checkRead: false,
-    checkWrite: false,
-  },
-};
+export { default as SendGridMail } from './connections/SendGridMail/SendGridMail.js';

@@ -5210,6 +5210,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/connection-knex", "workspace:packages/plugins/connections/connection-knex"],
             ["@lowdefy/connection-mongodb", "workspace:packages/plugins/connections/connection-mongodb"],
             ["@lowdefy/connection-redis", "workspace:packages/plugins/connections/connection-redis"],
+            ["@lowdefy/connection-sendgrid", "workspace:packages/plugins/connections/connection-sendgrid"],
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],
             ["@lowdefy/node-utils", "workspace:packages/utils/node-utils"],
             ["@lowdefy/nunjucks", "workspace:packages/utils/nunjucks"],
