@@ -16,8 +16,9 @@
 
 import getCollection from '../getCollection.js';
 import { serialize, deserialize } from '../serialize.js';
+import schema from './schema.js';
 
-async function mongodbDeleteOne({ request, connection }) {
+async function MongodbDeleteOne({ request, connection }) {
   const deserializedRequest = deserialize(request);
   const { filter, options } = deserializedRequest;
   const { collection, client } = await getCollection({ connection });
@@ -33,4 +34,10 @@ async function mongodbDeleteOne({ request, connection }) {
   return { deletedCount };
 }
 
-export default mongodbDeleteOne;
+MongodbDeleteOne.schema = schema;
+MongodbDeleteOne.meta = {
+  checkRead: false,
+  checkWrite: true,
+};
+
+export default MongodbDeleteOne;

@@ -38,6 +38,7 @@ test('buildAuth default', async () => {
           roles: {},
         },
       },
+      theme: {},
     },
     pages: [
       { id: 'a', type: 'Context', auth: { public: true } },
@@ -59,6 +60,7 @@ test('buildAuth no pages', async () => {
           roles: {},
         },
       },
+      theme: {},
     },
   });
 });
@@ -89,6 +91,7 @@ test('buildAuth all protected, some public', async () => {
           roles: {},
         },
       },
+      theme: {},
     },
     pages: [
       { id: 'a', type: 'Context', auth: { public: true } },
@@ -124,6 +127,7 @@ test('buildAuth all public, some protected', async () => {
           roles: {},
         },
       },
+      theme: {},
     },
     pages: [
       { id: 'a', type: 'Context', auth: { public: false } },
@@ -159,6 +163,7 @@ test('buildAuth all public', async () => {
           roles: {},
         },
       },
+      theme: {},
     },
     pages: [
       { id: 'a', type: 'Context', auth: { public: true } },
@@ -194,6 +199,7 @@ test('buildAuth all protected', async () => {
           roles: {},
         },
       },
+      theme: {},
     },
     pages: [
       { id: 'a', type: 'Context', auth: { public: false } },
@@ -233,6 +239,7 @@ test('buildAuth roles', async () => {
           },
         },
       },
+      theme: {},
     },
     pages: [
       { id: 'page1', type: 'Context', auth: { public: false, roles: ['role1', 'role2'] } },
@@ -288,6 +295,7 @@ test('buildAuth roles and protected pages array', async () => {
           protected: ['page1'],
         },
       },
+      theme: {},
     },
     pages: [{ id: 'page1', type: 'Context', auth: { public: false, roles: ['role1'] } }],
   });
@@ -319,6 +327,7 @@ test('buildAuth roles and protected true', async () => {
           protected: true,
         },
       },
+      theme: {},
     },
     pages: [{ id: 'page1', type: 'Context', auth: { public: false, roles: ['role1'] } }],
   });

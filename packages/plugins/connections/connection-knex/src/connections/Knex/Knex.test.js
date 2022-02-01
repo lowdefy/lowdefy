@@ -16,7 +16,8 @@
 
 import { validate } from '@lowdefy/ajv';
 import Knex from './Knex.js';
-import schema from './KnexSchema.json';
+
+const schema = Knex.schema;
 
 test('All requests are present', () => {
   expect(Knex.requests.KnexRaw).toBeDefined();

@@ -19,10 +19,10 @@ import { type } from '@lowdefy/helpers';
 async function writeRequestsOnPage({ page, context }) {
   return Promise.all(
     page.requests.map(async (request) => {
-      await context.writeBuildArtifact({
-        filePath: `pages/${page.pageId}/requests/${request.requestId}.json`,
-        content: JSON.stringify(request, null, 2),
-      });
+      await context.writeBuildArtifact(
+        `pages/${page.pageId}/requests/${request.requestId}.json`,
+        JSON.stringify(request, null, 2)
+      );
       delete request.properties;
       delete request.type;
       delete request.connectionId;

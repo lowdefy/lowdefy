@@ -16,12 +16,12 @@
 
 import { spawnProcess } from '@lowdefy/node-utils';
 
-function lowdefyBuild({ packageManager, directories }) {
+function lowdefyBuild({ bin, directories }) {
   return async () => {
     await spawnProcess({
+      command: 'node',
+      args: [bin.lowdefyBuild],
       logger: console,
-      args: ['run', 'build:lowdefy'],
-      command: packageManager,
       processOptions: {
         env: {
           ...process.env,

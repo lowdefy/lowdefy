@@ -15,12 +15,11 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import mongoDBUpdateOne from './MongoDBUpdateOne.js';
+import MongoDBUpdateOne from './MongoDBUpdateOne.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
-import requestIndex from './index.js';
-import schema from './MongoDBUpdateOneSchema.json';
 
-const { checkRead, checkWrite } = requestIndex.meta;
+const { checkRead, checkWrite } = MongoDBUpdateOne.meta;
+const schema = MongoDBUpdateOne.schema;
 
 const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';
@@ -42,7 +41,7 @@ test('updateOne', async () => {
     collection,
     write: true,
   };
-  const res = await mongoDBUpdateOne({ request, connection });
+  const res = await MongoDBUpdateOne({ request, connection });
   expect(res).toEqual({
     modifiedCount: 1,
     upsertedId: null,
@@ -63,7 +62,7 @@ test('updateOne upsert', async () => {
     collection,
     write: true,
   };
-  const res = await mongoDBUpdateOne({ request, connection });
+  const res = await MongoDBUpdateOne({ request, connection });
   expect(res).toEqual({
     modifiedCount: 0,
     upsertedId: {
@@ -87,7 +86,7 @@ test('updateOne upsert false', async () => {
     collection,
     write: true,
   };
-  const res = await mongoDBUpdateOne({ request, connection });
+  const res = await MongoDBUpdateOne({ request, connection });
   expect(res).toEqual({
     modifiedCount: 0,
     upsertedId: null,
@@ -107,7 +106,7 @@ test('updateOne upsert default false', async () => {
     collection,
     write: true,
   };
-  const res = await mongoDBUpdateOne({ request, connection });
+  const res = await MongoDBUpdateOne({ request, connection });
   expect(res).toEqual({
     modifiedCount: 0,
     upsertedId: null,
@@ -127,7 +126,7 @@ test('updateOne connection error', async () => {
     collection,
     write: true,
   };
-  await expect(mongoDBUpdateOne({ request, connection })).rejects.toThrow(
+  await expect(MongoDBUpdateOne({ request, connection })).rejects.toThrow(
     'Invalid connection string'
   );
 });
@@ -143,7 +142,7 @@ test('updateOne mongodb error', async () => {
     collection,
     write: true,
   };
-  await expect(mongoDBUpdateOne({ request, connection })).rejects.toThrow(
+  await expect(MongoDBUpdateOne({ request, connection })).rejects.toThrow(
     'Unknown modifier: $badOp'
   );
 });

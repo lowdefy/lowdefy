@@ -16,7 +16,8 @@
 
 import { validate } from '@lowdefy/ajv';
 import MongoDBCollection from './MongoDBCollection.js';
-import schema from './MongoDBCollectionSchema.json';
+
+const schema = MongoDBCollection.schema;
 
 test('All requests are present', () => {
   expect(MongoDBCollection.requests.MongoDBAggregation).toBeDefined();

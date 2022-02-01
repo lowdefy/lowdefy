@@ -15,12 +15,11 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import mongoDBDeleteMany from './MongoDBDeleteMany.js';
+import MongoDBDeleteMany from './MongoDBDeleteMany.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
-import requestIndex from './index.js';
-import schema from './MongoDBDeleteManySchema.json';
 
-const { checkRead, checkWrite } = requestIndex.meta;
+const { checkRead, checkWrite } = MongoDBDeleteMany.meta;
+const schema = MongoDBDeleteMany.schema;
 
 const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';
@@ -49,7 +48,7 @@ test('deleteMany - Single Document', async () => {
     collection,
     write: true,
   };
-  const res = await mongoDBDeleteMany({ request, connection });
+  const res = await MongoDBDeleteMany({ request, connection });
   expect(res).toEqual({
     deletedCount: 1,
   });
@@ -65,7 +64,7 @@ test('deleteMany - Multiple Documents', async () => {
     collection,
     write: true,
   };
-  const res = await mongoDBDeleteMany({ request, connection });
+  const res = await MongoDBDeleteMany({ request, connection });
   expect(res).toEqual({
     deletedCount: 3,
   });
@@ -81,7 +80,7 @@ test('deleteMany - Multiple Documents one field', async () => {
     collection,
     write: true,
   };
-  const res = await mongoDBDeleteMany({ request, connection });
+  const res = await MongoDBDeleteMany({ request, connection });
   expect(res).toEqual({
     deletedCount: 3,
   });
@@ -97,7 +96,7 @@ test('deleteMany connection error', async () => {
     collection,
     write: true,
   };
-  await expect(mongoDBDeleteMany({ request, connection })).rejects.toThrow(
+  await expect(MongoDBDeleteMany({ request, connection })).rejects.toThrow(
     'Invalid connection string'
   );
 });
@@ -113,7 +112,7 @@ test('deleteMany mongodb error', async () => {
     collection,
     write: true,
   };
-  await expect(mongoDBDeleteMany({ request, connection })).rejects.toThrow(
+  await expect(MongoDBDeleteMany({ request, connection })).rejects.toThrow(
     'w has to be a number or a string'
   );
 });
