@@ -3735,10 +3735,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@elastic/elasticsearch", [
-        ["npm:7.15.0", {
-          "packageLocation": "./.yarn/cache/@elastic-elasticsearch-npm-7.15.0-081267f0f5-e23a33469c.zip/node_modules/@elastic/elasticsearch/",
+        ["npm:7.16.0", {
+          "packageLocation": "./.yarn/cache/@elastic-elasticsearch-npm-7.16.0-35ac622aec-a91468045a.zip/node_modules/@elastic/elasticsearch/",
           "packageDependencies": [
-            ["@elastic/elasticsearch", "npm:7.15.0"],
+            ["@elastic/elasticsearch", "npm:7.16.0"],
             ["debug", "virtual:bd5ac53f2a4d13161e4becd2185852df3b4231ea7460becce6b80faf113589c84e6d5a7592f2b45846dcda321b203d871f080c12cd9638e02938ccdf6bfbd6ee#npm:4.3.2"],
             ["hpagent", "npm:0.1.2"],
             ["ms", "npm:2.1.3"],
@@ -5494,7 +5494,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/plugins/connections/connection-elasticsearch/",
           "packageDependencies": [
             ["@lowdefy/connection-elasticsearch", "workspace:packages/plugins/connections/connection-elasticsearch"],
-            ["@elastic/elasticsearch", "npm:7.15.0"],
+            ["@elastic/elasticsearch", "npm:7.16.0"],
             ["@lowdefy/ajv", "workspace:packages/utils/ajv"],
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.55"],

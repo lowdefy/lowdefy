@@ -2022,15 +2022,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@elastic/elasticsearch@npm:7.15.0":
-  version: 7.15.0
-  resolution: "@elastic/elasticsearch@npm:7.15.0"
+"@elastic/elasticsearch@npm:7.16.0":
+  version: 7.16.0
+  resolution: "@elastic/elasticsearch@npm:7.16.0"
   dependencies:
     debug: ^4.3.1
     hpagent: ^0.1.1
     ms: ^2.1.3
     secure-json-parse: ^2.4.0
-  checksum: e23a33469c51865cd96b7fea00c138177e25a341f5af3d8ec0fc7ae395efeeaff5e7e3c2d9eccb34becbdb5f68bd571babb96ef987ce2f8b40cda5d8f934e947
+  checksum: a91468045a6130c6113ecd6b74cd6b684b1f743205df3f8c305bf15ca96a7fc825499d67cbaa17d882d0d90794c685d4f846ba6c0e188fc9690750c6b8b650ab
   languageName: node
   linkType: hard
 
@@ -3590,7 +3590,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-elasticsearch@workspace:packages/plugins/connections/connection-elasticsearch"
   dependencies:
-    "@elastic/elasticsearch": 7.15.0
+    "@elastic/elasticsearch": 7.16.0
     "@lowdefy/ajv": 4.0.0-alpha.6
     "@lowdefy/helpers": 4.0.0-alpha.6
     "@swc/cli": 0.1.55

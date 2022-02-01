@@ -41,7 +41,7 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@elastic/elasticsearch": "7.15.0",
+    "@elastic/elasticsearch": "7.16.0",
     "@lowdefy/helpers": "4.0.0-alpha.6"
   },
   "devDependencies": {
