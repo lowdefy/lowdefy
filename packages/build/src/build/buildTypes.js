@@ -14,10 +14,17 @@
   limitations under the License.
 */
 
-function buildTypeClass({ counter, definitions, store, typeClass }) {
+function buildTypeClass(
+  context,
+  { counter, definitions, store, typeClass, warnIfMissing = false }
+) {
   const counts = counter.getCounts();
   Object.keys(counts).forEach((typeName) => {
     if (!definitions[typeName]) {
+      if (warnIfMissing) {
+        context.logger.warn(`${typeClass} type "${typeName}" was used but is not defined.`);
+        return;
+      }
       throw new Error(`${typeClass} type "${typeName}" was used but is not defined.`);
     }
     store[typeName] = {
@@ -49,39 +56,41 @@ function buildTypes({ components, context }) {
   //   typeClass: 'Action',
   // });
 
-  buildTypeClass({
+  buildTypeClass(context, {
     counter: typeCounters.blocks,
     definitions: context.types.blocks,
     store: components.types.blocks,
     typeClass: 'Block',
   });
 
-  buildTypeClass({
+  buildTypeClass(context, {
     counter: typeCounters.connections,
     definitions: context.types.connections,
     store: components.types.connections,
     typeClass: 'Connection',
   });
 
-  buildTypeClass({
+  buildTypeClass(context, {
     counter: typeCounters.requests,
     definitions: context.types.requests,
     store: components.types.requests,
     typeClass: 'Request',
   });
 
-  buildTypeClass({
+  buildTypeClass(context, {
     counter: typeCounters.operators.client,
     definitions: context.types.operators.client,
     store: components.types.operators.client,
     typeClass: 'Operator',
+    warnIfMissing: true,
   });
 
-  buildTypeClass({
+  buildTypeClass(context, {
     counter: typeCounters.operators.server,
     definitions: context.types.operators.server,
     store: components.types.operators.server,
     typeClass: 'Operator',
+    warnIfMissing: true,
   });
 }
 
