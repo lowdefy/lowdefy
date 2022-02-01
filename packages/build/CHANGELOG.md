@@ -143,6 +143,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### BREAKING CHANGES
 
 * The _event, _global, _input, _state, and _url_query operators are no longer evaluated in connections or requests.
+## [3.23.2](https://github.com/lowdefy/lowdefy/compare/v3.23.1...v3.23.2) (2021-11-29)
+
+**Note:** Version bump only for package @lowdefy/build
 
 
 

@@ -79,7 +79,7 @@ _ref:
       ###### Reference pages:
       ```yaml
       # lowdefy.yaml
-      lowdefy: '3.23.1'
+      lowdefy: '3.23.2'
       pages:
         - _ref: pages/page1.yaml
         - _ref: pages/page2.yaml
@@ -100,7 +100,7 @@ _ref:
       ```
       Returns:
       ```
-      lowdefy: '3.23.1'
+      lowdefy: '3.23.2'
       pages:
         - id: page1
           type: PageHeaderMenu
@@ -203,7 +203,7 @@ _ref:
 
       ```yaml
       // lowdefy.yaml
-      lowdefy: 3.23.1
+      lowdefy: 3.23.2
 
       cli:
         refResolver: resolvers/useLocalOrSharedConfig.js
@@ -229,7 +229,7 @@ _ref:
       ```
       ```yaml
       // lowdefy.yaml
-      lowdefy: 3.23.1
+      lowdefy: 3.23.2
 
       pages:
         - _ref:

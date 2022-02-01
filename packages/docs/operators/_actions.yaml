@@ -77,7 +77,7 @@ _ref:
       First register a custom JavaScript action: `getNormalizedEigenvector`
       ```yaml
       # file: lowdefy.yaml
-      lowdefy: '3.23.1'
+      lowdefy: '3.23.2'
       app:
         html:
           appendHead: |
