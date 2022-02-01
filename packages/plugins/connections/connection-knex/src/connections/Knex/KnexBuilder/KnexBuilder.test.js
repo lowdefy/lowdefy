@@ -16,8 +16,10 @@
 
 import { validate } from '@lowdefy/ajv';
 import knex from 'knex';
-import knexBuilder from './KnexBuilder.js';
-import schema from './KnexBuilderSchema.json';
+import KnexBuilder from './KnexBuilder.js';
+
+const { checkRead, checkWrite } = KnexBuilder.meta;
+const schema = KnexBuilder.schema;
 
 const mockKnexClient = jest.fn(() => mockKnexClient);
 
@@ -44,7 +46,7 @@ test('KnexBuilder with tableName', async () => {
     query: [{ select: ['*'] }, { where: ['name', 'steve'] }],
     tableName: 'table',
   };
-  const res = await knexBuilder({ request, connection });
+  const res = await KnexBuilder({ request, connection });
   expect(knex.mock.calls).toEqual([
     [
       {
@@ -74,7 +76,7 @@ test('KnexBuilder', async () => {
   const request = {
     query: [{ select: ['*'] }, { from: ['table'] }, { where: ['name', 'steve'] }],
   };
-  const res = await knexBuilder({ request, connection });
+  const res = await KnexBuilder({ request, connection });
   expect(knex.mock.calls).toEqual([
     [
       {
@@ -97,7 +99,7 @@ test('KnexBuilder, invalid method', async () => {
   const request = {
     query: [{ invalid: ['*'] }],
   };
-  await expect(knexBuilder({ request, connection })).rejects.toThrow(
+  await expect(KnexBuilder({ request, connection })).rejects.toThrow(
     'Invalid query builder method "invalid".'
   );
 });
@@ -106,7 +108,7 @@ test('KnexBuilder, more than one method', async () => {
   const request = {
     query: [{ select: ['*'], where: ['name', 'steve'] }],
   };
-  await expect(knexBuilder({ request, connection })).rejects.toThrow(
+  await expect(KnexBuilder({ request, connection })).rejects.toThrow(
     'Invalid query, more than one method defined in a method object, received ["select","where"].'
   );
 });
@@ -115,7 +117,7 @@ test('KnexBuilder, method args not an array', async () => {
   const request = {
     query: [{ select: '*' }],
   };
-  await expect(knexBuilder({ request, connection })).rejects.toThrow(
+  await expect(KnexBuilder({ request, connection })).rejects.toThrow(
     'Invalid query, method "select" arguments should be an array, received "*".'
   );
 });
@@ -142,4 +144,12 @@ test('query missing', () => {
   expect(() => validate({ schema, data: request })).toThrow(
     'KnexBuilder request should have required property "query".'
   );
+});
+
+test('checkRead should be false', async () => {
+  expect(checkRead).toBe(false);
+});
+
+test('checkWrite should be false', async () => {
+  expect(checkWrite).toBe(false);
 });

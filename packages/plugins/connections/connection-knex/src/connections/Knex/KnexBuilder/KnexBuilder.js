@@ -16,8 +16,9 @@
 
 import knex from 'knex';
 import { type } from '@lowdefy/helpers';
+import schema from './schema.js';
 
-async function knexBuilder({ request, connection }) {
+async function KnexBuilder({ request, connection }) {
   let client = knex(connection);
   if (request.tableName) {
     client = client(request.tableName);
@@ -47,4 +48,10 @@ async function knexBuilder({ request, connection }) {
   return client;
 }
 
-export default knexBuilder;
+KnexBuilder.schema = schema;
+KnexBuilder.meta = {
+  checkRead: false,
+  checkWrite: false,
+};
+
+export default KnexBuilder;

@@ -17,10 +17,10 @@
 import KnexBuilder from './KnexBuilder/KnexBuilder.js';
 import KnexRaw from './KnexRaw/KnexRaw.js';
 
+import schema from './schema.js';
+
 export default {
-  import: {
-    schema: 'connections/Knex/KnexSchema.json',
-  },
+  schema,
   requests: {
     KnexBuilder,
     KnexRaw,

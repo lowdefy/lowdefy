@@ -28,6 +28,8 @@ const defaultPackages = [
   '@lowdefy/blocks-markdown',
   '@lowdefy/connection-axios-http',
   '@lowdefy/connection-elasticsearch',
+  '@lowdefy/connection-knex',
+  '@lowdefy/connection-mongodb',
   '@lowdefy/connection-redis',
   '@lowdefy/connection-sendgrid',
   '@lowdefy/operators-change-case',

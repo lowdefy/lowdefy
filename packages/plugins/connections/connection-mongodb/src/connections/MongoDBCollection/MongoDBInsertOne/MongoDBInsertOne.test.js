@@ -16,12 +16,11 @@
 
 import { validate } from '@lowdefy/ajv';
 import { MongoClient } from 'mongodb';
-import mongoDBInsertOne from './MongoDBInsertOne.js';
+import MongoDBInsertOne from './MongoDBInsertOne.js';
 import clearTestMongoDb from '../../../../test/clearTestMongoDb.js';
-import requestIndex from './index.js';
-import schema from './MongoDBInsertOneSchema.json';
 
-const { checkRead, checkWrite } = requestIndex.meta;
+const { checkRead, checkWrite } = MongoDBInsertOne.meta;
+const schema = MongoDBInsertOne.schema;
 
 const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';
@@ -39,7 +38,7 @@ test('insertOne', async () => {
     collection,
     write: true,
   };
-  const res = await mongoDBInsertOne({ request, connection });
+  const res = await MongoDBInsertOne({ request, connection });
   expect(res).toEqual({
     insertedCount: 1,
     insertedId: 'insertOne',
@@ -62,7 +61,7 @@ test('insertOne options', async () => {
     collection,
     write: true,
   };
-  const res = await mongoDBInsertOne({ request, connection });
+  const res = await MongoDBInsertOne({ request, connection });
   expect(res).toEqual({
     insertedCount: 1,
     insertedId: 'insertOne_options',
@@ -82,7 +81,7 @@ test('insertOne connection error', async () => {
     collection,
     write: true,
   };
-  await expect(mongoDBInsertOne({ request, connection })).rejects.toThrow(
+  await expect(MongoDBInsertOne({ request, connection })).rejects.toThrow(
     'Invalid connection string'
   );
 });
@@ -95,8 +94,8 @@ test('insertOne mongodb error', async () => {
     collection,
     write: true,
   };
-  await mongoDBInsertOne({ request, connection });
-  await expect(mongoDBInsertOne({ request, connection })).rejects.toThrow(
+  await MongoDBInsertOne({ request, connection });
+  await expect(MongoDBInsertOne({ request, connection })).rejects.toThrow(
     'E11000 duplicate key error'
   );
 });
@@ -122,7 +121,7 @@ test('insertOne insert a date', async () => {
     collection,
     write: true,
   };
-  const res = await mongoDBInsertOne({ request, connection });
+  const res = await MongoDBInsertOne({ request, connection });
   expect(res).toEqual({
     insertedCount: 1,
     insertedId: 'insertOneDate',
