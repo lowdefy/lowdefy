@@ -40,7 +40,7 @@
     "@emotion/jest": "11.7.1",
     "@lowdefy/block-utils": "4.0.0-alpha.6",
     "@lowdefy/helpers": "4.0.0-alpha.6",
-    "@testing-library/dom": "8.10.1",
+    "@testing-library/dom": "8.11.3",
     "@testing-library/react": "13.0.0-alpha.4",
     "@testing-library/user-event": "14.0.0-alpha.14",
     "ajv": "8.9.0",

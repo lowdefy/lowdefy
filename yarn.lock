@@ -3339,7 +3339,7 @@ __metadata:
     "@lowdefy/helpers": 4.0.0-alpha.6
     "@swc/cli": 0.1.55
     "@swc/core": 1.2.135
-    "@testing-library/dom": 8.10.1
+    "@testing-library/dom": 8.11.3
     "@testing-library/react": 13.0.0-alpha.4
     "@testing-library/user-event": 14.0.0-alpha.14
     ajv: 8.9.0
@@ -3364,7 +3364,7 @@ __metadata:
     "@swc/cli": 0.1.55
     "@swc/core": 1.2.135
     "@swc/jest": 0.2.17
-    "@testing-library/dom": 8.10.1
+    "@testing-library/dom": 8.11.3
     "@testing-library/react": 13.0.0-alpha.4
     "@testing-library/user-event": 14.0.0-alpha.14
     classnames: 2.3.1
@@ -3391,7 +3391,7 @@ __metadata:
     "@swc/cli": 0.1.55
     "@swc/core": 1.2.135
     "@swc/jest": 0.2.17
-    "@testing-library/dom": 8.11.1
+    "@testing-library/dom": 8.11.3
     "@testing-library/react": 13.0.0-alpha.4
     "@testing-library/user-event": 14.0.0-alpha.14
     antd: 4.17.0-alpha.7
@@ -3420,7 +3420,7 @@ __metadata:
     "@swc/cli": 0.1.55
     "@swc/core": 1.2.135
     "@swc/jest": 0.2.17
-    "@testing-library/dom": 8.10.1
+    "@testing-library/dom": 8.11.3
     "@testing-library/react": 13.0.0-alpha.4
     "@testing-library/user-event": 14.0.0-alpha.14
     copyfiles: 2.4.1
@@ -3445,7 +3445,7 @@ __metadata:
     "@swc/cli": 0.1.55
     "@swc/core": 1.2.135
     "@swc/jest": 0.2.17
-    "@testing-library/dom": 8.10.1
+    "@testing-library/dom": 8.11.3
     "@testing-library/react": 13.0.0-alpha.4
     "@testing-library/user-event": 14.0.0-alpha.14
     copyfiles: 2.4.1
@@ -3470,7 +3470,7 @@ __metadata:
     "@swc/cli": 0.1.55
     "@swc/core": 1.2.135
     "@swc/jest": 0.2.17
-    "@testing-library/dom": 8.10.1
+    "@testing-library/dom": 8.11.3
     "@testing-library/react": 13.0.0-alpha.4
     "@testing-library/user-event": 14.0.0-alpha.14
     copyfiles: 2.4.1
@@ -3496,7 +3496,7 @@ __metadata:
     "@swc/cli": 0.1.55
     "@swc/core": 1.2.135
     "@swc/jest": 0.2.17
-    "@testing-library/dom": 8.10.1
+    "@testing-library/dom": 8.11.3
     "@testing-library/react": 13.0.0-alpha.4
     "@testing-library/user-event": 14.0.0-alpha.14
     copyfiles: 2.4.1
@@ -3519,7 +3519,7 @@ __metadata:
     "@swc/cli": 0.1.55
     "@swc/core": 1.2.135
     "@swc/jest": 0.2.17
-    "@testing-library/dom": 8.10.1
+    "@testing-library/dom": 8.11.3
     "@testing-library/react": 13.0.0-alpha.4
     "@testing-library/user-event": 14.0.0-alpha.14
     copyfiles: 2.4.1
@@ -3763,7 +3763,7 @@ __metadata:
     "@swc/cli": 0.1.55
     "@swc/core": 1.2.135
     "@swc/jest": 0.2.17
-    "@testing-library/dom": 8.10.1
+    "@testing-library/dom": 8.11.3
     "@testing-library/react": 13.0.0-alpha.4
     "@testing-library/user-event": 14.0.0-alpha.14
     antd: 4.17.0-alpha.7
@@ -4684,9 +4684,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/dom@npm:8.10.1":
-  version: 8.10.1
-  resolution: "@testing-library/dom@npm:8.10.1"
+"@testing-library/dom@npm:8.11.3":
+  version: 8.11.3
+  resolution: "@testing-library/dom@npm:8.11.3"
   dependencies:
     "@babel/code-frame": ^7.10.4
     "@babel/runtime": ^7.12.5
@@ -4696,11 +4696,11 @@ __metadata:
     dom-accessibility-api: ^0.5.9
     lz-string: ^1.4.4
     pretty-format: ^27.0.2
-  checksum: c11da16d981d4479fa18b2e90a62d2c19871da414016a4f80136394cf35e833ca4de4b56a64225f6bd5d3a13842176236d3508d217e3858c5e2ef35a3f391d5b
+  checksum: 2245d254b6058590e25de86fb7b3c75e4a31096901a191f80d3efb9fa7e1e273043416f370c8770feb9f3ccc73a1550a877a3b003b593f1728ae828fcb52cd62
   languageName: node
   linkType: hard
 
-"@testing-library/dom@npm:8.11.1, @testing-library/dom@npm:^8.5.0":
+"@testing-library/dom@npm:^8.5.0":
   version: 8.11.1
   resolution: "@testing-library/dom@npm:8.11.1"
   dependencies:

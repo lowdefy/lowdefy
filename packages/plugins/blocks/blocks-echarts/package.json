@@ -63,7 +63,7 @@
     "@swc/cli": "0.1.55",
     "@swc/core": "1.2.135",
     "@swc/jest": "0.2.17",
-    "@testing-library/dom": "8.10.1",
+    "@testing-library/dom": "8.11.3",
     "@testing-library/react": "13.0.0-alpha.4",
     "@testing-library/user-event": "14.0.0-alpha.14",
     "copyfiles": "2.4.1",
