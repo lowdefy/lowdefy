@@ -48,9 +48,9 @@
   },
   "devDependencies": {
     "@swc/cli": "0.1.55",
-    "@swc/core": "1.2.130",
+    "@swc/core": "1.2.135",
     "@swc/jest": "0.2.17",
-    "jest": "27.3.1"
+    "jest": "27.4.7"
   },
   "publishConfig": {
     "access": "public"

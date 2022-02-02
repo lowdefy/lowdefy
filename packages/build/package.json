@@ -49,11 +49,11 @@
     "@lowdefy/helpers": "4.0.0-alpha.6",
     "@lowdefy/node-utils": "4.0.0-alpha.6",
     "@lowdefy/nunjucks": "4.0.0-alpha.6",
-    "ajv": "8.8.2",
+    "ajv": "8.9.0",
     "js-yaml": "4.1.0",
     "json5": "2.2.0",
     "uuid": "8.3.2",
-    "yargs": "17.3.0"
+    "yargs": "17.3.1"
   },
   "devDependencies": {
     "@lowdefy/blocks-antd": "4.0.0-alpha.6",
@@ -78,9 +78,9 @@
     "@lowdefy/operators-uuid": "4.0.0-alpha.6",
     "@lowdefy/operators-yaml": "4.0.0-alpha.6",
     "@swc/cli": "0.1.55",
-    "@swc/core": "1.2.130",
+    "@swc/core": "1.2.135",
     "@swc/jest": "0.2.17",
-    "jest": "27.3.1"
+    "jest": "27.4.7"
   },
   "publishConfig": {
     "access": "public"
