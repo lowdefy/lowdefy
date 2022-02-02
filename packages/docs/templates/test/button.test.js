@@ -19,17 +19,15 @@ import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer';
 import defaultValueTransformer from '../blocks/defaultValueTransformer';
 
 const schema = {
-  schema: {
+  properties: {
+    type: 'object',
+    additionalProperties: false,
     properties: {
-      type: 'object',
-      additionalProperties: false,
-      properties: {
-        field: {
-          type: 'object',
-          description: 'description',
-          docs: {
-            displayType: 'button',
-          },
+      field: {
+        type: 'object',
+        description: 'description',
+        docs: {
+          displayType: 'button',
         },
       },
     },
@@ -137,22 +135,20 @@ test('button propertiesGetterTransformer', () => {
 test('button defaultValueTransformer', () => {
   expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`Object {}`);
   const schemaDV = {
-    schema: {
+    properties: {
+      type: 'object',
+      additionalProperties: false,
       properties: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          field: {
-            type: 'object',
-            description: 'description',
-            docs: {
-              displayType: 'button',
-            },
-            default: {
-              icon: 'UploadOutlined',
-              title: 'Upload',
-              type: 'default',
-            },
+        field: {
+          type: 'object',
+          description: 'description',
+          docs: {
+            displayType: 'button',
+          },
+          default: {
+            icon: 'UploadOutlined',
+            title: 'Upload',
+            type: 'default',
           },
         },
       },

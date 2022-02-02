@@ -40,8 +40,7 @@
     "start:server-dev": "yarn workspace @lowdefy/server-dev start --package-manager yarn --config-directory ../../app",
     "start": "yarn workspace @lowdefy/server build:lowdefy --config-directory ../../app && yarn && yarn workspace @lowdefy/server build:next && yarn workspace @lowdefy/server start",
     "start:dev": "yarn workspace @lowdefy/server build:lowdefy --config-directory ../../app && yarn && yarn workspace @lowdefy/server dev",
-    "test": "lerna run test",
-    "test:ci": "yarn install --immutable --immutable-cache --check-cache && yarn build && yarn test --ignore='@lowdefy/format' --ignore='@lowdefy/block-dev'"
+    "test": "lerna run test"
   },
   "devDependencies": {
     "@yarnpkg/pnpify": "3.1.1-rc.13",

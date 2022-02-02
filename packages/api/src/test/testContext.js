@@ -27,6 +27,9 @@ function testContext({
     info: () => {},
     warn: () => {},
   },
+  operators = {
+    _test: () => 'test',
+  },
   readConfigFile,
   roles,
   secrets = {},
@@ -43,6 +46,7 @@ function testContext({
     headers,
     host,
     logger,
+    operators,
     protocol,
     readConfigFile,
     secrets,
