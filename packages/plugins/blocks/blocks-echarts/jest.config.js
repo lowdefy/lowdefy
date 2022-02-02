@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   clearMocks: true,
   collectCoverage: true,
   collectCoverageFrom: ['src/**/*.js'],

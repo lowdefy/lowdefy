@@ -17,10 +17,6 @@
 import axios from 'axios';
 import errorHandler from './errorHandler.js';
 import createPrint from './print.js';
-// eslint-disable-next-line no-unused-vars
-import packageJson from '../../package.json';
-
-jest.mock('../../package.json', () => ({ version: 'cliVersion' }));
 
 jest.mock('./print', () => {
   const error = jest.fn();
@@ -39,6 +35,7 @@ beforeEach(() => {
 test('Print and log error with full context', async () => {
   const error = new Error('Test error');
   const context = {
+    cliVersion: 'cliVersion',
     lowdefyVersion: 'lowdefyVersion',
     command: 'command',
     disableTelemetry: false,
@@ -46,45 +43,48 @@ test('Print and log error with full context', async () => {
   await errorHandler({ context, error });
 
   expect(print.error.mock.calls).toEqual([['Test error']]);
-  const axiosAgruments = axios.request.mock.calls[0][0];
-  expect(axiosAgruments.headers).toEqual({
+  const axiosArguments = axios.request.mock.calls[0][0];
+  expect(axiosArguments.headers).toEqual({
     'User-Agent': 'Lowdefy CLI vcliVersion',
   });
-  expect(axiosAgruments.url).toEqual('https://api.lowdefy.net/errors');
-  expect(axiosAgruments.method).toEqual('post');
-  expect(axiosAgruments.data.cliVersion).toEqual('cliVersion');
-  expect(axiosAgruments.data.message).toEqual('Test error');
-  expect(axiosAgruments.data.name).toEqual('Error');
-  expect(axiosAgruments.data.source).toEqual('cli');
-  expect(axiosAgruments.data.stack).toMatch('Error: Test error');
-  expect(axiosAgruments.data.lowdefyVersion).toEqual('lowdefyVersion');
-  expect(axiosAgruments.data.command).toEqual('command');
+  expect(axiosArguments.url).toEqual('https://api.lowdefy.net/errors');
+  expect(axiosArguments.method).toEqual('post');
+  expect(axiosArguments.data.cliVersion).toEqual('cliVersion');
+  expect(axiosArguments.data.message).toEqual('Test error');
+  expect(axiosArguments.data.name).toEqual('Error');
+  expect(axiosArguments.data.source).toEqual('cli');
+  expect(axiosArguments.data.stack).toMatch('Error: Test error');
+  expect(axiosArguments.data.lowdefyVersion).toEqual('lowdefyVersion');
+  expect(axiosArguments.data.command).toEqual('command');
 });
 
-test('Print and log error with empty context', async () => {
+test('Print and log error with starting context', async () => {
   const error = new Error('Test error');
-  const context = {};
+  const context = {
+    cliVersion: 'cliVersion',
+  };
   await errorHandler({ context, error });
 
   expect(print.error.mock.calls).toEqual([['Test error']]);
-  const axiosAgruments = axios.request.mock.calls[0][0];
-  expect(axiosAgruments.headers).toEqual({
+  const axiosArguments = axios.request.mock.calls[0][0];
+  expect(axiosArguments.headers).toEqual({
     'User-Agent': 'Lowdefy CLI vcliVersion',
   });
-  expect(axiosAgruments.url).toEqual('https://api.lowdefy.net/errors');
-  expect(axiosAgruments.method).toEqual('post');
-  expect(axiosAgruments.data.cliVersion).toEqual('cliVersion');
-  expect(axiosAgruments.data.message).toEqual('Test error');
-  expect(axiosAgruments.data.name).toEqual('Error');
-  expect(axiosAgruments.data.source).toEqual('cli');
-  expect(axiosAgruments.data.stack).toMatch('Error: Test error');
-  expect(axiosAgruments.data.lowdefyVersion).toBe(undefined);
-  expect(axiosAgruments.data.command).toBe(undefined);
+  expect(axiosArguments.url).toEqual('https://api.lowdefy.net/errors');
+  expect(axiosArguments.method).toEqual('post');
+  expect(axiosArguments.data.cliVersion).toEqual('cliVersion');
+  expect(axiosArguments.data.message).toEqual('Test error');
+  expect(axiosArguments.data.name).toEqual('Error');
+  expect(axiosArguments.data.source).toEqual('cli');
+  expect(axiosArguments.data.stack).toMatch('Error: Test error');
+  expect(axiosArguments.data.lowdefyVersion).toBe(undefined);
+  expect(axiosArguments.data.command).toBe(undefined);
 });
 
 test('Do not log error if telemetry is disabled', async () => {
   const error = new Error('Test error');
   const context = {
+    cliVersion: 'cliVersion',
     lowdefyVersion: 'lowdefyVersion',
     command: 'command',
     disableTelemetry: true,
@@ -133,17 +133,17 @@ test('Pass if logError fails', async () => {
 //   await wrapped();
 //   expect(fn).toHaveBeenCalled();
 //   expect(print.error.mock.calls).toEqual([['Async Error']]);
-//   const axiosAgruments = axios.request.mock.calls[0][0];
-//   expect(axiosAgruments.headers).toEqual({
+//   const axiosArguments = axios.request.mock.calls[0][0];
+//   expect(axiosArguments.headers).toEqual({
 //     'User-Agent': 'Lowdefy CLI vcliVersion',
 //   });
-//   expect(axiosAgruments.url).toEqual('https://api.lowdefy.net/errors');
-//   expect(axiosAgruments.method).toEqual('post');
-//   expect(axiosAgruments.data.cliVersion).toEqual('cliVersion');
-//   expect(axiosAgruments.data.message).toEqual('Async Error');
-//   expect(axiosAgruments.data.name).toEqual('Error');
-//   expect(axiosAgruments.data.source).toEqual('cli');
-//   expect(axiosAgruments.data.stack).toMatch('Error: Async Error');
+//   expect(axiosArguments.url).toEqual('https://api.lowdefy.net/errors');
+//   expect(axiosArguments.method).toEqual('post');
+//   expect(axiosArguments.data.cliVersion).toEqual('cliVersion');
+//   expect(axiosArguments.data.message).toEqual('Async Error');
+//   expect(axiosArguments.data.name).toEqual('Error');
+//   expect(axiosArguments.data.source).toEqual('cli');
+//   expect(axiosArguments.data.stack).toMatch('Error: Async Error');
 // });
 
 // test('Catch error synchronous function, stay alive', async () => {
