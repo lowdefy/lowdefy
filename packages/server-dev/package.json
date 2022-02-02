@@ -61,23 +61,23 @@
     "@lowdefy/operators-nunjucks": "4.0.0-alpha.6",
     "@lowdefy/operators-uuid": "4.0.0-alpha.6",
     "@lowdefy/operators-yaml": "4.0.0-alpha.6",
-    "chokidar": "3.5.2",
-    "dotenv": "14.2.0",
+    "chokidar": "3.5.3",
+    "dotenv": "15.0.0",
     "js-yaml": "4.1.0",
-    "next": "12.0.3",
-    "next-auth": "4.0.0-beta.6",
+    "next": "12.0.10",
+    "next-auth": "4.1.2",
     "opener": "1.5.2",
-    "react": "18.0.0-alpha-327d5c484-20211106",
-    "react-dom": "18.0.0-alpha-327d5c484-20211106",
+    "react": "18.0.0-rc.0",
+    "react-dom": "18.0.0-rc.0",
     "react-icons": "4.3.1",
-    "swr": "1.0.1",
-    "yargs": "17.3.0"
+    "swr": "1.2.0",
+    "yargs": "17.3.1"
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "12.0.4",
+    "@next/eslint-plugin-next": "12.0.10",
     "less": "4.1.2",
     "less-loader": "10.2.0",
-    "next-with-less": "2.0.2"
+    "next-with-less": "2.0.4"
   },
   "publishConfig": {
     "access": "public"

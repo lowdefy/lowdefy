@@ -42,9 +42,9 @@
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-alpha.6",
     "@lowdefy/node-utils": "4.0.0-alpha.6",
-    "axios": "0.24.0",
+    "axios": "0.25.0",
     "chalk": "4.1.2",
-    "commander": "8.3.0",
+    "commander": "9.0.0",
     "decompress": "4.2.1",
     "decompress-targz": "4.1.1",
     "js-yaml": "4.1.0",
@@ -53,9 +53,9 @@
   },
   "devDependencies": {
     "@swc/cli": "0.1.55",
-    "@swc/core": "1.2.130",
+    "@swc/core": "1.2.135",
     "@swc/jest": "0.2.17",
-    "jest": "27.3.1"
+    "jest": "27.4.7"
   },
   "publishConfig": {
     "access": "public"
