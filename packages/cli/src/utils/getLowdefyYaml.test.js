@@ -137,21 +137,7 @@ test('Version is not a string', async () => {
     return null;
   });
   await expect(getLowdefyYaml({ configDirectory })).rejects.toThrow(
-    'Version number specified in "lowdefy.yaml" file is not valid. Received 1.'
-  );
-});
-
-test('Version is not a valid version number', async () => {
-  readFile.mockImplementation((filePath) => {
-    if (filePath === path.resolve(process.cwd(), 'lowdefy.yaml')) {
-      return `
-      lowdefy: v1-0-3
-      `;
-    }
-    return null;
-  });
-  await expect(getLowdefyYaml({ configDirectory })).rejects.toThrow(
-    'Version number specified in "lowdefy.yaml" file is not valid. Received "v1-0-3".'
+    'Version number specified in "lowdefy.yaml" file should be a string. Received 1.'
   );
 });
 
@@ -177,11 +163,7 @@ test('get cliConfig', async () => {
 
 test('could not find lowdefy.yaml in config dir, command is "init" or "clean-cache"', async () => {
   readFile.mockImplementation(() => null);
-  let config = await getLowdefyYaml({ command: 'init', configDirectory });
-  expect(config).toEqual({
-    cliConfig: {},
-  });
-  config = await getLowdefyYaml({ command: 'clean-cache', configDirectory });
+  const config = await getLowdefyYaml({ command: 'init', configDirectory });
   expect(config).toEqual({
     cliConfig: {},
   });

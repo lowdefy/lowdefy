@@ -19,17 +19,15 @@ import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer';
 import defaultValueTransformer from '../blocks/defaultValueTransformer';
 
 const schema = {
-  schema: {
+  properties: {
+    type: 'object',
+    additionalProperties: false,
     properties: {
-      type: 'object',
-      additionalProperties: false,
-      properties: {
-        field: {
-          type: 'object',
-          description: 'description',
-          docs: {
-            displayType: 'yaml',
-          },
+      field: {
+        type: 'object',
+        description: 'description',
+        docs: {
+          displayType: 'yaml',
         },
       },
     },
@@ -98,18 +96,16 @@ test('yaml propertiesGetterTransformer', () => {
 test('yaml defaultValueTransformer', () => {
   expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`Object {}`);
   const schemaDV = {
-    schema: {
+    properties: {
+      type: 'object',
+      additionalProperties: false,
       properties: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          field: {
-            type: 'object',
-            default: 'value',
-            description: 'description',
-            docs: {
-              displayType: 'yaml',
-            },
+        field: {
+          type: 'object',
+          default: 'value',
+          description: 'description',
+          docs: {
+            displayType: 'yaml',
           },
         },
       },
@@ -123,21 +119,19 @@ test('yaml defaultValueTransformer', () => {
 });
 
 const schemaNested = {
-  schema: {
+  properties: {
+    type: 'object',
+    additionalProperties: false,
     properties: {
-      type: 'object',
-      additionalProperties: false,
-      properties: {
-        obj: {
-          type: 'object',
-          description: 'obj description',
-          properties: {
-            field: {
-              type: 'object',
-              description: 'field description',
-              docs: {
-                displayType: 'yaml',
-              },
+      obj: {
+        type: 'object',
+        description: 'obj description',
+        properties: {
+          field: {
+            type: 'object',
+            description: 'field description',
+            docs: {
+              displayType: 'yaml',
             },
           },
         },
@@ -237,22 +231,20 @@ test('yaml schemaNested propertiesGetterTransformer', () => {
 test('yaml schemaNested defaultValueTransformer', () => {
   expect(defaultValueTransformer(schemaNested)).toMatchInlineSnapshot(`Object {}`);
   const schemaDV = {
-    schema: {
+    properties: {
+      type: 'object',
+      additionalProperties: false,
       properties: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          obj: {
-            type: 'object',
-            description: 'obj description',
-            properties: {
-              field: {
-                type: 'object',
-                default: { a: 1 },
-                description: 'field description',
-                docs: {
-                  displayType: 'yaml',
-                },
+        obj: {
+          type: 'object',
+          description: 'obj description',
+          properties: {
+            field: {
+              type: 'object',
+              default: { a: 1 },
+              description: 'field description',
+              docs: {
+                displayType: 'yaml',
               },
             },
           },
@@ -272,20 +264,18 @@ test('yaml schemaNested defaultValueTransformer', () => {
 });
 
 const schemaYamlInArray = {
-  schema: {
+  properties: {
+    type: 'object',
+    additionalProperties: false,
     properties: {
-      type: 'object',
-      additionalProperties: false,
-      properties: {
-        arr: {
-          type: 'array',
-          description: 'arr description',
-          items: {
-            type: 'object',
-            description: 'yaml description',
-            docs: {
-              displayType: 'yaml',
-            },
+      arr: {
+        type: 'array',
+        description: 'arr description',
+        items: {
+          type: 'object',
+          description: 'yaml description',
+          docs: {
+            displayType: 'yaml',
           },
         },
       },
@@ -391,21 +381,19 @@ test('yaml schemaYamlInArray defaultValueTransformer', () => {
     }
   `);
   const schemaYamlInArrayDV = {
-    schema: {
+    properties: {
+      type: 'object',
+      additionalProperties: false,
       properties: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          arr: {
-            type: 'array',
-            default: [{ a: 1 }],
-            description: 'arr description',
-            items: {
-              type: 'object',
-              description: 'yaml description',
-              docs: {
-                displayType: 'yaml',
-              },
+        arr: {
+          type: 'array',
+          default: [{ a: 1 }],
+          description: 'arr description',
+          items: {
+            type: 'object',
+            description: 'yaml description',
+            docs: {
+              displayType: 'yaml',
             },
           },
         },
@@ -424,24 +412,22 @@ test('yaml schemaYamlInArray defaultValueTransformer', () => {
 });
 
 const schemaYamlInObjectInArray = {
-  schema: {
+  properties: {
+    type: 'object',
+    additionalProperties: false,
     properties: {
-      type: 'object',
-      additionalProperties: false,
-      properties: {
-        arr: {
-          type: 'array',
-          description: 'arr description',
-          items: {
-            type: 'object',
-            description: 'obj description',
-            properties: {
-              yaml: {
-                type: 'object',
-                description: 'yaml description',
-                docs: {
-                  displayType: 'yaml',
-                },
+      arr: {
+        type: 'array',
+        description: 'arr description',
+        items: {
+          type: 'object',
+          description: 'obj description',
+          properties: {
+            yaml: {
+              type: 'object',
+              description: 'yaml description',
+              docs: {
+                displayType: 'yaml',
               },
             },
           },
@@ -580,25 +566,23 @@ test('yaml schemaYamlInObjectInArray defaultValueTransformer', () => {
     }
   `);
   const schemaYamlInObjectInArrayDV = {
-    schema: {
+    properties: {
+      type: 'object',
+      additionalProperties: false,
       properties: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          arr: {
-            type: 'array',
-            description: 'arr description',
-            default: [{ yaml: { b: 1 } }],
-            items: {
-              type: 'object',
-              description: 'obj description',
-              properties: {
-                yaml: {
-                  type: 'object',
-                  description: 'yaml description',
-                  docs: {
-                    displayType: 'yaml',
-                  },
+        arr: {
+          type: 'array',
+          description: 'arr description',
+          default: [{ yaml: { b: 1 } }],
+          items: {
+            type: 'object',
+            description: 'obj description',
+            properties: {
+              yaml: {
+                type: 'object',
+                description: 'yaml description',
+                docs: {
+                  displayType: 'yaml',
                 },
               },
             },

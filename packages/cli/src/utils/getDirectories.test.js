@@ -17,23 +17,33 @@
 import getDirectories from './getDirectories.js';
 
 test('default directories', () => {
-  const { cacheDirectory, buildDirectory } = getDirectories({
+  const directories = getDirectories({
     configDirectory: '/test/config',
     options: {},
   });
 
-  expect(cacheDirectory).toEqual('/test/config/.lowdefy/.cache');
-  expect(buildDirectory).toEqual('/test/config/.lowdefy/build');
+  expect(directories).toEqual({
+    build: '/test/config/.lowdefy/server/build',
+    config: '/test/config',
+    devServer: '/test/config/.lowdefy/dev',
+    dotLowdefy: '/test/config/.lowdefy',
+    server: '/test/config/.lowdefy/server',
+  });
 });
 
 test('specify outputDirectory in options', () => {
-  const { cacheDirectory, buildDirectory } = getDirectories({
+  const directories = getDirectories({
     configDirectory: '/test/config',
     options: {
-      outputDirectory: '/test/build',
+      outputDirectory: '/test/out',
     },
   });
 
-  expect(cacheDirectory).toEqual('/test/config/.lowdefy/.cache');
-  expect(buildDirectory).toEqual('/test/build');
+  expect(directories).toEqual({
+    build: '/test/out/server/build',
+    config: '/test/config',
+    devServer: '/test/out/dev',
+    dotLowdefy: '/test/out',
+    server: '/test/out/server',
+  });
 });

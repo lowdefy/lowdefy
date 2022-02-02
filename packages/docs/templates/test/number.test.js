@@ -19,15 +19,13 @@ import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer';
 import defaultValueTransformer from '../blocks/defaultValueTransformer';
 
 const schema = {
-  schema: {
+  properties: {
+    type: 'object',
+    additionalProperties: false,
     properties: {
-      type: 'object',
-      additionalProperties: false,
-      properties: {
-        num: {
-          type: 'number',
-          description: 'description.',
-        },
+      num: {
+        type: 'number',
+        description: 'description.',
       },
     },
   },
@@ -81,16 +79,14 @@ test('number defaultValueTransformer', () => {
     }
   `);
   const schemaDV = {
-    schema: {
+    properties: {
+      type: 'object',
+      additionalProperties: false,
       properties: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          num: {
-            type: 'number',
-            default: 1,
-            description: 'description.',
-          },
+        num: {
+          type: 'number',
+          default: 1,
+          description: 'description.',
         },
       },
     },
