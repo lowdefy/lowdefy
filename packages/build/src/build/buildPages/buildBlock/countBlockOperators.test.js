@@ -71,8 +71,8 @@ test('set empty operators array if no operators on page', async () => {
     ],
   };
   await buildPages({ components, context });
-  expect(context.counters.clientOperatorTypes.getCounts()).toEqual({});
-  expect(context.counters.serverOperatorTypes.getCounts()).toEqual({});
+  expect(context.typeCounters.operators.client.getCounts()).toEqual({});
+  expect(context.typeCounters.operators.server.getCounts()).toEqual({});
 });
 
 test('count all operators for the page', async () => {
@@ -104,14 +104,14 @@ test('count all operators for the page', async () => {
     ],
   };
   await buildPages({ components, context });
-  expect(context.counters.clientOperatorTypes.getCounts()).toEqual({
+  expect(context.typeCounters.operators.client.getCounts()).toEqual({
     _op_1: 3,
     _op_2: 1,
     _op_3: 1,
     _op_4: 1,
     _op_5: 1,
   });
-  expect(context.counters.serverOperatorTypes.getCounts()).toEqual({});
+  expect(context.typeCounters.operators.server.getCounts()).toEqual({});
 });
 
 test('count requests operators as server operators', async () => {
@@ -150,12 +150,12 @@ test('count requests operators as server operators', async () => {
     ],
   };
   await buildPages({ components, context });
-  expect(context.counters.clientOperatorTypes.getCounts()).toEqual({
+  expect(context.typeCounters.operators.client.getCounts()).toEqual({
     _op_1: 1,
     _op_2: 1,
     _op_3: 1,
   });
-  expect(context.counters.serverOperatorTypes.getCounts()).toEqual({
+  expect(context.typeCounters.operators.server.getCounts()).toEqual({
     _r_op_1: 1,
   });
 });
@@ -187,11 +187,11 @@ test('count request payload operators as client operators', async () => {
     ],
   };
   await buildPages({ components, context });
-  expect(context.counters.clientOperatorTypes.getCounts()).toEqual({
+  expect(context.typeCounters.operators.client.getCounts()).toEqual({
     _r_op_1: 1,
     _op_1: 1,
   });
-  expect(context.counters.serverOperatorTypes.getCounts()).toEqual({
+  expect(context.typeCounters.operators.server.getCounts()).toEqual({
     _r_op_2: 1,
   });
 });
