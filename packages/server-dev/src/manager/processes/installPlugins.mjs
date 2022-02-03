@@ -21,14 +21,14 @@ const args = {
   yarn: ['install'],
 };
 
-function installPlugins({ packageManager, verbose }) {
+function installPlugins({ packageManager, options }) {
   return async () => {
     console.log('Installing plugins...');
     await spawnProcess({
       logger: console,
       command: packageManager, // npm or yarn
       args: args[packageManager],
-      silent: !verbose,
+      silent: !options.verbose,
     });
   };
 }

@@ -35,10 +35,10 @@ function lowdefyBuildWatcher(context) {
     await context.lowdefyBuild();
     context.reloadClients();
   };
-  // TODO: Add ignored and watch paths
   return setupWatcher({
     callback,
-    watchPaths: [context.directories.config],
+    ignorePaths: context.options.watchIgnore,
+    watchPaths: [context.directories.config, ...context.options.watch],
   });
 }
 

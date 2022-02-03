@@ -80,7 +80,7 @@ async function run() {
   try {
     const serverPromise = startServer(context);
     await wait(800);
-    opener(`http://localhost:${context.port}`);
+    opener(`http://localhost:${context.options.port}`);
     await serverPromise;
   } catch (error) {
     console.log(error);

@@ -30,11 +30,12 @@ import restartServer from './processes/restartServer.mjs';
 import shutdownServer from './processes/shutdownServer.mjs';
 import startWatchers from './processes/startWatchers.mjs';
 
-const argv = yargs(hideBin(process.argv)).argv;
+const argv = yargs(hideBin(process.argv)).array('watch').array('watchIgnore').argv;
 const require = createRequire(import.meta.url);
 
 async function getContext() {
-  const { verbose = false } = argv;
+  const env = process.env;
+
   const context = {
     bin: {
       // TODO: The string replace is a little hacky and will fail if the location of the bin changes,
@@ -43,15 +44,23 @@ async function getContext() {
     },
     directories: {
       build: path.resolve(process.cwd(), './build'),
-      config: path.resolve(
-        argv.configDirectory || process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd()
-      ),
+      config: path.resolve(argv.configDirectory || env.LOWDEFY_DIRECTORY_CONFIG || process.cwd()),
       server: process.cwd(),
     },
-    packageManager: argv.packageManager || process.env.LOWDEFY_PACKAGE_MANAGER || 'npm',
-    port: argv.port || process.env.PORT || 3000,
-    verbose,
-    version: process.env.npm_package_version,
+    options: {
+      port: argv.port || env.PORT || 3000,
+      refResolver: argv.refResolver || env.LOWDEFY_BUILD_REF_RESOLVER,
+      watch:
+        argv.watch || env.LOWDEFY_SERVER_DEV_WATCH ? JSON.parse(env.LOWDEFY_SERVER_DEV_WATCH) : [],
+      watchIgnore:
+        argv.watchIgnore || env.LOWDEFY_SERVER_DEV_WATCH_IGNORE
+          ? JSON.parse(env.LOWDEFY_SERVER_DEV_WATCH_IGNORE)
+          : [],
+      // TODO: read option from from env
+      verbose: argv.verbose || false,
+    },
+    packageManager: argv.packageManager || env.LOWDEFY_PACKAGE_MANAGER || 'npm',
+    version: env.npm_package_version,
   };
 
   context.initialBuild = initialBuild(context);
