@@ -57,7 +57,6 @@
     "react-dom": "18.0.0-rc.0"
   },
   "devDependencies": {
-    "@babel/preset-react": "7.16.7",
     "@emotion/jest": "11.7.1",
     "@lowdefy/block-dev": "4.0.0-alpha.6",
     "@swc/cli": "0.1.55",
