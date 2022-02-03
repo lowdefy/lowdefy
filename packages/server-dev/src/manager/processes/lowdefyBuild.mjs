@@ -16,7 +16,7 @@
 
 import { spawnProcess } from '@lowdefy/node-utils';
 
-function lowdefyBuild({ bin, directories }) {
+function lowdefyBuild({ bin, directories, options }) {
   return async () => {
     await spawnProcess({
       command: 'node',
@@ -25,6 +25,7 @@ function lowdefyBuild({ bin, directories }) {
       processOptions: {
         env: {
           ...process.env,
+          LOWDEFY_BUILD_REF_RESOLVER: options.refResolver,
           LOWDEFY_DIRECTORY_BUILD: directories.build,
           LOWDEFY_DIRECTORY_CONFIG: directories.config,
           LOWDEFY_DIRECTORY_SERVER: process.cwd(),
