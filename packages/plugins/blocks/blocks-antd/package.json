@@ -62,8 +62,6 @@
     "tinycolor2": "1.4.2"
   },
   "devDependencies": {
-    "@babel/core": "7.16.12",
-    "@babel/preset-react": "7.16.7",
     "@emotion/jest": "11.7.1",
     "@lowdefy/block-dev": "4.0.0-alpha.6",
     "@lowdefy/node-utils": "4.0.0-alpha.6",
