@@ -71,20 +71,17 @@ program
     'The package manager to use. Options are "npm" or "yarn".'
   )
   .option('--port <port>', 'Change the port the development server is hosted at. Default is 3000.')
-  // TODO:
   .option(
     '--ref-resolver <ref-resolver-function-path>',
     'Path to a JavaScript file containing a _ref resolver function to be used as the app default _ref resolver.'
   )
-  // TODO:
   .option(
     '--watch <paths...>',
-    'A list of paths to files or directories that should be watched for changes.'
+    'A list of paths to files or directories that should be watched for changes. Globs are supported. Specify each path to watch separated by spaces.'
   )
-  // TODO:
   .option(
     '--watch-ignore <paths...>',
-    'A list of paths to files or directories that should be ignored by the file watcher. Globs are supported.'
+    'A list of paths to files or directories that should be ignored by the file watcher. Globs are supported. Specify each path to watch separated by spaces.'
   )
   .action(runCommand({ cliVersion: version })(dev));
 

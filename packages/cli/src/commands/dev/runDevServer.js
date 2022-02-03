@@ -17,7 +17,6 @@
 import { spawnProcess } from '@lowdefy/node-utils';
 
 async function runDevServer({ context }) {
-  // TODO: Pass packageManager as option
   await spawnProcess({
     logger: context.print,
     args: ['run', 'start'],
@@ -26,8 +25,11 @@ async function runDevServer({ context }) {
       cwd: context.directories.devServer,
       env: {
         ...process.env,
-        LOWDEFY_PACKAGE_MANAGER: context.packageManager,
+        LOWDEFY_BUILD_REF_RESOLVER: context.options.refResolver,
         LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
+        LOWDEFY_PACKAGE_MANAGER: context.packageManager,
+        LOWDEFY_SERVER_DEV_WATCH: JSON.stringify(context.options.watch),
+        LOWDEFY_SERVER_DEV_WATCH_IGNORE: JSON.stringify(context.options.watchIgnore),
         PORT: context.options.port,
       },
     },
