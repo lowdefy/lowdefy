@@ -7097,13 +7097,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ansi-regex", "npm:5.0.1"]
           ],
           "linkType": "HARD",
-        }],
-        ["npm:6.0.1", {
-          "packageLocation": "./.yarn/cache/ansi-regex-npm-6.0.1-8d663a607d-1ff8b7667c.zip/node_modules/ansi-regex/",
-          "packageDependencies": [
-            ["ansi-regex", "npm:6.0.1"]
-          ],
-          "linkType": "HARD",
         }]
       ]],
       ["ansi-styles", [
@@ -8241,13 +8234,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["supports-color", "npm:7.2.0"]
           ],
           "linkType": "HARD",
-        }],
-        ["npm:5.0.0", {
-          "packageLocation": "./.yarn/cache/chalk-npm-5.0.0-7be183234e-6eba7c518b.zip/node_modules/chalk/",
-          "packageDependencies": [
-            ["chalk", "npm:5.0.0"]
-          ],
-          "linkType": "HARD",
         }]
       ]],
       ["change-case", [
@@ -8417,14 +8403,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["cli-cursor", "npm:3.1.0"],
             ["restore-cursor", "npm:3.1.0"]
-          ],
-          "linkType": "HARD",
-        }],
-        ["npm:4.0.0", {
-          "packageLocation": "./.yarn/cache/cli-cursor-npm-4.0.0-08e7cbaf41-ab3f3ea207.zip/node_modules/cli-cursor/",
-          "packageDependencies": [
-            ["cli-cursor", "npm:4.0.0"],
-            ["restore-cursor", "npm:4.0.0"]
           ],
           "linkType": "HARD",
         }]
@@ -12109,10 +12087,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["is-interactive", [
-        ["npm:2.0.0", {
-          "packageLocation": "./.yarn/cache/is-interactive-npm-2.0.0-dcec8b26d7-e8d52ad490.zip/node_modules/is-interactive/",
+        ["npm:1.0.0", {
+          "packageLocation": "./.yarn/cache/is-interactive-npm-1.0.0-7ff7c6e04a-824808776e.zip/node_modules/is-interactive/",
           "packageDependencies": [
-            ["is-interactive", "npm:2.0.0"]
+            ["is-interactive", "npm:1.0.0"]
           ],
           "linkType": "HARD",
         }]
@@ -12307,10 +12285,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["is-unicode-supported", [
-        ["npm:1.1.0", {
-          "packageLocation": "./.yarn/cache/is-unicode-supported-npm-1.1.0-272ac4ebf4-1f2504d943.zip/node_modules/is-unicode-supported/",
+        ["npm:0.1.0", {
+          "packageLocation": "./.yarn/cache/is-unicode-supported-npm-0.1.0-0833e1bbfb-a2aab86ee7.zip/node_modules/is-unicode-supported/",
           "packageDependencies": [
-            ["is-unicode-supported", "npm:1.1.0"]
+            ["is-unicode-supported", "npm:0.1.0"]
           ],
           "linkType": "HARD",
         }]
@@ -13847,12 +13825,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["log-symbols", [
-        ["npm:5.1.0", {
-          "packageLocation": "./.yarn/cache/log-symbols-npm-5.1.0-75864cfeb4-7291b6e7f1.zip/node_modules/log-symbols/",
+        ["npm:4.1.0", {
+          "packageLocation": "./.yarn/cache/log-symbols-npm-4.1.0-0a13492d8b-fce1497b31.zip/node_modules/log-symbols/",
           "packageDependencies": [
-            ["log-symbols", "npm:5.1.0"],
-            ["chalk", "npm:5.0.0"],
-            ["is-unicode-supported", "npm:1.1.0"]
+            ["log-symbols", "npm:4.1.0"],
+            ["chalk", "npm:4.1.2"],
+            ["is-unicode-supported", "npm:0.1.0"]
           ],
           "linkType": "HARD",
         }]
@@ -13893,7 +13871,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["decompress-targz", "npm:4.1.1"],
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:27.4.7"],
             ["js-yaml", "npm:4.1.0"],
-            ["ora", "npm:6.0.1"],
+            ["ora", "npm:5.4.1"],
             ["uuid", "npm:8.3.2"]
           ],
           "linkType": "SOFT",
@@ -15966,18 +15944,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["ora", [
-        ["npm:6.0.1", {
-          "packageLocation": "./.yarn/cache/ora-npm-6.0.1-05bbf96407-d2215b85a4.zip/node_modules/ora/",
+        ["npm:5.4.1", {
+          "packageLocation": "./.yarn/cache/ora-npm-5.4.1-4f0343adb7-28d476ee6c.zip/node_modules/ora/",
           "packageDependencies": [
-            ["ora", "npm:6.0.1"],
-            ["bl", "npm:5.0.0"],
+            ["ora", "npm:5.4.1"],
+            ["bl", "npm:4.1.0"],
             ["chalk", "npm:4.1.2"],
-            ["cli-cursor", "npm:4.0.0"],
+            ["cli-cursor", "npm:3.1.0"],
             ["cli-spinners", "npm:2.6.1"],
-            ["is-interactive", "npm:2.0.0"],
-            ["is-unicode-supported", "npm:1.1.0"],
-            ["log-symbols", "npm:5.1.0"],
-            ["strip-ansi", "npm:7.0.1"],
+            ["is-interactive", "npm:1.0.0"],
+            ["is-unicode-supported", "npm:0.1.0"],
+            ["log-symbols", "npm:4.1.0"],
+            ["strip-ansi", "npm:6.0.1"],
             ["wcwidth", "npm:1.0.1"]
           ],
           "linkType": "HARD",
@@ -18884,15 +18862,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["signal-exit", "npm:3.0.6"]
           ],
           "linkType": "HARD",
-        }],
-        ["npm:4.0.0", {
-          "packageLocation": "./.yarn/cache/restore-cursor-npm-4.0.0-d42254f39d-5b675c5a59.zip/node_modules/restore-cursor/",
-          "packageDependencies": [
-            ["restore-cursor", "npm:4.0.0"],
-            ["onetime", "npm:5.1.2"],
-            ["signal-exit", "npm:3.0.6"]
-          ],
-          "linkType": "HARD",
         }]
       ]],
       ["retry", [
@@ -19712,14 +19681,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["strip-ansi", "npm:6.0.1"],
             ["ansi-regex", "npm:5.0.1"]
-          ],
-          "linkType": "HARD",
-        }],
-        ["npm:7.0.1", {
-          "packageLocation": "./.yarn/cache/strip-ansi-npm-7.0.1-668c121204-257f78fa43.zip/node_modules/strip-ansi/",
-          "packageDependencies": [
-            ["strip-ansi", "npm:7.0.1"],
-            ["ansi-regex", "npm:6.0.1"]
           ],
           "linkType": "HARD",
         }]
