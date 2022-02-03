@@ -17,7 +17,6 @@
 import generateImportFile from './generateImportFile.js';
 
 async function writeOperatorImports({ components, context }) {
-  // TODO: import _not and _type for validation.
   await context.writeBuildArtifact(
     'plugins/operatorsClient.js',
     generateImportFile({
