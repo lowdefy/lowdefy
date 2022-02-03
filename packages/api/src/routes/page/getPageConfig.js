@@ -14,10 +14,12 @@
   limitations under the License.
 */
 
-// TODO: strip auth prop from page before we send it to the client
 async function getPageConfig({ authorize, readConfigFile }, { pageId }) {
   const pageConfig = await readConfigFile(`pages/${pageId}/${pageId}.json`);
-  if (pageConfig && authorize(pageConfig)) return pageConfig;
+  if (pageConfig && authorize(pageConfig)) {
+    delete pageConfig.auth;
+    return pageConfig;
+  }
   return null;
 }
 

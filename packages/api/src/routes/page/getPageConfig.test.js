@@ -40,9 +40,6 @@ test('getPageConfig, public', async () => {
   const res = await getPageConfig(context, { pageId: 'pageId' });
   expect(res).toEqual({
     id: 'page:pageId',
-    auth: {
-      public: true,
-    },
   });
 });
 
@@ -81,9 +78,6 @@ test('getPageConfig, protected, with user', async () => {
   );
   expect(res).toEqual({
     id: 'page:pageId',
-    auth: {
-      public: false,
-    },
   });
 });
 

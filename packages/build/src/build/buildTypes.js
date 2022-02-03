@@ -38,6 +38,10 @@ function buildTypeClass(
 function buildTypes({ components, context }) {
   const { typeCounters } = context;
 
+  // Add operators used by form validation
+  typeCounters.operators.client.increment('_not');
+  typeCounters.operators.client.increment('_type');
+
   components.types = {
     actions: {},
     blocks: {},
