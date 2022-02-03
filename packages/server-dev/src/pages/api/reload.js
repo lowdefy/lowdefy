@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-// TODO: Send keep-alive comment event: https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#examples
-
 import chokidar from 'chokidar';
 
 const handler = async (req, res) => {
