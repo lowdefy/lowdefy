@@ -6,7 +6,8 @@
   "homepage": "https://lowdefy.com",
   "keywords": [
     "lowdefy",
-    "lowdefy connection"
+    "lowdefy connection",
+    "lowdefy plugin"
   ],
   "bugs": {
     "url": "https://github.com/lowdefy/lowdefy/issues"

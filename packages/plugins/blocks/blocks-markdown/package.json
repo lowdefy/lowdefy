@@ -8,7 +8,8 @@
     "lowdefy",
     "lowdefy blocks",
     "markdown",
-    "react-markdown"
+    "react-markdown",
+    "lowdefy plugin"
   ],
   "bugs": {
     "url": "https://github.com/lowdefy/lowdefy/issues"
