@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ObjectID } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import { serialize, deserialize } from './serialize.js';
 
 test('serialize dates', () => {
@@ -52,8 +52,8 @@ test('deserialize does not turn dates to strings', () => {
 
 test('serialize mongodb object id', () => {
   const object = {
-    objectid: ObjectID.createFromHexString('5e53d8403108c4b9fa51765d'),
-    array: [ObjectID.createFromHexString('5e53d8403108c4b9fa51765d')],
+    objectid: ObjectId.createFromHexString('5e53d8403108c4b9fa51765d'),
+    array: [ObjectId.createFromHexString('5e53d8403108c4b9fa51765d')],
   };
   expect(serialize(object)).toEqual({
     objectid: { _oid: '5e53d8403108c4b9fa51765d' },
@@ -67,8 +67,8 @@ test('deserialize mongodb object id', () => {
     array: [{ _oid: '5e53d8403108c4b9fa51765d' }],
   };
   expect(deserialize(object)).toEqual({
-    objectid: ObjectID.createFromHexString('5e53d8403108c4b9fa51765d'),
-    array: [ObjectID.createFromHexString('5e53d8403108c4b9fa51765d')],
+    objectid: ObjectId.createFromHexString('5e53d8403108c4b9fa51765d'),
+    array: [ObjectId.createFromHexString('5e53d8403108c4b9fa51765d')],
   });
 });
 

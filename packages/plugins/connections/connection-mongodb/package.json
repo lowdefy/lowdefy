@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-alpha.6",
-    "mongodb": "3.7.3",
+    "mongodb": "4.3.1",
     "saslprep": "1.0.3"
   },
   "devDependencies": {

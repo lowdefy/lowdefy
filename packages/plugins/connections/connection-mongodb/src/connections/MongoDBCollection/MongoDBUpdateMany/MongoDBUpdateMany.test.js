@@ -113,10 +113,7 @@ test('updateMany upsert', async () => {
   const res = await MongoDBUpdateMany({ request, connection });
   expect(res).toEqual({
     modifiedCount: 0,
-    upsertedId: {
-      _id: 'updateMany_upsert',
-      index: 0,
-    },
+    upsertedId: 'updateMany_upsert',
     upsertedCount: 1,
     matchedCount: 0,
   });
@@ -175,7 +172,7 @@ test('updateMany connection error', async () => {
     write: true,
   };
   await expect(MongoDBUpdateMany({ request, connection })).rejects.toThrow(
-    'Invalid connection string'
+    'Invalid scheme, expected connection string to start with "mongodb://" or "mongodb+srv://"'
   );
 });
 
