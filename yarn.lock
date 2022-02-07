@@ -2347,6 +2347,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/docs@workspace:packages/docs"
   dependencies:
+    "@swc/core": 1.2.135
+    "@swc/jest": 0.2.17
     jest: 27.4.7
   languageName: unknown
   linkType: soft

@@ -7,6 +7,7 @@ export default {
     '<rootDir>/.lowdefy/',
     '<rootDir>/jest.config.js',
     '<rootDir>/coverage/',
+    '<rootDir>/howto/',
   ],
   coverageReporters: [['lcov', { projectRoot: '../..' }], 'text', 'clover'],
   errorOnDeprecated: true,
@@ -15,5 +16,9 @@ export default {
     '<rootDir>/.lowdefy/',
     '<rootDir>/jest.config.js',
     '<rootDir>/coverage/',
+    '<rootDir>/howto/',
   ],
+  transform: {
+    '^.+\\.(t|j)sx?$': ['@swc/jest', { configFile: '../../.swcrc.test' }],
+  },
 };

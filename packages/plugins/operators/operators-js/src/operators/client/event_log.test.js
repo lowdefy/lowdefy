@@ -14,226 +14,29 @@
   limitations under the License.
 */
 
-import { WebParser } from '@lowdefy/operators';
+import event_log from './event_log.js';
 
-const arrayIndices = [1];
+jest.mock('@lowdefy/operators', () => ({
+  getFromObject: jest.fn(),
+}));
 
-const context = {
-  _internal: {
-    lowdefy: {
-      inputs: { id: true },
-      lowdefyGlobal: { global: true },
-      menus: [{ menus: true }],
-      urlQuery: { urlQuery: true },
-      user: { user: true },
-    },
-  },
-  eventLog: [{ eventLog: true }],
-  id: 'id',
-  requests: [{ requests: true }],
-  state: { state: true },
-};
-
-console.error = () => {};
-
-test('_event_log in array', async () => {
-  const input = { a: { _event_log: '1.blockId' } };
-  const parser = new WebParser({ context });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual({
-    a: 'block_b',
+test('request_details calls getFromObject', async () => {
+  const lowdefyOperators = await import('@lowdefy/operators');
+  event_log({
+    eventLog: [{ eventName: 'test' }],
+    arrayIndices: [0],
+    location: 'location',
+    params: 'params',
   });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('_event_log full state', async () => {
-  const input = { _event_log: true };
-  const parser = new WebParser({ context });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual([
-    {
-      blockId: 'block_a',
-      actionName: 'name_a',
-      response: [{ data: ['a', 'b'] }],
-      ts: new Date(0),
-      status: 'success',
-    },
-    {
-      blockId: 'block_b',
-      actionName: 'name_b',
-      ts: new Date(1),
-      error: [{ error: 'error', message: 'broken', name: 'e' }],
-    },
+  expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
+    [
+      {
+        arrayIndices: [0],
+        location: 'location',
+        object: [{ eventName: 'test' }],
+        operator: '_event_log',
+        params: 'params',
+      },
+    ],
   ]);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('_event_log null', async () => {
-  const input = { _event_log: null };
-  const parser = new WebParser({ context });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _event_log params must be of type string, integer, boolean or object. Received: null at locationId.],
-    ]
-  `);
-});
-
-test('_event_log param object key', async () => {
-  const input = {
-    _event_log: {
-      key: '0.actionName',
-    },
-  };
-  const parser = new WebParser({ context });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual('name_a');
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('_event_log param object all', async () => {
-  const input = {
-    _event_log: {
-      all: true,
-    },
-  };
-  const parser = new WebParser({ context });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual([
-    {
-      blockId: 'block_a',
-      actionName: 'name_a',
-      response: [{ data: ['a', 'b'] }],
-      ts: new Date(0),
-      status: 'success',
-    },
-    {
-      blockId: 'block_b',
-      actionName: 'name_b',
-      ts: new Date(1),
-      error: [{ error: 'error', message: 'broken', name: 'e' }],
-    },
-  ]);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('_event_log param object all and key', async () => {
-  const input = {
-    _event_log: {
-      all: true,
-      key: 'string',
-    },
-  };
-  const parser = new WebParser({ context });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual([
-    {
-      blockId: 'block_a',
-      actionName: 'name_a',
-      response: [{ data: ['a', 'b'] }],
-      ts: new Date(0),
-      status: 'success',
-    },
-    {
-      blockId: 'block_b',
-      actionName: 'name_b',
-      ts: new Date(1),
-      error: [{ error: 'error', message: 'broken', name: 'e' }],
-    },
-  ]);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('_event_log param object invalid', async () => {
-  const input = {
-    _event_log: {
-      other: true,
-    },
-  };
-  const parser = new WebParser({ context });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _event_log.key must be of type string or integer. Received: {"other":true} at locationId.],
-    ]
-  `);
-});
-
-test('_event_log param array', async () => {
-  const input = {
-    _event_log: ['string'],
-  };
-  const parser = new WebParser({ context });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _event_log params must be of type string, integer, boolean or object. Received: ["string"] at locationId.],
-    ]
-  `);
-});
-
-test('_event_log param object with string default', async () => {
-  const input = {
-    _event_log: {
-      key: 'notFound',
-      default: 'defaultValue',
-    },
-  };
-  const parser = new WebParser({ context });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual('defaultValue');
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('_event_log param object with zero default', async () => {
-  const input = {
-    _event_log: {
-      key: 'notFound',
-      default: 0,
-    },
-  };
-  const parser = new WebParser({ context });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual(0);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('_event_log param object with false default', async () => {
-  const input = {
-    _event_log: {
-      key: 'notFound',
-      default: false,
-    },
-  };
-  const parser = new WebParser({ context });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual(false);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('_event_log param object with no default', async () => {
-  const input = {
-    _event_log: {
-      key: 'notFound',
-    },
-  };
-  const parser = new WebParser({ context });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual(null);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });

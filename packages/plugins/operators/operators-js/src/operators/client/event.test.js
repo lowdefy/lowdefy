@@ -15,18 +15,19 @@
 */
 
 import event from './event.js';
-jest.mock('@lowdefy/operators');
 
-const input = {
-  arrayIndices: [0],
-  event: { event: true },
-  location: 'location',
-  params: 'params',
-};
+jest.mock('@lowdefy/operators', () => ({
+  getFromObject: jest.fn(),
+}));
 
-test('event calls getFromObject', () => {
-  const lowdefyOperators = import('@lowdefy/operators');
-  event(input);
+test('event calls getFromObject', async () => {
+  const lowdefyOperators = await import('@lowdefy/operators');
+  event({
+    arrayIndices: [0],
+    event: { event: true },
+    location: 'location',
+    params: 'params',
+  });
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {

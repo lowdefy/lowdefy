@@ -14,19 +14,21 @@
   limitations under the License.
 */
 import get from './get.js';
-jest.mock('@lowdefy/operators');
 
-test('_get calls getFromObject', () => {
-  const lowdefyOperators = import('@lowdefy/operators');
-  const input = {
+jest.mock('@lowdefy/operators', () => ({
+  getFromObject: jest.fn(),
+}));
+
+test('_get calls getFromObject', async () => {
+  const lowdefyOperators = await import('@lowdefy/operators');
+  get({
     arrayIndices: [0],
     location: 'location',
     params: {
       from: { a: 1 },
       key: 'a',
     },
-  };
-  get.default(input);
+  });
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
@@ -52,7 +54,6 @@ test('_get returns null if from is null', () => {
       key: 'a',
     },
   };
-  get(input);
   expect(get(input)).toBe(null);
 });
 
@@ -66,7 +67,6 @@ test('_get returns default value if from is null', () => {
       default: 'default',
     },
   };
-  get(input);
   expect(get(input)).toBe('default');
 });
 

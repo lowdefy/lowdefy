@@ -13,26 +13,20 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import _global from './global.js';
 
-jest.mock('@lowdefy/operators');
-
-let lowdefyOperators;
-let global;
-
-const input = {
-  arrayIndices: [0],
-  location: 'location',
-  lowdefyGlobal: { lowdefyGlobal: true },
-  params: 'params',
-};
-
-beforeEach(async () => {
-  lowdefyOperators = await import('@lowdefy/operators');
-  global = (await import('./global.js')).default;
-});
+jest.mock('@lowdefy/operators', () => ({
+  getFromObject: jest.fn(),
+}));
 
 test('global calls getFromObject', async () => {
-  global(input);
+  const lowdefyOperators = await import('@lowdefy/operators');
+  _global({
+    arrayIndices: [0],
+    location: 'location',
+    params: 'params',
+    lowdefyGlobal: { lowdefyGlobal: true },
+  });
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
