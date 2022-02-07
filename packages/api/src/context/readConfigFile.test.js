@@ -14,19 +14,20 @@
   limitations under the License.
 */
 
-function createCachedPromises(getter) {
-  const cache = new Map();
+import { getFileExtension } from '@lowdefy/node-utils';
 
-  function cachedPromises(key) {
-    if (cache.has(key)) {
-      return Promise.resolve(cache.get(key));
-    }
-    const promise = getter(key);
-    cache.set(key, promise);
-    return Promise.resolve(promise);
-  }
+jest.mock('@lowdefy/node-utils', () => {
+  return {
+    getFileExtension,
+    readFile: jest.fn(),
+  };
+});
 
-  return cachedPromises;
-}
-
-export default createCachedPromises;
+test('readConfigFile', async () => {
+  const nodeUtils = await import('@lowdefy/node-utils');
+  nodeUtils.mockImplementation(() => Promise.resove('config value'));
+  const createReadConfigFile = (await import('./readConfigFile.js')).default;
+  const readConfigFile = createReadConfigFile({ buildDirectory: '/build' });
+  const res = await readConfigFile('file');
+  expect(res).toEqual('config value');
+});
