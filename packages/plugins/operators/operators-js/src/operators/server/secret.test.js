@@ -15,12 +15,15 @@
 */
 
 import secret from './secret.js';
-jest.mock('@lowdefy/operators');
+
+jest.mock('@lowdefy/operators', () => ({
+  getFromObject: jest.fn(),
+}));
 
 console.error = () => {};
 
-test('secret calls getFromObject', () => {
-  const lowdefyOperators = import('@lowdefy/operators');
+test('secret calls getFromObject', async () => {
+  const lowdefyOperators = await import('@lowdefy/operators');
   secret({
     arrayIndices: [0],
     location: 'location',
@@ -41,8 +44,8 @@ test('secret calls getFromObject', () => {
   ]);
 });
 
-test('secret default value', () => {
-  const lowdefyOperators = import('@lowdefy/operators');
+test('secret default value', async () => {
+  const lowdefyOperators = await import('@lowdefy/operators');
   secret({
     arrayIndices: [0],
     location: 'location',
@@ -72,8 +75,8 @@ test('secret get all is not allowed', () => {
   );
 });
 
-test('secret OpenID Connect and JSON web token secrets are filtered out', () => {
-  const lowdefyOperators = import('@lowdefy/operators');
+test('secret OpenID Connect and JSON web token secrets are filtered out', async () => {
+  const lowdefyOperators = await import('@lowdefy/operators');
   secret({
     arrayIndices: [0],
     location: 'location',

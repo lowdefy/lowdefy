@@ -13,7 +13,11 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-jest.mock('@lowdefy/operators');
+import args from './args.js';
+
+jest.mock('@lowdefy/operators', () => ({
+  getFromObject: jest.fn(),
+}));
 
 const input = {
   args: [{ args: true }],
@@ -23,9 +27,13 @@ const input = {
 };
 
 test('args calls getFromObject', async () => {
-  const args = await import('./args.js');
   const lowdefyOperators = await import('@lowdefy/operators');
-  args.default(input);
+  args({
+    args: [{ args: true }],
+    arrayIndices: [0],
+    location: 'location',
+    params: 'params',
+  });
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
