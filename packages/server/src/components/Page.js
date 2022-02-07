@@ -16,25 +16,26 @@
 
 import React from 'react';
 
+import { urlQuery } from '@lowdefy/helpers';
 import { useRouter } from 'next/router';
 
 import Context from './Context.js';
 import Head from './Head.js';
 import Block from './block/Block.js';
 import setupLink from '../utils/setupLink.js';
+import createComponents from './createComponents.js';
 
 const LoadingBlock = () => <div>Loading...</div>;
 
 const Page = ({ lowdefy, pageConfig, rootConfig }) => {
   const router = useRouter();
-  lowdefy._internal.basePath = router.basePath;
-  lowdefy._internal.pathname = router.pathname;
-  lowdefy._internal.query = router.query;
   lowdefy._internal.router = router;
-  lowdefy._internal.link = setupLink({ lowdefy });
+  lowdefy._internal.link = setupLink(lowdefy);
+  lowdefy._internal.components = createComponents(lowdefy);
   lowdefy.home = rootConfig.home;
   lowdefy.lowdefyGlobal = rootConfig.lowdefyGlobal;
   lowdefy.menus = rootConfig.menus;
+  lowdefy.urlQuery = urlQuery.parse(window.location.search.slice(1));
   return (
     <Context config={pageConfig} lowdefy={lowdefy}>
       {(context, loading) => {
