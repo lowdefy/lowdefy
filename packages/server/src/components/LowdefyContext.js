@@ -19,14 +19,12 @@ import React from 'react';
 import callRequest from '../utils/callRequest.js';
 import blockComponents from '../../build/plugins/blocks.js';
 import operators from '../../build/plugins/operatorsClient.js';
-import components from './components.js';
 
-const LowdefyContext = ({ children }) => {
-  const lowdefy = {
-    _internal: {
+const LowdefyContext = ({ children, lowdefy }) => {
+  if (!lowdefy._internal) {
+    lowdefy._internal = {
       blockComponents,
       callRequest,
-      components,
       document,
       operators,
       updaters: {},
@@ -36,14 +34,14 @@ const LowdefyContext = ({ children }) => {
         return () => undefined;
       },
       link: () => undefined,
-    },
-    contexts: {},
-    inputs: {},
-    lowdefyGlobal: {},
-  };
+    };
+    lowdefy.contexts = {};
+    lowdefy.inputs = {};
+    lowdefy.lowdefyGlobal = {};
+  }
   lowdefy._internal.updateBlock = (blockId) =>
     lowdefy._internal.updaters[blockId] && lowdefy._internal.updaters[blockId]();
-  return <>{children(lowdefy)}</>;
+  return <>{children}</>;
 };
 
 export default LowdefyContext;
