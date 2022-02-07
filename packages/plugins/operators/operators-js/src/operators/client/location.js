@@ -31,6 +31,7 @@ const validProperties = [
   'hash',
 ];
 
+// TODO: Fix with new router and link
 function _location({ arrayIndices, context, location, params }) {
   if (!window || !window.location) {
     throw new Error(

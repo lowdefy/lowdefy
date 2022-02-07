@@ -15,18 +15,19 @@
 */
 
 import state from './state.js';
-jest.mock('@lowdefy/operators');
 
-const input = {
-  arrayIndices: [0],
-  location: 'location',
-  params: 'params',
-  state: { state: true },
-};
+jest.mock('@lowdefy/operators', () => ({
+  getFromObject: jest.fn(),
+}));
 
-test('state calls getFromObject', () => {
-  const lowdefyOperators = import('@lowdefy/operators');
-  state(input);
+test('state calls getFromObject', async () => {
+  const lowdefyOperators = await import('@lowdefy/operators');
+  state({
+    arrayIndices: [0],
+    location: 'location',
+    params: 'params',
+    state: { state: true },
+  });
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
