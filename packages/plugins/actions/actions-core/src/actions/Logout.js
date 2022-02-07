@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-async function Logout({ context }) {
-  return context._internal.lowdefy._internal.auth.logout();
+async function Logout({ methods: { logout } }) {
+  return logout();
 }
 
 export default Logout;

@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-async function Request({ actions, arrayIndices, context, event, params }) {
-  return context._internal.Requests.callRequests({ actions, arrayIndices, event, params });
+async function Request({ methods: { request }, params }) {
+  return request({ params });
 }
 
 export default Request;

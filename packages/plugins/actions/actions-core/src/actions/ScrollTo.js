@@ -14,15 +14,8 @@
   limitations under the License.
 */
 
-async function ScrollTo({ context, params = {} }) {
-  if (params.blockId) {
-    const element = context._internal.lowdefy._internal.document.getElementById(params.blockId);
-    if (element) {
-      element.scrollIntoView(params.options);
-    }
-  } else {
-    context._internal.lowdefy._internal.window.scrollTo(params);
-  }
+async function ScrollTo({ methods: { scrollTo }, params }) {
+  scrollTo({ params });
 }
 
 export default ScrollTo;

@@ -14,14 +14,8 @@
   limitations under the License.
 */
 
-import { serializer } from '@lowdefy/helpers';
-
-function Reset({ context }) {
-  context._internal.State.resetState();
-  context._internal.RootBlocks.reset(
-    serializer.deserializeFromString(context._internal.State.frozenState)
-  );
-  context._internal.update();
+function Reset({ methods: { reset } }) {
+  reset();
 }
 
 export default Reset;

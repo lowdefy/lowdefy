@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-async function Login({ context, params }) {
-  return context._internal.lowdefy._internal.auth.login(params);
+async function Login({ methods: { login }, params }) {
+  return login({ params });
 }
 
 export default Login;

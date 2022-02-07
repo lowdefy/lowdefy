@@ -14,14 +14,8 @@
   limitations under the License.
 */
 
-import { applyArrayIndices, set } from '@lowdefy/helpers';
-
-async function SetGlobal({ arrayIndices, context, params }) {
-  Object.keys(params).forEach((key) => {
-    set(context._internal.lowdefy.lowdefyGlobal, applyArrayIndices(arrayIndices, key), params[key]);
-  });
-  context._internal.RootBlocks.reset();
-  context._internal.update();
+async function SetGlobal({ methods: { setGlobal }, params }) {
+  setGlobal({ params });
 }
 
 export default SetGlobal;

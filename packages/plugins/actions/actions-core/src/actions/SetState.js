@@ -14,14 +14,8 @@
   limitations under the License.
 */
 
-import { applyArrayIndices } from '@lowdefy/helpers';
-
-async function SetState({ arrayIndices, context, params }) {
-  Object.keys(params).forEach((key) => {
-    context._internal.State.set(applyArrayIndices(arrayIndices, key), params[key]);
-  });
-  context._internal.RootBlocks.reset();
-  context._internal.update();
+async function SetState({ methods: { setState }, params }) {
+  setState({ params });
 }
 
 export default SetState;

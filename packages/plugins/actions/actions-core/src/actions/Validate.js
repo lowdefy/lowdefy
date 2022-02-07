@@ -14,18 +14,8 @@
   limitations under the License.
 */
 
-import getBlockMatcher from '../getBlockMatcher.js';
-
-async function Validate({ context, params }) {
-  const validationErrors = context.RootBlocks.validate(getBlockMatcher(params));
-  if (validationErrors.length > 0) {
-    const error = new Error(
-      `Your input has ${validationErrors.length} validation error${
-        validationErrors.length !== 1 ? 's' : ''
-      }.`
-    );
-    throw error;
-  }
+async function Validate({ methods: { validate }, params }) {
+  return validate({ params });
 }
 
 export default Validate;

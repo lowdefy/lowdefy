@@ -14,29 +14,8 @@
   limitations under the License.
 */
 
-import { applyArrayIndices, type } from '@lowdefy/helpers';
-
-// context, event, params
-
-async function CallMethod({ arrayIndices, context, params }) {
-  const { blockId, method, args = [] } = params;
-  const blockMethod =
-    context._internal.RootBlocks.map[applyArrayIndices(arrayIndices, blockId)].methods[method];
-  if (!type.isArray(args)) {
-    throw new Error(
-      `Failed to call method "${method}" on block "${blockId}": "args" should be an array. Received "${JSON.stringify(
-        params
-      )}".`
-    );
-  }
-  if (!type.isFunction(blockMethod)) {
-    throw new Error(
-      `Failed to call method "${method}" on block "${blockId}". Check if "${method}" is a valid block method for block "${blockId}". Received "${JSON.stringify(
-        params
-      )}".`
-    );
-  }
-  return blockMethod(...args);
+async function CallMethod({ methods: { callMethod }, params }) {
+  return callMethod({ params });
 }
 
 export default CallMethod;

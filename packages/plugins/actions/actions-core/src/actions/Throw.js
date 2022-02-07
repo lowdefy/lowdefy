@@ -13,24 +13,29 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
 import { type } from '@lowdefy/helpers';
 
 class ThrowActionError extends Error {
-  constructor(message, { blockId, context, metaData }) {
+  constructor(message, { blockId, metaData, pageId }) {
     super(message);
     this.blockId = blockId;
     this.metaData = metaData;
     this.name = 'ThrowError';
-    this.pageId = context.pageId;
+    this.pageId = pageId;
   }
 }
 
-function Throw({ blockId, context, params = {} }) {
+function Throw({ methods: { getBlockId, getPageId }, params }) {
   if (params.throw === false || type.isNone(params.throw)) {
     return;
   }
   if (params.throw === true) {
-    throw new ThrowActionError(params.message, { blockId, context, metaData: params.metaData });
+    throw new ThrowActionError(params.message, {
+      blockId: getBlockId(),
+      metaData: params.metaData,
+      pageId: getPageId(),
+    });
   }
   throw new Error(`Invalid Throw, check action params. Received "${JSON.stringify(params)}".`);
 }
