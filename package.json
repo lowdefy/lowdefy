@@ -32,6 +32,10 @@
   "scripts": {
     "build": "lerna run build",
     "build:dev": "NODE_ENV=development lerna run build",
+    "build:plugins": "yarn build:blocks && yarn build:connections && yarn build:operators",
+    "build:blocks": "lerna run --scope '@lowdefy/blocks-*' build",
+    "build:connections": "lerna run --scope '@lowdefy/connection-*' build",
+    "build:operators": "lerna run --scope '@lowdefy/operators-*' build",
     "clean": "lerna run clean",
     "lerna:version": "lerna version --no-git-tag-version",
     "lerna:publish": "lerna publish from-git",
