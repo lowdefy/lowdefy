@@ -37,7 +37,7 @@ import { default as setGlobal } from './setGlobal.js';
 import { default as setState } from './setState.js';
 import { default as validate } from './validate.js';
 
-export const getMethods = ({ actions, arrayIndices, blockId, context, event }) => {
+export const getMethods = ({ actions, arrayIndices, blockId, context, event, responses }) => {
   return {
     callMethod: (params) => callMethod({ arrayIndices, context, params }),
     getAction: (params) => getAction({ arrayIndices, location: blockId, params, responses }),
