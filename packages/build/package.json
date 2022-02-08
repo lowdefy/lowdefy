@@ -56,6 +56,7 @@
     "yargs": "17.3.1"
   },
   "devDependencies": {
+    "@lowdefy/actions-core": "4.0.0-alpha.6",
     "@lowdefy/blocks-antd": "4.0.0-alpha.6",
     "@lowdefy/blocks-basic": "4.0.0-alpha.6",
     "@lowdefy/blocks-color-selectors": "4.0.0-alpha.6",

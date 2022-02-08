@@ -38,6 +38,7 @@ import validateApp from './build/validateApp.js';
 import validateConfig from './build/validateConfig.js';
 import updateServerPackageJson from './build/updateServerPackageJson.js';
 import writeApp from './build/writeApp.js';
+import writeActionImports from './build/writePluginImports/writeActionImports.js';
 import writeBlockImports from './build/writePluginImports/writeBlockImports.js';
 import writeConfig from './build/writeConfig.js';
 import writeConnectionImports from './build/writePluginImports/writeConnectionImports.js';
@@ -105,6 +106,7 @@ async function build(options) {
     await writeGlobal({ components, context });
     await writeMenus({ components, context });
     await writeTypes({ components, context });
+    await writeActionImports({ components, context });
     await writeBlockImports({ components, context });
     await writeConnectionImports({ components, context });
     await writeOperatorImports({ components, context });

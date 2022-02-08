@@ -55,6 +55,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/operators"
       },
       {
+        "name": "@lowdefy/actions-core",
+        "reference": "workspace:packages/plugins/actions/actions-core"
+      },
+      {
         "name": "@lowdefy/blocks-antd",
         "reference": "workspace:packages/plugins/blocks/blocks-antd"
       },
@@ -178,6 +182,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "enableTopLevelFallback": true,
     "ignorePatternData": "(^(?:\\.yarn\\/sdks(?:\\/(?!\\.{1,2}(?:\\/|$))(?:(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$)).)*?)|$))$)",
     "fallbackExclusionList": [
+      ["@lowdefy/actions-core", ["workspace:packages/plugins/actions/actions-core"]],
       ["@lowdefy/ajv", ["workspace:packages/utils/ajv"]],
       ["@lowdefy/api", ["workspace:packages/api"]],
       ["@lowdefy/block-dev", ["workspace:packages/utils/block-dev"]],
@@ -2782,6 +2787,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@lowdefy/actions-core", [
+        ["workspace:packages/plugins/actions/actions-core", {
+          "packageLocation": "./packages/plugins/actions/actions-core/",
+          "packageDependencies": [
+            ["@lowdefy/actions-core", "workspace:packages/plugins/actions/actions-core"],
+            ["@lowdefy/helpers", "workspace:packages/utils/helpers"],
+            ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.55"],
+            ["@swc/core", "npm:1.2.135"],
+            ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.17"],
+            ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:27.4.7"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
       ["@lowdefy/ajv", [
         ["workspace:packages/utils/ajv", {
           "packageLocation": "./packages/utils/ajv/",
@@ -3035,6 +3054,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/build/",
           "packageDependencies": [
             ["@lowdefy/build", "workspace:packages/build"],
+            ["@lowdefy/actions-core", "workspace:packages/plugins/actions/actions-core"],
             ["@lowdefy/ajv", "workspace:packages/utils/ajv"],
             ["@lowdefy/blocks-antd", "workspace:packages/plugins/blocks/blocks-antd"],
             ["@lowdefy/blocks-basic", "workspace:packages/plugins/blocks/blocks-basic"],
@@ -3486,8 +3506,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/server/",
           "packageDependencies": [
             ["@lowdefy/server", "workspace:packages/server"],
+            ["@lowdefy/actions-core", "workspace:packages/plugins/actions/actions-core"],
             ["@lowdefy/api", "workspace:packages/api"],
             ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],
+            ["@lowdefy/blocks-antd", "workspace:packages/plugins/blocks/blocks-antd"],
             ["@lowdefy/build", "workspace:packages/build"],
             ["@lowdefy/engine", "workspace:packages/engine"],
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],
@@ -3513,6 +3535,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/server-dev/",
           "packageDependencies": [
             ["@lowdefy/server-dev", "workspace:packages/server-dev"],
+            ["@lowdefy/actions-core", "workspace:packages/plugins/actions/actions-core"],
             ["@lowdefy/api", "workspace:packages/api"],
             ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],
             ["@lowdefy/blocks-antd", "workspace:packages/plugins/blocks/blocks-antd"],
