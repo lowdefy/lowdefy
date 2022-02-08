@@ -2621,7 +2621,7 @@ __metadata:
     react: 18.0.0-rc.0
     react-dom: 18.0.0-rc.0
     react-icons: 4.3.1
-    swr: 1.2.0
+    swr: 1.1.2
     yargs: 17.3.1
   languageName: unknown
   linkType: soft
@@ -14593,12 +14593,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swr@npm:1.2.0":
-  version: 1.2.0
-  resolution: "swr@npm:1.2.0"
+"swr@npm:1.1.2":
+  version: 1.1.2
+  resolution: "swr@npm:1.1.2"
   peerDependencies:
     react: ^16.11.0 || ^17.0.0 || ^18.0.0
-  checksum: 9858cbd1849fea5d4d9c63c90b8115ffdc27ddd5500d37f43d6fe58fc57777846fc8e9bf2b12a954b5e8328eac38ecccfa16c5a08afe00a48dfb828516e208f7
+  checksum: 84bf222c667bf4f94bf9bcaf51f11443d69eb6feb82649c06ef8e576c51f52269872dbda4b926f267fd79cfeaf7bd84c6a62d519db25fe2af1fb811e75163e94
   languageName: node
   linkType: hard
 
