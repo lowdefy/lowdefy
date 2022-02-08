@@ -15,7 +15,7 @@
 */
 
 async function CallMethod({ methods: { callMethod }, params }) {
-  return callMethod({ params });
+  return callMethod(params);
 }
 
 export default CallMethod;

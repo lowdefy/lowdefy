@@ -15,7 +15,7 @@
 */
 
 async function Login({ methods: { login }, params }) {
-  return login({ params });
+  return login(params);
 }
 
 export default Login;

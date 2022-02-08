@@ -15,7 +15,7 @@
 */
 
 async function SetGlobal({ methods: { setGlobal }, params }) {
-  setGlobal({ params });
+  setGlobal(params);
 }
 
 export default SetGlobal;

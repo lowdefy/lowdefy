@@ -15,7 +15,7 @@
 */
 
 async function Request({ methods: { request }, params }) {
-  return request({ params });
+  return request(params);
 }
 
 export default Request;

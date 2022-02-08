@@ -15,7 +15,7 @@
 */
 
 function Message({ methods: { message }, params }) {
-  message({ params });
+  message(params);
 }
 
 export default Message;

@@ -15,7 +15,7 @@
 */
 
 async function Link({ methods: { link }, params }) {
-  link({ params });
+  link(params);
 }
 
 export default Link;

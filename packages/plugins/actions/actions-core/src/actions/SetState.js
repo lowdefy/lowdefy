@@ -15,7 +15,7 @@
 */
 
 async function SetState({ methods: { setState }, params }) {
-  setState({ params });
+  setState(params);
 }
 
 export default SetState;

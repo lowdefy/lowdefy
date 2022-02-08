@@ -15,7 +15,7 @@
 */
 
 async function ResetValidation({ methods: { resetValidation }, params }) {
-  resetValidation({ params });
+  resetValidation(params);
 }
 
 export default ResetValidation;

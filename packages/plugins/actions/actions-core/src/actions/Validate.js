@@ -15,7 +15,7 @@
 */
 
 async function Validate({ methods: { validate }, params }) {
-  return validate({ params });
+  return validate(params);
 }
 
 export default Validate;

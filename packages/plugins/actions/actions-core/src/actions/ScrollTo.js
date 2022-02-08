@@ -15,7 +15,7 @@
 */
 
 async function ScrollTo({ methods: { scrollTo }, params }) {
-  scrollTo({ params });
+  scrollTo(params);
 }
 
 export default ScrollTo;
