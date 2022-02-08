@@ -10,67 +10,72 @@
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
+  See the License for the specific language governing permissions or
   limitations under the License.
 */
-import { NodeParser } from '@lowdefy/operators';
+import { NodeParser, WebParser } from '@lowdefy/operators';
+import _or from './or.js';
 
-const arr0 = [0, 0];
-const arr1 = [0, 1];
-const arr2 = [1, 2];
-const arr3 = [1, 2, 3];
-const arr30 = [1, 2, 3, 0];
-const string = 'hello';
-const Null = null;
-const True = true;
-const False = false;
+const operators = {
+  _or,
+};
 
-console.error = () => {};
+const location = 'location';
 
-test('_or', async () => {
-  const parser = new NodeParser();
+test('_or false', () => {
+  expect(_or({ params: [0, 0], location })).toEqual(false);
+  expect(_or({ params: [false, false], location })).toEqual(false);
+});
+test('_or true', () => {
+  expect(_or({ params: [0, 1], location })).toEqual(true);
+  expect(_or({ params: [1, 2], location })).toEqual(true);
+  expect(_or({ params: [1, 2, 3], location })).toEqual(true);
+  expect(_or({ params: [1, 2, 3, 0], location })).toEqual(true);
+  expect(_or({ params: [true, true], location })).toEqual(true);
+  expect(_or({ params: [false, true], location })).toEqual(true);
+});
+test('_or errors', () => {
+  expect(() => _or({ params: 'hello', location })).toThrow(
+    'Operator Error: _or takes an array type. Received: "hello" at location.'
+  );
+  expect(() => _or({ params: null, location })).toThrow(
+    'Operator Error: _or takes an array type. Received: null at location.'
+  );
+  expect(() => _or({ params: true, location })).toThrow(
+    'Operator Error: _or takes an array type. Received: true at location.'
+  );
+  expect(() => _or({ params: false, location })).toThrow(
+    'Operator Error: _or takes an array type. Received: false at location.'
+  );
+});
+
+test('_or calls NodeParser', async () => {
+  const input = { a: { _or: [true, false] } };
+  const parser = new NodeParser({ operators, payload: {}, secrets: {}, user: {} });
   await parser.init();
-  let res = parser.parse({ input: { _or: arr0 }, location: 'locationId' });
-  expect(res.output).toEqual(false);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  res = parser.parse({ input: { _or: arr1 }, location: 'locationId' });
-  expect(res.output).toEqual(true);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  res = parser.parse({ input: { _or: arr2 }, location: 'locationId' });
-  expect(res.output).toEqual(true);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  res = parser.parse({ input: { _or: arr3 }, location: 'locationId' });
-  expect(res.output).toEqual(true);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  res = parser.parse({ input: { _or: arr30 }, location: 'locationId' });
-  expect(res.output).toEqual(true);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  res = parser.parse({ input: { _or: string }, location: 'locationId' });
-  expect(res.output).toEqual(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _or takes an array type. Received: "hello" at locationId.],
-    ]
-  `);
-  res = parser.parse({ input: { _or: Null }, location: 'locationId' });
-  expect(res.output).toEqual(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _or takes an array type. Received: null at locationId.],
-    ]
-  `);
-  res = parser.parse({ input: { _or: True }, location: 'locationId' });
-  expect(res.output).toEqual(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _or takes an array type. Received: true at locationId.],
-    ]
-  `);
-  res = parser.parse({ input: { _or: False }, location: 'locationId' });
-  expect(res.output).toEqual(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _or takes an array type. Received: false at locationId.],
-    ]
-  `);
+  const res = parser.parse({ input, location });
+  expect(res.output).toEqual({ a: true });
+});
+
+test('_or calls WebParser', async () => {
+  const context = {
+    _internal: {
+      lowdefy: {
+        inputs: { id: true },
+        lowdefyGlobal: { global: true },
+        menus: [{ menus: true }],
+        urlQuery: { urlQuery: true },
+        user: { user: true },
+      },
+    },
+    eventLog: [{ eventLog: true }],
+    id: 'id',
+    requests: [{ requests: true }],
+    state: { state: true },
+  };
+  const input = { a: { _or: [true, false] } };
+  const parser = new WebParser({ context, operators });
+  await parser.init();
+  const res = parser.parse({ input, location });
+  expect(res.output).toEqual({ a: true });
 });
