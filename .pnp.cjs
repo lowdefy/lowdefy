@@ -3549,7 +3549,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react", "npm:18.0.0-rc.0"],
             ["react-dom", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:18.0.0-rc.0"],
             ["react-icons", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:4.3.1"],
-            ["swr", "virtual:b951ea20ab6cada5f665e8389a50d828047e6b6f10e6ebaddde1e74a94868ec6ec703ff140742f295ef663cf92da1bc80fe9bbeaab30196cba0e992f38cd19ea#npm:1.2.0"],
+            ["swr", "virtual:b951ea20ab6cada5f665e8389a50d828047e6b6f10e6ebaddde1e74a94868ec6ec703ff140742f295ef663cf92da1bc80fe9bbeaab30196cba0e992f38cd19ea#npm:1.1.2"],
             ["yargs", "npm:17.3.1"]
           ],
           "linkType": "SOFT",
@@ -17816,17 +17816,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["swr", [
-        ["npm:1.2.0", {
-          "packageLocation": "./.yarn/cache/swr-npm-1.2.0-1529e39a5c-9858cbd184.zip/node_modules/swr/",
+        ["npm:1.1.2", {
+          "packageLocation": "./.yarn/cache/swr-npm-1.1.2-8ec1c9a7ac-84bf222c66.zip/node_modules/swr/",
           "packageDependencies": [
-            ["swr", "npm:1.2.0"]
+            ["swr", "npm:1.1.2"]
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:b951ea20ab6cada5f665e8389a50d828047e6b6f10e6ebaddde1e74a94868ec6ec703ff140742f295ef663cf92da1bc80fe9bbeaab30196cba0e992f38cd19ea#npm:1.2.0", {
-          "packageLocation": "./.yarn/__virtual__/swr-virtual-7bd309a097/0/cache/swr-npm-1.2.0-1529e39a5c-9858cbd184.zip/node_modules/swr/",
+        ["virtual:b951ea20ab6cada5f665e8389a50d828047e6b6f10e6ebaddde1e74a94868ec6ec703ff140742f295ef663cf92da1bc80fe9bbeaab30196cba0e992f38cd19ea#npm:1.1.2", {
+          "packageLocation": "./.yarn/__virtual__/swr-virtual-9bbb3471f0/0/cache/swr-npm-1.1.2-8ec1c9a7ac-84bf222c66.zip/node_modules/swr/",
           "packageDependencies": [
-            ["swr", "virtual:b951ea20ab6cada5f665e8389a50d828047e6b6f10e6ebaddde1e74a94868ec6ec703ff140742f295ef663cf92da1bc80fe9bbeaab30196cba0e992f38cd19ea#npm:1.2.0"],
+            ["swr", "virtual:b951ea20ab6cada5f665e8389a50d828047e6b6f10e6ebaddde1e74a94868ec6ec703ff140742f295ef663cf92da1bc80fe9bbeaab30196cba0e992f38cd19ea#npm:1.1.2"],
             ["@types/react", null],
             ["react", "npm:18.0.0-rc.0"]
           ],
