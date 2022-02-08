@@ -16,14 +16,16 @@
 
 import getFromObject from './getFromObject.js';
 
-const getState = ({ arrayIndices, location, params, state }) => {
-  return getFromObject({
-    arrayIndices,
-    location,
-    object: state,
-    method: 'getState',
-    params,
-  });
-};
+function createGetState({ arrayIndices, blockId, context }) {
+  return function getState(params) {
+    return getFromObject({
+      arrayIndices,
+      location: blockId,
+      object: context.state,
+      method: 'getState',
+      params,
+    });
+  };
+}
 
-export default getState;
+export default createGetState;

@@ -16,12 +16,14 @@
 
 import { serializer } from '@lowdefy/helpers';
 
-const reset = ({ context }) => {
-  context._internal.State.resetState();
-  context._internal.RootBlocks.reset(
-    serializer.deserializeFromString(context._internal.State.frozenState)
-  );
-  context._internal.update();
-};
+function createReset({ context }) {
+  return function reset() {
+    context._internal.State.resetState();
+    context._internal.RootBlocks.reset(
+      serializer.deserializeFromString(context._internal.State.frozenState)
+    );
+    context._internal.update();
+  };
+}
 
-export default reset;
+export default createReset;

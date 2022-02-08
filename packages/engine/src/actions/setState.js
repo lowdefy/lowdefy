@@ -16,12 +16,14 @@
 
 import { applyArrayIndices } from '@lowdefy/helpers';
 
-const setState = ({ arrayIndices, context, params }) => {
-  Object.keys(params).forEach((key) => {
-    context._internal.State.set(applyArrayIndices(arrayIndices, key), params[key]);
-  });
-  context._internal.RootBlocks.reset();
-  context._internal.update();
-};
+function createSetState({ arrayIndices, context }) {
+  return function setState(params) {
+    Object.keys(params).forEach((key) => {
+      context._internal.State.set(applyArrayIndices(arrayIndices, key), params[key]);
+    });
+    context._internal.RootBlocks.reset();
+    context._internal.update();
+  };
+}
 
-export default setState;
+export default createSetState;

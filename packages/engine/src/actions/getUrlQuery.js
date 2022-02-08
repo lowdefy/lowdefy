@@ -16,14 +16,16 @@
 
 import getFromObject from './getFromObject.js';
 
-const getUrlQuery = ({ arrayIndices, location, params, urlQuery }) => {
-  return getFromObject({
-    arrayIndices,
-    location,
-    object: urlQuery,
-    method: 'getUrlQuery',
-    params,
-  });
-};
+function createGetUrlQuery({ arrayIndices, blockId, context }) {
+  return function getUrlQuery(params) {
+    return getFromObject({
+      arrayIndices,
+      location: blockId,
+      object: context._internal.lowdefy.urlQuery || {},
+      method: 'getUrlQuery',
+      params,
+    });
+  };
+}
 
-export default getUrlQuery;
+export default createGetUrlQuery;

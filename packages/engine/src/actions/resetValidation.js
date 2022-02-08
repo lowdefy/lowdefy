@@ -16,8 +16,10 @@
 
 import getBlockMatcher from '../getBlockMatcher.js';
 
-const resetValidation = ({ context, params }) => {
-  context._internal.RootBlocks.resetValidation(getBlockMatcher(params));
-};
+function createResetValidation({ context }) {
+  return function resetValidation(params) {
+    context._internal.RootBlocks.resetValidation(getBlockMatcher(params));
+  };
+}
 
-export default resetValidation;
+export default createResetValidation;

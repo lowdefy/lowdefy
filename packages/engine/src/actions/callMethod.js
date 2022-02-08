@@ -16,25 +16,27 @@
 
 import { applyArrayIndices, type } from '@lowdefy/helpers';
 
-const callMethod = ({ arrayIndices, context, params }) => {
-  const { blockId, method, args = [] } = params;
-  const blockMethod =
-    context._internal.RootBlocks.map[applyArrayIndices(arrayIndices, blockId)].methods[method];
-  if (!type.isArray(args)) {
-    throw new Error(
-      `Failed to call method "${method}" on block "${blockId}": "args" should be an array. Received "${JSON.stringify(
-        params
-      )}".`
-    );
-  }
-  if (!type.isFunction(blockMethod)) {
-    throw new Error(
-      `Failed to call method "${method}" on block "${blockId}". Check if "${method}" is a valid block method for block "${blockId}". Received "${JSON.stringify(
-        params
-      )}".`
-    );
-  }
-  return blockMethod(...args);
-};
+function createCallMethod({ arrayIndices, context }) {
+  return function callMethod(params) {
+    const { blockId, method, args = [] } = params;
+    const blockMethod =
+      context._internal.RootBlocks.map[applyArrayIndices(arrayIndices, blockId)].methods[method];
+    if (!type.isArray(args)) {
+      throw new Error(
+        `Failed to call method "${method}" on block "${blockId}": "args" should be an array. Received "${JSON.stringify(
+          params
+        )}".`
+      );
+    }
+    if (!type.isFunction(blockMethod)) {
+      throw new Error(
+        `Failed to call method "${method}" on block "${blockId}". Check if "${method}" is a valid block method for block "${blockId}". Received "${JSON.stringify(
+          params
+        )}".`
+      );
+    }
+    return blockMethod(...args);
+  };
+}
 
-export default callMethod;
+export default createCallMethod;

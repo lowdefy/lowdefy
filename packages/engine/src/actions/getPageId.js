@@ -14,8 +14,10 @@
   limitations under the License.
 */
 
-const getPageId = ({ pageId }) => {
-  return pageId;
-};
+function createGetPageId({ context }) {
+  return function getPageId() {
+    return context.pageId;
+  };
+}
 
-export default getPageId;
+export default createGetPageId;

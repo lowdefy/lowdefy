@@ -16,16 +16,18 @@
 
 import getBlockMatcher from '../getBlockMatcher.js';
 
-const validate = ({ context, params }) => {
-  const validationErrors = context.RootBlocks.validate(getBlockMatcher(params));
-  if (validationErrors.length > 0) {
-    const error = new Error(
-      `Your input has ${validationErrors.length} validation error${
-        validationErrors.length !== 1 ? 's' : ''
-      }.`
-    );
-    throw error;
-  }
-};
+function createValidate({ context }) {
+  return function validate(params) {
+    const validationErrors = context.RootBlocks.validate(getBlockMatcher(params));
+    if (validationErrors.length > 0) {
+      const error = new Error(
+        `Your input has ${validationErrors.length} validation error${
+          validationErrors.length !== 1 ? 's' : ''
+        }.`
+      );
+      throw error;
+    }
+  };
+}
 
-export default validate;
+export default createValidate;

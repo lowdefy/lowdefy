@@ -16,14 +16,16 @@
 
 import getFromObject from './getFromObject.js';
 
-const getEvent = ({ arrayIndices, event, location, params }) => {
-  return getFromObject({
-    arrayIndices,
-    location,
-    object: event,
-    method: 'getEvent',
-    params,
-  });
-};
+function createGetEvent({ arrayIndices, blockId, event }) {
+  return function getEvent(params) {
+    return getFromObject({
+      arrayIndices,
+      location: blockId,
+      object: event,
+      method: 'getEvent',
+      params,
+    });
+  };
+}
 
-export default getEvent;
+export default createGetEvent;

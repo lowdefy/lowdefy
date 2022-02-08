@@ -14,13 +14,15 @@
   limitations under the License.
 */
 
-const message = ({ context, params = {} }) => {
-  context._internal.lowdefy._internal.displayMessage({
-    content: params.content || 'Success',
-    duration: params.duration,
-    icon: params.icon,
-    status: params.status,
-  });
-};
+function createMessage({ context }) {
+  return function message(params = {}) {
+    context._internal.lowdefy._internal.displayMessage({
+      content: params.content || 'Success',
+      duration: params.duration,
+      icon: params.icon,
+      status: params.status,
+    });
+  };
+}
 
-export default message;
+export default createMessage;

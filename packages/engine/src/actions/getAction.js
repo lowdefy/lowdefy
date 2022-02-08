@@ -16,14 +16,16 @@
 
 import getFromObject from './getFromObject.js';
 
-const getAction = ({ arrayIndices, location, params, responses }) => {
-  return getFromObject({
-    arrayIndices,
-    location,
-    object: responses,
-    method: 'getAction',
-    params,
-  });
-};
+function createGetAction({ actions, arrayIndices, blockId }) {
+  return function getAction(params) {
+    return getFromObject({
+      arrayIndices,
+      location: blockId,
+      object: actions,
+      method: 'getAction',
+      params,
+    });
+  };
+}
 
-export default getAction;
+export default createGetAction;

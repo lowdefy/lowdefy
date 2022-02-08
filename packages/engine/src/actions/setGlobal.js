@@ -16,12 +16,18 @@
 
 import { applyArrayIndices, set } from '@lowdefy/helpers';
 
-const setGlobal = ({ arrayIndices, context, params }) => {
-  Object.keys(params).forEach((key) => {
-    set(context._internal.lowdefy.lowdefyGlobal, applyArrayIndices(arrayIndices, key), params[key]);
-  });
-  context._internal.RootBlocks.reset();
-  context._internal.update();
+const createSetGlobal = ({ arrayIndices, context }) => {
+  return function setGlobal(params) {
+    Object.keys(params).forEach((key) => {
+      set(
+        context._internal.lowdefy.lowdefyGlobal,
+        applyArrayIndices(arrayIndices, key),
+        params[key]
+      );
+    });
+    context._internal.RootBlocks.reset();
+    context._internal.update();
+  };
 };
 
-export default setGlobal;
+export default createSetGlobal;

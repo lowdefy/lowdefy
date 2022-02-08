@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { getMethods } from './actions/index.js';
+import getActionMethods from './actions/getActionMethods.js';
 
 class Actions {
   constructor(context) {
@@ -156,13 +156,12 @@ class Actions {
     });
     try {
       response = await this.actions[action.type]({
-        methods: getMethods({
-          actions: this.actions,
+        methods: getActionMethods({
+          actions: responses,
           arrayIndices,
           blockId: block.blockId,
           context: this.context,
           event,
-          responses,
         }),
         document: this.context._internal.lowdefy._internal.document,
         params: parsedAction.params,

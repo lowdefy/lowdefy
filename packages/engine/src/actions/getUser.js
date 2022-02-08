@@ -16,14 +16,16 @@
 
 import getFromObject from './getFromObject.js';
 
-const getUser = ({ arrayIndices, location, params, user }) => {
-  return getFromObject({
-    arrayIndices,
-    location,
-    object: user,
-    method: 'getUser',
-    params,
-  });
-};
+function createGetUser({ arrayIndices, blockId, context }) {
+  return function getUser(params) {
+    return getFromObject({
+      arrayIndices,
+      location: blockId,
+      object: context._internal.lowdefy.user || {},
+      method: 'getUser',
+      params,
+    });
+  };
+}
 
-export default getUser;
+export default createGetUser;

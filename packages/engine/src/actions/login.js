@@ -14,8 +14,10 @@
   limitations under the License.
 */
 
-const login = ({ context, params }) => {
-  return context._internal.lowdefy._internal.auth.login(params);
-};
+function createLogin({ context }) {
+  return function login(params) {
+    return context._internal.lowdefy._internal.auth.login(params);
+  };
+}
 
-export default login;
+export default createLogin;

@@ -14,8 +14,10 @@
   limitations under the License.
 */
 
-const logout = ({ context }) => {
-  return context._internal.lowdefy._internal.auth.logout();
-};
+function createLogout({ context }) {
+  return function logout() {
+    return context._internal.lowdefy._internal.auth.logout();
+  };
+}
 
-export default logout;
+export default createLogout;

@@ -14,8 +14,10 @@
   limitations under the License.
 */
 
-const request = async ({ actions, arrayIndices, context, event, params }) => {
-  return await context._internal.Requests.callRequests({ actions, arrayIndices, event, params });
-};
+function createRequest({ actions, arrayIndices, context, event }) {
+  return async function request(params) {
+    return await context._internal.Requests.callRequests({ actions, arrayIndices, event, params });
+  };
+}
 
-export default request;
+export default createRequest;

@@ -14,8 +14,10 @@
   limitations under the License.
 */
 
-const getBlockId = ({ blockId }) => {
-  return blockId;
-};
+function createGetBlockId({ blockId }) {
+  return function getBlockId() {
+    return blockId;
+  };
+}
 
-export default getBlockId;
+export default createGetBlockId;

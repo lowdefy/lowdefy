@@ -16,14 +16,16 @@
 
 import getFromObject from './getFromObject.js';
 
-const getGlobal = ({ arrayIndices, lowdefyGlobal, location, params }) => {
-  return getFromObject({
-    arrayIndices,
-    location,
-    object: lowdefyGlobal,
-    method: 'getGlobal',
-    params,
-  });
-};
+function createGetGlobal({ arrayIndices, blockId, context }) {
+  return function getGlobal(params) {
+    return getFromObject({
+      arrayIndices,
+      location: blockId,
+      object: context._internal.lowdefy.lowdefyGlobal || {},
+      method: 'getGlobal',
+      params,
+    });
+  };
+}
 
-export default getGlobal;
+export default createGetGlobal;
