@@ -14,8 +14,15 @@
   limitations under the License.
 */
 
-const ScrollTo = ({ methods: { scrollTo }, params }) => {
-  scrollTo(params);
+const ScrollTo = ({ document, params, window }) => {
+  if (params.blockId) {
+    const element = document.getElementById(params.blockId);
+    if (element) {
+      element.scrollIntoView(params.options);
+    }
+  } else {
+    window.scrollTo(params);
+  }
 };
 
 export default ScrollTo;
