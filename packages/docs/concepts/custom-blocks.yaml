@@ -128,10 +128,12 @@ _ref:
               - `Link`: component`: Lowdefy standard Link React component used as links to pages or external urls. The following props apply:
                 - `back: boolean`: When the link is clicked, trigger the browser back.
                 - `home: boolean`: When the link is clicked, route to the home page.
-                - `pageId: string`: When the link is clicked, route to the provided Lowdefy page.
-                - `url: string`: When the link is clicked, route to an external url.
+                - `input: object`: When the link is clicked, pass data as the input object to the next Lowdefy page.  Can only be used with pageId link and newTab false. See [Input]( TODO: Link to input page? ).
                 - `newTab: boolean`: When the link is clicked, open the page in a new browser tab.
-                - `input: object`: When the link is clicked, pass data as the input object to the next Lowdefy page. See [Input]( TODO: Link to input page? ).
+                - `pageId: string`: When the link is clicked, route to the provided Lowdefy page.
+                - `replace: boolean`: Prevent adding a new entry into browser history by replacing the url instead of pushing into history. Can only be used with pageId link and newTab false.
+                - `scroll: boolean`: Disable scrolling to the top of the page after page transition. Can only be used with pageId link and newTab false.
+                - `url: string`: When the link is clicked, route to an external url.
                 - `urlQuery: object`: When the link is clicked, pass data as a url query to the next Lowdefy page. See [url query]( TODO: Link to url query page? ).
             - `content: object`: Passed to `container` and `context` block categories. The `content` object with methods to render sub blocks into content areas. The method name is the same as the area key, for example, 'content.content()` renders a blocks default `content` area.
             - `events: object`: All events defined on the block in the Lowdefy app config.

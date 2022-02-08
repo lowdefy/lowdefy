@@ -22,7 +22,17 @@ const createLinkComponent = (lowdefy) => {
       </a>
     );
   };
-  const sameOriginLink = ({ children, className, href, id, newTab, pageId, url }) => {
+  const sameOriginLink = ({
+    children,
+    className,
+    href,
+    id,
+    newTab,
+    pageId,
+    replace,
+    scroll,
+    url,
+  }) => {
     if (newTab) {
       return (
         <a
@@ -37,7 +47,7 @@ const createLinkComponent = (lowdefy) => {
       );
     }
     return (
-      <NextLink href={href}>
+      <NextLink href={href} replace={replace} scroll={scroll}>
         <a id={id} className={className}>
           {type.isFunction(children) ? children(pageId || url || id) : children}
         </a>
