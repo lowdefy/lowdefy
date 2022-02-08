@@ -37,7 +37,7 @@ test('Get config from env', () => {
     buildDirectory: 'build',
     publicDirectory: 'public',
     port: 8080,
-    serverBasePath: 'base',
+    basePath: 'base',
   });
 });
 

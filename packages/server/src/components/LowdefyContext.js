@@ -25,6 +25,7 @@ const LowdefyContext = ({ children, lowdefy }) => {
     lowdefy._internal = {
       blockComponents,
       callRequest,
+      components: {},
       document,
       operators,
       updaters: {},

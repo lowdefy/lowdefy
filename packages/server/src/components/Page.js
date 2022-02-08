@@ -32,10 +32,13 @@ const Page = ({ lowdefy, pageConfig, rootConfig }) => {
   lowdefy._internal.router = router;
   lowdefy._internal.link = setupLink(lowdefy);
   lowdefy._internal.components = createComponents(lowdefy);
+
+  lowdefy.basePath = lowdefy._internal.router.basePath;
   lowdefy.home = rootConfig.home;
   lowdefy.lowdefyGlobal = rootConfig.lowdefyGlobal;
   lowdefy.menus = rootConfig.menus;
   lowdefy.urlQuery = urlQuery.parse(window.location.search.slice(1));
+
   return (
     <Context config={pageConfig} lowdefy={lowdefy}>
       {(context, loading) => {

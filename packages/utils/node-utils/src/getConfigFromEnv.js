@@ -20,7 +20,7 @@ function getConfigFromEnv() {
     logLevel: process.env.LOWDEFY_SERVER_LOG_LEVEL,
     publicDirectory: process.env.LOWDEFY_SERVER_PUBLIC_DIRECTORY,
     port: process.env.LOWDEFY_SERVER_PORT && parseInt(process.env.LOWDEFY_SERVER_PORT),
-    serverBasePath: process.env.LOWDEFY_SERVER_BASE_PATH,
+    basePath: process.env.LOWDEFY_BASE_PATH,
   };
 }
 

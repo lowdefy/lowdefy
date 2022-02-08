@@ -7,6 +7,7 @@ module.exports = withLess({
       modifyVars: lowdefyConfig.theme.lessVariables,
     },
   },
+  basePath: process.env.LOWDEFY_BASE_PATH || lowdefyConfig.basePath,
   // reactStrictMode: true,
   webpack: (config, { isServer }) => {
     if (!isServer) {
