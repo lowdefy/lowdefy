@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-async function CallMethod({ methods: { callMethod }, params }) {
+const CallMethod = ({ methods: { callMethod }, params }) => {
   return callMethod(params);
-}
+};
 
 export default CallMethod;

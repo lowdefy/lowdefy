@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-async function SetGlobal({ methods: { setGlobal }, params }) {
+const SetGlobal = ({ methods: { setGlobal }, params }) => {
   setGlobal(params);
-}
+};
 
 export default SetGlobal;

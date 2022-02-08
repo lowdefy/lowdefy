@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-async function Validate({ methods: { validate }, params }) {
+const Validate = ({ methods: { validate }, params }) => {
   return validate(params);
-}
+};
 
 export default Validate;

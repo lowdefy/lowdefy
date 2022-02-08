@@ -26,7 +26,7 @@ class ThrowActionError extends Error {
   }
 }
 
-function Throw({ methods: { getBlockId, getPageId }, params }) {
+const Throw = ({ methods: { getBlockId, getPageId }, params }) => {
   if (params.throw === false || type.isNone(params.throw)) {
     return;
   }
@@ -38,7 +38,7 @@ function Throw({ methods: { getBlockId, getPageId }, params }) {
     });
   }
   throw new Error(`Invalid Throw, check action params. Received "${JSON.stringify(params)}".`);
-}
+};
 
 export default Throw;
 export { Throw, ThrowActionError };

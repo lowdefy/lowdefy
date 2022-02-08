@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-async function ScrollTo({ methods: { scrollTo }, params }) {
+const ScrollTo = ({ methods: { scrollTo }, params }) => {
   scrollTo(params);
-}
+};
 
 export default ScrollTo;

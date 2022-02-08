@@ -14,34 +14,17 @@
   limitations under the License.
 */
 
-import { default as CallMethod } from './actions/CallMethod.js';
-import { default as Link } from './actions/Link.js';
-import { default as Login } from './actions/Login.js';
-import { default as Logout } from './actions/Logout.js';
-import { default as Message } from './actions/Message.js';
-import { default as Request } from './actions/Request.js';
-import { default as Reset } from './actions/Reset.js';
-import { default as ResetValidation } from './actions/ResetValidation.js';
-import { default as ScrollTo } from './actions/ScrollTo.js';
-import { default as SetGlobal } from './actions/SetGlobal.js';
-import { default as SetState } from './actions/SetState.js';
-import { default as Throw } from './actions/Throw.js';
-import { default as Validate } from './actions/Validate.js';
-import { default as Wait } from './actions/Wait.js';
-
-export default {
-  CallMethod,
-  Link,
-  Login,
-  Logout,
-  Message,
-  Request,
-  Reset,
-  ResetValidation,
-  ScrollTo,
-  SetGlobal,
-  SetState,
-  Throw,
-  Validate,
-  Wait,
-};
+export { default as CallMethod } from './actions/CallMethod.js';
+export { default as Link } from './actions/Link.js';
+export { default as Login } from './actions/Login.js';
+export { default as Logout } from './actions/Logout.js';
+export { default as Message } from './actions/Message.js';
+export { default as Request } from './actions/Request.js';
+export { default as Reset } from './actions/Reset.js';
+export { default as ResetValidation } from './actions/ResetValidation.js';
+export { default as ScrollTo } from './actions/ScrollTo.js';
+export { default as SetGlobal } from './actions/SetGlobal.js';
+export { default as SetState } from './actions/SetState.js';
+export { default as Throw } from './actions/Throw.js';
+export { default as Validate } from './actions/Validate.js';
+export { default as Wait } from './actions/Wait.js';

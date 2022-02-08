@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-async function SetState({ methods: { setState }, params }) {
+const SetState = ({ methods: { setState }, params }) => {
   setState(params);
-}
+};
 
 export default SetState;

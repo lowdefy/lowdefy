@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-async function Link({ methods: { link }, params }) {
+const Link = ({ methods: { link }, params }) => {
   link(params);
-}
+};
 
 export default Link;
