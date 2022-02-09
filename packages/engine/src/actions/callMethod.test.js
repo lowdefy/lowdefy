@@ -52,7 +52,6 @@ test('CallMethod with no args, synchronous method', async () => {
   const rootBlock = {
     id: 'block:root:root:0',
     blockId: 'root',
-    type: 'TextInput',
     meta: {
       category: 'container',
     },
@@ -131,7 +130,6 @@ test('CallMethod method return a promise', async () => {
   const rootBlock = {
     id: 'block:root:root:0',
     blockId: 'root',
-    type: 'TextInput',
     meta: {
       category: 'container',
     },
@@ -202,7 +200,6 @@ test('CallMethod with args not an array', async () => {
   const rootBlock = {
     id: 'block:root:root:0',
     blockId: 'root',
-    type: 'TextInput',
     meta: {
       category: 'container',
     },
@@ -291,7 +288,6 @@ test('CallMethod with multiple positional args, synchronous method', async () =>
   const rootBlock = {
     id: 'block:root:root:0',
     blockId: 'root',
-    type: 'TextInput',
     meta: {
       category: 'container',
     },
@@ -367,7 +363,6 @@ test('CallMethod of block in array by explicit id', async () => {
   const rootBlock = {
     id: 'block:root:root:0',
     blockId: 'root',
-    type: 'TextInput',
     meta: {
       category: 'container',
     },
@@ -444,7 +439,6 @@ test('CallMethod of block in array by block with same indices and id pattern', a
   const rootBlock = {
     id: 'block:root:root:0',
     blockId: 'root',
-    type: 'TextInput',
     meta: {
       category: 'container',
     },
@@ -524,7 +518,6 @@ test('CallMethod with method does not exist', async () => {
   const rootBlock = {
     id: 'block:root:root:0',
     blockId: 'root',
-    type: 'TextInput',
     meta: {
       category: 'container',
     },
