@@ -15,27 +15,8 @@
 */
 
 import React from 'react';
-import { get, type } from '@lowdefy/helpers';
+import { get } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-utils';
-
-const Strong = ({ children, strong }) => (strong ? <b>{children}</b> : <>{children}</>);
-const Tag = ({ blockId, children, className, disabled, href, Link, newTab, onClick, rel }) =>
-  disabled ? (
-    <span id={blockId} className={className}>
-      {children}
-    </span>
-  ) : (
-    <Link
-      id={blockId}
-      className={className}
-      href={href}
-      onClick={onClick}
-      rel={rel || 'noopener noreferrer'}
-      target={newTab ? '_blank' : '_self'}
-    >
-      {children}
-    </Link>
-  );
 
 const AnchorBlock = ({
   blockId,
@@ -45,38 +26,33 @@ const AnchorBlock = ({
   methods,
   properties,
 }) => {
-  const title = type.isNone(properties.title)
-    ? type.isNone(properties.href)
-      ? properties.href
-      : blockId
-    : properties.title;
   const showLoading = get(events, 'onClick.loading') || loading;
   const disabled = properties.disabled || showLoading;
   return (
-    <Tag
-      blockId={blockId}
+    <Link
+      id={blockId}
       className={methods.makeCssClass([
         properties.style,
         disabled && { color: '#BEBEBE', cursor: 'not-allowed' },
       ])}
       disabled={disabled}
-      href={properties.href}
-      Link={Link}
-      rel={properties.rel}
-      newTab={properties.newTab}
       onClick={() => methods.triggerEvent({ name: 'onClick' })}
+      {...properties}
     >
-      <Strong strong={properties.strong}>
-        {properties.icon && (
-          <Icon
-            blockId={`${blockId}_icon`}
-            events={events}
-            properties={showLoading ? { name: 'LoadingOutlined', spin: true } : properties.icon}
-          />
-        )}
-        {` ${title}`}
-      </Strong>
-    </Tag>
+      {(defaultTitle) => (
+        <>
+          {properties.icon &&
+            (
+              <Icon
+                blockId={`${blockId}_icon`}
+                events={events}
+                properties={showLoading ? { name: 'LoadingOutlined', spin: true } : properties.icon}
+              />
+            ) + ` `}
+          {properties.title || defaultTitle}
+        </>
+      )}
+    </Link>
   );
 };
 

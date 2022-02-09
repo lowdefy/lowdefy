@@ -105,7 +105,7 @@ _ref:
 
             The following environment variables can be specified:
 
-            - `LOWDEFY_SERVER_BASE_PATH`: Set the base path to serve the Lowdefy application from. This will serve the application under `https://example.com/<base-path>`instead of `https://example.com`,  and all pages under `https://example.com/<base-path>/<page-id>` instead of the default `https://example.com/<page-id>`.
+            - `LOWDEFY_BASE_PATH`: Set the base path to serve the Lowdefy application from. This will serve the application under `https://example.com/<base-path>`instead of `https://example.com`,  and all pages under `https://example.com/<base-path>/<page-id>` instead of the default `https://example.com/<page-id>`.
             - `LOWDEFY_SERVER_BUILD_DIRECTORY`: The directory of the built Lowdefy configuration (The output of `lowdefy build`, usually found at `./.lowdefy/build` in your project repository). The default is `./.lowdefy/build`.
             - `LOWDEFY_SERVER_PORT`: The port at which to run the server. The default is `3000`.
             - `LOWDEFY_SERVER_PUBLIC_DIRECTORY`: The directory of the public assets to be served. The default is `./public`.
