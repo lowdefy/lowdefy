@@ -30,7 +30,6 @@ const lowdefyProps = [
   'components',
   'content',
   'eventLog',
-  'homePageId',
   'list',
   'loading',
   'menus',

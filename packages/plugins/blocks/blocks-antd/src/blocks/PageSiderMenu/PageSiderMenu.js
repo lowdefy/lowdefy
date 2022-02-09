@@ -35,7 +35,6 @@ const PageSiderMenu = ({
   components: { Icon, Link },
   events,
   content,
-  homePageId,
   menus,
   methods,
   pageId,
@@ -117,7 +116,6 @@ const PageSiderMenu = ({
       properties={{ style: mergeObjects([{ minHeight: '100vh' }, properties.style]) }}
       content={{
         // TODO: use next/image
-        // TODO: Link to home=true
         content: () => (
           <>
             <Header
@@ -167,7 +165,7 @@ const PageSiderMenu = ({
                         />
                       </div>
                     </div>
-                    <Link href={`${basePath}/${homePageId}`}>
+                    <Link home={true}>
                       <img
                         src={
                           (properties.logo && properties.logo.src) ||

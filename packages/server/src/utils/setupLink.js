@@ -16,29 +16,30 @@
 
 import { createLink } from '@lowdefy/engine';
 
-function setupLink({ lowdefy }) {
+function setupLink(lowdefy) {
   const { router, window } = lowdefy._internal;
-  const sameOriginLink = (path, newTab) => {
+  const backLink = () => router.back();
+  const disabledLink = () => {};
+  const newOriginLink = ({ href, newTab }) => {
     if (newTab) {
-      return window.open(`${window.location.origin}${lowdefy.basePath}${path}`, '_blank').focus();
+      return window.open(href, '_blank').focus();
     } else {
-      // Next handles the basePath here.
+      return window.location.assign(href);
+    }
+  };
+  const sameOriginLink = ({ href, newTab }) => {
+    if (newTab) {
+      return window.open(`${window.location.origin}${lowdefy.basePath}${href}`, '_blank').focus();
+    } else {
       return router.push({
-        pathname: path,
-        // TODO: Do we handle urlQuery as a param here?
-        // query: {},
+        pathname: href, // href includes the urlQuery as defined by engine
       });
     }
   };
-  const newOriginLink = (path, newTab) => {
-    if (newTab) {
-      return window.open(path, '_blank').focus();
-    } else {
-      return (window.location.href = path);
-    }
+  const noLink = () => {
+    throw new Error(`Invalid Link.`);
   };
-  const backLink = () => window.history.back();
-  return createLink({ backLink, lowdefy, newOriginLink, sameOriginLink });
+  return createLink({ backLink, disabledLink, lowdefy, newOriginLink, noLink, sameOriginLink });
 }
 
 export default setupLink;
