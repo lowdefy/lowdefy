@@ -24,10 +24,6 @@ const operators = {
   _function,
   _payload,
   _state,
-  // _test: jest.fn(() => 'test'),
-  // _error: jest.fn(() => {
-  //   throw new Error('Test error.');
-  // }),
 };
 
 const state = {
