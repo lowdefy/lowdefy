@@ -47,7 +47,7 @@ const input = {
 };
 
 test('location calls getFromObject', async () => {
-  const lowdefyOperators = import('@lowdefy/operators');
+  const lowdefyOperators = await import('@lowdefy/operators');
   location(input);
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
