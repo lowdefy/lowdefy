@@ -10,7 +10,7 @@
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions or
+  See the License for the specific language governing permissions and
   limitations under the License.
 */
 import { NodeParser, WebParser } from '@lowdefy/operators';
@@ -49,7 +49,7 @@ test('_or errors', () => {
   );
 });
 
-test('_or calls NodeParser', async () => {
+test('_or evaluated in NodeParser', async () => {
   const input = { a: { _or: [true, false] } };
   const parser = new NodeParser({ operators, payload: {}, secrets: {}, user: {} });
   await parser.init();
@@ -57,7 +57,7 @@ test('_or calls NodeParser', async () => {
   expect(res.output).toEqual({ a: true });
 });
 
-test('_or calls WebParser', async () => {
+test('_or evaluated in WebParser', async () => {
   const context = {
     _internal: {
       lowdefy: {
