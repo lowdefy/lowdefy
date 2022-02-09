@@ -126,11 +126,13 @@ _ref:
             - `components: object`: Helper React components that are exposed to blocks to use internally.
               - `Icon`: component`: Lowdefy standard Icon React component to render build in icons.
               - `Link`: component`: Lowdefy standard Link React component used as links to pages or external urls. The following props apply:
+                - `ariaLabel: string`: Arial-label to apply to link tag.
                 - `back: boolean`: When the link is clicked, trigger the browser back.
                 - `home: boolean`: When the link is clicked, route to the home page.
                 - `input: object`: When the link is clicked, pass data as the input object to the next Lowdefy page.  Can only be used with pageId link and newTab false. See [Input]( TODO: Link to input page? ).
                 - `newTab: boolean`: When the link is clicked, open the page in a new browser tab.
                 - `pageId: string`: When the link is clicked, route to the provided Lowdefy page.
+                - `rel: string`: Overwrite `<a/>` tag  property.
                 - `replace: boolean`: Prevent adding a new entry into browser history by replacing the url instead of pushing into history. Can only be used with pageId link and newTab false.
                 - `scroll: boolean`: Disable scrolling to the top of the page after page transition. Can only be used with pageId link and newTab false.
                 - `url: string`: When the link is clicked, route to an external url.

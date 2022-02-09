@@ -4,31 +4,50 @@ import { createLink } from '@lowdefy/engine';
 import { type } from '@lowdefy/helpers';
 
 const createLinkComponent = (lowdefy) => {
-  const backLink = ({ children, className, id }) => (
-    <a id={id} onClick={() => lowdefy._internal.router.back()} className={className}>
+  const backLink = ({ ariaLabel, children, className, id, rel }) => (
+    <a
+      id={id}
+      onClick={() => lowdefy._internal.router.back()}
+      className={className}
+      rel={rel}
+      aria-label={ariaLabel || 'back'}
+    >
       {type.isFunction(children) ? children(id) : children}
     </a>
   );
-  const newOriginLink = ({ children, className, href, id, newTab, pageId, url }) => {
-    return (
-      <a
-        id={id}
-        href={href}
-        className={className}
-        target={newTab && '_blank'}
-        rel={newTab && 'noopener noreferrer'}
-      >
-        {type.isFunction(children) ? children(pageId || url || id) : children}
-      </a>
-    );
-  };
-  const sameOriginLink = ({
+  const newOriginLink = ({
+    ariaLabel,
     children,
     className,
     href,
     id,
     newTab,
     pageId,
+    rel,
+    url,
+  }) => {
+    return (
+      <a
+        id={id}
+        aria-label={ariaLabel}
+        className={className}
+        href={href}
+        rel={rel || (newTab && 'noopener noreferrer')}
+        target={newTab && '_blank'}
+      >
+        {type.isFunction(children) ? children(pageId || url || id) : children}
+      </a>
+    );
+  };
+  const sameOriginLink = ({
+    ariaLabel,
+    children,
+    className,
+    href,
+    id,
+    newTab,
+    pageId,
+    rel,
     replace,
     scroll,
     url,
@@ -37,10 +56,11 @@ const createLinkComponent = (lowdefy) => {
       return (
         <a
           id={id}
-          href={`${window.location.origin}${lowdefy.basePath}${href}`}
+          aria-label={ariaLabel}
           className={className}
+          href={`${window.location.origin}${lowdefy.basePath}${href}`}
+          rel={rel || 'noopener noreferrer'}
           target="_blank"
-          rel="noopener noreferrer"
         >
           {type.isFunction(children) ? children(pageId || url || id) : children}
         </a>
@@ -48,7 +68,7 @@ const createLinkComponent = (lowdefy) => {
     }
     return (
       <NextLink href={href} replace={replace} scroll={scroll}>
-        <a id={id} className={className}>
+        <a id={id} aria-label={ariaLabel} className={className} rel={rel}>
           {type.isFunction(children) ? children(pageId || url || id) : children}
         </a>
       </NextLink>
