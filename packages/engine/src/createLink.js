@@ -34,14 +34,14 @@ function createLink({ backLink, disabledLink, lowdefy, newOriginLink, noLink, sa
       ? ''
       : `?${urlQueryFn.stringify(props.urlQuery)}`;
     if (props.home === true) {
-      lowdefy.inputs[`page:${lowdefy.home.pageId}`] = props.input;
+      lowdefy.inputs[`page:${lowdefy.home.pageId}`] = props.input || {};
       return sameOriginLink({
         href: `/${lowdefy.home.configured ? '' : lowdefy.home.pageId}${lowdefyUrlQuery}`,
         ...props,
       });
     }
     if (type.isString(props.pageId)) {
-      lowdefy.inputs[`page:${props.pageId}`] = props.input;
+      lowdefy.inputs[`page:${props.pageId}`] = props.input || {};
       return sameOriginLink({ href: `/${props.pageId}${lowdefyUrlQuery}`, ...props });
     }
     if (type.isString(props.url)) {
