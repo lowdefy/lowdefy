@@ -13,122 +13,33 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { NodeParser } from '@lowdefy/operators';
+// import { NodeParser } from '@lowdefy/operators';
+
+import _if from './if.js';
+
+const location = 'location';
 
 console.error = () => {};
 
-test('_if', async () => {
-  const parser = new NodeParser();
-  await parser.init();
-  let res = parser.parse({
-    input: {
-      _if: {
-        test: true,
-        then: 1,
-        else: 2,
-      },
-    },
-    location: 'locationId',
-  });
-  expect(res.output).toBe(1);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  res = parser.parse({
-    input: {
-      _if: {
-        test: false,
-        then: 1,
-        else: 2,
-      },
-    },
-    location: 'locationId',
-  });
-  expect(res.output).toBe(2);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  res = parser.parse({
-    input: {
-      _if: {
-        then: 1,
-        else: 2,
-      },
-    },
-    location: 'locationId',
-  });
-  expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _if takes a boolean type for parameter test. Received: {"then":1,"else":2} at locationId.],
-    ]
-  `);
-  res = parser.parse({
-    input: {
-      _if: {
-        test: false,
-        then: 1,
-      },
-    },
-    location: 'locationId',
-  });
-  expect(res.output).toBe(undefined);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  res = parser.parse({
-    input: {
-      _if: {
-        test: true,
-        else: 2,
-      },
-    },
-    location: 'locationId',
-  });
-  expect(res.output).toBe(undefined);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  res = parser.parse({
-    input: {
-      _if: {
-        test: {
-          a: [1, 3],
-        },
-        then: 1,
-        else: 2,
-      },
-    },
-    location: 'locationId',
-  });
-  expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _if takes a boolean type for parameter test. Received: {"test":{"a":[1,3]},"then":1,"else":2} at locationId.],
-    ]
-  `);
-  res = parser.parse({
-    input: {
-      _if: {
-        test: 'True',
-        then: 1,
-        else: 2,
-      },
-    },
-    location: 'locationId',
-  });
-  expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _if takes a boolean type for parameter test. Received: {"test":"True","then":1,"else":2} at locationId.],
-    ]
-  `);
-  res = parser.parse({
-    input: {
-      _if: {
-        test: 1,
-        then: 1,
-        else: 2,
-      },
-    },
-    location: 'locationId',
-  });
-  expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _if takes a boolean type for parameter test. Received: {"test":1,"then":1,"else":2} at locationId.],
-    ]
-  `);
+test('_if then', () => {
+  expect(_if({ params: { test: true, then: 1, else: 2 }, location })).toEqual(1);
+  expect(_if({ params: { test: true, else: 2 }, location })).toEqual(undefined);
+});
+test('_if else', () => {
+  expect(_if({ params: { test: false, then: 1, else: 2 }, location })).toEqual(2);
+  expect(_if({ params: { test: false, then: 1 }, location })).toEqual(undefined);
+});
+test('_if errors', () => {
+  expect(() => _if({ params: { then: 1, else: 2 }, location })).toThrow(
+    'Operator Error: _if takes a boolean type for parameter test. Received: {"then":1,"else":2} at location.'
+  );
+  expect(() => _if({ params: { test: { a: [1, 3] }, then: 1, else: 2 }, location })).toThrow(
+    'Operator Error: _if takes a boolean type for parameter test. Received: {"test":{"a":[1,3]},"then":1,"else":2} at location.'
+  );
+  expect(() => _if({ params: { test: 'True', then: 1, else: 2 }, location })).toThrow(
+    'Operator Error: _if takes a boolean type for parameter test. Received: {"test":"True","then":1,"else":2} at location.'
+  );
+  expect(() => _if({ params: { test: 1, then: 1, else: 2 }, location })).toThrow(
+    'Operator Error: _if takes a boolean type for parameter test. Received: {"test":1,"then":1,"else":2} at location.'
+  );
 });

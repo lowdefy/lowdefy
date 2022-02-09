@@ -16,7 +16,7 @@
 
 import date from './date.js';
 
-const location = 'locationId';
+const location = 'location';
 
 test('_date now', () => {
   const RealDate = Date;
@@ -57,19 +57,19 @@ test('_date negative int', () => {
 test('_date null', () => {
   expect(() => date({ params: null, location })).toThrowErrorMatchingInlineSnapshot(`
     "Operator Error: _date.__default accepts one of the following types: number, string.
-          Received: {\\"_date.__default\\":null} at locationId."
+          Received: {\\"_date.__default\\":null} at location."
   `);
 });
 
 test('_date invalid operator type', () => {
   expect(() => date({ params: {}, location })).toThrowErrorMatchingInlineSnapshot(`
     "Operator Error: _date.__default accepts one of the following types: number, string.
-          Received: {\\"_date.__default\\":{}} at locationId."
+          Received: {\\"_date.__default\\":{}} at location."
   `);
 });
 
 test('_date invalid string', () => {
   expect(() => date({ params: 'abc', location })).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _date.__default - abc could not resolve as a valid javascript date. Received: {\\"_date.__default\\":\\"abc\\"} at locationId."`
+    `"Operator Error: _date.__default - abc could not resolve as a valid javascript date. Received: {\\"_date.__default\\":\\"abc\\"} at location."`
   );
 });
