@@ -15,7 +15,7 @@
 */
 
 function createLink({ context }) {
-  return function link({ params }) {
+  return function link(params) {
     context._internal.lowdefy._internal.link(params);
   };
 }
