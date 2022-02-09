@@ -13,8 +13,6 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-
-import { NodeParser } from '@lowdefy/operators';
 import _regex from './regex.js';
 
 const location = 'location';
