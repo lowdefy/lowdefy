@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-const ScrollTo = ({ document, params, window }) => {
+function ScrollTo({ document, params, window }) {
   if (params.blockId) {
     const element = document.getElementById(params.blockId);
     if (element) {
@@ -23,6 +23,6 @@ const ScrollTo = ({ document, params, window }) => {
   } else {
     window.scrollTo(params);
   }
-};
+}
 
 export default ScrollTo;

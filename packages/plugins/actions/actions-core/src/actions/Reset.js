@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-const Reset = ({ methods: { reset } }) => {
+function Reset({ methods: { reset } }) {
   reset();
-};
+}
 
 export default Reset;

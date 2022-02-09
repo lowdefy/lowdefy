@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-const ResetValidation = ({ methods: { resetValidation }, params }) => {
+function ResetValidation({ methods: { resetValidation }, params }) {
   resetValidation(params);
-};
+}
 
 export default ResetValidation;

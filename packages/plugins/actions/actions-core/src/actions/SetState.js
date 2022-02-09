@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-const SetState = ({ methods: { setState }, params }) => {
+function SetState({ methods: { setState }, params }) {
   setState(params);
-};
+}
 
 export default SetState;

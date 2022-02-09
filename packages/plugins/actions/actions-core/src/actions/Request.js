@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-const Request = async ({ methods: { request }, params }) => {
+async function Request({ methods: { request }, params }) {
   return await request(params);
-};
+}
 
 export default Request;

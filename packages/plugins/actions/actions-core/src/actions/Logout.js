@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-const Logout = ({ methods: { logout } }) => {
+function Logout({ methods: { logout } }) {
   return logout();
-};
+}
 
 export default Logout;

@@ -14,8 +14,16 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 const Link = ({ methods: { link }, params }) => {
-  link(params);
+  const linkParams = type.isString(params) ? { pageId: params } : params;
+  try {
+    link(linkParams);
+  } catch (error) {
+    console.log(error);
+    throw new Error(`Invalid Link, check action params. Received "${JSON.stringify(params)}".`);
+  }
 };
 
 export default Link;

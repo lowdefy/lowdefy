@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-const Message = ({ methods: { message }, params }) => {
+function Message({ methods: { message }, params }) {
   message(params);
-};
+}
 
 export default Message;

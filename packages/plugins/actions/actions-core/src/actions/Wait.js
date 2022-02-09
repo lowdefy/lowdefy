@@ -16,11 +16,11 @@
 
 import { type, wait } from '@lowdefy/helpers';
 
-const Wait = ({ params }) => {
+function Wait({ params }) {
   if (!type.isInt(params.ms)) {
     throw new Error(`Wait action "ms" param should be an integer.`);
   }
   return wait(params.ms);
-};
+}
 
 export default Wait;

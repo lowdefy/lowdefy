@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-const Login = ({ methods: { login }, params }) => {
+function Login({ methods: { login }, params }) {
   return login(params);
-};
+}
 
 export default Login;
