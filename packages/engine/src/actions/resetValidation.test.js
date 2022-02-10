@@ -16,6 +16,9 @@
 
 import { get, type } from '@lowdefy/helpers';
 
+// TODO: issue importing plugin packages with jest due to jest es module resolution #https://github.com/facebook/jest/issues/9771
+// import { _not, _type } from '@lowdefy/operators-js/operators/client';
+
 import testContext from '../../test/testContext.js';
 
 const closeLoader = jest.fn();
