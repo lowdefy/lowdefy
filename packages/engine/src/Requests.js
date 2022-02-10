@@ -31,7 +31,7 @@ class Requests {
   }
 
   callRequests({ actions, arrayIndices, event, params } = {}) {
-    if (params.all === true) {
+    if (type.isObject(params) && params.all === true) {
       return Promise.all(
         Object.keys(this.requestConfig).map((requestId) =>
           this.callRequest({ requestId, event, arrayIndices })
