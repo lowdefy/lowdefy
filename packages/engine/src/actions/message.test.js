@@ -41,26 +41,28 @@ test('Message with content', async () => {
       category: 'container',
     },
     areas: {
-      blocks: [
-        {
-          id: 'block:root:button:0',
-          blockId: 'button',
-          type: 'Button',
-          meta: {
-            category: 'display',
-            valueType: 'string',
+      content: {
+        blocks: [
+          {
+            id: 'block:root:button:0',
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [
+                {
+                  id: 'a',
+                  type: 'Message',
+                  params: { content: 'test' },
+                },
+              ],
+            },
           },
-          events: {
-            onClick: [
-              {
-                id: 'a',
-                type: 'Message',
-                params: { content: 'test' },
-              },
-            ],
-          },
-        },
-      ],
+        ],
+      },
     },
   };
   const context = await testContext({
@@ -86,31 +88,33 @@ test('Message with all params', async () => {
       category: 'container',
     },
     areas: {
-      blocks: [
-        {
-          id: 'block:root:button:0',
-          blockId: 'button',
-          type: 'Button',
-          meta: {
-            category: 'display',
-            valueType: 'string',
-          },
-          events: {
-            onClick: [
-              {
-                id: 'a',
-                type: 'Message',
-                params: {
-                  content: 'content',
-                  duration: 6,
-                  icon: 'FireOutlined',
-                  status: 'error',
+      content: {
+        blocks: [
+          {
+            id: 'block:root:button:0',
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [
+                {
+                  id: 'a',
+                  type: 'Message',
+                  params: {
+                    content: 'content',
+                    duration: 6,
+                    icon: 'FireOutlined',
+                    status: 'error',
+                  },
                 },
-              },
-            ],
+              ],
+            },
           },
-        },
-      ],
+        ],
+      },
     },
   };
   const context = await testContext({
@@ -139,25 +143,27 @@ test('Message with no params', async () => {
       category: 'container',
     },
     areas: {
-      blocks: [
-        {
-          id: 'block:root:button:0',
-          blockId: 'button',
-          type: 'Button',
-          meta: {
-            category: 'display',
-            valueType: 'string',
+      content: {
+        blocks: [
+          {
+            id: 'block:root:button:0',
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [
+                {
+                  id: 'a',
+                  type: 'Message',
+                },
+              ],
+            },
           },
-          events: {
-            onClick: [
-              {
-                id: 'a',
-                type: 'Message',
-              },
-            ],
-          },
-        },
-      ],
+        ],
+      },
     },
   };
   const context = await testContext({

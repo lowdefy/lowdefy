@@ -56,8 +56,8 @@ const mockDate = jest.fn(() => ({ date: 0 }));
 mockDate.now = jest.fn(() => 0);
 
 // Comment out to use console
-console.log = () => {};
-console.error = () => {};
+// console.log = () => {};
+// console.error = () => {};
 
 beforeAll(() => {
   global.Date = mockDate;
@@ -84,20 +84,22 @@ test('Request call one request', async () => {
       },
     ],
     areas: {
-      blocks: [
-        {
-          id: 'button',
-          blockId: 'button',
-          type: 'Button',
-          meta: {
-            category: 'display',
-            valueType: 'string',
+      content: {
+        blocks: [
+          {
+            id: 'button',
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [{ id: 'a', type: 'Request', params: 'req_one' }],
+            },
           },
-          events: {
-            onClick: [{ id: 'a', type: 'Request', params: 'req_one' }],
-          },
-        },
-      ],
+        ],
+      },
     },
   };
   const context = await testContext({
@@ -145,20 +147,22 @@ test('Request call all requests', async () => {
       },
     ],
     areas: {
-      blocks: [
-        {
-          id: 'button',
-          blockId: 'button',
-          type: 'Button',
-          meta: {
-            category: 'display',
-            valueType: 'string',
+      content: {
+        blocks: [
+          {
+            id: 'button',
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [{ id: 'a', type: 'Request', params: { all: true } }],
+            },
           },
-          events: {
-            onClick: [{ id: 'a', type: 'Request', params: { all: true } }],
-          },
-        },
-      ],
+        ],
+      },
     },
   };
   const context = await testContext({
@@ -225,20 +229,22 @@ test('Request call array of requests', async () => {
       },
     ],
     areas: {
-      blocks: [
-        {
-          id: 'button',
-          blockId: 'button',
-          type: 'Button',
-          meta: {
-            category: 'display',
-            valueType: 'string',
+      content: {
+        blocks: [
+          {
+            id: 'button',
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [{ id: 'a', type: 'Request', params: ['req_one', 'req_two'] }],
+            },
           },
-          events: {
-            onClick: [{ id: 'a', type: 'Request', params: ['req_one', 'req_two'] }],
-          },
-        },
-      ],
+        ],
+      },
     },
   };
   const context = await testContext({
@@ -305,20 +311,22 @@ test('Request pass if params are none', async () => {
       },
     ],
     areas: {
-      blocks: [
-        {
-          id: 'button',
-          blockId: 'button',
-          type: 'Button',
-          meta: {
-            category: 'display',
-            valueType: 'string',
+      content: {
+        blocks: [
+          {
+            id: 'button',
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [{ id: 'a', type: 'Request' }],
+            },
           },
-          events: {
-            onClick: [{ id: 'a', type: 'Request' }],
-          },
-        },
-      ],
+        ],
+      },
     },
   };
   const context = await testContext({
@@ -342,20 +350,22 @@ test('Request call request error', async () => {
       },
     ],
     areas: {
-      blocks: [
-        {
-          id: 'button',
-          blockId: 'button',
-          type: 'Button',
-          meta: {
-            category: 'display',
-            valueType: 'string',
+      content: {
+        blocks: [
+          {
+            id: 'button',
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [{ id: 'a', type: 'Request', params: 'req_error' }],
+            },
           },
-          events: {
-            onClick: [{ id: 'a', type: 'Request', params: 'req_error' }],
-          },
-        },
-      ],
+        ],
+      },
     },
   };
   const context = await testContext({

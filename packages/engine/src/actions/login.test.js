@@ -52,26 +52,28 @@ test('Login', async () => {
       category: 'container',
     },
     areas: {
-      blocks: [
-        {
-          id: 'button',
-          blockId: 'button',
-          type: 'Button',
-          meta: {
-            category: 'display',
-            valueType: 'string',
+      content: {
+        blocks: [
+          {
+            id: 'button',
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [
+                {
+                  id: 'a',
+                  type: 'Login',
+                  params: { input: { i: true }, pageId: 'pageId', urlQuery: { u: true } },
+                },
+              ],
+            },
           },
-          events: {
-            onClick: [
-              {
-                id: 'a',
-                type: 'Login',
-                params: { input: { i: true }, pageId: 'pageId', urlQuery: { u: true } },
-              },
-            ],
-          },
-        },
-      ],
+        ],
+      },
     },
   };
   const context = await testContext({

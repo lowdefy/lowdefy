@@ -56,35 +56,37 @@ test('CallMethod with no args, synchronous method', async () => {
       category: 'container',
     },
     areas: {
-      blocks: [
-        {
-          id: 'block:root:textInput:0',
-          blockId: 'textInput',
-          type: 'TextInput',
-          meta: {
-            category: 'input',
-            valueType: 'string',
+      content: {
+        blocks: [
+          {
+            id: 'block:root:textInput:0',
+            blockId: 'textInput',
+            type: 'TextInput',
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
           },
-        },
-        {
-          id: 'block:root:button:0',
-          blockId: 'button',
-          type: 'Button',
-          meta: {
-            category: 'display',
-            valueType: 'string',
+          {
+            id: 'block:root:button:0',
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [
+                {
+                  id: 'a',
+                  type: 'CallMethod',
+                  params: { blockId: 'block:root:textInput:0', method: 'blockMethod' },
+                },
+              ],
+            },
           },
-          events: {
-            onClick: [
-              {
-                id: 'a',
-                type: 'CallMethod',
-                params: { blockId: 'block:root:textInput:0', method: 'blockMethod' },
-              },
-            ],
-          },
-        },
-      ],
+        ],
+      },
     },
   };
   const context = await testContext({
@@ -134,35 +136,41 @@ test('CallMethod method return a promise', async () => {
       category: 'container',
     },
     areas: {
-      blocks: [
-        {
-          id: 'block:root:textInput:0',
-          blockId: 'textInput',
-          type: 'TextInput',
-          meta: {
-            category: 'input',
-            valueType: 'string',
+      content: {
+        blocks: [
+          {
+            id: 'block:root:textInput:0',
+            blockId: 'textInput',
+            type: 'TextInput',
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
           },
-        },
-        {
-          id: 'block:root:button:0',
-          blockId: 'button',
-          type: 'Button',
-          meta: {
-            category: 'display',
-            valueType: 'string',
+          {
+            id: 'block:root:button:0',
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [
+                {
+                  id: 'a',
+                  type: 'CallMethod',
+                  params: {
+                    blockId: 'block:root:textInput:0',
+                    method: 'blockMethod',
+                    args: ['arg'],
+                  },
+                },
+              ],
+            },
           },
-          events: {
-            onClick: [
-              {
-                id: 'a',
-                type: 'CallMethod',
-                params: { blockId: 'block:root:textInput:0', method: 'blockMethod', args: ['arg'] },
-              },
-            ],
-          },
-        },
-      ],
+        ],
+      },
     },
   };
   const context = await testContext({
@@ -204,35 +212,37 @@ test('CallMethod with args not an array', async () => {
       category: 'container',
     },
     areas: {
-      blocks: [
-        {
-          id: 'block:root:textInput:0',
-          blockId: 'textInput',
-          type: 'TextInput',
-          meta: {
-            category: 'input',
-            valueType: 'string',
+      content: {
+        blocks: [
+          {
+            id: 'block:root:textInput:0',
+            blockId: 'textInput',
+            type: 'TextInput',
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
           },
-        },
-        {
-          id: 'block:root:button:0',
-          blockId: 'button',
-          type: 'Button',
-          meta: {
-            category: 'display',
-            valueType: 'string',
+          {
+            id: 'block:root:button:0',
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [
+                {
+                  id: 'a',
+                  type: 'CallMethod',
+                  params: { blockId: 'block:root:textInput:0', method: 'blockMethod', args: 'arg' },
+                },
+              ],
+            },
           },
-          events: {
-            onClick: [
-              {
-                id: 'a',
-                type: 'CallMethod',
-                params: { blockId: 'block:root:textInput:0', method: 'blockMethod', args: 'arg' },
-              },
-            ],
-          },
-        },
-      ],
+        ],
+      },
     },
   };
   const context = await testContext({
@@ -292,39 +302,41 @@ test('CallMethod with multiple positional args, synchronous method', async () =>
       category: 'container',
     },
     areas: {
-      blocks: [
-        {
-          id: 'block:root:textInput:0',
-          blockId: 'textInput',
-          type: 'TextInput',
-          meta: {
-            category: 'input',
-            valueType: 'string',
+      content: {
+        blocks: [
+          {
+            id: 'block:root:textInput:0',
+            blockId: 'textInput',
+            type: 'TextInput',
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
           },
-        },
-        {
-          id: 'block:root:button:0',
-          blockId: 'button',
-          type: 'Button',
-          meta: {
-            category: 'display',
-            valueType: 'string',
-          },
-          events: {
-            onClick: [
-              {
-                id: 'a',
-                type: 'CallMethod',
-                params: {
-                  blockId: 'block:root:textInput:0',
-                  method: 'blockMethod',
-                  args: ['arg1', 'arg2'],
+          {
+            id: 'block:root:button:0',
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [
+                {
+                  id: 'a',
+                  type: 'CallMethod',
+                  params: {
+                    blockId: 'block:root:textInput:0',
+                    method: 'blockMethod',
+                    args: ['arg1', 'arg2'],
+                  },
                 },
-              },
-            ],
+              ],
+            },
           },
-        },
-      ],
+        ],
+      },
     },
   };
   const context = await testContext({
@@ -367,55 +379,57 @@ test('CallMethod of block in array by explicit id', async () => {
       category: 'container',
     },
     areas: {
-      blocks: [
-        {
-          id: 'block:root:list:0',
-          blockId: 'list',
-          type: 'List',
-          meta: {
-            category: 'list',
-            valueType: 'array',
+      content: {
+        blocks: [
+          {
+            id: 'block:root:list:0',
+            blockId: 'list',
+            type: 'List',
+            meta: {
+              category: 'list',
+              valueType: 'array',
+            },
+            areas: {
+              content: {
+                blocks: [
+                  {
+                    id: 'block:root:list.$.textInput:0',
+                    blockId: 'list.$.textInput',
+                    type: 'TextInput',
+                    defaultValue: '123',
+                    meta: {
+                      category: 'input',
+                      valueType: 'string',
+                    },
+                  },
+                ],
+              },
+            },
           },
-          areas: {
-            content: {
-              blocks: [
+          {
+            id: 'block:root:button:0',
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [
                 {
-                  id: 'block:root:list.$.textInput:0',
-                  blockId: 'list.$.textInput',
-                  type: 'TextInput',
-                  defaultValue: '123',
-                  meta: {
-                    category: 'input',
-                    valueType: 'string',
+                  id: 'a',
+                  type: 'CallMethod',
+                  params: {
+                    blockId: 'block:root:list.0.textInput:0',
+                    method: 'blockMethod',
+                    args: ['arg'],
                   },
                 },
               ],
             },
           },
-        },
-        {
-          id: 'block:root:button:0',
-          blockId: 'button',
-          type: 'Button',
-          meta: {
-            category: 'display',
-            valueType: 'string',
-          },
-          events: {
-            onClick: [
-              {
-                id: 'a',
-                type: 'CallMethod',
-                params: {
-                  blockId: 'block:root:list.0.textInput:0',
-                  method: 'blockMethod',
-                  args: ['arg'],
-                },
-              },
-            ],
-          },
-        },
-      ],
+        ],
+      },
     },
   };
   const context = await testContext({
@@ -443,55 +457,57 @@ test('CallMethod of block in array by block with same indices and id pattern', a
       category: 'container',
     },
     areas: {
-      blocks: [
-        {
-          id: 'block:root:list:0',
-          blockId: 'list',
-          type: 'List',
-          meta: {
-            category: 'list',
-            valueType: 'array',
-          },
-          areas: {
-            content: {
-              blocks: [
-                {
-                  id: 'block:root:list.$.textInput:0',
-                  blockId: 'list.$.textInput',
-                  type: 'TextInput',
-                  defaultValue: '123',
-                  meta: {
-                    category: 'input',
-                    valueType: 'string',
+      content: {
+        blocks: [
+          {
+            id: 'block:root:list:0',
+            blockId: 'list',
+            type: 'List',
+            meta: {
+              category: 'list',
+              valueType: 'array',
+            },
+            areas: {
+              content: {
+                blocks: [
+                  {
+                    id: 'block:root:list.$.textInput:0',
+                    blockId: 'list.$.textInput',
+                    type: 'TextInput',
+                    defaultValue: '123',
+                    meta: {
+                      category: 'input',
+                      valueType: 'string',
+                    },
                   },
-                },
-                {
-                  id: 'block:root:list.$.button:0',
-                  blockId: 'list.$.button',
-                  type: 'Button',
-                  meta: {
-                    category: 'display',
-                    valueType: 'string',
-                  },
-                  events: {
-                    onClick: [
-                      {
-                        id: 'a',
-                        type: 'CallMethod',
-                        params: {
-                          blockId: 'block:root:list.$.textInput:0',
-                          method: 'blockMethod',
-                          args: ['arg'],
+                  {
+                    id: 'block:root:list.$.button:0',
+                    blockId: 'list.$.button',
+                    type: 'Button',
+                    meta: {
+                      category: 'display',
+                      valueType: 'string',
+                    },
+                    events: {
+                      onClick: [
+                        {
+                          id: 'a',
+                          type: 'CallMethod',
+                          params: {
+                            blockId: 'block:root:list.$.textInput:0',
+                            method: 'blockMethod',
+                            args: ['arg'],
+                          },
                         },
-                      },
-                    ],
+                      ],
+                    },
                   },
-                },
-              ],
+                ],
+              },
             },
           },
-        },
-      ],
+        ],
+      },
     },
   };
   const context = await testContext({
@@ -522,35 +538,37 @@ test('CallMethod with method does not exist', async () => {
       category: 'container',
     },
     areas: {
-      blocks: [
-        {
-          id: 'block:root:textInput:0',
-          blockId: 'textInput',
-          type: 'TextInput',
-          meta: {
-            category: 'input',
-            valueType: 'string',
+      content: {
+        blocks: [
+          {
+            id: 'block:root:textInput:0',
+            blockId: 'textInput',
+            type: 'TextInput',
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
           },
-        },
-        {
-          id: 'block:root:button:0',
-          blockId: 'button',
-          type: 'Button',
-          meta: {
-            category: 'display',
-            valueType: 'string',
+          {
+            id: 'block:root:button:0',
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [
+                {
+                  id: 'a',
+                  type: 'CallMethod',
+                  params: { blockId: 'block:root:textInput:0', method: 'no-method' },
+                },
+              ],
+            },
           },
-          events: {
-            onClick: [
-              {
-                id: 'a',
-                type: 'CallMethod',
-                params: { blockId: 'block:root:textInput:0', method: 'no-method' },
-              },
-            ],
-          },
-        },
-      ],
+        ],
+      },
     },
   };
   const context = await testContext({

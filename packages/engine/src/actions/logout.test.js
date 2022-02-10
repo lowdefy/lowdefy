@@ -52,25 +52,27 @@ test('Logout', async () => {
       category: 'container',
     },
     areas: {
-      blocks: [
-        {
-          id: 'button',
-          blockId: 'button',
-          type: 'Button',
-          meta: {
-            category: 'display',
-            valueType: 'string',
+      content: {
+        blocks: [
+          {
+            id: 'button',
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [
+                {
+                  id: 'a',
+                  type: 'Logout',
+                },
+              ],
+            },
           },
-          events: {
-            onClick: [
-              {
-                id: 'a',
-                type: 'Logout',
-              },
-            ],
-          },
-        },
-      ],
+        ],
+      },
     },
   };
   const context = await testContext({

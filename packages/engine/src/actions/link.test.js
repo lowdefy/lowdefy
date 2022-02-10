@@ -57,20 +57,22 @@ test('Link with string pageId params', async () => {
       category: 'container',
     },
     areas: {
-      blocks: [
-        {
-          id: 'block:root:button:0',
-          blockId: 'button',
-          type: 'Button',
-          meta: {
-            category: 'display',
-            valueType: 'string',
+      content: {
+        blocks: [
+          {
+            id: 'block:root:button:0',
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [{ id: 'a', type: 'Link', params: 'pageId' }],
+            },
           },
-          events: {
-            onClick: [{ id: 'a', type: 'Link', params: 'pageId' }],
-          },
-        },
-      ],
+        ],
+      },
     },
   };
   const context = await testContext({
@@ -91,20 +93,22 @@ test('Link with object params', async () => {
       category: 'container',
     },
     areas: {
-      blocks: [
-        {
-          id: 'block:root:button:0',
-          blockId: 'button',
-          type: 'Button',
-          meta: {
-            category: 'display',
-            valueType: 'string',
+      content: {
+        blocks: [
+          {
+            id: 'block:root:button:0',
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [{ id: 'a', type: 'Link', params: { pageId: 'pageId', newTab: true } }],
+            },
           },
-          events: {
-            onClick: [{ id: 'a', type: 'Link', params: { pageId: 'pageId', newTab: true } }],
-          },
-        },
-      ],
+        ],
+      },
     },
   };
   const context = await testContext({
@@ -132,20 +136,22 @@ test('Link error', async () => {
       category: 'container',
     },
     areas: {
-      blocks: [
-        {
-          id: 'block:root:button:0',
-          blockId: 'button',
-          type: 'Button',
-          meta: {
-            category: 'display',
-            valueType: 'string',
+      content: {
+        blocks: [
+          {
+            id: 'block:root:button:0',
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [{ id: 'a', type: 'Link', params: { invalid: true } }],
+            },
           },
-          events: {
-            onClick: [{ id: 'a', type: 'Link', params: { invalid: true } }],
-          },
-        },
-      ],
+        ],
+      },
     },
   };
   const context = await testContext({
