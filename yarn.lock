@@ -1956,7 +1956,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/actions-core@workspace:packages/plugins/actions/actions-core"
   dependencies:
+    "@lowdefy/blocks-antd": 4.0.0-alpha.6
+    "@lowdefy/engine": 4.0.0-alpha.6
     "@lowdefy/helpers": 4.0.0-alpha.6
+    "@lowdefy/operators": 4.0.0-alpha.6
     "@swc/cli": 0.1.55
     "@swc/core": 1.2.135
     "@swc/jest": 0.2.17
@@ -2598,7 +2601,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/server-dev@workspace:packages/server-dev"
   dependencies:
-    "@lowdefy/actions-core": 4.0.0-alpha.6
     "@lowdefy/api": 4.0.0-alpha.6
     "@lowdefy/block-utils": 4.0.0-alpha.6
     "@lowdefy/blocks-antd": 4.0.0-alpha.6
@@ -2642,10 +2644,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/server@workspace:packages/server"
   dependencies:
-    "@lowdefy/actions-core": 4.0.0-alpha.6
     "@lowdefy/api": 4.0.0-alpha.6
     "@lowdefy/block-utils": 4.0.0-alpha.6
-    "@lowdefy/blocks-antd": 4.0.0-alpha.6
     "@lowdefy/build": 4.0.0-alpha.6
     "@lowdefy/engine": 4.0.0-alpha.6
     "@lowdefy/helpers": 4.0.0-alpha.6
