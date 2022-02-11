@@ -14,18 +14,15 @@
   limitations under the License.
 */
 
-import getFromObject from './getFromObject.js';
-
-function createGetAction({ actions, arrayIndices, blockId }) {
-  return function getAction(params) {
-    return getFromObject({
-      arrayIndices,
-      location: blockId,
-      object: actions,
-      method: 'getAction',
-      params,
+function createDisplayMessage({ context }) {
+  return function displayMessage(params = {}) {
+    context._internal.lowdefy._internal.displayMessage({
+      content: params.content || 'Success',
+      duration: params.duration,
+      icon: params.icon,
+      status: params.status,
     });
   };
 }
 
-export default createGetAction;
+export default createDisplayMessage;

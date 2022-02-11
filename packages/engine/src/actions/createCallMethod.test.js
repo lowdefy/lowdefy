@@ -91,7 +91,7 @@ test('CallMethod with no args, synchronous method', async () => {
   };
   const context = await testContext({
     lowdefy,
-    rootBlock: rootBlock,
+    rootBlock,
     initState: { textInput: 'init' },
   });
   const button = context._internal.RootBlocks.map['block:root:button:0'];

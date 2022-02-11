@@ -14,32 +14,32 @@
   limitations under the License.
 */
 
-import createCallMethod from './callMethod.js';
-import createGetAction from './getAction.js';
-import createGetBlockId from './getBlockId.js';
-import createGetEvent from './getEvent.js';
-import createGetGlobal from './getGlobal.js';
-import createGetInput from './getInput.js';
-import createGetPageId from './getPageId.js';
-import createGetRequest from './getRequest.js';
-import createGetState from './getState.js';
-import createGetUrlQuery from './getUrlQuery.js';
-import createGetUser from './getUser.js';
-import createLink from './link.js';
-import createLogin from './login.js';
-import createLogout from './logout.js';
-import createMessage from './message.js';
-import createRequest from './request.js';
-import createReset from './reset.js';
-import createResetValidation from './resetValidation.js';
-import createSetGlobal from './setGlobal.js';
-import createSetState from './setState.js';
-import createValidate from './validate.js';
+import createCallMethod from './createCallMethod.js';
+import createGetActions from './createGetActions.js';
+import createGetBlockId from './createGetBlockId.js';
+import createGetEvent from './createGetEvent.js';
+import createGetGlobal from './createGetGlobal.js';
+import createGetInput from './createGetInput.js';
+import createGetPageId from './createGetPageId.js';
+import createGetRequest from './createGetRequest.js';
+import createGetState from './createGetState.js';
+import createGetUrlQuery from './createGetUrlQuery.js';
+import createGetUser from './createGetUser.js';
+import createLink from './createLink.js';
+import createLogin from './createLogin.js';
+import createLogout from './createLogout.js';
+import createDisplayMessage from './createDisplayMessage.js';
+import createRequest from './createRequest.js';
+import createReset from './createReset.js';
+import createResetValidation from './createResetValidation.js';
+import createSetGlobal from './createSetGlobal.js';
+import createSetState from './createSetState.js';
+import createValidate from './createValidate.js';
 
 function getActionMethods(props) {
   return {
     callMethod: createCallMethod(props),
-    getAction: createGetAction(props),
+    getActions: createGetActions(props),
     getBlockId: createGetBlockId(props),
     getEvent: createGetEvent(props),
     getGlobal: createGetGlobal(props),
@@ -52,7 +52,7 @@ function getActionMethods(props) {
     link: createLink(props),
     login: createLogin(props),
     logout: createLogout(props),
-    message: createMessage(props),
+    message: createDisplayMessage(props),
     request: createRequest(props),
     reset: createReset(props),
     resetValidation: createResetValidation(props),

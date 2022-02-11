@@ -14,15 +14,18 @@
   limitations under the License.
 */
 
-function createMessage({ context }) {
-  return function message(params = {}) {
-    context._internal.lowdefy._internal.displayMessage({
-      content: params.content || 'Success',
-      duration: params.duration,
-      icon: params.icon,
-      status: params.status,
+import getFromObject from './getFromObject.js';
+
+function createGetActions({ actions, arrayIndices, blockId }) {
+  return function getActions(params) {
+    return getFromObject({
+      arrayIndices,
+      location: blockId,
+      object: actions,
+      method: 'getAction',
+      params,
     });
   };
 }
 
-export default createMessage;
+export default createGetActions;
