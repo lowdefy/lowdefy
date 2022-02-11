@@ -19,7 +19,8 @@ import { type } from '@lowdefy/helpers';
 function ScrollTo({ document, params, window }) {
   if (!type.isObject(params)) {
     throw new Error(`Invalid ScrollTo, check action params. Received "${JSON.stringify(params)}".`);
-  } else if (params.blockId) {
+  }
+  if (params.blockId) {
     const element = document.getElementById(params.blockId);
     if (element) {
       element.scrollIntoView(params.options);
