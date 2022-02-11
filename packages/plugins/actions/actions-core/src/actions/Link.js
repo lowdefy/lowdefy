@@ -16,7 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-const Link = ({ methods: { link }, params }) => {
+function Link({ methods: { link }, params }) {
   const linkParams = type.isString(params) ? { pageId: params } : params;
   try {
     link(linkParams);
@@ -24,6 +24,6 @@ const Link = ({ methods: { link }, params }) => {
     console.log(error);
     throw new Error(`Invalid Link, check action params. Received "${JSON.stringify(params)}".`);
   }
-};
+}
 
 export default Link;
