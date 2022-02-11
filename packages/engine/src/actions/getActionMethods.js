@@ -21,7 +21,7 @@ import createGetEvent from './createGetEvent.js';
 import createGetGlobal from './createGetGlobal.js';
 import createGetInput from './createGetInput.js';
 import createGetPageId from './createGetPageId.js';
-import createGetRequest from './createGetRequest.js';
+import createGetRequestDetails from './createGetRequestDetails.js';
 import createGetState from './createGetState.js';
 import createGetUrlQuery from './createGetUrlQuery.js';
 import createGetUser from './createGetUser.js';
@@ -46,7 +46,7 @@ function getActionMethods(props) {
     getGlobal: createGetGlobal(props),
     getInput: createGetInput(props),
     getPageId: createGetPageId(props),
-    getRequest: createGetRequest(props),
+    getRequestDetails: createGetRequestDetails(props),
     getState: createGetState(props),
     getUrlQuery: createGetUrlQuery(props),
     getUser: createGetUser(props),

@@ -16,16 +16,16 @@
 
 import getFromObject from './getFromObject.js';
 
-const createGetRequest = ({ arrayIndices, blockId, context }) => {
-  return function getRequest(params) {
+const createGetRequestDetails = ({ arrayIndices, blockId, context }) => {
+  return function getRequestDetails(params) {
     return getFromObject({
       arrayIndices,
       location: blockId,
       object: context.requests,
-      method: 'getRequest',
+      method: 'getRequestDetails',
       params,
     });
   };
 };
 
-export default createGetRequest;
+export default createGetRequestDetails;
