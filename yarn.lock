@@ -1956,7 +1956,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/actions-core@workspace:packages/plugins/actions/actions-core"
   dependencies:
+    "@lowdefy/engine": 4.0.0-alpha.6
     "@lowdefy/helpers": 4.0.0-alpha.6
+    "@lowdefy/operators": 4.0.0-alpha.6
     "@swc/cli": 0.1.55
     "@swc/core": 1.2.135
     "@swc/jest": 0.2.17
