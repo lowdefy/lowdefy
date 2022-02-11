@@ -14,12 +14,8 @@
   limitations under the License.
 */
 
+import { Actions, Blocks, Requests, State } from '@lowdefy/engine';
 import { WebParser } from '@lowdefy/operators';
-
-import { Actions } from '@lowdefy/engine';
-import { Blocks } from '@lowdefy/engine';
-import { Requests } from '@lowdefy/engine';
-import { State } from '@lowdefy/engine';
 
 const testContext = async ({ lowdefy, operators, rootBlock, initState = {} }) => {
   const testLowdefy = {
