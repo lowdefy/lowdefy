@@ -22,8 +22,11 @@ const mockMessage = jest.fn(() => () => undefined);
 const lowdefy = {
   _internal: {
     actions: {
-      Message: ({ methods: { message }, params }) => {
-        return message(params);
+      DisplayMessage: ({ methods: { displayMessage }, params }) => {
+        return displayMessage({
+          ...params,
+          content: params ? params.content : 'Success',
+        });
       },
     },
     blockComponents: {
@@ -33,7 +36,7 @@ const lowdefy = {
   },
 };
 
-test('Message with content', async () => {
+test('DisplayMessage with content', async () => {
   const rootBlock = {
     id: 'block:root:root:0',
     blockId: 'root',
@@ -55,7 +58,7 @@ test('Message with content', async () => {
               onClick: [
                 {
                   id: 'a',
-                  type: 'Message',
+                  type: 'DisplayMessage',
                   params: { content: 'test' },
                 },
               ],
@@ -80,7 +83,7 @@ test('Message with content', async () => {
   ]);
 });
 
-test('Message with all params', async () => {
+test('DisplayMessage with all params', async () => {
   const rootBlock = {
     id: 'block:root:root:0',
     blockId: 'root',
@@ -102,7 +105,7 @@ test('Message with all params', async () => {
               onClick: [
                 {
                   id: 'a',
-                  type: 'Message',
+                  type: 'DisplayMessage',
                   params: {
                     content: 'content',
                     duration: 6,
@@ -135,7 +138,7 @@ test('Message with all params', async () => {
   ]);
 });
 
-test('Message with no params', async () => {
+test('DisplayMessage with no params', async () => {
   const rootBlock = {
     id: 'block:root:root:0',
     blockId: 'root',
@@ -157,7 +160,7 @@ test('Message with no params', async () => {
               onClick: [
                 {
                   id: 'a',
-                  type: 'Message',
+                  type: 'DisplayMessage',
                 },
               ],
             },

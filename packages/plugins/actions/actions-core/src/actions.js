@@ -18,7 +18,7 @@ export { default as CallMethod } from './actions/CallMethod.js';
 export { default as Link } from './actions/Link.js';
 export { default as Login } from './actions/Login.js';
 export { default as Logout } from './actions/Logout.js';
-export { default as Message } from './actions/Message.js';
+export { default as DisplayMessage } from './actions/DisplayMessage.js';
 export { default as Request } from './actions/Request.js';
 export { default as Reset } from './actions/Reset.js';
 export { default as ResetValidation } from './actions/ResetValidation.js';

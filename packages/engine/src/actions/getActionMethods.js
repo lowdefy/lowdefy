@@ -39,6 +39,7 @@ import createValidate from './createValidate.js';
 function getActionMethods(props) {
   return {
     callMethod: createCallMethod(props),
+    displayMessage: createDisplayMessage(props),
     getActions: createGetActions(props),
     getBlockId: createGetBlockId(props),
     getEvent: createGetEvent(props),
@@ -52,7 +53,6 @@ function getActionMethods(props) {
     link: createLink(props),
     login: createLogin(props),
     logout: createLogout(props),
-    message: createDisplayMessage(props),
     request: createRequest(props),
     reset: createReset(props),
     resetValidation: createResetValidation(props),
