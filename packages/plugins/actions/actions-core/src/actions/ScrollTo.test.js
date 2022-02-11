@@ -64,6 +64,18 @@ beforeEach(() => {
   mockElemScrollIntoView.mockReset();
 });
 
+const RealDate = Date;
+const mockDate = jest.fn(() => ({ date: 0 }));
+mockDate.now = jest.fn(() => 0);
+
+beforeAll(() => {
+  global.Date = mockDate;
+});
+
+afterAll(() => {
+  global.Date = RealDate;
+});
+
 test('ScrollTo with no params', async () => {
   const rootBlock = {
     id: 'block:root:root:0',
@@ -95,8 +107,34 @@ test('ScrollTo with no params', async () => {
     rootBlock,
   });
   const button = context._internal.RootBlocks.map['block:root:button:0'];
-  button.triggerEvent({ name: 'onClick' });
-  expect(mockWindowScrollTo.mock.calls).toEqual([]);
+  const res = await button.triggerEvent({ name: 'onClick' });
+  expect(res).toEqual({
+    blockId: 'button',
+    bounced: false,
+    endTimestamp: { date: 0 },
+    error: {
+      action: {
+        id: 'a',
+        type: 'ScrollTo',
+      },
+      error: {
+        error: new Error('Invalid ScrollTo, check action params. Received "undefined".'),
+        index: 0,
+        type: 'ScrollTo',
+      },
+    },
+    event: undefined,
+    eventName: 'onClick',
+    responses: {
+      a: {
+        error: new Error('Invalid ScrollTo, check action params. Received "undefined".'),
+        index: 0,
+        type: 'ScrollTo',
+      },
+    },
+    startTimestamp: { date: 0 },
+    success: false,
+  });
 });
 
 test('ScrollTo with no blockId', async () => {
