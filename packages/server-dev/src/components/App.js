@@ -44,7 +44,7 @@ const App = ({ lowdefy }) => {
 
   const redirect = setPageId(lowdefy);
   if (redirect) {
-    lowdefy._internal.router.push(`${lowdefy.basePath}/${lowdefy.pageId}`); // TODO: test redirect
+    lowdefy._internal.router.push(`/${lowdefy.pageId}`);
   }
 
   return (
