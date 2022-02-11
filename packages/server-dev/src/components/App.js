@@ -16,6 +16,7 @@
 
 import React from 'react';
 
+import { urlQuery } from '@lowdefy/helpers';
 import { useRouter } from 'next/router';
 
 import Page from './Page.js';
@@ -23,26 +24,27 @@ import Reload from './Reload.js';
 import setPageId from '../utils/setPageId.js';
 import setupLink from '../utils/setupLink.js';
 import useRootConfig from '../utils/useRootConfig.js';
+import createComponents from './createComponents.js';
 
 const App = ({ lowdefy }) => {
   const router = useRouter();
-  const { data: rootConfig } = useRootConfig();
+  const { data: rootConfig } = useRootConfig(router.basePath);
 
   window.lowdefy = lowdefy;
 
+  lowdefy._internal.router = router;
+  lowdefy._internal.link = setupLink(lowdefy);
+  lowdefy._internal.components = createComponents(lowdefy);
+
+  lowdefy.basePath = lowdefy._internal.router.basePath;
   lowdefy.home = rootConfig.home;
   lowdefy.lowdefyGlobal = rootConfig.lowdefyGlobal;
   lowdefy.menus = rootConfig.menus;
-
-  lowdefy._internal.basePath = router.basePath;
-  lowdefy._internal.pathname = router.pathname;
-  lowdefy._internal.query = router.query;
-  lowdefy._internal.router = router;
-  lowdefy._internal.link = setupLink({ lowdefy });
+  lowdefy.urlQuery = urlQuery.parse(window.location.search.slice(1));
 
   const redirect = setPageId(lowdefy);
   if (redirect) {
-    lowdefy._internal.router.push(`/${lowdefy.pageId}`);
+    lowdefy._internal.router.push(`${lowdefy.basePath}/${lowdefy.pageId}`); // TODO: test redirect
   }
 
   return (

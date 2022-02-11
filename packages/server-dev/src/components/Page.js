@@ -24,9 +24,9 @@ import usePageConfig from '../utils/usePageConfig.js';
 const LoadingBlock = () => <div>Loading...</div>;
 
 const Page = ({ lowdefy }) => {
-  const { data: pageConfig } = usePageConfig(lowdefy.pageId);
+  const { data: pageConfig } = usePageConfig(lowdefy.pageId, lowdefy.basePath);
   if (!pageConfig) {
-    lowdefy._internal.router.replace(`/404`);
+    lowdefy._internal.router.replace(`${lowdefy.basePath}/404`); // TODO: test redirect
     return <LoadingBlock />;
   }
   return (

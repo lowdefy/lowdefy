@@ -15,18 +15,18 @@
 */
 
 function setPageId(lowdefy) {
-  if (lowdefy._internal.pathname === '/404') {
+  if (lowdefy._internal.router.pathname === `/404`) {
     lowdefy.pageId = '404';
     return false;
   }
-  if (!lowdefy._internal.query.pageId) {
+  if (!lowdefy._internal.router.query.pageId) {
     lowdefy.pageId = lowdefy.home.pageId;
     if (lowdefy.home.configured === false) {
       return true;
     }
     return false;
   }
-  lowdefy.pageId = lowdefy._internal.query.pageId;
+  lowdefy.pageId = lowdefy._internal.router.query.pageId;
   return false;
 }
 

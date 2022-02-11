@@ -16,9 +16,9 @@
 
 import request from './request.js';
 
-function callRequest({ pageId, payload, requestId }) {
+function callRequest(apiContext, { pageId, payload, requestId }) {
   return request({
-    url: `/api/request/${pageId}/${requestId}`,
+    url: `${apiContext.config.basePath}/api/request/${pageId}/${requestId}`,
     method: 'POST',
     body: { payload },
   });
