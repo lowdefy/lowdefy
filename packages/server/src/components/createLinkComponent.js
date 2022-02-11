@@ -19,10 +19,10 @@ const createLinkComponent = (lowdefy) => {
     ariaLabel,
     children,
     className,
-    href,
     id,
     newTab,
     pageId,
+    query,
     rel,
     url,
   }) => {
@@ -31,7 +31,7 @@ const createLinkComponent = (lowdefy) => {
         id={id}
         aria-label={ariaLabel}
         className={className}
-        href={href}
+        href={`${url}${query ? `?${query}` : ''}`}
         rel={rel || (newTab && 'noopener noreferrer')}
         target={newTab && '_blank'}
       >
@@ -43,22 +43,27 @@ const createLinkComponent = (lowdefy) => {
     ariaLabel,
     children,
     className,
-    href,
     id,
     newTab,
     pageId,
+    pathname,
+    query,
     rel,
     replace,
     scroll,
+    setInput,
     url,
   }) => {
     if (newTab) {
       return (
+        // eslint-disable-next-line react/jsx-no-target-blank
         <a
           id={id}
           aria-label={ariaLabel}
           className={className}
-          href={`${window.location.origin}${lowdefy.basePath}${href}`}
+          href={`${window.location.origin}${lowdefy.basePath}${pathname}${
+            query ? `?${query}` : ''
+          }`}
           rel={rel || 'noopener noreferrer'}
           target="_blank"
         >
@@ -67,8 +72,8 @@ const createLinkComponent = (lowdefy) => {
       );
     }
     return (
-      <NextLink href={href} replace={replace} scroll={scroll}>
-        <a id={id} aria-label={ariaLabel} className={className} rel={rel}>
+      <NextLink href={{ pathname, query }} replace={replace} scroll={scroll}>
+        <a id={id} aria-label={ariaLabel} className={className} rel={rel} onClick={setInput}>
           {type.isFunction(children) ? children(pageId || url || id) : children}
         </a>
       </NextLink>
