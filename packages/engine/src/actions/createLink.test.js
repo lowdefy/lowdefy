@@ -14,13 +14,23 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import testContext from '../../test/testContext.js';
 
 const lowdefy = {
   _internal: {
     actions: {
       Link: ({ methods: { link }, params }) => {
-        return link(params);
+        const linkParams = type.isString(params) ? { pageId: params } : params;
+        try {
+          link(linkParams);
+        } catch (error) {
+          console.log(error);
+          throw new Error(
+            `Invalid Link, check action params. Received "${JSON.stringify(params)}".`
+          );
+        }
       },
     },
     blockComponents: {
@@ -81,7 +91,7 @@ test('Link with string pageId params', async () => {
   });
   const button = context._internal.RootBlocks.map['block:root:button:0'];
   const res = await button.triggerEvent({ name: 'onClick' });
-  expect(lowdefy._internal.link.mock.calls).toEqual([['pageId']]);
+  expect(lowdefy._internal.link.mock.calls).toEqual([[{ pageId: 'pageId' }]]);
   expect(res.success).toBe(true);
 });
 
@@ -184,7 +194,7 @@ test('Link error', async () => {
         type: 'Link',
       },
       error: {
-        error: new Error('Link test error'),
+        error: new Error('Invalid Link, check action params. Received "{"invalid":true}".'),
         index: 0,
         type: 'Link',
       },
@@ -192,7 +202,7 @@ test('Link error', async () => {
     responses: {
       a: {
         type: 'Link',
-        error: new Error('Link test error'),
+        error: new Error('Invalid Link, check action params. Received "{"invalid":true}".'),
         index: 0,
       },
     },
