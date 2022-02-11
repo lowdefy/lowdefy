@@ -21,7 +21,7 @@ function createGetUrlQuery({ arrayIndices, blockId, context }) {
     return getFromObject({
       arrayIndices,
       location: blockId,
-      object: context._internal.lowdefy.urlQuery || {},
+      object: context._internal.lowdefy.urlQuery,
       method: 'getUrlQuery',
       params,
     });
