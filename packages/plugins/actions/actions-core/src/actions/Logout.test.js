@@ -14,62 +14,15 @@
   limitations under the License.
 */
 
-import testContext from './testContext.js';
 import Logout from './Logout.js';
 
 const mockActionMethod = jest.fn();
-
-const lowdefy = {
-  _internal: {
-    actions: {
-      Logout: (props) => Logout({ ...props, methods: { logout: mockActionMethod } }),
-    },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-    },
-  },
-};
 
 beforeEach(() => {
   mockActionMethod.mockReset();
 });
 
 test('Logout action invocation', async () => {
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'action',
-                  type: 'Logout',
-                  params: 'call',
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = await testContext({
-    lowdefy,
-    rootBlock,
-  });
-  const button = context._internal.RootBlocks.map['button'];
-  await button.triggerEvent({ name: 'onClick' });
+  Logout({ methods: { logout: mockActionMethod } });
   expect(mockActionMethod.mock.calls).toEqual([[]]);
 });

@@ -14,62 +14,15 @@
   limitations under the License.
 */
 
-import testContext from './testContext.js';
 import SetGlobal from './SetGlobal.js';
 
 const mockActionMethod = jest.fn();
-
-const lowdefy = {
-  _internal: {
-    actions: {
-      SetGlobal: (props) => SetGlobal({ ...props, methods: { setGlobal: mockActionMethod } }),
-    },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-    },
-  },
-};
 
 beforeEach(() => {
   mockActionMethod.mockReset();
 });
 
 test('SetGlobal action invocation', async () => {
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'action',
-                  type: 'SetGlobal',
-                  params: 'call',
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = await testContext({
-    lowdefy,
-    rootBlock,
-  });
-  const button = context._internal.RootBlocks.map['button'];
-  await button.triggerEvent({ name: 'onClick' });
+  SetGlobal({ methods: { setGlobal: mockActionMethod }, params: 'call' });
   expect(mockActionMethod.mock.calls).toEqual([['call']]);
 });

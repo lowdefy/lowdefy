@@ -51,6 +51,10 @@ const lowdefy = {
   },
 };
 
+// Comment out to use console
+console.log = () => {};
+console.error = () => {};
+
 beforeEach(() => {
   mockWindowOpen.mockReset();
   mockWindowFocus.mockReset();

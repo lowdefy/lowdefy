@@ -14,62 +14,15 @@
   limitations under the License.
 */
 
-import testContext from './testContext.js';
 import CallMethod from './CallMethod.js';
 
 const mockActionMethod = jest.fn();
-
-const lowdefy = {
-  _internal: {
-    actions: {
-      CallMethod: (props) => CallMethod({ ...props, methods: { callMethod: mockActionMethod } }),
-    },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-    },
-  },
-};
 
 beforeEach(() => {
   mockActionMethod.mockReset();
 });
 
 test('CallMethod action invocation', async () => {
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'action',
-                  type: 'CallMethod',
-                  params: 'call',
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = await testContext({
-    lowdefy,
-    rootBlock,
-  });
-  const button = context._internal.RootBlocks.map['button'];
-  await button.triggerEvent({ name: 'onClick' });
+  CallMethod({ methods: { callMethod: mockActionMethod }, params: 'call' });
   expect(mockActionMethod.mock.calls).toEqual([['call']]);
 });
