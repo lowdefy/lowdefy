@@ -21,7 +21,7 @@ function createGetUser({ arrayIndices, blockId, context }) {
     return getFromObject({
       arrayIndices,
       location: blockId,
-      object: context._internal.lowdefy.user || {},
+      object: context._internal.lowdefy.user,
       method: 'getUser',
       params,
     });
