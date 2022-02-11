@@ -15,7 +15,12 @@
 */
 
 function Message({ methods: { message }, params }) {
-  message(params);
+  message({
+    content: params.content || 'Success',
+    duration: params.duration,
+    icon: params.icon,
+    status: params.status,
+  });
 }
 
 export default Message;

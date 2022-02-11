@@ -16,12 +16,7 @@
 
 function createDisplayMessage({ context }) {
   return function displayMessage(params = {}) {
-    context._internal.lowdefy._internal.displayMessage({
-      content: params.content || 'Success',
-      duration: params.duration,
-      icon: params.icon,
-      status: params.status,
-    });
+    context._internal.lowdefy._internal.displayMessage(params);
   };
 }
 
