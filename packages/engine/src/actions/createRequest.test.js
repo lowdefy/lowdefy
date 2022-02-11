@@ -34,7 +34,12 @@ const mockReqResponses = {
 const mockCallRequest = jest.fn();
 const mockCallRequestImp = ({ requestId }) => {
   if (requestId === 'req_error') throw mockReqResponses['req_error'];
-  return mockReqResponses[requestId];
+  return new Promise((resolve, reject) => {
+    if (requestId === 'req_error') {
+      reject(mockReqResponses[requestId]);
+    }
+    resolve(mockReqResponses[requestId]);
+  });
 };
 
 const lowdefy = {
