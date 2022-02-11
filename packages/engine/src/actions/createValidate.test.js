@@ -339,12 +339,12 @@ test('Validate all fields', async () => {
   const button = context._internal.RootBlocks.map['button'];
   const text1 = context._internal.RootBlocks.map['text1'];
   const text2 = context._internal.RootBlocks.map['text2'];
-  await button.triggerEvent({ name: 'onClick' });
   expect(text1.eval.validation).toEqual({
     errors: ['text1 does not match pattern "text1"'],
-    status: 'error',
+    status: null,
     warnings: [],
   });
+  await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
     bounced: false,

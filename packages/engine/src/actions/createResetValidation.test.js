@@ -174,12 +174,12 @@ test('RestValidation after required field', async () => {
   const button = context._internal.RootBlocks.map['button'];
   const reset = context._internal.RootBlocks.map['reset'];
   const text1 = context._internal.RootBlocks.map['text1'];
-  await button.triggerEvent({ name: 'onClick' });
   expect(text1.eval.validation).toEqual({
     errors: ['This field is required'],
-    status: 'error',
+    status: null,
     warnings: [],
   });
+  await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
     bounced: false,
