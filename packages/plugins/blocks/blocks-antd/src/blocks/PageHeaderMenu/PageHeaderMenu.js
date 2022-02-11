@@ -32,7 +32,6 @@ const PageHeaderMenu = ({
   components: { Icon, Link },
   content,
   events,
-  homePageId,
   menus,
   methods,
   pageId,
@@ -116,10 +115,9 @@ const PageHeaderMenu = ({
               ])}
               content={{
                 // TODO: use next/image
-                // TODO: Link to home=true
                 content: () => (
                   <>
-                    <Link href={`${homePageId}`}>
+                    <Link home={true}>
                       <img
                         src={
                           (properties.logo && properties.logo.src) ||

@@ -16,6 +16,8 @@
 
 import eq from './eq.js';
 
+const location = 'location';
+
 test('_eq false', () => {
   expect(eq({ params: [1, 2], location })).toEqual(false);
   expect(eq({ params: [0, 1], location })).toEqual(false);
@@ -40,5 +42,8 @@ test('_eq errors', () => {
   );
   expect(() => eq({ params: false, location })).toThrow(
     'Operator Error: _eq takes an array type as input. Received: false at location.'
+  );
+  expect(() => eq({ params: [1, 2, 3], location })).toThrow(
+    'Operator Error: _eq takes an array of length 2 as input. Received: [1,2,3] at location.'
   );
 });

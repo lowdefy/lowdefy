@@ -14,12 +14,20 @@
   limitations under the License.
 */
 
-import Link from 'next/link';
-import { createIcon } from '@lowdefy/block-utils';
+import { getFileExtension } from '@lowdefy/node-utils';
 
-import icons from '../../build/plugins/icons.js';
+jest.mock('@lowdefy/node-utils', () => {
+  return {
+    getFileExtension,
+    readFile: jest.fn(),
+  };
+});
 
-export default {
-  Link,
-  Icon: createIcon(icons),
-};
+test('readConfigFile', async () => {
+  const nodeUtils = await import('@lowdefy/node-utils');
+  nodeUtils.mockImplementation(() => Promise.resove('config value'));
+  const createReadConfigFile = (await import('./readConfigFile.js')).default;
+  const readConfigFile = createReadConfigFile({ buildDirectory: '/build' });
+  const res = await readConfigFile('file');
+  expect(res).toEqual('config value');
+});

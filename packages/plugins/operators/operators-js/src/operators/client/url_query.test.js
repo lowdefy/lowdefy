@@ -15,19 +15,21 @@
 */
 
 import url_query from './url_query.js';
-jest.mock('@lowdefy/operators');
 
-const input = {
-  arrayIndices: [0],
-  location: 'location',
-  params: 'params',
-  secrets: { secrets: true },
-  urlQuery: { urlQuery: true },
-};
+jest.mock('@lowdefy/operators', () => ({
+  getFromObject: jest.fn(),
+}));
 
-test('url_query calls getFromObject', () => {
-  const lowdefyOperators = import('@lowdefy/operators');
-  url_query(input);
+const input = {};
+
+test('url_query calls getFromObject', async () => {
+  const lowdefyOperators = await import('@lowdefy/operators');
+  url_query({
+    arrayIndices: [0],
+    location: 'location',
+    params: 'params',
+    urlQuery: { urlQuery: true },
+  });
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {

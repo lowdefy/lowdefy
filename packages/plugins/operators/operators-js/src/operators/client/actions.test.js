@@ -15,22 +15,23 @@
 */
 
 import actions from './actions.js';
-jest.mock('@lowdefy/operators');
 
-const input = {
-  actions: {
-    action_id: {
-      response: 'returned from action',
+jest.mock('@lowdefy/operators', () => ({
+  getFromObject: jest.fn(),
+}));
+
+test('actions calls getFromObject', async () => {
+  const lowdefyOperators = await import('@lowdefy/operators');
+  actions({
+    actions: {
+      action_id: {
+        response: 'returned from action',
+      },
     },
-  },
-  arrayIndices: [0],
-  location: 'location',
-  params: 'params',
-};
-
-test('actions calls getFromObject', () => {
-  const lowdefyOperators = import('@lowdefy/operators');
-  actions(input);
+    arrayIndices: [0],
+    location: 'location',
+    params: 'params',
+  });
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {

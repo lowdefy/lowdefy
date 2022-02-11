@@ -14,19 +14,16 @@
   limitations under the License.
 */
 
-function createCachedPromises(getter) {
-  const cache = new Map();
+import { createIcon } from '@lowdefy/block-utils';
 
-  function cachedPromises(key) {
-    if (cache.has(key)) {
-      return Promise.resolve(cache.get(key));
-    }
-    const promise = getter(key);
-    cache.set(key, promise);
-    return Promise.resolve(promise);
-  }
+import createLinkComponent from './createLinkComponent.js';
+import icons from '../../build/plugins/icons.js';
 
-  return cachedPromises;
-}
+const createComponents = (lowdefy) => {
+  return {
+    Link: createLinkComponent(lowdefy),
+    Icon: createIcon(icons),
+  };
+};
 
-export default createCachedPromises;
+export default createComponents;

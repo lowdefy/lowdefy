@@ -13,48 +13,20 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { NodeParser } from '@lowdefy/operators';
+import _not from './not.js';
 
-const arr0 = [0, 0];
-const arr1 = [0, 1];
-const arr2 = [1, 2];
-const arr3 = [1, 2, 3];
-const arr30 = [1, 2, 3, 0];
-const string = 'hello';
-const Null = null;
-const True = true;
-const False = false;
+const location = 'location';
 
 console.error = () => {};
 
-test('_not', async () => {
-  const parser = new NodeParser();
-  await parser.init();
-  let res = parser.parse({ input: { _not: arr0 }, location: 'locationId' });
-  expect(res.output).toEqual(false);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  res = parser.parse({ input: { _not: arr1 }, location: 'locationId' });
-  expect(res.output).toEqual(false);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  res = parser.parse({ input: { _not: arr2 }, location: 'locationId' });
-  expect(res.output).toEqual(false);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  res = parser.parse({ input: { _not: arr3 }, location: 'locationId' });
-  expect(res.output).toEqual(false);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  res = parser.parse({ input: { _not: arr30 }, location: 'locationId' });
-  expect(res.output).toEqual(false);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  res = parser.parse({ input: { _not: string }, location: 'locationId' });
-  expect(res.output).toEqual(false);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  res = parser.parse({ input: { _not: Null }, location: 'locationId' });
-  expect(res.output).toEqual(true);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  res = parser.parse({ input: { _not: True }, location: 'locationId' });
-  expect(res.output).toEqual(false);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  res = parser.parse({ input: { _not: False }, location: 'locationId' });
-  expect(res.output).toEqual(true);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+test('_not returns true', () => {
+  expect(_not({ params: 0, location })).toEqual(true);
+  expect(_not({ params: null, location })).toEqual(true);
+  expect(_not({ params: false, location })).toEqual(true);
+});
+test('_not returns false', () => {
+  expect(_not({ params: 1, location })).toEqual(false);
+  expect(_not({ params: true, location })).toEqual(false);
+  expect(_not({ params: [0, 0], location })).toEqual(false);
+  expect(_not({ params: 'string', location })).toEqual(false);
 });

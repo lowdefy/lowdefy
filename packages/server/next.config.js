@@ -1,7 +1,9 @@
 const withLess = require('next-with-less');
 const lowdefyConfig = require('./build/config.json');
 
+// TODO: Trance env and args from cli that is required on the server.
 module.exports = withLess({
+  basePath: process.env.LOWDEFY_BASE_PATH || lowdefyConfig.basePath,
   lessLoaderOptions: {
     lessOptions: {
       modifyVars: lowdefyConfig.theme.lessVariables,
