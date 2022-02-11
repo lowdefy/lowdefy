@@ -21,7 +21,7 @@ function createGetGlobal({ arrayIndices, blockId, context }) {
     return getFromObject({
       arrayIndices,
       location: blockId,
-      object: context._internal.lowdefy.lowdefyGlobal || {},
+      object: context._internal.lowdefy.lowdefyGlobal,
       method: 'getGlobal',
       params,
     });
