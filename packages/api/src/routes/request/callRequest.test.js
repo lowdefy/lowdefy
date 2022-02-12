@@ -14,6 +14,7 @@
   limitations under the License.
 */
 import { jest } from '@jest/globals';
+import { _date, _payload, _secret, _user } from '@lowdefy/operators-js';
 
 import callRequest from './callRequest.js';
 import testContext from '../../test/testContext.js';
@@ -27,7 +28,14 @@ const mockTestRequest = jest.fn();
 const mockTestRequestCheckRead = jest.fn();
 const mockTestRequestCheckWrite = jest.fn();
 
-mockTestRequest.schema = {};
+mockTestRequest.schema = {
+  type: 'object',
+  properties: {
+    schemaPropString: {
+      type: 'string',
+    },
+  },
+};
 mockTestRequestCheckRead.schema = {};
 mockTestRequestCheckWrite.schema = {};
 
@@ -62,15 +70,31 @@ const connections = {
   },
 };
 
+const operators = {
+  _date,
+  _payload,
+  _secret,
+  _user,
+  _error: () => {
+    throw new Error('Test error.');
+  },
+};
+
 const secrets = {
   CONNECTION: 'connectionSecret',
   REQUEST: 'requestSecret',
 };
 
-const context = testContext({ connections, readConfigFile: mockReadConfigFile, secrets });
+const context = testContext({
+  connections,
+  readConfigFile: mockReadConfigFile,
+  operators,
+  secrets,
+});
 const authenticatedContext = testContext({
   connections,
   readConfigFile: mockReadConfigFile,
+  operators,
   secrets,
   user: { sub: 'sub' },
 });
@@ -531,7 +555,7 @@ test('request properties operator error', async () => {
         connectionId: 'testConnection',
         auth: { public: true },
         properties: {
-          willError: { _get: null },
+          willError: { _error: null },
         },
       },
     })
@@ -539,9 +563,7 @@ test('request properties operator error', async () => {
   mockTestRequest.mockImplementation(defaultResolverImp);
 
   await expect(callRequest(context, defaultParams)).rejects.toThrow(RequestError);
-  await expect(callRequest(context, defaultParams)).rejects.toThrow(
-    'Error: Operator Error: _get takes an object as params. Received: null at requestId.'
-  );
+  await expect(callRequest(context, defaultParams)).rejects.toThrow('Error: Test error.');
 });
 
 test('connection properties operator error', async () => {
@@ -553,7 +575,7 @@ test('connection properties operator error', async () => {
         connectionId: 'testConnection',
         auth: { public: true },
         properties: {
-          willError: { _get: null },
+          willError: { _error: null },
         },
       },
     })
@@ -561,9 +583,7 @@ test('connection properties operator error', async () => {
   mockTestRequest.mockImplementation(defaultResolverImp);
 
   await expect(callRequest(context, defaultParams)).rejects.toThrow(RequestError);
-  await expect(callRequest(context, defaultParams)).rejects.toThrow(
-    'Error: Operator Error: _get takes an object as params. Received: null at testConnection.'
-  );
+  await expect(callRequest(context, defaultParams)).rejects.toThrow('Error: Test error.');
 });
 
 test('request resolver throws  error', async () => {
