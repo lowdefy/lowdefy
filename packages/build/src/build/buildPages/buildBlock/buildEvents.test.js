@@ -13,6 +13,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
+import { jest } from '@jest/globals';
+
 import { get } from '@lowdefy/helpers';
 import buildPages from '../buildPages.js';
 import testContext from '../../../test/testContext.js';

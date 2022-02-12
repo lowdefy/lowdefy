@@ -3049,6 +3049,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/build/",
           "packageDependencies": [
             ["@lowdefy/build", "workspace:packages/build"],
+            ["@jest/globals", "npm:27.5.1"],
             ["@lowdefy/ajv", "workspace:packages/utils/ajv"],
             ["@lowdefy/blocks-antd", "workspace:packages/plugins/blocks/blocks-antd"],
             ["@lowdefy/blocks-basic", "workspace:packages/plugins/blocks/blocks-basic"],

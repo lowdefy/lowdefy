@@ -39,4 +39,4 @@ array:
   }
 }
 
-module.exports = resolver;
+export default resolver;

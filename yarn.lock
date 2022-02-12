@@ -2199,6 +2199,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/build@workspace:packages/build"
   dependencies:
+    "@jest/globals": 27.5.1
     "@lowdefy/ajv": 4.0.0-alpha.6
     "@lowdefy/blocks-antd": 4.0.0-alpha.6
     "@lowdefy/blocks-basic": 4.0.0-alpha.6

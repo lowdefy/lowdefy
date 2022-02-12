@@ -42,7 +42,7 @@
     "prepare": "yarn build",
     "start": "node dist/scripts/run.js",
     "swc": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
-    "test": "jest --coverage"
+    "test": "yarn node --experimental-vm-modules $(yarn bin jest)"
   },
   "dependencies": {
     "@lowdefy/ajv": "4.0.0-alpha.6",
@@ -56,6 +56,7 @@
     "yargs": "17.3.1"
   },
   "devDependencies": {
+    "@jest/globals": "27.5.1",
     "@lowdefy/blocks-antd": "4.0.0-alpha.6",
     "@lowdefy/blocks-basic": "4.0.0-alpha.6",
     "@lowdefy/blocks-color-selectors": "4.0.0-alpha.6",

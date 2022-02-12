@@ -19,4 +19,4 @@ function resolver(path) {
   return undefined;
 }
 
-module.exports = resolver;
+export default resolver;
