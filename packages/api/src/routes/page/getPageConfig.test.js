@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
+
 import getPageConfig from './getPageConfig.js';
 import testContext from '../../test/testContext.js';
 

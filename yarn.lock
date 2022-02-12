@@ -1036,7 +1036,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/globals@npm:^27.5.1":
+"@jest/globals@npm:27.5.1, @jest/globals@npm:^27.5.1":
   version: 27.5.1
   resolution: "@jest/globals@npm:27.5.1"
   dependencies:
@@ -1983,6 +1983,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/api@workspace:packages/api"
   dependencies:
+    "@jest/globals": 27.5.1
     "@lowdefy/ajv": 4.0.0-alpha.6
     "@lowdefy/helpers": 4.0.0-alpha.6
     "@lowdefy/node-utils": 4.0.0-alpha.6
