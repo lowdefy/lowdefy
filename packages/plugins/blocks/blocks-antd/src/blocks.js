@@ -62,7 +62,6 @@ export { default as Progress } from './blocks/Progress/Progress.js';
 export { default as RadioSelector } from './blocks/RadioSelector/RadioSelector.js';
 export { default as RatingSlider } from './blocks/RatingSlider/RatingSlider.js';
 export { default as Result } from './blocks/Result/Result.js';
-export { default as S3UploadButton } from './blocks/S3UploadButton/S3UploadButton.js';
 export { default as Selector } from './blocks/Selector/Selector.js';
 export { default as Sider } from './blocks/Sider/Sider.js';
 export { default as Statistic } from './blocks/Statistic/Statistic.js';
